@@ -20,9 +20,7 @@ public class ProductsResponse {
 	@SerializedName("categories")
 	@Expose
 	private List<Category> categories = new ArrayList<>();
-	@SerializedName("delivery_info")
-	@Expose
-	private DeliveryInfo deliveryInfo;
+
 	@SerializedName("show_message")
 	@Expose
 	private Integer showMessage;
@@ -38,6 +36,9 @@ public class ProductsResponse {
 	@SerializedName("subscription_message")
 	@Expose
 	private String subscriptionMessage;
+	@SerializedName("delivery_info")
+	@Expose
+	private DeliveryInfo deliveryInfo;
 
 	/**
 	 *
@@ -93,13 +94,6 @@ public class ProductsResponse {
 		this.categories = categories;
 	}
 
-	public DeliveryInfo getDeliveryInfo() {
-		return deliveryInfo;
-	}
-
-	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
-		this.deliveryInfo = deliveryInfo;
-	}
 
 	public Integer getShowMessage() {
 		return showMessage;
@@ -141,4 +135,11 @@ public class ProductsResponse {
 		this.subscriptionMessage = subscriptionMessage;
 	}
 
+	public DeliveryInfo getDeliveryInfo() {
+		return deliveryInfo;
+	}
+
+	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
+		this.deliveryInfo = deliveryInfo;
+	}
 }

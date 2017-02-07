@@ -41,7 +41,6 @@ import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.StyleSpan;
 import android.util.Pair;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -90,6 +89,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -392,7 +393,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
     PushDialog pushDialog;
 
-    LocationFetcher highAccuracyLF, highSpeedAccuracyLF;
+    LocationFetcher highAccuracyLF = null, highSpeedAccuracyLF = null;
 
     PromoCoupon promoCouponSelectedForRide;
 
@@ -956,6 +957,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onDrawerOpened(View drawerView) {
                 Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Side Menu");
             }
 
             @Override
@@ -2774,7 +2776,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void setUserData() {
         try {
             menuBar.setUserData();
-            topBar.setUserData();
 
             updateInRideAddMoneyToWalletButtonText();
             setPaymentOptionInRide();
@@ -3368,6 +3369,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
                         showChatButton();
+
+                        if(Data.autoData != null && Data.autoData.getReferralPopupContent() != null){
+                            if(Data.autoData.getReferralPopupContent().getShown() == 0) {
+                                new OrderCompleteReferralDialog(this, new OrderCompleteReferralDialog.Callback() {
+                                    @Override
+                                    public void onDialogDismiss() {
+                                    }
+
+                                    @Override
+                                    public void onConfirmed() {
+                                    }
+                                }).show(false, "", "", "", Data.autoData.getReferralPopupContent(),
+                                        Integer.parseInt(Data.autoData.getcEngagementId()),
+                                        -1, ProductType.AUTO.getOrdinal());
+                                Data.autoData.getReferralPopupContent().setShown(1);
+                            }
+                        }
 
                         break;
 
@@ -6408,7 +6426,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     @Override
-    public void startRideForCustomer(final int flag, final String message) {
+    public void startRideForCustomer(final int flag, final String message, final PlaceOrderResponse.ReferralPopupContent referralPopupContent) {
         try {
             if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)) {
                 Log.e("in ", "herestartRideForCustomer");
@@ -6422,7 +6440,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void run() {
                             try {
                                 Log.i("in in herestartRideForCustomer  run class", "=");
-                                if(Data.autoData.getAssignedDriverInfo() != null) {
+                                if(Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
+                                    Data.autoData.setReferralPopupContent(referralPopupContent);
 									initializeStartRideVariables();
 									passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
 									switchPassengerScreen(passengerScreenMode);
@@ -7621,8 +7640,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 if(modeEnabled == 1){
                     topBar.textViewTitle.setText(getResources().getString(R.string.emergency_mode_enabled));
-                    topBar.textViewTitle.getPaint().setShader(null);
-                    topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_30)*minRatio);
+
+//                    topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_30)*minRatio);
                     topBar.textViewTitle.setTextColor(getResources().getColor(R.color.red));
                     topBar.relativeLayoutNotification.setVisibility(View.GONE);
                     topBar.imageViewMenu.setImageResource(R.drawable.menu_icon_selector_emergency);
@@ -7649,9 +7668,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 localModeEnabled = 0;
             }
 
-            topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) getResources().getDimensionPixelSize(R.dimen.text_size_40) * minRatio);
+//            topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) getResources().getDimensionPixelSize(R.dimen.text_size_40) * minRatio);
             topBar.imageViewMenu.setImageResource(R.drawable.ic_menu_selector);
-            topBar.textViewTitle.getPaint().setShader(Utils.textColorGradient(this, topBar.textViewTitle));
+            topBar.textViewTitle.setTextColor(getResources().getColor(R.color.text_color));
 
         } catch(Exception e){
             e.printStackTrace();

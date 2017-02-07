@@ -10,7 +10,6 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -151,32 +150,31 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             layoutParams.setMargins((int) (25.0f*ASSL.Xscale()), (int) (25.0f*ASSL.Yscale()), (int)(25.0f*ASSL.Xscale()), (int) (6.0f*ASSL.Yscale()));
             mHolder.cardViewRecycler.setLayoutParams(layoutParams);
 
-            if(itemSelected.getQuantity() > 0){
-                mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
-                mHolder.addButton.setVisibility(View.GONE);
-                mHolder.textViewQuantity.setText(String.valueOf(itemSelected.getQuantity()));
+            int total = itemSelected.getQuantity();
+            mHolder.textViewQuantity.setText(String.valueOf(total));
+            mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark);
+            mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
+            if (total == 0) {
+                mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme);
+                mHolder.imageViewMinus.setVisibility(View.GONE);
+                mHolder.textViewQuantity.setVisibility(View.GONE);
             } else {
-                mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
-                mHolder.addButton.setVisibility(View.VISIBLE);
+                mHolder.imageViewMinus.setVisibility(View.VISIBLE);
+                mHolder.textViewQuantity.setVisibility(View.VISIBLE);
             }
 
             mHolder.textViewAboutItemDescription.setVisibility(!TextUtils.isEmpty(item.getItemDetails()) ? View.VISIBLE : View.GONE);
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
-//            mHolder.textViewAboutItemDescription.setMaxLines(2);
-//            mHolder.textViewAboutItemDescription.setEllipsize(TextUtils.TruncateAt.END);
 
-
-            mHolder.relativeLayoutQuantitySel.setVisibility(View.VISIBLE);
             if(context instanceof FreshActivity
                     && ((FreshActivity)context).getVendorOpened() != null
                     && (1 == ((FreshActivity)context).getVendorOpened().getIsClosed() || 0 == ((FreshActivity)context).getVendorOpened().getIsAvailable())){
-                mHolder.relativeLayoutQuantitySel.setVisibility(View.GONE);
+                mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
             }
 
 
             mHolder.imageViewMinus.setTag(position);
             mHolder.imageViewPlus.setTag(position);
-            mHolder.addButton.setTag(position);
 
             View.OnClickListener plusClick = new View.OnClickListener() {
                 @Override
@@ -193,7 +191,6 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             };
 
-            mHolder.addButton.setOnClickListener(plusClick);
             mHolder.imageViewPlus.setOnClickListener(plusClick);
             mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -334,17 +331,15 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
     class ViewHolderItem extends RecyclerView.ViewHolder {
 
         public CardView cardViewRecycler;
-        public RelativeLayout relativeLayoutItem, relativeLayoutQuantitySel ;
+        public RelativeLayout relativeLayoutItem ;
         public LinearLayout linearLayoutQuantitySelector;
         private ImageView imageViewFoodType, saperatorImage, imageViewMinus, imageViewPlus;
         public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity;
-        public Button addButton;
 
         public ViewHolderItem(View itemView, Context context) {
             super(itemView);
             cardViewRecycler = (CardView) itemView.findViewById(R.id.cvRoot);
             relativeLayoutItem = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutItem);
-            relativeLayoutQuantitySel = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutQuantitySel);
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             saperatorImage = (ImageView) itemView.findViewById(R.id.saperatorImage);
@@ -355,8 +350,6 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
             textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenRegular(context));
             textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenRegular(context));
-
-            addButton = (Button) itemView.findViewById(R.id.add_button); addButton.setTypeface(Fonts.mavenRegular(context));
         }
     }
 

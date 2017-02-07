@@ -36,7 +36,7 @@ public class BranchMetricsUtils {
                                         final String referralCode, final String referringUserName,
                                         final String title, final String fbShareDescription, final String jugnooFbBanner,
                                         String branchDesktopUrl, String branchAndroidUrl,
-                                        String branchIosUrl, String branchFallbackUrl){
+                                        String branchIosUrl, String branchFallbackUrl, String city){
 
         String existingUrl = Prefs.with(context).getString(spKey, "");
         String existingUserIdentifier = Prefs.with(context).getString(SPLabels.USER_IDENTIFIER, "");
@@ -99,7 +99,8 @@ public class BranchMetricsUtils {
                     ;
             LinkProperties linkProperties = new LinkProperties()
                     .setChannel(channel)
-                    .setFeature(Branch.FEATURE_TAG_SHARE);
+                    .setFeature(Branch.FEATURE_TAG_SHARE)
+                    .setStage(city);
 
             if(!"".equalsIgnoreCase(branchDesktopUrl)){
                 linkProperties.addControlParameter("$desktop_url", branchDesktopUrl);

@@ -1,51 +1,47 @@
 package com.sabkuchfresh.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.MenusCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.FreshSortingDialog;
-import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
-
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 
 
 public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener {
 
 	private final String TAG = VendorMenuFragment.class.getSimpleName();
-	private RelativeLayout linearLayoutRoot;
+	private LinearLayout llRoot;
     private LinearLayout mainLayout;
     private LinearLayout noFreshsView;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
+	private ImageView ivShadowBelowTab, ivShadowAboveTab;
 	private MenusCategoryFragmentsAdapter menusCategoryFragmentsAdapter;
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
 
-    private FreshSortingDialog freshSortingDialog;
-    private ArrayList<SortResponseModel> slots = new ArrayList<>();
     public VendorMenuFragment(){}
     protected Bus mBus;
 
@@ -72,10 +68,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         activity.setSwipeAvailable(false);
 
 		activity.fragmentUISetup(this);
-		linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(llRoot != null) {
+				new ASSL(activity, llRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,9 +85,12 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 		viewPager.setAdapter(menusCategoryFragmentsAdapter);
 
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
-		tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
+		tabs.setTextColorResource(R.color.text_color_dark_1, R.color.text_color);
 		tabs.setBackgroundColor(activity.getResources().getColor(R.color.transparent));
+		tabs.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
         tabs.setOnMyTabClickListener(this);
+		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
+		ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
 
 		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -118,7 +117,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 		success(activity.getMenuProductsResponse());
 
-		getFreshSortingDialog();
+		activity.setSortingList(this);
 
 		return rootView;
 	}
@@ -153,7 +152,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(llRoot);
         System.gc();
 	}
 
@@ -204,21 +203,15 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 	void success(VendorMenuResponse productsResponse) {
 		try {
 			noFreshsView.setVisibility(View.GONE);
-			if (!isHidden()) {
-				activity.showBottomBar(true);
-				activity.getTopBar().below_shadow.setVisibility(View.GONE);
-			} else {
-				Fragment fragment = activity.getTopFragment();
-				if (fragment != null && fragment instanceof VendorMenuFragment) {
-					activity.showBottomBar(false);
-					activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
-				}
-			}
 			mainLayout.setVisibility(View.VISIBLE);
 			activity.setMenuProductsResponse(productsResponse);
 
 			if (activity.getMenuProductsResponse() != null
 					&& activity.getMenuProductsResponse().getCategories() != null) {
+				tabs.setVisibility(View.VISIBLE);
+				ivShadowAboveTab.setVisibility(View.VISIBLE);
+				ivShadowBelowTab.setVisibility(View.VISIBLE);
+
 				activity.updateCartFromSP();
 				activity.updateCartValuesGetTotalPrice();
 				menusCategoryFragmentsAdapter.setCategories(activity.getMenuProductsResponse().getCategories());
@@ -231,46 +224,14 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 				if (activity.updateCart) {
 					activity.updateCart = false;
 					activity.openCart();
-					activity.getRelativeLayoutCartNew().performClick();
 				}
 			}
-
-
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
 	}
 
 
-	public FreshSortingDialog getFreshSortingDialog() {
-		try {
-			if (freshSortingDialog == null) {
-                setSortingList();
-                slots.get(1).check = true;
-                activity.menusSort = slots.get(1).id;
-                activity.onSortEvent(new SortSelection(activity.menusSort));
-                freshSortingDialog = new FreshSortingDialog(activity, slots,
-                        new FreshSortingDialog.FreshDeliverySortDialogCallback() {
-                            @Override
-                            public void onOkClicked(int position) {
-                                activity.menusSort = position;
-                                activity.getBus().post(new SortSelection(position));
-                            }
-                        });
-            }
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return freshSortingDialog;
-	}
-
-	private void setSortingList() {
-		slots.clear();
-		slots.add(new SortResponseModel(0, "A-Z", false));
-//		slots.add(new SortResponseModel(1, "Popularity", false));
-		slots.add(new SortResponseModel(2, "Price: Low to High", false));
-		slots.add(new SortResponseModel(3, "Price: High to Low", false));
-	}
 
 	public MenusCategoryFragmentsAdapter getMenusCategoryFragmentsAdapter() {
 		return menusCategoryFragmentsAdapter;

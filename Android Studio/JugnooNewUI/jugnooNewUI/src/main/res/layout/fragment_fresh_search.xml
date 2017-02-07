@@ -1,134 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/linearLayoutRoot"
+<RelativeLayout
+    android:id="@+id/rlRoot"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/white"
     >
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutSearchBar"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewCategoryItems"
         android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/white"
-        android:splitMotionEvents="false">
+        android:layout_height="match_parent"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical"
+        android:splitMotionEvents="false"
+        >
+    </android.support.v7.widget.RecyclerView>
 
+    <TextView
+        android:id="@+id/textViewPlaceholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40px"
+        android:text="@string/sorry_no_match_found"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_26"
 
-        <ImageView
-            android:id="@+id/imageViewSearchIcon"
-            android:layout_width="33px"
-            android:layout_height="33px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"
-            android:src="@drawable/search_icon"
-            android:tag="mwar"
-            android:visibility="gone"/>
+        />
 
-        <ImageView
-            android:id="@+id/imageViewBack"
-            style="@style/back_image"/>
-
-
-        <EditText
-            android:id="@+id/editTextSearch"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
-            android:layout_marginRight="20px"
-            android:layout_toLeftOf="@+id/linearLayoutCross"
-            android:layout_toRightOf="@+id/imageViewBack"
-            android:background="@color/transparent"
-            android:gravity="center_vertical"
-            android:hint="@string/search_items"
-            android:singleLine="true"
-            android:textColor="@color/text_color"
-            android:textCursorDrawable="@drawable/cursor_black"
-            android:textSize="30px"/>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutCross"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5px"
-            android:gravity="right"
-            android:orientation="horizontal"
-            >
-
-            <product.clicklabs.jugnoo.utils.ProgressWheel
-                android:id="@+id/progressBarSearch"
-                xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                android:layout_width="70px"
-                android:layout_height="70px"
-                android:layout_marginRight="5px"
-                android:tag="mwar"
-                android:visibility="gone"
-                wheel:matProg_barColor="@color/theme_color"
-                wheel:matProg_barWidth="3dp"
-                wheel:matProg_fillRadius="true"
-                wheel:matProg_progressIndeterminate="true"
-                />
-
-            <ImageView
-                android:id="@+id/imageViewSearchCross"
-                android:layout_width="70px"
-                android:layout_height="70px"
-                android:padding="20px"
-                android:src="@drawable/ic_cross_et"
-                android:tag="mwar"
-                android:visibility="gone"
-                />
-        </LinearLayout>
-
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:layout_alignParentBottom="true"
-            android:rotation="180"
-            android:src="@drawable/shadow_down"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        />
 
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewCategoryItems"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fadeScrollbars="true"
-            android:scrollbars="vertical"
-            android:splitMotionEvents="false"
-            >
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/textViewPlaceholder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_26"
-            android:textColor="@color/text_color"
-            android:text="@string/sorry_no_match_found"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40px"
-
-            />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="6px"
-            android:background="@drawable/shadow_up"
-            android:layout_alignParentBottom="true"
-            />
-
-    </RelativeLayout>
-
-
-</LinearLayout>
+</RelativeLayout>

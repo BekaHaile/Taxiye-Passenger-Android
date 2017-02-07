@@ -25,6 +25,7 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.home.TopBar;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -69,7 +70,7 @@ import retrofit.mime.TypedByteArray;
 public class MealFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener, MealAdapter.Callback {
     private final String TAG = MealFragment.class.getSimpleName();
 
-    private RelativeLayout linearLayoutRoot;
+    private LinearLayout llRoot;
     private MealAdapter mealAdapter;
     private RecyclerView recyclerViewCategoryItems;
 
@@ -90,6 +91,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     private boolean resumed = false;
     private RelativeLayout relativeLayoutNoMenus;
     private TextView textViewNothingFound;
+    private View vShadow;
 
     public MealFragment() {
     }
@@ -101,20 +103,21 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
+        activity.setDeliveryAddressView(rootView);
 
         mBus = activity.getBus();
         Data.AppType = AppConstant.ApplicationType.MEALS;
         Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
 
-        linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+        llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
         try {
-            if (linearLayoutRoot != null) {
-                new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+            if (llRoot != null) {
+                new ASSL(activity, llRoot, 1134, 720, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        linearLayoutRoot.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
+        llRoot.setBackgroundColor(activity.getResources().getColor(R.color.white));
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
@@ -143,6 +146,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         mSwipeRefreshLayout.setEnabled(true);
 
         recyclerViewCategoryItems.setAdapter(mealAdapter);
+        vShadow = rootView.findViewById(R.id.vShadow);
+        vShadow.setVisibility(View.VISIBLE);
 
         setSortingList();
 
@@ -150,6 +155,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         try {
             if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
+                //activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -181,9 +187,12 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             activity.fragmentUISetup(this);
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
-            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
-                activity.showBottomBar(false);
+            if(activity.getCartChangedAtCheckout()){
+                activity.updateCartFromSP();
+                mealAdapter.notifyDataSetChanged();
+                activity.updateCartValuesGetTotalPrice();
             }
+            activity.setCartChangedAtCheckout(false);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -193,7 +202,19 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                     activity.setRefreshCart(false);
                 }
             }, 300);
+
+            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+            }
+
+            if(noMealsView.getVisibility() == View.VISIBLE){
+                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+            }
         }
+
+
     }
 
 
@@ -240,7 +261,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(llRoot);
         System.gc();
     }
 
@@ -284,17 +305,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                     public void success(ProductsResponse productsResponse, Response response) {
                         noFreshsView.setVisibility(View.GONE);
                         relativeLayoutNoMenus.setVisibility(View.GONE);
+                        activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                        activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
-                            if(!isHidden()) {
-                                activity.showBottomBar(true);
-                            } else {
-                                Fragment fragment = activity.getTopFragment();
-                                if(fragment != null && fragment instanceof MealFragment) {
-                                    activity.showBottomBar(false);
-                                }
-                            }
 
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = JSONParser.getServerMessage(jObj);
@@ -302,14 +317,20 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
+                                    activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                                    activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
                                     mSwipeRefreshLayout.setVisibility(View.GONE);
                                     noMealsView.setVisibility(View.GONE);
-                                    activity.showBottomBar(false);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
                                             productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
                                 else {
+                                    if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
+                                        activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                                    } else{
+                                        activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
+                                    }
                                     int sortedBy = jObj.optInt(Constants.SORTED_BY);
                                     mealsData.clear();
                                     mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
@@ -345,11 +366,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                     if(mealsData.size()+recentOrder.size()>0) {
                                         noMealsView.setVisibility(View.GONE);
                                         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                        activity.showBottomBar(true);
+                                        activity.getTopBar().getLlCartContainer().setVisibility(View.VISIBLE);
                                     } else {
                                         noMealsView.setVisibility(View.VISIBLE);
-                                        //mSwipeRefreshLayout.setVisibility(View.GONE);
-                                        activity.showBottomBar(false);
+                                        activity.getTopBar().getLlCartContainer().setVisibility(View.GONE);
                                     }
 
                                     if (activity.getProductsResponse() != null
@@ -397,7 +417,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {
-        activity.showBottomBar(false);
         mealsData.clear();
         mealAdapter.setList(mealsData);
 

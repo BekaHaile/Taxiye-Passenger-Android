@@ -74,19 +74,7 @@ public class ShareActivity extends BaseFragmentActivity {
 		return callbackManager;
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-//		FlurryAgent.init(this, Config.getFlurryKey());
-//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
-	}
 
-	@Override
-	protected void onStop() {
-		super.onStop();
-//		FlurryAgent.onEndSession(this);
-	}
-	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -138,7 +126,7 @@ public class ShareActivity extends BaseFragmentActivity {
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 		textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES);
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
+		//textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 		getLeaderboardCall();
 		getLeaderboardActivityCall();

@@ -143,8 +143,9 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:textSize">@dimen/top_bar_title_text_size</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textSize">@dimen/text_size_34</item>
         <item name="android:textAllCaps">true</item>
     </style>
 

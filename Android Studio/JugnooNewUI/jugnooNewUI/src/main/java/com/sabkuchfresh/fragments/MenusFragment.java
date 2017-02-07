@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -62,7 +65,8 @@ import retrofit.mime.TypedByteArray;
 public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener{
     private final String TAG = MenusFragment.class.getSimpleName();
 
-    private RelativeLayout linearLayoutRoot, relativeLayoutNoMenus;
+    private LinearLayout llRoot;
+    private RelativeLayout relativeLayoutNoMenus;
     private MenusRestaurantAdapter menusRestaurantAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
@@ -76,7 +80,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private ArrayList<String> status = new ArrayList<>();
 
     PushDialog pushDialog;
-    private boolean resumed = false;
+    private boolean resumed = false, searchOpened = false;
 
     public MenusFragment() {
     }
@@ -89,14 +93,15 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
+        activity.setDeliveryAddressView(rootView);
 
         Data.AppType = AppConstant.ApplicationType.MENUS;
         Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
 
-        linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+        llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
         try {
-            if (linearLayoutRoot != null) {
-                new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+            if (llRoot != null) {
+                new ASSL(activity, llRoot, 1134, 720, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,6 +186,13 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        activity.getTopBar().ivSearchCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.getTopBar().etSearch.setText("");
+            }
+        });
+
         return rootView;
     }
 
@@ -201,6 +213,11 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             activity.fragmentUISetup(this);
             activity.resumeMethod();
             menusRestaurantAdapter.applyFilter();
+            activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
+            if(searchOpened){
+                searchOpened = false;
+                openSearch(false);
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -213,13 +230,17 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         }
     }
 
-
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+    public void onDestroyView() {
+        try {
+            menusRestaurantAdapter.removeHandler();
+        } catch (Exception e) {
+        }
+        super.onDestroyView();
+        ASSL.closeActivity(llRoot);
         System.gc();
     }
+
 
     @Override
     public void onRefresh() {
@@ -263,10 +284,15 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
                                     menusRestaurantAdapter.setList(vendors);
                                     menusRestaurantAdapter.applyFilter();
+                                    activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
-//                                    relativeLayoutSearchFilter.setVisibility(relativeLayoutNoMenus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+
+                                    if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                                        activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                                        activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -436,6 +462,38 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             }
         }).show();
 
+    }
+
+    public void openSearch(boolean clearEt){
+       if(searchOpened){
+           searchOpened = false;
+           activity.getTopBar().etSearch.setText("");
+           activity.fragmentUISetup(this);
+       } else {
+           searchOpened = true;
+           if(clearEt) {
+               activity.getTopBar().etSearch.setText("");
+           }
+           activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
+           activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
+           activity.getTopBar().title.setVisibility(View.GONE);
+           activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
+
+           activity.getTopBar().setSearchVisibility(View.VISIBLE);
+           activity.getTopBar().ivSearch.setVisibility(View.GONE);
+           activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+           activity.getTopBar().etSearch.requestFocus();
+           Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
+       }
+    }
+
+    public boolean getSearchOpened(){
+        return searchOpened;
+    }
+
+    public MenusRestaurantAdapter getMenusRestaurantAdapter(){
+        return menusRestaurantAdapter;
     }
 
 }

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llLocation"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:src="@drawable/shadow_down_new" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@drawable/bg_white_menu_item_selector_color_selector">
+
+        <ImageView
+            android:id="@+id/ivLoc"
+            android:layout_width="25px"
+            android:layout_height="34px"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/px_42"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_new_fresh_location" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/px_22"
+            android:layout_toRightOf="@+id/ivLoc"
+            android:layout_toLeftOf="@+id/ivEditLoc"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvDeliveryAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/delivery_address"
+                android:textColor="@color/text_color_light_less"
+                android:textSize="@dimen/text_size_22" />
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px_6"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivEditLoc"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20px"
+            android:padding="15px"
+            android:src="@drawable/edit_icon_selector"
+            android:tag="mwar"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+</LinearLayout>

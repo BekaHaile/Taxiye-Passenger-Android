@@ -25,6 +25,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="55px"
         android:layout_toRightOf="@+id/imageViewItemImage"
+        android:layout_toLeftOf="@+id/linearLayoutQuantitySelector"
         android:orientation="vertical">
 
         <TextView
@@ -32,7 +33,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25px"
-            android:maxLines="2"
             android:text="Orange"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_34"
@@ -68,79 +68,36 @@
         android:id="@+id/textViewOutOfStock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_gravity="center_horizontal"
+        android:layout_marginRight="40px"
         android:gravity="center"
         android:text="Out\nof\nStock"
         android:textColor="@color/off_text"
         android:textSize="@dimen/text_size_34"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="40px"
         android:visibility="gone"/>
 
 
-    <LinearLayout
-        android:id="@+id/linearLayoutQuantitySelector"
+    <include
+        layout="@layout/layout_item_quantity_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/imageViewSep"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="25px"
         android:layout_marginRight="20px"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/imageViewMinus"
-            android:layout_width="74px"
-            android:layout_height="74px"
-            android:padding="10px"
-            android:src="@drawable/ic_minus_selector"
-            android:tag="mwar"/>
-
-        <TextView
-            android:id="@+id/textViewQuantity"
-            android:layout_width="70px"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="998"
-            android:textColor="@color/theme_color"
-            android:textSize="@dimen/text_size_34"/>
-
-        <ImageView
-            android:id="@+id/imageViewPlus"
-            android:layout_width="74px"
-            android:layout_height="74px"
-            android:padding="10px"
-            android:src="@drawable/ic_plus_selector"
-            android:tag="mwar"/>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/add_button"
-        android:layout_width="118px"
-        android:layout_height="60px"
-        android:layout_above="@+id/imageViewSep"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="25px"
-        android:layout_marginRight="20px"
-        android:background="@drawable/button_theme"
-        android:text="ADD"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_32"
-        android:visibility="visible"/>
+        />
 
     <ImageView
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_below="@+id/linearLayoutContent"
-        android:background="@color/stroke_color_light"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"
+        android:background="@color/stroke_color_light"
         />
 
 </RelativeLayout>

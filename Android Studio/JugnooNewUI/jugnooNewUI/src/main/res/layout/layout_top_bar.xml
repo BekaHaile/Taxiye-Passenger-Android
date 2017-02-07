@@ -47,8 +47,9 @@
             android:gravity="center"
             android:text="@string/app_name"
             android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_40"/>
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_36"
+            />
 
 
         <LinearLayout

@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
-    android:layout_width="720px"
-    android:layout_height="1134px"
-    android:background="@color/grey_dark">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
 
     <fragment
@@ -227,6 +227,12 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        />
 
     <include layout="@layout/layout_location_address_error" />
 

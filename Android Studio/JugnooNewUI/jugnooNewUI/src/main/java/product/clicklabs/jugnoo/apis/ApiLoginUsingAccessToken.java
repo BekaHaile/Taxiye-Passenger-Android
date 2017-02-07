@@ -55,10 +55,8 @@ public class ApiLoginUsingAccessToken {
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 			}
 
-			if (Data.locationFetcher != null) {
-				Data.loginLatitude = Data.locationFetcher.getLatitude();
-				Data.loginLongitude = Data.locationFetcher.getLongitude();
-			}
+			Data.loginLatitude = latitude;
+			Data.loginLongitude = longitude;
 
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);

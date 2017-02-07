@@ -57,6 +57,10 @@ public interface Events {
     String IS_PUSH_MEALS_ENABLED = "is_push_meals_enabled";
     String IS_PUSH_AUTOS_ENABLED = "is_push_autos_enabled";
     String IS_PUSH_FRESH_ENABLED = "is_push_fresh_enabled";
+    String IS_PUSH_GROCERY_ENABLED = "is_push_grocery_enabled";
+    String IS_PUSH_MENUS_ENABLED = "is_push_menus_enabled";
+    String IS_PUSH_PAY_ENABLED = "is_push_pay_enabled";
+
     String TRAIN_TIME = "train_time";
 
     String MAX_COUPON_VALUE = "max_coupon_value";

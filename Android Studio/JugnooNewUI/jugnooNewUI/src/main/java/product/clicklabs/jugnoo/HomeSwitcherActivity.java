@@ -1,28 +1,19 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import com.sabkuchfresh.home.TopBar;
 
 import java.util.ArrayList;
 
@@ -34,12 +25,11 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollGridView;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 
 
-public class HomeSwitcherActivity extends Activity {
+public class HomeSwitcherActivity extends Activity implements LocationUpdate {
 
     RelativeLayout relative,relativeLayoutHomeData;
 
@@ -56,10 +46,17 @@ public class HomeSwitcherActivity extends Activity {
     DrawerLayout drawerLayout;
     private MenuBar menuBar;
 
+    private LocationFetcher locationFetcher = null;
+
     @Override
     protected void onResume() {
         super.onResume();
         HomeActivity.checkForAccessTokenChange(this);
+        if(locationFetcher == null){
+            locationFetcher = new LocationFetcher(this, 1000);
+        } else {
+            locationFetcher.connect();
+        }
     }
 
     @Override
@@ -164,7 +161,12 @@ public class HomeSwitcherActivity extends Activity {
         }
 
         Log.v("length of data","length of data"+gridViewData.size());
-        GridViewAdapter gridViewAdapter = new GridViewAdapter(this, gridViewData);
+        GridViewAdapter gridViewAdapter = new GridViewAdapter(this, gridViewData, new GridViewAdapter.Callback() {
+            @Override
+            public Location getLocation() {
+                return location;
+            }
+        });
         gridView.setAdapter(gridViewAdapter);
         gridView.setNumColumns((gridViewData.size()>2)?2:1);
 
@@ -472,6 +474,20 @@ public class HomeSwitcherActivity extends Activity {
         performBackPressed();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(locationFetcher != null){
+            locationFetcher.destroy();
+        }
+    }
+
+
+    private Location location;
+    @Override
+    public void onLocationChanged(Location location) {
+        this.location = location;
+    }
 
     @Override
     protected void onDestroy() {

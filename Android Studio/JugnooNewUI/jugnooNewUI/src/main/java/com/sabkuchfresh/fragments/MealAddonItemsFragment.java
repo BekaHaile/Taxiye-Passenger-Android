@@ -17,7 +17,6 @@ import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
@@ -58,6 +57,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
     private ArrayList<SubItem> mealsAddonData = new ArrayList<>();
     private int addOnSelectedCount = 0;
+    public ArrayList<SubItem> subItemsInCart;
 
 
     public MealAddonItemsFragment() {
@@ -107,10 +107,6 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
             }
         });
 
-        setSkipOnCLickListener();
-
-
-
         updateCartItemsList();
 
         relativeLayoutCartTop = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCartTop);
@@ -126,22 +122,26 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         linearLayoutCartDetails = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartDetails);
         linearLayoutCartDetails.setVisibility(View.GONE);
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, false,
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, FlurryEventNames.REVIEW_CART, false,
                 new FreshCartItemsAdapter.Callback() {
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {
+                        activity.saveCartList(subItemsInCart);
+                        activity.updateCartFromSP();
                         updateCartDataView();
                         updateAddonsListCount();
                     }
 
                     @Override
                     public void onMinusClicked(int position, SubItem subItem) {
-                        updateCartDataView();
                         if(subItem.getSubItemQuantitySelected() == 0){
-                            activity.subItemsInCart.remove(position);
-                            checkIfEmpty();
+                            subItemsInCart.remove(position);
                         }
+                        activity.saveCartList(subItemsInCart);
+                        activity.updateCartFromSP();
+                        updateCartDataView();
                         updateAddonsListCount();
+                        checkIfEmpty();
                     }
 
                     @Override
@@ -204,23 +204,20 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
-            setSkipOnCLickListener();
+
+            if(activity.getCartChangedAtCheckout()){
+                activity.updateCartFromSP();
+                freshCartItemsAdapter.notifyDataSetChanged();
+                addOnItemsAdapter.notifyDataSetChanged();
+                activity.updateCartValuesGetTotalPrice();
+            }
+            activity.setCartChangedAtCheckout(false);
             updateCartDataView();
             updateCartItemsList();
             updateAddonsListCount();
         }
     }
 
-
-    private void setSkipOnCLickListener(){
-        activity.getTopBar().textViewSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.getTransactionUtils().openCheckoutMergedFragment(activity, activity.getRelativeLayoutContainer());
-                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.SKIP_TOP);
-            }
-        });
-    }
 
     @Override
     public void onDestroy() {
@@ -249,7 +246,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
-        updateCartTopBarView(activity.updateCartValuesGetTotalPrice());
+        updateCartTopBarView(activity.updateCartValuesGetTotalPriceFMG(subItem));
         addOnSelectedCount++;
         updateBottomBar();
         updateCartItemsList();
@@ -257,7 +254,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
-        updateCartTopBarView(activity.updateCartValuesGetTotalPrice());
+        updateCartTopBarView(activity.updateCartValuesGetTotalPriceFMG(subItem));
         addOnSelectedCount--;
         updateBottomBar();
         updateCartItemsList();
@@ -292,41 +289,30 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
     }
 
     private void checkIfEmpty(){
-        if(activity.subItemsInCart.size() == 0){
+        if(subItemsInCart.size() == 0){
             activity.performBackPressed();
         }
     }
 
 
     private void updateCartItemsList(){
-        if(activity.subItemsInCart == null) {
-            activity.subItemsInCart = new ArrayList<>();
-        }
-        activity.subItemsInCart.clear();
-        if(activity.getProductsResponse() != null
-                && activity.getProductsResponse().getCategories() != null) {
-            for (Category category : activity.getProductsResponse().getCategories()) {
-                for (SubItem subItem : category.getSubItems()) {
-                    if (subItem.getSubItemQuantitySelected() > 0) {
-                        activity.subItemsInCart.add(subItem);
-                    }
-                }
-            }
-        }
+        subItemsInCart = activity.fetchCartList();
         if(freshCartItemsAdapter != null){
-            freshCartItemsAdapter.notifyDataSetChanged();
+            freshCartItemsAdapter.setResults(subItemsInCart);
         }
     }
 
     public void deleteCart() {
-        for(SubItem subItem : activity.subItemsInCart){
+        for(SubItem subItem : subItemsInCart){
             subItem.setSubItemQuantitySelected(0);
         }
+        activity.saveCartList(subItemsInCart);
+        activity.updateCartFromSP();
         updateCartDataView();
-        activity.subItemsInCart.clear();
+        subItemsInCart.clear();
+        activity.setCartChangedAtCheckout(true);
         freshCartItemsAdapter.notifyDataSetChanged();
         checkIfEmpty();
-
     }
 
     private void updateAddonsListCount(){

@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.adapters;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -17,9 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeSwitcherActivity;
-import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -36,16 +35,14 @@ public class GridViewAdapter extends BaseAdapter
     private Context context;
     LayoutInflater gridViewLayout;
     ArrayList<String> gridList;
-    public GridViewAdapter(Context context)
-    {
-        this.context = context;
-    }
+    private Callback callback;
 
-    public GridViewAdapter(Context context, ArrayList<String> gridList)
+    public GridViewAdapter(Context context, ArrayList<String> gridList, Callback callback)
     {
         this.context = context;
         this.gridList = gridList;
         this.gridViewLayout = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.callback = callback;
     }
     @Override
     public int getCount()
@@ -140,8 +137,8 @@ public class GridViewAdapter extends BaseAdapter
                         try {
                             int pos = ((ViewHolder)v.getTag()).id;
 
-                            double latitude = (((HomeSwitcherActivity)context).getIntent().getDoubleExtra(Constants.KEY_LATITUDE, LocationFetcher.getSavedLatFromSP((context))));
-                            double longitude = (((HomeSwitcherActivity)context).getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, LocationFetcher.getSavedLngFromSP((context))));
+                            double latitude = (((HomeSwitcherActivity)context).getIntent().getDoubleExtra(Constants.KEY_LATITUDE, callback.getLocation().getLatitude()));
+                            double longitude = (((HomeSwitcherActivity)context).getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, callback.getLocation().getLongitude()));
                             Bundle bundle = ((HomeSwitcherActivity)context).getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE);
                             MyApplication.getInstance().getAppSwitcher().switchApp(((HomeSwitcherActivity)context),  gridList.get(pos),
                                     ((HomeSwitcherActivity)context).getIntent().getData(),
@@ -169,13 +166,17 @@ public class GridViewAdapter extends BaseAdapter
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Prefs.with(context).save("home_switcher_client_id", clientId);
+                try {
+                    Prefs.with(context).save("home_switcher_client_id", clientId);
 
-                double latitude = (((HomeSwitcherActivity)context).getIntent().getDoubleExtra(Constants.KEY_LATITUDE, LocationFetcher.getSavedLatFromSP((context))));
-                double longitude = (((HomeSwitcherActivity)context).getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, LocationFetcher.getSavedLngFromSP((context))));
-                Bundle bundle = ((HomeSwitcherActivity)context).getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE);
-                MyApplication.getInstance().getAppSwitcher().switchApp(((HomeSwitcherActivity)context), clientId, ((HomeSwitcherActivity)context).getIntent().getData(),
-                        new LatLng(latitude, longitude), bundle, false, false, true);
+                    double latitude = (((HomeSwitcherActivity)context).getIntent().getDoubleExtra(Constants.KEY_LATITUDE, callback.getLocation().getLatitude()));
+                    double longitude = (((HomeSwitcherActivity)context).getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, callback.getLocation().getLongitude()));
+                    Bundle bundle = ((HomeSwitcherActivity)context).getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE);
+                    MyApplication.getInstance().getAppSwitcher().switchApp(((HomeSwitcherActivity)context), clientId, ((HomeSwitcherActivity)context).getIntent().getData(),
+							new LatLng(latitude, longitude), bundle, false, false, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }, duration+bounceDuration+75);
 
@@ -190,5 +191,9 @@ public class GridViewAdapter extends BaseAdapter
         public ImageView imageViewGridScreen;
         public TextView textViewGridScreen;
 
+    }
+
+    public interface Callback{
+        Location getLocation();
     }
 }

@@ -105,8 +105,6 @@ public class Data {
 	private static PayData payData;
 
 	
-	public static LocationFetcher locationFetcher;
-
 
 	public static final String DEVICE_TYPE = "0";
 	public static String uniqueDeviceId = "";
@@ -150,7 +148,6 @@ public class Data {
 			mealsData = null;
 			DeliveryData = null;
 
-			locationFetcher = null;
 			facebookUserData = null;
             previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 			

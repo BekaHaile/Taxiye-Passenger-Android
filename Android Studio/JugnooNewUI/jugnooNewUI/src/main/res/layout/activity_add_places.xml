@@ -45,11 +45,11 @@
                     android:singleLine="true"
                     android:layout_marginRight="10px"
                     android:textCursorDrawable="@drawable/cursor_black"
-                    android:layout_toLeftOf="@+id/imageViewSearchCross"
+                    android:layout_toLeftOf="@+id/ivDeliveryAddressCross"
                     />
 
                 <ImageView
-                    android:id="@+id/imageViewSearchCross"
+                    android:id="@+id/ivDeliveryAddressCross"
                     android:layout_width="70px"
                     android:layout_height="70px"
                     android:padding="16px"

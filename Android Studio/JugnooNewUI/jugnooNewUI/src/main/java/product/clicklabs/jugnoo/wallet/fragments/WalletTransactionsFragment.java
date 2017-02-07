@@ -130,7 +130,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		imageViewJugnooAnimation = (ImageView)rootView.findViewById(R.id.imageViewJugnooAnimation);
 		jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
 
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
+		//textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
 

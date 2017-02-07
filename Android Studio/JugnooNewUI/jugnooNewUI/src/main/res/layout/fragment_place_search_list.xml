@@ -66,7 +66,7 @@
             wheel:matProg_progressIndeterminate="true" />
 
         <ImageView
-            android:id="@+id/imageViewSearchCross"
+            android:id="@+id/ivDeliveryAddressCross"
             android:layout_width="70px"
             android:layout_height="70px"
             android:layout_alignParentRight="true"

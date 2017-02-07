@@ -1,11 +1,11 @@
 package com.sabkuchfresh.home;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,22 +18,29 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Pair;
-import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.jugnoo.pay.activities.PaySDKUtils;
 import com.jugnoo.pay.models.MessageRequest;
+import com.sabkuchfresh.adapters.FreshSortingAdapter;
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -49,6 +56,7 @@ import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
+import com.sabkuchfresh.fragments.FreshHomeFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.GroceryFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
@@ -64,11 +72,13 @@ import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
+import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SubItemCompareAtoZ;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceHighToLow;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceLowToHigh;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriority;
+import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemCompareAtoZ;
@@ -89,6 +99,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
@@ -104,7 +115,6 @@ import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
-import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
@@ -142,10 +152,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     private RelativeLayout relativeLayoutContainer;
 
-    private RelativeLayout relativeLayoutCart, relativeLayoutCheckoutBar, relativeLayoutSort, relativeLayoutCartNew, relativeLayoutLeft;
-    private LinearLayout linearLayoutCheckout, linearLayoutCheckoutContainer;
-    private TextView textViewTotalPrice, textViewCheckout, textViewMinOrder, textViewCartItemsCountNew, textViewCartItemsCount;
-    private ImageView imageViewCartNew;
+    private TextView textViewMinOrder;
 
     private MenuBar menuBar;
     private TopBar topBar;
@@ -153,6 +160,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private TransactionUtils transactionUtils;
 
     private ProductsResponse productsResponse;
+    private SuperCategoriesData superCategoriesData;
     private UserCheckoutResponse userCheckoutResponse;
 
     private String selectedAddress = "";
@@ -165,7 +173,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private PaymentOption paymentOption;
 
     private List<DeliveryAddress> deliveryAddresses;
-    public ArrayList<SubItem> subItemsInCart;
+    private ArrayList<SortResponseModel> slots = new ArrayList<>();
 
     public String mContactNo = "";
 
@@ -180,7 +188,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public boolean updateCart = false;
 
-    private LocationFetcher locationFetcher;
+    private LocationFetcher locationFetcher = null;
     public float scale = 0f;
 
     public boolean locationSearchShown = false;
@@ -193,12 +201,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private VendorMenuResponse vendorMenuResponse;
 
     private AppBarLayout appBarLayout;
-    private RelativeLayout searchLayout;
+    private RelativeLayout rlSort, rlSortBg, rlSortContainer;
+    private View viewSortFake, viewSortFake1;
+    private ImageView ivSort;
     private Toolbar toolbar;
-
-    public void openNotification() {
-        menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
-    }
+    private RecyclerView rvDeliverySlots;
+    private FreshSortingAdapter sortingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,18 +221,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
 
 
-//            if(Data.userData.getShowHomeScreen() == 1)
-//            {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this,
-//                                Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-//                                getIntent().getData(), getSelectedLatLng(), true);
-//                    }
-//                }, 500);
-//                Data.userData.setShowHomeScreen(0);
-//            }
 
             Data.currentActivity = FreshActivity.class.getName();
             drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -232,14 +228,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             scale = getResources().getDisplayMetrics().density;
 
             relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
-            searchLayout = (RelativeLayout) findViewById(R.id.searchLayout);
-            ((TextView) findViewById(R.id.textViewSearch)).setTypeface(Fonts.mavenMedium(this));
-            searchLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    searchItem();
-                }
-            });
 
             try {
                 mBus = ((MyApplication) getApplication()).getBus();
@@ -262,36 +250,49 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude)));
             }
 
-            relativeLayoutCart = (RelativeLayout) findViewById(R.id.relativeLayoutCart);
-            linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
-            relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
-            relativeLayoutCartNew = (RelativeLayout) findViewById(R.id.relativeLayoutCartNew);
-            linearLayoutCheckout = (LinearLayout) findViewById(R.id.linearLayoutCheckout);
-            relativeLayoutSort = (RelativeLayout) findViewById(R.id.relativeLayoutSort);
-            relativeLayoutLeft = (RelativeLayout) findViewById(R.id.relativeLayoutLeft);
-
-            imageViewCartNew = (ImageView) findViewById(R.id.imageViewCartNew);
-
-            textViewCartItemsCountNew = (TextView) findViewById(R.id.textViewCartItemsCountNew);
-            textViewCartItemsCountNew.setTypeface(Fonts.mavenRegular(this));
-
-            textViewCartItemsCount = (TextView) findViewById(R.id.textViewCartItemsCount);
-            textViewCartItemsCount.setTypeface(Fonts.mavenRegular(this));
-            textViewCartItemsCount.setMinWidth((int)(45f * ASSL.Xscale()));
-
-            textViewTotalPrice = (TextView) findViewById(R.id.textViewTotalPrice);
-            textViewTotalPrice.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
-
-            textViewCheckout = (TextView) findViewById(R.id.textViewCheckout);
-            textViewCheckout.setTypeface(Fonts.mavenRegular(this));
             textViewMinOrder = (TextView) findViewById(R.id.textViewMinOrder);
             textViewMinOrder.setTypeface(Fonts.mavenRegular(this));
+            rlSort = (RelativeLayout) findViewById(R.id.rlSort);
+            rlSortBg = (RelativeLayout) findViewById(R.id.rlSortBg);
+            ivSort = (ImageView) findViewById(R.id.ivSort);
+            viewSortFake = (View) findViewById(R.id.viewSortFake);
+            viewSortFake1 = (View) findViewById(R.id.viewSortFake1);
+            rlSortContainer = (RelativeLayout) findViewById(R.id.rlSortContainer);
+            rvDeliverySlots = (RecyclerView) findViewById(R.id.rvDeliverySlots);
+            rvDeliverySlots.setLayoutManager(new LinearLayoutManager(this));
+            rvDeliverySlots.setItemAnimator(new DefaultItemAnimator());
+            rvDeliverySlots.setHasFixedSize(false);
 
             topView = (View) findViewById(R.id.topBarMain);
 
             menuBar = new MenuBar(this, drawerLayout);
             topBar = new TopBar(this, drawerLayout);
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
+
+            topBar.etSearch.addTextChangedListener(textWatcher);
+            resetToolbar();
+
+            drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    FlurryEventLogger.event(Constants.INFORMATIVE, "menu", "Side Menu");
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+
+                }
+
+                @Override
+                public void onDrawerStateChanged(int newState) {
+
+                }
+            });
 
             appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 @Override
@@ -312,18 +313,42 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 }
             });
 
+            sortingAdapter = new FreshSortingAdapter(FreshActivity.this, slots, new FreshSortingAdapter.Callback() {
+                @Override
+                public void onSlotSelected(int position, SortResponseModel slot) {
+                    int type = getAppType();
+                    if(type == AppConstant.ApplicationType.MEALS){
+                        mealSort = position;
+                        MyApplication.getInstance().logEvent(FirebaseEvents.M_SORT+"_"+slot.name, null);
+                    } else if(type == AppConstant.ApplicationType.GROCERY){
+                        freshSort = position;
+                        MyApplication.getInstance().logEvent(FirebaseEvents.G_SORT+"_"+slot.name, null);
+                    } else if(type == AppConstant.ApplicationType.MENUS){
+                        menusSort = position;
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_SORT+"_"+slot.name, null);
+                    } else{
+                        freshSort = position;
+                        MyApplication.getInstance().logEvent(FirebaseEvents.F_SORT+"_"+slot.name, null);
+                    }
+                    getBus().post(new SortSelection(position));
+                    ivSort.performClick();
+                }
+            });
+            rvDeliverySlots.setAdapter(sortingAdapter);
+
 
             View.OnClickListener checkoutOnClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Utils.hideSoftKeyboard(FreshActivity.this, textViewCartItemsCountNew);
+                    Utils.hideSoftKeyboard(FreshActivity.this, topBar.etSearch);
                     FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.CHECKOUT_SCREEN);
                     FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.REVIEW_CART, getProduct());
 
                     int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                    updateCartFromSP();
                     if (updateCartValuesGetTotalPrice().second > 0) {
-                        if (isMealAddonItemsAvailable()) {
-                            addMealAddonItemsFragment();
+                        if (getMealAddonItemsFragment() == null && isMealAddonItemsAvailable()) {
+                            getTransactionUtils().addMealAddonItemsFragment(FreshActivity.this, relativeLayoutContainer);
                         } else {
                             openCart(appType);
 
@@ -357,63 +382,29 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             };
 
 
-            relativeLayoutCheckoutBar.setOnClickListener(checkoutOnClickListener);
-            linearLayoutCheckout.setOnClickListener(checkoutOnClickListener);
-            relativeLayoutCartNew.setOnClickListener(checkoutOnClickListener);
+            topBar.getLlCartContainer().setOnClickListener(checkoutOnClickListener);
 
-            relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
+            ivSort.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
-                        Utils.hideSoftKeyboard(FreshActivity.this, textViewCartItemsCount);
-                        FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CART, FlurryEventNames.BOTTOM_ICON);
-                        if(!canOrder && Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType) == AppConstant.ApplicationType.MEALS)
-                            return;
-
-                        if(updateCartValuesGetTotalPrice().second > 0) {
-                            int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
-                            openCart(appType);
-                        } else {
-                            Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty));
-                        }
-
-                        if((getFreshSearchFragment() != null && !getFreshSearchFragment().isHidden())
-                                || (getMenusSearchFragment() != null && !getMenusSearchFragment().isHidden())){
-                            int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
-                            if(appType == AppConstant.ApplicationType.GROCERY){
-                                MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_CART, null);
-                            } else {
-                                MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_CART, null);
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-            });
-
-            relativeLayoutSort.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FreshFragment fragment = getFreshFragment();
-                    MealFragment mealFragment = getMealFragment();
-                    GroceryFragment groceryFragment = getGroceryFragment();
-                    VendorMenuFragment vendorMenuFragment = getVendorMenuFragment();
-
-                    if (fragment != null && !fragment.isHidden()) {
-                        fragment.getFreshSortingDialog().showSorting();
-                    } else if(mealFragment != null && !mealFragment.isHidden()) {
-                        mealFragment.getFreshSortingDialog().showSorting();
-                    } else if(groceryFragment != null && !groceryFragment.isHidden()) {
-                        groceryFragment.getFreshSortingDialog().showSorting();
-                    } else if(vendorMenuFragment != null && !vendorMenuFragment.isHidden()) {
-                        vendorMenuFragment.getFreshSortingDialog().showSorting();
+                    if(viewSortFake.getVisibility() == View.GONE){
+                        viewSortFake.setVisibility(View.VISIBLE);
+                        viewSortFake1.setVisibility(View.VISIBLE);
+                        rlSortContainer.setVisibility(View.GONE);
+                    } else{
+                        viewSortFake.setVisibility(View.GONE);
+                        viewSortFake1.setVisibility(View.GONE);
+                        rlSortContainer.setVisibility(View.VISIBLE);
                     }
                 }
             });
 
+            rlSortContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ivSort.performClick();
+                }
+            });
 
 
 
@@ -429,6 +420,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.GROCERY);
                     lastClientId = Config.getGroceryClientId();
                 } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                    fetchFiltersFromSP();
                     openCart();
                     addMenusFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
@@ -436,7 +428,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     marginBottom = 33f;
                 } else {
                     openCart();
-                    addFreshFragment();
+                    addFreshHomeFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
                     lastClientId = Config.getFreshClientId();
                 }
@@ -445,13 +437,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             } catch (Exception e) {
                 e.printStackTrace();
-                addFreshFragment();
+                addFreshHomeFragment();
             }
 
 
-            // Register to receive messages.
-            // We are registering an observer (mMessageReceiver) to receive Intents
-            // with actions named "custom-event-name".
             LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                     new IntentFilter(Data.LOCAL_BROADCAST));
 
@@ -469,6 +458,37 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     }
 
+    public void setSortingList(Fragment fragment) {
+        slots.clear();
+        if(fragment instanceof FreshFragment) {
+            slots.add(new SortResponseModel(0, "A-Z", false));
+            slots.add(new SortResponseModel(1, "Popularity", false));
+            slots.add(new SortResponseModel(2, "Price: Low to High", false));
+            slots.add(new SortResponseModel(3, "Price: High to Low", false));
+        } else if(fragment instanceof VendorMenuFragment){
+            slots.add(new SortResponseModel(0, "A-Z", false));
+            slots.add(new SortResponseModel(1, "Price: Low to High", false));
+            slots.add(new SortResponseModel(2, "Price: High to Low", false));
+
+            slots.get(1).check = true;
+            menusSort = slots.get(1).id;
+            onSortEvent(new SortSelection(menusSort));
+        }
+        sortingAdapter.notifyDataSetChanged();
+    }
+
+    public void updateSortSelectedFromAPI(Fragment fragment, JSONObject jObj){
+        if(fragment instanceof FreshFragment) {
+            if (freshSort == -1) {
+                int sortedBy = jObj.optInt(Constants.SORTED_BY);
+                freshSort = sortedBy;
+                slots.get(sortedBy).setCheck(true);
+            } else {
+                slots.get(freshSort).setCheck(true);
+            }
+            onSortEvent(new SortSelection(freshSort));
+        }
+    }
 
 
     public void intentToShareActivity(){
@@ -487,10 +507,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                                 try {
                                     if(getAppType() != AppConstant.ApplicationType.MENUS && productsResponse != null && productsResponse.getCategories() != null) {
                                         updateCartFromSP();
-                                        relativeLayoutCartNew.performClick();
+                                        topBar.getLlCartContainer().performClick();
                                     } else if(getAppType() == AppConstant.ApplicationType.MENUS && getMenuProductsResponse() != null && getMenuProductsResponse().getCategories() != null) {
                                         updateCartFromSP();
-                                        relativeLayoutCartNew.performClick();
+                                        topBar.getLlCartContainer().performClick();
                                     } else {
                                         updateCart = true;
                                     }
@@ -529,7 +549,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 								String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
 								if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
 									updateCartFromSP();
-									relativeLayoutCartNew.performClick();
+                                    topBar.getLlCartContainer().performClick();
 								} else {
 									Bundle bundle = new Bundle();
 									bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
@@ -545,7 +565,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                                 String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getGroceryClientId());
                                 if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
                                     updateCartFromSP();
-                                    relativeLayoutCartNew.performClick();
+                                    topBar.getLlCartContainer().performClick();
                                 } else {
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
@@ -559,7 +579,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                                 String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
                                 if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
                                     updateCartFromSP();
-                                    relativeLayoutCartNew.performClick();
+                                    topBar.getLlCartContainer().performClick();
                                 } else {
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
@@ -645,7 +665,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
         if (!HomeActivity.checkIfUserDataNull(this)) {
             menuBar.setUserData();
-            topBar.setUserData();
 
 
             fetchWalletBalance(this);
@@ -658,7 +677,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
             if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
                     Data.userData.getIntegratedJugnooEnabled() == 1) {
-                if((getFreshFragment() != null && !getFreshFragment().isHidden()) ||
+                if((getFreshHomeFragment() != null && !getFreshHomeFragment().isHidden()) ||
                         (getMealFragment() != null && !getMealFragment().isHidden()) ||
                         (getGroceryFragment() != null && !getGroceryFragment().isHidden())
                         || (getMenusFragment() != null && !getMenusFragment().isHidden())) {
@@ -677,9 +696,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public void resumeMethod() {
         menuBar.setUserData();
-        topBar.setUserData();
 
         fetchWalletBalance(this);
+    }
+
+    public FreshHomeFragment getFreshHomeFragment() {
+        return (FreshHomeFragment) getSupportFragmentManager().findFragmentByTag(FreshHomeFragment.class.getName());
     }
 
     public FreshFragment getFreshFragment() {
@@ -720,15 +742,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public TopBar getTopBar() {
         return topBar;
-    }
-
-    public void showBottomBar(boolean flag) {
-        if(flag && (getFeedbackFragment() == null || !getFeedbackFragment().isVisible())) {
-            relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
-        }else {
-            relativeLayoutCheckoutBar.setVisibility(View.GONE);
-            textViewMinOrder.setVisibility(View.GONE);
-        }
     }
 
 
@@ -783,51 +796,42 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         }
     }
 
-    private Pair<Double, Integer> updateCartValuesGetTotalPriceFMG() {
+    public Pair<Double, Integer> getSubItemInCartTotalPrice(){
         Pair<Double, Integer> pair;
         totalPrice = 0;
         totalQuantity = 0;
         try {
-            if (getProductsResponse() != null
-                    && getProductsResponse().getCategories() != null) {
-                for (Category category : getProductsResponse().getCategories()) {
-                    for (SubItem subItem : category.getSubItems()) {
-                        if (subItem.getSubItemQuantitySelected() > 0) {
-                            totalQuantity++;
-                            totalPrice = totalPrice + (((double) subItem.getSubItemQuantitySelected()) * subItem.getPrice());
-                        }
-                    }
-                }
-                textViewTotalPrice.setText(String.format(getResources().getString(R.string.rupees_value_format),
-                        Utils.getMoneyDecimalFormat().format(totalPrice)));
-                if (totalQuantity > 0) {
-                    textViewCartItemsCount.setVisibility(View.VISIBLE);
-                    textViewCartItemsCountNew.setVisibility(View.VISIBLE);
-                    if(drawerLayout.getDrawerLockMode(GravityCompat.START)== DrawerLayout.LOCK_MODE_UNLOCKED)
-                    imageViewCartNew.setImageResource(R.drawable.ic_cart_fill);
-                    String total = String.valueOf(totalQuantity);
-                    textViewCartItemsCount.setText(total);
-                    textViewCartItemsCountNew.setText(total);
-                } else {
-                    textViewCartItemsCount.setVisibility(View.GONE);
-                    textViewCartItemsCountNew.setVisibility(View.GONE);
-                    imageViewCartNew.setImageResource(R.drawable.ic_cart_empty);
-                }
-                if(getFreshFragment() != null) {
-                    setMinOrderAmountText(getFreshFragment());
-                }
-                else if(getGroceryFragment() != null) {
-                    setMinOrderAmountText(getGroceryFragment());
-                }
+            ArrayList<SubItem> subItemsInCart = fetchCartList();
+            for(SubItem subItem : subItemsInCart){
+				if(subItem.getSubItemQuantitySelected() > 0){
+					totalQuantity++;
+					totalPrice = totalPrice + (((double) subItem.getSubItemQuantitySelected()) * subItem.getPrice());
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        pair = new Pair<>(totalPrice, totalQuantity);
+        return pair;
+    }
+
+    private Pair<Double, Integer> updateCartValuesGetTotalPriceFMG(){
+        return updateCartValuesGetTotalPriceFMG(null);
+    }
+
+    public Pair<Double, Integer> updateCartValuesGetTotalPriceFMG(SubItem subItemToUpdate) {
+        saveCartToSPFMG(subItemToUpdate);
+        Pair<Double, Integer> pair = getSubItemInCartTotalPrice();
+        try {
+            updateTotalAmountPrice(totalPrice);
+            if (getFreshFragment() != null) {
+                setMinOrderAmountText(getFreshFragment());
+            } else if (getGroceryFragment() != null) {
+                setMinOrderAmountText(getGroceryFragment());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        saveCartToSP();
-        if (totalQuantity > 0) {
-        }
-        pair = new Pair<>(totalPrice, totalQuantity);
         return pair;
     }
 
@@ -861,21 +865,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         }
                     }
                 }
-                textViewTotalPrice.setText(String.format(getResources().getString(R.string.rupees_value_format),
-                        Utils.getMoneyDecimalFormat().format(totalPrice)));
-                if (totalQuantity > 0) {
-                    textViewCartItemsCount.setVisibility(View.VISIBLE);
-                    textViewCartItemsCountNew.setVisibility(View.VISIBLE);
-                    if(drawerLayout.getDrawerLockMode(GravityCompat.START)== DrawerLayout.LOCK_MODE_UNLOCKED)
-                        imageViewCartNew.setImageResource(R.drawable.ic_cart_fill);
-                    String total = String.valueOf(totalQuantity);
-                    textViewCartItemsCount.setText(total);
-                    textViewCartItemsCountNew.setText(total);
-                } else {
-                    textViewCartItemsCount.setVisibility(View.GONE);
-                    textViewCartItemsCountNew.setVisibility(View.GONE);
-                    imageViewCartNew.setImageResource(R.drawable.ic_cart_empty);
-                }
+                updateTotalAmountPrice(totalPrice);
                 if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
                     if (getMenusCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
@@ -889,34 +879,45 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             e.printStackTrace();
         }
 
-        saveCartToSP();
+        saveCartToSPMenus();
         if (totalQuantity > 0) {
         }
         pair = new Pair<>(totalPrice, totalQuantity);
         return pair;
     }
 
-
-    public RelativeLayout getSearchLayout() {
-        return searchLayout;
+    public void updateTotalAmountPrice(double totalPrice){
+        try {
+            if (totalPrice > 0) {
+                topBar.getLlCartAmount().setVisibility(View.VISIBLE);
+                topBar.getTvCartAmount().setText(String.format(getResources().getString(R.string.rupees_value_format),
+                        Utils.getMoneyDecimalFormat().format(totalPrice)));
+            } else {
+                topBar.getLlCartAmount().setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+
 
     public void fragmentUISetup(Fragment fragment) {
         try {
+            int llSearchCartContainerVis = View.VISIBLE;
+            int llSearchCartVis = View.VISIBLE;
+            int llCartContainerVis = View.GONE;
+            int ivSearchVis = View.GONE;
+            int llSearchContainerVis = View.GONE;
             int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
             textViewMinOrder.setVisibility(View.GONE);
 
-            topBar.title.setTypeface(Fonts.avenirNext(this));
-            topBar.below_shadow.setVisibility(View.VISIBLE);
-            relativeLayoutCartNew.setVisibility(View.GONE);
-            linearLayoutCheckout.setVisibility(View.VISIBLE);
-            topBar.textViewSkip.setVisibility(View.GONE);
-            topBar.relativeLayoutLocality.setVisibility(View.GONE);
+            topBar.imageViewDelete.setVisibility(View.GONE);
             topBar.textViewReset.setVisibility(View.GONE);
 
             RelativeLayout.LayoutParams titleLayoutParams = (RelativeLayout.LayoutParams) topBar.title.getLayoutParams();
-            titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
-            titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, 0);
+            //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
+            //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, 0);
 
             topView.setVisibility(View.VISIBLE);
 
@@ -927,83 +928,80 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
             topBar.editTextDeliveryAddress.setVisibility(View.GONE);
 
-            relativeLayoutLeft.setVisibility(View.VISIBLE);
-            searchLayout.setVisibility(View.GONE);
-            resetToolbar();
+            rlSort.setVisibility(View.GONE);
+            int rlFilterVis = View.GONE;
+            topBar.buttonCheckServer.setVisibility(View.GONE);
 
-            if (fragment instanceof FreshFragment) {
-                resetToolbarWithScroll();
-				topBar.imageViewMenu.setVisibility(View.VISIBLE);
-				topBar.below_shadow.setVisibility(View.GONE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.GONE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				textViewCheckout.setVisibility(View.GONE);
-				if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
-                    relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+            LayoutTransition layoutTransition = new LayoutTransition();
+            topBar.getLlSearchCart().setLayoutTransition(layoutTransition);
 
-				if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    float marginBottom = 85f;
+            if(fragment instanceof FreshHomeFragment){
+                topBar.buttonCheckServer.setVisibility(View.VISIBLE);
+                llSearchCartContainerVis = View.VISIBLE;
+                llCartContainerVis = View.VISIBLE;
+                ivSearchVis = View.VISIBLE;
+                topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                topBar.imageViewBack.setVisibility(View.GONE);
+
+                if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    float marginBottom = 40f;
                     int dpAsPixels = (int) (marginBottom*scale + 0.5f);
                     fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-				}
+                }
 
-				relativeLayoutCartNew.setVisibility(View.VISIBLE);
-                relativeLayoutCart.setVisibility(View.GONE);
-				linearLayoutCheckout.setVisibility(View.GONE);
 
-				relativeLayoutSort.setVisibility(View.VISIBLE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getResources().getString(R.string.fresh));
+                //topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
+                setMinOrderAmountText(fragment);
+
+            } else if (fragment instanceof FreshFragment) {
+                llSearchCartContainerVis = View.VISIBLE;
+                llCartContainerVis = View.VISIBLE;
+                ivSearchVis = View.VISIBLE;
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+                rlSort.setVisibility(View.VISIBLE);
+
 				topBar.title.setVisibility(View.VISIBLE);
 				topBar.title.setText(getResources().getString(R.string.fresh));
-				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
-                topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
-                setRelativeLayoutLocalityClick();
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
                 setMinOrderAmountText(fragment);
-                setNoItemsView(fragment);
-                searchLayout.setVisibility(View.VISIBLE);
+
 
             } else if(fragment instanceof MealFragment){
+                llSearchCartContainerVis = View.VISIBLE;
+                llCartContainerVis = View.VISIBLE;
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.GONE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				textViewCheckout.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 
-				relativeLayoutCartNew.setVisibility(View.VISIBLE);
-                relativeLayoutCart.setVisibility(View.GONE);
-				linearLayoutCheckout.setVisibility(View.GONE);
+                if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
+                    llSearchCartVis = View.GONE;
+                }
 
-				relativeLayoutSort.setVisibility(View.VISIBLE);
-
-				if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-					fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-				}
+                if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    float marginBottom = 40f;
+                    int dpAsPixels = (int) (marginBottom*scale + 0.5f);
+                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                }
 
 				topBar.title.setVisibility(View.VISIBLE);
 				topBar.title.setText(getResources().getString(R.string.meals));
-				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
-                topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
-                setRelativeLayoutLocalityClick();
-                setNoItemsView(fragment);
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
 			}
             else if (fragment instanceof GroceryFragment) {
-                resetToolbarWithScroll();
+                llSearchCartContainerVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
-                topBar.below_shadow.setVisibility(View.GONE);
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.GONE);
-                topBar.imageViewDelete.setVisibility(View.GONE);
-                textViewCheckout.setVisibility(View.GONE);
-                if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
-                    relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
@@ -1011,72 +1009,44 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     int dpAsPixels = (int) (marginBottom*scale + 0.5f);
                     fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
                 }
-                relativeLayoutCartNew.setVisibility(View.VISIBLE);
-                relativeLayoutCart.setVisibility(View.GONE);
-                linearLayoutCheckout.setVisibility(View.GONE);
-
-                relativeLayoutSort.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.grocery));
-                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
-                topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
-                setRelativeLayoutLocalityClick();
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
                 setMinOrderAmountText(fragment);
-                setNoItemsView(fragment);
-                searchLayout.setVisibility(View.VISIBLE);
 
             } else if (fragment instanceof MenusFragment) {
+                llSearchCartContainerVis = View.VISIBLE;
+                ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.GONE);
-                topBar.imageViewDelete.setVisibility(View.GONE);
-                textViewCheckout.setVisibility(View.GONE);
-                relativeLayoutCheckoutBar.setVisibility(View.GONE);
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
+                rlFilterVis = View.VISIBLE;
 
-
-                relativeLayoutCartNew.setVisibility(View.VISIBLE);
-                relativeLayoutCart.setVisibility(View.GONE);
-                linearLayoutCheckout.setVisibility(View.GONE);
-
-                relativeLayoutSort.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.menus));
-                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
-                topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
-                setRelativeLayoutLocalityClick();
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
+                topBar.getLlSearchCart().setLayoutTransition(null);
 
             }
             else if (fragment instanceof VendorMenuFragment) {
+                llCartContainerVis = View.VISIBLE;
+                ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.below_shadow.setVisibility(View.GONE);
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.imageViewDelete.setVisibility(View.GONE);
-                textViewCheckout.setVisibility(View.GONE);
-                if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
-                    relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 
-
-                relativeLayoutCartNew.setVisibility(View.VISIBLE);
-                relativeLayoutCart.setVisibility(View.GONE);
-                linearLayoutCheckout.setVisibility(View.GONE);
-                relativeLayoutSort.setVisibility(View.VISIBLE);
+                rlSort.setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(vendorOpened.getName());
-                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
                 if(getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
                     if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
@@ -1086,79 +1056,46 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     textViewMinOrder.setText(getString(R.string.minimum_order) + " "
                             + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
                 }
-                resetToolbarWithScroll();
-                searchLayout.setVisibility(View.VISIBLE);
             }
             else if(fragment instanceof MenusItemCustomizeFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.below_shadow.setVisibility(View.VISIBLE);
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.imageViewDelete.setVisibility(View.GONE);
-                relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
+                llSearchCartVis = View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getString(R.string.customize_item));
-                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+                //topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
-                resetToolbar();
-                searchLayout.setVisibility(View.GONE);
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
             }
             else if (fragment instanceof MenusFilterFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.imageViewDelete.setVisibility(View.GONE);
-                textViewCheckout.setVisibility(View.GONE);
-                relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-
-                relativeLayoutCartNew.setVisibility(View.VISIBLE);
-                linearLayoutCheckout.setVisibility(View.GONE);
-                relativeLayoutSort.setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.filters);
-                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
                 topBar.textViewReset.setVisibility(View.VISIBLE);
             }
             else if (fragment instanceof MenusFilterCuisinesFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.imageViewDelete.setVisibility(View.GONE);
-                textViewCheckout.setVisibility(View.GONE);
-                relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-
-                relativeLayoutCartNew.setVisibility(View.VISIBLE);
-                linearLayoutCheckout.setVisibility(View.GONE);
-                relativeLayoutSort.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.select_cuisines);
-                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
-                topBar.textViewReset.setVisibility(View.GONE);
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
             }
             else if (fragment instanceof FreshCheckoutMergedFragment || fragment instanceof MenusCheckoutMergedFragment) {
-                resetToolbar();
 				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-				relativeLayoutSort.setVisibility(View.GONE);
-                relativeLayoutCart.setVisibility(View.VISIBLE);
+                llSearchCartContainerVis = View.VISIBLE;
+                llSearchCartVis = View.GONE;
 
 				topBar.title.setVisibility(View.VISIBLE);
 				topBar.title.setText(getResources().getString(R.string.checkout));
@@ -1166,13 +1103,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 			} else if (fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-				relativeLayoutSort.setVisibility(View.GONE);
-                relativeLayoutCart.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
 
 				topBar.title.setVisibility(View.VISIBLE);
                 if(fragment instanceof AddToAddressBookFragment){
@@ -1186,34 +1118,22 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 			} else if(fragment instanceof DeliveryAddressesFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.imageViewDelete.setVisibility(View.GONE);
-                topBar.below_shadow.setVisibility(View.GONE);
-                relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-                relativeLayoutSort.setVisibility(View.GONE);
-                relativeLayoutCart.setVisibility(View.VISIBLE);
+                llSearchCartContainerVis = View.GONE;
 
                 topBar.title.setVisibility(View.GONE);
-                topBar.title.setText("Type Delivery Address");
                 topBar.editTextDeliveryAddress.setVisibility(View.VISIBLE);
                 topBar.editTextDeliveryAddress.requestFocus();
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            }
-            else if (fragment instanceof FreshSearchFragment || fragment instanceof MenusSearchFragment) {
-				topView.setVisibility(View.GONE);
-                CoordinatorLayout.LayoutParams lp1 = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
-                lp.height = 0;
-                appBarLayout.setLayoutParams(lp1);
-				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.VISIBLE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 
-				relativeLayoutSort.setVisibility(View.GONE);
-                relativeLayoutCart.setVisibility(View.VISIBLE);
+            } else if (fragment instanceof FreshSearchFragment || fragment instanceof MenusSearchFragment) {
+                llCartContainerVis = View.VISIBLE;
+                llSearchContainerVis = View.VISIBLE;
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.title.setVisibility(View.GONE);
+                topBar.llSearchContainer.setVisibility(View.VISIBLE);
+                llSearchCartContainerVis = View.VISIBLE;
 
                 try {
                     if(appType == AppConstant.ApplicationType.MENUS && getVendorMenuFragment() != null
@@ -1230,58 +1150,52 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     e.printStackTrace();
                 }
 
-                topBar.title.setVisibility(View.VISIBLE);
+
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 setMinOrderAmountText(fragment);
 
 			} else if(fragment instanceof FeedbackFragment) {
-                topBar.below_shadow.setVisibility(View.GONE);
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.GONE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				textViewCheckout.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.GONE);
 				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-                resetToolbar();
 			}
             else if(fragment instanceof OrderStatusActivity) {
-                topBar.below_shadow.setVisibility(View.VISIBLE);
                 topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.imageViewDelete.setVisibility(View.GONE);
-                textViewCheckout.setVisibility(View.GONE);
-                relativeLayoutCheckoutBar.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+                //topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                resetToolbar();
             }
             else if (fragment instanceof MealAddonItemsFragment) {
+                llCartContainerVis = View.GONE;
                 topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.imageViewDelete.setVisibility(View.GONE);
-                relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-                relativeLayoutSort.setVisibility(View.GONE);
-                relativeLayoutCart.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.pick_addons));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                topBar.textViewSkip.setVisibility(View.VISIBLE);
             }
 
-            if(topBar.imageViewMenu.getVisibility() == View.VISIBLE){
-                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
-            } else if(topBar.imageViewBack.getVisibility() == View.VISIBLE){
-                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
+
+            topBar.getLlSearchCartContainer().setVisibility(llSearchCartContainerVis);
+            topBar.getLlSearchCart().setVisibility(llSearchCartVis);
+            topBar.getLlCartContainer().setVisibility(llCartContainerVis);
+            topBar.getIvSearch().setVisibility(ivSearchVis);
+            topBar.getLlSearchContainer().setVisibility(llSearchContainerVis);
+            topBar.rlFilter.setVisibility(rlFilterVis);
+
+            if(topBar.getLlSearchCart().getVisibility() == View.VISIBLE){
+                topBar.title.setGravity(Gravity.LEFT);
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
+                titleLayoutParams.setMargins((int)(ASSL.Xscale()*20), 0, 0, 0);
+            } else{
+                topBar.title.setGravity(Gravity.CENTER);
+                //titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                //titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
+                titleLayoutParams.setMargins((int)(ASSL.Xscale()*-32), 0, 0, 0);
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
@@ -1295,15 +1209,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         try {
             if(getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                 if (getProductsResponse() != null && totalQuantity > 0
-                        && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)
-                        && (relativeLayoutCheckoutBar.getVisibility() == View.VISIBLE)) {
+                        && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)) {
                     if(Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())){
                         textViewMinOrder.setVisibility(View.VISIBLE);
                         textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
                     }
-                    else if(totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+                    else if(totalPrice < getSuperCategoriesData().getDeliveryInfo().getMinAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
-                        double leftAmount = getProductsResponse().getDeliveryInfo().getMinAmount() - totalPrice;
+                        double leftAmount = getSuperCategoriesData().getDeliveryInfo().getMinAmount() - totalPrice;
                         textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
                                 Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
                     } else {
@@ -1318,19 +1231,22 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         }
     }
 
-    private void setNoItemsView(Fragment fragment){
+
+
+    public void searchItem() {
         try {
-            if(fragment instanceof FreshFragment || fragment instanceof GroceryFragment){
-                    if(getProductsResponse() != null && getProductsResponse().getCategories().size() == 0){
-                        getTopBar().below_shadow.setVisibility(View.VISIBLE);
-                        showBottomBar(false);
-                    }
-            }
-            else if(fragment instanceof MealFragment){
-                if(((MealFragment)fragment).getMealAdapter().getItemCount()>0) {
-                    showBottomBar(true);
-                } else {
-                    showBottomBar(false);
+            if(getAppType() == AppConstant.ApplicationType.MENUS){
+                if(getTopFragment() instanceof MenusFragment){
+                    getMenusFragment().openSearch(false);
+                } else if(getTopFragment() instanceof VendorMenuFragment){
+                    getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
+                }
+            } else {
+                if(getFreshFragment() != null){
+                    getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer, getFreshFragment().getSuperCategory().getSuperCategoryId(),
+                            getSuperCategoriesData().getDeliveryInfo().getCityId());
+                } else{
+                    getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer, -1, getSuperCategoriesData().getDeliveryInfo().getCityId());
                 }
             }
         } catch (Exception e) {
@@ -1338,14 +1254,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         }
     }
 
-
-
-    public void searchItem() {
-        if(getAppType() == AppConstant.ApplicationType.MENUS){
-            getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
-        } else {
-            getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer);
-        }
+    public void openMenusFilter(){
+        getTransactionUtils().openMenusFilterFragment(this, getRelativeLayoutContainer());
     }
 
     private FreshSearchFragment getFreshSearchFragment() {
@@ -1427,7 +1337,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         selectedLatLng = new LatLng(Data.latitude, Data.longitude);
     }
 
-    public void orderComplete() {
+    public void clearAllCartAtOrderComplete(){
         int type = getAppType();
         if(type == AppConstant.ApplicationType.FRESH) {
             clearCart();
@@ -1439,26 +1349,34 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             clearMealCart();
         }
         if(type == AppConstant.ApplicationType.MENUS){
-            for(com.sabkuchfresh.retrofit.model.menus.Category category : getMenuProductsResponse().getCategories()){
-                if(category.getSubcategories() != null){
-                    for(Subcategory subcategory : category.getSubcategories()){
-                        for(Item item : subcategory.getItems()){
+            if(getMenuProductsResponse() != null) {
+                for (com.sabkuchfresh.retrofit.model.menus.Category category : getMenuProductsResponse().getCategories()) {
+                    if (category.getSubcategories() != null) {
+                        for (Subcategory subcategory : category.getSubcategories()) {
+                            for (Item item : subcategory.getItems()) {
+                                item.getItemSelectedList().clear();
+                            }
+                        }
+                    } else if (category.getItems() != null) {
+                        for (Item item : category.getItems()) {
                             item.getItemSelectedList().clear();
                         }
-                    }
-                } else if(category.getItems() != null){
-                    for(Item item : category.getItems()){
-                        item.getItemSelectedList().clear();
                     }
                 }
             }
         } else {
-            for (Category category : productsResponse.getCategories()) {
-                for (SubItem subItem : category.getSubItems()) {
-                    subItem.setSubItemQuantitySelected(0);
+            if(productsResponse != null) {
+                for (Category category : productsResponse.getCategories()) {
+                    for (SubItem subItem : category.getSubItems()) {
+                        subItem.setSubItemQuantitySelected(0);
+                    }
                 }
             }
         }
+    }
+
+    public void orderComplete() {
+        clearAllCartAtOrderComplete();
         splInstr = "";
         slotSelected = null;
         slotToSelect = null;
@@ -1480,13 +1398,15 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     }
 
-    private void addFreshFragment() {
+    private void addFreshHomeFragment() {
         getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new FreshFragment(),
-                        FreshFragment.class.getName())
-                .addToBackStack(FreshFragment.class.getName())
+                .add(relativeLayoutContainer.getId(), new FreshHomeFragment(),
+                        FreshHomeFragment.class.getName())
+                .addToBackStack(FreshHomeFragment.class.getName())
                 .commitAllowingStateLoss();
     }
+
+
 
     private void addMealFragment() {
         getSupportFragmentManager().beginTransaction()
@@ -1536,7 +1456,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         if(getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finish();
         }
-        Utils.hideSoftKeyboard(this, textViewCartItemsCountNew);
+        try {
+            Utils.hideSoftKeyboard(this, textViewMinOrder);
+        } catch (Exception e) {
+        }
         final AddToAddressBookFragment fragment = getAddToAddressBookFragment();
         if(fragment != null && fragment.locationEdited){
             DialogPopup.alertPopupTwoButtonsWithListeners(FreshActivity.this, "",
@@ -1555,9 +1478,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
                         }
                     }, false, false);
-        }
-        else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            finish();
         } else if(locationSearchShown) {
             locationSearchShown = false;
             try {
@@ -1565,7 +1485,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
+        }
+        else if(getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()){
+            getMenusFragment().openSearch(false);
+        }
+        else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            finish();
+        }
+        else {
             if((getSupportFragmentManager().getBackStackEntryCount() == 2 && getFreshSearchFragment() == null) ||
                     (getSupportFragmentManager().getBackStackEntryCount() == 3 && getFreshSearchFragment() != null)){
                 FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.HOME_SCREEN);
@@ -1575,9 +1502,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     (getSupportFragmentManager().getBackStackEntryCount() == 4 && getFreshSearchFragment() != null)){
                 FlurryEventLogger.event(FlurryEventNames.CHECKOUT, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.REVIEW_CART_SCREEN);
             }
-            if(getFreshSearchFragment() != null){
+            if(getTopFragment() instanceof FreshSearchFragment){
                 getFreshSearchFragment().clearArrays();
-            } else if(getMenusSearchFragment() != null){
+            } else if(getTopFragment() instanceof MenusSearchFragment){
                 getMenusSearchFragment().clearArrays();
             }
 
@@ -1642,7 +1569,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void setUserData() {
         try {
             menuBar.setUserData();
-            topBar.setUserData();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1671,6 +1597,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public ProductsResponse getProductsResponse() {
         return productsResponse;
+    }
+
+    public SuperCategoriesData getSuperCategoriesData() {
+        return superCategoriesData;
+    }
+
+    public void setSuperCategoriesData(SuperCategoriesData superCategoriesData) {
+        this.superCategoriesData = superCategoriesData;
     }
 
     public void setProductsResponse(ProductsResponse productsResponse) {
@@ -1758,8 +1692,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     @Override
     protected void onPause() {
         super.onPause();
+        if(cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null){
+            updateCartFromSPFMG(null);
+        }
         saveCartToSP();
-        Log.e(TAG, "cart saved=" + Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+        if(getAppType() == AppConstant.ApplicationType.MENUS) {
+            saveFilters();
+        }
 
         if (locationFetcher != null) {
             locationFetcher.destroy();
@@ -1771,24 +1710,54 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         if(getAppType() == AppConstant.ApplicationType.MENUS){
             saveCartToSPMenus();
         } else {
-            saveCartToSPFMG();
+            saveCartToSPFMG(null);
         }
     }
 
-    private void saveCartToSPFMG() {
+    private void saveCartToSPFMG(SubItem subItemToUpdate) {
         try {
             JSONObject jCart = new JSONObject();
-            if (getProductsResponse() != null
+            if(getAppType() == AppConstant.ApplicationType.FRESH) {
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+            } else if(getAppType() == AppConstant.ApplicationType.GROCERY){
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+            } else{
+                if(subItemToUpdate != null) {
+                    jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+                }
+            }
+            Gson gson = new Gson();
+            if (subItemToUpdate == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
                         if (subItem.getSubItemQuantitySelected() > 0) {
                             try {
-                                jCart.put(String.valueOf(subItem.getSubItemId()), (int) subItem.getSubItemQuantitySelected());
+                                jCart.put(String.valueOf(subItem.getSubItemId()), gson.toJson(subItem, SubItem.class));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                jCart.remove(String.valueOf(subItem.getSubItemId()));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
+                    }
+                }
+            } else if(subItemToUpdate != null){
+                if (subItemToUpdate.getSubItemQuantitySelected() > 0) {
+                    try {
+                        jCart.put(String.valueOf(subItemToUpdate.getSubItemId()), gson.toJson(subItemToUpdate, SubItem.class));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        jCart.remove(String.valueOf(subItemToUpdate.getSubItemId()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -1861,14 +1830,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         if(getAppType() == AppConstant.ApplicationType.MENUS){
             updateCartFromSPMenus();
         } else {
-            updateCartFromSPFMG();
+            updateCartFromSPFMG(null);
         }
     }
 
-    private void updateCartFromSPFMG() {
+    public void updateCartFromSPFMG(ArrayList<SubItem> subItems) {
         try {
             JSONObject jCart;
-            int type = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
+            int type = getAppType();
             if(type == AppConstant.ApplicationType.FRESH) {
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
             } else if(type == AppConstant.ApplicationType.GROCERY){
@@ -1876,27 +1845,51 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             } else{
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
             }
-            if (getProductsResponse() != null
+            Gson gson = new Gson();
+            if (subItems == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
                 boolean cartUpdated = false;
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
                         subItem.setSubItemQuantitySelected(0);
                         try {
-                            int savedQuant = jCart.optInt(String.valueOf(subItem.getSubItemId()),
-                                    (int) subItem.getSubItemQuantitySelected());
-                            if(subItem.getStock() < savedQuant){
-                                savedQuant = subItem.getStock();
-                                cartUpdated = true;
+                            String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
+                            if(!TextUtils.isEmpty(jItem)){
+                               SubItem subItemSaved =  gson.fromJson(jItem, SubItem.class);
+                                if(subItem.getStock() < subItemSaved.getSubItemQuantitySelected()){
+                                    subItemSaved.setSubItemQuantitySelected(subItem.getStock());
+                                    cartUpdated = true;
+                                }
+                                subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
                             }
-                            subItem.setSubItemQuantitySelected(savedQuant);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 }
                 if(cartUpdated) {
-                    saveCartToSP();
+                    saveCartToSPFMG(null);
+                }
+            } else if(subItems != null){
+                boolean cartUpdated = false;
+                for (SubItem subItem : subItems) {
+                    subItem.setSubItemQuantitySelected(0);
+                    try {
+                        String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
+                        if(!TextUtils.isEmpty(jItem)){
+                            SubItem subItemSaved =  gson.fromJson(jItem, SubItem.class);
+                            if(subItem.getStock() < subItemSaved.getSubItemQuantitySelected()){
+                                subItemSaved.setSubItemQuantitySelected(subItem.getStock());
+                                cartUpdated = true;
+                            }
+                            subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(cartUpdated) {
+                    saveCartToSPFMG(null);
                 }
             }
 
@@ -1951,7 +1944,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 
 
-    private void clearCart() {
+    public void clearCart() {
         Prefs.with(this).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
     }
 
@@ -1995,11 +1988,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         comparator = new ItemCompareAtoZ();
                         gaEvents("", FlurryEventNames.SORT, FlurryEventNames.A_Z);
                         break;
-                    case 2:
+                    case 1:
                         comparator = new ItemComparePriceLowToHigh();
                         gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
                         break;
-                    case 3:
+                    case 2:
                         comparator = new ItemComparePriceHighToLow();
                         gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_HIGH_TO_LOW);
                         break;
@@ -2306,16 +2299,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     }
 
 
-    public void addMealAddonItemsFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new MealAddonItemsFragment(),
-                        MealAddonItemsFragment.class.getName())
-                .addToBackStack(MealAddonItemsFragment.class.getName())
-                .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                .commitAllowingStateLoss();
-    }
-
     public MealAddonItemsFragment getMealAddonItemsFragment() {
         return (MealAddonItemsFragment) getSupportFragmentManager().findFragmentByTag(MealAddonItemsFragment.class.getName());
     }
@@ -2374,6 +2357,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 }
             }
             clearMealCart();
+            updateCartFromSP();
+            updateCartValuesGetTotalPrice();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2456,6 +2441,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         }
     }
 
+    public boolean refreshCart2 = false;
     private boolean refreshCart = false;
     public boolean isRefreshCart(){
         return refreshCart;
@@ -2463,6 +2449,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void setRefreshCart(boolean refreshCart){
         this.refreshCart = refreshCart;
     }
+
+
 
 
 
@@ -2475,19 +2463,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         this.vendorOpened = vendorOpened;
     }
 
-    public RelativeLayout getRelativeLayoutCartNew(){
-        return relativeLayoutCartNew;
-    }
-
-
-    private void setRelativeLayoutLocalityClick(){
-        topBar.relativeLayoutLocality.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
-            }
-        });
-    }
 
     private MenusResponse menusResponse;
 
@@ -2498,6 +2473,79 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void setMenusResponse(MenusResponse menusResponse) {
         this.menusResponse = menusResponse;
     }
+
+    public void saveFilters(){
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_SORT_BY, sortBySelected.getOrdinal());
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_MIN_ORDER, moSelected.getOrdinal());
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_DELIVERY_TIME, dtSelected.getOrdinal());
+        StringBuilder sbCuisines = new StringBuilder();
+        if(cuisinesSelected.size() > 0){
+            for(String cuisine : cuisinesSelected){
+                sbCuisines.append(cuisine).append(",");
+            }
+        }
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_CUISINES, sbCuisines.toString());
+
+        StringBuilder sbQF = new StringBuilder();
+        if(quickFilterSelected.size() > 0){
+            for(String qf : quickFilterSelected){
+                sbQF.append(qf).append(",");
+            }
+        }
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_QUICK, sbQF.toString());
+    }
+
+
+    public void fetchFiltersFromSP(){
+        int sortBy = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_SORT_BY, sortBySelected.getOrdinal());
+        if(sortBy == MenusFilterFragment.SortType.POPULARITY.getOrdinal()){
+            sortBySelected = MenusFilterFragment.SortType.POPULARITY;
+        } else if(sortBy == MenusFilterFragment.SortType.DISTANCE.getOrdinal()){
+            sortBySelected = MenusFilterFragment.SortType.DISTANCE;
+        } else if(sortBy == MenusFilterFragment.SortType.PRICE.getOrdinal()){
+            sortBySelected = MenusFilterFragment.SortType.PRICE;
+        } else if(sortBy == MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED.getOrdinal()){
+            sortBySelected = MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED;
+        }
+
+        int mo = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_MIN_ORDER, moSelected.getOrdinal());
+        if(mo == MenusFilterFragment.MinOrder.MO150.getOrdinal()){
+            moSelected = MenusFilterFragment.MinOrder.MO150;
+        } else if(mo == MenusFilterFragment.MinOrder.MO250.getOrdinal()){
+            moSelected = MenusFilterFragment.MinOrder.MO250;
+        } else if(mo == MenusFilterFragment.MinOrder.MO500.getOrdinal()){
+            moSelected = MenusFilterFragment.MinOrder.MO500;
+        }
+
+        int dt = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_DELIVERY_TIME, dtSelected.getOrdinal());
+        if(dt == MenusFilterFragment.DeliveryTime.DT30.getOrdinal()){
+            dtSelected = MenusFilterFragment.DeliveryTime.DT30;
+        } else if(dt == MenusFilterFragment.DeliveryTime.DT45.getOrdinal()){
+            dtSelected = MenusFilterFragment.DeliveryTime.DT45;
+        } else if(dt == MenusFilterFragment.DeliveryTime.DT60.getOrdinal()){
+            dtSelected = MenusFilterFragment.DeliveryTime.DT60;
+        }
+
+        String cuisines = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_CUISINES, "");
+        if(!TextUtils.isEmpty(cuisines)){
+            String arr[] = cuisines.split(",");
+            cuisinesSelected.clear();
+            for(String cuisine : arr){
+                cuisinesSelected.add(cuisine);
+            }
+        }
+
+        String qfs = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_QUICK, "");
+        if(!TextUtils.isEmpty(qfs)){
+            String arr[] = qfs.split(",");
+            quickFilterSelected.clear();
+            for(String qf : arr){
+                quickFilterSelected.add(qf);
+            }
+        }
+
+    }
+
 
     private MenusFilterFragment.SortType sortBySelected = MenusFilterFragment.SortType.NONE;
     private MenusFilterFragment.MinOrder moSelected = MenusFilterFragment.MinOrder.NONE;
@@ -2675,12 +2723,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             } else {
                 address = getSelectedAddressType();
             }
-            getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26f * ASSL.Xscale());
-
-            getTopBar().textViewLocationValue.setText(address);
+            setLocationAddress(address);
             if(getFreshCheckoutMergedFragment() == null && getMenusCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
-                if (appType == AppConstant.ApplicationType.FRESH && getFreshFragment() != null) {
-                    getFreshFragment().getAllProducts(true, getSelectedLatLng());
+                if (appType == AppConstant.ApplicationType.FRESH && getFreshHomeFragment() != null) {
+                    getFreshHomeFragment().getSuperCategoriesAPI();
                 } else if (appType == AppConstant.ApplicationType.MEALS && getMealFragment() != null) {
                     getMealFragment().getAllProducts(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.GROCERY && getGroceryFragment() != null) {
@@ -2750,7 +2796,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void onAddressUpdated(AddressAdded event) {
         try {
             if (event.flag) {
-                setRefreshCart(true);
+                if(getFreshCheckoutMergedFragment() != null || getMenusCheckoutMergedFragment() != null){
+                    setRefreshCart(true);
+                }
                 int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
                 setAddressAndFetchOfferingData(appType);
                 saveOfferingLastAddress(appType);
@@ -2807,29 +2855,21 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             e.printStackTrace();
         }
     }
+
     public void resetToolbar() {
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+//        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+//                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+//                | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
         params.setScrollFlags(0);
 
-        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-        layoutParams.height = (int)(96f * ASSL.Yscale());
-        toolbar.setLayoutParams(layoutParams);
-    }
-
-    public void resetToolbarWithScroll(){
-        resetToolbarWithScroll(164f);
-    }
-    public void resetToolbarWithScroll(float height){
-        AppBarLayout.LayoutParams params =
-                (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-                | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+        float height = 96f;
 
         AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
         layoutParams.height = (int)(height * ASSL.Yscale());
         toolbar.setLayoutParams(layoutParams);
     }
+
 
     public void openMenusItemCustomizeFragment(int categoryPos, int subCategoryPos, int itemPos){
         getTransactionUtils().openMenusItemCustomizeFragment(this, getRelativeLayoutContainer(), categoryPos, subCategoryPos, itemPos);
@@ -2839,8 +2879,279 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         return Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
     }
 
-    public RelativeLayout getRelativeLayoutCheckoutBar(){
-        return relativeLayoutCheckoutBar;
+
+    public ArrayList<SubItem> fetchCartList(){
+        ArrayList<SubItem> subItemsInCart = new ArrayList<>();
+        try {
+            JSONObject jCart = new JSONObject();
+            if(getAppType() == AppConstant.ApplicationType.FRESH) {
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+            } else if(getAppType() == AppConstant.ApplicationType.GROCERY){
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+            } else{
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+            }
+
+            Gson gson = new Gson();
+            Iterator<String> itemIds = jCart.keys();
+            while(itemIds.hasNext()){
+                String itemId = itemIds.next();
+                if(Utils.checkIfOnlyDigits(itemId)) {
+                    String jItem = jCart.optString(itemId, "");
+                    if (!TextUtils.isEmpty(jItem)) {
+                        SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
+                        if (subItemSaved.getSubItemQuantitySelected() > 0) {
+                            subItemsInCart.add(subItemSaved);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return subItemsInCart;
+    }
+
+
+    public void saveCartList(ArrayList<SubItem> subItems){
+        try {
+            JSONObject jCart = new JSONObject();
+            Gson gson = new Gson();
+            for (SubItem subItem : subItems) {
+                if (subItem.getSubItemQuantitySelected() > 0) {
+                    try {
+                        jCart.put(String.valueOf(subItem.getSubItemId()), gson.toJson(subItem, SubItem.class));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            jCart.put(Constants.KEY_CITY_ID, getCartCityId());
+            int type = getAppType();
+            if(type == AppConstant.ApplicationType.FRESH) {
+                Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
+            } else if(type == AppConstant.ApplicationType.GROCERY){
+                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
+            } else{
+                Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getCartCityId(){
+        try {
+            JSONObject jCart = new JSONObject();
+            if(getAppType() == AppConstant.ApplicationType.FRESH) {
+				jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+			} else if(getAppType() == AppConstant.ApplicationType.GROCERY){
+				jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+			} else{
+				jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+			}
+            return jCart.optInt(Constants.KEY_CITY_ID, -1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public void setCartCityId(int cityId){
+        try {
+            JSONObject jCart = new JSONObject();
+            if(getAppType() == AppConstant.ApplicationType.FRESH) {
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+            } else if(getAppType() == AppConstant.ApplicationType.GROCERY){
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+            } else{
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+            }
+            jCart.put(Constants.KEY_CITY_ID, cityId);
+            int type = getAppType();
+            if(type == AppConstant.ApplicationType.FRESH) {
+                Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
+            } else if(type == AppConstant.ApplicationType.GROCERY){
+                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
+            } else{
+                Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean cartChangedAtCheckout = false;
+    public boolean getCartChangedAtCheckout(){
+        return cartChangedAtCheckout;
+    }
+    public void setCartChangedAtCheckout(boolean cartChangedAtCheckout){
+        this.cartChangedAtCheckout = cartChangedAtCheckout;
+    }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            try {
+                if(getFreshSearchFragment() != null) {
+                    getFreshSearchFragment().searchFreshItems(s.toString());
+                } else if(getTopFragment() instanceof MenusFragment){
+                    getMenusFragment().getMenusRestaurantAdapter().searchVendorsFromTopBar(s.toString());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    public DrawerLayout getDrawerLayout(){
+        return drawerLayout;
+    }
+
+
+    private DeliveryAddressView deliveryAddressView;
+    public void setDeliveryAddressView(View view){
+        deliveryAddressView = new DeliveryAddressView(this, view);
+        setLlLocalityClick();
+    }
+
+    private void setLocationAddress(String address){
+        if(deliveryAddressView != null) {
+            deliveryAddressView.tvLocation.setText(address);
+        }
+    }
+
+    private void setLlLocalityClick(){
+        if(deliveryAddressView != null) {
+            deliveryAddressView.llLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
+                }
+            });
+        }
+    }
+
+    public void setDeliveryAddressViewVisibility(int visibility){
+        if(deliveryAddressView != null) {
+            deliveryAddressView.llLocation.setVisibility(visibility);
+        }
+    }
+
+
+
+    public boolean checkForCityChange(final int cityId, final CityChangeCallback callback){
+        if(fetchCartList().size() > 0
+                && getCartCityId() != cityId){
+            DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+                    getString(R.string.delivery_address_changed_alert),
+                    getString(R.string.yes), getString(R.string.no),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            clearCart();
+                            setCartCityId(cityId);
+                            updateCartFromSP();
+                            updateCartValuesGetTotalPrice();
+                            callback.onYesClick();
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setDeliveryAddressModelToSelectedAddress();
+//                            setRefreshCart(true);
+//                            getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
+                            callback.onNoClick();
+                        }
+                    }, false, false);
+            return true;
+        } else if(getCartCityId() != cityId){
+            setCartCityId(cityId);
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    public interface CityChangeCallback{
+        void onYesClick();
+        void onNoClick();
+    }
+
+    private DeliveryAddressModel deliveryAddressModel;
+    private Gson gson = new Gson();
+    public void saveDeliveryAddressModel() {
+        deliveryAddressModel = new DeliveryAddressModel(getSelectedAddress(), getSelectedLatLng(),
+                getSelectedAddressId(), getSelectedAddressType());
+        try{Prefs.with(this).save(Constants.SP_FRESH_CART_ADDRESS, gson.toJson(deliveryAddressModel,
+                DeliveryAddressModel.class));}catch(Exception e){}
+    }
+
+    private void setDeliveryAddressModelToSelectedAddress() {
+        if(deliveryAddressModel == null){
+            try {deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(Constants.SP_FRESH_CART_ADDRESS,
+						Constants.EMPTY_JSON_OBJECT), DeliveryAddressModel.class);} catch (Exception e) {}
+        }
+        if (deliveryAddressModel != null) {
+            setSelectedAddress(deliveryAddressModel.getAddress());
+            setSelectedLatLng(deliveryAddressModel.getLatLng());
+            setSelectedAddressId(deliveryAddressModel.getId());
+            setSelectedAddressType(deliveryAddressModel.getType());
+            onAddressUpdated(new AddressAdded(true));
+        }
+    }
+
+    public class DeliveryAddressModel {
+        @SerializedName("address")
+        @Expose
+        private String address;
+        @SerializedName("latitude")
+        @Expose
+        private Double latitude;
+        @SerializedName("longitude")
+        @Expose
+        private Double longitude;
+        @SerializedName("id")
+        @Expose
+        private Integer id;
+        @SerializedName("type")
+        @Expose
+        private String type;
+
+        public DeliveryAddressModel(String address, LatLng latLng, int id, String type) {
+            this.address = address;
+            this.latitude = latLng.latitude;
+            this.longitude = latLng.longitude;
+            this.id = id;
+            this.type = type;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public LatLng getLatLng() {
+            return new LatLng(latitude, longitude);
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getType() {
+            return type;
+        }
     }
 
 }

@@ -234,9 +234,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="90px"
-                android:layout_height="81px"
-                android:layout_marginLeft="110px"
+                android:layout_width="61px"
+                android:layout_height="61px"
+                android:layout_marginLeft="122px"
+                android:layout_marginRight="12px"
                 android:src="@drawable/ic_menu_category_fresh_selector"
                 android:tag="mwar"/>
 

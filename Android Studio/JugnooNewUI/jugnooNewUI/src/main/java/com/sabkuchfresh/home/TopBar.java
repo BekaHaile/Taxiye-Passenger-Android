@@ -1,13 +1,17 @@
 package com.sabkuchfresh.home;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
-import android.graphics.drawable.StateListDrawable;
+import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,9 +20,7 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -26,22 +28,24 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class TopBar implements FlurryEventNames {
 
-
 	Activity activity;
 	DrawerLayout drawerLayout;
 
-	//Top RL
 	public RelativeLayout topRl;
-	public ImageView imageViewMenu, imageViewSearchCancel, below_shadow;
+	public ImageView imageViewMenu;
 	public TextView title;
 	public Button buttonCheckServer;
-	public RelativeLayout relativeLayoutNotification;
-	public TextView textViewNotificationValue, textViewSkip;
-	public ImageView imageViewBack, imageViewDelete, imageViewNotification, imageViewShadow, imageViewSearchCross;//, imageViewSearch;
+	public ImageView imageViewBack, ivDeliveryAddressCross, imageViewDelete;
 	public EditText editTextDeliveryAddress;
 
-	public RelativeLayout relativeLayoutLocality;
-	public TextView textViewLocationValue, textViewReset;
+	public RelativeLayout llSearchContainer;
+	public EditText etSearch;
+	public ImageView ivSearchCross, ivSearch, ivFilterApplied;
+	public RelativeLayout rlFilter;
+
+	public RelativeLayout llSearchCartContainer;
+	public TextView textViewReset, tvCartAmount;
+	public LinearLayout llCartAmount, llCartContainer, llSearchCart;
 
 
 
@@ -54,36 +58,39 @@ public class TopBar implements FlurryEventNames {
 	private void setupTopBar(){
 		topRl = (RelativeLayout) drawerLayout.findViewById(R.id.topRl);
 		imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
-		imageViewSearchCancel = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchCancel);
-		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(activity));
+		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.avenirNext(activity));
 
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
-		relativeLayoutNotification = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutNotification);
-		textViewNotificationValue = (TextView) drawerLayout.findViewById(R.id.textViewNotificationValue);
-		textViewNotificationValue.setTypeface(Fonts.latoRegular(activity));
-		textViewNotificationValue.setVisibility(View.GONE);
-		textViewSkip = (TextView) drawerLayout.findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.mavenMedium(activity));
-		textViewSkip.setVisibility(View.GONE);
+		llCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llCartContainer);
+		llCartAmount = (LinearLayout) drawerLayout.findViewById(R.id.llCartAmount);
+		tvCartAmount = (TextView) drawerLayout.findViewById(R.id.tvCartAmount); tvCartAmount.setTypeface(Fonts.mavenRegular(activity));
+		llSearchCartContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
+		llSearchCart = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCart);
 
-		below_shadow = (ImageView) drawerLayout.findViewById(R.id.below_shadow);
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
-		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
-        imageViewNotification = (ImageView) drawerLayout.findViewById(R.id.imageViewNotification);
 		editTextDeliveryAddress = (EditText) drawerLayout.findViewById(R.id.editTextDeliveryAddress);
 		editTextDeliveryAddress.setTypeface(Fonts.mavenLight(activity));
-		imageViewSearchCross = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchCross);
-//		imageViewSearch = (ImageView)drawerLayout.findViewById(R.id.imageViewSearch);
+		ivDeliveryAddressCross = (ImageView) drawerLayout.findViewById(R.id.ivDeliveryAddressCross);
+		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
 
-		relativeLayoutLocality = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutLocality);
-		((TextView)drawerLayout.findViewById(R.id.textViewLocation)).setTypeface(Fonts.mavenRegular(activity));
-		textViewLocationValue = (TextView) drawerLayout.findViewById(R.id.textViewLocationValue); textViewLocationValue.setTypeface(Fonts.mavenMedium(activity));
 		textViewReset = (TextView) drawerLayout.findViewById(R.id.textViewReset); textViewReset.setTypeface(Fonts.mavenMedium(activity));
 
-		//Top bar events
+		llSearchContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchContainer);
+		etSearch = (EditText) drawerLayout.findViewById(R.id.etSearch); etSearch.setTypeface(Fonts.mavenMedium(activity));
+		ivSearch = (ImageView) drawerLayout.findViewById(R.id.ivSearch);
+		rlFilter = (RelativeLayout) drawerLayout.findViewById(R.id.rlFilter);
+		ivFilterApplied = (ImageView) drawerLayout.findViewById(R.id.ivFilterApplied);
+		ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
+		ivFilterApplied.setVisibility(View.GONE);
+		//setSearchVisibility(View.GONE);
+
+
 		topRl.setOnClickListener(topBarOnClickListener);
 		imageViewMenu.setOnClickListener(topBarOnClickListener);
 		buttonCheckServer.setOnClickListener(topBarOnClickListener);
-//		imageViewSearch.setOnClickListener(topBarOnClickListener);
+		ivSearch.setOnClickListener(topBarOnClickListener);
+		rlFilter.setOnClickListener(topBarOnClickListener);
+		imageViewBack.setOnClickListener(topBarOnClickListener);
 
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
@@ -97,35 +104,58 @@ public class TopBar implements FlurryEventNames {
 			}
 		});
 
-		imageViewSearchCancel.setOnClickListener(topBarOnClickListener);
-		relativeLayoutNotification.setOnClickListener(topBarOnClickListener);
-		imageViewBack.setOnClickListener(topBarOnClickListener);
-		imageViewDelete.setOnClickListener(topBarOnClickListener);
 
+		etSearch.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-		if(activity instanceof FreshActivity){
-			relativeLayoutNotification.setVisibility(View.VISIBLE);
-			imageViewSearchCancel.setVisibility(View.GONE);
-			title.setText(activity.getResources().getString(R.string.app_name).toUpperCase());
-		} else {
-			relativeLayoutNotification.setVisibility(View.GONE);
-		}
+			}
 
-//        try {
-//            if(Data.getFreshData().stores.size()>1) {
-//                relativeLayoutNotification.setVisibility(View.GONE);
-//            } else {
-//                relativeLayoutNotification.setVisibility(View.VISIBLE);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if(s.length() > 0){
+					ivSearchCross.setVisibility(View.VISIBLE);
+				} else{
+					ivSearchCross.setVisibility(View.GONE);
+				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+
+			}
+		});
+
 
 	}
 
-//	public ImageView getImageViewSearch() {
-//		return imageViewSearch;
-//	}
+	public RelativeLayout getLlSearchContainer() {
+		return llSearchContainer;
+	}
+
+	public LinearLayout getLlSearchCart() {
+		return llSearchCart;
+	}
+
+	public ImageView getIvSearch() {
+		return ivSearch;
+	}
+
+	public LinearLayout getLlCartAmount() {
+		return llCartAmount;
+	}
+
+	public TextView getTvCartAmount() {
+		return tvCartAmount;
+	}
+
+	public RelativeLayout getLlSearchCartContainer() {
+		return llSearchCartContainer;
+	}
+
+	public LinearLayout getLlCartContainer() {
+		return llCartContainer;
+	}
 
 	public View.OnClickListener topBarOnClickListener = new View.OnClickListener() {
 		@Override
@@ -142,60 +172,46 @@ public class TopBar implements FlurryEventNames {
 				case R.id.buttonCheckServer:
 					break;
 
-                case R.id.relativeLayoutNotification:
-                    if(activity instanceof FreshActivity) {
-                        ((FreshActivity)activity).openNotification();
-                    }
-                    break;
-
 				case R.id.imageViewBack:
 					if(activity instanceof FreshActivity){
 						((FreshActivity)activity).performBackPressed();
 					}
 					break;
 
-				case R.id.imageViewDelete:
-					if(activity instanceof FreshActivity){
-						((FreshActivity)activity).deleteCart();
+				case R.id.ivSearch:
+					if(activity instanceof FreshActivity) {
+						//llSearchCart.setLayoutTransition(null);
+						LayoutTransition lt = new LayoutTransition();
+						lt.disableTransitionType(LayoutTransition.DISAPPEARING);
+						//llSearchCart.setLayoutTransition(lt);
+						((FreshActivity)activity).searchItem();
+						/*new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								((FreshActivity)activity).searchItem();
+							}
+						}, 1000);*/
+
 					}
 					break;
 
-//				case R.id.imageViewSearch:
-//					if(activity instanceof FreshActivity){
-//						((FreshActivity)activity).searchItem();
-//					}
-//					break;
+				case R.id.rlFilter:
+					if(activity instanceof FreshActivity){
+						((FreshActivity)activity).openMenusFilter();
+					}
+					break;
 
 			}
 		}
 	};
 
 
-
-	public void setUserData(){
-		try {
-			int unreadNotificationsCount = Prefs.with(activity).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-			if(unreadNotificationsCount > 0){
-				textViewNotificationValue.setVisibility(View.VISIBLE);
-				textViewNotificationValue.setText(String.valueOf(unreadNotificationsCount));
-			}
-			else{
-				textViewNotificationValue.setVisibility(View.GONE);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+	public void setSearchVisibility(int visibility){
+		if(visibility == View.VISIBLE){
+			llSearchContainer.setBackgroundResource(R.drawable.capsule_white_stroke);
+		} else {
+			//llSearchContainer.setBackgroundResource(R.drawable.background_transparent);
 		}
 	}
-
-
-	private StateListDrawable getStateListDrawable(int resourceNormal, int resourcePressed){
-		StateListDrawable stateListDrawable = new StateListDrawable();
-		stateListDrawable.addState(new int[]{android.R.attr.state_pressed},
-				activity.getResources().getDrawable(resourcePressed));
-		stateListDrawable.addState(new int[]{},
-				activity.getResources().getDrawable(resourceNormal));
-		return stateListDrawable;
-	}
-
 
 }

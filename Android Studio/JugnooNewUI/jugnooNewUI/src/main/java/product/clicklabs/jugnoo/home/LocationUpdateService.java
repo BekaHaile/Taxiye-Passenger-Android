@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -29,7 +30,7 @@ import retrofit.mime.TypedByteArray;
 public class LocationUpdateService extends Service {
 
 	private final String TAG = LocationUpdateService.class.getSimpleName();
-	private LocationFetcherBG locationFetcherBG;
+	private LocationFetcherBG locationFetcherBG = null;
 	private CustomLocationReceiver locationReceiver;
 	private boolean oneShot;
 
@@ -121,11 +122,17 @@ public class LocationUpdateService extends Service {
 			try{
 				double latitude = intent.getDoubleExtra(Constants.KEY_LATITUDE, 0);
 				double longitude = intent.getDoubleExtra(Constants.KEY_LONGITUDE, 0);
+				if(Double.compare(latitude, 0) == 0 && Double.compare(longitude, 0) == 0){
+					LocationFetcher lf = new LocationFetcher(context);
+					latitude = lf.getSavedLatFromSP();
+					longitude = lf.getSavedLngFromSP();
+				}
 				emergencyLoc = intent.getBooleanExtra(Constants.KEY_EMERGENCY_LOC, false);
 				Log.i(TAG, "customonReceive lat=" + latitude + ", lng=" + longitude);
 
 				if(oneShot && locationFetcherBG != null){
 					locationFetcherBG.destroy();
+					locationFetcherBG = null;
 				}
 
 				Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(context);

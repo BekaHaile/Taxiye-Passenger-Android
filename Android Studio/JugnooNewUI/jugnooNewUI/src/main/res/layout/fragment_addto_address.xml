@@ -1,8 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
-    android:layout_width="720px"
-    android:layout_height="1134px"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white">
 
 
@@ -300,5 +299,10 @@
 
     </ScrollView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        />
 
 </RelativeLayout>

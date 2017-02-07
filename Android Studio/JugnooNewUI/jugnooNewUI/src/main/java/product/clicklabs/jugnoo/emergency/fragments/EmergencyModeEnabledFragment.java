@@ -55,7 +55,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 
 	private View rootView;
     private FragmentActivity activity;
-	private LocationFetcher locationFetcher;
+	private LocationFetcher locationFetcher = null;
 	private Location location;
 
 	private String driverId, engagementId;
@@ -76,20 +76,23 @@ public class EmergencyModeEnabledFragment extends Fragment {
 	@Override
 	public void onStop() {
 		super.onStop();
-//		FlurryAgent.onEndSession(activity);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(activity);
-		locationFetcher.connect();
+		if(locationFetcher != null) {
+			locationFetcher.connect();
+		}
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		locationFetcher.destroy();
+		if(locationFetcher != null) {
+			locationFetcher.destroy();
+		}
 	}
 
 	@Override
@@ -168,12 +171,14 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		buttonCallEmergencyContact.setOnClickListener(onClickListener);
 		buttonDisableEmergencyMode.setOnClickListener(onClickListener);
 
-		locationFetcher = new LocationFetcher(activity, new LocationUpdate() {
-			@Override
-			public void onLocationChanged(Location location) {
-				EmergencyModeEnabledFragment.this.location = location;
-			}
-		}, 1000);
+		if(locationFetcher == null) {
+			locationFetcher = new LocationFetcher(activity, new LocationUpdate() {
+				@Override
+				public void onLocationChanged(Location location) {
+					EmergencyModeEnabledFragment.this.location = location;
+				}
+			}, 1000);
+		}
 
 
 		callEmergencyAlert();
@@ -202,6 +207,16 @@ public class EmergencyModeEnabledFragment extends Fragment {
 				@Override
 				public void onFailure() {
 
+				}
+
+				@Override
+				public double getSavedLatitude() {
+					return locationFetcher.getSavedLatFromSP();
+				}
+
+				@Override
+				public double getSavedLongitude() {
+					return locationFetcher.getSavedLngFromSP();
 				}
 			}).raiseEmergencyAlertAPI(getLocation(), "", driverId, engagementId);
 		} else{
@@ -248,7 +263,15 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		}
 	}
 
-    @Override
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if(locationFetcher != null) {
+			locationFetcher.destroy();
+		}
+	}
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
         ASSL.closeActivity(rootView);

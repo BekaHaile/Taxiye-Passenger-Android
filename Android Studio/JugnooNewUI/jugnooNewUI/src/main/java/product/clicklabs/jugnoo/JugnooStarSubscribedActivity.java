@@ -69,7 +69,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
+        //textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         imageViewBack.setOnClickListener(this);
 

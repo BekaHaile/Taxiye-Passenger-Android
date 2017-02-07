@@ -10,13 +10,16 @@ import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
+import com.sabkuchfresh.fragments.FreshFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
+import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MenusCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
+import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 
 import product.clicklabs.jugnoo.R;
 
@@ -24,6 +27,19 @@ import product.clicklabs.jugnoo.R;
  * Created by shankar on 1/27/16.
  */
 public class TransactionUtils {
+
+	public void addFreshFragment(FragmentActivity activity, View container, SuperCategoriesData.SuperCategory superCategory) {
+		if(!checkIfFragmentAdded(activity, FreshFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+					.add(container.getId(), FreshFragment.newInstance(superCategory),
+							FreshFragment.class.getName())
+					.addToBackStack(FreshFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
 
 	public void openCheckoutMergedFragment(FragmentActivity activity, View container) {
 		if(!checkIfFragmentAdded(activity, FreshCheckoutMergedFragment.class.getName())) {
@@ -107,11 +123,11 @@ public class TransactionUtils {
 	}
 
 
-	public void openSearchFragment(FragmentActivity activity, View container) {
+	public void openSearchFragment(FragmentActivity activity, View container, int superCategoryId, int cityId) {
 		if(!checkIfFragmentAdded(activity, FreshSearchFragment.class.getName())) {
 			activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-					.add(container.getId(), new FreshSearchFragment(),
+					.add(container.getId(), FreshSearchFragment.newInstance(superCategoryId, cityId),
                             FreshSearchFragment.class.getName())
 					.addToBackStack(FreshSearchFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -204,6 +220,18 @@ public class TransactionUtils {
 
 	public boolean checkIfFragmentAdded(FragmentActivity activity, String tag){
 		return (activity.getSupportFragmentManager().findFragmentByTag(tag) != null);
+	}
+
+	public void addMealAddonItemsFragment(FragmentActivity fragmentActivity, View container) {
+		if(!checkIfFragmentAdded(fragmentActivity, MealAddonItemsFragment.class.getName())) {
+			fragmentActivity.getSupportFragmentManager().beginTransaction()
+					.add(container.getId(), new MealAddonItemsFragment(),
+							MealAddonItemsFragment.class.getName())
+					.addToBackStack(MealAddonItemsFragment.class.getName())
+					.hide(fragmentActivity.getSupportFragmentManager().findFragmentByTag(fragmentActivity.getSupportFragmentManager()
+							.getBackStackEntryAt(fragmentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
 	}
 
 }

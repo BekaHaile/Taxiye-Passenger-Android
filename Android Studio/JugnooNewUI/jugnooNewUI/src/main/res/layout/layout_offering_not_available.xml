@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/ic_menus_nothing_found"
     android:visibility="gone">
+
     <ImageView
         android:id="@+id/imageViewShadow"
         android:layout_width="match_parent"
         android:layout_height="6px"
         android:background="@drawable/shadow_down"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 
     <TextView
@@ -26,13 +26,13 @@
 
     <TextView
         android:id="@+id/textViewNothingFound"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewOhSnap"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px"
         android:layout_marginTop="20px"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
         android:gravity="center"
         android:text="@string/nothing_found_near_you"
         android:textColor="@color/text_color"
@@ -44,9 +44,10 @@
         android:id="@+id/imageViewArrow"
         android:layout_width="73px"
         android:layout_height="88px"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="64px"
-        android:layout_marginTop="36px"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="80px"
+        android:scaleX="-1"
+        android:layout_marginTop="50px"
         android:src="@drawable/ic_curved_up_arrow"
         android:tag="mwar" />
 

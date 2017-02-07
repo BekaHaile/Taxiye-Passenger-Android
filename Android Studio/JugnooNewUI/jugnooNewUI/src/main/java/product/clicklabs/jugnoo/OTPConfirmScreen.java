@@ -107,7 +107,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	private boolean runAfterDelay;
 	private TextView tvProgress;
 	private boolean onlyDigits, openHomeSwitcher = false;
-
+	private LocationFetcher locationFetcher = null;
 
 	@Override
 	protected void onStart() {
@@ -623,8 +623,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, OTPConfirmScreen.class.getName());
 		Utils.enableSMSReceiver(this);
 
-		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(OTPConfirmScreen.this, 1000);
+		if(locationFetcher == null){
+			locationFetcher = new LocationFetcher(OTPConfirmScreen.this, 1000);
+		} else {
+			locationFetcher.connect();
 		}
 		HomeActivity.checkForAccessTokenChange(this);
 
@@ -703,9 +705,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
 		Utils.disableSMSReceiver(this);
 		try{
-			if(Data.locationFetcher != null){
-				Data.locationFetcher.destroy();
-				Data.locationFetcher = null;
+			if(locationFetcher != null){
+				locationFetcher.destroy();
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -733,9 +734,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
                 HashMap<String, String> params = new HashMap<>();
 
-                if (Data.locationFetcher != null) {
-                    Data.loginLatitude = Data.locationFetcher.getLatitude();
-                    Data.loginLongitude = Data.locationFetcher.getLongitude();
+                if (locationFetcher != null) {
+                    Data.loginLatitude = locationFetcher.getLatitude();
+                    Data.loginLongitude = locationFetcher.getLongitude();
                 }
 
                 params.put("email", emailRegisterData.emailId);
@@ -834,9 +835,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
                 HashMap<String, String> params = new HashMap<>();
 
-                if (Data.locationFetcher != null) {
-                    Data.loginLatitude = Data.locationFetcher.getLatitude();
-                    Data.loginLongitude = Data.locationFetcher.getLongitude();
+                if (locationFetcher != null) {
+                    Data.loginLatitude = locationFetcher.getLatitude();
+                    Data.loginLongitude = locationFetcher.getLongitude();
                 }
 
 
@@ -936,9 +937,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 				HashMap<String, String> params = new HashMap<>();
 
-				if (Data.locationFetcher != null) {
-					Data.loginLatitude = Data.locationFetcher.getLatitude();
-					Data.loginLongitude = Data.locationFetcher.getLongitude();
+				if (locationFetcher != null) {
+					Data.loginLatitude = locationFetcher.getLatitude();
+					Data.loginLongitude = locationFetcher.getLongitude();
 				}
 
 				params.put("user_google_id", googleRegisterData.id);
@@ -1136,9 +1137,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	@Override
 	protected void onDestroy() {
 		try{
-			if(Data.locationFetcher != null){
-				Data.locationFetcher.destroy();
-				Data.locationFetcher = null;
+			if(locationFetcher != null){
+				locationFetcher.destroy();
 			}
 			if(handler != null){
 				handler.removeCallbacks(runnable);
@@ -1339,9 +1339,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (Data.locationFetcher != null) {
-				Data.loginLatitude = Data.locationFetcher.getLatitude();
-				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			if (locationFetcher != null) {
+				Data.loginLatitude = locationFetcher.getLatitude();
+				Data.loginLongitude = locationFetcher.getLongitude();
 			}
 
 			if (isPhoneNumber) {
@@ -1451,9 +1451,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (Data.locationFetcher != null) {
-				Data.loginLatitude = Data.locationFetcher.getLatitude();
-				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			if (locationFetcher != null) {
+				Data.loginLatitude = locationFetcher.getLatitude();
+				Data.loginLongitude = locationFetcher.getLongitude();
 			}
 
 
@@ -1562,9 +1562,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (Data.locationFetcher != null) {
-				Data.loginLatitude = Data.locationFetcher.getLatitude();
-				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			if (locationFetcher != null) {
+				Data.loginLatitude = locationFetcher.getLatitude();
+				Data.loginLongitude = locationFetcher.getLongitude();
 			}
 
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());

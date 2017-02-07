@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -97,19 +96,23 @@ public class AddOnItemsAdapter extends BaseAdapter {
         mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
                 Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
 
-        mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
+
+        mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark);
+        mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
         if (subItem.getSubItemQuantitySelected() == 0) {
-            if (subItem.getStock() > 0) {
-                mHolder.mAddButton.setVisibility(View.VISIBLE);
+            if(subItem.getStock() > 0){
+                mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme);
+                mHolder.imageViewMinus.setVisibility(View.GONE);
+                mHolder.textViewQuantity.setVisibility(View.GONE);
                 mHolder.textViewOutOfStock.setVisibility(View.GONE);
-            } else {
-                mHolder.mAddButton.setVisibility(View.GONE);
+            } else{
+                mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
                 mHolder.textViewOutOfStock.setVisibility(View.VISIBLE);
             }
-            mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
         } else {
-            mHolder.mAddButton.setVisibility(View.GONE);
-            mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
+            mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
+            mHolder.imageViewMinus.setVisibility(View.VISIBLE);
+            mHolder.textViewQuantity.setVisibility(View.VISIBLE);
             mHolder.textViewOutOfStock.setVisibility(View.GONE);
         }
 
@@ -121,7 +124,6 @@ public class AddOnItemsAdapter extends BaseAdapter {
 
         mHolder.imageViewMinus.setTag(position);
         mHolder.imageViewPlus.setTag(position);
-        mHolder.mAddButton.setTag(position);
 
 
         mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
@@ -139,32 +141,6 @@ public class AddOnItemsAdapter extends BaseAdapter {
                 }
             }
         });
-        mHolder.mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-
-                    int pos = (int) v.getTag();
-                    if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-                        subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
-                        callback.onPlusClicked(pos, subItems.get(pos));
-                    } else {
-                        Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) + "");
-                    }
-                    notifyDataSetChanged();
-                    int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
-                    if (appType == AppConstant.ApplicationType.FRESH) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
-                    } else if (appType == AppConstant.ApplicationType.GROCERY) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
-                    } else if (appType == AppConstant.ApplicationType.MENUS) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
         mHolder.imageViewPlus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +152,17 @@ public class AddOnItemsAdapter extends BaseAdapter {
                         callback.onPlusClicked(pos, subItems.get(pos));
                     } else {
                         Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) + "");
+                    }
+
+                    if(subItems.get(pos).getSubItemQuantitySelected() == 1){
+                        int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
+                        if (appType == AppConstant.ApplicationType.FRESH) {
+                            MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
+                        } else if (appType == AppConstant.ApplicationType.GROCERY) {
+                            MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
+                        } else if (appType == AppConstant.ApplicationType.MENUS) {
+                            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
+                        }
                     }
 
                     notifyDataSetChanged();
@@ -207,7 +194,6 @@ public class AddOnItemsAdapter extends BaseAdapter {
         public RelativeLayout relative;
         private ImageView imageViewItemImage, imageViewMinus, imageViewPlus, imageViewSep;
         public TextView textViewItemName, textViewItemUnit, textViewItemPrice, textViewQuantity, textViewOutOfStock;
-        public Button mAddButton;
         public LinearLayout linearLayoutQuantitySelector;
         public MainViewHolder(View itemView, Context context) {
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
@@ -216,7 +202,6 @@ public class AddOnItemsAdapter extends BaseAdapter {
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
             imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
-            mAddButton = (Button) itemView.findViewById(R.id.add_button); mAddButton.setTypeface(Fonts.mavenRegular(context));
 
             textViewItemName = (TextView)itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenRegular(context));
             textViewItemUnit = (TextView)itemView.findViewById(R.id.textViewItemUnit); textViewItemUnit.setTypeface(Fonts.mavenRegular(context));

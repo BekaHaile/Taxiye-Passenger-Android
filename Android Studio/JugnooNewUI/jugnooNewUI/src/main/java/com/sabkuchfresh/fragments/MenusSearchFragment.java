@@ -15,9 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
@@ -36,19 +34,15 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 
 
 @SuppressLint("ValidFragment")
 public class MenusSearchFragment extends Fragment {
 
-	private LinearLayout linearLayoutRoot;
+	private RelativeLayout rlRoot;
 
 	private RecyclerView recyclerViewCategoryItems;
 	private MenusCategoryItemsAdapter menusCategoryItemsAdapter;
-	private EditText editTextSearch;
-	private ProgressWheel progressBarSearch;
-	private ImageView imageViewSearchCross, imageViewBack;
 	private TextView textViewPlaceholder;
 
 	private View rootView;
@@ -74,45 +68,38 @@ public class MenusSearchFragment extends Fragment {
         activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
 
-		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(rlRoot != null) {
+				new ASSL(activity, rlRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        Utils.setupUI(rootView.findViewById(R.id.linearLayoutRoot), activity);
+        Utils.setupUI(rlRoot, activity);
 
 		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
 		recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewCategoryItems.setHasFixedSize(false);
-
-		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
-		editTextSearch.setTypeface(Fonts.mavenLight(activity));
-		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch);
-		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.imageViewSearchCross);
+		
 		textViewPlaceholder = (TextView) rootView.findViewById(R.id.textViewPlaceholder); textViewPlaceholder.setTypeface(Fonts.mavenRegular(activity));
-		progressBarSearch.setVisibility(View.GONE);
-		imageViewSearchCross.setVisibility(View.GONE);
 		textViewPlaceholder.setVisibility(View.GONE);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 				try {
-					editTextSearch.requestFocus();
+					activity.getTopBar().etSearch.setText("");
+					activity.getTopBar().etSearch.requestFocus();
 					InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-					mgr.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+					mgr.showSoftInput(activity.getTopBar().etSearch, InputMethodManager.SHOW_IMPLICIT);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
         }, 3);
 
-
-        imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 
 		if(itemsInSearch == null) {
 			itemsInSearch = new ArrayList<>();
@@ -143,7 +130,7 @@ public class MenusSearchFragment extends Fragment {
 								new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
-										activity.getRelativeLayoutCheckoutBar().performClick();
+										activity.getTopBar().getLlCartContainer().performClick();
 									}
 								}, new View.OnClickListener() {
 									@Override
@@ -156,7 +143,7 @@ public class MenusSearchFragment extends Fragment {
 		recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
 
 
-		editTextSearch.addTextChangedListener(new TextWatcher() {
+		activity.getTopBar().etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -171,10 +158,8 @@ public class MenusSearchFragment extends Fragment {
             public void afterTextChanged(Editable s) {
 				try {
 					if (s.length() > 0) {
-						imageViewSearchCross.setVisibility(View.VISIBLE);
 						new ItemsSearchAsync().execute(s.toString());
 					} else {
-						imageViewSearchCross.setVisibility(View.GONE);
 						clearArrays();
 						menusCategoryItemsAdapter.notifyDataSetChanged();
 					}
@@ -184,17 +169,10 @@ public class MenusSearchFragment extends Fragment {
 			}
         });
 
-		imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
+		activity.getTopBar().ivSearchCross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editTextSearch.setText("");
-            }
-        });
-
-        imageViewBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.performBackPressed();
+                activity.getTopBar().etSearch.setText("");
             }
         });
 
@@ -215,7 +193,6 @@ public class MenusSearchFragment extends Fragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progressBarSearch.setVisibility(View.VISIBLE);
 		}
 
 		@Override
@@ -261,7 +238,6 @@ public class MenusSearchFragment extends Fragment {
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 			try {
-				progressBarSearch.setVisibility(View.GONE);
 				menusCategoryItemsAdapter.notifyDataSetChanged();
 				if(itemsInSearch.size() > 0){
 					textViewPlaceholder.setVisibility(View.GONE);
@@ -340,15 +316,15 @@ public class MenusSearchFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        editTextSearch.requestFocus();
+                        activity.getTopBar().etSearch.requestFocus();
                         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        mgr.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+                        mgr.showSoftInput(activity.getTopBar().etSearch, InputMethodManager.SHOW_IMPLICIT);
                     } catch(Exception e){}
                 }
             }, 700);
 			activity.fragmentUISetup(this);
-			if(editTextSearch.getText().toString().trim().length() > 0){
-				new ItemsSearchAsync().execute(editTextSearch.getText().toString().trim());
+			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
+				new ItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
 			}
 		}
 	}
@@ -357,7 +333,7 @@ public class MenusSearchFragment extends Fragment {
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(rlRoot);
         System.gc();
 	}
 

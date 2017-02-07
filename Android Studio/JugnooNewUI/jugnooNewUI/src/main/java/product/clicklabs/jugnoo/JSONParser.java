@@ -10,6 +10,7 @@ import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.datastructure.PopupData;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Store;
 
 import org.json.JSONArray;
@@ -185,7 +186,6 @@ public class JSONParser implements Constants {
             gamePredictName = gamePredictViewData.split(VIEW_DATA_SPLITTER)[1];
             gamePredictNew = gamePredictViewData.split(VIEW_DATA_SPLITTER)[2];
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         if(Prefs.with(context).getInt(SP_FIRST_LOGIN_COMPLETE, 0) == 0){
@@ -323,6 +323,7 @@ public class JSONParser implements Constants {
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
             Data.autoData.setUseRecentLocAutoSnapMaxDistance(autosData.getUseRecentLocAutoSnapMaxDistance());
+            Data.autoData.setReferralPopupContent(autosData.getReferralPopupContent());
 
             if(Data.autoData.getPromoCoupons() == null){
                 Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
@@ -351,7 +352,6 @@ public class JSONParser implements Constants {
             if(deliveryData.getCoupons() != null)
                 Data.getDeliveryData().getPromoCoupons().addAll(deliveryData.getCoupons());
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -530,7 +530,6 @@ public class JSONParser implements Constants {
             }
 
         } catch (Exception e){
-            e.printStackTrace();
         }
     }
 
@@ -675,6 +674,8 @@ public class JSONParser implements Constants {
 
         Prefs.with(context).save(SP_FRESH_LAST_ADDRESS_OBJ, EMPTY_JSON_OBJECT);
         Data.setLatLngOfJeanieLastShown(latLng);
+
+        resetMenusFilters(context);
 
         return resp;
     }
@@ -1079,6 +1080,7 @@ public class JSONParser implements Constants {
             int cancellationCharges = 0, isPooledRide = 0, chatEnabled = 0;
             long cancellationTimeOffset = 0;
             ArrayList<String> fellowRiders = new ArrayList<>();
+            PlaceOrderResponse.ReferralPopupContent referralPopupContent = null;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1196,6 +1198,11 @@ public class JSONParser implements Constants {
                             } catch(Exception e){
                                 e.printStackTrace();
                             }
+
+                            try {
+                                JSONObject jReferralPopupContent = jObject.optJSONObject(KEY_REFERRAL_POPUP_CONTENT);
+                                referralPopupContent = new Gson().fromJson(jReferralPopupContent.toString(), PlaceOrderResponse.ReferralPopupContent.class);
+                            } catch (Exception e){}
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(context, jObject1);
@@ -1259,6 +1266,7 @@ public class JSONParser implements Constants {
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled));
 
                 Data.autoData.setFareFactor(fareFactor);
+                Data.autoData.setReferralPopupContent(referralPopupContent);
 
                 Log.e("Data.autoData.getAssignedDriverInfo() on login", "=" + Data.autoData.getAssignedDriverInfo().latLng);
 
@@ -1785,4 +1793,13 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
     }
+
+    private void resetMenusFilters(Context context) {
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_SORT_BY, -1);
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_MIN_ORDER, -1);
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_DELIVERY_TIME, -1);
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_CUISINES, "");
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_QUICK, "");
+    }
+
 }

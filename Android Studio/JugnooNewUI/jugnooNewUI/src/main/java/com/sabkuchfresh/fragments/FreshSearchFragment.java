@@ -9,22 +9,20 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
+import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 
@@ -33,27 +31,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.Log;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 @SuppressLint("ValidFragment")
 public class FreshSearchFragment extends Fragment {
 
-	private LinearLayout linearLayoutRoot;
+	private RelativeLayout rlRoot;
 
 	private RecyclerView recyclerViewCategoryItems;
 	private FreshCategoryItemsAdapter freshCategoryItemsAdapter;
-	private EditText editTextSearch;
-	private ProgressWheel progressBarSearch;
-	private ImageView imageViewSearchCross, imageViewBack;
 	private TextView textViewPlaceholder;
 
 	private View rootView;
     private FreshActivity activity;
-    private int currentGroupId = 1;
+    private int currentGroupId = 1, superCategoryId = -1, cityId = 1;
 	private ArrayList<SubItem> subItemsInSearch;
 
 
@@ -66,6 +71,15 @@ public class FreshSearchFragment extends Fragment {
     public void onStop() {
 		super.onStop();
     }
+
+	public static FreshSearchFragment newInstance(int superCategoryId, int cityId){
+		FreshSearchFragment freshSearchFragment = new FreshSearchFragment();
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_SUPER_CATEGORY_ID, superCategoryId);
+		bundle.putInt(Constants.KEY_CITY_ID, cityId);
+		freshSearchFragment.setArguments(bundle);
+		return freshSearchFragment;
+	}
 	
 
     @Override
@@ -75,49 +89,46 @@ public class FreshSearchFragment extends Fragment {
         activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
 
-		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		searchText = "";
+
+		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(rlRoot != null) {
+				new ASSL(activity, rlRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        Utils.setupUI(rootView.findViewById(R.id.linearLayoutRoot), activity);
+        Utils.setupUI(rlRoot, activity);
 
 		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
 		recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewCategoryItems.setHasFixedSize(false);
 
-		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
-		editTextSearch.setTypeface(Fonts.mavenLight(activity));
-		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch);
-		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.imageViewSearchCross);
 		textViewPlaceholder = (TextView) rootView.findViewById(R.id.textViewPlaceholder); textViewPlaceholder.setTypeface(Fonts.mavenRegular(activity));
-		progressBarSearch.setVisibility(View.GONE);
-		imageViewSearchCross.setVisibility(View.GONE);
 		textViewPlaceholder.setVisibility(View.GONE);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 				try {
-					editTextSearch.requestFocus();
+					activity.getTopBar().etSearch.requestFocus();
 					InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-					mgr.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+					mgr.showSoftInput(activity.getTopBar().etSearch, InputMethodManager.SHOW_IMPLICIT);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-        }, 3);
-
-
-        imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
+        }, 300);
 
 		if(subItemsInSearch == null) {
 			subItemsInSearch = new ArrayList<>();
 		}
+
+		superCategoryId = getArguments().getInt(Constants.KEY_SUPER_CATEGORY_ID, -1);
+		cityId = getArguments().getInt(Constants.KEY_CITY_ID, 1);
+
 
 		freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity,
 				subItemsInSearch, null, 0,
@@ -125,17 +136,16 @@ public class FreshSearchFragment extends Fragment {
 				new FreshCategoryItemsAdapter.Callback() {
 					@Override
 					public void onPlusClicked(int position, SubItem subItem) {
-						activity.updateCartValuesGetTotalPrice();
+						activity.updateCartValuesGetTotalPriceFMG(subItem);
 					}
 
 					@Override
 					public void onMinusClicked(int position, SubItem subItem) {
-						activity.updateCartValuesGetTotalPrice();
+						activity.updateCartValuesGetTotalPriceFMG(subItem);
 					}
 
 					@Override
 					public void onDeleteClicked(int position, SubItem subItem) {
-						activity.updateCartValuesGetTotalPrice();
 					}
 
 					@Override
@@ -156,7 +166,7 @@ public class FreshSearchFragment extends Fragment {
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
-		editTextSearch.addTextChangedListener(new TextWatcher() {
+		/*activity.getTopBar().etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -171,10 +181,8 @@ public class FreshSearchFragment extends Fragment {
             public void afterTextChanged(Editable s) {
 				try {
 					if (s.length() > 0) {
-						imageViewSearchCross.setVisibility(View.VISIBLE);
 						new SubItemsSearchAsync().execute(s.toString());
 					} else {
-						imageViewSearchCross.setVisibility(View.GONE);
 						clearArrays();
 						freshCategoryItemsAdapter.notifyDataSetChanged();
 					}
@@ -182,22 +190,16 @@ public class FreshSearchFragment extends Fragment {
 					e.printStackTrace();
 				}
 			}
-        });
+        });*/
 
-		imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
+		activity.getTopBar().etSearch.setText("");
+
+		activity.getTopBar().ivSearchCross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editTextSearch.setText("");
+				activity.getTopBar().etSearch.setText("");
             }
         });
-
-        imageViewBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.performBackPressed();
-            }
-        });
-
 
 		return rootView;
 	}
@@ -215,7 +217,6 @@ public class FreshSearchFragment extends Fragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progressBarSearch.setVisibility(View.VISIBLE);
 		}
 
 		@Override
@@ -261,7 +262,6 @@ public class FreshSearchFragment extends Fragment {
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 			try {
-				progressBarSearch.setVisibility(View.GONE);
 				freshCategoryItemsAdapter.notifyDataSetChanged();
 				if(subItemsInSearch.size() > 0){
 					textViewPlaceholder.setVisibility(View.GONE);
@@ -310,25 +310,33 @@ public class FreshSearchFragment extends Fragment {
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
-		try {
-			freshCategoryItemsAdapter.notifyDataSetChanged();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		if(!hidden){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        editTextSearch.requestFocus();
+						activity.getTopBar().etSearch.requestFocus();
                         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        mgr.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+                        mgr.showSoftInput(activity.getTopBar().etSearch, InputMethodManager.SHOW_IMPLICIT);
                     } catch(Exception e){}
                 }
             }, 700);
 			activity.fragmentUISetup(this);
-			if(editTextSearch.getText().toString().trim().length() > 0){
-				new SubItemsSearchAsync().execute(editTextSearch.getText().toString().trim());
+			if(activity.getCartChangedAtCheckout()){
+				activity.updateCartFromSP();
+				activity.updateCartFromSPFMG(subItemsInSearch);
+				freshCategoryItemsAdapter.notifyDataSetChanged();
+				activity.updateCartValuesGetTotalPrice();
+			}
+			activity.setCartChangedAtCheckout(false);
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					activity.setMinOrderAmountText(FreshSearchFragment.this);
+				}
+			}, 300);
+			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
+				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
 			}
 		}
 	}
@@ -337,8 +345,106 @@ public class FreshSearchFragment extends Fragment {
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(rlRoot);
         System.gc();
+	}
+
+
+
+
+	public void searchFreshItems(String s){
+		try {
+			if (s.length() > 0 && activity.getFreshFragment() != null) {
+				new SubItemsSearchAsync().execute(s.toString());
+			} else {
+				subItemsInSearch.clear();
+				clearArrays();
+				freshCategoryItemsAdapter.notifyDataSetChanged();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		searchText = s.trim();
+		if(searchText.length() > 2) {
+			searchFreshItemsAutoComplete(searchText);
+		} else if(searchText.length() == 0){
+			subItemsInSearch.clear();
+			freshCategoryItemsAdapter.notifyDataSetChanged();
+			textViewPlaceholder.setVisibility(View.GONE);
+		}
+	}
+
+	private String searchText;
+	private boolean refreshingAutoComplete = false;
+	public void searchFreshItemsAutoComplete(final String searchText) {
+		try {
+			if(!refreshingAutoComplete) {
+				if (AppStatus.getInstance(activity).isOnline(activity)) {
+						HashMap<String, String> params = new HashMap<>();
+						params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+						params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+						params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+						params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
+						params.put(Constants.KEY_CITY_ID, String.valueOf(cityId));
+						params.put(Constants.INTERATED, "1");
+						params.put(Constants.KEY_SEARCH_TEXT, searchText);
+						params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategoryId));
+
+						refreshingAutoComplete = true;
+
+						new HomeUtil().putDefaultParams(params);
+						RestClient.getFreshApiService().getItemSearch(params, new retrofit.Callback<FreshSearchResponse>() {
+							@Override
+							public void success(FreshSearchResponse freshSearchResponse, Response response) {
+								String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+								try {
+									String message = freshSearchResponse.getMessage();
+										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == freshSearchResponse.getFlag()) {
+											//subItemsInSearch.clear();
+											for(SuperCategoriesData.SuperCategory superCategory : freshSearchResponse.getSuperCategories()){
+												if(!superCategory.getSuperCategoryId().equals(superCategoryId)) {
+													for (Category category : superCategory.getCategories()) {
+														subItemsInSearch.addAll(category.getSubItems());
+													}
+												}
+											}
+											activity.updateCartFromSPFMG(subItemsInSearch);
+											freshCategoryItemsAdapter.notifyDataSetChanged();
+											if(subItemsInSearch.size() > 0){
+												textViewPlaceholder.setVisibility(View.GONE);
+											} else{
+												textViewPlaceholder.setVisibility(View.VISIBLE);
+											}
+										} else {
+
+										}
+								} catch (Exception exception) {
+									exception.printStackTrace();
+								}
+								refreshingAutoComplete = false;
+								recallSearch(searchText);
+							}
+
+							@Override
+							public void failure(RetrofitError error) {
+								Log.e("search fragment", "fetchRestaurantViaSearch error" + error.toString());
+								refreshingAutoComplete = false;
+								recallSearch(searchText);
+							}
+						});
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			refreshingAutoComplete = false;
+			recallSearch(searchText);
+		}
+	}
+
+	private void recallSearch(String previousSearchText){
+		if (!searchText.trim().equalsIgnoreCase(previousSearchText)) {
+			searchFreshItems(searchText);
+		}
 	}
 
 

@@ -1,13 +1,11 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -65,16 +63,9 @@ public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 	@Override
 	public View getCustomTabView(int position) {
 		View convertView = inflater.inflate(R.layout.tab_item_fresh_category, null);
-		ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
 		TextView textView = (TextView) convertView.findViewById(R.id.textView);
-		textView.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
+		textView.setTypeface(Fonts.mavenRegular(context));
 		textView.setText(categories.get(position).getCategoryName());
-//		try{
-//			Picasso.with(context).load(categories.get(position).getCategoryImage())
-//					.into(imageView);
-//		} catch(Exception e){
-//			e.printStackTrace();
-//		}
 		convertView.setLayoutParams(new LinearLayout.LayoutParams(150, LinearLayout.LayoutParams.MATCH_PARENT));
 		ASSL.DoMagic(convertView);
 		return convertView;
