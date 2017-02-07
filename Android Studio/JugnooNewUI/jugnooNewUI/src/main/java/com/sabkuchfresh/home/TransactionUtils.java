@@ -1,8 +1,11 @@
 package com.sabkuchfresh.home;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.View;
 
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
@@ -83,12 +86,40 @@ public class TransactionUtils {
     }
 
     public void openRestaurantImageFragment(FragmentActivity activity, View container) {
+
+
         if (!checkIfFragmentAdded(activity, RestaurantImageFragment.class.getName())) {
+
+            RestaurantImageFragment restaurantImageFragment = RestaurantImageFragment.newInstance();
+           /* VendorMenuFragment vendorMenuFragment = (VendorMenuFragment) activity.getSupportFragmentManager().findFragmentByTag(VendorMenuFragment.class.getName());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && vendorMenuFragment != null) {
+
+                Transition changeTransform = TransitionInflater.from(activity).
+                        inflateTransition(R.transition.change_image_transform);
+                Transition explodeTransform = TransitionInflater.from(activity).
+                        inflateTransition(android.R.transition.explode);
+
+
+                // Setup exit transition on first fragment
+                vendorMenuFragment.setSharedElementReturnTransition(changeTransform);
+                vendorMenuFragment.setExitTransition(explodeTransform);
+
+                // Setup enter transition on second fragment
+                restaurantImageFragment.setSharedElementEnterTransition(changeTransform);
+                restaurantImageFragment.setEnterTransition(explodeTransform);
+
+                restaurantImageFragment.setAllowEnterTransitionOverlap(true);
+                restaurantImageFragment.setAllowReturnTransitionOverlap(true);
+
+
+            }*/
+            FreshActivity freshActivity = (FreshActivity) activity;
             activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out,0, 0)
-                    .add(container.getId(), RestaurantImageFragment.newInstance(),
+                    .setCustomAnimations(R.anim.fade_in_slow,R.anim.fade_out_slow, R.anim.fade_in_slow ,R.anim.fade_out_slow)
+                    .add(container.getId(), restaurantImageFragment,
                             RestaurantImageFragment.class.getName())
                     .addToBackStack(RestaurantImageFragment.class.getName())
+                   //  .addSharedElement(freshActivity.ivCollapseRestImage, activity.getString(R.string.zoom_view))
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

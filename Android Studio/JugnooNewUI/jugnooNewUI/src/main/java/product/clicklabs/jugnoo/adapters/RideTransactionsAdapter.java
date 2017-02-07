@@ -88,8 +88,13 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewTo.setText(R.string.to_colon);
                 holder.textViewToValue.setText(orderHistory.getDropAddress());
                 holder.textViewDetails.setText(R.string.details_colon);
-                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
-                        Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
+                if(orderHistory.getOriginalOrderAmount() != null){
+                    holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
+                            Utils.getMoneyDecimalFormat().format(orderHistory.getOriginalOrderAmount())));
+                } else {
+                    holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
+                            Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
+                }
                 holder.imageViewProductType.setImageResource(R.drawable.ic_history_auto);
 
                 try {

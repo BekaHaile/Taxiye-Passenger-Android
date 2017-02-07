@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:id="@+id/layout_rest_details"
+    android:id="@+id/layout_rest_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="gone">
@@ -11,8 +11,9 @@
         android:id="@+id/iv_rest_collapse_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_alpha" />
-
+        android:scaleType="centerCrop"
+        android:background="@color/black_alpha"
+        android:transitionName="@string/zoom_view" />
 
 
     <View
@@ -22,14 +23,14 @@
         android:background="@color/opaque_black" />
 
     <ImageView
-        android:visibility="gone"
         android:id="@+id/iv_rest_original_image"
         android:layout_width="match_parent"
         android:layout_height="560px"
-        android:scaleType="centerCrop"
         android:layout_centerInParent="true"
-        android:tag="mwar" />
-
+        android:scaleType="centerCrop"
+        android:tag="mwar"
+        android:transitionName="@string/zoom_view"
+        android:visibility="gone" />
 
 
     <TextView
@@ -39,6 +40,7 @@
         android:layout_above="@+id/tvCollapRestaurantDeliveryTime"
         android:layout_marginLeft="@dimen/px_30"
         android:text=""
+
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_36"
         app:font="avenir" />
@@ -48,37 +50,35 @@
         android:id="@+id/tvCollapRestaurantDeliveryTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/px_20"
+        android:layout_marginLeft="@dimen/px_30"
+        android:layout_marginTop="@dimen/px_10"
+        android:drawableLeft="@drawable/ic_clock_grey"
+        android:drawablePadding="@dimen/px_8"
         android:text=""
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_22"
-        android:layout_marginLeft="@dimen/px_30"
-        android:layout_marginTop="@dimen/px_10"
-        android:layout_marginBottom="@dimen/px_20"
-        android:drawableLeft="@drawable/ic_clock_grey"
-        android:drawablePadding="@dimen/px_8"
-        android:layout_alignParentBottom="true"
-        app:font="maven"
-        />
+        app:font="maven" />
 
 
     <TextView
         android:id="@+id/tvCollapRestaurantRating"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/px_40"
-        android:background="@drawable/capsule_text_color"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/tv_rest_title"
+        android:layout_marginRight="@dimen/px_30"
+        android:layout_marginTop="@dimen/px_10"
+        android:background="@drawable/capsule_text_color"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/px_15"
+        android:paddingRight="@dimen/px_15"
         android:text=""
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_20"
-        android:paddingRight="@dimen/px_15"
-        android:paddingLeft="@dimen/px_15"
-        android:gravity="center_vertical"
-        android:layout_marginTop="@dimen/px_10"
-        android:layout_marginRight="@dimen/px_30"
         android:visibility="visible"
-        app:font="maven"
-        />
+        app:font="maven" />
 
 
 </RelativeLayout>

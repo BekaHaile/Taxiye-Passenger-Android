@@ -145,7 +145,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         }
     }
 
-
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -153,13 +152,14 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         if (!hidden) {
             menusCategoryFragmentsAdapter.notifyDataSetChanged();
             tabs.notifyDataSetChanged();
-            activity.collapseToolbar();
             activity.fragmentUISetup(this);
             activity.resumeMethod();
             if (activity.isRefreshCart()) {
 
             }
             activity.setRefreshCart(false);
+
+
         }
     }
 
@@ -246,46 +246,51 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 activity.getBus().post(new SortSelection(activity.menusSort));
 
 
-                if (activity.getVendorOpened() != null) {
-                    activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
-                    Picasso.with(activity).load(activity.getVendorOpened().getImage()).fit().into(activity.ivCollapseRestImage);
 
-                    activity.setVendorDeliveryTimeToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime);
-                    setTextViewDrawableColor(activity.tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));
-
-                    if (activity.getVendorOpened().getRating() != null) {
-                        activity.tvCollapRestaurantRating.setVisibility(View.VISIBLE);
-
-                        Spannable spannable = new SpannableString(activity.getString(R.string.star_icon) + " " + activity.getVendorOpened().getRating());// + "  " + "(" + activity.getVendorOpened().getReviewCount() + ")");
-                        Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
-                        spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-                        activity.tvCollapRestaurantRating.setText(spannable);
-                        int ratingColor;
-                        if (activity.getVendorOpened().getColorCode() != null
-                                && activity.getVendorOpened().getColorCode().startsWith("#")
-                                && activity.getVendorOpened().getColorCode().length() == 7)
-                            ratingColor = Color.parseColor(activity.getVendorOpened().getColorCode());
-                        else
-                            ratingColor = Color.parseColor("#8dd061"); //default Green Color
-
-                        setTextViewBackgroundDrawableColor(activity.tvCollapRestaurantRating, ratingColor);
-                    } else {
-                        activity.tvCollapRestaurantRating.setVisibility(View.GONE);
-                    }
-
-
-                    activity.ivCollapseRestImage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            activity.openRestaurantFragment();
-                        }
-                    });
-
-
-                }
+                setUpCollapseToolbarData();
             }
         } catch (Exception exception) {
             exception.printStackTrace();
+        }
+    }
+
+    private void setUpCollapseToolbarData() {
+        if (activity.getVendorOpened() != null) {
+            activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
+            Picasso.with(activity).load(activity.getVendorOpened().getImage()).into(activity.ivCollapseRestImage);
+
+            activity.setVendorDeliveryTimeToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime);
+            setTextViewDrawableColor(activity.tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));
+
+            if (activity.getVendorOpened().getRating() != null) {
+                activity.tvCollapRestaurantRating.setVisibility(View.VISIBLE);
+
+                Spannable spannable = new SpannableString(activity.getString(R.string.star_icon) + " " + activity.getVendorOpened().getRating());// + "  " + "(" + activity.getVendorOpened().getReviewCount() + ")");
+                Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
+                spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                activity.tvCollapRestaurantRating.setText(spannable);
+                int ratingColor;
+                if (activity.getVendorOpened().getColorCode() != null
+                        && activity.getVendorOpened().getColorCode().startsWith("#")
+                        && activity.getVendorOpened().getColorCode().length() == 7)
+                    ratingColor = Color.parseColor(activity.getVendorOpened().getColorCode());
+                else
+                    ratingColor = Color.parseColor("#8dd061"); //default Green Color
+
+                setTextViewBackgroundDrawableColor(activity.tvCollapRestaurantRating, ratingColor);
+            } else {
+                activity.tvCollapRestaurantRating.setVisibility(View.GONE);
+            }
+
+
+            activity.ivCollapseRestImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.openRestaurantFragment();
+                }
+            });
+
+
         }
     }
 
@@ -298,7 +303,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     }
 
     private void setTextViewBackgroundDrawableColor(TextView textView, int color) {
-        if(textView.getBackground() != null){
+        if (textView.getBackground() != null) {
             textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
         }
     }

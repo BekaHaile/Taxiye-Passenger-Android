@@ -516,6 +516,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     activity.setSplInstr(editTextDeliveryInstructions.getText().toString().trim());
                     placeOrder();
                     placeOrderAnalytics();
+                } else{
+                    setSlideInitial();
                 }
             }
         });
@@ -1395,8 +1397,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             getCheckoutDataAPI(selectedSubscription);
                                         }
                                     });
-                                }
-                                else {
+                                } else {
                                     setSlideInitial();
                                     final int validStockCount = jObj.optInt(Constants.KEY_VALID_STOCK_COUNT, -1);
                                     if(validStockCount > -1){
