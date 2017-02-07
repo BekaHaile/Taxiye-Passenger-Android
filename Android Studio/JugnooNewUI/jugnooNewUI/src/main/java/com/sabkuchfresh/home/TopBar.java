@@ -142,8 +142,8 @@ public class TopBar implements FlurryEventNames {
 					break;
 
 				case R.id.imageViewMenu:
-
 					drawerLayout.openDrawer(GravityCompat.START);
+					Utils.hideSoftKeyboard(activity, etSearch);
 					break;
 
 				case R.id.buttonCheckServer:

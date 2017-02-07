@@ -338,7 +338,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     }
                 }
 
-                mHolder.textViewAddressLine.setVisibility(((vendor.getRestaurantAddress() != null)) ? View.VISIBLE : View.GONE);
+                mHolder.textViewAddressLine.setVisibility(!TextUtils.isEmpty(vendor.getRestaurantAddress()) ? View.VISIBLE : View.GONE);
                 mHolder.textViewAddressLine.setText(vendor.getRestaurantAddress());
 
                 if (vendor.getCuisines() != null && vendor.getCuisines().size() > 0) {

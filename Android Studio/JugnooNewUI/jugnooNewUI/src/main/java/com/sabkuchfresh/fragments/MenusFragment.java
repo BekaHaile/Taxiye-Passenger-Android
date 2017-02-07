@@ -200,13 +200,17 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 (TextView) rootView.findViewById(R.id.tvScroll), new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+                if(activity.getTopFragment() instanceof MenusFragment) {
+                    activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void keyBoardClosed() {
-                if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                if(activity.getTopFragment() instanceof MenusFragment) {
+                    if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                        activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
