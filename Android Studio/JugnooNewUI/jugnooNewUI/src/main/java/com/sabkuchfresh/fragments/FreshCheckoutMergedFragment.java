@@ -2083,6 +2083,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         cartChangedRefreshCheckout = false;
                                     }
                                 } else{
+                                    setSlideInitial();
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                         @Override
@@ -2236,19 +2237,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 freshCartItemsAdapter.notifyDataSetChanged();
                 activity.setCartChangedAtCheckout(true);
             }
+        }
 
-
-            if(!Data.userData.isSubscriptionActive() && userCheckoutResponse.getShowStarSubscriptions() == 1) {
-                if (userCheckoutResponse.getSubscriptionInfo() != null) {
-                    freshCartItemsAdapter.setResults(subItemsInCart, userCheckoutResponse.getSubscriptionInfo());
-                    cvBecomeStar.setVisibility(View.GONE);
-                } else {
-                    freshCartItemsAdapter.setResults(subItemsInCart, null);
-                    cvBecomeStar.setVisibility(View.VISIBLE);
-                }
-            } else{
+        if(!Data.userData.isSubscriptionActive() && userCheckoutResponse.getShowStarSubscriptions() == 1) {
+            if (userCheckoutResponse.getSubscriptionInfo() != null) {
+                freshCartItemsAdapter.setResults(subItemsInCart, userCheckoutResponse.getSubscriptionInfo());
                 cvBecomeStar.setVisibility(View.GONE);
+            } else {
+                freshCartItemsAdapter.setResults(subItemsInCart, null);
+                cvBecomeStar.setVisibility(View.VISIBLE);
             }
+        } else{
+            cvBecomeStar.setVisibility(View.GONE);
         }
     }
 
