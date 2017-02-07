@@ -298,6 +298,16 @@ public class TranscCompletedActivity extends BaseActivity {
                                         commonResponse.getTxnMessage(), commonResponse.getMessage());
                                 updateUI(txnDetail, false, true, false);
 							}
+                            else if(flag == ApiResponseFlags.TXN_NOT_EXISTS.getOrdinal())
+                            {
+                                // DialogPopup.alertPopup(TranscCompletedActivity.this, "", commonResponse.getMessage(), false);
+                                DialogPopup.alertPopupWithListener(TranscCompletedActivity.this, "Error", commonResponse.getMessage(), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        onBackPressed();
+                                    }
+                                });
+                            }
                             else {
                                 retryDialogSendMoneyCallbackApi(DialogErrorType.SERVER_ERROR, message, orderId, accessToken);
 							}
