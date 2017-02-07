@@ -1390,30 +1390,17 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 						}
 					});
 		} else {
-			if (Config.getDefaultServerUrl().equalsIgnoreCase(Config.getLiveServerUrl())
-					&& Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)) {
-				DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
-						getResources().getString(R.string.uninstall_driver_app),
-						new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								ActivityCompat.finishAffinity(SplashNewActivity.this);
-							}
-						});
-
-			} else {
-				try {
-					FirebaseInstanceId.getInstance().getToken();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				if ("".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, ""))) {
+			try {
+				FirebaseInstanceId.getInstance().getToken();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if ("".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, ""))) {
 //					DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
-					getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
-					getHandlerGoToAccessToken().postDelayed(getRunnableGoToAccessToken(), 5000);
-				} else {
-					goToAccessTokenLogin();
-				}
+				getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
+				getHandlerGoToAccessToken().postDelayed(getRunnableGoToAccessToken(), 5000);
+			} else {
+				goToAccessTokenLogin();
 			}
 		}
 	}

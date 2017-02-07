@@ -553,20 +553,16 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             if (position >= 0 && position < recentOrders.size()) {
                 return STATUS_ITEM;
             } else if (position >= recentOrders.size() && vendorsToShow.size() == 0) {
-                return NO_VENDORS_ITEM;
+                return FORM_ITEM;
             } else if (position >= recentOrders.size() && position - recentOrders.size() < vendorsToShow.size()) {
                 return MAIN_ITEM;
             } else {
-                if (vendorsToShowCount() > 0) {
-                    return FORM_ITEM;
-                } else {
-                    return NO_VENDORS_ITEM;
-                }
+                return FORM_ITEM;
             }
         } else if (position < recentOrdersSize()) {
             return STATUS_ITEM;
         } else {
-            if (vendorsToShowCount() > 0) {
+            if (vendorsCompleteCount() > 0) {
                 return FORM_ITEM;
             } else {
                 return NO_VENDORS_ITEM;
@@ -576,9 +572,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
-        int formItem = (vendorsToShowCount() > 0) ? 1 : 0;
-        return  recentOrdersSize() + vendorsToShowCount() + noVenderToShowCount + formItem;
+//        int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
+        int formItem = (recentOrdersSize() > 0 || vendorsCompleteCount() > 0) ? 1 : 0;
+        return recentOrdersSize() + vendorsToShowCount() + formItem;
     }
 
     private int recentOrdersSize() {
@@ -892,7 +888,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                             new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-
+                                                    callback.onNotify(0);
                                                 }
                                             }, false, true);
                                     restaurantName = ""; locality = ""; telephone = "";

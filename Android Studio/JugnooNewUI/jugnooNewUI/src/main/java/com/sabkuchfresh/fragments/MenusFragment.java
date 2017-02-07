@@ -144,6 +144,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
             @Override
             public void onNotify(int count) {
+                if(count == 0){
+                    recyclerViewRestaurant.smoothScrollToPosition(0);
+                }
             }
         });
 
