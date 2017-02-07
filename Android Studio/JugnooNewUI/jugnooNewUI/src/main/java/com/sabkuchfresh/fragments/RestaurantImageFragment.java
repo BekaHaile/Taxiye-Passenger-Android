@@ -118,7 +118,7 @@ public class RestaurantImageFragment extends Fragment {
 
             layoutRestDetails.setVisibility(View.VISIBLE);
             ivRestOriginalImage.setVisibility(View.VISIBLE);
-            backgroundImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            backgroundImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             if (activity.getVendorOpened() != null && activity.getVendorOpened().getImage() != null) {
 

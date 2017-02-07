@@ -6,7 +6,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -258,7 +257,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private void setUpCollapseToolbarData() {
         if (activity.getVendorOpened() != null) {
             activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
-            Picasso.with(activity).load(activity.getVendorOpened().getImage()).fit().into(activity.ivCollapseRestImage);
+            Picasso.with(activity).load(activity.getVendorOpened().getImage()).into(activity.ivCollapseRestImage);
 
             activity.setVendorDeliveryTimeToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime);
             setTextViewDrawableColor(activity.tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));
