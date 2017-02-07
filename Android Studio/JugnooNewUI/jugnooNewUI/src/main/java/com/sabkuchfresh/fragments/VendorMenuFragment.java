@@ -256,7 +256,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     if (activity.getVendorOpened().getRating() != null) {
                         activity.tvCollapRestaurantRating.setVisibility(View.VISIBLE);
 
-                        Spannable spannable = new SpannableString(activity.getString(R.string.star_icon) + " " + activity.getVendorOpened().getRating() + "  " + "(" + activity.getVendorOpened().getReviewCount() + ")");
+                        Spannable spannable = new SpannableString(activity.getString(R.string.star_icon) + " " + activity.getVendorOpened().getRating());// + "  " + "(" + activity.getVendorOpened().getReviewCount() + ")");
                         Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
                         spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
                         activity.tvCollapRestaurantRating.setText(spannable);

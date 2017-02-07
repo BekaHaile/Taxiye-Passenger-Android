@@ -892,7 +892,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                             new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-
+                                                    callback.onNotify(0);
                                                 }
                                             }, false, true);
                                     restaurantName = ""; locality = ""; telephone = "";

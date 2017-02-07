@@ -431,39 +431,12 @@
                             android:textSize="@dimen/text_size_34" />
                     </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="-10px">
-
-                        <TextView
-                            android:id="@+id/tvDeliveryCharges"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="40px"
-                            android:text="@string/delivery_charges"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30" />
-
-                        <TextView
-                            android:id="@+id/tvDeliveryChargesVal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="30px"
-                            android:text="@string/rupee_0"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30" />
-                    </RelativeLayout>
-
                     <LinearLayout
                         android:id="@+id/llExtraCharges"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="10px"
+                        android:layout_marginTop="-10px"
                         ></LinearLayout>
 
                     <RelativeLayout
