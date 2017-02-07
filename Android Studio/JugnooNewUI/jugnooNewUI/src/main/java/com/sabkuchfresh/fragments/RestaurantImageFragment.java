@@ -14,7 +14,9 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -35,16 +37,22 @@ public class RestaurantImageFragment extends Fragment {
 
     @Bind(R.id.iv_rest_collapse_image)
     ImageView backgroundImageView;
+
     @Bind(R.id.tv_rest_title)
     TextView tvRestTitle;
+
     @Bind(R.id.tvCollapRestaurantRating)
     TextView tvCollapRestaurantRating;
+
     @Bind(R.id.tvCollapRestaurantDeliveryTime)
     TextView tvCollapRestaurantDeliveryTime;
+
     @Bind(R.id.layout_rest_details)
     RelativeLayout layoutRestDetails;
+
     @Bind(R.id.iv_rest_original_image)
     ImageView ivRestOriginalImage;
+
     @Bind(R.id.shadow_view)
     View shadowView;
     private FreshActivity activity;
@@ -81,16 +89,33 @@ public class RestaurantImageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.restaurant_collapse_details, container, false);
         ButterKnife.bind(this, view);
-        activity.fragmentUISetup(this);
-        try {
-            if (layoutRestDetails != null) {
-                new ASSL(activity, layoutRestDetails, 1134, 720, true);
+        setupDetails(false);
+        backgroundImageView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gesture.onTouchEvent(event);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        });
+        return view;
+    }
+
+    private void setupDetails(boolean fromHidden) {
+        activity.fragmentUISetup(this);
+        if (!fromHidden) {
+            try {
+                if (layoutRestDetails != null) {
+                    new ASSL(activity, layoutRestDetails, 1134, 720, true);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
         }
+
         if (activity != null) {
-            shadowView.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.opaque_black_strong));
+            shadowView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.opaque_black_strong));
+
+
             layoutRestDetails.setVisibility(View.VISIBLE);
             ivRestOriginalImage.setVisibility(View.VISIBLE);
             backgroundImageView.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -139,16 +164,25 @@ public class RestaurantImageFragment extends Fragment {
 
             }
         }
+    }
 
-        return view;
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden) {
+            setupDetails(true);
+        }
+        super.onHiddenChanged(hidden);
     }
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
+
         if (loadBlurredImageTask != null && !loadBlurredImageTask.isCancelled())
             loadBlurredImageTask.cancel(true);
         ButterKnife.unbind(this);
+        activity.resetCollapseToolbar();
+        super.onDestroyView();
     }
 
 
@@ -161,9 +195,60 @@ public class RestaurantImageFragment extends Fragment {
     }
 
     private void setTextViewBackgroundDrawableColor(TextView textView, int color) {
-        if(textView.getBackground() != null){
+        if (textView.getBackground() != null) {
             textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
         }
+
+    }
+
+
+    final GestureDetector gesture = new GestureDetector(getActivity(),
+            new GestureDetector.SimpleOnGestureListener() {
+
+                @Override
+                public boolean onDown(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                    final float SWIPE_MIN_DISTANCE = 125.0f;
+                    if (e1.getY() - e2.getY() < SWIPE_MIN_DISTANCE)
+                        return false;
+
+
+                    switch (getSlope(e1.getX(), e1.getY(), e2.getX(), e2.getY())) {
+                        case 1:
+                            activity.performBackPressed();
+                            return true;
+                        case 2:
+
+                            return true;
+                        case 3:
+
+                            return true;
+                        case 4:
+                            return true;
+                    }
+                    return false;
+                }
+            });
+
+    private int getSlope(float x1, float y1, float x2, float y2) {
+        Double angle = Math.toDegrees(Math.atan2(y1 - y2, x2 - x1));
+        if (angle > 45 && angle <= 135)
+            // top
+            return 1;
+        if (angle >= 135 && angle < 180 || angle < -135 && angle > -180)
+            // left
+            return 2;
+        if (angle < -45 && angle >= -135)
+            // down
+            return 3;
+        if (angle > -45 && angle <= 45)
+            // right
+            return 4;
+        return 0;
     }
 
 }

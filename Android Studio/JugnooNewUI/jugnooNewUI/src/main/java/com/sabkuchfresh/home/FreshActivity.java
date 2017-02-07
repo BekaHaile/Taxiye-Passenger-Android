@@ -221,6 +221,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     private Toolbar toolbar;
     private RecyclerView rvDeliverySlots;
     private FreshSortingAdapter sortingAdapter;
+    private CoordinatorLayout coordinatorLayout;
     private static final float COLLAPSE_TOOLBAR_HEIGHT = 270f;
 
     @Override
@@ -234,7 +235,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             toolbar.setTitle("");
 
             appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
-
+            coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
             initCollapseToolBarViews();
 
             Data.currentActivity = FreshActivity.class.getName();
@@ -285,7 +286,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
 
             topBar.etSearch.addTextChangedListener(textWatcher);
-            resetToolbar();
+            resetCollapseToolbar();
 
 
 
@@ -714,6 +715,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         return (MenusCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(MenusCheckoutMergedFragment.class.getName());
     }
 
+
+    private RestaurantImageFragment getRestaurantImageFragment() {
+        return (RestaurantImageFragment) getSupportFragmentManager().findFragmentByTag(RestaurantImageFragment.class.getName());
+    }
+
     public DeliveryAddressesFragment getDeliveryAddressesFragment() {
         return (DeliveryAddressesFragment) getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName());
     }
@@ -850,7 +856,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 }
                 updateTotalAmountPrice(totalPrice);
                 if (getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
-                    if (getMenusCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
+                    if (getMenusCheckoutMergedFragment() == null && getRestaurantImageFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
                     } else {
                         textViewMinOrder.setVisibility(View.GONE);
@@ -1161,7 +1167,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     }
 
 
-    private void setCollapsingToolbar(boolean isEnable, Fragment fragment) {
+    public void setCollapsingToolbar(boolean isEnable, Fragment fragment) {
 
 
         CoordinatorLayout.LayoutParams relativeparams = (CoordinatorLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
@@ -1191,6 +1197,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             onStateChanged(appBarLayout, State.EXPANDED);
             appBarLayout.addOnOffsetChangedListener(collapseBarController);
 
+
         } else {
             findViewById(R.id.layout_rest_details).setVisibility(View.GONE);
             appBarLayout.removeOnOffsetChangedListener(collapseBarController);
@@ -1212,7 +1219,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 onStateChanged(appBarLayout, State.COLLAPSED);
             }
 
-
         }
 
 
@@ -1231,7 +1237,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     }
 
     public void openRestaurantFragment() {
-        transactionUtils.openRestaurantImageFragment(this, relativeLayoutContainer);
+        transactionUtils.openRestaurantImageFragment(FreshActivity.this, relativeLayoutContainer);
     }
 
     public void setMinOrderAmountText(Fragment fragment) {
@@ -1265,8 +1271,24 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             if (getAppType() == AppConstant.ApplicationType.MENUS) {
                 if (getTopFragment() instanceof MenusFragment) {
                     getMenusFragment().openSearch(false);
-                } else if (getTopFragment() instanceof VendorMenuFragment) {
-                    getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
+                } else if (getTopFragment() instanceof VendorMenuFragment || getTopFragment() instanceof RestaurantImageFragment) {
+                    if (getTopFragment() instanceof VendorMenuFragment) {
+
+
+                        //this is done to avoid flicker of collapse toolbar
+                        topBar.title.setVisibility(View.GONE);
+                        topBar.getIvSearch().setVisibility(View.GONE);
+                        appBarLayout.setExpanded(false, true);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
+                            }
+                        }, 200);
+                    } else {
+                        getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
+                    }
+
                 }
             } else {
                 if (getFreshFragment() != null) {
@@ -1530,7 +1552,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 getMenusSearchFragment().clearArrays();
             }
 
+
             super.onBackPressed();
+
+
         }
     }
 
@@ -2880,18 +2905,23 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         }
     }
 
-    public void resetToolbar() {
-  /*      AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-//        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-//                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-//                | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
-        params.setScrollFlags(0);
 
-        float height = 96f;
+    public void resetCollapseToolbar() {
 
-        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-        layoutParams.height = (int)(height * ASSL.Yscale());
-        toolbar.setLayoutParams(layoutParams);*/
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+                AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+                 if (behavior != null) {
+                    int[] consumed = new int[2];
+                    behavior.onNestedPreScroll(coordinatorLayout, appBarLayout, null, 0, 1, consumed);
+                }
+            }
+        }, 50);
+
+
     }
 
 
@@ -3206,6 +3236,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     private AppBarLayout.OnOffsetChangedListener collapseBarController = new AppBarLayout.OnOffsetChangedListener() {
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
+
             if (verticalOffset == 0) {
                 if (mCurrentState != State.EXPANDED) {
                     onStateChanged(appBarLayout, State.EXPANDED);
@@ -3270,12 +3302,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
 
 //                tvCollapRestaurantRating.setTextColor(tvCollapRestaurantRating.getTextColors().withAlpha(255 - calculatedAlpha));
-                tvCollapRestaurantRating.setAlpha((float)(255 - calculatedAlpha)/255f);
+                tvCollapRestaurantRating.setAlpha((float) (255 - calculatedAlpha) / 255f);
                 if (ivCollapseRestImage.getBackground() != null)
                     ivCollapseRestImage.getBackground().setAlpha(255 - calculatedAlpha);
 
                 topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(calculatedAlpha));
-                tvCollapRestaurantDeliveryTime.setAlpha((float)(255 - calculatedAlpha)/255f);
+                tvCollapRestaurantDeliveryTime.setAlpha((float) (255 - calculatedAlpha) / 255f);
 
 
                 if (mCurrentState != State.IDLE) {
@@ -3380,11 +3412,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     }
 
 
-    public void collapseToolbar() {
-        appBarLayout.setExpanded(false, true);
-        mCurrentState = State.COLLAPSED;
-    }
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
@@ -3399,7 +3426,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     };
 
 
-    public void setVendorDeliveryTimeToTextView(MenusResponse.Vendor vendor, TextView textView){
+    public void setVendorDeliveryTimeToTextView(MenusResponse.Vendor vendor, TextView textView) {
         final String prefix;
         final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
         final SpannableStringBuilder sb;
@@ -3409,7 +3436,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
             }
             prefix = getString(R.string.delivers_in);
-            sb = new SpannableStringBuilder(deliveryTime+" min");
+            sb = new SpannableStringBuilder(deliveryTime + " min");
 
         } else {
             prefix = getString(R.string.opens_at);
@@ -3421,7 +3448,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         textView.append(sb);
     }
 
-    public FABViewTest getFabViewTest(){
+    public FABViewTest getFabViewTest() {
         return fabViewTest;
     }
 
