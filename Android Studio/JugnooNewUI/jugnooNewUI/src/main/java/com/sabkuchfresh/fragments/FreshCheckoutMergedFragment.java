@@ -282,6 +282,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     }
                 }
                 activity.setRefreshCart(true);
+                deliveryAddressUpdated = true;
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -571,6 +572,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         });
         keyboardLayoutListener.setResizeTextView(false);
         linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
+        checkoutApiDoneOnce = false;
 
         return rootView;
     }
@@ -1915,6 +1918,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
+    private boolean checkoutApiDoneOnce = false;
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
         try {
             if(!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType())) {
@@ -1926,6 +1930,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
                                 Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
                         activity.setRefreshCart(true);
+                        deliveryAddressUpdated = true;
+                        if(!checkoutApiDoneOnce) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getCheckoutDataAPI();
+                                }
+                            }, 500);
+                        }
+                        checkoutApiDoneOnce = true;
                     } catch (Exception e) {
                     }
                 } else {
@@ -1942,14 +1956,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
 
-//            if(type != AppConstant.ApplicationType.MENUS) {
-//                if (!checkoutSaveData.isDefault()) {
-//                    activity.setSelectedAddress(checkoutSaveData.getAddress());
-//                    activity.setSelectedAddressType(checkoutSaveData.getAddressType());
-//                    activity.setSelectedAddressId(checkoutSaveData.getAddressId());
-//                    activity.setSelectedLatLng(new LatLng(checkoutSaveData.getLatitude(), checkoutSaveData.getLongitude()));
-//                }
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2269,14 +2275,25 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
+
     private double deliveryCharges(){
         double deliveryCharges = 0d;
         if(type == AppConstant.ApplicationType.MEALS) {
-            deliveryCharges = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+            if(activity.getUserCheckoutResponse() != null
+                    && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() != null
+                    && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() > 0){
+                deliveryCharges = activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges();
+            } else if(activity.getUserCheckoutResponse() != null
+                    && activity.getUserCheckoutResponse().getDeliveryInfo() != null
+                    && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() != null
+                    && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() > 0){
+                deliveryCharges = activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges();
+            } else {
+                deliveryCharges = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+            }
         } else{
             deliveryCharges = activity.getSuperCategoriesData().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
         }
-
         return deliveryCharges;
     }
 
