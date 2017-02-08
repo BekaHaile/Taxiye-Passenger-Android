@@ -382,7 +382,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                 .resize((int)(ratio * 150f), (int)(ratio * 150f))
                                 .centerCrop()
                                 .transform(new RoundBorderTransform((int)(ratio*6f), 0))
-                                .error(R.drawable.ic_meal_place_holder)
+                                .error(R.drawable.ic_fresh_item_placeholder)
                                 .into(mHolder.imageViewRestaurantImage);
                     } else {
                         mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
