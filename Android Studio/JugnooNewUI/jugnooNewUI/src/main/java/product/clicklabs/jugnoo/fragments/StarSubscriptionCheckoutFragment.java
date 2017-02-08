@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
@@ -607,6 +608,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                     activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                                 }
                             }, false);
+                            Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
+                                    0l);
                             //DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", message);
                         }
                     } catch (Exception e) {

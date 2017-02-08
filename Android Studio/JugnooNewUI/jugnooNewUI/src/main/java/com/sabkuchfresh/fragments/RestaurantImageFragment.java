@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.BlurImageTask;
 import com.sabkuchfresh.utils.CustomTypeFaceSpan;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -122,13 +123,15 @@ public class RestaurantImageFragment extends Fragment {
 
             if (activity.getVendorOpened() != null && activity.getVendorOpened().getImage() != null) {
 
+
+                Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).placeholder(R.drawable.ic_fresh_item_placeholder).into(ivRestOriginalImage);
                 //background blurred Image
                 loadBlurredImageTask = new BlurImageTask(getActivity(), new BlurImageTask.OnExecution() {
                     @Override
                     public void onLoad(Bitmap originalbitmap, Bitmap blurredBitmap) {
-                        if (originalbitmap != null) {
-                            ivRestOriginalImage.setImageBitmap(originalbitmap);
-                        }
+//                        if (originalbitmap != null) {
+//                            ivRestOriginalImage.setImageBitmap(originalbitmap);
+//                        }
                         if (blurredBitmap != null) {
                             backgroundImageView.setImageBitmap(blurredBitmap);
                         }

@@ -2482,7 +2482,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         if(!Data.userData.isSubscriptionActive()
                 && activity.getUserCheckoutResponse() != null
                 && activity.getUserCheckoutResponse().getSubscriptionInfo() != null
-                && activity.getUserCheckoutResponse().getSubscriptionInfo().getSubscriptionId() != null) {
+                && activity.getUserCheckoutResponse().getSubscriptionInfo().getSubscriptionId() != null
+                && activity.getUserCheckoutResponse().getSubscriptionInfo().getDeliveryCharges() != null) {
             deliveryCharges = activity.getUserCheckoutResponse().getSubscriptionInfo().getDeliveryCharges();
         }
 
