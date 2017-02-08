@@ -1293,13 +1293,13 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                         //this is done to avoid flicker of collapse toolbar
                         topBar.title.setVisibility(View.GONE);
                         topBar.getIvSearch().setVisibility(View.GONE);
-                        appBarLayout.setExpanded(false, true);
+                        appBarLayout.setExpanded(false, false);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
                             }
-                        }, 200);
+                        }, 150);
                     } else {
                         getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
                     }
@@ -2941,8 +2941,14 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     }
 
 
-    public void openMenusItemCustomizeFragment(int categoryPos, int subCategoryPos, int itemPos) {
-        getTransactionUtils().openMenusItemCustomizeFragment(this, getRelativeLayoutContainer(), categoryPos, subCategoryPos, itemPos);
+    public void openMenusItemCustomizeFragment(final int categoryPos,final int subCategoryPos,final int itemPos) {
+        appBarLayout.setExpanded(false, false);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getTransactionUtils().openMenusItemCustomizeFragment(FreshActivity.this, getRelativeLayoutContainer(), categoryPos, subCategoryPos, itemPos);
+            }
+        }, 150);
     }
 
     public int getAppType() {
@@ -3374,6 +3380,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 llCartContainer.getBackground().setAlpha(255);
                 llCartContainer.setSelected(true);
                 topBar.getIvSearch().setSelected(true);
+                topBar.getIvSearch().setAlpha(255);
 
 
                 //back Button
@@ -3401,6 +3408,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 llCartContainer.getBackground().setAlpha(255);
                 llCartContainer.setSelected(false);
                 topBar.getIvSearch().setSelected(false);
+                topBar.getIvSearch().setAlpha(255);
 
                 //back Button
                 topBar.imageViewBack.getDrawable().mutate().setColorFilter(ContextCompat.getColor(this, R.color.lightBlackTxtColor), PorterDuff.Mode.SRC_ATOP);
