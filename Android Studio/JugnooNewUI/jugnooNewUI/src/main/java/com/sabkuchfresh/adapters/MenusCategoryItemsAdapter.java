@@ -164,7 +164,8 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
             mHolder.textViewAboutItemDescription.setTag(position);
-            RelativeLayout.LayoutParams paramsDesc = (RelativeLayout.LayoutParams) mHolder.textViewAboutItemDescription.getLayoutParams();
+            int visibilityDesc;
+            RelativeLayout.LayoutParams paramsSep = (RelativeLayout.LayoutParams) mHolder.saperatorImage.getLayoutParams();
             if(!TextUtils.isEmpty(item.getItemDetails())){
                 if(item.getItemDetails().length() > 80){
                     SpannableStringBuilder ssb;
@@ -182,11 +183,15 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     mHolder.textViewAboutItemDescription.append(" ");
                     mHolder.textViewAboutItemDescription.append(ssb);
                 }
-                paramsDesc.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+                visibilityDesc = View.VISIBLE;
+                paramsSep.addRule(RelativeLayout.BELOW, mHolder.textViewAboutItemDescription.getId());
             } else {
-                paramsDesc.height = 1;
+                visibilityDesc = View.GONE;
+                paramsSep.addRule(RelativeLayout.BELOW, mHolder.textViewItemCategoryName.getId());
             }
-            mHolder.textViewAboutItemDescription.setLayoutParams(paramsDesc);
+            mHolder.textViewAboutItemDescription.setVisibility(visibilityDesc);
+            mHolder.saperatorImage.setLayoutParams(paramsSep);
+
             mHolder.textViewAboutItemDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -318,7 +323,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
         public RelativeLayout relativeLayoutItem;
         public LinearLayout linearLayoutQuantitySelector;
-        private ImageView imageViewFoodType, imageViewMinus, imageViewPlus;
+        private ImageView imageViewFoodType, imageViewMinus, imageViewPlus, saperatorImage;
         public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity;
 
         public MainViewHolder(View itemView, Context context) {
@@ -328,6 +333,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
+            saperatorImage = (ImageView) itemView.findViewById(R.id.saperatorImage);
 
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
             textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenMedium(context));

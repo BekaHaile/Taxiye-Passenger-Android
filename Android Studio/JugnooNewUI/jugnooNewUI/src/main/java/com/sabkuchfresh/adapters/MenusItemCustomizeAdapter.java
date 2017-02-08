@@ -147,7 +147,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             ViewHolderItem mHolder = (ViewHolderItem) holder;
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
             mHolder.textViewItemCategoryName.setText(item.getItemName());
-            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 90f)));
+            mHolder.textViewItemCategoryName.setMinimumHeight((int)(Math.min(ASSL.Xscale(), ASSL.Yscale()) * 90f));
 
             int total = itemSelected.getQuantity();
             mHolder.textViewQuantity.setText(String.valueOf(total));
@@ -163,21 +163,16 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
-            RelativeLayout.LayoutParams paramsDesc = (RelativeLayout.LayoutParams) mHolder.textViewAboutItemDescription.getLayoutParams();
-            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
-            int gravity;
+            int gravity, visibilityDesc;
             if(!TextUtils.isEmpty(item.getItemDetails())){
-                paramsDesc.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
                 gravity = Gravity.LEFT;
-                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 30f), paramsFT.rightMargin, paramsFT.bottomMargin);
+                visibilityDesc = View.VISIBLE;
             } else {
-                paramsDesc.height = 1;
                 gravity = Gravity.CENTER_VERTICAL;
-                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 50f), paramsFT.rightMargin, paramsFT.bottomMargin);
+                visibilityDesc = View.GONE;
             }
-            mHolder.textViewAboutItemDescription.setLayoutParams(paramsDesc);
+            mHolder.textViewAboutItemDescription.setVisibility(visibilityDesc);
             mHolder.textViewItemCategoryName.setGravity(gravity);
-            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
 
             if(context instanceof FreshActivity
                     && ((FreshActivity)context).getVendorOpened() != null

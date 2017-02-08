@@ -257,7 +257,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private void setUpCollapseToolbarData() {
         if (activity.getVendorOpened() != null) {
             activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
-            Picasso.with(activity).load(activity.getVendorOpened().getImage()).into(activity.ivCollapseRestImage);
+            Picasso.with(activity).load(activity.getVendorOpened().getImage())
+                    .placeholder(R.drawable.ic_fresh_item_placeholder)
+                    .into(activity.ivCollapseRestImage);
 
             activity.setVendorDeliveryTimeToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime);
             setTextViewDrawableColor(activity.tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));

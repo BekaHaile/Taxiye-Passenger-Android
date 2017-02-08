@@ -322,8 +322,16 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                     if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                                         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                                        if(searchOpened) {
+                                            openSearch(true);
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Utils.hideSoftKeyboard(activity, activity.getTopBar().etSearch);
+                                                }
+                                            }, 100);
+                                        }
                                     }
-                                    recyclerViewRestaurant.smoothScrollToPosition(0);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -504,6 +512,10 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
            activity.fragmentUISetup(this);
            if(keyboardLayoutListener.getKeyBoardState() == 1){
                activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+           }
+           if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+               activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+               activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
            }
        } else {
            searchOpened = true;

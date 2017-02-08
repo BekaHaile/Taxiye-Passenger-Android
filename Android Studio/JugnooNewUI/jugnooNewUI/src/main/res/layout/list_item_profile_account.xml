@@ -237,7 +237,7 @@
                 android:layout_width="61px"
                 android:layout_height="61px"
                 android:layout_marginLeft="122px"
-                android:layout_marginRight="12px"
+                android:layout_marginRight="18px"
                 android:src="@drawable/ic_menu_category_fresh_selector"
                 android:tag="mwar"/>
 

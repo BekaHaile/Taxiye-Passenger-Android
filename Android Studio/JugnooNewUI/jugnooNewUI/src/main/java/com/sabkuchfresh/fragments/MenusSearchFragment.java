@@ -186,8 +186,8 @@ public class MenusSearchFragment extends Fragment {
 				if(activity.getMenuProductsResponse() != null
 						&& activity.getMenuProductsResponse().getCategories() != null) {
 					String token = params[0];
-					itemsInSearch.clear();
 					if(!token.equalsIgnoreCase(tokenSearched)) {
+						itemsInSearch.clear();
 						if(token.length() == 1 && token.length() > tokenSearched.length()) {
 							searchFromStart(token);
 						}
