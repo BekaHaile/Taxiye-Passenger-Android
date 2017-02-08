@@ -121,7 +121,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.OrderStatusActivity;
+import product.clicklabs.jugnoo.OrderStatusFragment;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -1125,11 +1125,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-            } else if (fragment instanceof OrderStatusActivity) {
+            } else if (fragment instanceof OrderStatusFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                llSearchCartVis = View.GONE;
             } else if (fragment instanceof MealAddonItemsFragment) {
                 llCartContainerVis = View.GONE;
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -3436,7 +3437,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
             }
             prefix = getString(R.string.delivers_in);
-            sb = new SpannableStringBuilder(deliveryTime + " min");
+            sb = new SpannableStringBuilder(deliveryTime + " mins");
 
         } else {
             prefix = getString(R.string.opens_at);

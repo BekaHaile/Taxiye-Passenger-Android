@@ -42,7 +42,7 @@
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/top_bar_height"
                     android:background="@android:color/white"
                     android:contentInsetLeft="0dp"
                     android:contentInsetStart="0dp"

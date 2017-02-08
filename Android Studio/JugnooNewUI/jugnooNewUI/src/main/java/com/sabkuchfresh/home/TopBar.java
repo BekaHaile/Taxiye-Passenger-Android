@@ -138,8 +138,6 @@ public class TopBar implements FlurryEventNames {
 		@Override
 		public void onClick(View v) {
 			switch(v.getId()){
-				case R.id.topRl:
-					break;
 
 				case R.id.imageViewMenu:
 					drawerLayout.openDrawer(GravityCompat.START);

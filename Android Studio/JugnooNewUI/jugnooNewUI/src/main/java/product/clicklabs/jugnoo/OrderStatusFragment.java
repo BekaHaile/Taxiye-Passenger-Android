@@ -69,7 +69,7 @@ import retrofit.mime.TypedByteArray;
  * Created by ankit on 27/10/16.
  */
 
-public class OrderStatusActivity extends Fragment implements View.OnClickListener{
+public class OrderStatusFragment extends Fragment implements View.OnClickListener{
 
     private RelativeLayout relative, rlAmountPayable, rlBilledAmount, rlRefund, rlOrderStatus;
     private TextView tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,

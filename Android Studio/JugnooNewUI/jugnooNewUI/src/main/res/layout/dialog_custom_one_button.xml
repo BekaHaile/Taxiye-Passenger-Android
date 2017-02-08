@@ -5,6 +5,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:splitMotionEvents="false"
+                android:soundEffectsEnabled="false"
     >
 
     <RelativeLayout
@@ -15,6 +16,7 @@
         android:layout_margin="40px"
         android:background="@drawable/background_white_rounded_bordered"
         android:splitMotionEvents="false"
+        android:soundEffectsEnabled="false"
         >
 
 

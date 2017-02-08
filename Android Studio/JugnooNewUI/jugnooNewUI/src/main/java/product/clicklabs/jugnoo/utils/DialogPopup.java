@@ -318,10 +318,15 @@ public class DialogPopup {
 		dialogNoInternet(activity, title, text, alertCallBackWithButtonsInterface);
 	}
 
-	
 
 	public static void alertPopupLeftOriented(Activity activity, String title, String message,
-											  boolean leftOriented, boolean applyMinDimens, boolean inHtml) {
+											  boolean leftOriented, boolean applyMinDimens, boolean inHtml){
+		alertPopupLeftOriented(activity, title, message, leftOriented, applyMinDimens, inHtml, false);
+	}
+
+	public static void alertPopupLeftOriented(Activity activity, String title, String message,
+											  boolean leftOriented, boolean applyMinDimens, boolean inHtml,
+											  boolean cancellable) {
 		try {
 			dismissAlertPopup();
 			if("".equalsIgnoreCase(title)){
@@ -338,8 +343,8 @@ public class DialogPopup {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
+			dialog.setCancelable(cancellable);
+			dialog.setCanceledOnTouchOutside(cancellable);
 
 			RelativeLayout relativeLayoutInner = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutInner);
 
@@ -383,6 +388,23 @@ public class DialogPopup {
 				}
 				
 			});
+
+			if(cancellable){
+				frameLayout.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+
+				});
+				relativeLayoutInner.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+
+					}
+				});
+			}
+
 			
 			dialog.show();
 		} catch (Exception e) {
@@ -407,7 +429,13 @@ public class DialogPopup {
 
 	public static void alertPopupWithListener(Activity activity, String title, String message, String buttonText,
 											  final View.OnClickListener onClickListener, boolean newInstance,
-											  boolean showTitle) {
+											  boolean showTitle){
+		alertPopupWithListener(activity, title, message, buttonText, onClickListener, newInstance, showTitle, false);
+	}
+
+	public static void alertPopupWithListener(Activity activity, String title, String message, String buttonText,
+											  final View.OnClickListener onClickListener, boolean newInstance,
+											  boolean showTitle, boolean cancellable) {
 		try {
 			if(ifOtherDialog(activity, message, onClickListener, null, false)) {
 				dismissAlertPopup();
@@ -432,8 +460,8 @@ public class DialogPopup {
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 				layoutParams.dimAmount = 0.6f;
 				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(false);
-				dialog.setCanceledOnTouchOutside(false);
+				dialog.setCancelable(cancellable);
+				dialog.setCanceledOnTouchOutside(cancellable);
 
 
 				TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
@@ -466,6 +494,23 @@ public class DialogPopup {
 					}
 
 				});
+
+				if(cancellable){
+					frameLayout.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialog.dismiss();
+						}
+					});
+
+					dialog.findViewById(R.id.relativeLayoutInner).setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+
+						}
+					});
+				}
+
 
 				dialog.show();
 			}

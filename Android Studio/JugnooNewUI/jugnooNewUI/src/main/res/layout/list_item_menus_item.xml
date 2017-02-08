@@ -25,11 +25,10 @@
         android:layout_toLeftOf="@+id/linearLayoutQuantitySelector"
         android:lineSpacingExtra="2px"
         android:layout_marginTop="@dimen/px_24"
-        android:text="Margherita Pizza"
+        android:text="Margherita \nPizza"
         android:textColor="@color/lightBlackTxtColor"
         android:textSize="@dimen/px_32"
         android:layout_toRightOf="@id/imageViewFoodType"
-        android:minHeight="90px"
         />
 
     <include
@@ -47,8 +46,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewItemCategoryName"
-        android:layout_marginBottom="@dimen/px_24"
-        android:layout_marginLeft="5px"
         android:layout_marginRight="20px"
         android:layout_marginTop="5px"
         android:layout_toRightOf="@id/imageViewFoodType"
@@ -64,6 +61,7 @@
         android:layout_below="@id/textViewAboutItemDescription"
         android:layout_marginLeft="25px"
         android:layout_marginRight="25px"
+        android:layout_marginTop="@dimen/px_24"
         android:background="@color/grey_light_more_alpha"
         android:visibility="visible"
         />
