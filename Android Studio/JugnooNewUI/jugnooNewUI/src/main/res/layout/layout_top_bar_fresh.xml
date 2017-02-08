@@ -191,9 +191,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_margin="7px"
                         android:layout_marginTop="9px"
-                        android:background="@drawable/rectangle_6_copy"
-                        android:padding="16px"
-                        android:src="@drawable/searc_icon"
+                        android:src="@drawable/ic_search_new_selector"
                         android:tag="mwar"
                         android:visibility="visible" />
 

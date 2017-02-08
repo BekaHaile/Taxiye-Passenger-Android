@@ -1194,7 +1194,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 toolbar.setLayoutParams(toolBarParams);
 
             }
-            topBar.getIvSearch().setBackgroundResource(R.drawable.ic_circle);
+            topBar.getIvSearch().setSelected(false);
             onStateChanged(appBarLayout, State.EXPANDED);
             appBarLayout.addOnOffsetChangedListener(collapseBarController);
 
@@ -1213,10 +1213,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
 
             if (fragment instanceof RestaurantImageFragment) {
-                topBar.getIvSearch().setBackgroundResource(R.drawable.ic_circle);
+                topBar.getIvSearch().setSelected(true);
                 onStateChanged(appBarLayout, State.EXPANDED);
             } else {
-                topBar.getIvSearch().setBackgroundResource(R.drawable.rectangle_6_copy);
+                topBar.getIvSearch().setSelected(false);
                 onStateChanged(appBarLayout, State.COLLAPSED);
             }
 
@@ -2915,7 +2915,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             public void run() {
                 CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
                 AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-                 if (behavior != null) {
+                if (behavior != null) {
                     int[] consumed = new int[2];
                     behavior.onNestedPreScroll(coordinatorLayout, appBarLayout, null, 0, 1, consumed);
                 }
@@ -3235,6 +3235,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     private LinearLayout llToolbarLayout;
     public ImageView ivCollapseRestImage;
     private AppBarLayout.OnOffsetChangedListener collapseBarController = new AppBarLayout.OnOffsetChangedListener() {
+        @SuppressWarnings("deprecation")
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
@@ -3267,27 +3268,29 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     float searchAndCapsuleAlpha2 = (((appBarLayout.getTotalScrollRange() / 2) - (-verticalOffset)) * 1.0f) / (appBarLayout.getTotalScrollRange() / 2 - 0);
                     searchAndCapsuleAlpha2 = searchAndCapsuleAlpha2 * 255;
 
-                    topBar.getIvSearch().getBackground().setAlpha((int) searchAndCapsuleAlpha2);
-                    if (!topBar.getIvSearch().getBackground().getConstantState().equals(ContextCompat.getDrawable(FreshActivity.this, R.drawable.ic_circle).getConstantState())) {
-                        topBar.getIvSearch().setBackgroundResource(R.drawable.ic_circle);
+                    if (!topBar.getIvSearch().isSelected()) {
+                        topBar.getIvSearch().setSelected(true);
 
                     }
-
+                    topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha2);
 
                     if (!topBar.llCartContainer.isSelected())
                         topBar.llCartContainer.setSelected(true);
+
                     topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha2);
                     topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.argb((int) searchAndCapsuleAlpha2, 255, 255, 255), PorterDuff.Mode.SRC_ATOP);
                 } else {
 
                     float searchAndCapsuleAlpha1 = (appBarLayout.getTotalScrollRange() - (-verticalOffset)) * 1.0f / (appBarLayout.getTotalScrollRange() - (appBarLayout.getTotalScrollRange() / 2));
                     searchAndCapsuleAlpha1 = 255 - (searchAndCapsuleAlpha1 * 255);
-                    if (!topBar.getIvSearch().getBackground().getConstantState().equals(ContextCompat.getDrawable(FreshActivity.this, R.drawable.rectangle_6_copy).getConstantState())) {
-                        topBar.getIvSearch().setBackgroundResource(R.drawable.rectangle_6_copy);
+
+
+                    if (topBar.getIvSearch().isSelected()) {
+                        topBar.getIvSearch().setSelected(false);
 
                     }
 
-                    topBar.getIvSearch().getBackground().setAlpha((int) searchAndCapsuleAlpha1);
+                    topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha1);
                     if (topBar.llCartContainer.isSelected())
                         topBar.llCartContainer.setSelected(false);
 
@@ -3297,12 +3300,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 }
 
 
-                //        llCartContainer.getBackground().setAlpha(calculatedAlpha);
-
                 tvCollapRestaurantName.setTextColor(tvCollapRestaurantName.getTextColors().withAlpha(255 - calculatedAlpha));
 
-
-//                tvCollapRestaurantRating.setTextColor(tvCollapRestaurantRating.getTextColors().withAlpha(255 - calculatedAlpha));
                 tvCollapRestaurantRating.setAlpha((float) (255 - calculatedAlpha) / 255f);
                 if (ivCollapseRestImage.getBackground() != null)
                     ivCollapseRestImage.getBackground().setAlpha(255 - calculatedAlpha);
@@ -3359,7 +3358,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 //Cart and Search Button
                 llCartContainer.getBackground().setAlpha(255);
                 llCartContainer.setSelected(true);
-                topBar.getIvSearch().getBackground().setAlpha(255);
+                topBar.getIvSearch().setSelected(true);
 
 
                 //back Button
@@ -3386,7 +3385,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 //Cart and Search Button
                 llCartContainer.getBackground().setAlpha(255);
                 llCartContainer.setSelected(false);
-                topBar.getIvSearch().getBackground().setAlpha(255);
+                topBar.getIvSearch().setSelected(false);
 
                 //back Button
                 topBar.imageViewBack.getDrawable().mutate().setColorFilter(ContextCompat.getColor(this, R.color.lightBlackTxtColor), PorterDuff.Mode.SRC_ATOP);
