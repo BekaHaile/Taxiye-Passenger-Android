@@ -206,7 +206,7 @@
                             android:id="@+id/ivFilter"
                             android:layout_width="62px"
                             android:layout_height="62px"
-                            android:src="@drawable/ic_menus_filters" />
+                            android:src="@drawable/ic_menus_filters_selector" />
 
                         <ImageView
                             android:id="@+id/ivFilterApplied"

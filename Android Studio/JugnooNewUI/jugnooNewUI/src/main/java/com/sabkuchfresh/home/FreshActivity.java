@@ -2766,6 +2766,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 } else if (arr.length > 0) {
                     address = arr[0];
                 }
+                address = getSelectedAddress();
             } else {
                 address = getSelectedAddressType();
             }
