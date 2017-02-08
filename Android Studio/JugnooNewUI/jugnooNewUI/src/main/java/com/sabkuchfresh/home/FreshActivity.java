@@ -3437,7 +3437,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
             }
             prefix = getString(R.string.delivers_in);
-            sb = new SpannableStringBuilder(deliveryTime + " min");
+            sb = new SpannableStringBuilder(deliveryTime + " mins");
 
         } else {
             prefix = getString(R.string.opens_at);

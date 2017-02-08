@@ -40,7 +40,7 @@
         android:drawableLeft="@drawable/ic_restaurant_location"
         android:paddingLeft="@dimen/px_5"
         android:paddingBottom="@dimen/px_2"
-        android:drawablePadding="@dimen/px_5"
+        android:drawablePadding="@dimen/dp_2"
         />
 
     <TextView
@@ -92,7 +92,7 @@
         android:layout_toRightOf="@+id/imageViewRestaurantImage"
         android:layout_below="@+id/textViewMinimumOrder"
         android:drawableLeft="@drawable/ic_clock_grey"
-        android:drawablePadding="@dimen/px_8"
+        android:drawablePadding="@dimen/dp_4"
         />
 
     <TextView
@@ -109,7 +109,7 @@
         android:paddingRight="@dimen/px_15"
         android:paddingLeft="@dimen/px_15"
         android:drawableLeft="@drawable/ic_exclamation_red"
-        android:drawablePadding="@dimen/px_6"
+        android:drawablePadding="@dimen/dp_3"
         android:gravity="center_vertical"
         />
 
