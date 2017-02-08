@@ -28,12 +28,12 @@
                 android:id="@+id/toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
                 app:contentScrim="@android:color/white"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
                 app:scrimVisibleHeightTrigger="100px">
-               <!-- app:scrimAnimationDuration="400"
+                <!-- app:scrimAnimationDuration="400"
 
-                app:scrimVisibleHeightTrigger="50px">-->
+                 app:scrimVisibleHeightTrigger="50px">-->
 
 
                 <include layout="@layout/restaurant_collapse_details" />
@@ -56,6 +56,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <include
                             android:id="@+id/topBarMain"
                             layout="@layout/layout_top_bar_fresh" />
@@ -67,7 +68,6 @@
 
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
-
 
 
         <LinearLayout
