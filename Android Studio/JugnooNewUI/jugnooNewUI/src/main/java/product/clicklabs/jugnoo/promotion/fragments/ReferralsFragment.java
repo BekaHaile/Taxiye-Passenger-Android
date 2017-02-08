@@ -183,11 +183,13 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 						FlurryEventLogger.event(FlurryEventNames.INVITE_EARN_MORE_INFO);
 						FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Details");
 						MyApplication.getInstance().logEvent(REFERRAL+"_"+DETAILS, bundle);
-						DialogPopup.alertPopupWithListener(activity, "", Data.userData.getReferralMessages().referralMoreInfoMessage, new View.OnClickListener() {
+						DialogPopup.alertPopupWithListener(activity, "",
+								Data.userData.getReferralMessages().referralMoreInfoMessage, "",
+								new View.OnClickListener() {
 							@Override
 							public void onClick(View view) {
 							}
-						});
+						}, false, false, true);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

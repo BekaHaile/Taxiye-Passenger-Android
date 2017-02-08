@@ -176,8 +176,8 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 50f), paramsFT.rightMargin, paramsFT.bottomMargin);
             }
             mHolder.textViewAboutItemDescription.setLayoutParams(paramsDesc);
-            mHolder.textViewItemCategoryName.setGravity(gravity);
-            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
+//            mHolder.textViewItemCategoryName.setGravity(gravity);
+//            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
 
             if(context instanceof FreshActivity
                     && ((FreshActivity)context).getVendorOpened() != null

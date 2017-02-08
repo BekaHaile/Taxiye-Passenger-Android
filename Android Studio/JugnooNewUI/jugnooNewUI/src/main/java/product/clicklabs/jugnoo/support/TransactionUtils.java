@@ -9,7 +9,7 @@ import android.view.View;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.OrderStatusActivity;
+import product.clicklabs.jugnoo.OrderStatusFragment;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
@@ -146,20 +146,20 @@ public class TransactionUtils {
 	}
 
 	public void openOrderStatusFragment(FragmentActivity activity, View container, int orderId, int productType) {
-		if(!checkIfFragmentAdded(activity, OrderStatusActivity.class.getName())) {
+		if(!checkIfFragmentAdded(activity, OrderStatusFragment.class.getName())) {
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 			fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-			OrderStatusActivity orderStatusActivity = new OrderStatusActivity();
+			OrderStatusFragment orderStatusFragment = new OrderStatusFragment();
 			Bundle bundle = new Bundle();
 			bundle.putInt(Constants.KEY_ORDER_ID, orderId);
 			bundle.putInt(Constants.KEY_PRODUCT_TYPE, productType);
 
-			orderStatusActivity.setArguments(bundle);
+			orderStatusFragment.setArguments(bundle);
 			fragmentTransaction.add(container.getId(),
-					orderStatusActivity,
-					OrderStatusActivity.class.getName())
-					.addToBackStack(OrderStatusActivity.class.getName());
+					orderStatusFragment,
+					OrderStatusFragment.class.getName())
+					.addToBackStack(OrderStatusFragment.class.getName());
 			if(fragmentManager.getBackStackEntryCount() > 0){
 				fragmentTransaction.hide(fragmentManager.findFragmentByTag(fragmentManager
 						.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName()));
