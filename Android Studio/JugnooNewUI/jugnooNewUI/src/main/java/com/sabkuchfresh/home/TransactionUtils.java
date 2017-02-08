@@ -1,11 +1,8 @@
 package com.sabkuchfresh.home;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.View;
 
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
@@ -115,7 +112,7 @@ public class TransactionUtils {
             }*/
             FreshActivity freshActivity = (FreshActivity) activity;
             activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in_slow,R.anim.fade_out_slow, R.anim.fade_in_slow ,R.anim.fade_out_slow)
+                    .setCustomAnimations(android.R.anim.fade_in,0)
                     .add(container.getId(), restaurantImageFragment,
                             RestaurantImageFragment.class.getName())
                     .addToBackStack(RestaurantImageFragment.class.getName())
