@@ -450,13 +450,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         btnAddStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(getActivity(), JugnooStarActivity.class);
-                intent.putExtra("checkout_fragment", selectedSubId);
-                getActivity().startActivity(intent);*/
-
                 selectedSubscription = new Gson().fromJson(selectedSubId, SubscriptionData.Subscription.class);
-                /*freshCartItemsAdapter.setResults(subItemsInCart, selectedSubscription);
-                cvBecomeStar.setVisibility(View.GONE);*/
                 getCheckoutDataAPI(selectedSubscription);
             }
         });
@@ -1949,6 +1943,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             })) {
                                     } else {
                                         activity.setUserCheckoutResponse(userCheckoutResponse);
+                                        if(activity.getUserCheckoutResponse() != null
+                                                && activity.getUserCheckoutResponse().getSubscriptionInfo() != null
+                                                && activity.getUserCheckoutResponse().getSubscriptionInfo().getSubscriptionId() == null) {
+                                            Utils.showToast(activity, activity.getResources().getString(R.string.star_could_not_be_added));
+                                        }
                                         setSubscriptionView();
                                         updateCartFromCheckoutData(userCheckoutResponse);
 
@@ -2178,7 +2177,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
         if(Data.userData.getShowSubscriptionData() == 1 && !Data.userData.isSubscriptionActive() && userCheckoutResponse.getShowStarSubscriptions() == 1) {
-            if (userCheckoutResponse.getSubscriptionInfo() != null) {
+            if (userCheckoutResponse.getSubscriptionInfo() != null && userCheckoutResponse.getSubscriptionInfo().getSubscriptionId() != null) {
                 freshCartItemsAdapter.setResults(subItemsInCart, userCheckoutResponse.getSubscriptionInfo());
                 cvBecomeStar.setVisibility(View.GONE);
             } else {
@@ -2416,7 +2415,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private double getSubTotalAmount(boolean includeSubscription){
         if(includeSubscription){
             double subTotalAmountIncSubs = subTotalAmount;
-            if(!Data.userData.isSubscriptionActive() && activity.getUserCheckoutResponse().getSubscriptionInfo() != null) {
+            if(!Data.userData.isSubscriptionActive()
+                    && activity.getUserCheckoutResponse() != null
+                    && activity.getUserCheckoutResponse().getSubscriptionInfo() != null
+                    && activity.getUserCheckoutResponse().getSubscriptionInfo().getSubscriptionId() != null) {
                 subTotalAmountIncSubs = subTotalAmountIncSubs + activity.getUserCheckoutResponse().getSubscriptionInfo().getPrice();
             }
             return subTotalAmountIncSubs;
@@ -2477,7 +2479,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         } else{
             deliveryCharges = activity.getSuperCategoriesData().getDeliveryInfo().getApplicableDeliveryCharges(type, getSubTotalAmount(false));
         }
-        if(!Data.userData.isSubscriptionActive() && activity.getUserCheckoutResponse().getSubscriptionInfo() != null) {
+        if(!Data.userData.isSubscriptionActive()
+                && activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getSubscriptionInfo() != null
+                && activity.getUserCheckoutResponse().getSubscriptionInfo().getSubscriptionId() != null) {
             deliveryCharges = activity.getUserCheckoutResponse().getSubscriptionInfo().getDeliveryCharges();
         }
 
