@@ -4,8 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dull_background"
-    android:padding="25px"
-
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.v7.widget.CardView
@@ -19,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:orientation="vertical"
-            android:padding="36px">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_view_invoice"
@@ -48,19 +45,21 @@
                 app:font="maven" />
 
 
-            <com.sabkuchfresh.utils.CustomRatingBar
+            <com.sabkuchfresh.utils.RatingBarMenuFeedback
                 android:id="@+id/rating_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="60px"
+                android:paddingBottom="25px"
                 android:numStars="5"
                 android:rating="3"
                 app:halfStars="false"
                 app:maxStars="5"
                 app:onlyForDisplay="false"
-                app:starOff="@drawable/star_yellow_new_empty"
-                app:starOn="@drawable/star_yellow_new_full" />
+                android:tag="mwar"
+                app:starOff="@drawable/ic_menu_feedback_star_off"
+                app:starOn="@drawable/ic_menu_feedback_star_on" />
 
             <EditText
                 android:id="@+id/edt_feedback_title"

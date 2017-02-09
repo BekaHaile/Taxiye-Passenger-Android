@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.utils.CustomRatingBar;
+import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 
 import java.util.ArrayList;
 
@@ -40,7 +40,7 @@ public class NewFeedbackFragment extends Fragment {
     @Bind(R.id.tv_rate_experience)
     TextView tvRateExperience;
     @Bind(R.id.rating_bar)
-    CustomRatingBar ratingBar;
+    RatingBarMenuFeedback ratingBar;
     @Bind(R.id.edt_feedback_title)
     EditText edtFeedbackTitle;
     @Bind(R.id.edt_feedback_descc)
@@ -65,13 +65,14 @@ public class NewFeedbackFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.content_rate_experience, container, false);
-        ButterKnife.bind(this, rootView);
+
         activity = (FreshActivity) getActivity();
+        mainLayout = (LinearLayout) rootView.findViewById(R.id.root_layout);
+        new ASSL(activity, mainLayout, 1134, 720, false);
+        ButterKnife.bind(this, rootView);
         activity.fragmentUISetup(this);
 
 
-        mainLayout = (LinearLayout) rootView.findViewById(R.id.root_layout);
-        new ASSL(activity, mainLayout, 1134, 720, false);
 /*
 
         try {

@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
+import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
@@ -74,7 +74,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             ivOffering;
     private FreshActivity activity;
     private LinearLayout linearLayoutRideSummary, linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer, llBadReason;
-    private RelativeLayout  mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
+    private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
     private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue, tvItems,
             textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp, textViewRideEndWithImage;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;
@@ -95,7 +95,10 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private TextView textViewRSOtherError;
     private Button buttonRSSubmitFeedback;
     private EditText editTextRSFeedback;
+    private LinearLayout llThumbsRating;
+    private RatingBarMenuFeedback ratingBarMenuFeedback;
     private ArrayList<FeedbackReason> reasons = new ArrayList<>();
+    private TextView textViewRSWhatImprove;
 
     @Nullable
     @Override
@@ -105,11 +108,11 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
         updateUI();
-        try {
+      /*  try {
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
             reasons.clear();
-            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+            if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
                     .equals(Config.getFreshClientId())) {
                 viewType = Data.getFreshData().getFeedbackViewType();
                 dateValue = Data.getFreshData().getFeedbackDeliveryDate();
@@ -118,7 +121,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
                 productType = ProductType.FRESH;
-                for(int i=0; i<Data.getFreshData().getNegativeFeedbackReasons().length(); i++){
+                for (int i = 0; i < Data.getFreshData().getNegativeFeedbackReasons().length(); i++) {
                     reasons.add(new FeedbackReason(Data.getFreshData().getNegativeFeedbackReasons().get(i).toString()));
                 }
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
@@ -131,7 +134,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 feedbackOrderItems = Data.getMealsData().getFeedbackOrderItems();
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
                 productType = ProductType.MEALS;
-                for(int i=0; i<Data.getMealsData().getNegativeFeedbackReasons().length(); i++){
+                for (int i = 0; i < Data.getMealsData().getNegativeFeedbackReasons().length(); i++) {
                     reasons.add(new FeedbackReason(Data.getMealsData().getNegativeFeedbackReasons().get(i).toString()));
                 }
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
@@ -143,11 +146,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
                 productType = ProductType.GROCERY;
-                for(int i=0; i<Data.getGroceryData().getNegativeFeedbackReasons().length(); i++){
+                for (int i = 0; i < Data.getGroceryData().getNegativeFeedbackReasons().length(); i++) {
                     reasons.add(new FeedbackReason(Data.getGroceryData().getNegativeFeedbackReasons().get(i).toString()));
                 }
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
                     .equals(Config.getMenusClientId())) {
+
                 viewType = Data.getMenusData().getFeedbackViewType();
                 dateValue = Data.getMenusData().getFeedbackDeliveryDate();
                 orderAmount = Data.getMenusData().getAmount();
@@ -155,7 +159,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 activity.getTopBar().title.setText(getResources().getString(R.string.menus));
                 endRideGoodFeedbackText = Data.getMenusData().getRideEndGoodFeedbackText();
                 productType = ProductType.MENUS;
-                for(int i=0; i<Data.getMenusData().getNegativeFeedbackReasons().length(); i++){
+                for (int i = 0; i < Data.getMenusData().getNegativeFeedbackReasons().length(); i++) {
                     reasons.add(new FeedbackReason(Data.getMenusData().getNegativeFeedbackReasons().get(i).toString()));
                 }
             } else {
@@ -169,7 +173,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
         if (TextUtils.isEmpty(orderId))
             activity.finish();
-
+*/
+        rootView = inflater.inflate(R.layout.layout_feedback, container, false);
 
         setUp();
 
@@ -229,6 +234,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         imageViewThumbsUpGif = (ImageView) rootView.findViewById(R.id.imageViewThumbsUpGif);
         imageviewType = (ImageView) rootView.findViewById(R.id.imageview_type);
         ivOffering = (ImageView) rootView.findViewById(R.id.ivOffering);
+        llThumbsRating = (LinearLayout) rootView.findViewById(R.id.ll_thumbs_rating);
         imageViewThumbsDown = (ImageView) rootView.findViewById(R.id.imageViewThumbsDown);
         imageViewThumbsUp = (ImageView) rootView.findViewById(R.id.imageViewThumbsUp);
         llBadReason = (LinearLayout) rootView.findViewById(R.id.llBadReason);
@@ -238,11 +244,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
         buttonEndRideSkip = (Button) rootView.findViewById(R.id.buttonEndRideSkip);
         buttonEndRideInviteFriends = (Button) rootView.findViewById(R.id.buttonEndRideInviteFriends);
-        ((TextView) rootView.findViewById(R.id.textViewRSWhatImprove)).setTypeface(Fonts.mavenMedium(activity));
+        textViewRSWhatImprove = ((TextView) rootView.findViewById(R.id.textViewRSWhatImprove));
+        textViewRSWhatImprove.setTypeface(Fonts.mavenMedium(activity));
         buttonRSSubmitFeedback = (Button) rootView.findViewById(R.id.buttonRSSubmitFeedback);
         buttonRSSubmitFeedback.setTypeface(Fonts.mavenRegular(activity));
         editTextRSFeedback = (EditText) rootView.findViewById(R.id.editTextRSFeedback);
-
+        ratingBarMenuFeedback = (RatingBarMenuFeedback) rootView.findViewById(R.id.rating_bar);
 
         if (Config.getFreshClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.feedback_fresh);
@@ -253,9 +260,43 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         } else if (Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.ic_fab_menus);
             ivOffering.setImageResource(R.drawable.ic_fab_menus);
+
+            /**
+             Edited by Parminder Singh on 2/10/17 at 12:46 PM
+             **/
+
+
+            llThumbsRating.setVisibility(View.GONE);
+            ratingBarMenuFeedback.setVisibility(View.VISIBLE);
+            llBadReason.setVisibility(View.VISIBLE);
+            editTextRSFeedback.setHint("Comments..");
+            textViewRSWhatImprove.setSelected(true);
+            ratingBarMenuFeedback.setOnScoreChanged(new RatingBarMenuFeedback.IRatingBarCallbacks() {
+                @Override
+                public void scoreChanged(float score) {
+                    if (score > 2) {
+
+                        if (!textViewRSWhatImprove.isSelected()) {
+                            textViewRSWhatImprove.setSelected(true);
+                            textViewRSWhatImprove.setText("What was amazing?");
+                        }
+
+                    } else {
+                        if (textViewRSWhatImprove.isSelected()) {
+                            textViewRSWhatImprove.setSelected(false);
+                            textViewRSWhatImprove.setText("Oh no,what went wrong?");
+                        }
+
+                    }
+                }
+            });
+
+
         } else {
             imageviewType.setImageResource(R.drawable.feedback_meals);
             ivOffering.setImageResource(R.drawable.ic_fab_meals);
+
+
         }
 
         try {
@@ -292,6 +333,14 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
                 // api call
                 sendQuery(0, feedbackReasons);
+
+
+                if (ratingBarMenuFeedback.getScore() > 2) {
+                    //..
+                } else {
+
+                }
+
 
             }
         });
