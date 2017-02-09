@@ -141,9 +141,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         super.onHiddenChanged(hidden);
         activity.setSwipeAvailable(true);
         if (!hidden) {
+            activity.fragmentUISetup(this);
             menusCategoryFragmentsAdapter.notifyDataSetChanged();
             tabs.notifyDataSetChanged();
-            activity.fragmentUISetup(this);
             activity.resumeMethod();
             if (activity.isRefreshCart()) {
 
@@ -235,7 +235,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     activity.openCart();
                 }
                 activity.getBus().post(new SortSelection(activity.menusSort));
-
 
 
                 setUpCollapseToolbarData();
