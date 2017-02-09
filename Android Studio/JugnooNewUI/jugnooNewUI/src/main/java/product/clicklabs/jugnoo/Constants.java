@@ -612,4 +612,5 @@ public interface Constants {
 	String KEY_SEARCH_TEXT = "search_text";
 	String KEY_EMPTY_CART = "empty_cart";
 	String FEEDBACK_TITLE = "feedback_title";
+	String KEY_REVIEW_DESC = "review_desc";
 }

@@ -367,10 +367,13 @@ public class FreshSearchFragment extends Fragment {
 
 						refreshingAutoComplete = true;
 
+					activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
+
 						new HomeUtil().putDefaultParams(params);
 						RestClient.getFreshApiService().getItemSearch(params, new retrofit.Callback<FreshSearchResponse>() {
 							@Override
 							public void success(FreshSearchResponse freshSearchResponse, Response response) {
+								activity.getTopBar().setPBSearchVisibility(View.GONE);
 								String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 								try {
 									String message = freshSearchResponse.getMessage();
@@ -402,6 +405,7 @@ public class FreshSearchFragment extends Fragment {
 
 							@Override
 							public void failure(RetrofitError error) {
+								activity.getTopBar().setPBSearchVisibility(View.GONE);
 								Log.e("search fragment", "fetchRestaurantViaSearch error" + error.toString());
 								refreshingAutoComplete = false;
 								recallSearch(searchText);

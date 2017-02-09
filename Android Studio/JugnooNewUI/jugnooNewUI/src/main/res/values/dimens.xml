@@ -426,5 +426,8 @@
     <dimen name="dp_3">
         3dp
     </dimen>
+    <dimen name="px_350">
+        350px
+    </dimen>
 
 </resources>

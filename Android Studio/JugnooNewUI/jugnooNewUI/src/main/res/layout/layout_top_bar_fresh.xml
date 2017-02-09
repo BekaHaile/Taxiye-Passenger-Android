@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:splitMotionEvents="false">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:splitMotionEvents="false">
 
     <LinearLayout
         android:id="@+id/llTop"
@@ -143,7 +144,10 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_light"
                         android:textCursorDrawable="@drawable/cursor_black"
-                        android:textSize="@dimen/text_size_26" />
+                        android:textSize="@dimen/text_size_26"
+                        android:inputType="text"
+                        android:imeOptions="actionSearch"
+                        />
 
                     <product.clicklabs.jugnoo.utils.ProgressWheel
                         xmlns:wheel="http://schemas.android.com/apk/res-auto"
@@ -270,6 +274,35 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivAddReview"
+                    android:layout_width="@dimen/px_62"
+                    android:layout_height="@dimen/px_62"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:tag="mwar"
+                    android:src="@drawable/ic_add_grey_bg_selector"
+                    android:visibility="gone"
+                    />
+
+                <TextView
+                    android:id="@+id/tvNameCap"
+                    android:layout_width="@dimen/px_70"
+                    android:layout_height="@dimen/px_70"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/circle_grey"
+                    android:gravity="center"
+                    android:tag="mwar"
+                    android:text="G"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/px_36"
+                    android:textStyle="bold"
+                    app:font="maven"
+                    android:visibility="gone"
+                    />
+
 
             </RelativeLayout>
 

@@ -1497,6 +1497,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="zoom_view">zoom_view_transition</string>
     <string name="star_could_not_be_added">Jugnoo star couldn\'t be added. Please try next time.</string>
+    <string name="share_your_experience">Share your experience...</string>
+    <string name="please_enter_some_feedback">Please enter some feedback</string>
+    <string name="feedback_must_be_in_500">Feedback must be in 500 characters</string>
+    <string name="thanks_for_your_valuable_feedback">Thanks for your valuable feedback</string>
 
 
 </resources>

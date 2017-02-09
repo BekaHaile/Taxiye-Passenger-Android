@@ -1,6 +1,7 @@
 package com.sabkuchfresh.home;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -38,30 +39,31 @@ public class TopBar implements FlurryEventNames {
 	public LinearLayout llSearchContainer;
 	public EditText etSearch;
 	public ProgressWheel pbSearch;
-	public ImageView ivSearchCross, ivSearch, ivFilterApplied;
+	public ImageView ivSearchCross, ivSearch, ivFilterApplied, ivAddReview;
 	public RelativeLayout rlFilter;
 
 	public RelativeLayout llSearchCartContainer;
-	public TextView textViewReset, tvCartAmount;
+	public TextView textViewReset, tvCartAmount, tvNameCap;
 	public LinearLayout llCartAmount, llCartContainer, llSearchCart;
 
 
-
-	public TopBar(Activity activity, DrawerLayout drawerLayout){
+	public TopBar(Activity activity, DrawerLayout drawerLayout) {
 		this.activity = activity;
 		this.drawerLayout = drawerLayout;
 		setupTopBar();
 	}
 
-	private void setupTopBar(){
+	private void setupTopBar() {
 		topRl = (RelativeLayout) drawerLayout.findViewById(R.id.topRl);
 		imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
-		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.avenirNext(activity));
+		title = (TextView) drawerLayout.findViewById(R.id.title);
+		title.setTypeface(Fonts.avenirNext(activity));
 
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
 		llCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llCartContainer);
 		llCartAmount = (LinearLayout) drawerLayout.findViewById(R.id.llCartAmount);
-		tvCartAmount = (TextView) drawerLayout.findViewById(R.id.tvCartAmount); tvCartAmount.setTypeface(Fonts.mavenRegular(activity));
+		tvCartAmount = (TextView) drawerLayout.findViewById(R.id.tvCartAmount);
+		tvCartAmount.setTypeface(Fonts.mavenRegular(activity));
 		llSearchCartContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
 		llSearchCart = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCart);
 
@@ -71,16 +73,21 @@ public class TopBar implements FlurryEventNames {
 		ivDeliveryAddressCross = (ImageView) drawerLayout.findViewById(R.id.ivDeliveryAddressCross);
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
 
-		textViewReset = (TextView) drawerLayout.findViewById(R.id.textViewReset); textViewReset.setTypeface(Fonts.mavenMedium(activity));
+		textViewReset = (TextView) drawerLayout.findViewById(R.id.textViewReset);
+		textViewReset.setTypeface(Fonts.mavenMedium(activity));
 
 		llSearchContainer = (LinearLayout) drawerLayout.findViewById(R.id.llSearchContainer);
-		etSearch = (EditText) drawerLayout.findViewById(R.id.etSearch); etSearch.setTypeface(Fonts.mavenMedium(activity));
+		etSearch = (EditText) drawerLayout.findViewById(R.id.etSearch);
+		etSearch.setTypeface(Fonts.mavenMedium(activity));
 		ivSearch = (ImageView) drawerLayout.findViewById(R.id.ivSearch);
 		pbSearch = (ProgressWheel) drawerLayout.findViewById(R.id.pbSearch);
 		rlFilter = (RelativeLayout) drawerLayout.findViewById(R.id.rlFilter);
 		ivFilterApplied = (ImageView) drawerLayout.findViewById(R.id.ivFilterApplied);
 		ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
 		ivFilterApplied.setVisibility(View.GONE);
+		ivAddReview = (ImageView) drawerLayout.findViewById(R.id.ivAddReview);
+		tvNameCap = (TextView) drawerLayout.findViewById(R.id.tvNameCap);
+		tvNameCap.setTypeface(Typeface.DEFAULT_BOLD);
 		//setSearchVisibility(View.GONE);
 
 
@@ -90,13 +97,14 @@ public class TopBar implements FlurryEventNames {
 		ivSearch.setOnClickListener(topBarOnClickListener);
 		rlFilter.setOnClickListener(topBarOnClickListener);
 		imageViewBack.setOnClickListener(topBarOnClickListener);
+		ivAddReview.setOnClickListener(topBarOnClickListener);
 
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				if(Data.AppType == com.sabkuchfresh.utils.AppConstant.ApplicationType.MENUS){
+				if (Data.AppType == com.sabkuchfresh.utils.AppConstant.ApplicationType.MENUS) {
 					Utils.showToast(activity, Config.getMenusServerUrlName());
-				} else{
+				} else {
 					Utils.showToast(activity, Config.getFreshServerUrlName());
 				}
 				return false;
@@ -137,7 +145,7 @@ public class TopBar implements FlurryEventNames {
 	public View.OnClickListener topBarOnClickListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			switch(v.getId()){
+			switch (v.getId()) {
 
 				case R.id.imageViewMenu:
 					drawerLayout.openDrawer(GravityCompat.START);
@@ -148,18 +156,18 @@ public class TopBar implements FlurryEventNames {
 					break;
 
 				case R.id.imageViewBack:
-					if(activity instanceof FreshActivity){
-						((FreshActivity)activity).performBackPressed();
+					if (activity instanceof FreshActivity) {
+						((FreshActivity) activity).performBackPressed();
 					}
 					break;
 
 				case R.id.ivSearch:
-					if(activity instanceof FreshActivity) {
+					if (activity instanceof FreshActivity) {
 						//llSearchCart.setLayoutTransition(null);
 //						LayoutTransition lt = new LayoutTransition();
 //						lt.disableTransitionType(LayoutTransition.DISAPPEARING);
 						//llSearchCart.setLayoutTransition(lt);
-						((FreshActivity)activity).searchItem();
+						((FreshActivity) activity).searchItem();
 						/*new Handler().postDelayed(new Runnable() {
 							@Override
 							public void run() {
@@ -171,26 +179,31 @@ public class TopBar implements FlurryEventNames {
 					break;
 
 				case R.id.rlFilter:
-					if(activity instanceof FreshActivity){
-						((FreshActivity)activity).openMenusFilter();
+					if (activity instanceof FreshActivity) {
+						((FreshActivity) activity).openMenusFilter();
 					}
 					break;
+
+				case R.id.ivAddReview:
+					if (activity instanceof FreshActivity) {
+						((FreshActivity) activity).openRestaurantAddReviewFragment();
+					}
 
 			}
 		}
 	};
 
 
-	public void setSearchVisibility(int visibility){
-		if(visibility == View.VISIBLE){
+	public void setSearchVisibility(int visibility) {
+		if (visibility == View.VISIBLE) {
 			llSearchContainer.setBackgroundResource(R.drawable.capsule_white_stroke);
 		} else {
 			//llSearchContainer.setBackgroundResource(R.drawable.background_transparent);
 		}
 	}
 
-	public void setPBSearchVisibility(int visibility){
-		if(visibility == View.VISIBLE){
+	public void setPBSearchVisibility(int visibility) {
+		if (visibility == View.VISIBLE) {
 			pbSearch.spin();
 		} else {
 			pbSearch.stopSpinning();

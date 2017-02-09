@@ -19,7 +19,9 @@ import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
 import com.sabkuchfresh.fragments.NewFeedbackFragment;
+import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
+import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 
@@ -235,7 +237,7 @@ public class TransactionUtils {
     }
 
     public void openFeedback(FragmentActivity activity, View container) {
-        if (!checkIfFragmentAdded(activity, FeedbackFragment.class.getName())) {
+        if (!activity.isFinishing() && !checkIfFragmentAdded(activity, FeedbackFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
                     .add(container.getId(), new FeedbackFragment(),
@@ -248,7 +250,7 @@ public class TransactionUtils {
     }
 
     public void openMenuFeedback(FragmentActivity activity, View container) {
-        if (!checkIfFragmentAdded(activity, NewFeedbackFragment.class.getName())) {
+        if (!activity.isFinishing() && !checkIfFragmentAdded(activity, NewFeedbackFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
                     .add(container.getId(), new NewFeedbackFragment(),
@@ -290,5 +292,31 @@ public class TransactionUtils {
         }
     }
 
+    public void openRestaurantReviewsListFragment(FragmentActivity activity, View container, int restaurantId) {
+        if (!checkIfFragmentAdded(activity, RestaurantReviewsListFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in,0)
+                    .add(container.getId(), RestaurantReviewsListFragment.newInstance(restaurantId),
+                            RestaurantReviewsListFragment.class.getName())
+                    .addToBackStack(RestaurantReviewsListFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+
+    public void openRestaurantAddReviewFragment(FragmentActivity activity, View container, int restaurantId) {
+        if (!checkIfFragmentAdded(activity, RestaurantAddReviewFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in,0)
+                    .add(container.getId(), RestaurantAddReviewFragment.newInstance(restaurantId),
+                            RestaurantAddReviewFragment.class.getName())
+                    .addToBackStack(RestaurantAddReviewFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
 }
 

@@ -8,7 +8,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +33,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
@@ -79,7 +84,9 @@ import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
 import com.sabkuchfresh.fragments.NewFeedbackFragment;
+import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
+import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
@@ -102,6 +109,7 @@ import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -715,9 +723,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         return (MenusCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(MenusCheckoutMergedFragment.class.getName());
     }
 
-
-    private RestaurantImageFragment getRestaurantImageFragment() {
+    public RestaurantImageFragment getRestaurantImageFragment() {
         return (RestaurantImageFragment) getSupportFragmentManager().findFragmentByTag(RestaurantImageFragment.class.getName());
+    }
+
+    public RestaurantReviewsListFragment getRestaurantReviewsListFragment() {
+        return (RestaurantReviewsListFragment) getSupportFragmentManager().findFragmentByTag(RestaurantReviewsListFragment.class.getName());
     }
 
     public DeliveryAddressesFragment getDeliveryAddressesFragment() {
@@ -917,6 +928,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             rlSort.setVisibility(View.GONE);
             int rlFilterVis = View.GONE;
             topBar.buttonCheckServer.setVisibility(View.GONE);
+            topBar.ivAddReview.setVisibility(View.GONE);
+            topBar.tvNameCap.setVisibility(View.GONE);
 
             LayoutTransition layoutTransition = new LayoutTransition();
             topBar.getLlSearchCart().setLayoutTransition(layoutTransition);
@@ -1146,6 +1159,31 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.pick_addons));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            }
+            else if(fragment instanceof RestaurantReviewsListFragment){
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+
+                topBar.title.setVisibility(View.VISIBLE);
+                if(getVendorOpened() != null) {
+                    topBar.title.setText(getVendorOpened().getName());
+                }
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                topBar.ivAddReview.setVisibility(View.VISIBLE);
+            } else if (fragment instanceof RestaurantAddReviewFragment) {
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+
+				topBar.title.setVisibility(View.GONE);
+                topBar.tvNameCap.setVisibility(View.VISIBLE);
+                try {
+                    topBar.tvNameCap.setText(Data.userData.userName.substring(0, 1));
+                    topBar.tvNameCap.setTextColor(Color.parseColor("#8dcf61"));
+                    setTextViewBackgroundDrawableColor(topBar.tvNameCap, Color.parseColor("#e1fccf"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
 
@@ -1567,9 +1605,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 getMenusSearchFragment().clearArrays();
             }
 
+            if(getTopFragment() instanceof RestaurantReviewsListFragment && getRestaurantImageFragment() != null){
+                super.onBackPressed();
+            }
 
             super.onBackPressed();
-
 
         }
     }
@@ -3252,7 +3292,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public TextView tvCollapRestaurantName;
     public TextView tvCollapRestaurantRating, tvCollapRestaurantDeliveryTime;
     private RelativeLayout rlCollapseDetails;
-    private LinearLayout llCartContainer;
+    private LinearLayout llCartContainer, llCollapseRating;
     private LinearLayout llToolbarLayout;
     public ImageView ivCollapseRestImage;
     private AppBarLayout.OnOffsetChangedListener collapseBarController = new AppBarLayout.OnOffsetChangedListener() {
@@ -3349,6 +3389,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         tvCollapRestaurantDeliveryTime = (TextView) findViewById(R.id.tvCollapRestaurantDeliveryTime);
         rlCollapseDetails = (RelativeLayout) findViewById(R.id.layout_rest_details);
         llCartContainer = (LinearLayout) findViewById(R.id.llCartContainer);
+        llCollapseRating = (LinearLayout) findViewById(R.id.llCollapseRating);
 
 
         //to enable animate layout changes since it acts weirdly with collapsing toolbar if declared in xml because it animates whole heirarchy and hence toolbar behaves weirdly
@@ -3363,6 +3404,13 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 layoutTransition.enableTransitionType(LayoutTransition.CHANGING);
             }
         }
+
+        llCollapseRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRestaurantReviewsListFragment();
+            }
+        });
 
     }
 
@@ -3473,6 +3521,51 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     public FABViewTest getFabViewTest() {
         return fabViewTest;
+    }
+
+    public int setRatingAndGetColor(TextView tv, Double rating, String colorCode){
+        Spannable spannable = new SpannableString(getString(R.string.star_icon) + " " + rating);
+        Typeface star = Typeface.createFromAsset(getAssets(), "fonts/icomoon.ttf");
+        spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv.setText(spannable);
+        int ratingColor;
+        if (colorCode != null
+                && colorCode.startsWith("#")
+                && colorCode.length() == 7)
+            ratingColor = Color.parseColor(colorCode);
+        else
+            ratingColor = Color.parseColor("#8dd061"); //default Green Color
+
+        setTextViewBackgroundDrawableColor(tv, ratingColor);
+
+        return ratingColor;
+    }
+
+    public void setTextViewBackgroundDrawableColor(TextView textView, int color) {
+        if(textView.getBackground() != null){
+            textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        }
+    }
+
+    public void setTextViewDrawableColor(TextView textView, int color) {
+        for (Drawable drawable : textView.getCompoundDrawables()) {
+            if (drawable != null) {
+                drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+            }
+        }
+    }
+
+    public void openRestaurantReviewsListFragment(){
+        if(getVendorOpened() != null) {
+            appBarLayout.setExpanded(false, false);
+            getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
+        }
+    }
+
+    public void openRestaurantAddReviewFragment(){
+        if(getVendorOpened() != null) {
+            getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
+        }
     }
 
 }

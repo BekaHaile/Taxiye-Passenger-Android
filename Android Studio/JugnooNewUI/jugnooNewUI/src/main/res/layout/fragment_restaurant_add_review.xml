@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rlRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bSubmit"
+        android:background="@drawable/background_transparent"
+        android:fadeScrollbars="true"
+        android:gravity="left"
+        android:hint="@string/share_your_experience"
+        android:imeOptions="actionDone"
+        android:maxLength="500"
+        android:padding="@dimen/px_60"
+        android:scrollbars="vertical"
+        android:tag="mwar"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/text_color_hint"
+        android:textCursorDrawable="@drawable/cursor_black"
+        android:textSize="@dimen/px_32"
+        app:font="maven"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@+id/etFeedback"
+        android:background="@color/stroke_light_grey_alpha"
+        />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        />
+
+    <Button
+        android:id="@+id/bSubmit"
+        style="@style/ButtonTheme"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/px_30"
+        android:layout_marginTop="@dimen/px_30"
+        android:text="@string/submit"
+        app:font="maven"
+
+        />
+
+
+</RelativeLayout>

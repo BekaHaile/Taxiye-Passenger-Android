@@ -103,9 +103,8 @@ public class NewFeedbackFragment extends Fragment {
     }
 
     private void sendFeedback(int rating, String feedbackTitle, String negativeReasons) {
-
-
-        SendFeedbackQuery.sendQuery(orderId, productType, rating, feedbackTitle, negativeReasons, activity, new SendFeedbackQuery.FeedbackResultListener() {
+        new SendFeedbackQuery().sendQuery(Integer.parseInt(orderId), -1, productType, rating, negativeReasons, "", activity,
+                new SendFeedbackQuery.FeedbackResultListener() {
             @Override
             public void onSendFeedbackResult(boolean isSuccess, int rating) {
                 if (isSuccess) {

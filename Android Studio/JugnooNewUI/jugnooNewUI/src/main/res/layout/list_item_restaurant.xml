@@ -129,6 +129,7 @@
         android:layout_marginTop="@dimen/px_24"
         android:layout_marginRight="@dimen/px_30"
         android:visibility="gone"
+        app:font="maven"
         />
     
     <View

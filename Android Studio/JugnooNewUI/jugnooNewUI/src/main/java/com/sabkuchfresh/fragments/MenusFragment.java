@@ -144,16 +144,12 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
             @Override
             public void onNotify(int count) {
-                if (count == 0) {
-                    recyclerViewRestaurant.smoothScrollToPosition(0);
-                }
             }
         });
 
         recyclerViewRestaurant.setAdapter(menusRestaurantAdapter);
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
-
 
         try {
             if (Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {

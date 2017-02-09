@@ -2,18 +2,11 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -33,7 +26,6 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.RestaurantSearchResponse;
-import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
 
@@ -370,7 +362,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 });
 
                 activity.setVendorDeliveryTimeToTextView(vendor, mHolder.textViewDelivery);
-                setTextViewDrawableColor(mHolder.textViewDelivery, ContextCompat.getColor(activity, R.color.text_color));
+                activity.setTextViewDrawableColor(mHolder.textViewDelivery, ContextCompat.getColor(activity, R.color.text_color));
 
 
 
@@ -393,25 +385,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
 
                 mHolder.tvRating.setVisibility(View.GONE);
-                if (vendor.getRating() != null) {
-                    Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
-                    Typeface rating = Fonts.mavenMedium(activity);
-                    String paddingStarToText = " ";
-                    Spannable restaurantRating = new SpannableString(activity.getString(R.string.star_icon) + paddingStarToText + vendor.getRating());
-
-                    //append strings and set different fonts to each subString
-                    restaurantRating.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    restaurantRating.setSpan(new CustomTypeFaceSpan("", rating), 1, restaurantRating.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                    int ratingColor;
-                    if (vendor.getColorCode() != null && vendor.getColorCode().startsWith("#") && vendor.getColorCode().length() == 7)
-                        ratingColor = Color.parseColor(vendor.getColorCode());
-                    else
-                        ratingColor = Color.parseColor("#8dd061"); //default Green Color
-
-                    setTextViewBackgroundDrawableColor(mHolder.tvRating, ratingColor);
-                    mHolder.tvRating.setText(restaurantRating);
+                if (vendor.getRating() != null && vendor.getRating() >= 1d) {
                     mHolder.tvRating.setVisibility(View.VISIBLE);
+                    activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(), vendor.getColorCode());
                 }
 
             } else if (holder instanceof ViewHolderRestaurantForm) {
@@ -445,19 +421,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     }
 
-    private void setTextViewBackgroundDrawableColor(TextView textView, int color) {
-        if(textView.getBackground() != null){
-            textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-        }
-    }
-
-    private void setTextViewDrawableColor(TextView textView, int color) {
-        for (Drawable drawable : textView.getCompoundDrawables()) {
-            if (drawable != null) {
-                drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-            }
-        }
-    }
 
 
     private void showPossibleStatus(ArrayList<String> possibleStatus, int status, ViewTitleStatus statusHolder) {
