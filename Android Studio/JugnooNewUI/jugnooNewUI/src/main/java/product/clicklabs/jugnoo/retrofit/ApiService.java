@@ -70,6 +70,11 @@ public interface ApiService {
                         Callback<LoginResponse> callback);
 
     @FormUrlEncoded
+    @POST("/v3/customer/gift")
+    void claimGift(@FieldMap Map<String, String> params,
+                   Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
     @POST("/show_panel")
     void showPanel(@FieldMap Map<String, String> params,
                    Callback<ShowPanelResponse> callback);
