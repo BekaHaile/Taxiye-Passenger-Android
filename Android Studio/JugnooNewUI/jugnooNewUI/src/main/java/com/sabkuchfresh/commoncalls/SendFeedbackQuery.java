@@ -33,12 +33,12 @@ public class SendFeedbackQuery {
         void onSendFeedbackResult(boolean isSuccess, int rating);
     }
 
-    public void sendQuery(final int orderId, final int restaurantId, final ProductType productType, final int rating,
-                                 final String comments, final String reviewDesc,
-                                 final Activity activity, final FeedbackResultListener feedbackResultListener) {
+    public void sendQuery(final int orderId, final int restaurantId, final ProductType productType, final int rating, final String ratingType,
+                          final String comments, final String reviewDesc,
+                          final Activity activity, final FeedbackResultListener feedbackResultListener) {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                if(orderId > 0) {
+                if (orderId > 0) {
                     if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
                         Data.getFreshData().setPendingFeedback(0);
                     } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
@@ -54,19 +54,23 @@ public class SendFeedbackQuery {
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.RATING_TYPE, "0");
                 params.put(Constants.INTERATED, "1");
-                if(orderId > 0) {
+                if (orderId > 0) {
                     params.put(Constants.ORDER_ID, "" + orderId);
                 }
-                if(rating > 0) {
+                if (ratingType != null && (ratingType.equals(Constants.RATING_TYPE_STAR) || ratingType.equals(Constants.RATING_TYPE_THUMBS))) {
+                    params.put(Constants.RATING_TYPE, ratingType);
+                }
+
+                if (rating > 0) {
                     params.put(Constants.RATING, "" + rating);
                 }
-                if(!TextUtils.isEmpty(comments)){
+                if (!TextUtils.isEmpty(comments)) {
                     params.put(Constants.COMMENT, comments);
                 }
-                if(!TextUtils.isEmpty(reviewDesc)){
+                if (!TextUtils.isEmpty(reviewDesc)) {
                     params.put(Constants.KEY_REVIEW_DESC, reviewDesc);
                 }
-                if(restaurantId > 0){
+                if (restaurantId > 0) {
                     params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(restaurantId));
                 }
 
@@ -90,7 +94,7 @@ public class SendFeedbackQuery {
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                        retryDialog(DialogErrorType.CONNECTION_LOST, productType, activity, orderId, restaurantId, rating, comments, reviewDesc, feedbackResultListener);
+                        retryDialog(DialogErrorType.CONNECTION_LOST, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener);
                     }
                 };
                 new HomeUtil().putDefaultParams(params);
@@ -101,7 +105,7 @@ public class SendFeedbackQuery {
                 }
 
             } else {
-                retryDialog(DialogErrorType.NO_NET, productType, activity, orderId, restaurantId, rating, comments, reviewDesc, feedbackResultListener);
+                retryDialog(DialogErrorType.NO_NET, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener);
             }
         } catch (Exception e) {
             DialogPopup.dismissLoadingDialog();
@@ -111,13 +115,13 @@ public class SendFeedbackQuery {
     }
 
     private void retryDialog(DialogErrorType errorType, final ProductType productType, final Activity activity,
-                             final int orderId, final int restaurantId, final int rating,
+                             final int orderId, final int restaurantId, final int rating, final String ratingType,
                              final String negativeReasons, final String reviewDesc, final FeedbackResultListener feedbackResultListener) {
         DialogPopup.dialogNoInternet(activity, errorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        sendQuery(orderId, restaurantId, productType, rating, negativeReasons, reviewDesc, activity, feedbackResultListener);
+                        sendQuery(orderId, restaurantId, productType, rating, ratingType, negativeReasons, reviewDesc, activity, feedbackResultListener);
                     }
 
                     @Override

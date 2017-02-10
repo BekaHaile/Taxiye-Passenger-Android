@@ -102,7 +102,7 @@ public class NewFeedbackFragment extends Fragment {
         return rootView;
     }
 
-    private void sendFeedback(int rating, String feedbackTitle, String negativeReasons) {
+   /* private void sendFeedback(int rating, String feedbackTitle, String negativeReasons) {
         new SendFeedbackQuery().sendQuery(Integer.parseInt(orderId), -1, productType, rating, negativeReasons, "", activity,
                 new SendFeedbackQuery.FeedbackResultListener() {
             @Override
@@ -112,7 +112,7 @@ public class NewFeedbackFragment extends Fragment {
                 }
             }
         });
-    }
+    }*/
 
 
     @Override
@@ -127,7 +127,7 @@ public class NewFeedbackFragment extends Fragment {
             case R.id.tv_view_invoice:
                 break;
             case R.id.btn_submit:
-                sendFeedback(Math.round(ratingBar.getScore()), edtFeedbackTitle.getText().toString().trim(), edtFeedbackDescc.getText().toString().trim());
+              //  sendFeedback(Math.round(ratingBar.getScore()), edtFeedbackTitle.getText().toString().trim(), edtFeedbackDescc.getText().toString().trim());
                 break;
         }
     }

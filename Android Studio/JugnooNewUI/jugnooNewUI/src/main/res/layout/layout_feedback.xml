@@ -242,13 +242,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="25px"
+                android:layout_marginBottom="10px"
                 android:layout_marginTop="30px"
                 android:numStars="5"
                 android:paddingBottom="30px"
-                android:rating="3"
+                android:rating="0"
                 android:tag="mwar"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:halfStars="false"
                 app:maxStars="5"
                 app:onlyForDisplay="false"
@@ -322,7 +322,7 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textViewRSWhatImprove"
@@ -341,7 +341,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="40px"
                     android:layout_marginRight="40px"
-                    android:layout_marginTop="20px"
+                    android:layout_marginTop="40px"
                     android:divider="@color/transparent"
                     android:dividerHeight="0px"
                     android:horizontalSpacing="22px"

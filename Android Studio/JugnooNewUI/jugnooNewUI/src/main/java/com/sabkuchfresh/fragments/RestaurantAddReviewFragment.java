@@ -119,10 +119,13 @@ public class RestaurantAddReviewFragment extends Fragment {
 	}
 
 
+	SendFeedbackQuery sendFeedbackQuery;
 	private void submitFeedback(String reviewDesc){
 		DialogPopup.showLoadingDialog(activity, "");
-		SendFeedbackQuery sendFeedbackQuery = new SendFeedbackQuery();
-		sendFeedbackQuery.sendQuery(-1, restaurantId, ProductType.MENUS, -1, "", reviewDesc, activity,
+		if(sendFeedbackQuery == null) {
+			sendFeedbackQuery = new SendFeedbackQuery();
+		}
+		sendFeedbackQuery.sendQuery(-1, restaurantId, ProductType.MENUS, -1,null, "", reviewDesc, activity,
 				new SendFeedbackQuery.FeedbackResultListener() {
 					@Override
 					public void onSendFeedbackResult(boolean isSuccess, int rating) {

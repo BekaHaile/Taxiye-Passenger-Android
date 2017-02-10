@@ -50,7 +50,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
 
 
     private int mMaxStars = 5;
-    private float mCurrentScore = 3f;
+    private float mCurrentScore = 0f;
     private int mStarOnResource = R.drawable.ic_menu_feedback_star_on;
     private int mStarOffResource = R.drawable.ic_menu_feedback_star_off;
     private int mStarHalfResource = R.drawable.ic_menu_feedback_star_off;
