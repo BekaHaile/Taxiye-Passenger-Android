@@ -244,7 +244,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     //Passenger main layout
     RelativeLayout passengerMainLayout;
-
+    BaseFragmentActivity
 
     //Map layout
     RelativeLayout mapLayout;
