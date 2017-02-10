@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,6 +30,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.JugnooStarActivity;
+import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -73,7 +75,7 @@ import static com.sabkuchfresh.analytics.FlurryEventNames.RECHARGE;
 public class StarSubscriptionCheckoutFragment extends Fragment implements PromoCouponsAdapter.Callback {
 
     private View rootView;
-    private JugnooStarActivity activity;
+    private Activity activity;
     private TextView tvPaymentPlan, tvPlanAmount;
     private Button bPlaceOrder;
     private LinearLayout linearLayoutOffers, linearLayoutRoot;
@@ -101,7 +103,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_star_subscription_checkout, container, false);
 
-        activity = (JugnooStarActivity) getActivity();
+        if(getActivity() instanceof JugnooStarActivity) {
+            activity = (JugnooStarActivity) getActivity();
+        } else if(getActivity() instanceof JugnooStarSubscribedActivity){
+            activity = (JugnooStarSubscribedActivity) getActivity();
+        }
+
         linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
         try {
             if (linearLayoutRoot != null) {

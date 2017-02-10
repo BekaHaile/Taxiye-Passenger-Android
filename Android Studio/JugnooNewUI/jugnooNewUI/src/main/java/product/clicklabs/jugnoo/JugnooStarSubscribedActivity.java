@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -59,6 +61,8 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
     private StarMembershipAdapter starMembershipAdapter;
     private Button btnUpgradeNow;
     private ArrayList<String> benefits = new ArrayList<>();
+    private SubscriptionData.Subscription subscription;
+    private String selectedSubId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,8 +124,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
         btnUpgradeNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //openStarCheckoutFragment(JugnooStarSubscribedActivity.this, rlFragment);
+                openStarCheckoutFragment(JugnooStarSubscribedActivity.this, rlFragment);
             }
         });
 
@@ -398,6 +401,8 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
             if(savingsResponse.getUpgradeData() != null && savingsResponse.getUpgradeData().size() > 0){
                 llUpgradeContainer.setVisibility(View.VISIBLE);
                 tvUpgradingText.setText(savingsResponse.getUpgradeData().get(0).getUpgradingText());
+                subscription = savingsResponse.getUpgradeData().get(0).getUpgradeArray().get(0);
+                selectedSubId = new Gson().toJson(subscription);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -409,7 +414,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
         performBackPressed();
     }
 
-    /*public void openStarCheckoutFragment(FragmentActivity activity, View container) {
+    public void openStarCheckoutFragment(FragmentActivity activity, View container) {
         rlFragment.setVisibility(View.VISIBLE);
         activity.getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
@@ -417,5 +422,5 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                         StarSubscriptionCheckoutFragment.class.getName())
                 .addToBackStack(StarSubscriptionCheckoutFragment.class.getName())
                 .commitAllowingStateLoss();
-    }*/
+    }
 }

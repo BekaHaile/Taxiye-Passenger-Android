@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import product.clicklabs.jugnoo.datastructure.SubscriptionData;
+
 /**
  * Created by shankar on 1/5/16.
  */
@@ -92,7 +94,7 @@ public class FetchSubscriptionSavingsResponse {
 		private String upgradingText;
 		@SerializedName("upgradeArray")
 		@Expose
-		private List<UpgradeArray> upgradeArray = null;
+		private List<SubscriptionData.Subscription> upgradeArray = null;
 
 		public Integer getId() {
 			return id;
@@ -110,14 +112,13 @@ public class FetchSubscriptionSavingsResponse {
 			this.upgradingText = upgradingText;
 		}
 
-		public List<UpgradeArray> getUpgradeArray() {
+		public List<SubscriptionData.Subscription> getUpgradeArray() {
 			return upgradeArray;
 		}
 
-		public void setUpgradeArray(List<UpgradeArray> upgradeArray) {
+		public void setUpgradeArray(List<SubscriptionData.Subscription> upgradeArray) {
 			this.upgradeArray = upgradeArray;
 		}
-
 	}
 }
 
