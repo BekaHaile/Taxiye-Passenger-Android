@@ -55,6 +55,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.squareup.picasso.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -81,6 +83,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
+import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -171,7 +174,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
 	private LinearLayout llSignupMain;
 
-	private RelativeLayout rlClaimGift;
+	private RelativeLayout rlClaimGift, rlPromo;
 	private ImageView ivUser;
 	private TextView tvGiftFrom, tvGiftDetail;
 	private Button btnClaimGift;
@@ -496,6 +499,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			tvScroll = (TextView) findViewById(R.id.tvScroll);
 			llSignupMain = (LinearLayout) findViewById(R.id.llSignupMain);
 
+			rlPromo = (RelativeLayout) findViewById(R.id.rlPromo);
 			rlClaimGift = (RelativeLayout) findViewById(R.id.rlClaimGift);
 			ivUser = (ImageView) findViewById(R.id.ivUser);
 			tvGiftFrom = (TextView) findViewById(R.id.tvGiftFrom); tvGiftFrom.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
@@ -1182,6 +1186,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 			case CLAIM_GIFT:
 				// claim gift api call
+				//apiClaimGift();
 				imageViewBack.setVisibility(View.GONE);
 				relativeLayoutJugnooLogo.setVisibility(View.GONE);
 				linearLayoutLogin.setVisibility(View.GONE);
@@ -1441,9 +1446,11 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, referralCode));
 			if(!TextUtils.isEmpty(refreeUserId)) {
 				if (rlClaimGift.getVisibility() != View.VISIBLE) {
+					rlPromo.setVisibility(View.GONE);
 					changeUIState(State.CLAIM_GIFT);
 				}
 			} else{
+				rlPromo.setVisibility(View.VISIBLE);
 				changeUIState(State.SIGNUP);
 			}
 		}
@@ -3358,12 +3365,15 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			HashMap<String, String> params = new HashMap<>();
 			params.put("user_id", refreeUserId);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("os_version", MyApplication.getInstance().osVersion());
+			params.put("referral_code", Data.deepLinkReferralCode);
 			new HomeUtil().putDefaultParams(params);
-			RestClient.getApiService().claimGift(params, new Callback<SettleUserDebt>() {
+			RestClient.getApiService().claimGift(params, new Callback<ReferralClaimGift>() {
 				@Override
-				public void success(SettleUserDebt settleUserDebt, Response response) {
+				public void success(ReferralClaimGift referralClaimGift, Response response) {
 					DialogPopup.dismissLoadingDialog();
+					if(referralClaimGift.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+						setClaimGiftData(referralClaimGift);
+					}
 				}
 
 				@Override
@@ -3376,8 +3386,23 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 		}
 	}
 
+	private void setClaimGiftData(ReferralClaimGift referralClaimGift) {
+		if(referralClaimGift.getRefereeUserImage() != null
+				&& !TextUtils.isEmpty(referralClaimGift.getRefereeUserImage())){
+			float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+			Picasso.with(this).load(Data.userData.userImage)
+					.transform(new CircleTransform())
+					.resize((int)(144f * minRatio), (int)(144f * minRatio))
+					.placeholder(R.drawable.ic_profile_img_placeholder)
+					.centerCrop()
+					.into(ivUser);
+		}
+		tvGiftFrom.setText(referralClaimGift.getClaimGiftTitle());
+		tvGiftDetail.setText(referralClaimGift.getClaimGiftText());
+	}
 
-    public void verifyOtpViaEmail(final Activity activity, final String email, final String phoneNo, String otp) {
+
+	public void verifyOtpViaEmail(final Activity activity, final String email, final String phoneNo, String otp) {
         if (MyApplication.getInstance().isOnline()) {
 
             final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, "Loading...");

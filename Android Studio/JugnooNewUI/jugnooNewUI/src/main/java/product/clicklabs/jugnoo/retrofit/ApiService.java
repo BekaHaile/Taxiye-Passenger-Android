@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
+import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
@@ -70,9 +71,9 @@ public interface ApiService {
                         Callback<LoginResponse> callback);
 
     @FormUrlEncoded
-    @POST("/v3/customer/gift")
+    @POST("/v3/customer/fetch_referee_user_details")
     void claimGift(@FieldMap Map<String, String> params,
-                   Callback<SettleUserDebt> callback);
+                   Callback<ReferralClaimGift> callback);
 
     @FormUrlEncoded
     @POST("/show_panel")
