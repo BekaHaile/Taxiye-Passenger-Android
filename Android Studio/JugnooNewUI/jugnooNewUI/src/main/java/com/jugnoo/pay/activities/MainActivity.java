@@ -541,21 +541,30 @@ public class MainActivity extends BaseActivity {
                     CallProgressWheel.dismissLoadingDialog();
                     try {
                         int flag = fetchPayDataResponse.getFlag();
-                        if (flag == 401) {
+                        if (flag == ApiResponseFlags.AUTH_REGISTRATION_SUCCESSFUL.getOrdinal()) {
                             updateTransactions(fetchPayDataResponse);
                             Data.getPayData().getPay().setHasVpa(1);
 
                             // set First time launch false in prefManager
-                            prefManager.setFirstTimeLaunch(false);
+                            // prefManager.setFirstTimeLaunch(false);
                             if(goBack == 1){
                                 finish();
                                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
                             }
 
-                        } else if (flag == 403) {
+                        } else if (flag == ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal()) {
 //                            logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
-
-                        } else {
+                        }
+                        else if(flag == com.jugnoo.pay.utils.ApiResponseFlags.VPA_NOT_FOUND.getOrdinal())
+                        {
+                            DialogPopup.alertPopupWithListener(MainActivity.this, "Error", fetchPayDataResponse.getMessage(), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    MyApplication.getInstance().getAppSwitcher().switchApp(MainActivity.this, Config.getAutosClientId(), new LatLng(Data.latitude, Data.longitude), false);
+                                }
+                            });
+                        }
+                        else {
                             retryDialogVerifyUser(DialogErrorType.SERVER_ERROR, verifyRegisterResponse);
                         }
                     } catch (Exception e) {

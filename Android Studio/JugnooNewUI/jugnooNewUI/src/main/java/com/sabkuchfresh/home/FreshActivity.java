@@ -3572,6 +3572,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
     }
+
     public boolean canExitVendorMenu() {
 
 

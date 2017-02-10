@@ -69,9 +69,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/tv_rest_title"
-        android:layout_marginRight="@dimen/px_20"
-        android:layout_marginTop="0px"
+        android:layout_alignBottom="@+id/tv_rest_title"
+        android:layout_marginRight="@dimen/px_30"
+        android:layout_marginTop="@dimen/px_10"
         android:visibility="visible"
         >
         <TextView
@@ -87,7 +87,6 @@
             android:textSize="@dimen/text_size_20"
             android:visibility="visible"
             app:font="maven"
-            android:layout_margin="@dimen/px_10"
             />
 
     </LinearLayout>
