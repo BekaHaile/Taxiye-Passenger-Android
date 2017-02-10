@@ -71,7 +71,7 @@ public interface ApiService {
                         Callback<LoginResponse> callback);
 
     @FormUrlEncoded
-    @POST("/v3/customer/fetch_referee_user_details")
+    @POST("/fetch_referee_user_details")
     void claimGift(@FieldMap Map<String, String> params,
                    Callback<ReferralClaimGift> callback);
 

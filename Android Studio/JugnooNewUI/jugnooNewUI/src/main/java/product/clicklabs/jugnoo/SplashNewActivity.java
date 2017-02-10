@@ -59,6 +59,7 @@ import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -1186,7 +1187,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 			case CLAIM_GIFT:
 				// claim gift api call
-				//apiClaimGift();
+				apiClaimGift();
 				imageViewBack.setVisibility(View.GONE);
 				relativeLayoutJugnooLogo.setVisibility(View.GONE);
 				linearLayoutLogin.setVisibility(View.GONE);
@@ -3360,7 +3361,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 	private void apiClaimGift(){
 		if (MyApplication.getInstance().isOnline()) {
-			DialogPopup.showLoadingDialogNewInstance(SplashNewActivity.this, "Loading...");
+			DialogPopup.showLoadingDialog(SplashNewActivity.this, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
 			params.put("user_id", refreeUserId);
@@ -3371,8 +3372,18 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				@Override
 				public void success(ReferralClaimGift referralClaimGift, Response response) {
 					DialogPopup.dismissLoadingDialog();
-					if(referralClaimGift.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-						setClaimGiftData(referralClaimGift);
+					try {
+						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "verifyOtp jsonString = " + jsonString);
+						JSONObject jObj = new JSONObject(jsonString);
+						String message = JSONParser.getServerMessage(jObj);
+						if(referralClaimGift.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                            setClaimGiftData(referralClaimGift);
+                        } else{
+                            DialogPopup.alertPopup(SplashNewActivity.this, "", message);
+                        }
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 
@@ -3387,18 +3398,23 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	}
 
 	private void setClaimGiftData(ReferralClaimGift referralClaimGift) {
-		if(referralClaimGift.getRefereeUserImage() != null
-				&& !TextUtils.isEmpty(referralClaimGift.getRefereeUserImage())){
-			float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-			Picasso.with(this).load(Data.userData.userImage)
-					.transform(new CircleTransform())
-					.resize((int)(144f * minRatio), (int)(144f * minRatio))
-					.placeholder(R.drawable.ic_profile_img_placeholder)
-					.centerCrop()
-					.into(ivUser);
+		try {
+			tvGiftFrom.setText(referralClaimGift.getClaimGiftTitle());
+			tvGiftDetail.setText(referralClaimGift.getClaimGiftText());
+			btnClaimGift.setText(referralClaimGift.getClaimGiftButtonText());
+			if(referralClaimGift.getRefereeUserImage() != null
+                    && !TextUtils.isEmpty(referralClaimGift.getRefereeUserImage())){
+                float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                Picasso.with(this).load(referralClaimGift.getRefereeUserImage())
+                        .transform(new CircleTransform())
+                        .resize((int)(144f * minRatio), (int)(144f * minRatio))
+                        .placeholder(R.drawable.ic_profile_img_placeholder)
+                        .centerCrop()
+                        .into(ivUser);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		tvGiftFrom.setText(referralClaimGift.getClaimGiftTitle());
-		tvGiftDetail.setText(referralClaimGift.getClaimGiftText());
 	}
 
 

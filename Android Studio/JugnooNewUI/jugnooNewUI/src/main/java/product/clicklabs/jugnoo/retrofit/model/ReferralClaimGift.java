@@ -11,6 +11,9 @@ public class ReferralClaimGift {
     @SerializedName("flag")
     @Expose
     private Integer flag;
+    @SerializedName("message")
+    @Expose
+    private String message;
     @SerializedName("referee_user_image")
     @Expose
     private String refereeUserImage;
@@ -20,6 +23,9 @@ public class ReferralClaimGift {
     @SerializedName("claim_gift_text")
     @Expose
     private String claimGiftText;
+    @SerializedName("claim_gift_button_text")
+    @Expose
+    private String claimGiftButtonText;
 
     public Integer getFlag() {
         return flag;
@@ -27,6 +33,14 @@ public class ReferralClaimGift {
 
     public void setFlag(Integer flag) {
         this.flag = flag;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getClaimGiftText() {
@@ -51,5 +65,13 @@ public class ReferralClaimGift {
 
     public void setRefereeUserImage(String refereeUserImage) {
         this.refereeUserImage = refereeUserImage;
+    }
+
+    public String getClaimGiftButtonText() {
+        return claimGiftButtonText;
+    }
+
+    public void setClaimGiftButtonText(String claimGiftButtonText) {
+        this.claimGiftButtonText = claimGiftButtonText;
     }
 }

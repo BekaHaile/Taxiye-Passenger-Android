@@ -48,8 +48,8 @@
             android:textSize="@dimen/text_size_36"
             android:layout_below="@+id/tvGiftFrom"
             android:text="Someone just gifted you a cashback "
-            android:paddingLeft="@dimen/px_20"
-            android:paddingRight="@dimen/px_20"
+            android:paddingLeft="@dimen/px_50"
+            android:paddingRight="@dimen/px_50"
             android:textColor="@color/text_color"
             android:gravity="center"
             android:layout_marginTop="@dimen/px_88"/>
