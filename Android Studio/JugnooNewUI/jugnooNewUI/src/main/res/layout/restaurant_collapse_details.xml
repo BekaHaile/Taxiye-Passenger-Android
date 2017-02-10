@@ -35,14 +35,15 @@
 
     <TextView
         android:id="@+id/tv_rest_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/tvCollapRestaurantDeliveryTime"
         android:layout_marginLeft="@dimen/px_30"
-        android:text=""
-
+        android:layout_marginRight="@dimen/px_30"
+        android:text="Resta"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_36"
+        android:layout_toLeftOf="@+id/tvCollapRestaurantRating"
         app:font="avenir" />
 
 
@@ -67,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/px_40"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/tv_rest_title"
+        android:layout_alignBottom="@+id/tv_rest_title"
         android:layout_marginRight="@dimen/px_30"
         android:layout_marginTop="@dimen/px_10"
         android:background="@drawable/capsule_text_color"
