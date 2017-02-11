@@ -132,6 +132,10 @@ public class RestaurantAddReviewFragment extends Fragment {
 						if (isSuccess) {
 							activity.performBackPressed();
 							Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
+							RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
+							if(frag != null) {
+								frag.fetchFeedback();
+							}
 						}
 					}
 				});

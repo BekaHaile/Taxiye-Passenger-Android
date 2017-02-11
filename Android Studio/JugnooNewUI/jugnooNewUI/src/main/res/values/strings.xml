@@ -1503,6 +1503,8 @@
     <string name="thanks_for_your_valuable_feedback">Thanks for your valuable feedback</string>
     <string name="feedback_menu_what_amazing">What was amazing?</string>
     <string name="feedback_menu_what_wrong">Oh no,what went wrong?</string>
+    <string name="feed_is_empty">Feed is empty!</string>
+    <string name="be_first_one_to_add">BE FIRST ONE TO ADD...</string>
 
 
 </resources>

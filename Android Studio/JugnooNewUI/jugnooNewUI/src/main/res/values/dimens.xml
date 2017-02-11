@@ -429,5 +429,8 @@
     <dimen name="px_350">
         350px
     </dimen>
+    <dimen name="px_777">
+        777px
+    </dimen>
 
 </resources>

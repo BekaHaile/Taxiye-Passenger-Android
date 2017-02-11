@@ -84,6 +84,9 @@ public class FetchFeedbackResponse {
 		@SerializedName("user_image")
 		@Expose
 		private String userImage;
+		@SerializedName("date")
+		@Expose
+		private String date;
 
 		public Integer getOrderId() {
 			return orderId;
@@ -94,7 +97,7 @@ public class FetchFeedbackResponse {
 		}
 
 		public Double getRating() {
-			return rating;
+			return (rating == null || rating < 1d) ? null : Math.round(rating * 10.0) / 10.0;
 		}
 
 		public void setRating(Double rating) {
@@ -157,5 +160,12 @@ public class FetchFeedbackResponse {
 			this.userImage = userImage;
 		}
 
+		public String getDate() {
+			return date;
+		}
+
+		public void setDate(String date) {
+			this.date = date;
+		}
 	}
 }

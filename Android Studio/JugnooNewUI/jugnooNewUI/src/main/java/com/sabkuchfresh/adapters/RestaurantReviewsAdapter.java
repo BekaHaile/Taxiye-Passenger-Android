@@ -62,31 +62,33 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 
 			holder.tvName.setText(review.getUserName());
-			holder.tvDateTime.setText(review.getReviewTitle());
+			holder.tvDateTime.setText(review.getDate());
 			holder.tvReviewMessage.setText(review.getReviewDesc());
 			holder.tvReviewTag.setText(review.getTags());
 			holder.vSep.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
-			holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags()) || review.getRating() == null? View.GONE : View.VISIBLE);
 
 
 			RelativeLayout.LayoutParams paramsRating = (RelativeLayout.LayoutParams) holder.tvRating.getLayoutParams();
-			RelativeLayout.LayoutParams paramsMessage = (RelativeLayout.LayoutParams) holder.tvReviewMessage.getLayoutParams();
+			RelativeLayout.LayoutParams paramsRatingTag = (RelativeLayout.LayoutParams) holder.tvReviewTag.getLayoutParams();
 			int ratingVis = View.VISIBLE, messageVis = View.VISIBLE;
 			if (review.getRating() != null && !TextUtils.isEmpty(review.getReviewDesc())) {
 				paramsRating.setMargins(paramsRating.leftMargin, paramsRating.topMargin, paramsRating.rightMargin, 0);
-				paramsMessage.addRule(RelativeLayout.BELOW, holder.tvRating.getId());
+				paramsRatingTag.setMargins(paramsRatingTag.leftMargin, paramsRatingTag.topMargin, paramsRatingTag.rightMargin, 0);
+				holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags())? View.INVISIBLE : View.VISIBLE);
 			}
 			else if (review.getRating() != null && TextUtils.isEmpty(review.getReviewDesc())) {
 				paramsRating.setMargins(paramsRating.leftMargin, paramsRating.topMargin, paramsRating.rightMargin, (int)(ASSL.Yscale()*40f));
+				paramsRatingTag.setMargins(paramsRatingTag.leftMargin, paramsRatingTag.topMargin, paramsRatingTag.rightMargin, (int)(ASSL.Yscale()*40f));
 				messageVis = View.GONE;
+				holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags())? View.INVISIBLE : View.VISIBLE);
 			}
 			else if (review.getRating() == null && !TextUtils.isEmpty(review.getReviewDesc())){
 				ratingVis = View.GONE;
-				paramsMessage.addRule(RelativeLayout.BELOW, holder.tvName.getId());
+				holder.tvReviewTag.setVisibility(View.GONE);
 			}
 			holder.tvRating.setLayoutParams(paramsRating);
+			holder.tvReviewTag.setLayoutParams(paramsRatingTag);
 			holder.tvRating.setVisibility(ratingVis);
-			holder.tvReviewMessage.setLayoutParams(paramsMessage);
 			holder.tvReviewMessage.setVisibility(messageVis);
 
 			if(review.getRating() != null){

@@ -1,14 +1,19 @@
 package com.sabkuchfresh.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.RestaurantReviewsAdapter;
 import com.sabkuchfresh.commoncalls.ApiRestaurantFetchFeedback;
@@ -30,6 +35,8 @@ public class RestaurantReviewsListFragment extends Fragment{
 
     private RelativeLayout rlRoot;
     private RecyclerView recyclerViewReviews;
+    private RelativeLayout rlNoReviews;
+    private TextView tvFeedEmpty;
     private RestaurantReviewsAdapter reviewsAdapter;
 
     private View rootView;
@@ -78,6 +85,15 @@ public class RestaurantReviewsListFragment extends Fragment{
         reviewsAdapter = new RestaurantReviewsAdapter(activity, restaurantReviews);
         recyclerViewReviews.setAdapter(reviewsAdapter);
 
+        rlNoReviews = (RelativeLayout) rootView.findViewById(R.id.rlNoReviews);
+        tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);
+
+        tvFeedEmpty.setText(activity.getString(R.string.feed_is_empty));
+        SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add));
+        ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvFeedEmpty.append("\n");
+        tvFeedEmpty.append(ssb);
+
         fetchFeedback();
 
         return rootView;
@@ -92,7 +108,7 @@ public class RestaurantReviewsListFragment extends Fragment{
     }
 
     private ApiRestaurantFetchFeedback apiRestaurantFetchFeedback;
-    private void fetchFeedback(){
+    public void fetchFeedback(){
         if(apiRestaurantFetchFeedback == null){
             apiRestaurantFetchFeedback = new ApiRestaurantFetchFeedback(activity, new ApiRestaurantFetchFeedback.Callback() {
                 @Override
@@ -100,6 +116,7 @@ public class RestaurantReviewsListFragment extends Fragment{
                     restaurantReviews.clear();
                     restaurantReviews.addAll(reviews);
                     reviewsAdapter.notifyDataSetChanged();
+                    rlNoReviews.setVisibility(restaurantReviews.size() == 0 ? View.VISIBLE : View.GONE);
                 }
 
                 @Override

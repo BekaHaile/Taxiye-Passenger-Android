@@ -277,10 +277,14 @@
 
                 <ImageView
                     android:id="@+id/ivAddReview"
-                    android:layout_width="@dimen/px_62"
-                    android:layout_height="@dimen/px_62"
+                    android:layout_width="@dimen/px_82"
+                    android:layout_height="@dimen/px_82"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:paddingRight="0px"
+                    android:paddingLeft="@dimen/px_20"
+                    android:paddingBottom="@dimen/px_10"
+                    android:paddingTop="@dimen/px_10"
                     android:tag="mwar"
                     android:src="@drawable/ic_add_grey_bg_selector"
                     android:visibility="gone"

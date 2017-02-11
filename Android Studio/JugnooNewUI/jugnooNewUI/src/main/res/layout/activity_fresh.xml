@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 app:contentScrim="@android:color/white"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-                app:scrimVisibleHeightTrigger="150px">
+                app:scrimVisibleHeightTrigger="95dp">
                 <!-- app:scrimAnimationDuration="400"
 
                  app:scrimVisibleHeightTrigger="50px">-->
