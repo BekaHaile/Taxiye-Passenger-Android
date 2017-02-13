@@ -309,7 +309,7 @@ public class TransactionUtils {
     public void openRestaurantAddReviewFragment(FragmentActivity activity, View container, int restaurantId) {
         if (!checkIfFragmentAdded(activity, RestaurantAddReviewFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.bottom_in, android.R.anim.fade_in)
+                    .setCustomAnimations(R.anim.bottom_in, 0)
                     .add(container.getId(), RestaurantAddReviewFragment.newInstance(restaurantId),
                             RestaurantAddReviewFragment.class.getName())
                     .addToBackStack(RestaurantAddReviewFragment.class.getName())

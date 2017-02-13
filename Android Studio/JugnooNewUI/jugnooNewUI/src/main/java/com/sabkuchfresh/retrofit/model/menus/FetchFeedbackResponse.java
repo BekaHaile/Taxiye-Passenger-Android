@@ -63,9 +63,6 @@ public class FetchFeedbackResponse {
 		@SerializedName("rating")
 		@Expose
 		private Double rating;
-		@SerializedName("review_title")
-		@Expose
-		private String reviewTitle;
 		@SerializedName("tags")
 		@Expose
 		private String tags;
@@ -102,14 +99,6 @@ public class FetchFeedbackResponse {
 
 		public void setRating(Double rating) {
 			this.rating = rating;
-		}
-
-		public String getReviewTitle() {
-			return reviewTitle;
-		}
-
-		public void setReviewTitle(String reviewTitle) {
-			this.reviewTitle = reviewTitle;
 		}
 
 		public String getTags() {
