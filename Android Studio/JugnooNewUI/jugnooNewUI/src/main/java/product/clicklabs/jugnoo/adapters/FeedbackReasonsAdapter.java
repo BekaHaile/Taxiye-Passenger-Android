@@ -129,7 +129,7 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
     public String getSelectedReasons() {
         ArrayList<FeedbackReason> currentList = showPositiveReasons ? positiveReasons : feedbackReasons;
         String reasons = "";
-        if (currentList != null) {
+        if (currentList != null && currentList.size() > 0) {
             for (int i = 0; i < currentList.size(); i++) {
                 if (currentList.get(i).checked) {
                     reasons = reasons + currentList.get(i).name + ",";
