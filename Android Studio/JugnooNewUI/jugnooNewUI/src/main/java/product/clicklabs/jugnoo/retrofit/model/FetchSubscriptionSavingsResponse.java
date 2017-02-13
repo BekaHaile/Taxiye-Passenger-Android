@@ -92,7 +92,7 @@ public class FetchSubscriptionSavingsResponse {
 		@SerializedName("upgrading_text")
 		@Expose
 		private String upgradingText;
-		@SerializedName("upgradeArray")
+		@SerializedName("upgrade_array")
 		@Expose
 		private List<SubscriptionData.Subscription> upgradeArray = null;
 

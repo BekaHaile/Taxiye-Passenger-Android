@@ -594,7 +594,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             }
 
             new HomeUtil().putDefaultParams(params);
-            RestClient.getApiService().purchaseSubscription(params, new retrofit.Callback<PurchaseSubscriptionResponse>() {
+            RestClient.getApiService().updateSubscription(params, new retrofit.Callback<PurchaseSubscriptionResponse>() {
                 @Override
                 public void success(final PurchaseSubscriptionResponse purchaseSubscriptionResponse, Response response) {
                     DialogPopup.dismissLoadingDialog();
