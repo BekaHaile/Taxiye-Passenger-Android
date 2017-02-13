@@ -95,20 +95,6 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                 recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
                 recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
                 recyclerViewCategoryItems.setHasFixedSize(false);
-
-
-                /**
-                 Edited by Parminder Singh on 2/1/17 at 7:48 PM
-                 This is done to avoid a state where user scrolls up immediately before the collapse bar settles hence giving weird behavioud
-                 **/
-
-                recyclerViewCategoryItems.setNestedScrollingEnabled(false);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        recyclerViewCategoryItems.setNestedScrollingEnabled(true);
-                    }
-                }, 1000);
                 mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
                 mSwipeRefreshLayout.setOnRefreshListener(this);
                 mSwipeRefreshLayout.setColorSchemeResources(R.color.white);

@@ -102,7 +102,6 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         }
 
 
-
         holder.textViewFeedbackReason.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,26 +129,40 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
     public String getSelectedReasons() {
         ArrayList<FeedbackReason> currentList = showPositiveReasons ? positiveReasons : feedbackReasons;
         String reasons = "";
-        for (int i = 0; i < currentList.size(); i++) {
-            if (currentList.get(i).checked) {
-                reasons = reasons + currentList.get(i).name + ",";
+        if (currentList != null) {
+            for (int i = 0; i < currentList.size(); i++) {
+                if (currentList.get(i).checked) {
+                    reasons = reasons + currentList.get(i).name + ",";
+                }
             }
-        }
-        if (!reasons.equalsIgnoreCase("")) {
-            reasons = reasons.substring(0, reasons.length() - 1);
+            if (!reasons.equalsIgnoreCase("")) {
+                reasons = reasons.substring(0, reasons.length() - 1);
+            }
         }
         return reasons;
     }
 
     public boolean isLastSelected() {
         ArrayList<FeedbackReason> currentList = showPositiveReasons ? positiveReasons : feedbackReasons;
-        if (currentList.size() > 0) {
+        if (currentList != null && currentList.size() > 0) {
             return currentList.get(currentList.size() - 1).checked;
         } else {
             return false;
         }
     }
 
+    public void resetSelectedStates() {
+        if (positiveReasons != null) {
+            for (FeedbackReason feedbackReason : positiveReasons)
+                feedbackReason.checked = false;
+        }
+        if (feedbackReasons != null) {
+            for (FeedbackReason feedbackReason : feedbackReasons)
+                feedbackReason.checked = false;
+        }
+
+        notifyDataSetChanged();
+    }
 
     private class ViewHolderFeedbackReason {
         TextView textViewFeedbackReason;
@@ -163,7 +176,9 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
 
     public void resetData(boolean showPositiveReasons) {
         this.showPositiveReasons = showPositiveReasons;
-        notifyDataSetChanged();
+        resetSelectedStates();
+        //notify Data Set is called in method resetSelectedStates()
+
     }
 }
 

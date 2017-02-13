@@ -302,6 +302,9 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                             textViewRSWhatImprove.setText(R.string.feedback_menu_what_amazing);
                             if (feedbackReasonsAdapter != null)
                                 feedbackReasonsAdapter.resetData(true);
+                        } else {
+                            if (feedbackReasonsAdapter != null)
+                                feedbackReasonsAdapter.resetSelectedStates();
                         }
 
                     } else {
@@ -310,9 +313,13 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                             textViewRSWhatImprove.setText(R.string.feedback_menu_what_wrong);
                             if (feedbackReasonsAdapter != null)
                                 feedbackReasonsAdapter.resetData(false);
+                        } else {
+                            if (feedbackReasonsAdapter != null)
+                                feedbackReasonsAdapter.resetSelectedStates();
                         }
 
                     }
+
                 }
             });
 

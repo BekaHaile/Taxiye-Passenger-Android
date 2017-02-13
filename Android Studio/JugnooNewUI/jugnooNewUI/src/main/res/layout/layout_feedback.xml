@@ -247,7 +247,7 @@
                 android:numStars="5"
                 android:paddingBottom="30px"
                 android:rating="0"
-                android:tag="mwar"
+                android:tag="DontTouchMe"
                 android:visibility="gone"
                 app:halfStars="false"
                 app:maxStars="5"

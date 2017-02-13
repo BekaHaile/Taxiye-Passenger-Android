@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
@@ -230,16 +231,16 @@ public class RatingBarMenuFeedback extends LinearLayout {
 
     private TextView createStar() {
         TextView v = new TextView(getContext());
-        v.setCompoundDrawablePadding((int) (ASSL.Yscale()*20.0f));
+        v.setCompoundDrawablePadding((int) (ASSL.Yscale() * 20.0f));
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
-        params.rightMargin = (int) (ASSL.Xscale()*15.0f);
-        params.bottomMargin = (int) (ASSL.Yscale()*25.0f);
-        params.topMargin = (int) (ASSL.Yscale()*25.0f);
-        params.leftMargin = (int) (ASSL.Xscale()*15.0f);
+        params.rightMargin = (int) (ASSL.Xscale() * 15.0f);
+        params.bottomMargin = (int) (ASSL.Yscale() * 25.0f);
+        params.topMargin = (int) (ASSL.Yscale() * 25.0f);
+        params.leftMargin = (int) (ASSL.Xscale() * 15.0f);
         v.setGravity(Gravity.CENTER);
-        v.setCompoundDrawablePadding((int) (ASSL.Yscale()*12.0f));
-        v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        v.setCompoundDrawablePadding((int) (ASSL.Yscale() * 12.0f));
+        v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f);
         v.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/maven_pro_bold.ttf"));
         v.setTextColor(ContextCompat.getColor(getContext(), R.color.text_color));
         v.setLayoutParams(params);
@@ -300,7 +301,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
     private void animateStarPressed(TextView star) {
         if (star != null)
 //            star.setTextSize(TypedValue.COMPLEX_UNIT_PX, 28);
-        ViewCompat.animate(star).scaleX(1.2f).scaleY(1.2f).setDuration(100).start();
+            ViewCompat.animate(star).scaleX(1.2f).scaleY(1.2f).setDuration(100).start();
     }
 
     private void animateStarRelease(TextView star) {
