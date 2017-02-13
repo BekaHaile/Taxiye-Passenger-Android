@@ -202,7 +202,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 
 			if(!"".equalsIgnoreCase(Data.userData.getInviteEarnScreenImage())){
 				Picasso.with(activity).load(Data.userData.getInviteEarnScreenImage())
-						.placeholder(R.drawable.ic_promotions_friend_refer)
+						.placeholder(R.drawable.ic_fresh_new_placeholder)
 						.error(R.drawable.ic_promotions_friend_refer)
 						.into(imageViewLogo);
 			}

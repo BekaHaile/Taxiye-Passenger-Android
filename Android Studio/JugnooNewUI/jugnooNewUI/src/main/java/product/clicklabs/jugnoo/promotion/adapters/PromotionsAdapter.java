@@ -2,11 +2,12 @@ package product.clicklabs.jugnoo.promotion.adapters;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -40,8 +41,11 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_coupon, parent, false);
 
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(720, 128);
-        v.setLayoutParams(layoutParams);
+    /*    RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.bottomMargin = 20;
+        ((RelativeLayout) v).setGravity(Gravity.CENTER);
+
+        v.setLayoutParams(layoutParams);*/
 
         ASSL.DoMagic(v);
         return new ViewHolder(v, activity);
@@ -50,14 +54,13 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
     @Override
     public void onBindViewHolder(PromotionsAdapter.ViewHolder holder, int position) {
         PromoCoupon promoCoupon = promoCoupons.get(position);
-
         holder.textViewCouponTitle.setText(promoCoupon.getTitle());
-        if(promoCoupon instanceof CouponInfo){
+        if (promoCoupon instanceof CouponInfo) {
             holder.textViewExpiryDate.setText(String.format(activity.getResources().getString(R.string.valid_until_format),
-                    DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(((CouponInfo)promoCoupon).expiryDate))));
-        } else if(promoCoupon instanceof PromotionInfo){
+                    DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(((CouponInfo) promoCoupon).expiryDate))));
+        } else if (promoCoupon instanceof PromotionInfo) {
             holder.textViewExpiryDate.setText(String.format(activity.getResources().getString(R.string.valid_until_format),
-                    DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(((PromotionInfo)promoCoupon).endOn))));
+                    DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(((PromotionInfo) promoCoupon).endOn))));
         }
         holder.relative.setTag(position);
         holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -65,17 +68,17 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
             public void onClick(View v) {
                 int pos = (int) v.getTag();
                 PromoCoupon promoCoupon = promoCoupons.get(pos);
-                if(promoCoupon instanceof CouponInfo){
-                    DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo)promoCoupon).description, true, true, false, true);
+                if (promoCoupon instanceof CouponInfo) {
+                    DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description, true, true, false, true);
                     FlurryEventLogger.event(activity, FlurryEventNames.TNC_VIEWS);
-                } else if(promoCoupon instanceof PromotionInfo){
-                    DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo)promoCoupon).terms, false, true, true, true);
+                } else if (promoCoupon instanceof PromotionInfo) {
+                    DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, false, true, true, true);
                     FlurryEventLogger.event(activity, FlurryEventNames.TNC_VIEWS_PROMO);
                 }
             }
         });
 
-	}
+    }
 
     @Override
     public int getItemCount() {
@@ -83,15 +86,16 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout relative;
+        public RelativeLayout relative;
         public TextView textViewCouponTitle, textViewExpiryDate;
         public ImageView imageViewCut;
+
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
-            relative = (LinearLayout) itemView.findViewById(R.id.relative);
-            textViewCouponTitle = (TextView)itemView.findViewById(R.id.textViewCouponTitle);
+            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+            textViewCouponTitle = (TextView) itemView.findViewById(R.id.textViewCouponTitle);
             textViewCouponTitle.setTypeface(Fonts.mavenLight(activity));
-            textViewExpiryDate = (TextView)itemView.findViewById(R.id.textViewExpiryDate);
+            textViewExpiryDate = (TextView) itemView.findViewById(R.id.textViewExpiryDate);
             textViewExpiryDate.setTypeface(Fonts.mavenLight(activity));
             imageViewCut = (ImageView) itemView.findViewById(R.id.imageViewCut);
         }

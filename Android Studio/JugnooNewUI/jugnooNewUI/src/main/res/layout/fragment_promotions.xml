@@ -148,8 +148,10 @@
         android:id="@+id/recyclerViewOffers"
         android:layout_width="match_parent"
         android:layout_height="415px"
-        android:layout_marginTop="40px"
+        android:layout_marginTop="26px"
         android:visibility="gone"
+        android:layout_marginLeft="28px"
+        android:layout_marginRight="28px"
         android:layout_below="@+id/relativeLayoutListTitle"
         android:fadeScrollbars="true"
         android:scrollbars="vertical" />
