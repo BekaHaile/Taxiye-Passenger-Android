@@ -1498,6 +1498,7 @@
     <string name="zoom_view">zoom_view_transition</string>
     <string name="star_could_not_be_added">Jugnoo star couldn\'t be added. Please try next time.</string>
     <string name="claim_gift">Claim gift</string>
-
+    <string name="auto_renewal">Auto Renewal</string>
+    <string name="upgrade_now">Upgrade Now</string>
 
 </resources>

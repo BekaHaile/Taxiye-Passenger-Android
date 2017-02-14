@@ -430,5 +430,7 @@
     <dimen name="px_54">54px</dimen>
     <dimen name="px_76">76px</dimen>
     <dimen name="px_154">154px</dimen>
+    <dimen name="px_66">66px</dimen>
+    <dimen name="px_19">19px</dimen>
 
 </resources>
