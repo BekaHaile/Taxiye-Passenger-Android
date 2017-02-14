@@ -1187,7 +1187,9 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 			case CLAIM_GIFT:
 				// claim gift api call
-				apiClaimGift();
+				if(!TextUtils.isEmpty(refreeUserId)) {
+					apiClaimGift();
+				}
 				imageViewBack.setVisibility(View.GONE);
 				relativeLayoutJugnooLogo.setVisibility(View.GONE);
 				linearLayoutLogin.setVisibility(View.GONE);
@@ -1445,15 +1447,15 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
 			SplashNewActivity.registerationType = RegisterationType.EMAIL;
 			setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, referralCode));
-			if(!TextUtils.isEmpty(refreeUserId)) {
+			//if(!TextUtils.isEmpty(refreeUserId)) {
 				if (rlClaimGift.getVisibility() != View.VISIBLE) {
 					rlPromo.setVisibility(View.GONE);
 					changeUIState(State.CLAIM_GIFT);
 				}
-			} else{
-				rlPromo.setVisibility(View.VISIBLE);
-				changeUIState(State.SIGNUP);
-			}
+//			} else{
+//				rlPromo.setVisibility(View.VISIBLE);
+//				changeUIState(State.SIGNUP);
+//			}
 		}
 	}
 

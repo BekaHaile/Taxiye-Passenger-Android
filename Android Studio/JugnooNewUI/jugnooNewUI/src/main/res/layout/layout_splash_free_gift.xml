@@ -22,9 +22,10 @@
 
         <ImageView
             android:id="@+id/ivUser"
-            android:layout_width="@dimen/px_144"
-            android:layout_height="@dimen/px_144"
+            android:layout_width="@dimen/px_154"
+            android:layout_height="@dimen/px_154"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/px_50"
             android:src="@drawable/ic_profile_img_placeholder"
             android:tag="mwar"/>
 
@@ -34,7 +35,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_44"
             android:layout_below="@+id/ivUser"
-            android:text="Gift from "
+            android:text="Free Gift from friend"
             android:layout_marginTop="@dimen/px_54"
             android:paddingLeft="@dimen/px_20"
             android:paddingRight="@dimen/px_20"
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_36"
             android:layout_below="@+id/tvGiftFrom"
-            android:text="Someone just gifted you a cashback "
+            android:text="Your friend just gifted you a cashback coupon for your first transaction."
             android:paddingLeft="@dimen/px_50"
             android:paddingRight="@dimen/px_50"
             android:textColor="@color/text_color"
@@ -59,8 +60,8 @@
             style="@style/ButtonTheme"
             android:text="@string/claim_gift"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/px_76"
+            android:layout_below="@+id/tvGiftDetail"
             android:layout_marginTop="@dimen/px_100"/>
 
     </RelativeLayout>
