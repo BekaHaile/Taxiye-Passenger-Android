@@ -418,7 +418,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
         rlFragment.setVisibility(View.VISIBLE);
         activity.getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                .add(container.getId(), StarSubscriptionCheckoutFragment.newInstance(selectedSubId),
+                .add(container.getId(), StarSubscriptionCheckoutFragment.newInstance(selectedSubId, true),
                         StarSubscriptionCheckoutFragment.class.getName())
                 .addToBackStack(StarSubscriptionCheckoutFragment.class.getName())
                 .commitAllowingStateLoss();

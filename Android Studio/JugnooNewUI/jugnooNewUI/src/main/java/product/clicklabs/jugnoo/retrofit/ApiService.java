@@ -522,8 +522,8 @@ public interface ApiService {
                             Callback<PurchaseSubscriptionResponse> callback);
 
     @FormUrlEncoded
-    @POST("/update_subscription")
-    void updateSubscription(@FieldMap Map<String, String> params,
+    @POST("/upgrade_subscription")
+    void upgradeSubscription(@FieldMap Map<String, String> params,
                               Callback<PurchaseSubscriptionResponse> callback);
 
     @FormUrlEncoded
