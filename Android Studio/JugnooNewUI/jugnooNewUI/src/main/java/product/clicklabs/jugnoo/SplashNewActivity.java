@@ -233,12 +233,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								if (Data.deepLinkIndex == -1) {
 									Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
 									Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
+									Log.v("deepLinkReferralCode", "---> "+Data.deepLinkReferralCode);
 									refreeUserId = referringParams.optString(KEY_USER_ID, "");
-									Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
-									if ("".equalsIgnoreCase(pair.first)
-											&& !"".equalsIgnoreCase(MyApplication.getInstance().getDeviceToken())) {
-										sendToRegisterThroughSms(Data.deepLinkReferralCode);
-									}
 								}
 							}
 							Log.e("Deeplink =", "=" + Data.deepLinkIndex);
@@ -248,6 +244,12 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 						String link = referringParams.optString("link", "");
 						if (!"".equalsIgnoreCase(link)) {
 							MyApplication.getInstance().getDatabase2().insertLink(link);
+						}
+
+						Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
+						if ("".equalsIgnoreCase(pair.first)
+								&& !"".equalsIgnoreCase(MyApplication.getInstance().getDeviceToken())) {
+							sendToRegisterThroughSms(true);
 						}
 
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
@@ -1441,8 +1443,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	}
 
 
-	private void sendToRegisterThroughSms(String referralCode) {
-		if (!"".equalsIgnoreCase(referralCode)) {
+	private void sendToRegisterThroughSms(boolean openLS) {
+		if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 			Data.deepLinkIndex = -1;
 			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
 			SplashNewActivity.registerationType = RegisterationType.EMAIL;
@@ -1456,6 +1458,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 //				rlPromo.setVisibility(View.VISIBLE);
 //				changeUIState(State.SIGNUP);
 //			}
+		} else if(openLS){
+			changeUIState(State.SPLASH_LS);
 		}
 	}
 
@@ -1674,7 +1678,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 		} else {
 			if (MyApplication.getInstance().isOnline()) {
 				if(getIntent().getData() != null && getIntent().getData().toString().equalsIgnoreCase("jungooautos://open")){
-
+					sendToRegisterThroughSms(false);
 				} else{
 					changeUIState(State.SPLASH_LS);
 				}
@@ -1682,7 +1686,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			} else {
 				changeUIState(State.SPLASH_NO_NET);
 			}
-			sendToRegisterThroughSms(Data.deepLinkReferralCode);
 		}
 	}
 
