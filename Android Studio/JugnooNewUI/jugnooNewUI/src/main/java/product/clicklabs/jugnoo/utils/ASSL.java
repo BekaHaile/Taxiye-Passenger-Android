@@ -71,7 +71,13 @@ import android.widget.TextView;
 /*     */   {
 /* 124 */     return scaleX;
 /*     */   }
-/*     */
+
+         public static float minRatio(){
+               return Math.min(ASSL.Xscale(), ASSL.Yscale());
+         }
+
+
+    /*     */
 /*     */   public static float Yscale() {
 /* 128 */     return scaleY;
 /*     */   }
@@ -244,6 +250,8 @@ import android.widget.TextView;
 /* 323 */           DoMagic(vg.getChildAt(i));
 /*     */     }
 /*     */   }
+
+
 /*     */ }
 
 /* Location:           /Users/shankar/Desktop/assl_sdk_rmn_jugnoo.jar

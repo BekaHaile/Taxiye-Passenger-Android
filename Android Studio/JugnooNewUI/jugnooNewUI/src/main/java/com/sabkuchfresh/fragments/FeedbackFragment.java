@@ -23,8 +23,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
+import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
@@ -74,7 +76,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             ivOffering;
     private FreshActivity activity;
     private LinearLayout linearLayoutRideSummary, linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer, llBadReason;
-    private RelativeLayout  mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
+    private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
     private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue, tvItems,
             textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp, textViewRideEndWithImage;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;
@@ -95,7 +97,11 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private TextView textViewRSOtherError;
     private Button buttonRSSubmitFeedback;
     private EditText editTextRSFeedback;
-    private ArrayList<FeedbackReason> reasons = new ArrayList<>();
+    private LinearLayout llThumbsRating;
+    private RatingBarMenuFeedback ratingBarMenuFeedback;
+    private ArrayList<FeedbackReason> negativeReasons = new ArrayList<>();
+    private TextView textViewRSWhatImprove;
+    private ArrayList<FeedbackReason> positiveReasons;
 
     @Nullable
     @Override
@@ -108,8 +114,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         try {
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
-            reasons.clear();
-            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+            negativeReasons.clear();
+            if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
                     .equals(Config.getFreshClientId())) {
                 viewType = Data.getFreshData().getFeedbackViewType();
                 dateValue = Data.getFreshData().getFeedbackDeliveryDate();
@@ -118,9 +124,11 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
                 productType = ProductType.FRESH;
-                for(int i=0; i<Data.getFreshData().getNegativeFeedbackReasons().length(); i++){
-                    reasons.add(new FeedbackReason(Data.getFreshData().getNegativeFeedbackReasons().get(i).toString()));
+                for (int i = 0; i < Data.getFreshData().getNegativeFeedbackReasons().length(); i++) {
+                    negativeReasons.add(new FeedbackReason(Data.getFreshData().getNegativeFeedbackReasons().get(i).toString()));
                 }
+
+
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
                     .equals(Config.getMealsClientId())) {
                 viewType = Data.getMealsData().getFeedbackViewType();
@@ -131,8 +139,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 feedbackOrderItems = Data.getMealsData().getFeedbackOrderItems();
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
                 productType = ProductType.MEALS;
-                for(int i=0; i<Data.getMealsData().getNegativeFeedbackReasons().length(); i++){
-                    reasons.add(new FeedbackReason(Data.getMealsData().getNegativeFeedbackReasons().get(i).toString()));
+                for (int i = 0; i < Data.getMealsData().getNegativeFeedbackReasons().length(); i++) {
+                    negativeReasons.add(new FeedbackReason(Data.getMealsData().getNegativeFeedbackReasons().get(i).toString()));
                 }
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
                     .equals(Config.getGroceryClientId())) {
@@ -143,11 +151,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
                 productType = ProductType.GROCERY;
-                for(int i=0; i<Data.getGroceryData().getNegativeFeedbackReasons().length(); i++){
-                    reasons.add(new FeedbackReason(Data.getGroceryData().getNegativeFeedbackReasons().get(i).toString()));
+                for (int i = 0; i < Data.getGroceryData().getNegativeFeedbackReasons().length(); i++) {
+                    negativeReasons.add(new FeedbackReason(Data.getGroceryData().getNegativeFeedbackReasons().get(i).toString()));
                 }
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
                     .equals(Config.getMenusClientId())) {
+
                 viewType = Data.getMenusData().getFeedbackViewType();
                 dateValue = Data.getMenusData().getFeedbackDeliveryDate();
                 orderAmount = Data.getMenusData().getAmount();
@@ -155,9 +164,16 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 activity.getTopBar().title.setText(getResources().getString(R.string.menus));
                 endRideGoodFeedbackText = Data.getMenusData().getRideEndGoodFeedbackText();
                 productType = ProductType.MENUS;
-                for(int i=0; i<Data.getMenusData().getNegativeFeedbackReasons().length(); i++){
-                    reasons.add(new FeedbackReason(Data.getMenusData().getNegativeFeedbackReasons().get(i).toString()));
+                for (int i = 0; i < Data.getMenusData().getNegativeFeedbackReasons().length(); i++) {
+                    negativeReasons.add(new FeedbackReason(Data.getMenusData().getNegativeFeedbackReasons().get(i).toString()));
                 }
+                if (Data.getMenusData().getPositiveFeedbackReasons() != null) {
+                    positiveReasons = new ArrayList<>();
+                    for (int i = 0; i < Data.getMenusData().getPositiveFeedbackReasons().length(); i++) {
+                        positiveReasons.add(new FeedbackReason(Data.getMenusData().getPositiveFeedbackReasons().get(i).toString()));
+                    }
+                }
+
             } else {
                 activity.finish();
             }
@@ -165,11 +181,10 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             e.printStackTrace();
         }
 
-        rootView = inflater.inflate(R.layout.layout_feedback, container, false);
 
         if (TextUtils.isEmpty(orderId))
             activity.finish();
-
+        rootView = inflater.inflate(R.layout.layout_feedback, container, false);
 
         setUp();
 
@@ -229,6 +244,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         imageViewThumbsUpGif = (ImageView) rootView.findViewById(R.id.imageViewThumbsUpGif);
         imageviewType = (ImageView) rootView.findViewById(R.id.imageview_type);
         ivOffering = (ImageView) rootView.findViewById(R.id.ivOffering);
+        llThumbsRating = (LinearLayout) rootView.findViewById(R.id.ll_thumbs_rating);
         imageViewThumbsDown = (ImageView) rootView.findViewById(R.id.imageViewThumbsDown);
         imageViewThumbsUp = (ImageView) rootView.findViewById(R.id.imageViewThumbsUp);
         llBadReason = (LinearLayout) rootView.findViewById(R.id.llBadReason);
@@ -238,11 +254,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
         buttonEndRideSkip = (Button) rootView.findViewById(R.id.buttonEndRideSkip);
         buttonEndRideInviteFriends = (Button) rootView.findViewById(R.id.buttonEndRideInviteFriends);
-        ((TextView) rootView.findViewById(R.id.textViewRSWhatImprove)).setTypeface(Fonts.mavenMedium(activity));
+        textViewRSWhatImprove = ((TextView) rootView.findViewById(R.id.textViewRSWhatImprove));
+        textViewRSWhatImprove.setTypeface(Fonts.mavenMedium(activity));
         buttonRSSubmitFeedback = (Button) rootView.findViewById(R.id.buttonRSSubmitFeedback);
         buttonRSSubmitFeedback.setTypeface(Fonts.mavenRegular(activity));
         editTextRSFeedback = (EditText) rootView.findViewById(R.id.editTextRSFeedback);
-
+        ratingBarMenuFeedback = (RatingBarMenuFeedback) rootView.findViewById(R.id.rating_bar);
 
         if (Config.getFreshClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.feedback_fresh);
@@ -251,15 +268,71 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             imageviewType.setImageResource(R.drawable.feedback_grocery);
             ivOffering.setImageResource(R.drawable.ic_fab_grocery);
         } else if (Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+
+
             imageviewType.setImageResource(R.drawable.ic_fab_menus);
             ivOffering.setImageResource(R.drawable.ic_fab_menus);
+
+            /**
+             Edited by Parminder Singh on 2/10/17 at 12:46 PM
+             **/
+
+            llThumbsRating.setVisibility(View.GONE);
+            ratingBarMenuFeedback.setVisibility(View.VISIBLE);
+            editTextRSFeedback.setHint("Comments..");
+            textViewRSWhatImprove.setTag(null);
+            ratingBarMenuFeedback.setOnScoreChanged(new RatingBarMenuFeedback.IRatingBarCallbacks() {
+                @Override
+                public void scoreChanged(float score) {
+
+                    if (llBadReason.getVisibility() != View.VISIBLE) {
+                        llBadReason.setVisibility(View.VISIBLE);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollViewRideSummary.smoothScrollTo(0, (int) buttonRSSubmitFeedback.getY());
+                            }
+                        }, 300);
+                    }
+
+                    if (score > 2) {
+
+                        if (textViewRSWhatImprove.getTag() == null || ((int) textViewRSWhatImprove.getTag()) == 0) {
+                            textViewRSWhatImprove.setTag(1);
+                            textViewRSWhatImprove.setText(R.string.feedback_menu_what_amazing);
+                            if (feedbackReasonsAdapter != null)
+                                feedbackReasonsAdapter.resetData(true);
+                        } else {
+                            if (feedbackReasonsAdapter != null)
+                                feedbackReasonsAdapter.resetSelectedStates();
+                        }
+
+                    } else {
+                        if (textViewRSWhatImprove.getTag() == null || ((int) textViewRSWhatImprove.getTag()) == 1) {
+                            textViewRSWhatImprove.setTag(0);
+                            textViewRSWhatImprove.setText(R.string.feedback_menu_what_wrong);
+                            if (feedbackReasonsAdapter != null)
+                                feedbackReasonsAdapter.resetData(false);
+                        } else {
+                            if (feedbackReasonsAdapter != null)
+                                feedbackReasonsAdapter.resetSelectedStates();
+                        }
+
+                    }
+
+                }
+            });
+
+
         } else {
             imageviewType.setImageResource(R.drawable.feedback_meals);
             ivOffering.setImageResource(R.drawable.ic_fab_meals);
+
+
         }
 
         try {
-            feedbackReasonsAdapter = new FeedbackReasonsAdapter(activity, reasons,
+            feedbackReasonsAdapter = new FeedbackReasonsAdapter(activity, negativeReasons, positiveReasons,
                     new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
                         @Override
                         public void onLastItemSelected(boolean selected) {
@@ -278,20 +351,28 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         buttonRSSubmitFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
+                String comments = feedbackReasonsAdapter.getSelectedReasons();
                 //boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
-                String feedbackStr = editTextRSFeedback.getText().toString().trim();
-                if (feedbackStr.length() > 0) {
-                    if (feedbackStr.length() > 300) {
+                String reviewDescription = editTextRSFeedback.getText().toString().trim();
+                if (reviewDescription.length() > 0) {
+                    if (reviewDescription.length() > 300) {
                         editTextRSFeedback.requestFocus();
                         editTextRSFeedback.setError(getString(R.string.review_must_be_in));
                     } else {
-                        feedbackReasons = feedbackReasons + ", " + feedbackStr;
+                        if (productType != ProductType.MENUS) {
+                            comments = comments + ", " + reviewDescription;
+                        }
+
                     }
                 }
 
                 // api call
-                sendQuery(0, feedbackReasons);
+                if (productType != ProductType.MENUS) {
+                    sendQuery(0, comments);
+                } else {
+                    sumbitMenuFeedback(reviewDescription, comments, (int) ratingBarMenuFeedback.getScore());
+                }
+
 
             }
         });
@@ -330,7 +411,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 //sendQuery(0, "");
                 try {
                     imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down_active);
-                    if (reasons.size() > 0) {
+                    if (negativeReasons.size() > 0) {
                         llBadReason.setVisibility(View.VISIBLE);
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -366,21 +447,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             public void onClick(View v) {
                 llBadReason.setVisibility(View.GONE);
                 imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down);
-                isUpbuttonClicked = true;
+                afterGoodRating();
                 sendQuery(1, "");
-                if (viewType != -1) {
-                    if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()) {
-                        endRideWithImages(R.drawable.ride_end_image_1);
-                    } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()) {
-                        endRideWithImages(R.drawable.ride_end_image_2);
-                    } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()) {
-                        endRideWithImages(R.drawable.ride_end_image_3);
-                    } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()) {
-                        endRideWithImages(R.drawable.ride_end_image_4);
-                    } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
-                        endRideWithGif();
-                    }
-                }
                 try {
                     if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
                         MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_UPVOTE, new Bundle());
@@ -412,6 +480,24 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 //            }
 //        });
 //        linearLayoutRideSummary.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+    }
+
+    private void afterGoodRating() {
+        isUpbuttonClicked = true;
+
+        if (viewType != -1) {
+            if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()) {
+                endRideWithImages(R.drawable.ride_end_image_1);
+            } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()) {
+                endRideWithImages(R.drawable.ride_end_image_2);
+            } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()) {
+                endRideWithImages(R.drawable.ride_end_image_3);
+            } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()) {
+                endRideWithImages(R.drawable.ride_end_image_4);
+            } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
+                endRideWithGif();
+            }
+        }
     }
 
     private void updateUI() {
@@ -721,4 +807,49 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             }
         }
     }
+
+    SendFeedbackQuery sendFeedbackQuery;
+
+    private void sumbitMenuFeedback(String reviewDesc, String comments, int score) {
+        DialogPopup.showLoadingDialog(activity, "");
+        if (sendFeedbackQuery == null) {
+            sendFeedbackQuery = new SendFeedbackQuery();
+        }
+
+        sendFeedbackQuery.sendQuery(Integer.parseInt(orderId), -1, ProductType.MENUS, score, Constants.RATING_TYPE_STAR, comments, reviewDesc, activity,
+                new SendFeedbackQuery.FeedbackResultListener() {
+                    @Override
+                    public void onSendFeedbackResult(boolean isSuccess, int rating) {
+                        if (isSuccess) {
+
+
+                            if (rating > 2) {
+                                // for Good rating
+                                afterGoodRating();
+                                if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            backPressed(true);
+                                        }
+                                    }, 3000);
+                                } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()) {
+                                    backPressed(true);
+
+                                }
+
+
+                            } else {
+                                // for bad rating
+                                backPressed(true);
+                            }
+
+
+                          /*  activity.performBackPressed();
+                            product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));*/
+                        }
+                    }
+                });
+    }
+
 }

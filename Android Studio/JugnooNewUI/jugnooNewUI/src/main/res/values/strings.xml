@@ -1500,5 +1500,18 @@
     <string name="claim_gift">Claim gift</string>
     <string name="auto_renewal">Auto Renewal</string>
     <string name="upgrade_now">Upgrade Now</string>
+    <string name="share_your_experience">Share your experience...</string>
+    <string name="please_enter_some_feedback">Please enter some feedback</string>
+    <string name="feedback_must_be_in_500">Feedback must be in 500 characters</string>
+    <string name="thanks_for_your_valuable_feedback">Thanks for your valuable feedback</string>
+    <string name="feedback_menu_what_amazing">What was amazing?</string>
+    <string name="feedback_menu_what_wrong">Oh no,what went wrong?</string>
+    <string name="feed_is_empty">Feed is empty!</string>
+    <string name="be_first_one_to_add">BE FIRST ONE TO ADD...</string>
+    <string name="items_summary">Item(s) Summary</string>
+    <string name="bill_summary">Bill Summary</string>
+    <string name="dont_touch_me">DontTouchMe</string>
+    <string name="payment_summary">Payment Summary</string>
+    <string name="payable_amount">Payable amount</string>
 
 </resources>

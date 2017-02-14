@@ -1,9 +1,12 @@
 package product.clicklabs.jugnoo;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
+
+import com.tsengvn.typekit.TypekitContextWrapper;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
 
@@ -39,5 +42,10 @@ public class BaseFragmentActivity extends FragmentActivity {
 		if(!HomeActivity.checkIfUserDataNull(this)){
 			HomeActivity.checkForAccessTokenChange(this);
 		}
+	}
+
+	@Override
+	protected void attachBaseContext(Context newBase) {
+		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
 	}
 }

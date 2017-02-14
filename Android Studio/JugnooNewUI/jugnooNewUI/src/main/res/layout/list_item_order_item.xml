@@ -110,11 +110,10 @@
 
     <ImageView
         android:id="@+id/imageViewSep"
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_marginLeft="140px"
+        style="@style/HorizontalDividerLight"
+        android:layout_marginLeft="34px"
         android:layout_marginRight="34px"
         android:layout_below="@+id/linearLayoutContent"
-        android:background="@color/stroke_light_grey_alpha"/>
+        />
 
 </RelativeLayout>

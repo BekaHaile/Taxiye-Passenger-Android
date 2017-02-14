@@ -79,6 +79,7 @@ import retrofit.mime.TypedByteArray;
 public class JSONParser implements Constants {
 
 
+
     private final String TAG = JSONParser.class.getSimpleName();
 
 
@@ -547,6 +548,7 @@ public class JSONParser implements Constants {
             int isFatafatEnabled = jMenusData.optInt(KEY_FATAFAT_ENABLED, 1);
             String rideEndGoodFeedbackText = jMenusData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
             JSONArray negativeFeedbackReasons = jMenusData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
+            JSONArray positiveFeedbackReasons = jMenusData.optJSONArray(KEY_POSITIVE_FEEDBACK_REASONS);
 
             PopupData popupData = null;
             try {
@@ -587,7 +589,7 @@ public class JSONParser implements Constants {
             } catch (Exception e){ e.printStackTrace(); }
 
             Data.setMenusData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText, negativeFeedbackReasons));
+                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText, negativeFeedbackReasons,positiveFeedbackReasons));
 
             try {
                 if(Data.getMenusData().getPromoCoupons() == null){

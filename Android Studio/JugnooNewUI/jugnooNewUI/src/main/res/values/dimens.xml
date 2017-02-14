@@ -432,5 +432,11 @@
     <dimen name="px_154">154px</dimen>
     <dimen name="px_66">66px</dimen>
     <dimen name="px_19">19px</dimen>
+    <dimen name="px_350">
+        350px
+    </dimen>
+    <dimen name="px_777">
+        777px
+    </dimen>
 
 </resources>

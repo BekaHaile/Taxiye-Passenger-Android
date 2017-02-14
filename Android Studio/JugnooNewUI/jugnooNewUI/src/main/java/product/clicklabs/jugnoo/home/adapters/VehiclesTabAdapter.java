@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.home.adapters;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,8 +19,6 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
 
 public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.ViewHolder> {
 
@@ -67,14 +63,14 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
                 Picasso.with(activity)
                         .load(region.getImages().getTabHighlighted())
-                        .placeholder(R.drawable.ic_supply_placeholder)
+                        .placeholder(region.getTabSelected())
                         .into(holder.imageViewTab);
             } else{
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
                 Picasso.with(activity)
                         .load(region.getImages().getTabNormal())
-                        .placeholder(R.drawable.ic_supply_placeholder)
+                        .placeholder(region.getTabNormal())
                         .into(holder.imageViewTab);
             }
         } catch (Exception e) {

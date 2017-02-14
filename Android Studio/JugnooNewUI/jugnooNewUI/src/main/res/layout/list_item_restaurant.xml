@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rlRoot"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+<RelativeLayout android:id="@+id/rlRoot"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_white_menu_item_selector_color_selector"
     >
 
@@ -21,9 +21,9 @@
     <View
         android:layout_width="@dimen/px_150"
         android:layout_height="@dimen/px_40"
+        android:layout_alignBottom="@+id/imageViewRestaurantImage"
         android:layout_marginLeft="@dimen/px_30"
         android:background="@drawable/shadow_up_menu_item"
-        android:layout_alignBottom="@+id/imageViewRestaurantImage"
         />
 
 
@@ -31,52 +31,52 @@
         android:id="@+id/textViewAddressLine"
         android:layout_width="@dimen/px_150"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageViewRestaurantImage"
+        android:layout_marginLeft="@dimen/px_30"
+        android:background="@color/transparent"
+        android:drawableLeft="@drawable/ic_restaurant_location"
+        android:drawablePadding="@dimen/dp_2"
+        android:paddingBottom="@dimen/px_2"
+        android:paddingLeft="@dimen/px_5"
         android:text="Sector 28 B"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_16"
-        android:background="@color/transparent"
-        android:layout_marginLeft="@dimen/px_30"
-        android:layout_alignBottom="@+id/imageViewRestaurantImage"
-        android:drawableLeft="@drawable/ic_restaurant_location"
-        android:paddingLeft="@dimen/px_5"
-        android:paddingBottom="@dimen/px_2"
-        android:drawablePadding="@dimen/dp_2"
         />
 
     <TextView
         android:id="@+id/textViewRestaurantName"
         android:layout_width="@dimen/px_380"
         android:layout_height="wrap_content"
-        android:maxLines="3"
-        android:text="Title\nabc"
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/text_size_32"
         android:layout_marginTop="@dimen/px_26"
         android:layout_toRightOf="@+id/imageViewRestaurantImage"
+        android:maxLines="3"
+        android:text="Title"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_32"
         />
 
     <TextView
         android:id="@+id/textViewRestaurantCusines"
         android:layout_width="@dimen/px_480"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/imageViewRestaurantImage"
         android:layout_below="@+id/textViewRestaurantName"
         android:layout_marginTop="@dimen/px_10"
+        android:layout_toRightOf="@+id/imageViewRestaurantImage"
         android:maxLines="3"
-        android:text="Title\nabc"
+        android:text="Title"
         android:textColor="@color/text_color_light_less"
-        android:textSize="@dimen/text_size_26" />
+        android:textSize="@dimen/text_size_26"/>
 
     <TextView
         android:id="@+id/textViewMinimumOrder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewRestaurantCusines"
+        android:layout_marginTop="@dimen/px_10"
+        android:layout_toRightOf="@+id/imageViewRestaurantImage"
         android:text="Minimum Order r399"
         android:textColor="@color/order_history_status_color"
         android:textSize="@dimen/text_size_22"
-        android:layout_marginTop="@dimen/px_10"
-        android:layout_toRightOf="@+id/imageViewRestaurantImage"
-        android:layout_below="@+id/textViewRestaurantCusines"
         />
 
 
@@ -84,33 +84,33 @@
         android:id="@+id/textViewDelivery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewMinimumOrder"
+        android:layout_marginBottom="@dimen/px_26"
+        android:layout_marginTop="@dimen/px_14"
+        android:layout_toRightOf="@+id/imageViewRestaurantImage"
+        android:drawableLeft="@drawable/ic_clock_grey"
+        android:drawablePadding="@dimen/dp_4"
         android:text="Delivers in 40-60 min"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_22"
-        android:layout_marginTop="@dimen/px_14"
-        android:layout_marginBottom="@dimen/px_26"
-        android:layout_toRightOf="@+id/imageViewRestaurantImage"
-        android:layout_below="@+id/textViewMinimumOrder"
-        android:drawableLeft="@drawable/ic_clock_grey"
-        android:drawablePadding="@dimen/dp_4"
         />
 
     <TextView
         android:id="@+id/textViewRestaurantCloseTime"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/px_40"
-        android:background="@drawable/capsule_red_very_light"
-        android:layout_toRightOf="@+id/imageViewRestaurantImage"
         android:layout_below="@+id/textViewDelivery"
-        android:text="Closes in 15 minute"
-        android:textColor="@color/red_dark_more"
-        android:textSize="@dimen/text_size_20"
         android:layout_marginBottom="@dimen/px_26"
-        android:paddingRight="@dimen/px_15"
-        android:paddingLeft="@dimen/px_15"
+        android:layout_toRightOf="@+id/imageViewRestaurantImage"
+        android:background="@drawable/capsule_red_very_light"
         android:drawableLeft="@drawable/ic_exclamation_red"
         android:drawablePadding="@dimen/dp_3"
         android:gravity="center_vertical"
+        android:paddingLeft="@dimen/px_15"
+        android:paddingRight="@dimen/px_15"
+        android:text="Closes in 15 minute"
+        android:textColor="@color/red_dark_more"
+        android:textSize="@dimen/text_size_20"
         />
 
 
@@ -118,19 +118,20 @@
         android:id="@+id/tvRating"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/px_40"
-        android:background="@drawable/capsule_text_color"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/px_30"
+        android:layout_marginTop="@dimen/px_24"
+        android:background="@drawable/capsule_text_color"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/px_15"
+        android:paddingRight="@dimen/px_15"
         android:text="Rating 2.1"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_20"
-        android:paddingRight="@dimen/px_15"
-        android:paddingLeft="@dimen/px_15"
-        android:gravity="center_vertical"
-        android:layout_marginTop="@dimen/px_24"
-        android:layout_marginRight="@dimen/px_30"
         android:visibility="gone"
+        app:font="maven"
         />
-    
+
     <View
         android:id="@+id/vSep"
         android:layout_width="match_parent"

@@ -3,29 +3,21 @@ package com.sabkuchfresh.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.BlurImageTask;
-import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -56,6 +48,10 @@ public class RestaurantImageFragment extends Fragment {
 
     @Bind(R.id.shadow_view)
     View shadowView;
+
+    @Bind(R.id.llCollapseRating)
+    LinearLayout llCollapseRating;
+
     private FreshActivity activity;
     private BlurImageTask loadBlurredImageTask;
 
@@ -143,29 +139,24 @@ public class RestaurantImageFragment extends Fragment {
                 tvRestTitle.setText(activity.getVendorOpened().getName());
 
                 activity.setVendorDeliveryTimeToTextView(activity.getVendorOpened(), tvCollapRestaurantDeliveryTime);
-                setTextViewDrawableColor(tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));
+                activity.setTextViewDrawableColor(tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));
 
-                if (activity.getVendorOpened().getRating() != null) {
+                if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
                     tvCollapRestaurantRating.setVisibility(View.VISIBLE);
-
-                    Spannable spannable = new SpannableString(activity.getString(R.string.star_icon) + " " + activity.getVendorOpened().getRating());// + "  " + "(" + activity.getVendorOpened().getReviewCount() + ")");
-                    Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
-                    spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-                    tvCollapRestaurantRating.setText(spannable);
-                    int ratingColor;
-                    if (activity.getVendorOpened().getColorCode() != null
-                            && activity.getVendorOpened().getColorCode().startsWith("#")
-                            && activity.getVendorOpened().getColorCode().length() == 7)
-                        ratingColor = Color.parseColor(activity.getVendorOpened().getColorCode());
-                    else
-                        ratingColor = Color.parseColor("#8dd061"); //default Green Color
-
-                    setTextViewBackgroundDrawableColor(tvCollapRestaurantRating, ratingColor);
+                    activity.setRatingAndGetColor(tvCollapRestaurantRating, activity.getVendorOpened().getRating(),
+                            activity.getVendorOpened().getColorCode());
                 } else {
                     tvCollapRestaurantRating.setVisibility(View.GONE);
                 }
 
             }
+
+            llCollapseRating.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.openRestaurantReviewsListFragment();
+                }
+            });
         }
     }
 
@@ -189,20 +180,7 @@ public class RestaurantImageFragment extends Fragment {
     }
 
 
-    private void setTextViewDrawableColor(TextView textView, int color) {
-        for (Drawable drawable : textView.getCompoundDrawables()) {
-            if (drawable != null) {
-                drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-            }
-        }
-    }
 
-    private void setTextViewBackgroundDrawableColor(TextView textView, int color) {
-        if (textView.getBackground() != null) {
-            textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-        }
-
-    }
 
 
     final GestureDetector gesture = new GestureDetector(getActivity(),
