@@ -40,6 +40,6 @@ public class TextViewStrikeThrough extends TextView {
             paint.setStrokeWidth((int) (ASSL.Yscale() * 4.0f));
             paint.setFlags(Paint.ANTI_ALIAS_FLAG);
         }
-        canvas.drawLine(0, getHeight(), getWidth(), 0, paint);
+        canvas.drawLine(0, ((float)getHeight())* 0.6f, getWidth(), ((float)getHeight())* 0.3f, paint);
     }
 }

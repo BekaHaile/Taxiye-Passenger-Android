@@ -45,6 +45,7 @@ public class TopBar implements FlurryEventNames {
 	public RelativeLayout llSearchCartContainer;
 	public TextView textViewReset, tvCartAmount, tvNameCap;
 	public LinearLayout llCartAmount, llCartContainer, llSearchCart;
+	public ImageView ivCross;
 
 
 	public TopBar(Activity activity, DrawerLayout drawerLayout) {
@@ -88,6 +89,7 @@ public class TopBar implements FlurryEventNames {
 		ivAddReview = (ImageView) drawerLayout.findViewById(R.id.ivAddReview);
 		tvNameCap = (TextView) drawerLayout.findViewById(R.id.tvNameCap);
 		tvNameCap.setTypeface(Typeface.DEFAULT_BOLD);
+		ivCross = (ImageView) drawerLayout.findViewById(R.id.ivCross);
 		//setSearchVisibility(View.GONE);
 
 
@@ -98,6 +100,7 @@ public class TopBar implements FlurryEventNames {
 		rlFilter.setOnClickListener(topBarOnClickListener);
 		imageViewBack.setOnClickListener(topBarOnClickListener);
 		ivAddReview.setOnClickListener(topBarOnClickListener);
+		ivCross.setOnClickListener(topBarOnClickListener);
 
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
@@ -188,7 +191,13 @@ public class TopBar implements FlurryEventNames {
 					if (activity instanceof FreshActivity) {
 						((FreshActivity) activity).openRestaurantAddReviewFragment();
 					}
+					break;
 
+				case R.id.ivCross:
+					if (activity instanceof FreshActivity) {
+						((FreshActivity) activity).performBackPressed();
+					}
+					break;
 			}
 		}
 	};

@@ -170,7 +170,7 @@
                         android:padding="15px"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="@dimen/px_10"
-                        android:src="@drawable/ic_cross_grey"
+                        android:src="@drawable/ic_cross_grey_selector"
                         android:visibility="visible" />
 
                 </LinearLayout>
@@ -306,8 +306,6 @@
                     app:font="maven"
                     android:visibility="gone"
                     />
-
-
             </RelativeLayout>
 
             <TextView
@@ -324,6 +322,14 @@
                 android:textColor="@color/text_color_selector"
                 android:textSize="30.6px"
                 android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/ivCross"
+                style="@style/CrossSelector"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:layout_marginLeft="@dimen/px_10"
+                />
 
         </RelativeLayout>
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +33,7 @@ import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.utils.TextViewStrikeThrough;
 
 import org.json.JSONObject;
 
@@ -94,7 +94,8 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
     private LinearLayout llExtraCharges, llMain;
 
     private TextView tvItemsQuantityVal;
-    private TextView tvTotalAmountValOld, tvTotalAmountMessage;
+    private TextViewStrikeThrough tvTotalAmountValOld;
+    private TextView tvTotalAmountMessage;
     private TextView tvPaymentMethodVal;
 
     @Nullable
@@ -178,7 +179,7 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
         cancelfeedbackBtn.setTypeface(Fonts.mavenRegular(activity));
 
         tvItemsQuantityVal = (TextView) rootView.findViewById(R.id.tvItemsQuantityVal);
-        tvTotalAmountValOld = (TextView) rootView.findViewById(R.id.tvTotalAmountValOld);
+        tvTotalAmountValOld = (TextViewStrikeThrough) rootView.findViewById(R.id.tvTotalAmountValOld);
         tvTotalAmountMessage = (TextView) rootView.findViewById(R.id.tvTotalAmountMessage);
         tvPaymentMethodVal = (TextView) rootView.findViewById(R.id.tvPaymentMethodVal);
 
@@ -585,10 +586,10 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
     }
 
     private View addFinalAmountView(LinearLayout llFinalAmount, String fieldText, Double fieldTextVal, boolean showNegative){
-        return addFinalAmountView(llFinalAmount, fieldText, fieldTextVal, showNegative, false, true);
+        return addFinalAmountView(llFinalAmount, fieldText, fieldTextVal, showNegative, false, true, false, -1);
     }
     private View addFinalAmountView(LinearLayout llFinalAmount, String fieldText, Double fieldTextVal,
-                                    boolean showNegative, boolean showFree, boolean showDivider){
+                                    boolean showNegative, boolean showFree, boolean showDivider, boolean titleBold, int colorResId){
         try {
             llFinalAmount.setVisibility(View.VISIBLE);
             LayoutInflater layoutInflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -613,6 +614,12 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                     }
                 }
+            }
+            if(titleBold){
+                tvDelCharges.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+            }
+            if(colorResId > -1){
+                tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, colorResId));
             }
             View vDivider = view.findViewById(R.id.vDivider);
             if(!showDivider){
@@ -718,7 +725,7 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
             if((datum.getServiceTax() != null) && (datum.getServiceTax() > 0)){
                 addFinalAmountView(llExtraCharges, activity.getString(R.string.service_tax), datum.getServiceTax(), false);
             }
-            addFinalAmountView(llExtraCharges, activity.getString(R.string.delivery_charges), datum.getDeliveryCharges(), false, true, true);
+            addFinalAmountView(llExtraCharges, activity.getString(R.string.delivery_charges), datum.getDeliveryCharges(), false, true, true, false, -1);
 
 
             double totalAmountVal = datum.getOriginalOrderAmount();
@@ -727,28 +734,17 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
                 if (datum.getOldAmount() != null && Double.compare(datum.getNewAmount(), datum.getOldAmount()) != 0) {
                     tvTotalAmountValOld.setVisibility(View.VISIBLE);
 					tvTotalAmountValOld.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(datum.getOldAmount())));
-                    tvTotalAmountValOld.setPaintFlags(tvTotalAmountValOld.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//                    tvTotalAmountValOld.setPaintFlags(tvTotalAmountValOld.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    tvTotalAmountMessage.setVisibility(TextUtils.isEmpty(datum.getNote()) ? View.GONE : View.VISIBLE);
+                    tvTotalAmountMessage.setText(datum.getNote());
                 }
 				totalAmountVal = datum.getNewAmount();
             } else if(datum.getTotalAmount() != null){
                 totalAmountVal = datum.getTotalAmount();
             }
             tvTotalAmountVal.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(totalAmountVal)));
-			tvTotalAmountMessage.setVisibility(TextUtils.isEmpty(datum.getTotalAmountInfoText()) ? View.GONE : View.VISIBLE);
-			tvTotalAmountMessage.setText(datum.getTotalAmountInfoText());
 
 
-/*
-            if((datum.getDiscount() != null) && (datum.getDiscount() != 0)
-                    || (datum.getJugnooDeducted() != null) && (datum.getJugnooDeducted() != 0)){
-                rlAmountPayable.setVisibility(View.VISIBLE);
-                tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(datum.getOriginalOrderAmount().intValue() - datum.getJugnooDeducted().intValue()
-                                - datum.getDiscount().intValue() - datum.getWalletDeducted().intValue())));
-            } else{
-                rlAmountPayable.setVisibility(View.GONE);
-                llFinalAmount.setVisibility(View.GONE);
-            }
-*/
 
 
             View vDivider = rootView.findViewById(R.id.vDividerPayment);
@@ -786,18 +782,20 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
             if((datum.getDiscount() != null) && (datum.getDiscount() > 0)){
                 vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.discount), datum.getDiscount(), true);
             }
-
             if((datum.getJugnooDeducted() != null) && (datum.getJugnooDeducted() > 0)){
                 vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash), datum.getJugnooDeducted(), false);
             }
+            if(datum.getPayableAmount() != null && datum.getPayableAmount() > 0){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.payable_amount), datum.getPayableAmount(),
+                        false, false, true, true, R.color.theme_color);
+            }
+            if(datum.getOrderRefundAmount() != null && datum.getOrderRefundAmount() > 0){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.refund), datum.getJugnooDeducted(),
+                        false, false, true, false, R.color.order_status_green);
+            }
 
-            if(datum.getOrderRefundAmount() != null && datum.getOrderRefundAmount() > 0) {
-                addFinalAmountView(llFinalAmount, activity.getString(R.string.billed_amount), datum.getOrderBillableAmount(), false, false, true);
-                addFinalAmountView(llFinalAmount, activity.getString(R.string.refund), datum.getOrderRefundAmount(), false, false, false);
-            } else {
-                if(vDivider != null){
-                    vDivider.setVisibility(View.INVISIBLE);
-                }
+            if(vDivider != null){
+                vDivider.setVisibility(View.INVISIBLE);
             }
 
             if (orderHistory.getCancellable() == 1) {

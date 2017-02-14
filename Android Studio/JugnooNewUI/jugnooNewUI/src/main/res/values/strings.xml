@@ -1509,5 +1509,6 @@
     <string name="bill_summary">Bill Summary</string>
     <string name="dont_touch_me">DontTouchMe</string>
     <string name="payment_summary">Payment Summary</string>
+    <string name="payable_amount">Payable amount</string>
 
 </resources>

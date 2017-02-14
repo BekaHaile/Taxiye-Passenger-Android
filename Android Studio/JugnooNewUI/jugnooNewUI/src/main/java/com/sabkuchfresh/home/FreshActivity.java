@@ -732,6 +732,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         return (RestaurantReviewsListFragment) getSupportFragmentManager().findFragmentByTag(RestaurantReviewsListFragment.class.getName());
     }
 
+    public RestaurantAddReviewFragment getRestaurantAddReviewFragment() {
+        return (RestaurantAddReviewFragment) getSupportFragmentManager().findFragmentByTag(RestaurantAddReviewFragment.class.getName());
+    }
+
     public DeliveryAddressesFragment getDeliveryAddressesFragment() {
         return (DeliveryAddressesFragment) getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName());
     }
@@ -921,6 +925,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             topBar.buttonCheckServer.setVisibility(View.GONE);
             topBar.ivAddReview.setVisibility(View.GONE);
             topBar.tvNameCap.setVisibility(View.GONE);
+            topBar.ivCross.setVisibility(View.GONE);
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -1161,7 +1166,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.ivAddReview.setVisibility(View.VISIBLE);
             } else if (fragment instanceof RestaurantAddReviewFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.VISIBLE);
+				topBar.imageViewBack.setVisibility(View.GONE);
+                topBar.ivCross.setVisibility(View.VISIBLE);
 
 				topBar.title.setVisibility(View.GONE);
                 topBar.tvNameCap.setVisibility(View.VISIBLE);

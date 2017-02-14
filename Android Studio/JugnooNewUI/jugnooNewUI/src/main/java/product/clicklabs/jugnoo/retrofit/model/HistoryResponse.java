@@ -299,9 +299,9 @@ public class HistoryResponse {
         @SerializedName("payable_amount")
         @Expose
         private Double payableAmount;
-        @SerializedName("total_amount_info_text")
+        @SerializedName("note")
         @Expose
-        private String totalAmountInfoText;
+        private String note;
 
         /**
          * @return The pickupAddress
@@ -1155,12 +1155,12 @@ public class HistoryResponse {
             this.payableAmount = payableAmount;
         }
 
-        public String getTotalAmountInfoText() {
-            return totalAmountInfoText;
+        public String getNote() {
+            return note;
         }
 
-        public void setTotalAmountInfoText(String totalAmountInfoText) {
-            this.totalAmountInfoText = totalAmountInfoText;
+        public void setNote(String note) {
+            this.note = note;
         }
     }
 

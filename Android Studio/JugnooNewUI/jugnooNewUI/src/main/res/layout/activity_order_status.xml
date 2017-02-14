@@ -495,7 +495,7 @@
                             app:font="maven"
                             />
 
-                        <TextView
+                        <com.sabkuchfresh.utils.TextViewStrikeThrough
                             android:id="@+id/tvTotalAmountValOld"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -609,7 +609,7 @@
                             android:text="@string/rupee_0"
                             android:layout_marginBottom="@dimen/px_26"
                             android:layout_marginTop="@dimen/px_30"
-                            android:textColor="@color/order_status_green"
+                            android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_32"
                             app:font="maven"/>
 

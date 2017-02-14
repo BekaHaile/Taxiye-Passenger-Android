@@ -59,6 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="52px"
+                android:gravity="center"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -66,13 +67,13 @@
                     android:id="@+id/editTextPromoCode"
                     android:layout_width="400px"
                     android:layout_height="80px"
-                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="36px"
                     android:background="#0000"
                     android:capitalize="characters"
                     android:digits="@string/digits_characters_caps_numbers"
                     android:gravity="center"
                     android:hint="@string/enter_promo_code"
+                    android:textAlignment="viewStart"
                     android:inputType="textCapCharacters"
                     android:paddingLeft="20px"
                     android:paddingRight="20px"
