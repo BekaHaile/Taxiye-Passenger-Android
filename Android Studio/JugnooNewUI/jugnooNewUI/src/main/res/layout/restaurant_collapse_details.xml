@@ -70,8 +70,8 @@
         android:orientation="vertical"
         android:layout_alignParentRight="true"
         android:layout_alignBottom="@+id/tv_rest_title"
-        android:layout_marginRight="@dimen/px_30"
-        android:layout_marginTop="@dimen/px_10"
+        android:layout_marginRight="@dimen/px_20"
+        android:layout_marginBottom="-10px"
         android:visibility="visible"
         >
         <TextView
@@ -82,7 +82,8 @@
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/px_15"
             android:paddingRight="@dimen/px_15"
-            android:text=""
+            android:layout_margin="@dimen/px_10"
+            android:text="5.6"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_20"
             android:visibility="visible"

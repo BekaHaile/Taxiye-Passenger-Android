@@ -22,7 +22,7 @@
         android:textColor="@color/text_color"
         android:textSize="@dimen/px_46"
         android:textStyle="bold"
-        app:font="maven"
+        app:font="maven-bold"
         />
 
     <ImageView

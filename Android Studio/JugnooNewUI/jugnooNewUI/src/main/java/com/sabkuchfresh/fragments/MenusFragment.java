@@ -503,14 +503,15 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         if (searchOpened) {
             searchOpened = false;
             activity.getTopBar().etSearch.setText("");
-            activity.fragmentUISetup(this);
+          //  activity.fragmentUISetup(this);
             if (keyboardLayoutListener.getKeyBoardState() == 1) {
                 activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
             }
             if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
-                activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                //activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
             }
+            activity.getTopBar().animateSearchBar(false);
         } else {
             searchOpened = true;
             if (clearEt) {

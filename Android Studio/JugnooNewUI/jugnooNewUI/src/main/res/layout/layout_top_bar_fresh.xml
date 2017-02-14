@@ -114,7 +114,7 @@
                     android:layout_marginLeft="@dimen/px_10"
                     android:layout_toLeftOf="@+id/llSearchCart"
                     android:background="@drawable/capsule_white_stroke"
-                    android:visibility="visible"
+                    android:visibility="invisible"
                     android:layout_centerVertical="true"
                     android:orientation="horizontal"
                     >
@@ -146,8 +146,7 @@
                         android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="@dimen/text_size_26"
                         android:inputType="text"
-                        android:imeOptions="actionSearch"
-                        />
+                        android:imeOptions="actionSearch" />
 
                     <product.clicklabs.jugnoo.utils.ProgressWheel
                         xmlns:wheel="http://schemas.android.com/apk/res-auto"
@@ -210,6 +209,7 @@
                             android:id="@+id/ivFilter"
                             android:layout_width="62px"
                             android:layout_height="62px"
+                            android:tag="mwar"
                             android:src="@drawable/ic_menus_filters_selector" />
 
                         <ImageView

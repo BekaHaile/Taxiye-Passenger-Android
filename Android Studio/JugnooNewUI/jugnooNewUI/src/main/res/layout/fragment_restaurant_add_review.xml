@@ -16,7 +16,7 @@
         android:background="@drawable/background_transparent"
         android:fadeScrollbars="true"
         android:gravity="left"
-        android:hint="@string/share_your_experience"
+        android:hint="@string/what_you_love_about_restaurant"
         android:imeOptions="actionDone"
         android:maxLength="500"
         android:padding="@dimen/px_60"

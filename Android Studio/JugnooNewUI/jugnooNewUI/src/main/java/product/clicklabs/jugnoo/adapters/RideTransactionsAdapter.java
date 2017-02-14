@@ -155,7 +155,18 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
                 }
 
-                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
+                double amount = 0.0d;
+                if((orderHistory.getProductType() == ProductType.FRESH.getOrdinal() || orderHistory.getProductType() == ProductType.GROCERY.getOrdinal())
+                        && orderHistory.getTotalAmount() != null){
+                    amount = orderHistory.getTotalAmount();
+                } else if(orderHistory.getOriginalOrderAmount() != null){
+                    amount = orderHistory.getOriginalOrderAmount();
+                } else {
+                    amount = orderHistory.getOrderAmount();
+                }
+                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(amount)));
+
+
                 if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_history_fresh);
                 } else if(orderHistory.getProductType() == ProductType.MEALS.getOrdinal()) {

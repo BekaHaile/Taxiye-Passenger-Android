@@ -161,7 +161,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 dateValue = Data.getMenusData().getFeedbackDeliveryDate();
                 orderAmount = Data.getMenusData().getAmount();
                 orderId = Data.getMenusData().getOrderId();
-                activity.getTopBar().title.setText(getResources().getString(R.string.menus));
+                if(!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())){
+                    activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
+                } else {
+                    activity.getTopBar().title.setText(activity.getString(R.string.menus));
+                }
+
                 endRideGoodFeedbackText = Data.getMenusData().getRideEndGoodFeedbackText();
                 productType = ProductType.MENUS;
                 for (int i = 0; i < Data.getMenusData().getNegativeFeedbackReasons().length(); i++) {

@@ -3,6 +3,8 @@ package com.sabkuchfresh.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,6 +101,24 @@ public class RestaurantAddReviewFragment extends Fragment {
 
 		activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
+		etFeedback.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				bSubmit.setEnabled(s.length() > 0);
+			}
+		});
+		bSubmit.setEnabled(false);
+
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -143,6 +163,7 @@ public class RestaurantAddReviewFragment extends Fragment {
 
 	@Override
 	public void onDestroyView() {
+		activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		super.onDestroyView();
 		ASSL.closeActivity(rlRoot);
 		System.gc();
