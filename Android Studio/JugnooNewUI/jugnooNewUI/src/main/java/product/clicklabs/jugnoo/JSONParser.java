@@ -539,6 +539,7 @@ public class JSONParser implements Constants {
     public void parseMenusData(Context context, JSONObject jMenusData, LoginResponse.Menus menusData){
         try{
             String orderId = jMenusData.optString(KEY_FEEDBACK_ORDER_ID, "");
+            String restaurantName = jMenusData.optString(KEY_RESTAURANT_NAME, "");
             String question = jMenusData.optString(KEY_QUESTION, "");
             int questionType = jMenusData.optInt(KEY_QUESTION_TYPE, 0);
             int pendingFeedback = jMenusData.optInt(KEY_PENDING_FEEDBACK, 0);
@@ -589,7 +590,8 @@ public class JSONParser implements Constants {
             } catch (Exception e){ e.printStackTrace(); }
 
             Data.setMenusData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText, negativeFeedbackReasons,positiveFeedbackReasons));
+                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText,
+                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName));
 
             try {
                 if(Data.getMenusData().getPromoCoupons() == null){

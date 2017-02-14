@@ -146,7 +146,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 Intent intent = new Intent(PromotionActivity.this, ShareActivity.class);
                 intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
                 startActivity(intent);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.WANT_FREE_RIDES, bundle);
                 FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "B_WantFreeRides");

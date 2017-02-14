@@ -1139,6 +1139,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             } else if (fragment instanceof OrderStatusFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);

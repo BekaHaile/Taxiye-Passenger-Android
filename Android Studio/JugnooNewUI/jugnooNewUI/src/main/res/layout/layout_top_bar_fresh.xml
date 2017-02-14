@@ -209,6 +209,7 @@
                             android:id="@+id/ivFilter"
                             android:layout_width="62px"
                             android:layout_height="62px"
+                            android:tag="mwar"
                             android:src="@drawable/ic_menus_filters_selector" />
 
                         <ImageView
