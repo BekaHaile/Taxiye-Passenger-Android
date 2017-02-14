@@ -82,7 +82,8 @@ public class ReferralActions implements FirebaseEvents {
                         Data.userData.getReferralMessages().getTitle(),
                         Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
                         Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
-                        Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl(), Data.userData.getCity());
+                        Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl(), Data.userData.getCity(),
+                        Data.userData.getUserId());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -160,7 +161,8 @@ public class ReferralActions implements FirebaseEvents {
                     Data.userData.getReferralMessages().getTitle(),
                     Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
-                    Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl(), Data.userData.getCity());
+                    Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl(), Data.userData.getCity(),
+                    Data.userData.getUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -189,7 +191,8 @@ public class ReferralActions implements FirebaseEvents {
                     Data.userData.getReferralMessages().getTitle(),
                     Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
-                    Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl(), Data.userData.getCity());
+                    Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl(), Data.userData.getCity(),
+                    Data.userData.getUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -221,7 +224,8 @@ public class ReferralActions implements FirebaseEvents {
                     Data.userData.getReferralMessages().getTitle(),
                     Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
-                    Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl(), Data.userData.getCity());
+                    Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl(), Data.userData.getCity(),
+                    Data.userData.getUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -248,7 +252,8 @@ public class ReferralActions implements FirebaseEvents {
                     Data.userData.getReferralMessages().getTitle(),
                     Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
-                    Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl(), Data.userData.getCity());
+                    Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl(), Data.userData.getCity(),
+                    Data.userData.getUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }
