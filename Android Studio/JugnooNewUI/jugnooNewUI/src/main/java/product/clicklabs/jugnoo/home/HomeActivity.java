@@ -245,7 +245,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Passenger main layout
     RelativeLayout passengerMainLayout;
 
-
     //Map layout
     RelativeLayout mapLayout;
     public GoogleMap map;

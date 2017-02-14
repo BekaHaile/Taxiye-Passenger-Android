@@ -82,6 +82,9 @@ public class SubItem {
     @SerializedName("subItemQuantitySelected")
     @Expose
     private Integer subItemQuantitySelected;
+    @SerializedName("earliest_delivery_message")
+    @Expose
+    private String earliestDeliveryMessage;
 
     /**
      *
@@ -511,4 +514,11 @@ public class SubItem {
         this.deliveryTimeText = deliveryTimeText;
     }
 
+    public String getEarliestDeliveryMessage() {
+        return earliestDeliveryMessage;
+    }
+
+    public void setEarliestDeliveryMessage(String earliestDeliveryMessage) {
+        this.earliestDeliveryMessage = earliestDeliveryMessage;
+    }
 }

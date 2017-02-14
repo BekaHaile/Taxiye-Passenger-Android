@@ -55,8 +55,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.squareup.picasso.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -81,6 +84,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
+import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -90,6 +94,7 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
+import product.clicklabs.jugnoo.utils.Font;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -170,6 +175,12 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
 	private LinearLayout llSignupMain;
 
+	private RelativeLayout rlClaimGift, rlPromo;
+	private ImageView ivUser;
+	private TextView tvGiftFrom, tvGiftDetail;
+	private Button btnClaimGift;
+	private String refreeUserId = "";
+
 	public void resetFlags() {
 		loginDataFetched = false;
 		emailRegister = false;
@@ -222,11 +233,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								if (Data.deepLinkIndex == -1) {
 									Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
 									Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
-									Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
-									if ("".equalsIgnoreCase(pair.first)
-											&& !"".equalsIgnoreCase(MyApplication.getInstance().getDeviceToken())) {
-										sendToRegisterThroughSms(Data.deepLinkReferralCode);
-									}
+									Log.v("deepLinkReferralCode", "---> "+Data.deepLinkReferralCode);
+									refreeUserId = referringParams.optString(KEY_USER_ID, "");
 								}
 							}
 							Log.e("Deeplink =", "=" + Data.deepLinkIndex);
@@ -238,6 +246,12 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 							MyApplication.getInstance().getDatabase2().insertLink(link);
 						}
 
+						Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
+						if ("".equalsIgnoreCase(pair.first)
+								&& !"".equalsIgnoreCase(MyApplication.getInstance().getDeviceToken())) {
+							sendToRegisterThroughSms(true);
+						}
+
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
 						// "~channel":"Facebook","~creation_source":"SDK","~feature":"share","~id":"178470536899245547","+match_guaranteed":true,"+click_timestamp":1443850505,
 						// "+is_first_session":false,"+clicked_branch_link":true}
@@ -245,6 +259,9 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					fetchPhoneNoOtpFromBranchParams(referringParams);
 				}
 			}, this.getIntent().getData(), this);
+
+			Log.e("Deeplink =", "getIntent().getData()=" + getIntent().getData());
+			Log.e("Deeplink =", "getIntent().getExtras()=" + getIntent().getExtras());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -484,6 +501,13 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 			tvScroll = (TextView) findViewById(R.id.tvScroll);
 			llSignupMain = (LinearLayout) findViewById(R.id.llSignupMain);
+
+			rlPromo = (RelativeLayout) findViewById(R.id.rlPromo);
+			rlClaimGift = (RelativeLayout) findViewById(R.id.rlClaimGift);
+			ivUser = (ImageView) findViewById(R.id.ivUser);
+			tvGiftFrom = (TextView) findViewById(R.id.tvGiftFrom); tvGiftFrom.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+			tvGiftDetail = (TextView) findViewById(R.id.tvGiftDetail); tvGiftDetail.setTypeface(Fonts.mavenMedium(this));
+			btnClaimGift = (Button) findViewById(R.id.btnClaimGift); btnClaimGift.setTypeface(Fonts.mavenMedium(this));
 
 			root.setOnClickListener(onClickListenerKeybordHide);
 
@@ -854,6 +878,23 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			editTextSPassword.setOnFocusChangeListener(onFocusChangeListener);
 			editTextSPromo.setOnFocusChangeListener(onFocusChangeListener);
 
+			btnClaimGift.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+                            Data.deepLinkIndex = -1;
+                            FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
+                            SplashNewActivity.registerationType = RegisterationType.EMAIL;
+                            setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, Data.deepLinkReferralCode));
+                            changeUIState(State.SIGNUP);
+                        }
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
 
 			buttonEmailSignup.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -1127,6 +1168,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	private void changeUIState(State state) {
 		imageViewJugnooLogo.requestFocus();
 		llContainer.setVisibility(View.GONE);
+		rlSplashLogo.setVisibility(View.GONE);
 		int duration = 500;
 		switch (state) {
 			case SPLASH_INIT:
@@ -1143,6 +1185,52 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				rlSplashLogo.setVisibility(View.VISIBLE);
 				linearLayoutLogin.setVisibility(View.GONE);
 				relativeLayoutSignup.setVisibility(View.GONE);
+				break;
+
+			case CLAIM_GIFT:
+				// claim gift api call
+				if(!TextUtils.isEmpty(refreeUserId)) {
+					apiClaimGift();
+				}
+				imageViewBack.setVisibility(View.GONE);
+				relativeLayoutJugnooLogo.setVisibility(View.GONE);
+				linearLayoutLogin.setVisibility(View.GONE);
+
+				//if(this.state == State.SPLASH_LS) {
+					Animation claimAnimation = AnimationUtils.loadAnimation(this, R.anim.right_in);
+				claimAnimation.setFillAfter(true);
+				claimAnimation.setDuration(duration);
+				rlClaimGift.startAnimation(claimAnimation);
+				rlClaimGift.setVisibility(View.VISIBLE);
+
+					Animation claimAnimatio1 = AnimationUtils.loadAnimation(this, R.anim.right_out);
+				claimAnimatio1.setFillAfter(false);
+				claimAnimatio1.setDuration(duration);
+				rlSplashLogo.startAnimation(claimAnimatio1);
+
+				claimAnimatio1.setAnimationListener(new Animation.AnimationListener() {
+					@Override
+					public void onAnimationStart(Animation animation) {
+
+					}
+
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						rlSplashLogo.setVisibility(View.GONE);
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+
+					}
+				});
+				//}
+
+				llContainer.setVisibility(View.VISIBLE);
+				linearLayoutLogin.setVisibility(View.GONE);
+				relativeLayoutSignup.setVisibility(View.GONE);
+				relativeLayoutLS.setVisibility(View.GONE);
+
 				break;
 
 			case SPLASH_LS:
@@ -1171,7 +1259,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 				if(this.state == State.LOGIN) {
 					relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
-					relativeLayoutLS.setVisibility(View.VISIBLE);
+
 					Animation animation4 = AnimationUtils.loadAnimation(this, R.anim.left_out);
 					animation4.setFillAfter(false);
 					animation4.setDuration(duration);
@@ -1212,12 +1300,12 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					});
 				} else{
 					relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
-				}
+			}
 
 				llContainer.setVisibility(View.VISIBLE);
 				linearLayoutLogin.setVisibility(View.GONE);
 				relativeLayoutSignup.setVisibility(View.GONE);
-
+				relativeLayoutLS.setVisibility(View.VISIBLE);
 
 				break;
 
@@ -1280,6 +1368,11 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					animation3.setFillAfter(false);
 					animation3.setDuration(duration);
 					linearLayoutLogin.startAnimation(animation3);
+				} else if(this.state == State.CLAIM_GIFT) {
+					Animation animation3 = AnimationUtils.loadAnimation(this, R.anim.right_out);
+					animation3.setFillAfter(false);
+					animation3.setDuration(duration);
+					rlClaimGift.startAnimation(animation3);
 				} else {
 					Animation animation3 = AnimationUtils.loadAnimation(this, R.anim.right_out);
 					animation3.setFillAfter(false);
@@ -1289,6 +1382,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 				llContainer.setVisibility(View.VISIBLE);
 				linearLayoutLogin.setVisibility(View.GONE);
+				rlClaimGift.setVisibility(View.GONE);
 				relativeLayoutSignup.setVisibility(View.VISIBLE);
 				relativeLayoutLS.setVisibility(View.GONE);
 				rlSplashLogo.setVisibility(View.GONE);
@@ -1349,13 +1443,23 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	}
 
 
-	private void sendToRegisterThroughSms(String referralCode) {
-		if (!"".equalsIgnoreCase(referralCode)) {
+	private void sendToRegisterThroughSms(boolean openLS) {
+		if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 			Data.deepLinkIndex = -1;
 			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
 			SplashNewActivity.registerationType = RegisterationType.EMAIL;
 			setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, referralCode));
-			changeUIState(State.SIGNUP);
+			//if(!TextUtils.isEmpty(refreeUserId)) {
+				if (rlClaimGift.getVisibility() != View.VISIBLE) {
+					rlPromo.setVisibility(View.GONE);
+					changeUIState(State.CLAIM_GIFT);
+				}
+//			} else{
+//				rlPromo.setVisibility(View.VISIBLE);
+//				changeUIState(State.SIGNUP);
+//			}
+		} else if(openLS){
+			changeUIState(State.SPLASH_LS);
 		}
 	}
 
@@ -1573,12 +1677,15 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 		} else {
 			if (MyApplication.getInstance().isOnline()) {
-				changeUIState(State.SPLASH_LS);
+				if(getIntent().getData() != null && getIntent().getData().toString().equalsIgnoreCase("jungooautos://open")){
+					sendToRegisterThroughSms(false);
+				} else{
+					changeUIState(State.SPLASH_LS);
+				}
 				getAllowedAuthChannels(SplashNewActivity.this);
 			} else {
 				changeUIState(State.SPLASH_NO_NET);
 			}
-			sendToRegisterThroughSms(Data.deepLinkReferralCode);
 		}
 	}
 
@@ -2071,7 +2178,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 
 	public enum State {
-		SPLASH_INIT(0), SPLASH_LS(1), SPLASH_NO_NET(2), LOGIN(3), SIGNUP(4);
+		SPLASH_INIT(0), SPLASH_LS(1), SPLASH_NO_NET(2), LOGIN(3), SIGNUP(4), CLAIM_GIFT(5);
 
 		private int ordinal;
 
@@ -2743,7 +2850,9 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 						String ownerEmail = UserEmailFetcher.getEmail(SplashNewActivity.this);
 						if(ownerEmail != null && (!ownerEmail.equalsIgnoreCase(""))){
 							editTextSEmail.setText(ownerEmail);
-							editTextSName.setText(Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail)));
+							if(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail) != null) {
+								editTextSName.setText(Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail)));
+							}
 							FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.NAME_EMAIL_AUTOFILLED);
 							phoneFetchedName = editTextSName.getText().toString();
 							phoneFetchedEmail = editTextSEmail.getText().toString();
@@ -3255,8 +3364,66 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
         }
     };
 
+	private void apiClaimGift(){
+		if (MyApplication.getInstance().isOnline()) {
+			DialogPopup.showLoadingDialog(SplashNewActivity.this, "Loading...");
 
-    public void verifyOtpViaEmail(final Activity activity, final String email, final String phoneNo, String otp) {
+			HashMap<String, String> params = new HashMap<>();
+			params.put("user_id", refreeUserId);
+			params.put("device_name", MyApplication.getInstance().deviceName());
+			params.put("referral_code", Data.deepLinkReferralCode);
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().claimGift(params, new Callback<ReferralClaimGift>() {
+				@Override
+				public void success(ReferralClaimGift referralClaimGift, Response response) {
+					DialogPopup.dismissLoadingDialog();
+					try {
+						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "verifyOtp jsonString = " + jsonString);
+						JSONObject jObj = new JSONObject(jsonString);
+						String message = JSONParser.getServerMessage(jObj);
+						if(referralClaimGift.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                            setClaimGiftData(referralClaimGift);
+                        } else{
+                            DialogPopup.alertPopup(SplashNewActivity.this, "", message);
+                        }
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					DialogPopup.dismissLoadingDialog();
+				}
+			});
+		} else{
+			DialogPopup.alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+		}
+	}
+
+	private void setClaimGiftData(ReferralClaimGift referralClaimGift) {
+		try {
+			tvGiftFrom.setText(referralClaimGift.getClaimGiftTitle());
+			tvGiftDetail.setText(referralClaimGift.getClaimGiftText());
+			btnClaimGift.setText(referralClaimGift.getClaimGiftButtonText());
+			if(referralClaimGift.getRefereeUserImage() != null
+                    && !TextUtils.isEmpty(referralClaimGift.getRefereeUserImage())){
+                float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                Picasso.with(this).load(referralClaimGift.getRefereeUserImage())
+                        .transform(new CircleTransform())
+                        .resize((int)(144f * minRatio), (int)(144f * minRatio))
+                        .placeholder(R.drawable.ic_profile_img_placeholder)
+                        .centerCrop()
+                        .into(ivUser);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public void verifyOtpViaEmail(final Activity activity, final String email, final String phoneNo, String otp) {
         if (MyApplication.getInstance().isOnline()) {
 
             final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, "Loading...");

@@ -65,6 +65,35 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="22px"
                     android:layout_marginLeft="22px" />
+                
+                <RelativeLayout
+                    android:id="@+id/rlEarliestDelivery"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px_66"
+                    android:background="@drawable/shadow_down_meals_earliest"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="@dimen/px_20"
+                        android:layout_height="@dimen/px_20"
+                        android:src="@drawable/ic_meals_earliest"
+                        android:layout_toLeftOf="@+id/tvEarliestDelivery"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/px_10"
+                        android:tag="mwar"/>
+
+                    <TextView
+                        android:id="@+id/tvEarliestDelivery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text=""
+                        android:textSize="@dimen/text_size_18"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/px_36"/>
+
+                </RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout

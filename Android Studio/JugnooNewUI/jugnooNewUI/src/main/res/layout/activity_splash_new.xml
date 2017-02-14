@@ -25,6 +25,9 @@
             <!-- splash with logo-->
             <include layout="@layout/layout_splash_logo"/>
 
+            <!-- splash with logo-->
+            <include layout="@layout/layout_splash_free_gift"/>
+
             <!-- splash buttons -->
             <include layout="@layout/layout_splash_ls" />
 

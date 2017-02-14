@@ -402,6 +402,7 @@ public class Data {
 			e1.printStackTrace();
 		}
 
+		//Data.deepLinkReferralCode = Prefs.with(context).getString(Constants.DEEP_LINK_REFERRAL_CODE, "");
 		Log.e("Deeplink =", "=" + Data.deepLinkIndex);
 		Log.e("deepLinkReferralCode =", "=" + Data.deepLinkReferralCode);
 
