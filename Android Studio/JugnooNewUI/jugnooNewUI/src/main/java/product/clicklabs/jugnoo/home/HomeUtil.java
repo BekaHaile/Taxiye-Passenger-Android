@@ -150,6 +150,7 @@ public class HomeUtil {
 			intent.putExtra(Constants.KEY_LOGGED_OUT, 1);
 			intent.putExtra(Constants.KEY_MESSAGE, message);
 		}
+		intent.putExtra(Constants.KEY_SPLASH_STATE, SplashNewActivity.State.SPLASH_LS.getOrdinal());
 		activity.startActivity(intent);
 		activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
