@@ -231,13 +231,13 @@ public class RatingBarMenuFeedback extends LinearLayout {
 
     private TextView createStar() {
         TextView v = new TextView(getContext());
+        v.setMinWidth((int) (ASSL.Xscale() * 100.0f));
         v.setCompoundDrawablePadding((int) (ASSL.Yscale() * 20.0f));
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
-        params.rightMargin = (int) (ASSL.Xscale() * 15.0f);
+        params.rightMargin = (int) (ASSL.Xscale() * 10.0f);
         params.bottomMargin = (int) (ASSL.Yscale() * 25.0f);
         params.topMargin = (int) (ASSL.Yscale() * 25.0f);
-        params.leftMargin = (int) (ASSL.Xscale() * 15.0f);
         v.setGravity(Gravity.CENTER);
         v.setCompoundDrawablePadding((int) (ASSL.Yscale() * 12.0f));
         v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f);
@@ -262,7 +262,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
             return true;
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
-                animateStarRelease(getImageView(mLastStarId));
+                animateStarRelease(getImageView(mLastStarId), mCurrentScore);
                 mLastStarId = -1;
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -271,8 +271,8 @@ public class RatingBarMenuFeedback extends LinearLayout {
                 float lastscore = mCurrentScore;
                 mCurrentScore = getScoreForPosition(event.getX());
                 if (lastscore != mCurrentScore) {
-                    animateStarRelease(getImageView(mLastStarId));
-                    animateStarPressed(getImageView(getImageForScore(mCurrentScore)));
+                    animateStarRelease(getImageView(mLastStarId), mCurrentScore);
+                    animateStarPressed(getImageView(getImageForScore(mCurrentScore)), mCurrentScore);
                     mLastStarId = getImageForScore(mCurrentScore);
                     refreshStars();
                     if (onScoreChanged != null)
@@ -283,7 +283,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
                 mLastX = event.getX();
                 lastscore = mCurrentScore;
                 mCurrentScore = getScoreForPosition(event.getX());
-                animateStarPressed(getImageView(getImageForScore(mCurrentScore)));
+                animateStarPressed(getImageView(getImageForScore(mCurrentScore)), mCurrentScore);
                 mLastStarId = getImageForScore(mCurrentScore);
                 if (lastscore != mCurrentScore) {
                     refreshStars();
@@ -292,22 +292,24 @@ public class RatingBarMenuFeedback extends LinearLayout {
                 }
                 return true;
             case MotionEvent.ACTION_CANCEL:
-                animateStarRelease(getImageView(getImageForScore(mCurrentScore)));
+                animateStarRelease(getImageView(getImageForScore(mCurrentScore)), mCurrentScore);
                 break;
         }
         return true;
     }
 
-    private void animateStarPressed(TextView star) {
+    private void animateStarPressed(TextView star, float score) {
         if (star != null)
-//            star.setTextSize(TypedValue.COMPLEX_UNIT_PX, 28);
             ViewCompat.animate(star).scaleX(1.2f).scaleY(1.2f).setDuration(100).start();
+//            star.setTextSize(TypedValue.COMPLEX_UNIT_PX, 28);
+
     }
 
-    private void animateStarRelease(TextView star) {
+    private void animateStarRelease(TextView star, float score) {
         if (star != null) {
-//            star.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26);
             ViewCompat.animate(star).scaleX(1f).scaleY(1f).setDuration(100).start();
+//            star.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26);
+
         }
     }
 
