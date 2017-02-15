@@ -33,6 +33,7 @@ import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.utils.TextViewStrikeThrough;
 
 import org.json.JSONObject;
 
@@ -71,17 +72,16 @@ import retrofit.mime.TypedByteArray;
 
 public class OrderStatusFragment extends Fragment implements View.OnClickListener{
 
-    private RelativeLayout relative, rlAmountPayable, rlBilledAmount, rlRefund, rlOrderStatus;
+    private RelativeLayout relative, rlOrderStatus;
     private TextView tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,
-            tvDelveryPlace, tvDeliveryToVal, tvSubAmount, tvSubAmountVal, tvPaymentMethod, tvPaymentMethodCash,
-            tvTotalAmount, tvTotalAmountVal, tvAmountPayable, tvAmountPayableVal, tvBilledAmount, tvBilledAmountVal,
-            tvRefund, tvRefundVal;
-    private ImageView ivPaymentMethodVal, ivDeliveryPlace, ivOrderCompleted, imageViewRestaurant, imageViewCallRestaurant;
+            tvDelveryPlace, tvDeliveryToVal,
+            tvTotalAmountVal, tvAmountPayableVal;
+    private ImageView ivDeliveryPlace, ivOrderCompleted, imageViewRestaurant, imageViewCallRestaurant;
     private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn;
     private int orderId, productType;
     private NonScrollListView listViewOrder;
     private OrderItemsAdapter orderItemsAdapter;
-    private LinearLayout llFinalAmount, llDeliveryPlace, orderComplete, orderCancel, llRefund;
+    private LinearLayout llFinalAmount, llDeliveryPlace, orderComplete, orderCancel;
     private ArrayList<HistoryResponse.OrderItem> subItemsOrders = new ArrayList<HistoryResponse.OrderItem>();
     private HistoryResponse.Datum orderHistory;
     private FragmentActivity activity;
@@ -92,6 +92,12 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
     private View rootView;
     private ImageView ivTopShadow;
     private LinearLayout llExtraCharges, llMain;
+
+    private TextView tvItemsQuantityVal;
+    private TextViewStrikeThrough tvTotalAmountValOld;
+    private TextView tvTotalAmountMessage;
+    private TextView tvPaymentMethodVal;
+    private RelativeLayout rlWalletDeducted;
 
     @Nullable
     @Override
@@ -126,25 +132,10 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
         tvDeliveryTo = (TextView) rootView.findViewById(R.id.tvDeliveryTo); tvDeliveryTo.setTypeface(Fonts.mavenMedium(activity));
         tvDelveryPlace = (TextView) rootView.findViewById(R.id.tvDelveryPlace); tvDelveryPlace.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         tvDeliveryToVal = (TextView) rootView.findViewById(R.id.tvDeliveryToVal); tvDeliveryToVal.setTypeface(Fonts.mavenMedium(activity));
-        tvSubAmount = (TextView) rootView.findViewById(R.id.tvSubAmount); tvSubAmount.setTypeface(Fonts.mavenMedium(activity));
-        tvSubAmountVal = (TextView) rootView.findViewById(R.id.tvSubAmountVal); tvSubAmountVal.setTypeface(Fonts.mavenMedium(activity));
-        tvTotalAmount = (TextView) rootView.findViewById(R.id.tvTotalAmount); tvTotalAmount.setTypeface(Fonts.mavenMedium(activity));
-        tvTotalAmountVal = (TextView) rootView.findViewById(R.id.tvTotalAmountVal); tvTotalAmountVal.setTypeface(Fonts.mavenMedium(activity));
-        rlAmountPayable = (RelativeLayout) rootView.findViewById(R.id.rlAmountPayable);
-        tvAmountPayable = (TextView) rootView.findViewById(R.id.tvAmountPayable); tvAmountPayable.setTypeface(Fonts.mavenMedium(activity));
+        tvTotalAmountVal = (TextView) rootView.findViewById(R.id.tvTotalAmountVal);
         tvAmountPayableVal = (TextView) rootView.findViewById(R.id.tvAmountPayableVal); tvAmountPayableVal.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
         llFinalAmount = (LinearLayout) rootView.findViewById(R.id.llFinalAmount);
         llFinalAmount.setVisibility(View.GONE);
-        tvPaymentMethod = (TextView) rootView.findViewById(R.id.tvPaymentMethod); tvPaymentMethod.setTypeface(Fonts.mavenRegular(activity));
-        ivPaymentMethodVal = (ImageView) rootView.findViewById(R.id.ivPaymentMethodVal);
-        tvPaymentMethodCash = (TextView) rootView.findViewById(R.id.tvPaymentMethodCash); tvPaymentMethodCash.setTypeface(Fonts.mavenMedium(activity));
-        llRefund = (LinearLayout) rootView.findViewById(R.id.llRefund);
-        rlBilledAmount = (RelativeLayout) rootView.findViewById(R.id.rlBilledAmount);
-        rlRefund = (RelativeLayout) rootView.findViewById(R.id.rlRefund);
-        tvBilledAmount = (TextView) rootView.findViewById(R.id.tvBilledAmount); tvBilledAmount.setTypeface(Fonts.mavenRegular(activity));
-        tvBilledAmountVal = (TextView) rootView.findViewById(R.id.tvBilledAmountVal); tvBilledAmountVal.setTypeface(Fonts.mavenMedium(activity));
-        tvRefund = (TextView) rootView.findViewById(R.id.tvRefund); tvRefund.setTypeface(Fonts.mavenRegular(activity));
-        tvRefundVal = (TextView) rootView.findViewById(R.id.tvRefundVal); tvRefundVal.setTypeface(Fonts.mavenMedium(activity));
         bNeedHelp = (Button) rootView.findViewById(R.id.bNeedHelp);
         llDeliveryPlace = (LinearLayout) rootView.findViewById(R.id.llDeliveryPlace);
         ivDeliveryPlace = (ImageView) rootView.findViewById(R.id.ivDeliveryPlace);
@@ -187,6 +178,17 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
 
         cancelfeedbackBtn = (Button) rootView.findViewById(R.id.cancelfeedbackBtn);
         cancelfeedbackBtn.setTypeface(Fonts.mavenRegular(activity));
+
+        tvItemsQuantityVal = (TextView) rootView.findViewById(R.id.tvItemsQuantityVal);
+        tvItemsQuantityVal.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        tvTotalAmountValOld = (TextViewStrikeThrough) rootView.findViewById(R.id.tvTotalAmountValOld);
+        tvTotalAmountMessage = (TextView) rootView.findViewById(R.id.tvTotalAmountMessage);
+        tvPaymentMethodVal = (TextView) rootView.findViewById(R.id.tvPaymentMethodVal);
+        rlWalletDeducted = (RelativeLayout) rootView.findViewById(R.id.rlWalletDeducted);
+        ((TextView)rootView.findViewById(R.id.tvItemSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        ((TextView)rootView.findViewById(R.id.tvBillSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        ((TextView)rootView.findViewById(R.id.tvPaymentSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+
 
         buttonCancelOrder.setOnClickListener(this);
         reorderBtn.setOnClickListener(this);
@@ -336,7 +338,7 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
                                     subItemsOrders.clear();
                                     subItemsOrders.addAll(historyResponse.getData().get(0).getOrderItems());
                                     orderItemsAdapter.notifyDataSetChanged();
-
+                                    tvItemsQuantityVal.setText(String.valueOf(subItemsOrders.size()));
                                     setStatusResponse(historyResponse);
                                 } else {
                                     retryDialogOrderData(message, DialogErrorType.SERVER_ERROR);
@@ -590,18 +592,20 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
         ivStatus0.setLayoutParams(layoutParams);
     }
 
-    private void addFinalAmountView(LinearLayout llFinalAmount, String fieldText, Double fieldTextVal, boolean negative){
+    private View addFinalAmountView(LinearLayout llFinalAmount, String fieldText, Double fieldTextVal, boolean showNegative){
+        return addFinalAmountView(llFinalAmount, fieldText, fieldTextVal, showNegative, false, true, false);
+    }
+    private View addFinalAmountView(LinearLayout llFinalAmount, String fieldText, Double fieldTextVal,
+                                    boolean showNegative, boolean showFree, boolean showDivider, boolean showAsterisk){
         try {
             llFinalAmount.setVisibility(View.VISIBLE);
             LayoutInflater layoutInflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = layoutInflater.inflate(R.layout.layout_order_amount_new, null);
             RelativeLayout relative = (RelativeLayout) view.findViewById(R.id.relative);
             TextView tvDelCharges = (TextView) view.findViewById(R.id.tvDelCharges);
-            tvDelCharges.setTypeface(Fonts.mavenRegular(activity));
             TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
-            tvDelChargesVal.setTypeface(Fonts.mavenMedium(activity));
             tvDelCharges.setText(fieldText);
-            if(negative) {
+            if(showNegative) {
                 tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
                 tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
             } else {
@@ -609,15 +613,29 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
                     tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
                     tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 } else {
-                    tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
-                    tvDelChargesVal.setText(activity.getResources().getString(R.string.free));
+                    if (showFree) {
+                        tvDelChargesVal.setText(activity.getResources().getString(R.string.free));
+                        tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
+                    } else {
+                        tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                        tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+                    }
                 }
+            }
+            if(showAsterisk){
+                tvDelChargesVal.append("*");
+            }
+            View vDivider = view.findViewById(R.id.vDivider);
+            if(!showDivider){
+                vDivider.setVisibility(View.INVISIBLE);
             }
             llFinalAmount.addView(view);
             ASSL.DoMagic(relative);
+            return vDivider;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private double getSubTotalAmount(HistoryResponse historyResponse){
@@ -635,9 +653,11 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
 
     private void setStatusResponse(HistoryResponse historyResponse) {
         try {
-            tvOrderStatusVal.setText(historyResponse.getData().get(0).getOrderStatus());
-            if((historyResponse.getData().get(0).getOrderStatusInt() == OrderStatus.ORDER_COMPLETED.getOrdinal())
-                    || historyResponse.getData().get(0).getOrderStatusInt() == OrderStatus.CASH_RECEIVED.getOrdinal()){
+            HistoryResponse.Datum datum = historyResponse.getData().get(0);
+
+            tvOrderStatusVal.setText(datum.getOrderStatus());
+            if((datum.getOrderStatusInt() == OrderStatus.ORDER_COMPLETED.getOrdinal())
+                    || datum.getOrderStatusInt() == OrderStatus.CASH_RECEIVED.getOrdinal()){
                 ivOrderCompleted.setVisibility(View.VISIBLE);
             } else{
                 ivOrderCompleted.setVisibility(View.GONE);
@@ -647,15 +667,15 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
                 cvOrderStatus.setVisibility(View.VISIBLE);
                 rlOrderStatus.setVisibility(View.GONE);
                 setDefaultState();
-                showPossibleStatus(historyResponse.getRecentOrdersPossibleStatus(), historyResponse.getData().get(0).getOrderTrackingIndex());
+                showPossibleStatus(historyResponse.getRecentOrdersPossibleStatus(), datum.getOrderTrackingIndex());
             } else{
                 cvOrderStatus.setVisibility(View.GONE);
                 rlOrderStatus.setVisibility(View.VISIBLE);
             }
 
 
-            tvOrderTimeVal.setText(historyResponse.getData().get(0).getOrderTime());
-            tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(historyResponse.getData().get(0).getOrderTime())));
+            tvOrderTimeVal.setText(datum.getOrderTime());
+            tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getOrderTime())));
 
             if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
                 tvDeliveryTime.setText(activity.getString(R.string.delivered_from_colon));
@@ -670,31 +690,25 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
                 imageViewCallRestaurant.setVisibility(TextUtils.isEmpty(orderHistory.getRestaurantPhoneNo()) ? View.GONE : View.VISIBLE);
             } else {
                 if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
-                    tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate() + " " +
+                    tvDeliveryTimeVal.setText(datum.getExpectedDeliveryDate() + " " +
                             DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()).replace("AM", "").replace("PM", "") + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
                 } else {
-                    tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate());
+                    tvDeliveryTimeVal.setText(datum.getExpectedDeliveryDate());
                 }
                 imageViewRestaurant.setVisibility(View.GONE);
                 imageViewCallRestaurant.setVisibility(View.GONE);
             }
-            tvDeliveryToVal.setText(historyResponse.getData().get(0).getDeliveryAddress());
-
-            try {
-                tvSubAmountVal.setText(activity.getString(R.string.rupees_value_format,Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderItemAmountSum())));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            tvDeliveryToVal.setText(datum.getDeliveryAddress());
 
 
-            tvOrderStatusVal.setTextColor(Color.parseColor(historyResponse.getData().get(0).getOrderStatusColor()));
+            tvOrderStatusVal.setTextColor(Color.parseColor(datum.getOrderStatusColor()));
 
-            if(!historyResponse.getData().get(0).getDeliveryAddressType().equalsIgnoreCase("")){
+            if(!datum.getDeliveryAddressType().equalsIgnoreCase("")){
                 llDeliveryPlace.setVisibility(View.VISIBLE);
-                tvDelveryPlace.setText(historyResponse.getData().get(0).getDeliveryAddressType());
-                if(historyResponse.getData().get(0).getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.home))){
+                tvDelveryPlace.setText(datum.getDeliveryAddressType());
+                if(datum.getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.home))){
                     ivDeliveryPlace.setImageResource(R.drawable.home);
-                } else if(historyResponse.getData().get(0).getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.work))){
+                } else if(datum.getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.work))){
                     ivDeliveryPlace.setImageResource(R.drawable.work);
                 } else{
                     ivDeliveryPlace.setImageResource(R.drawable.ic_loc_other);
@@ -703,95 +717,89 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
                 llDeliveryPlace.setVisibility(View.GONE);
             }
 
-            tvPaymentMethodCash.setVisibility(View.GONE);
-            if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.CASH.getOrdinal()){
-                ivPaymentMethodVal.setVisibility(View.GONE);
-                tvPaymentMethodCash.setVisibility(View.VISIBLE);
-            } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.PAYTM.getOrdinal()){
-                ivPaymentMethodVal.setImageResource(R.drawable.ic_paytm_small);
-            } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()){
-                ivPaymentMethodVal.setImageResource(R.drawable.ic_mobikwik_small);
-            } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()){
-                ivPaymentMethodVal.setImageResource(R.drawable.ic_freecharge_small);
-            } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()){
-                ivPaymentMethodVal.setImageResource(R.drawable.ic_fab_pay);
-                tvPaymentMethodCash.setVisibility(View.VISIBLE);
-                tvPaymentMethodCash.setText(activity.getString(R.string.jugnoo_pay));
-            } else{
-                ivPaymentMethodVal.setVisibility(View.GONE);
-                tvPaymentMethodCash.setVisibility(View.VISIBLE);
+            double totalAmountVal = datum.getOriginalOrderAmount();
+            boolean showAsterisk = false;
+            tvTotalAmountValOld.setVisibility(View.GONE);
+            if(datum.getNewAmount() != null){
+                if (datum.getOldAmount() != null && Double.compare(datum.getNewAmount(), datum.getOldAmount()) != 0) {
+                    tvTotalAmountValOld.setVisibility(View.VISIBLE);
+                    tvTotalAmountValOld.setText(activity.getString(R.string.rupees_value_format,
+                            Utils.getMoneyDecimalFormat().format(datum.getOldAmount())));
+                }
+                totalAmountVal = datum.getNewAmount();
+            } else if(datum.getTotalAmount() != null){
+                totalAmountVal = datum.getTotalAmount();
             }
+            tvTotalAmountVal.setText(activity.getString(R.string.rupees_value_format,
+                    Utils.getMoneyDecimalFormat().format(totalAmountVal)));
+
+            tvTotalAmountMessage.setVisibility(TextUtils.isEmpty(datum.getNote()) ? View.GONE : View.VISIBLE);
+            tvTotalAmountMessage.setText(datum.getNote());
+            showAsterisk = !TextUtils.isEmpty(datum.getNote());
+
 
             llExtraCharges.removeAllViews();
-            if((historyResponse.getData().get(0).getPackingCharges() != null) && (historyResponse.getData().get(0).getPackingCharges() > 0)){
-                addFinalAmountView(llExtraCharges, getResources().getString(R.string.packaging_charges), historyResponse.getData().get(0).getPackingCharges(), false);
+            addFinalAmountView(llExtraCharges, activity.getString(R.string.sub_total), datum.getOrderItemAmountSum(), false, false, true, showAsterisk);
+            if((datum.getPackingCharges() != null) && (datum.getPackingCharges() > 0)){
+                addFinalAmountView(llExtraCharges, activity.getString(R.string.packaging_charges), datum.getPackingCharges(), false);
             }
-            if((historyResponse.getData().get(0).getValueAddedTax() != null) && (historyResponse.getData().get(0).getValueAddedTax() > 0)){
-                addFinalAmountView(llExtraCharges, getResources().getString(R.string.vat), historyResponse.getData().get(0).getValueAddedTax(), false);
+            if((datum.getValueAddedTax() != null) && (datum.getValueAddedTax() > 0)){
+                addFinalAmountView(llExtraCharges, activity.getString(R.string.vat), datum.getValueAddedTax(), false);
             }
-            if((historyResponse.getData().get(0).getServiceTax() != null) && (historyResponse.getData().get(0).getServiceTax() > 0)){
-                addFinalAmountView(llExtraCharges, getResources().getString(R.string.service_tax), historyResponse.getData().get(0).getServiceTax(), false);
+            if((datum.getServiceTax() != null) && (datum.getServiceTax() > 0)){
+                addFinalAmountView(llExtraCharges, activity.getString(R.string.service_tax), datum.getServiceTax(), false);
             }
-            addFinalAmountView(llExtraCharges, getResources().getString(R.string.delivery_charges), historyResponse.getData().get(0).getDeliveryCharges(), false);
+            addFinalAmountView(llExtraCharges, activity.getString(R.string.delivery_charges), datum.getDeliveryCharges(), false, true, true, false);
+            if((datum.getDiscount() != null) && (datum.getDiscount() > 0)){
+                addFinalAmountView(llExtraCharges, activity.getString(R.string.discount), datum.getDiscount(), true);
+            }
 
 
-            tvTotalAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOriginalOrderAmount())));
+
+
+
+            View vDivider = rootView.findViewById(R.id.vDividerPayment);
+            if(datum.getWalletDeducted() != null && datum.getWalletDeducted() > 0) {
+                rlWalletDeducted.setVisibility(View.VISIBLE);
+                tvAmountPayableVal.setText(activity.getString(R.string.rupees_value_format,
+                        Utils.getMoneyDecimalFormat().format(datum.getWalletDeducted())));
+            } else{
+                rlWalletDeducted.setVisibility(View.GONE);
+            }
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvPaymentMethodVal.getLayoutParams();
+            tvPaymentMethodVal.setPadding(0, 0, 0, 0);
+            tvPaymentMethodVal.setText("");
+            tvPaymentMethodVal.setBackgroundResource(R.drawable.background_transparent);
+            if(datum.getPaymentMode() == PaymentOption.PAYTM.getOrdinal()){
+                params.setMargins((int)(ASSL.Xscale() * 10f), 0, 0, 0);
+                tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_paytm_small);
+            } else if(datum.getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()){
+                params.setMargins((int)(ASSL.Xscale() * 25f), 0, 0, 0);
+                tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_mobikwik_small);
+            } else if(datum.getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()){
+                params.setMargins((int)(ASSL.Xscale() * 30f), 0, 0, 0);
+                tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_freecharge_small);
+            } else if(datum.getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()){
+                tvPaymentMethodVal.setText(R.string.jugnoo_pay);
+                params.setMargins((int)(ASSL.Xscale() * 35f), 0, 0, 0);
+            }
+            tvPaymentMethodVal.setLayoutParams(params);
+
+
             llFinalAmount.removeAllViews();
-            if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)){
-                addFinalAmountView(llFinalAmount, getResources().getString(R.string.discount), historyResponse.getData().get(0).getDiscount(), true);
+            if(datum.getPayableAmount() != null && datum.getPayableAmount() > 0){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.cash), datum.getPayableAmount(), false);
+            }
+            if((datum.getJugnooDeducted() != null) && (datum.getJugnooDeducted() > 0)){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash), datum.getJugnooDeducted(), false);
+            }
+            if(datum.getOrderRefundAmount() != null && datum.getOrderRefundAmount() > 0){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.refund), datum.getOrderRefundAmount(), false);
             }
 
-             if((historyResponse.getData().get(0).getJugnooDeducted() != null) && (historyResponse.getData().get(0).getJugnooDeducted() != 0)){
-                addFinalAmountView(llFinalAmount, getResources().getString(R.string.jugnoo_cash), historyResponse.getData().get(0).getJugnooDeducted(), true);
-            }
-
-/*
-            if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)
-                    || (historyResponse.getData().get(0).getJugnooDeducted() != null) && (historyResponse.getData().get(0).getJugnooDeducted() != 0)){
-                rlAmountPayable.setVisibility(View.VISIBLE);
-                tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOriginalOrderAmount().intValue() - historyResponse.getData().get(0).getJugnooDeducted().intValue()
-                                - historyResponse.getData().get(0).getDiscount().intValue() - historyResponse.getData().get(0).getWalletDeducted().intValue())));
-            } else{
-                rlAmountPayable.setVisibility(View.GONE);
-                llFinalAmount.setVisibility(View.GONE);
-            }
-*/
-
-
-            if(historyResponse.getData().get(0).getJugnooDeducted()>0 || historyResponse.getData().get(0).getDiscount() > 0
-                    || (historyResponse.getData().get(0).getWalletDeducted() != null && historyResponse.getData().get(0).getWalletDeducted() > 0))
-            {
-                rlAmountPayable.setVisibility(View.VISIBLE);
-                tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderAmount())));
-                if(historyResponse.getData().get(0).getPaymentMode() != PaymentOption.CASH.getOrdinal()){
-                    tvAmountPayable.setText(R.string.amount_paid);
-                } else {
-                    tvAmountPayable.setText(R.string.amount_payable);
-                }
-            } else{
-                rlAmountPayable.setVisibility(View.GONE);
-            }
-
-
-        /*    if(getBilledAmount(historyResponse) < historyResponse.getData().get(0).getOriginalOrderAmount()){
-                llRefund.setVisibility(View.VISIBLE);
-                tvBilledAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(getBilledAmount(historyResponse))));
-                tvRefundVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderRefundAmount().intValue())));
-            } else{
-                llRefund.setVisibility(View.GONE);
-            }*/
-
-            if(historyResponse.getData().get(0).getOrderRefundAmount()>0)
-            {
-                Log.v("refund value","refund value "+historyResponse.getData().get(0).getOrderRefundAmount());
-
-                llRefund.setVisibility(View.VISIBLE);
-                tvBilledAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderBillableAmount())));
-                tvRefundVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderRefundAmount().intValue())));
-            }
-            else
-            {
-                llRefund.setVisibility(View.GONE);
+            if(vDivider != null){
+                vDivider.setVisibility(View.INVISIBLE);
             }
 
             if (orderHistory.getCancellable() == 1) {

@@ -2,18 +2,11 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -33,7 +26,6 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.RestaurantSearchResponse;
-import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
 
@@ -48,6 +40,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
@@ -82,6 +75,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private ArrayList<MenusResponse.Vendor> vendorsComplete, vendorsFiltered, vendorsToShow;
     private Callback callback;
     private String searchText;
+    private boolean searchApiHitOnce = false;
 
     private static final int MAIN_ITEM = 0;
     private static final int FORM_ITEM = 1;
@@ -104,6 +98,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.possibleStatus = possibleStatus;
         timerHandler.postDelayed(timerRunnable, 1000);
         restaurantName = ""; locality = ""; telephone = "";
+        searchApiHitOnce = false;
     }
 
     Handler timerHandler = new Handler();
@@ -384,6 +379,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         try {
                             int pos = (int) v.getTag();
                             callback.onRestaurantSelected(pos, vendorsToShow.get(pos));
+                            if(searchApiHitOnce && searchText.length() > 0){
+                                FlurryEventLogger.eventGA(Events.MENUS, Events.SEARCH_MATCHED, searchText);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -391,7 +389,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 });
 
                 activity.setVendorDeliveryTimeToTextView(vendor, mHolder.textViewDelivery);
-                setTextViewDrawableColor(mHolder.textViewDelivery, ContextCompat.getColor(activity, R.color.text_color));
+                activity.setTextViewDrawableColor(mHolder.textViewDelivery, ContextCompat.getColor(activity, R.color.text_color));
 
 
 
@@ -413,27 +411,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
                 }
 
-
                 int visibilityRating = View.GONE;
-                if (vendor.getRating() != null) {
-                    Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
-                    Typeface rating = Fonts.mavenMedium(activity);
-                    String paddingStarToText = " ";
-                    Spannable restaurantRating = new SpannableString(activity.getString(R.string.star_icon) + paddingStarToText + vendor.getRating());
-
-                    //append strings and set different fonts to each subString
-                    restaurantRating.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    restaurantRating.setSpan(new CustomTypeFaceSpan("", rating), 1, restaurantRating.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                    int ratingColor;
-                    if (vendor.getColorCode() != null && vendor.getColorCode().startsWith("#") && vendor.getColorCode().length() == 7)
-                        ratingColor = Color.parseColor(vendor.getColorCode());
-                    else
-                        ratingColor = Color.parseColor("#8dd061"); //default Green Color
-
-                    setTextViewBackgroundDrawableColor(mHolder.tvRating, ratingColor);
-                    mHolder.tvRating.setText(restaurantRating);
+                if (vendor.getRating() != null && vendor.getRating() >= 1d) {
                     visibilityRating = View.VISIBLE;
+                    activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(), vendor.getColorCode());
                 }
                 mHolder.tvRating.setVisibility(visibilityRating);
 
@@ -448,6 +429,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     @Override
                     public void onClick(View v) {
                         apiRecommendRestaurant();
+                        FlurryEventLogger.eventGA(Events.MENUS, Events.ADD_RESTRO, restaurantName);
                     }
                 });
 
@@ -468,19 +450,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     }
 
-    private void setTextViewBackgroundDrawableColor(TextView textView, int color) {
-        if(textView.getBackground() != null){
-            textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-        }
-    }
-
-    private void setTextViewDrawableColor(TextView textView, int color) {
-        for (Drawable drawable : textView.getCompoundDrawables()) {
-            if (drawable != null) {
-                drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-            }
-        }
-    }
 
 
     private void showPossibleStatus(ArrayList<String> possibleStatus, int status, ViewTitleStatus statusHolder) {
@@ -610,6 +579,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private int vendorsCompleteCount() {
         return vendorsComplete == null ? 0 : vendorsComplete.size();
+    }
+
+    public void setSearchApiHitOnce(boolean searchApiHitOnce){
+        this.searchApiHitOnce = searchApiHitOnce;
+    }
+
+    public boolean isSearchApiHitOnce() {
+        return searchApiHitOnce;
     }
 
 
@@ -785,6 +762,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                             if(productsResponse.getRestaurantIds().size() > 0) {
                                                 queryMap.put(searchText, productsResponse.getRestaurantIds());
                                             }
+                                            searchApiHitOnce = true;
                                         } else {
                                             searchVendors(searchText, null);
                                         }

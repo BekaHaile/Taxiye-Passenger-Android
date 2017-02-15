@@ -35,7 +35,7 @@
             android:maxLines="2"
             android:text="Orange"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
+            android:textSize="@dimen/text_size_32"
             />
 
         <TextView
@@ -63,7 +63,7 @@
                 android:maxLines="2"
                 android:text="@string/rupee_0"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_28"
+                android:textSize="@dimen/text_size_26"
 
 
                 />
@@ -77,7 +77,7 @@
                 android:maxLines="1"
                 android:text="X 2"
                 android:textColor="@color/text_color_light"
-                android:textSize="@dimen/text_size_28"/>
+                android:textSize="@dimen/text_size_26"/>
 
             <TextView
                 android:id="@+id/textViewItemCancelled"
@@ -88,7 +88,7 @@
                 android:maxLines="1"
                 android:text="@string/item_cancelled"
                 android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_28"/>
+                android:textSize="@dimen/text_size_26"/>
 
         </LinearLayout>
 
@@ -100,7 +100,7 @@
         android:layout_height="wrap_content"
         android:text="@string/rupee_0"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/text_size_38"
+        android:textSize="@dimen/text_size_32"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="30px"
@@ -110,11 +110,10 @@
 
     <ImageView
         android:id="@+id/imageViewSep"
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_marginLeft="140px"
+        style="@style/HorizontalDividerLight"
+        android:layout_marginLeft="34px"
         android:layout_marginRight="34px"
         android:layout_below="@+id/linearLayoutContent"
-        android:background="@color/stroke_light_grey_alpha"/>
+        />
 
 </RelativeLayout>

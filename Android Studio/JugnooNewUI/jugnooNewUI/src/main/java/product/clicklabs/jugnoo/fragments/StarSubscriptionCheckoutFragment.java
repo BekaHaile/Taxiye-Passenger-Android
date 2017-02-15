@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,6 +30,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.JugnooStarActivity;
+import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -73,7 +75,7 @@ import static com.sabkuchfresh.analytics.FlurryEventNames.RECHARGE;
 public class StarSubscriptionCheckoutFragment extends Fragment implements PromoCouponsAdapter.Callback {
 
     private View rootView;
-    private JugnooStarActivity activity;
+    private Activity activity;
     private TextView tvPaymentPlan, tvPlanAmount;
     private Button bPlaceOrder;
     private LinearLayout linearLayoutOffers, linearLayoutRoot;
@@ -87,11 +89,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private LinearLayout linearLayoutWalletContainer;
     private SubscriptionData.Subscription subscription;
     private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
+    private boolean isUpgrade;
 
-    public static StarSubscriptionCheckoutFragment newInstance(String subscription){
+    public static StarSubscriptionCheckoutFragment newInstance(String subscription, boolean isUpgrade){
         StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
         Bundle bundle = new Bundle();
         bundle.putString("plan", subscription);
+        bundle.putBoolean("upgrade", isUpgrade);
         fragment.setArguments(bundle);
         return  fragment;
     }
@@ -101,7 +105,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_star_subscription_checkout, container, false);
 
-        activity = (JugnooStarActivity) getActivity();
+        if(getActivity() instanceof JugnooStarActivity) {
+            activity = (JugnooStarActivity) getActivity();
+        } else if(getActivity() instanceof JugnooStarSubscribedActivity){
+            activity = (JugnooStarSubscribedActivity) getActivity();
+        }
+
         linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
         try {
             if (linearLayoutRoot != null) {
@@ -112,6 +121,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
         try {
             Bundle bundle = getArguments();
+            isUpgrade = bundle.getBoolean("upgrade", false);
             String plan = bundle.getString("plan", "");
             subscription = new Gson().fromJson(plan, SubscriptionData.Subscription.class);
 
@@ -305,7 +315,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
                 }
 
-                apiPurchaseSubscription();
+                if(!isUpgrade) {
+                    apiPurchaseSubscription();
+                } else{
+                    apiUpgradeSubscription();
+                }
             }
 
         } catch (Exception e) {
@@ -638,7 +652,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        apiPurchaseSubscription();
+                        if(!isUpgrade) {
+                            apiPurchaseSubscription();
+                        } else{
+                            apiUpgradeSubscription();
+                        }
                     }
 
                     @Override
@@ -651,6 +669,71 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                     }
                 });
+    }
+
+    private void apiUpgradeSubscription() {
+        if (MyApplication.getInstance().isOnline()) {
+            DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            params.put(Constants.KEY_SUB_ID, String.valueOf(subscription.getSubId()));
+            params.put(Constants.KEY_PAYMENT_PREFERENCE, String.valueOf(getPaymentOption().getOrdinal()));
+            params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
+            params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+            if(getSelectedPromoCoupon() != null && getSelectedPromoCoupon().getId() > -1){
+                if(getSelectedPromoCoupon() instanceof CouponInfo){
+                    params.put(Constants.KEY_ACCOUNT_ID, String.valueOf(getSelectedPromoCoupon().getId()));
+                } else if(getSelectedPromoCoupon() instanceof PromotionInfo){
+                    params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(getSelectedPromoCoupon().getId()));
+                }
+                params.put(Constants.KEY_MASTER_COUPON, String.valueOf(getSelectedPromoCoupon().getMasterCoupon()));
+                product.clicklabs.jugnoo.utils.FlurryEventLogger.eventGA("Star Checkout", "Offers", getSelectedPromoCoupon().getTitle());
+            }
+
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().upgradeSubscription(params, new retrofit.Callback<PurchaseSubscriptionResponse>() {
+                @Override
+                public void success(final PurchaseSubscriptionResponse purchaseSubscriptionResponse, Response response) {
+                    DialogPopup.dismissLoadingDialog();
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i("cancel Subscription response = ", "" + responseStr);
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+                        String message = JSONParser.getServerMessage(jObj);
+                        if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                            DialogPopup.alertPopupWithListener(activity, "", message, getResources().getString(R.string.ok), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Data.userData.getSubscriptionData().setUserSubscriptions(purchaseSubscriptionResponse.getUserSubscriptions());
+                                    Data.autoData.setCancellationChargesPopupTextLine1(purchaseSubscriptionResponse.getCancellationChargesPopupTextLine1());
+                                    Data.autoData.setCancellationChargesPopupTextLine2(purchaseSubscriptionResponse.getCancellationChargesPopupTextLine2());
+                                    activity.finish();
+                                    activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                                }
+                            }, false);
+                            Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
+                                    0l);
+                            //DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", message);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        retryDialog(DialogErrorType.SERVER_ERROR);
+                    }
+                    DialogPopup.dismissLoadingDialog();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("customerFetchUserAddress error=", "" + error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    retryDialog(DialogErrorType.CONNECTION_LOST);
+                }
+            });
+
+        } else {
+            retryDialog(DialogErrorType.NO_NET);
+        }
     }
 
     private PromoCoupon selectedPromoCoupon;

@@ -235,6 +235,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     mHolder.deliveryTime.setVisibility(View.GONE);
                 }
 
+                if(subItem.getEarliestDeliveryMessage() != null && !subItem.getEarliestDeliveryMessage().equalsIgnoreCase("")){
+                    mHolder.rlEarliestDelivery.setVisibility(View.VISIBLE);
+                    mHolder.tvEarliestDelivery.setText(subItem.getEarliestDeliveryMessage());
+                } else{
+                    mHolder.rlEarliestDelivery.setVisibility(View.GONE);
+                }
+
 
                 mHolder.imageViewMinus.setTag(position);
                 mHolder.imageViewPlus.setTag(position);
@@ -428,11 +435,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class ViewHolderSlot extends RecyclerView.ViewHolder {
         public LinearLayout linear;
-        public RelativeLayout belowLayout;
+        public RelativeLayout belowLayout, rlEarliestDelivery;
         public LinearLayout linearLayoutQuantitySelector, cartLayout;
         private ImageView imageViewMmeals, foodType;
         private ImageView imageViewMinus, imageViewPlus, imageClosed;
-        public TextView textViewTitle, textPrice, textViewdetails, deliveryTime, textViewQuantity;
+        public TextView textViewTitle, textPrice, textViewdetails, deliveryTime, textViewQuantity, tvEarliestDelivery;
 
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
@@ -440,6 +447,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             cartLayout = (LinearLayout) itemView.findViewById(R.id.cart_layout);
             belowLayout = (RelativeLayout) itemView.findViewById(R.id.below_layout);
+            rlEarliestDelivery = (RelativeLayout) itemView.findViewById(R.id.rlEarliestDelivery);
 
             imageViewMmeals = (ImageView) itemView.findViewById(R.id.imageViewMmeals);
             foodType = (ImageView) itemView.findViewById(R.id.food_type);
@@ -457,6 +465,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             deliveryTime.setTypeface(Fonts.mavenMedium(context));
             textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuantity);
             textViewQuantity.setTypeface(Fonts.mavenRegular(context));
+            tvEarliestDelivery = (TextView) itemView.findViewById(R.id.tvEarliestDelivery);
+            tvEarliestDelivery.setTypeface(Fonts.mavenMedium(context));
 
         }
     }

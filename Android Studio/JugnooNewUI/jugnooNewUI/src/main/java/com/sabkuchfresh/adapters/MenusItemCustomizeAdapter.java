@@ -164,15 +164,19 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
             int gravity, visibilityDesc;
+            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
             if(!TextUtils.isEmpty(item.getItemDetails())){
                 gravity = Gravity.LEFT;
                 visibilityDesc = View.VISIBLE;
+                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 30f), paramsFT.rightMargin, paramsFT.bottomMargin);
             } else {
                 gravity = Gravity.CENTER_VERTICAL;
                 visibilityDesc = View.GONE;
+                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 45f), paramsFT.rightMargin, paramsFT.bottomMargin);
             }
             mHolder.textViewAboutItemDescription.setVisibility(visibilityDesc);
             mHolder.textViewItemCategoryName.setGravity(gravity);
+            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
 
             if(context instanceof FreshActivity
                     && ((FreshActivity)context).getVendorOpened() != null

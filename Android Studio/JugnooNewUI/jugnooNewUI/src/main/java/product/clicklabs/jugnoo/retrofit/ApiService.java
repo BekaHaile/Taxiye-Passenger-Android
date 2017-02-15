@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
+import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
@@ -68,6 +69,11 @@ public interface ApiService {
     @POST("/v3/customer/verify_otp")
     void verifyOtp(@FieldMap Map<String, String> params,
                         Callback<LoginResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/fetch_referee_user_details")
+    void claimGift(@FieldMap Map<String, String> params,
+                   Callback<ReferralClaimGift> callback);
 
     @FormUrlEncoded
     @POST("/show_panel")
@@ -520,6 +526,11 @@ public interface ApiService {
     @POST("/purchase_subscription")
     void purchaseSubscription(@FieldMap Map<String, String> params,
                             Callback<PurchaseSubscriptionResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/upgrade_subscription")
+    void upgradeSubscription(@FieldMap Map<String, String> params,
+                              Callback<PurchaseSubscriptionResponse> callback);
 
     @FormUrlEncoded
     @POST("/push_tracking")

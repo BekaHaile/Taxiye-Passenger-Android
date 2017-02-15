@@ -639,12 +639,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             }
         });
 
-        if(Data.userData.getSlideCheckoutPayEnabled() == 1){
-            rlSliderContainer.setVisibility(View.VISIBLE);
-            buttonPlaceOrder.setVisibility(View.GONE);
-        } else{
-            buttonPlaceOrder.setVisibility(View.VISIBLE);
-            rlSliderContainer.setVisibility(View.GONE);
+        try {
+            if(Data.userData.getSlideCheckoutPayEnabled() == 1){
+				rlSliderContainer.setVisibility(View.VISIBLE);
+				buttonPlaceOrder.setVisibility(View.GONE);
+			} else{
+				buttonPlaceOrder.setVisibility(View.VISIBLE);
+				rlSliderContainer.setVisibility(View.GONE);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return rootView;

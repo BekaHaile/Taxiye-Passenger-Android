@@ -42,7 +42,7 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
 
             /************** Adapter for the parent List *************/
 
-        if(resizeTextView) {
+        if(textViewScroll != null && resizeTextView) {
             ViewGroup.LayoutParams params_12 = textViewScroll
                 .getLayoutParams();
 
@@ -59,11 +59,13 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
 
         } else {
 
-            ViewGroup.LayoutParams params = textViewScroll
-                .getLayoutParams();
-            params.height = 0;
-            textViewScroll.setLayoutParams(params);
-            textViewScroll.requestLayout();
+            if(textViewScroll != null) {
+                ViewGroup.LayoutParams params = textViewScroll
+                        .getLayoutParams();
+                params.height = 0;
+                textViewScroll.setLayoutParams(params);
+                textViewScroll.requestLayout();
+            }
 
             if(keyBoardState == 1) {
                 keyBoardStateHandler.keyBoardClosed();
@@ -75,7 +77,7 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
 
     public void setResizeTextView(boolean resizeTextView) {
         this.resizeTextView = resizeTextView;
-        if(!resizeTextView){
+        if(textViewScroll != null && !resizeTextView){
             ViewGroup.LayoutParams params = textViewScroll
                 .getLayoutParams();
             params.height = 0;

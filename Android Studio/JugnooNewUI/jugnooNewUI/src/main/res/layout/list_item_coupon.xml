@@ -1,58 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/transparent"
-    android:orientation="vertical"
-    android:splitMotionEvents="false" >
+    android:layout_height="100px"
+    android:layout_marginBottom="14px"
+    android:layout_marginTop="14px"
+    android:background="@drawable/background_sliding_botton_bg_color_dashed_rb"
+    android:gravity="center"
+    android:splitMotionEvents="false">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/textViewCouponTitle"
+        android:layout_width="464px"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:maxLines="3"
+        android:paddingLeft="10px"
+        android:paddingRight="10px"
+        android:layout_marginTop="10px"
+        android:layout_marginBottom="10px"
+        android:text="1 Free"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_26" />
+
+    <TextView
+        android:id="@+id/textViewExpiryDate"
         android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:background="@drawable/background_sliding_botton_bg_color_dashed_rb"
-        android:splitMotionEvents="false"
-        android:layout_marginLeft="28px"
-        android:layout_marginRight="28px"
-        android:layout_marginTop="14px"
-        android:layout_marginBottom="14px"
-        >
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10px"
+        android:layout_marginBottom="10px"
+        android:layout_toRightOf="@+id/textViewCouponTitle"
+        android:gravity="center"
+        android:maxLines="3"
+        android:text="12:00 PM"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_20" />
 
-        <TextView
-            android:id="@+id/textViewCouponTitle"
-            android:layout_width="464px"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="1 Free Ride\nbac\nabc\nabc"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_26"
-            android:maxLines="3"
-            android:paddingLeft="10px"
-            android:paddingRight="10px"
-            />
+    <ImageView
+        android:id="@+id/imageViewCut"
+        android:layout_width="18px"
 
-        <TextView
-            android:id="@+id/textViewExpiryDate"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="12:00 PM"
-            android:textColor="@color/text_color"
-            android:layout_toRightOf="@+id/textViewCouponTitle"
-            android:textSize="@dimen/text_size_20"
-            android:maxLines="3"
-            android:padding="10px"
-            />
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="-9px"
+        android:layout_toRightOf="@+id/textViewCouponTitle"
+        android:src="@drawable/ic_promotions_offer_strip_scissor" />
 
-        <ImageView
-            android:id="@+id/imageViewCut"
-            android:layout_width="18px"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/textViewCouponTitle"
-            android:layout_marginLeft="-9px"
-            android:src="@drawable/ic_promotions_offer_strip_scissor"
-            />
+</RelativeLayout>
 
-    </RelativeLayout>
-
-</LinearLayout>

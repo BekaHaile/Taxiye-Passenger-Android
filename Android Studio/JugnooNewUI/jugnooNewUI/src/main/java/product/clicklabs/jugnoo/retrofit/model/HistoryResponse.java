@@ -287,6 +287,22 @@ public class HistoryResponse {
         @Expose
         private Integer addressId;
 
+        @SerializedName("old_amount")
+        @Expose
+        private Double oldAmount;
+        @SerializedName("new_amount")
+        @Expose
+        private Double newAmount;
+        @SerializedName("total_amount")
+        @Expose
+        private Double totalAmount;
+        @SerializedName("payable_amount")
+        @Expose
+        private Double payableAmount;
+        @SerializedName("note")
+        @Expose
+        private String note;
+
         /**
          * @return The pickupAddress
          */
@@ -1105,6 +1121,46 @@ public class HistoryResponse {
 
         public void setCityId(Integer cityId) {
             this.cityId = cityId;
+        }
+
+        public Double getOldAmount() {
+            return oldAmount;
+        }
+
+        public void setOldAmount(Double oldAmount) {
+            this.oldAmount = oldAmount;
+        }
+
+        public Double getNewAmount() {
+            return newAmount;
+        }
+
+        public void setNewAmount(Double newAmount) {
+            this.newAmount = newAmount;
+        }
+
+        public Double getTotalAmount() {
+            return totalAmount;
+        }
+
+        public void setTotalAmount(Double totalAmount) {
+            this.totalAmount = totalAmount;
+        }
+
+        public Double getPayableAmount() {
+            return payableAmount;
+        }
+
+        public void setPayableAmount(Double payableAmount) {
+            this.payableAmount = payableAmount;
+        }
+
+        public String getNote() {
+            return note;
+        }
+
+        public void setNote(String note) {
+            this.note = note;
         }
     }
 

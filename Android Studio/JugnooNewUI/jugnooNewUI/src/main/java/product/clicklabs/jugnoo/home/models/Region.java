@@ -1,11 +1,16 @@
 package product.clicklabs.jugnoo.home.models;
 
+import android.content.Context;
+import android.graphics.drawable.StateListDrawable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 3/19/16.
@@ -259,6 +264,30 @@ public class Region {
 
 	public void setVehicleIconSet(VehicleIconSet vehicleIconSet) {
 		this.vehicleIconSet = vehicleIconSet;
+	}
+
+	public int getTabNormal(){
+		if(vehicleType == VehicleTypeValue.AUTOS.getOrdinal() && rideType == RideTypeValue.POOL.getOrdinal()){
+			return R.drawable.ic_auto_pool_tab_normal;
+		} else {
+			return getVehicleIconSet().getIconTab();
+		}
+	}
+
+	public int getTabSelected(){
+		if(vehicleType == VehicleTypeValue.AUTOS.getOrdinal() && rideType == RideTypeValue.POOL.getOrdinal()){
+			return R.drawable.ic_auto_pool_tab_selected;
+		} else {
+			return getVehicleIconSet().getIconTabSelected();
+		}
+	}
+
+	public StateListDrawable getRequestSelector(Context context){
+		if(vehicleType == VehicleTypeValue.AUTOS.getOrdinal() && rideType == RideTypeValue.POOL.getOrdinal()){
+			return Utils.getSelector(context, R.drawable.ic_auto_pool_request_normal, R.drawable.ic_auto_pool_request_selected);
+		} else {
+			return getVehicleIconSet().getRequestSelector(context);
+		}
 	}
 
 	public Integer getRegionId() {

@@ -8,7 +8,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +33,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
@@ -79,7 +84,9 @@ import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
 import com.sabkuchfresh.fragments.NewFeedbackFragment;
+import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
+import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
@@ -102,6 +109,7 @@ import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -118,6 +126,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
@@ -716,9 +725,16 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         return (MenusCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(MenusCheckoutMergedFragment.class.getName());
     }
 
-
-    private RestaurantImageFragment getRestaurantImageFragment() {
+    public RestaurantImageFragment getRestaurantImageFragment() {
         return (RestaurantImageFragment) getSupportFragmentManager().findFragmentByTag(RestaurantImageFragment.class.getName());
+    }
+
+    public RestaurantReviewsListFragment getRestaurantReviewsListFragment() {
+        return (RestaurantReviewsListFragment) getSupportFragmentManager().findFragmentByTag(RestaurantReviewsListFragment.class.getName());
+    }
+
+    public RestaurantAddReviewFragment getRestaurantAddReviewFragment() {
+        return (RestaurantAddReviewFragment) getSupportFragmentManager().findFragmentByTag(RestaurantAddReviewFragment.class.getName());
     }
 
     public DeliveryAddressesFragment getDeliveryAddressesFragment() {
@@ -908,6 +924,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             rlSort.setVisibility(View.GONE);
             int rlFilterVis = View.GONE;
             topBar.buttonCheckServer.setVisibility(View.GONE);
+            topBar.ivAddReview.setVisibility(View.GONE);
+            topBar.tvNameCap.setVisibility(View.GONE);
+            topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
+
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
                 llSearchCartContainerVis = View.VISIBLE;
@@ -1090,8 +1110,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.GONE);
-                topBar.llSearchContainer.setVisibility(View.VISIBLE);
                 llSearchCartContainerVis = View.VISIBLE;
+                topBar.llSearchContainer.setVisibility(View.VISIBLE);
+                topBar.animateSearchBar(true);
+
 
                 try {
                     if (appType == AppConstant.ApplicationType.MENUS && getVendorMenuFragment() != null
@@ -1118,6 +1140,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             } else if (fragment instanceof OrderStatusFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1133,6 +1156,28 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.pick_addons));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof RestaurantReviewsListFragment) {
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+
+                topBar.title.setVisibility(View.VISIBLE);
+                if (getVendorOpened() != null) {
+                    topBar.title.setText(getVendorOpened().getName());
+                }
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                topBar.ivAddReview.setVisibility(View.VISIBLE);
+            } else if (fragment instanceof RestaurantAddReviewFragment) {
+            	topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.imageViewBack.setImageResource(R.drawable.ic_cross_grey_selector);
+                topBar.title.setVisibility(View.GONE);
+                topBar.tvNameCap.setVisibility(View.VISIBLE);
+                try {
+                    topBar.tvNameCap.setText(Data.userData.userName.substring(0, 1));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
 
@@ -1275,23 +1320,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             if (getAppType() == AppConstant.ApplicationType.MENUS) {
                 if (getTopFragment() instanceof MenusFragment) {
                     getMenusFragment().openSearch(false);
+                    topBar.title.setVisibility(View.GONE);
+                    topBar.title.invalidate();
+                    topBar.animateSearchBar(true);
                 } else if (getTopFragment() instanceof VendorMenuFragment || getTopFragment() instanceof RestaurantImageFragment) {
-                   /* if (getTopFragment() instanceof VendorMenuFragment) {
-
-
-                        //this is done to avoid flicker of collapse toolbar
-                        topBar.title.setVisibility(View.GONE);
-                        topBar.getIvSearch().setVisibility(View.GONE);
-                        appBarLayout.setExpanded(false, false);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
-                            }
-                        }, 150);
-                    } else {
-                        getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
-                    }*/
                     if (canExitVendorMenu())
                         getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
 
@@ -1540,6 +1572,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             }
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
             getMenusFragment().openSearch(false);
+            if(getMenusFragment().getMenusRestaurantAdapter() != null
+                    && !getMenusFragment().getMenusRestaurantAdapter().isSearchApiHitOnce()){
+               FlurryEventLogger.eventGA(Events.MENUS, Events.SEARCH, Events.NOT_SEARCHED);
+            }
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
         } else {
@@ -1558,9 +1594,15 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 getMenusSearchFragment().clearArrays();
             }
 
+            if (getTopFragment() instanceof RestaurantReviewsListFragment && getRestaurantImageFragment() != null) {
+                super.onBackPressed();
+            }
+
+            if (getTopFragment() != null && getTopFragment() instanceof FreshSearchFragment)
+                topBar.animateSearchBar(false);
+
 
             super.onBackPressed();
-
 
         }
     }
@@ -2668,6 +2710,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     && !getVendorOpened().getRestaurantId().equals(jsonSavedCart
                     .optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))) {
                 String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
+                FlurryEventLogger.eventGA(Events.MENUS,Events.SECOND_RESTAURANT_ORDER,Events.POPUP_ORDER);
                 DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
                         getString(R.string.previous_vendor_cart_message_format, oldRestaurantName),
                         getString(R.string.ok), getString(R.string.cancel),
@@ -2688,6 +2731,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                             }
                         }, false, false);
+
+
                 return false;
             } else {
                 return true;
@@ -3251,7 +3296,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public TextView tvCollapRestaurantName;
     public TextView tvCollapRestaurantRating, tvCollapRestaurantDeliveryTime;
     private RelativeLayout rlCollapseDetails;
-    private LinearLayout llCartContainer;
+    private LinearLayout llCartContainer, llCollapseRating;
     private LinearLayout llToolbarLayout;
     public ImageView ivCollapseRestImage;
     private int currentVerticalOffSet;
@@ -3350,6 +3395,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         tvCollapRestaurantDeliveryTime = (TextView) findViewById(R.id.tvCollapRestaurantDeliveryTime);
         rlCollapseDetails = (RelativeLayout) findViewById(R.id.layout_rest_details);
         llCartContainer = (LinearLayout) findViewById(R.id.llCartContainer);
+        llCollapseRating = (LinearLayout) findViewById(R.id.llCollapseRating);
 
 
         //to enable animate layout changes since it acts weirdly with collapsing toolbar if declared in xml because it animates whole heirarchy and hence toolbar behaves weirdly
@@ -3367,6 +3413,13 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
        /* LayoutTransition layoutTransition = new LayoutTransition();
         topBar.getLlSearchCart().setLayoutTransition(layoutTransition);*/
 
+
+        llCollapseRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRestaurantReviewsListFragment();
+            }
+        });
 
     }
 
@@ -3477,6 +3530,55 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     public FABViewTest getFabViewTest() {
         return fabViewTest;
+    }
+
+    public int setRatingAndGetColor(TextView tv, Double rating, String colorCode) {
+        Spannable spannable = new SpannableString(getString(R.string.star_icon) + " " + rating);
+        Typeface star = Typeface.createFromAsset(getAssets(), "fonts/icomoon.ttf");
+        spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv.setText(spannable);
+        int ratingColor;
+        if (colorCode != null
+                && colorCode.startsWith("#")
+                && colorCode.length() == 7)
+            ratingColor = Color.parseColor(colorCode);
+        else
+            ratingColor = Color.parseColor("#8dd061"); //default Green Color
+
+        setTextViewBackgroundDrawableColor(tv, ratingColor);
+
+        return ratingColor;
+    }
+
+    public void setTextViewBackgroundDrawableColor(TextView textView, int color) {
+        if (textView.getBackground() != null) {
+            textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        }
+    }
+
+    public void setTextViewDrawableColor(TextView textView, int color) {
+        for (Drawable drawable : textView.getCompoundDrawables()) {
+            if (drawable != null) {
+                drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+            }
+        }
+    }
+
+    public void openRestaurantReviewsListFragment() {
+        if (getVendorOpened() != null) {
+            appBarLayout.setExpanded(false, false);
+            topBar.llCartContainer.setVisibility(View.GONE);
+            topBar.ivSearch.setVisibility(View.GONE);
+            FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.CLICKED);
+            getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
+        }
+    }
+
+    public void openRestaurantAddReviewFragment() {
+        if (getVendorOpened() != null) {
+            FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.PLUS_BUTTON);
+            getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
+        }
     }
 
     public boolean canExitVendorMenu() {

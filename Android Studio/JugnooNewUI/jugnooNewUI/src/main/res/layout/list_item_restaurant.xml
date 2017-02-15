@@ -129,6 +129,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_20"
         android:visibility="gone"
+        app:font="maven"
         />
 
     <View

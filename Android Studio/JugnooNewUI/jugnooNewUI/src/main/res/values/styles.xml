@@ -103,11 +103,12 @@
 
 
     <style name="back_image">
-        <item name="android:layout_width">60.7px</item>
-        <item name="android:layout_height">76.9px</item>
+        <item name="android:layout_width">76px</item>
+        <item name="android:layout_height">76px</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:padding">20px</item>
         <item name="android:src">@drawable/ic_back_selector</item>
+        <item name="android:scaleType">centerInside</item>
         <item name="android:layout_marginLeft">10px</item>
         <item name="android:tag">mwar</item>
     </style>
@@ -277,5 +278,33 @@
         <attr name="halfStars" format="boolean" />
     </declare-styleable>
 
+
+    <style name="HorizontalDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:tag">@string/dont_touch_me</item>
+        <item name="android:background">@color/divider_color</item>
+    </style>
+
+    <style name="HorizontalDividerLight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2px</item>
+        <item name="android:background">@color/stroke_light_grey_alpha</item>
+    </style>
+
+    <style name="HorizontalDividerDotted">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">6px</item>
+        <item name="android:background">@drawable/dotted</item>
+        <item name="android:layerType">software</item>
+    </style>
+
+    <style name="CrossSelector">
+        <item name="android:layout_width">70px</item>
+        <item name="android:layout_height">70px</item>
+        <item name="android:padding">20px</item>
+        <item name="android:src">@drawable/ic_cross_grey_selector</item>
+        <item name="android:tag">mwar</item>
+    </style>
 
 </resources>

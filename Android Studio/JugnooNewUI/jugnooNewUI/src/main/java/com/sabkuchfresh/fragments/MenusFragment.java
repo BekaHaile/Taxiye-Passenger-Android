@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
+import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -62,7 +64,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener{
+public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = MenusFragment.class.getSimpleName();
 
     private LinearLayout llRoot;
@@ -87,7 +89,6 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_menus, container, false);
@@ -109,7 +110,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         }
 
         try {
-            if(!TextUtils.isEmpty(Data.userData.getUserId())) {
+            if (!TextUtils.isEmpty(Data.userData.getUserId())) {
                 MyApplication.getInstance().branch.setIdentity(Data.userData.getUserId());
             }
         } catch (Exception e) {
@@ -117,8 +118,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         }
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
-        ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
+        ((TextView) rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        textViewNothingFound = (TextView) rootView.findViewById(R.id.textViewNothingFound);
+        textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
 
         recyclerViewRestaurant = (RecyclerView) rootView.findViewById(R.id.recyclerViewRestaurant);
@@ -135,7 +137,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         swipeRefreshLayout.setEnabled(true);
 
-        menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder,status, new MenusRestaurantAdapter.Callback() {
+        menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
                 getVendorMenu(vendor);
@@ -151,16 +153,14 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
 
-
-
         try {
-            if(Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {
+            if (Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
 
-                     activity.openFeedback();
+                        activity.openFeedback();
                     }
                 }, 300);
             }
@@ -168,12 +168,12 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             e.printStackTrace();
         }
         try {
-            if(Data.userData.getPromoSuccess() == 0) {
+            if (Data.userData.getPromoSuccess() == 0) {
                 showPromoFailedAtSignupDialog();
-            } else if(Data.getMenusData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
+            } else if (Data.getMenusData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
                 Data.getMenusData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
                 showPopup();
-            } else if(Data.getMenusData().getPopupData() != null) {
+            } else if (Data.getMenusData().getPopupData() != null) {
                 pushDialog = new PushDialog(activity, new PushDialog.Callback() {
                     @Override
                     public void onButtonClicked(int deepIndex) {
@@ -200,14 +200,14 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 (TextView) rootView.findViewById(R.id.tvScroll), new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                if(activity.getTopFragment() instanceof MenusFragment) {
+                if (activity.getTopFragment() instanceof MenusFragment) {
                     activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void keyBoardClosed() {
-                if(activity.getTopFragment() instanceof MenusFragment) {
+                if (activity.getTopFragment() instanceof MenusFragment) {
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.VISIBLE);
                     }
@@ -218,13 +218,15 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
+        FlurryEventLogger.trackScreenView(Events.MENUS_SCREEN);
+
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(!isHidden() && resumed) {
+        if (!isHidden() && resumed) {
             activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
             activity.setRefreshCart(false);
         }
@@ -239,14 +241,14 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             activity.resumeMethod();
             menusRestaurantAdapter.applyFilter();
             activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-            if(searchOpened){
+            if (searchOpened) {
                 searchOpened = false;
                 openSearch(false);
             }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(activity.isRefreshCart()){
+                    if (activity.isRefreshCart()) {
                         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
                     }
                     activity.setRefreshCart(false);
@@ -298,7 +300,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = menusResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()){
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
                                     activity.setMenusResponse(menusResponse);
                                     vendors = (ArrayList<MenusResponse.Vendor>) menusResponse.getVendors();
 
@@ -309,17 +311,17 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
                                     menusRestaurantAdapter.setList(vendors);
                                     menusRestaurantAdapter.applyFilter();
-                                    if(activity.getTopFragment() instanceof MenusFragment) {
+                                    if (activity.getTopFragment() instanceof MenusFragment) {
                                         activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
                                     }
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
 
-                                    if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                                    if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
                                         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
-                                        if(searchOpened) {
+                                        if (searchOpened) {
                                             openSearch(true);
                                             new Handler().postDelayed(new Runnable() {
                                                 @Override
@@ -337,8 +339,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                             exception.printStackTrace();
                         }
                         try {
-                            if(finalProgressDialog != null)
-                            finalProgressDialog.dismiss();
+                            if (finalProgressDialog != null)
+                                finalProgressDialog.dismiss();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -350,8 +352,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                         relativeLayoutNoMenus.setVisibility(View.GONE);
                         Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
                         try {
-                            if(finalProgressDialog != null)
-                            finalProgressDialog.dismiss();
+                            if (finalProgressDialog != null)
+                                finalProgressDialog.dismiss();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -393,7 +395,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     public void getVendorMenu(final MenusResponse.Vendor vendor) {
         try {
-            if(MyApplication.getInstance().isOnline()) {
+            if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
@@ -415,13 +417,13 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = productsResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
                                     activity.setVendorOpened(vendor);
                                     activity.setMenuProductsResponse(productsResponse);
-                                    if(activity.menusSort == -1) {
+                                    if (activity.menusSort == -1) {
                                         activity.menusSort = jObj.getInt(Constants.SORTED_BY);
                                     }
-                                    if(vendor.getIsClosed()==1) {
+                                    if (vendor.getIsClosed() == 1) {
                                         activity.clearMenusCart();
                                     }
                                     activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
@@ -442,8 +444,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                         retryDialogVendorData(DialogErrorType.CONNECTION_LOST, vendor);
                     }
                 });
-            }
-            else {
+            } else {
                 retryDialogVendorData(DialogErrorType.NO_NET, vendor);
             }
         } catch (Exception e) {
@@ -453,7 +454,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     }
 
-    private void retryDialogVendorData(DialogErrorType dialogErrorType, final MenusResponse.Vendor vendor){
+    private void retryDialogVendorData(DialogErrorType dialogErrorType, final MenusResponse.Vendor vendor) {
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
@@ -473,9 +474,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 });
     }
 
-    private void showPromoFailedAtSignupDialog(){
-        try{
-            if(Data.userData.getPromoSuccess() == 0) {
+    private void showPromoFailedAtSignupDialog() {
+        try {
+            if (Data.userData.getPromoSuccess() == 0) {
                 DialogPopup.alertPopupWithListener(activity, "",
                         Data.userData.getPromoMessage(),
                         new View.OnClickListener() {
@@ -486,7 +487,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                         });
                 Data.userData.setPromoSuccess(1);
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -502,42 +503,44 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     }
 
-    public void openSearch(boolean clearEt){
-       if(searchOpened){
-           searchOpened = false;
-           activity.getTopBar().etSearch.setText("");
-           activity.fragmentUISetup(this);
-           if(keyboardLayoutListener.getKeyBoardState() == 1){
-               activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
-           }
-           if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
-               activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
-               activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
-           }
-       } else {
-           searchOpened = true;
-           if(clearEt) {
-               activity.getTopBar().etSearch.setText("");
-           }
-           activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
-           activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
-           activity.getTopBar().title.setVisibility(View.GONE);
-           activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
+    public void openSearch(boolean clearEt) {
+        if (searchOpened) {
+            searchOpened = false;
+            activity.getTopBar().etSearch.setText("");
+          //  activity.fragmentUISetup(this);
+            if (keyboardLayoutListener.getKeyBoardState() == 1) {
+                activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+            }
+            if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
+                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                //activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+            }
+            activity.getTopBar().animateSearchBar(false);
+        } else {
+            searchOpened = true;
+            menusRestaurantAdapter.setSearchApiHitOnce(false);
+            if (clearEt) {
+                activity.getTopBar().etSearch.setText("");
+            }
+            activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
+            activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
+            activity.getTopBar().title.setVisibility(View.GONE);
+            activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
 
-           activity.getTopBar().setSearchVisibility(View.VISIBLE);
-           activity.getTopBar().ivSearch.setVisibility(View.GONE);
-           activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            activity.getTopBar().setSearchVisibility(View.VISIBLE);
+            activity.getTopBar().ivSearch.setVisibility(View.GONE);
+            activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-           activity.getTopBar().etSearch.requestFocus();
-           Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
-       }
+            activity.getTopBar().etSearch.requestFocus();
+            Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
+        }
     }
 
-    public boolean getSearchOpened(){
+    public boolean getSearchOpened() {
         return searchOpened;
     }
 
-    public MenusRestaurantAdapter getMenusRestaurantAdapter(){
+    public MenusRestaurantAdapter getMenusRestaurantAdapter() {
         return menusRestaurantAdapter;
     }
 

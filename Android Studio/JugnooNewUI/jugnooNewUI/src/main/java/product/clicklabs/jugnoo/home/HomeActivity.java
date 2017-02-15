@@ -245,7 +245,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Passenger main layout
     RelativeLayout passengerMainLayout;
 
-
     //Map layout
     RelativeLayout mapLayout;
     public GoogleMap map;
@@ -8691,10 +8690,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void updateImageViewRideNowIcon(){
         try {
+            imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRequestSelector(this));
             getSelectorBitmapLoader(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
-                    .loadSelector(imageViewRideNow, slidingBottomPanel.getRequestRideOptionsFragment().
-                            getRegionSelected().getImages().getRideNowNormal(), slidingBottomPanel.getRequestRideOptionsFragment().
-                            getRegionSelected().getImages().getRideNowHighlighted(), new SelectorBitmapLoader.Callback() {
+                    .loadSelector(imageViewRideNow,
+                            slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getImages().getRideNowNormal(),
+                            slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getImages().getRideNowHighlighted(),
+                            new SelectorBitmapLoader.Callback() {
                         @Override
                         public void onSuccess(Drawable drawable) {
                             if (regionIdForSelectorLoader == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {

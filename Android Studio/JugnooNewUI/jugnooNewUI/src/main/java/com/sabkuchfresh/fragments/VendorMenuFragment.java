@@ -1,23 +1,15 @@
 package com.sabkuchfresh.fragments;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -27,7 +19,6 @@ import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
-import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -261,24 +252,12 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     .into(activity.ivCollapseRestImage);
 
             activity.setVendorDeliveryTimeToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime);
-            setTextViewDrawableColor(activity.tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));
+            activity.setTextViewDrawableColor(activity.tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));
 
-            if (activity.getVendorOpened().getRating() != null) {
+            if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
                 activity.tvCollapRestaurantRating.setVisibility(View.VISIBLE);
-
-                Spannable spannable = new SpannableString(activity.getString(R.string.star_icon) + " " + activity.getVendorOpened().getRating());// + "  " + "(" + activity.getVendorOpened().getReviewCount() + ")");
-                Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
-                spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-                activity.tvCollapRestaurantRating.setText(spannable);
-                int ratingColor;
-                if (activity.getVendorOpened().getColorCode() != null
-                        && activity.getVendorOpened().getColorCode().startsWith("#")
-                        && activity.getVendorOpened().getColorCode().length() == 7)
-                    ratingColor = Color.parseColor(activity.getVendorOpened().getColorCode());
-                else
-                    ratingColor = Color.parseColor("#8dd061"); //default Green Color
-
-                setTextViewBackgroundDrawableColor(activity.tvCollapRestaurantRating, ratingColor);
+                activity.setRatingAndGetColor(activity.tvCollapRestaurantRating, activity.getVendorOpened().getRating(),
+                        activity.getVendorOpened().getColorCode());
             } else {
                 activity.tvCollapRestaurantRating.setVisibility(View.GONE);
             }
@@ -295,17 +274,4 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         }
     }
 
-    private void setTextViewDrawableColor(TextView textView, int color) {
-        for (Drawable drawable : textView.getCompoundDrawables()) {
-            if (drawable != null) {
-                drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-            }
-        }
-    }
-
-    private void setTextViewBackgroundDrawableColor(TextView textView, int color) {
-        if (textView.getBackground() != null) {
-            textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-        }
-    }
 }

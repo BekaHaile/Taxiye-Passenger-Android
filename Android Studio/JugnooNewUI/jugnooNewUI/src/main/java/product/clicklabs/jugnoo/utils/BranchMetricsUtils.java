@@ -36,7 +36,8 @@ public class BranchMetricsUtils {
                                         final String referralCode, final String referringUserName,
                                         final String title, final String fbShareDescription, final String jugnooFbBanner,
                                         String branchDesktopUrl, String branchAndroidUrl,
-                                        String branchIosUrl, String branchFallbackUrl, String city){
+                                        String branchIosUrl, String branchFallbackUrl, String city,
+                                        String userId){
 
         String existingUrl = Prefs.with(context).getString(spKey, "");
         String existingUserIdentifier = Prefs.with(context).getString(SPLabels.USER_IDENTIFIER, "");
@@ -96,6 +97,7 @@ public class BranchMetricsUtils {
                     .addContentMetadata(Constants.KEY_DEEPINDEX, "0")
                     .addContentMetadata(Constants.KEY_REFERRAL_CODE, referralCode)
                     .addContentMetadata(Constants.KEY_BRANCH_REFERRING_USER_NAME, referringUserName)
+                    .addContentMetadata(Constants.KEY_USER_ID, userId)
                     ;
             LinkProperties linkProperties = new LinkProperties()
                     .setChannel(channel)
