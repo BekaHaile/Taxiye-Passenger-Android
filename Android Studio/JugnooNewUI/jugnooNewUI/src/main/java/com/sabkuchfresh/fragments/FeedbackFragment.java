@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -818,7 +820,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
     SendFeedbackQuery sendFeedbackQuery;
 
-    private void sumbitMenuFeedback(String reviewDesc, String comments, int score) {
+    private void sumbitMenuFeedback(final String reviewDesc, final String comments, final int score) {
         DialogPopup.showLoadingDialog(activity, "");
         if (sendFeedbackQuery == null) {
             sendFeedbackQuery = new SendFeedbackQuery();
@@ -830,6 +832,9 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                     public void onSendFeedbackResult(boolean isSuccess, int rating) {
                         if (isSuccess) {
 
+                            if(!TextUtils.isEmpty(comments)) FlurryEventLogger.eventGA(Events.MENU,Events.FEEDBACK,Events.COMMENT_ADDED);
+                            if(!TextUtils.isEmpty(reviewDesc))FlurryEventLogger.eventGA(Events.MENU,Events.FEEDBACK,"Tag- " + reviewDesc);
+                            if(score>0)FlurryEventLogger.eventGA(Events.MENU,Events.FEEDBACK,Events.RATING,score);
 
                             if (rating > 2) {
                                 // for Good rating

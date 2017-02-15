@@ -69,4 +69,19 @@ public interface Events {
     String REGISTERED_CITY = "Registered city";
     String PROMO_CODE_USED = "PromoCodeUsed";
 
+
+    /**
+     Edited by Parminder Singh on 2/15/17 at 4:00 PM
+     **/
+
+    String MENU = "Menu";
+    String SECOND_RESTAURANT_ORDER = "Second Restaurant Order";
+    String POPUP_ORDER = "Popup Order";
+    String FEEDBACK = "Feedback";
+    String COMMENT_ADDED = "Comment Added";
+    java.lang.String RATING = "Rating";
+    String REVIEW = "Review";
+    String PLUS_BUTTON = "Plus Button";
+    String SUBMITTED = "Submitted";
+    String CLICKED = "Clicked";
 }

@@ -126,6 +126,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
@@ -2706,6 +2707,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     && !getVendorOpened().getRestaurantId().equals(jsonSavedCart
                     .optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))) {
                 String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
+                FlurryEventLogger.eventGA(Events.MENU,Events.SECOND_RESTAURANT_ORDER,Events.POPUP_ORDER);
                 DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
                         getString(R.string.previous_vendor_cart_message_format, oldRestaurantName),
                         getString(R.string.ok), getString(R.string.cancel),
@@ -2726,6 +2728,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                             }
                         }, false, false);
+
+
                 return false;
             } else {
                 return true;
@@ -3562,12 +3566,14 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             appBarLayout.setExpanded(false, false);
             topBar.llCartContainer.setVisibility(View.GONE);
             topBar.ivSearch.setVisibility(View.GONE);
+            FlurryEventLogger.eventGA(Events.MENU,Events.REVIEW,Events.CLICKED);
             getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
     }
 
     public void openRestaurantAddReviewFragment() {
         if (getVendorOpened() != null) {
+            FlurryEventLogger.eventGA(Events.MENU,Events.REVIEW,Events.PLUS_BUTTON);
             getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
     }
