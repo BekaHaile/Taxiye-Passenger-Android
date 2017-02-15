@@ -83,7 +83,7 @@ public class BecomeStarAdapter extends BaseAdapter {
 		final MainViewHolder mHolder = ((MainViewHolder) holder);
 		try {
 				mHolder.tvPickupName.setText(String.format(context.getResources().getString(R.string.rupees_value_format_without_space),
-						String.valueOf(subItems.get(position).getAmount()))+" /"+subItems.get(position).getPlanString());
+						String.valueOf(subItems.get(position).getAmount()))+"/"+subItems.get(position).getPlanString());
 
 		} catch (Exception e) {
 			e.printStackTrace();
