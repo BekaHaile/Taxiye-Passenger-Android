@@ -3560,6 +3560,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public void openRestaurantReviewsListFragment() {
         if (getVendorOpened() != null) {
             appBarLayout.setExpanded(false, false);
+            topBar.llCartContainer.setVisibility(View.GONE);
+            topBar.ivSearch.setVisibility(View.GONE);
             getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
     }

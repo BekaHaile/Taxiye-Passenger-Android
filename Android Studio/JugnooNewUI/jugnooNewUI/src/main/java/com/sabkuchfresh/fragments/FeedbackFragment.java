@@ -57,6 +57,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollGridView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -377,6 +378,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 } else {
                     sumbitMenuFeedback(reviewDescription, comments, (int) ratingBarMenuFeedback.getScore());
                 }
+                Utils.hideSoftKeyboard(activity, editTextRSFeedback);
 
 
             }
@@ -472,19 +474,20 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         });
         activity.fragmentUISetup(this);
 
-//        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutRideSummary, textViewRSScroll,
-//                new KeyboardLayoutListener.KeyBoardStateHandler() {
-//            @Override
-//            public void keyboardOpened() {
-//
-//            }
-//
-//            @Override
-//            public void keyBoardClosed() {
-//
-//            }
-//        });
-//        linearLayoutRideSummary.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutRideSummary, textViewRSScroll,
+                new KeyboardLayoutListener.KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+                scrollViewRideSummary.scrollTo(0, editTextRSFeedback.getBottom());
+            }
+
+            @Override
+            public void keyBoardClosed() {
+
+            }
+        });
+        keyboardLayoutListener.setResizeTextView(false);
+        linearLayoutRideSummary.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
     }
 
     private void afterGoodRating() {
