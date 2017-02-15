@@ -152,7 +152,7 @@ public class RestaurantAddReviewFragment extends Fragment {
 					@Override
 					public void onSendFeedbackResult(boolean isSuccess, int rating) {
 						if (isSuccess) {
-							FlurryEventLogger.eventGA(Events.MENU,Events.REVIEW,Events.SUBMITTED);
+							FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.SUBMITTED);
 							activity.performBackPressed();
 							Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
 							RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();

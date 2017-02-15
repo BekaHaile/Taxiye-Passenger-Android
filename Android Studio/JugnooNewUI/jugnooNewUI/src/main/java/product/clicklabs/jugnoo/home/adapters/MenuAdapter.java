@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
@@ -339,6 +340,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_AUTOS, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.RIDES);
                 }
             });
 
@@ -349,6 +351,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_FRESH, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.FRESH);
                 }
             });
 
@@ -359,6 +362,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     holder.imageViewArrow.setRotation(270);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_MEALS, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.MEALS);
                 }
             });
 
@@ -378,6 +382,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_GROCERY, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.GROCERY);
                 }
             });
 
@@ -388,6 +393,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_MENUS, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.MENUS);
                 }
             });
 
@@ -398,6 +404,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_PAY, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.PAY);
                 }
             });
         }

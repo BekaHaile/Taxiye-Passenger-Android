@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
+import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -215,6 +217,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         keyboardLayoutListener.setResizeTextView(false);
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
+        FlurryEventLogger.trackScreenView(Events.MENUS_SCREEN);
 
         return rootView;
     }
@@ -514,6 +518,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             activity.getTopBar().animateSearchBar(false);
         } else {
             searchOpened = true;
+            menusRestaurantAdapter.setSearchApiHitOnce(false);
             if (clearEt) {
                 activity.getTopBar().etSearch.setText("");
             }

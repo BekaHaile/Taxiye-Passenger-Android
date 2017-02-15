@@ -40,6 +40,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
@@ -59,7 +60,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.http.HEAD;
 
 /**
  * Created by Shankar on 15/11/16.
@@ -75,6 +75,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private ArrayList<MenusResponse.Vendor> vendorsComplete, vendorsFiltered, vendorsToShow;
     private Callback callback;
     private String searchText;
+    private boolean searchApiHitOnce = false;
 
     private static final int MAIN_ITEM = 0;
     private static final int FORM_ITEM = 1;
@@ -97,6 +98,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.possibleStatus = possibleStatus;
         timerHandler.postDelayed(timerRunnable, 1000);
         restaurantName = ""; locality = ""; telephone = "";
+        searchApiHitOnce = false;
     }
 
     Handler timerHandler = new Handler();
@@ -377,6 +379,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         try {
                             int pos = (int) v.getTag();
                             callback.onRestaurantSelected(pos, vendorsToShow.get(pos));
+                            if(searchApiHitOnce && searchText.length() > 0){
+                                FlurryEventLogger.eventGA(Events.MENUS, Events.SEARCH_MATCHED, searchText);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -424,6 +429,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     @Override
                     public void onClick(View v) {
                         apiRecommendRestaurant();
+                        FlurryEventLogger.eventGA(Events.MENUS, Events.ADD_RESTRO, restaurantName);
                     }
                 });
 
@@ -573,6 +579,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private int vendorsCompleteCount() {
         return vendorsComplete == null ? 0 : vendorsComplete.size();
+    }
+
+    public void setSearchApiHitOnce(boolean searchApiHitOnce){
+        this.searchApiHitOnce = searchApiHitOnce;
+    }
+
+    public boolean isSearchApiHitOnce() {
+        return searchApiHitOnce;
     }
 
 
@@ -748,6 +762,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                             if(productsResponse.getRestaurantIds().size() > 0) {
                                                 queryMap.put(searchText, productsResponse.getRestaurantIds());
                                             }
+                                            searchApiHitOnce = true;
                                         } else {
                                             searchVendors(searchText, null);
                                         }

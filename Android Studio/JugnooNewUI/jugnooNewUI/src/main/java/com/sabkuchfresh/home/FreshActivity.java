@@ -1572,7 +1572,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             }
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
             getMenusFragment().openSearch(false);
-
+            if(getMenusFragment().getMenusRestaurantAdapter() != null
+                    && !getMenusFragment().getMenusRestaurantAdapter().isSearchApiHitOnce()){
+               FlurryEventLogger.eventGA(Events.MENUS, Events.SEARCH, Events.NOT_SEARCHED);
+            }
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
         } else {
@@ -2707,7 +2710,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     && !getVendorOpened().getRestaurantId().equals(jsonSavedCart
                     .optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))) {
                 String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
-                FlurryEventLogger.eventGA(Events.MENU,Events.SECOND_RESTAURANT_ORDER,Events.POPUP_ORDER);
+                FlurryEventLogger.eventGA(Events.MENUS,Events.SECOND_RESTAURANT_ORDER,Events.POPUP_ORDER);
                 DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
                         getString(R.string.previous_vendor_cart_message_format, oldRestaurantName),
                         getString(R.string.ok), getString(R.string.cancel),
@@ -3566,14 +3569,14 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             appBarLayout.setExpanded(false, false);
             topBar.llCartContainer.setVisibility(View.GONE);
             topBar.ivSearch.setVisibility(View.GONE);
-            FlurryEventLogger.eventGA(Events.MENU,Events.REVIEW,Events.CLICKED);
+            FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.CLICKED);
             getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
     }
 
     public void openRestaurantAddReviewFragment() {
         if (getVendorOpened() != null) {
-            FlurryEventLogger.eventGA(Events.MENU,Events.REVIEW,Events.PLUS_BUTTON);
+            FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.PLUS_BUTTON);
             getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
     }

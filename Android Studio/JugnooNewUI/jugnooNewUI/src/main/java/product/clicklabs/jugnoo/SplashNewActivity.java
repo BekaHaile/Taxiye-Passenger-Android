@@ -59,7 +59,6 @@ import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -94,7 +93,6 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
-import product.clicklabs.jugnoo.utils.Font;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -888,6 +886,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
                             SplashNewActivity.registerationType = RegisterationType.EMAIL;
                             setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, Data.deepLinkReferralCode));
                             changeUIState(State.SIGNUP);
+							FlurryEventLogger.eventGA(Events.INFORMATION, Events.CLAIM_GIFT, btnClaimGift.getText().toString());
                         }
 					} catch (Exception e) {
 						e.printStackTrace();

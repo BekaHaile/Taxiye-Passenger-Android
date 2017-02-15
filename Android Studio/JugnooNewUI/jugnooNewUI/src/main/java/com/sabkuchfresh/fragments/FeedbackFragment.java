@@ -815,6 +815,11 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.menus));
             }
+            if(!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())){
+                activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
+            } else {
+                activity.getTopBar().title.setText(activity.getString(R.string.menus));
+            }
         }
     }
 
@@ -832,9 +837,9 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                     public void onSendFeedbackResult(boolean isSuccess, int rating) {
                         if (isSuccess) {
 
-                            if(!TextUtils.isEmpty(comments)) FlurryEventLogger.eventGA(Events.MENU,Events.FEEDBACK,Events.COMMENT_ADDED);
-                            if(!TextUtils.isEmpty(reviewDesc))FlurryEventLogger.eventGA(Events.MENU,Events.FEEDBACK,"Tag- " + reviewDesc);
-                            if(score>0)FlurryEventLogger.eventGA(Events.MENU,Events.FEEDBACK,Events.RATING,score);
+                            if(!TextUtils.isEmpty(comments)) FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK,Events.COMMENT_ADDED);
+                            if(!TextUtils.isEmpty(reviewDesc))FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK,"Tag- " + reviewDesc);
+                            if(score>0)FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK,Events.RATING,score);
 
                             if (rating > 2) {
                                 // for Good rating
