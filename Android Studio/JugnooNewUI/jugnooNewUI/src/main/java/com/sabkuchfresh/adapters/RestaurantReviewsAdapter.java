@@ -1,5 +1,6 @@
 package com.sabkuchfresh.adapters;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -101,6 +102,8 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				} else {
 					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_downarrow, 0);
 				}
+			} else {
+				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, ContextCompat.getColor(activity, R.color.text_color_light));
 			}
 
 		} catch (Exception e) {

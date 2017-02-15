@@ -44,6 +44,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -165,6 +166,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        FlurryEventLogger.trackScreenView(Events.MEALS_SCREEN);
 
         return rootView;
     }

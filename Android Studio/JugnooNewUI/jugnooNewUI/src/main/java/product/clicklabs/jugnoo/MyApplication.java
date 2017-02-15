@@ -204,15 +204,14 @@ public class MyApplication extends Application {
      * @param screenName screen name to be displayed on GA dashboard
      */
     public void trackScreenView(String screenName) {
-        Tracker t = getGoogleAnalyticsTracker();
-        t.enableAdvertisingIdCollection(true);
-        // Set screen name.
-        t.setScreenName(screenName);
+		// Get tracker.
+		Tracker t = getGoogleAnalyticsTracker();
 
-        // Send a screen view.
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+// Set screen name.
+		t.setScreenName(screenName);
 
-        GoogleAnalytics.getInstance(this).dispatchLocalHits();
+// Send a screen view.
+		t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     public void setGAUserId(String mUserId) {

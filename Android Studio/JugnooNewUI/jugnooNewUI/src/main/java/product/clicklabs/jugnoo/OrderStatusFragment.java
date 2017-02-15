@@ -725,9 +725,6 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
                     tvTotalAmountValOld.setVisibility(View.VISIBLE);
                     tvTotalAmountValOld.setText(activity.getString(R.string.rupees_value_format,
                             Utils.getMoneyDecimalFormat().format(datum.getOldAmount())));
-                    tvTotalAmountMessage.setVisibility(TextUtils.isEmpty(datum.getNote()) ? View.GONE : View.VISIBLE);
-                    tvTotalAmountMessage.setText(datum.getNote());
-                    showAsterisk = true;
                 }
                 totalAmountVal = datum.getNewAmount();
             } else if(datum.getTotalAmount() != null){
@@ -735,6 +732,10 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
             }
             tvTotalAmountVal.setText(activity.getString(R.string.rupees_value_format,
                     Utils.getMoneyDecimalFormat().format(totalAmountVal)));
+
+            tvTotalAmountMessage.setVisibility(TextUtils.isEmpty(datum.getNote()) ? View.GONE : View.VISIBLE);
+            tvTotalAmountMessage.setText(datum.getNote());
+            showAsterisk = !TextUtils.isEmpty(datum.getNote());
 
 
             llExtraCharges.removeAllViews();

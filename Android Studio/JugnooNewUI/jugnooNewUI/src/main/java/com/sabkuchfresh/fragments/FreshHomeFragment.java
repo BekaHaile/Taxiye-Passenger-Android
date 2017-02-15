@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshSuperCategoriesAdapter;
+import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -131,6 +133,8 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        FlurryEventLogger.trackScreenView(Events.FRESH_SCREEN);
 
         return rootView;
     }
