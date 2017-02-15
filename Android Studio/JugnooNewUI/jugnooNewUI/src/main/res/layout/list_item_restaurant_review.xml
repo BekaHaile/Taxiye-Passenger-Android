@@ -19,10 +19,9 @@
         android:gravity="center"
         android:tag="mwar"
         android:text="G"
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/px_46"
-        android:textStyle="bold"
-        app:font="maven-bold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/px_56"
+        app:font="maven"
         />
 
     <ImageView

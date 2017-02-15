@@ -16,11 +16,11 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 
 /**
@@ -241,7 +241,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
         v.setGravity(Gravity.CENTER);
         v.setCompoundDrawablePadding((int) (ASSL.Yscale() * 12.0f));
         v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f);
-        v.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/maven_pro_bold.ttf"));
+        v.setTypeface(Fonts.mavenMedium(getContext()), Typeface.BOLD);
         v.setTextColor(ContextCompat.getColor(getContext(), R.color.text_color));
         v.setLayoutParams(params);
         v.setCompoundDrawablesWithIntrinsicBounds(0, mStarOffResource, 0, 0);
