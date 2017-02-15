@@ -1,7 +1,6 @@
 package com.sabkuchfresh.home;
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -50,7 +49,6 @@ public class TopBar implements FlurryEventNames {
     public LinearLayout llCartAmount, llCartContainer, llSearchCart;
     private Animation searchBarAnimation;
     private Animation searchBarCloseAnimation;
-    public ImageView ivCross;
 
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
@@ -93,10 +91,7 @@ public class TopBar implements FlurryEventNames {
         ivFilterApplied.setVisibility(View.GONE);
         ivAddReview = (ImageView) drawerLayout.findViewById(R.id.ivAddReview);
         tvNameCap = (TextView) drawerLayout.findViewById(R.id.tvNameCap);
-        tvNameCap.setTypeface(Typeface.DEFAULT_BOLD);
         //setSearchVisibility(View.GONE);
-        ivCross = (ImageView) drawerLayout.findViewById(R.id.ivCross);
-        ivCross.setOnClickListener(topBarOnClickListener);
 
         topRl.setOnClickListener(topBarOnClickListener);
         imageViewMenu.setOnClickListener(topBarOnClickListener);
@@ -243,11 +238,6 @@ public class TopBar implements FlurryEventNames {
                     }
                     break;
 
-                case R.id.ivCross:
-                    if (activity instanceof FreshActivity) {
-                        ((FreshActivity) activity).performBackPressed();
-                    }
-                    break;
             }
         }
     };

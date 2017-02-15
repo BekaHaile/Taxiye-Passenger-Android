@@ -925,7 +925,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             topBar.buttonCheckServer.setVisibility(View.GONE);
             topBar.ivAddReview.setVisibility(View.GONE);
             topBar.tvNameCap.setVisibility(View.GONE);
-            topBar.ivCross.setVisibility(View.GONE);
+            topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -1168,14 +1168,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.ivAddReview.setVisibility(View.VISIBLE);
             } else if (fragment instanceof RestaurantAddReviewFragment) {
             	topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.GONE);
-                topBar.ivCross.setVisibility(View.VISIBLE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.imageViewBack.setImageResource(R.drawable.ic_cross_grey_selector);
                 topBar.title.setVisibility(View.GONE);
                 topBar.tvNameCap.setVisibility(View.VISIBLE);
                 try {
                     topBar.tvNameCap.setText(Data.userData.userName.substring(0, 1));
-                    topBar.tvNameCap.setTextColor(Color.parseColor("#8dcf61"));
-                    setTextViewBackgroundDrawableColor(topBar.tvNameCap, Color.parseColor("#e1fccf"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

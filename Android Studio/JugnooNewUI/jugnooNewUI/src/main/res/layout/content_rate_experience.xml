@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="SUBMIT"
-                app:font="maven-bold" />
+                app:font="maven" />
 
 
         </LinearLayout>

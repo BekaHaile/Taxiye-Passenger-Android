@@ -300,8 +300,8 @@
                     android:gravity="center"
                     android:tag="mwar"
                     android:text="G"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/px_36"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/px_42"
                     android:textStyle="bold"
                     app:font="maven"
                     android:visibility="gone"
@@ -322,14 +322,6 @@
                 android:textColor="@color/text_color_selector"
                 android:textSize="30.6px"
                 android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/ivCross"
-                style="@style/CrossSelector"
-                android:layout_centerVertical="true"
-                android:visibility="gone"
-                android:layout_marginLeft="@dimen/px_10"
-                />
 
         </RelativeLayout>
 

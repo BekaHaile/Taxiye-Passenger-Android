@@ -93,9 +93,9 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 			if(review.getRating() != null){
 				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor());
-				int colorAlpha = (color & 0x00FFFFFF) | 0x99000000;
-				holder.tvNameCap.setTextColor(color);
-				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, colorAlpha);
+//				int colorAlpha = (color & 0x00FFFFFF) | 0x99000000;
+//				holder.tvNameCap.setTextColor(color);
+				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, color);
 				if(review.getRatingFlag() == 1){
 					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_uparrow, 0);
 				} else {
