@@ -3,7 +3,7 @@
     android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menu_item_selector_color">
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/topBar"
@@ -34,11 +34,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/tvStarIntro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:text="Hi, become a jugnoo star and enjoy free deliveries, cashbacks and much more..."
+                android:textColor="@color/text_color"
+                android:gravity="center"
+                android:padding="@dimen/px_20"
+                android:textSize="@dimen/text_size_30"/>
+
             <LinearLayout
                 android:id="@+id/llContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:layout_below="@+id/rlBenefits"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/px_60">
 
@@ -50,6 +62,7 @@
                     android:layout_marginRight="@dimen/px_40"
                     android:layout_marginTop="@dimen/px_30"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:text="@string/jugnoo_Star_title"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34" />
@@ -200,16 +213,24 @@
 
 
             <RelativeLayout
+                android:id="@+id/rlBenefits"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/llContainer"
+                android:layout_below="@+id/tvStarIntro"
                 android:background="@color/grey_lb_list">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/divider_color" />
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/rvBenefits"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fadeScrollbars="true"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="@dimen/px_0"
                     android:paddingTop="@dimen/px_15"
                     android:scrollbars="vertical" />
             </RelativeLayout>
@@ -218,6 +239,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="6px"
                 android:layout_below="@+id/llContainer"
+                android:visibility="gone"
                 android:background="@drawable/shadow_down" />
 
         </RelativeLayout>

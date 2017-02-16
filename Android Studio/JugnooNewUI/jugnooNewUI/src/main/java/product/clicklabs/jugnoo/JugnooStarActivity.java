@@ -39,7 +39,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
     private RelativeLayout relative, rlPlan1, rlPlan2;
     private TextView textViewTitle, tvSubTitle;
     private ImageView imageViewBack, ivRadio1, ivRadio2;
-    private TextView tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2;
+    private TextView tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2, tvStarIntro;
     private NonScrollListView rvBenefits;
 //    private StarBenefitsAdapter starBenefitsAdapter;
     private StarMembershipAdapter starMembershipAdapter;
@@ -71,6 +71,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         bJoinNow = (Button) findViewById(R.id.bJoinNow); bJoinNow.setTypeface(Fonts.mavenMedium(this)); bJoinNow.setOnClickListener(this);
 
 
+        tvStarIntro = (TextView) findViewById(R.id.tvStarIntro); tvStarIntro.setTypeface(Fonts.mavenRegular(this));
         tvSubTitle = (TextView) findViewById(R.id.tvSubTitle); tvSubTitle.setTypeface(Fonts.mavenMedium(this));
         rlPlan1 = (RelativeLayout) findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(this); rlPlan1.setVisibility(View.GONE);
         rlPlan2 = (RelativeLayout) findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(this); rlPlan2.setVisibility(View.GONE);

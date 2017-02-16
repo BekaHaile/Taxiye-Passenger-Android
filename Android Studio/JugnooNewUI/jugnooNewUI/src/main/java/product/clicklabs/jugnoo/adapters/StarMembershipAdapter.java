@@ -67,7 +67,7 @@ public class StarMembershipAdapter extends BaseAdapter {
 				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_menus);
 			}
 
-			viewHolder.ivSep.setVisibility((position < getCount()-1) ? View.VISIBLE : View.GONE);
+			//viewHolder.ivSep.setVisibility((position < getCount()-1) ? View.VISIBLE : View.GONE);
 
 		}
 	}

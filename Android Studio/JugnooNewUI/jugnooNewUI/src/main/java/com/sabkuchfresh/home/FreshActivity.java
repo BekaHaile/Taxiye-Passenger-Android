@@ -1289,12 +1289,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         try {
             if (getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                 int textViewMinOrderVis = View.VISIBLE;
-                if (getProductsResponse() != null && totalQuantity > 0
+                if (getProductsResponse() != null
                         && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)) {
                     if (Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
                         textViewMinOrderVis = View.VISIBLE;
                         textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
-                    } else if (totalPrice < getSuperCategoriesData().getDeliveryInfo().getMinAmount()) {
+                    } else if (totalQuantity > 0 && totalPrice < getSuperCategoriesData().getDeliveryInfo().getMinAmount()) {
                         textViewMinOrderVis = View.VISIBLE;
                         double leftAmount = getSuperCategoriesData().getDeliveryInfo().getMinAmount() - totalPrice;
                         textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
