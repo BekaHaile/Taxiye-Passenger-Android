@@ -188,7 +188,8 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
 
 
 
-            starMembershipAdapter = new StarMembershipAdapter(JugnooStarSubscribedActivity.this, benefits, benefitOffering, new StarMembershipAdapter.Callback() {
+            starMembershipAdapter = new StarMembershipAdapter(JugnooStarSubscribedActivity.this, Data.userData.getSubscriptionData().getSubscriptionBenefits()
+                    , new StarMembershipAdapter.Callback() {
                 @Override
                 public void onUnsubscribe() {
                     DialogPopup.alertPopupTwoButtonsWithListeners(JugnooStarSubscribedActivity.this, "", "Are you sure you want to cancel Subscription?"

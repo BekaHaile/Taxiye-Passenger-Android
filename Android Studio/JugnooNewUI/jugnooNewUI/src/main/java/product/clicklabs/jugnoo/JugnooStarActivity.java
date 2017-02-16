@@ -4,6 +4,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,14 +40,13 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
     private RelativeLayout relative, rlPlan1, rlPlan2;
     private TextView textViewTitle, tvSubTitle;
     private ImageView imageViewBack, ivRadio1, ivRadio2;
-    private TextView tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2, tvStarIntro;
+    private TextView tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2;
     private NonScrollListView rvBenefits;
 //    private StarBenefitsAdapter starBenefitsAdapter;
     private StarMembershipAdapter starMembershipAdapter;
     private String selectedSubId;
     private RelativeLayout rlFragment;
     private Button bJoinNow;
-    private View divider;
     private SubscriptionData.Subscription subscription;
     private boolean fromFreshCheckout;
 
@@ -71,8 +71,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         bJoinNow = (Button) findViewById(R.id.bJoinNow); bJoinNow.setTypeface(Fonts.mavenMedium(this)); bJoinNow.setOnClickListener(this);
 
 
-        tvStarIntro = (TextView) findViewById(R.id.tvStarIntro); tvStarIntro.setTypeface(Fonts.mavenRegular(this));
-        tvSubTitle = (TextView) findViewById(R.id.tvSubTitle); tvSubTitle.setTypeface(Fonts.mavenMedium(this));
+        tvSubTitle = (TextView) findViewById(R.id.tvSubTitle); tvSubTitle.setTypeface(Fonts.mavenRegular(this));
         rlPlan1 = (RelativeLayout) findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(this); rlPlan1.setVisibility(View.GONE);
         rlPlan2 = (RelativeLayout) findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(this); rlPlan2.setVisibility(View.GONE);
         ivRadio1 = (ImageView) findViewById(R.id.ivRadio1);
@@ -83,7 +82,6 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         tvAmount2 = (TextView) findViewById(R.id.tvAmount2); tvAmount2.setTypeface(Fonts.avenirNext(this));
         tvPeriod1 = (TextView) findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.mavenMedium(this));
         tvPeriod2 = (TextView) findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.mavenMedium(this));
-        divider = (View) findViewById(R.id.divider);
         rvBenefits = (NonScrollListView) findViewById(R.id.rvBenefits);
         /*rvBenefits.setLayoutManager(new LinearLayoutManager(this));
         rvBenefits.setItemAnimator(new DefaultItemAnimator());
@@ -97,76 +95,38 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         }
 
         try {
-            tvSubTitle.setText(Data.userData.getSubscriptionData().getSubscriptionTitle());
+            tvSubTitle.setText(Data.userData.getSubscriptionData().getSubscriptionTitleNew());
             if(Data.userData.getSubscriptionData().getSubscriptions() != null){
                 for(int i=0; i<Data.userData.getSubscriptionData().getSubscriptions().size(); i++) {
                     if (i == 0) {
                         rlPlan1.setVisibility(View.VISIBLE);
-                        if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() != null && Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() !=0){
+                        if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText() != null && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText())){
                             tvActualAmount1.setVisibility(View.VISIBLE);
-                            tvActualAmount1.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
-                                    String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount())));
-                            tvActualAmount1.setPaintFlags(tvActualAmount1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                            tvActualAmount1.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText()+" ");
+                            tvActualAmount1.setTextColor(ContextCompat.getColor(this, R.color.green));
+                            tvAmount1.setTextColor(ContextCompat.getColor(this, R.color.green));
+                            //tvActualAmount1.setPaintFlags(tvActualAmount1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         }
-                        tvAmount1.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
-                                String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getAmount())));
-                        tvPeriod1.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getPlanString()));
-                        divider.setVisibility(View.GONE);
+                        tvAmount1.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getFinalAmountText());
+                        tvPeriod1.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getPlanStringNew()));
                     } else if (i == 1) {
                         rlPlan2.setVisibility(View.VISIBLE);
-                        if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() != null && Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() !=0){
+                        if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText() != null && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText())){
                             tvActualAmount2.setVisibility(View.VISIBLE);
-                            tvActualAmount2.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
-                                    String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount())));
-                            tvActualAmount2.setPaintFlags(tvActualAmount2.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                            tvActualAmount2.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText()+" ");
+                            tvActualAmount2.setTextColor(ContextCompat.getColor(this, R.color.green));
+                            tvAmount2.setTextColor(ContextCompat.getColor(this, R.color.green));
+                            //tvActualAmount2.setPaintFlags(tvActualAmount2.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         }
-                        tvAmount2.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
-                                String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getAmount())));
-                        tvPeriod2.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getPlanString()));
-                        divider.setVisibility(View.VISIBLE);
+                        tvAmount2.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getFinalAmountText());
+                        tvPeriod2.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getPlanStringNew()));
                     }
                 }
             }
 
-            String tempStr = Data.userData.getSubscriptionData().getSubTextAutos()+";;;"+Data.userData.getSubscriptionData().getSubTextFresh()+";;;"+
-                    Data.userData.getSubscriptionData().getSubTextMeals()+";;;"+Data.userData.getSubscriptionData().getSubTextMenus()+";;;"+
-                    Data.userData.getSubscriptionData().getSubTextGrocery();
-            String[] strArray = tempStr.split(";;;");
-            ArrayList<String> benefits = new ArrayList<>(Arrays.asList(strArray));
 
-//            starBenefitsAdapter = new StarBenefitsAdapter(JugnooStarActivity.this, benefits);
-
-            benefits.clear();
-            ArrayList<String> benefitOffering = new ArrayList<>();
-
-            if(!TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextAutos())) {
-                benefitOffering.add(Config.getAutosClientId());
-                benefits.add(Data.userData.getSubscriptionData().getSubTextAutos());
-            }
-            if(Data.userData.getMealsEnabled() == 1
-                    && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextMeals())){
-                benefitOffering.add(Config.getMealsClientId());
-                benefits.add(Data.userData.getSubscriptionData().getSubTextMeals());
-            }
-            if(Data.userData.getFreshEnabled() == 1
-                    && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextFresh())){
-                benefitOffering.add(Config.getFreshClientId());
-                benefits.add(Data.userData.getSubscriptionData().getSubTextFresh());
-            }
-            if(Data.userData.getGroceryEnabled() == 1
-                    && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextGrocery())){
-                benefitOffering.add(Config.getGroceryClientId());
-                benefits.add(Data.userData.getSubscriptionData().getSubTextGrocery());
-            }
-            if(Data.userData.getMenusEnabled() == 1
-                    && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextMenus())){
-                benefitOffering.add(Config.getMenusClientId());
-                benefits.add(Data.userData.getSubscriptionData().getSubTextMenus());
-            }
-
-
-
-            starMembershipAdapter = new StarMembershipAdapter(JugnooStarActivity.this, benefits, benefitOffering, new StarMembershipAdapter.Callback() {
+            starMembershipAdapter = new StarMembershipAdapter(JugnooStarActivity.this, Data.userData.getSubscriptionData().getSubscriptionBenefits()
+                    , new StarMembershipAdapter.Callback() {
                 @Override
                 public void onUnsubscribe() {
                 }
