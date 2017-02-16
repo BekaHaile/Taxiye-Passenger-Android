@@ -12,7 +12,7 @@
         android:id="@+id/etFeedback"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bSubmit"
+        android:layout_above="@+id/layout_controller"
         android:background="@drawable/background_transparent"
         android:fadeScrollbars="true"
         android:gravity="left"
@@ -44,17 +44,85 @@
         android:background="@drawable/shadow_down_new"
         />
 
-    <Button
+
+    <RelativeLayout
+        android:id="@id/layout_controller"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:paddingLeft="20px"
+        android:paddingRight="24px"
+        android:paddingTop="10px"
+        android:paddingBottom="32px"
+        android:layout_height="100px">
+
+
+        <ImageButton
+            android:id="@+id/ib_access_camera"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_add_review_camera"
+            android:layout_marginRight="20px"
+            android:padding="15px"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/bSubmit"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="end"
+            android:text="Submit"
+            app:font="maven"
+            android:textColor="@color/text_color_submit"
+            android:textSize="32px"
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <View
+            android:id="@+id/submitDivider"
+            android:layout_toLeftOf="@id/bSubmit"
+            android:layout_centerVertical="true"
+            android:layout_height="match_parent"
+            android:layout_width="2px" android:background="@color/dull_line"/>
+        <ImageButton
+            android:id="@+id/ib_access_star"
+            android:padding="15px"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_add_review_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ib_access_camera"
+            />
+        <TextView
+            android:text="400"
+            android:gravity="right"
+            android:maxLines="1"
+            app:font="maven"
+            android:textSize="26px"
+            android:textColor="@color/text_color_dark_1"
+            android:layout_toRightOf="@id/ib_access_star"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/submitDivider"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView2" />
+
+
+
+
+    </RelativeLayout>
+   <!-- <Button
         android:id="@+id/bSubmit"
         style="@style/ButtonTheme"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/px_30"
         android:layout_marginTop="@dimen/px_30"
         android:text="@string/submit"
-        app:font="maven"
-
-        />
+        app:font="maven" />-->
 
 
 </RelativeLayout>
