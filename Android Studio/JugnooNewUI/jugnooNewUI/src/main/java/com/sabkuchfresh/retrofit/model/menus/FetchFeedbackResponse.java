@@ -84,6 +84,24 @@ public class FetchFeedbackResponse {
 		@SerializedName("date")
 		@Expose
 		private String date;
+		@SerializedName("like_count")
+		@Expose
+		private Integer likeCount;
+		@SerializedName("share_count")
+		@Expose
+		private Integer shareCount;
+		@SerializedName("liked")
+		@Expose
+		private Integer liked;
+		@SerializedName("shared")
+		@Expose
+		private Integer shared;
+		@SerializedName("editable")
+		@Expose
+		private Integer editable;
+		@SerializedName("images")
+		@Expose
+		private List<ReviewImage> images;
 
 		public Integer getOrderId() {
 			return orderId;
@@ -155,6 +173,80 @@ public class FetchFeedbackResponse {
 
 		public void setDate(String date) {
 			this.date = date;
+		}
+
+		public Integer getLikeCount() {
+			return likeCount;
+		}
+
+		public void setLikeCount(Integer likeCount) {
+			this.likeCount = likeCount;
+		}
+
+		public Integer getShareCount() {
+			return shareCount;
+		}
+
+		public void setShareCount(Integer shareCount) {
+			this.shareCount = shareCount;
+		}
+
+		public Integer getLiked() {
+			return liked;
+		}
+
+		public void setLiked(Integer liked) {
+			this.liked = liked;
+		}
+
+		public Integer getShared() {
+			return shared;
+		}
+
+		public void setShared(Integer shared) {
+			this.shared = shared;
+		}
+
+		public Integer getEditable() {
+			return editable;
+		}
+
+		public void setEditable(Integer editable) {
+			this.editable = editable;
+		}
+
+		public List<ReviewImage> getImages() {
+			return images;
+		}
+
+		public void setImages(List<ReviewImage> images) {
+			this.images = images;
+		}
+	}
+
+
+	public class ReviewImage{
+		@SerializedName("url")
+		@Expose
+		private String url;
+		@SerializedName("thumbnail")
+		@Expose
+		private String thumbnail;
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+		public String getThumbnail() {
+			return thumbnail;
+		}
+
+		public void setThumbnail(String thumbnail) {
+			this.thumbnail = thumbnail;
 		}
 	}
 }

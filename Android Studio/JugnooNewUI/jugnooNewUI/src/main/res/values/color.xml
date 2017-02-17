@@ -265,6 +265,7 @@
     <color name="text_color_blue">#2BC9EC</color>
     <color name="text_color_red">#DE5B5B</color>
 
+    <color name="stroke_light_grey">#979797</color>
     <color name="stroke_light_grey_alpha">#33979797</color>
     <color name="no_internet_text_color">#979797</color>
     <color name="order_history_status_color">#1fbd2a</color>

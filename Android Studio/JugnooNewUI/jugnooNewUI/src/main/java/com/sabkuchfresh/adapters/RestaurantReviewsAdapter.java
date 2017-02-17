@@ -1,6 +1,8 @@
 package com.sabkuchfresh.adapters;
 
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -66,7 +68,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.tvDateTime.setText(review.getDate());
 			holder.tvReviewMessage.setText(review.getReviewDesc());
 			holder.tvReviewTag.setText(review.getTags());
-			holder.vSep.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
+			holder.vShadowUp.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
 
 
 			RelativeLayout.LayoutParams paramsRating = (RelativeLayout.LayoutParams) holder.tvRating.getLayoutParams();
@@ -106,6 +108,16 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, ContextCompat.getColor(activity, R.color.text_color_light));
 			}
 
+
+			holder.ivFeedEdit.setTag(position);
+			holder.ivFeedEdit.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+
+				}
+			});
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -120,11 +132,14 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	class ViewHolderReview extends RecyclerView.ViewHolder {
 		public TextView tvNameCap, tvName, tvDateTime, tvRating, tvReviewTag, tvReviewMessage;
 		public ImageView ivImage;
-		public View vSep;
+		public View vShadowUp;
+		public RecyclerView rvFeedImages;
+		public TextView tvLikeShareCount;
+		public ImageView ivFeedEdit, ivFeedShare, ivFeedLike;
 
 		public ViewHolderReview(View itemView) {
 			super(itemView);
-			vSep = itemView.findViewById(R.id.vSep);
+			vShadowUp = itemView.findViewById(R.id.vShadowUp);
 			ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
 			tvNameCap = (TextView) itemView.findViewById(R.id.tvNameCap);
 			tvName = (TextView) itemView.findViewById(R.id.tvName);
@@ -132,6 +147,14 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			tvRating = (TextView) itemView.findViewById(R.id.tvRating);
 			tvReviewTag = (TextView) itemView.findViewById(R.id.tvReviewTag);
 			tvReviewMessage = (TextView) itemView.findViewById(R.id.tvReviewMessage);
+			rvFeedImages = (RecyclerView) itemView.findViewById(R.id.rvFeedImages);
+			rvFeedImages.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
+			rvFeedImages.setItemAnimator(new DefaultItemAnimator());
+			rvFeedImages.setHasFixedSize(false);
+			tvLikeShareCount = (TextView) itemView.findViewById(R.id.tvLikeShareCount);
+			ivFeedEdit = (ImageView) itemView.findViewById(R.id.ivFeedEdit);
+			ivFeedShare = (ImageView) itemView.findViewById(R.id.ivFeedShare);
+			ivFeedLike = (ImageView) itemView.findViewById(R.id.ivFeedLike);
 		}
 	}
 
