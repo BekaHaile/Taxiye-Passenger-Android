@@ -51,15 +51,16 @@ import retrofit.mime.TypedByteArray;
 
 public class JugnooStarSubscribedActivity extends BaseFragmentActivity implements View.OnClickListener {
 
-    private RelativeLayout relative, rlAutoRenewal, rlFragment;
+    private RelativeLayout relative, rlAutoRenewal, rlFragment, rlPlan1, rlPlan2;;
     private TextView textViewTitle, tvAutoRenewal, tvUpgradingText;
-    private ImageView imageViewBack, ivAutoRenewalSwitch;
-    private TextView tvCurrentPlanValue, tvExpiresOnValue, tvSavingsMeterRetry, tvBenefits;
-    private LinearLayout llSavingsValue, llUpgradeContainer;
+    private ImageView imageViewBack, ivAutoRenewalSwitch, ivRadio1, ivRadio2;
+    private TextView tvCurrentPlanValue, tvExpiresOnValue, tvSavingsMeterRetry, tvBenefits, tvExpiredTitle,
+            tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2;;
+    private LinearLayout llSavingsValue, llUpgradeContainer, llRenew;
     private ProgressWheel progressWheel;
     private NonScrollListView rvBenefits;
     private StarMembershipAdapter starMembershipAdapter;
-    private Button btnUpgradeNow;
+    private Button btnUpgradeNow, bRenew;
     private ArrayList<String> benefits = new ArrayList<>();
     private SubscriptionData.Subscription subscription;
     private String selectedSubId;
@@ -96,6 +97,20 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
         progressWheel = (ProgressWheel) findViewById(R.id.progressWheel);
         tvSavingsMeterRetry = (TextView) findViewById(R.id.tvSavingsMeterRetry);
         tvSavingsMeterRetry.setTypeface(Fonts.mavenMedium(this));
+
+        llRenew = (LinearLayout) findViewById(R.id.llRenew);
+        tvExpiredTitle = (TextView) findViewById(R.id.tvExpiredTitle); tvExpiredTitle.setTypeface(Fonts.mavenRegular(this));
+        rlPlan1 = (RelativeLayout) findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(this); rlPlan1.setVisibility(View.GONE);
+        rlPlan2 = (RelativeLayout) findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(this); rlPlan2.setVisibility(View.GONE);
+        ivRadio1 = (ImageView) findViewById(R.id.ivRadio1);
+        ivRadio2 = (ImageView) findViewById(R.id.ivRadio2);
+        tvActualAmount1 = (TextView) findViewById(R.id.tvActualAmount1); tvActualAmount1.setTypeface(Fonts.mavenRegular(this));
+        tvActualAmount2 = (TextView) findViewById(R.id.tvActualAmount2); tvActualAmount2.setTypeface(Fonts.mavenRegular(this));
+        tvAmount1 = (TextView) findViewById(R.id.tvAmount1); tvAmount1.setTypeface(Fonts.mavenRegular(this));
+        tvAmount2 = (TextView) findViewById(R.id.tvAmount2); tvAmount2.setTypeface(Fonts.mavenRegular(this));
+        tvPeriod1 = (TextView) findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.mavenMedium(this));
+        tvPeriod2 = (TextView) findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.mavenMedium(this));
+        bRenew = (Button) findViewById(R.id.bRenew); bRenew.setTypeface(Fonts.mavenMedium(this));
 
         rlFragment = (RelativeLayout) findViewById(R.id.rlFragment);
         llUpgradeContainer = (LinearLayout) findViewById(R.id.llUpgradeContainer);

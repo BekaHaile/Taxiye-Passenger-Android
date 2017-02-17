@@ -1513,5 +1513,6 @@
     <string name="dont_touch_me">DontTouchMe</string>
     <string name="payment_summary">Payment Summary</string>
     <string name="payable_amount">Payable amount</string>
+    <string name="renew">Renew</string>
 
 </resources>
