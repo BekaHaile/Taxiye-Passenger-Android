@@ -60,31 +60,12 @@ public class FetchSubscriptionSavingsResponse {
 		this.upgradeData = upgradeData;
 	}
 
-	public class UpgradeArray {
+	public RenewalData getRenewalData() {
+		return renewalData;
+	}
 
-		@SerializedName("upgradable_to")
-		@Expose
-		private Integer upgradableTo;
-		@SerializedName("upgrade_amount")
-		@Expose
-		private Integer upgradeAmount;
-
-		public Integer getUpgradableTo() {
-			return upgradableTo;
-		}
-
-		public void setUpgradableTo(Integer upgradableTo) {
-			this.upgradableTo = upgradableTo;
-		}
-
-		public Integer getUpgradeAmount() {
-			return upgradeAmount;
-		}
-
-		public void setUpgradeAmount(Integer upgradeAmount) {
-			this.upgradeAmount = upgradeAmount;
-		}
-
+	public void setRenewalData(RenewalData renewalData) {
+		this.renewalData = renewalData;
 	}
 
 	public class UpgradeDatum {
@@ -129,12 +110,12 @@ public class FetchSubscriptionSavingsResponse {
 		@SerializedName("warning")
 		@Expose
 		private Warning warning;
-		@SerializedName("upgrade_plan")
-		@Expose
-		private UpgradePlan upgradePlan;
 		@SerializedName("renew_plan")
 		@Expose
-		private RenewPlan renewPlan;
+		private SubscriptionData.Subscription renewPlan;
+		@SerializedName("upgrade_plan")
+		@Expose
+		private List<UpgradeDatum> upgradePlan = null;
 
 		public Warning getWarning() {
 			return warning;
@@ -144,20 +125,20 @@ public class FetchSubscriptionSavingsResponse {
 			this.warning = warning;
 		}
 
-		public UpgradePlan getUpgradePlan() {
-			return upgradePlan;
-		}
-
-		public void setUpgradePlan(UpgradePlan upgradePlan) {
-			this.upgradePlan = upgradePlan;
-		}
-
-		public RenewPlan getRenewPlan() {
+		public SubscriptionData.Subscription getRenewPlan() {
 			return renewPlan;
 		}
 
-		public void setRenewPlan(RenewPlan renewPlan) {
+		public void setRenewPlan(SubscriptionData.Subscription renewPlan) {
 			this.renewPlan = renewPlan;
+		}
+
+		public List<UpgradeDatum> getUpgradePlan() {
+			return upgradePlan;
+		}
+
+		public void setUpgradePlan(List<UpgradeDatum> upgradePlan) {
+			this.upgradePlan = upgradePlan;
 		}
 
 	}
@@ -174,131 +155,6 @@ public class FetchSubscriptionSavingsResponse {
 
 		public void setText(String text) {
 			this.text = text;
-		}
-
-	}
-
-	public class RenewPlan {
-
-		@SerializedName("title")
-		@Expose
-		private String title;
-		@SerializedName("description")
-		@Expose
-		private String description;
-		@SerializedName("cross_text")
-		@Expose
-		private String crossText;
-		@SerializedName("renew_data")
-		@Expose
-		private RenewData renewData;
-
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public void setDescription(String description) {
-			this.description = description;
-		}
-
-		public String getCrossText() {
-			return crossText;
-		}
-
-		public void setCrossText(String crossText) {
-			this.crossText = crossText;
-		}
-
-		public RenewData getRenewData() {
-			return renewData;
-		}
-
-		public void setRenewData(RenewData renewData) {
-			this.renewData = renewData;
-		}
-
-	}
-
-	public class RenewData {
-
-		@SerializedName("sub_id")
-		@Expose
-		private Integer subId;
-		@SerializedName("amount")
-		@Expose
-		private Integer amount;
-
-		public Integer getSubId() {
-			return subId;
-		}
-
-		public void setSubId(Integer subId) {
-			this.subId = subId;
-		}
-
-		public Integer getAmount() {
-			return amount;
-		}
-
-		public void setAmount(Integer amount) {
-			this.amount = amount;
-		}
-
-	}
-
-	public class UpgradePlan {
-
-		@SerializedName("title")
-		@Expose
-		private String title;
-		@SerializedName("description")
-		@Expose
-		private String description;
-		@SerializedName("cross_text")
-		@Expose
-		private String crossText;
-		@SerializedName("upgrade_data")
-		@Expose
-		private List<UpgradeDatum> upgradeData = null;
-
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public void setDescription(String description) {
-			this.description = description;
-		}
-
-		public String getCrossText() {
-			return crossText;
-		}
-
-		public void setCrossText(String crossText) {
-			this.crossText = crossText;
-		}
-
-		public List<UpgradeDatum> getUpgradeData() {
-			return upgradeData;
-		}
-
-		public void setUpgradeData(List<UpgradeDatum> upgradeData) {
-			this.upgradeData = upgradeData;
 		}
 
 	}

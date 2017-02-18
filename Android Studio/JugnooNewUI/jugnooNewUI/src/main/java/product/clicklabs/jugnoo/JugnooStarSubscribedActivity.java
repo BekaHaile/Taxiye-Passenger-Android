@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.adapters.StarMembershipAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.StarPurchaseType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -60,10 +61,12 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
     private ProgressWheel progressWheel;
     private NonScrollListView rvBenefits;
     private StarMembershipAdapter starMembershipAdapter;
-    private Button btnUpgradeNow, bRenew;
+    private Button btnUpgradeNow, bConfirm;
     private ArrayList<String> benefits = new ArrayList<>();
     private SubscriptionData.Subscription subscription;
     private String selectedSubId;
+    private FetchSubscriptionSavingsResponse subscriptionSavingsResponse = null;
+    private int purchaseType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,15 +105,15 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
         tvExpiredTitle = (TextView) findViewById(R.id.tvExpiredTitle); tvExpiredTitle.setTypeface(Fonts.mavenRegular(this));
         rlPlan1 = (RelativeLayout) findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(this); rlPlan1.setVisibility(View.GONE);
         rlPlan2 = (RelativeLayout) findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(this); rlPlan2.setVisibility(View.GONE);
-        ivRadio1 = (ImageView) findViewById(R.id.ivRadio1);
-        ivRadio2 = (ImageView) findViewById(R.id.ivRadio2);
+        ivRadio1 = (ImageView) findViewById(R.id.ivRadio1); ivRadio1.setOnClickListener(this);
+        ivRadio2 = (ImageView) findViewById(R.id.ivRadio2); ivRadio2.setOnClickListener(this);
         tvActualAmount1 = (TextView) findViewById(R.id.tvActualAmount1); tvActualAmount1.setTypeface(Fonts.mavenRegular(this));
         tvActualAmount2 = (TextView) findViewById(R.id.tvActualAmount2); tvActualAmount2.setTypeface(Fonts.mavenRegular(this));
         tvAmount1 = (TextView) findViewById(R.id.tvAmount1); tvAmount1.setTypeface(Fonts.mavenRegular(this));
         tvAmount2 = (TextView) findViewById(R.id.tvAmount2); tvAmount2.setTypeface(Fonts.mavenRegular(this));
         tvPeriod1 = (TextView) findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.mavenMedium(this));
         tvPeriod2 = (TextView) findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.mavenMedium(this));
-        bRenew = (Button) findViewById(R.id.bRenew); bRenew.setTypeface(Fonts.mavenMedium(this));
+        bConfirm = (Button) findViewById(R.id.bConfirm); bConfirm.setTypeface(Fonts.mavenMedium(this)); bConfirm.setOnClickListener(this);
 
         rlFragment = (RelativeLayout) findViewById(R.id.rlFragment);
         llUpgradeContainer = (LinearLayout) findViewById(R.id.llUpgradeContainer);
@@ -139,7 +142,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
         btnUpgradeNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openStarCheckoutFragment(JugnooStarSubscribedActivity.this, rlFragment);
+                openStarCheckoutFragment(JugnooStarSubscribedActivity.this, rlFragment, StarPurchaseType.UPGRADE.getOrdinal());
             }
         });
 
@@ -332,6 +335,24 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
             case R.id.imageViewBack:
                 performBackPressed();
                 break;
+            case R.id.ivRadio1:
+                if(subscriptionSavingsResponse.getRenewalData().getRenewPlan() != null) {
+                    subscription = subscriptionSavingsResponse.getRenewalData().getRenewPlan();
+                }
+                purchaseType = StarPurchaseType.RENEW.getOrdinal();
+                selectedPlan(ivRadio1, subscription);
+                break;
+            case R.id.ivRadio2:
+                if(subscriptionSavingsResponse.getRenewalData().getUpgradePlan() != null
+                        && subscriptionSavingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray() != null) {
+                    subscription = subscriptionSavingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0);
+                }
+                purchaseType = StarPurchaseType.UPGRADE.getOrdinal();
+                selectedPlan(ivRadio2, subscription);
+                break;
+            case R.id.bConfirm:
+                openStarCheckoutFragment(JugnooStarSubscribedActivity.this, rlFragment, purchaseType);
+                break;
         }
     }
 
@@ -380,8 +401,10 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                         try {
                             if (savingsResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 llSavingsValue.removeAllViews();
+                                subscriptionSavingsResponse = savingsResponse;
                                 setTotalSavingsValueText(llSavingsValue, savingsResponse.getTotalSavings());
                                 setUpgradeView(savingsResponse);
+                                setRenewView(savingsResponse);
                             } else {
                                 DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", savingsResponse.getMessage());
                                 llSavingsValue.removeAllViews();
@@ -411,6 +434,52 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
         }
     }
 
+    private void setRenewView(FetchSubscriptionSavingsResponse savingsResponse) {
+        llRenew.setVisibility(View.GONE);
+        if(savingsResponse.getRenewalData() != null){
+            llUpgradeContainer.setVisibility(View.GONE);
+            llRenew.setVisibility(View.VISIBLE);
+            if(savingsResponse.getRenewalData().getWarning() != null && savingsResponse.getRenewalData().getWarning().getText() != null) {
+                tvExpiredTitle.setVisibility(View.VISIBLE);
+                tvExpiredTitle.setText(savingsResponse.getRenewalData().getWarning().getText());
+            }
+            if(savingsResponse.getRenewalData().getRenewPlan() != null){
+                rlPlan1.setVisibility(View.VISIBLE);
+                tvPeriod1.setText(savingsResponse.getRenewalData().getRenewPlan().getPlanString());
+                tvAmount1.setText(String.valueOf(savingsResponse.getRenewalData().getRenewPlan().getAmount()));
+                if(savingsResponse.getRenewalData().getRenewPlan().getInitialAmount() != null
+                        && savingsResponse.getRenewalData().getRenewPlan().getInitialAmount() > 0){
+                    tvActualAmount1.setVisibility(View.VISIBLE);
+                    tvActualAmount1.setText(String.valueOf(savingsResponse.getRenewalData().getRenewPlan().getInitialAmount()));
+                }
+                selectedPlan(ivRadio1, savingsResponse.getRenewalData().getRenewPlan());
+                subscription = savingsResponse.getRenewalData().getRenewPlan();
+                purchaseType = StarPurchaseType.RENEW.getOrdinal();
+                bConfirm.setText(getResources().getString(R.string.confirm));
+            }
+            if(savingsResponse.getRenewalData().getUpgradePlan() != null && savingsResponse.getRenewalData().getUpgradePlan().size() > 0){
+                rlPlan2.setVisibility(View.VISIBLE);
+                tvPeriod2.setText(savingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0).getPlanString());
+                tvAmount2.setText(String.valueOf(savingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0).getAmount()));
+                if(savingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0).getInitialAmount() != null
+                        && savingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0).getInitialAmount() > 0){
+                    tvActualAmount2.setVisibility(View.VISIBLE);
+                    tvActualAmount2.setText(String.valueOf(savingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0).getInitialAmount()));
+                }
+                if(rlPlan1.getVisibility() == View.VISIBLE){
+                    bConfirm.setText(getResources().getString(R.string.confirm));
+                } else{
+                    bConfirm.setText(getResources().getString(R.string.renew));
+                    subscription = savingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0);
+                    purchaseType = StarPurchaseType.UPGRADE.getOrdinal();
+                    selectedPlan(ivRadio1, savingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0));
+                }
+            }
+
+
+        }
+    }
+
     private void setUpgradeView(FetchSubscriptionSavingsResponse savingsResponse) {
         try {
             llUpgradeContainer.setVisibility(View.GONE);
@@ -425,16 +494,25 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
         }
     }
 
+    private void selectedPlan(ImageView ivRadio, SubscriptionData.Subscription selectedSubscription){
+        ivRadio1.setImageResource(R.drawable.ic_radio_button_normal);
+        ivRadio2.setImageResource(R.drawable.ic_radio_button_normal);
+
+        ivRadio.setImageResource(R.drawable.ic_order_status_green);
+        subscription = selectedSubscription;
+        selectedSubId = new Gson().toJson(subscription);
+    }
+
     @Override
     public void onBackPressed() {
         performBackPressed();
     }
 
-    public void openStarCheckoutFragment(FragmentActivity activity, View container) {
+    public void openStarCheckoutFragment(FragmentActivity activity, View container, int purchaseType) {
         rlFragment.setVisibility(View.VISIBLE);
         activity.getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                .add(container.getId(), StarSubscriptionCheckoutFragment.newInstance(selectedSubId, true),
+                .add(container.getId(), StarSubscriptionCheckoutFragment.newInstance(selectedSubId, purchaseType),
                         StarSubscriptionCheckoutFragment.class.getName())
                 .addToBackStack(StarSubscriptionCheckoutFragment.class.getName())
                 .commitAllowingStateLoss();

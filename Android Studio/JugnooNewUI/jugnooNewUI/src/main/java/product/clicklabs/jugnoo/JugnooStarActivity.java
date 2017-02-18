@@ -23,6 +23,7 @@ import java.util.Arrays;
 
 import product.clicklabs.jugnoo.adapters.StarMembershipAdapter;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.StarPurchaseType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -209,7 +210,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         rlFragment.setVisibility(View.VISIBLE);
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(container.getId(), StarSubscriptionCheckoutFragment.newInstance(selectedSubId, false),
+                    .add(container.getId(), StarSubscriptionCheckoutFragment.newInstance(selectedSubId, StarPurchaseType.PURCHARE.getOrdinal()),
                             StarSubscriptionCheckoutFragment.class.getName())
                     .addToBackStack(StarSubscriptionCheckoutFragment.class.getName())
                     .commitAllowingStateLoss();

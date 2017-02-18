@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.StarPurchaseType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
@@ -89,13 +90,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private LinearLayout linearLayoutWalletContainer;
     private SubscriptionData.Subscription subscription;
     private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
-    private boolean isUpgrade;
+    private int purchaseType = StarPurchaseType.PURCHARE.getOrdinal();
 
-    public static StarSubscriptionCheckoutFragment newInstance(String subscription, boolean isUpgrade){
+    public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
         StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
         Bundle bundle = new Bundle();
         bundle.putString("plan", subscription);
-        bundle.putBoolean("upgrade", isUpgrade);
+        bundle.putInt("type", type);
         fragment.setArguments(bundle);
         return  fragment;
     }
@@ -121,7 +122,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
         try {
             Bundle bundle = getArguments();
-            isUpgrade = bundle.getBoolean("upgrade", false);
+            purchaseType = bundle.getInt("type", StarPurchaseType.PURCHARE.getOrdinal());
             String plan = bundle.getString("plan", "");
             subscription = new Gson().fromJson(plan, SubscriptionData.Subscription.class);
 
@@ -315,9 +316,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
                 }
 
-                if(!isUpgrade) {
+                if(purchaseType == StarPurchaseType.PURCHARE.getOrdinal()) {
                     apiPurchaseSubscription();
-                } else{
+                } else if(purchaseType == StarPurchaseType.UPGRADE.getOrdinal()){
                     apiUpgradeSubscription();
                 }
             }
@@ -652,9 +653,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        if(!isUpgrade) {
+                        if(purchaseType == StarPurchaseType.PURCHARE.getOrdinal()) {
                             apiPurchaseSubscription();
-                        } else{
+                        } else if(purchaseType == StarPurchaseType.UPGRADE.getOrdinal()){
                             apiUpgradeSubscription();
                         }
                     }
@@ -714,7 +715,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             }, false);
                             Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
                                     0l);
-                            //DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", message);
+                        } else{
+                            DialogPopup.alertPopup(activity, "", message);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
