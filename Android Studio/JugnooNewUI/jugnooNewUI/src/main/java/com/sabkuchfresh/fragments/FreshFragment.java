@@ -295,7 +295,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 @Override
                 public void run() {
                     activity.setMinOrderAmountText(FreshFragment.this);
-					if(activity.isRefreshCart()){
+					if(activity.isRefreshCart() && !activity.refreshCart2){
                         getAllProducts(true, activity.getSelectedLatLng());
 					}
 					activity.setRefreshCart(false);

@@ -27,6 +27,7 @@
         android:textCursorDrawable="@drawable/cursor_black"
         android:textSize="@dimen/px_42"
         app:font="maven"
+        android:inputType="textCapSentences|textMultiLine"
         />
 
     <View

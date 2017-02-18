@@ -287,7 +287,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
             llThumbsRating.setVisibility(View.GONE);
             ratingBarMenuFeedback.setVisibility(View.VISIBLE);
-            editTextRSFeedback.setHint("Comments..");
+            editTextRSFeedback.setHint(R.string.comments);
             textViewRSWhatImprove.setTag(null);
             ratingBarMenuFeedback.setOnScoreChanged(new RatingBarMenuFeedback.IRatingBarCallbacks() {
                 @Override
@@ -815,10 +815,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.menus));
             }
-            if(!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())){
-                activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
-            } else {
-                activity.getTopBar().title.setText(activity.getString(R.string.menus));
+            if(productType == ProductType.MENUS) {
+                if (!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())) {
+                    activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
+                } else {
+                    activity.getTopBar().title.setText(activity.getString(R.string.menus));
+                }
             }
         }
     }

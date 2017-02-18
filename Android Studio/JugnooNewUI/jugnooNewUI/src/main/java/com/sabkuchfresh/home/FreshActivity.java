@@ -1195,10 +1195,15 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             RelativeLayout.LayoutParams titleLayoutParams = (RelativeLayout.LayoutParams) topBar.title.getLayoutParams();
             if (topBar.getLlSearchCart().getVisibility() == View.VISIBLE) {
                 topBar.title.setGravity(Gravity.LEFT);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20), 0, 0, 0);
-            } else {
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20f), 0, 0, 0);
+                titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.getLlSearchCart().getId());
+            }
+            else {
                 topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32), 0, 0, 0);
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
+            }
+            if(topBar.ivAddReview.getVisibility() == View.VISIBLE){
+                titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.ivAddReview.getId());
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);

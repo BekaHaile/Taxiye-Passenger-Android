@@ -212,6 +212,8 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                             itemSelected.setQuantity(itemSelected.getQuantity() - 1);
                             notifyDataSetChanged();
                             callback.updateItemTotalPrice(itemSelected);
+                        } else {
+                            callback.onItemMinusClick();
                         }
                     } catch (Exception e){}
                 }
@@ -401,6 +403,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
     public interface Callback{
         void updateItemTotalPrice(ItemSelected itemSelected);
+        void onItemMinusClick();
     }
 
 }

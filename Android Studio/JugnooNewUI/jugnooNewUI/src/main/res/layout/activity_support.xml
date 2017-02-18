@@ -14,7 +14,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="@color/white"
-        android:animateLayoutChanges="true"
         >
 
         <TextView

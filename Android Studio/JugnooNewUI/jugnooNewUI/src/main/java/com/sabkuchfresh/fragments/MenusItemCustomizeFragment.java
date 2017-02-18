@@ -100,6 +100,11 @@ public class MenusItemCustomizeFragment extends Fragment {
 									tvItemTotalValue.setText(activity.getString(R.string.rupees_value_format,
 											Utils.getMoneyDecimalFormat().format(itemSelected.getTotalPriceWithQuantity())));
 								}
+
+								@Override
+								public void onItemMinusClick() {
+									activity.performBackPressed();
+								}
 							});
 					rvCustomizeItem.setAdapter(menusItemCustomizeAdapter);
 

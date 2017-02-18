@@ -2432,11 +2432,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private PaymentOption getSavedPaymentOption(){
-        if(checkoutSaveData.isDefault()){
-            return MyApplication.getInstance().getWalletCore().getDefaultPaymentOption();
-        } else{
-            return MyApplication.getInstance().getWalletCore().getPaymentOptionFromInt(checkoutSaveData.getPaymentMode());
-        }
+        return MyApplication.getInstance().getWalletCore().getDefaultPaymentOption();
+//        if(checkoutSaveData.isDefault()){
+//            return MyApplication.getInstance().getWalletCore().getDefaultPaymentOption();
+//        } else{
+//            return MyApplication.getInstance().getWalletCore().getPaymentOptionFromInt(checkoutSaveData.getPaymentMode());
+//        }
     }
 
 

@@ -127,7 +127,7 @@ public class RestaurantAddReviewFragment extends Fragment {
 				etFeedback.requestFocus();
 				Utils.showSoftKeyboard(activity, etFeedback);
 			}
-		}, 200);
+		}, 10);
 
 		return rootView;
 	}

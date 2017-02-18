@@ -28,7 +28,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -105,137 +104,143 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 
 
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-		MainViewHolder mHolder = ((MainViewHolder) holder);
-		SubItem subItem;
-		if(position == subItems.size()){
-			subItem = new SubItem();
-			subItem.setSubItemName(subscription.getDescription());
-			subItem.setPrice((double)subscription.getPrice());
-			subItem.setSubItemQuantitySelected(1);
-		} else {
-			subItem = subItems.get(position);
-		}
-
-
-		mHolder.textViewItemName.setText(subItem.getSubItemName());
-		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
-				Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
-		mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
-
-		if(position == getCount()-1){
-			mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.transparent));
-		} else {
-			mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.stroke_light_grey_alpha));
-		}
-
 		try {
+			MainViewHolder mHolder = ((MainViewHolder) holder);
+			SubItem subItem;
 			if(position == subItems.size()){
-				Picasso.with(context).load(R.drawable.star)
-						.placeholder(R.drawable.ic_fresh_item_placeholder)
-						.fit()
-						.centerCrop()
-						.error(R.drawable.ic_fresh_item_placeholder)
-						.into(mHolder.imageViewItemImage);
+				subItem = new SubItem();
+				subItem.setSubItemName(subscription.getDescription());
+				subItem.setPrice((double)subscription.getPrice());
+				subItem.setSubItemQuantitySelected(1);
 			} else {
-				if (!TextUtils.isEmpty(subItem.getSubItemImage())) {
-					mHolder.imageViewItemImage.setVisibility(View.VISIBLE);
-					Picasso.with(context).load(subItem.getSubItemImage())
+				subItem = subItems.get(position);
+			}
+
+
+			mHolder.textViewItemName.setText(subItem.getSubItemName());
+			try {
+				mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
+						Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
+
+			if(position == getCount()-1){
+				mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.transparent));
+			} else {
+				mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.stroke_light_grey_alpha));
+			}
+
+			try {
+				if(position == subItems.size()){
+					Picasso.with(context).load(R.drawable.star)
 							.placeholder(R.drawable.ic_fresh_item_placeholder)
 							.fit()
 							.centerCrop()
 							.error(R.drawable.ic_fresh_item_placeholder)
 							.into(mHolder.imageViewItemImage);
 				} else {
-					mHolder.imageViewItemImage.setVisibility(View.GONE);
+					if (!TextUtils.isEmpty(subItem.getSubItemImage())) {
+						mHolder.imageViewItemImage.setVisibility(View.VISIBLE);
+						Picasso.with(context).load(subItem.getSubItemImage())
+								.placeholder(R.drawable.ic_fresh_item_placeholder)
+								.fit()
+								.centerCrop()
+								.error(R.drawable.ic_fresh_item_placeholder)
+								.into(mHolder.imageViewItemImage);
+					} else {
+						mHolder.imageViewItemImage.setVisibility(View.GONE);
+					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
+			mHolder.imageViewFoodType.setVisibility(appType == AppConstant.ApplicationType.MENUS ? View.VISIBLE : View.GONE);
+			mHolder.imageViewFoodType.setImageResource(subItem.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
+			RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+			RelativeLayout.LayoutParams paramsLLC = (RelativeLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
+			if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
+				paramsFT.setMargins(0, (int)(ASSL.Yscale()*25f), 0, 0);
+				paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
+			} else {
+				paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
+				paramsLLC.setMargins((int)(ASSL.Xscale()*30f), 0, 0, 0);
+			}
+			mHolder.imageViewFoodType.setLayoutParams(paramsFT);
+			mHolder.linearLayoutContent.setLayoutParams(paramsLLC);
+
+
+			mHolder.imageViewMinus.setTag(position);
+			mHolder.imageViewPlus.setTag(position);
+
+			mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						final int pos = (int) v.getTag();
+						if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
+							DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
+									context.getString(R.string.coupon_remove_reapply_before_checkout),
+									context.getString(R.string.ok),
+									context.getString(R.string.cancel),
+									new View.OnClickListener(){
+										@Override
+										public void onClick(View v) {
+											doMinus(pos);
+											callback.removeCoupon();
+										}
+									},
+									new View.OnClickListener(){
+										@Override
+										public void onClick(View v) {
+
+										}
+									}, true, false);
+						} else{
+							doMinus(pos);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
+			mHolder.imageViewPlus.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						final int pos = (int) v.getTag();
+						if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
+							DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
+									context.getString(R.string.coupon_remove_reapply_before_checkout),
+									context.getString(R.string.ok),
+									context.getString(R.string.cancel),
+									new View.OnClickListener(){
+										@Override
+										public void onClick(View v) {
+											doPlus(pos);
+											callback.removeCoupon();
+										}
+									},
+									new View.OnClickListener(){
+										@Override
+										public void onClick(View v) {
+
+										}
+									}, true, false);
+						} else{
+							doPlus(pos);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		mHolder.imageViewFoodType.setVisibility(appType == AppConstant.ApplicationType.MENUS ? View.VISIBLE : View.GONE);
-		mHolder.imageViewFoodType.setImageResource(subItem.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
-		RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
-		RelativeLayout.LayoutParams paramsLLC = (RelativeLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
-		if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
-			paramsFT.setMargins(0, (int)(ASSL.Yscale()*25f), 0, 0);
-			paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
-		} else {
-			paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
-			paramsLLC.setMargins((int)(ASSL.Xscale()*30f), 0, 0, 0);
-		}
-		mHolder.imageViewFoodType.setLayoutParams(paramsFT);
-		mHolder.linearLayoutContent.setLayoutParams(paramsLLC);
-
-
-		mHolder.imageViewMinus.setTag(position);
-		mHolder.imageViewPlus.setTag(position);
-
-		mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					final int pos = (int) v.getTag();
-					if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
-						DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
-								context.getString(R.string.coupon_remove_reapply_before_checkout),
-								context.getString(R.string.ok),
-								context.getString(R.string.cancel),
-								new View.OnClickListener(){
-									@Override
-									public void onClick(View v) {
-										doMinus(pos);
-										callback.removeCoupon();
-									}
-								},
-								new View.OnClickListener(){
-									@Override
-									public void onClick(View v) {
-
-									}
-								}, true, false);
-					} else{
-						doMinus(pos);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-		mHolder.imageViewPlus.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					final int pos = (int) v.getTag();
-					if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
-						DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
-								context.getString(R.string.coupon_remove_reapply_before_checkout),
-								context.getString(R.string.ok),
-								context.getString(R.string.cancel),
-								new View.OnClickListener(){
-									@Override
-									public void onClick(View v) {
-										doPlus(pos);
-										callback.removeCoupon();
-									}
-								},
-								new View.OnClickListener(){
-									@Override
-									public void onClick(View v) {
-
-									}
-								}, true, false);
-					} else{
-						doPlus(pos);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-
 	}
 
 	private void doMinus(int pos){
