@@ -1514,5 +1514,6 @@
     <string name="payment_summary">Payment Summary</string>
     <string name="payable_amount">Payable amount</string>
     <string name="renew">Renew</string>
+    <string name="invoice_amount_excluding_any_toll_taxes">*Invoice amount is excluding any toll taxes which are to be borne directly by the customer.</string>
 
 </resources>
