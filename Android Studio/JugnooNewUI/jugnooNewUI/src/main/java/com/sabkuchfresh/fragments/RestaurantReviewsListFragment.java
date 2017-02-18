@@ -80,10 +80,10 @@ public class RestaurantReviewsListFragment extends Fragment{
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(activity));
         recyclerViewReviews.setItemAnimator(new DefaultItemAnimator());
         recyclerViewReviews.setHasFixedSize(false);
-
         restaurantReviews = new ArrayList<>();
         reviewsAdapter = new RestaurantReviewsAdapter(activity, restaurantReviews);
         recyclerViewReviews.setAdapter(reviewsAdapter);
+
 
         rlNoReviews = (RelativeLayout) rootView.findViewById(R.id.rlNoReviews);
         tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);

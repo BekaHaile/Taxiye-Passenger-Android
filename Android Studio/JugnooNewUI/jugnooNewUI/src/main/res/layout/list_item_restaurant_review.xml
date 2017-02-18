@@ -8,19 +8,10 @@
     android:orientation="vertical"
     >
 
-    <View
-        android:id="@+id/vShadowUp"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/shadow_new_height"
-        android:background="@drawable/shadow_down_new"
-        android:rotation="180"
-        />
-
     <TextView
         android:id="@+id/tvNameCap"
         android:layout_width="@dimen/px_100"
         android:layout_height="@dimen/px_100"
-        android:layout_below="@+id/vShadowUp"
         android:layout_marginLeft="@dimen/px_30"
         android:layout_marginRight="@dimen/px_16"
         android:layout_marginTop="@dimen/px_30"
@@ -37,7 +28,6 @@
         android:id="@+id/ivImage"
         android:layout_width="@dimen/px_100"
         android:layout_height="@dimen/px_100"
-        android:layout_below="@+id/vShadowUp"
         android:layout_marginLeft="@dimen/px_30"
         android:layout_marginRight="@dimen/px_16"
         android:layout_marginTop="@dimen/px_30"
@@ -50,7 +40,6 @@
         android:id="@+id/tvName"
         android:layout_width="@dimen/px_350"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vShadowUp"
         android:layout_marginRight="@dimen/px_15"
         android:layout_marginTop="@dimen/px_36"
         android:layout_toLeftOf="@+id/tvDateTime"
@@ -132,7 +121,7 @@
         android:layout_below="@+id/tvReviewMessage"
         android:layout_marginTop="@dimen/px_20"
         android:scrollbars="horizontal"
-
+        android:translationZ="1dp"
         />
 
 
@@ -170,7 +159,7 @@
         android:layout_marginBottom="@dimen/px_20"
         android:layout_marginRight="@dimen/px_20"
         android:layout_marginTop="@dimen/px_20"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/bg_transp_menu_color_selector"
         android:padding="@dimen/px_10"
         android:src="@drawable/ic_feed_edit"
         android:tag="mwar"
@@ -188,7 +177,7 @@
         android:layout_marginRight="@dimen/px_30"
         android:layout_marginTop="@dimen/px_20"
         android:layout_toLeftOf="@+id/ivFeedEdit"
-        android:background="?attr/selectableItemBackground"
+        android:background="@drawable/bg_transp_menu_color_selector"
         android:padding="@dimen/px_10"
         android:src="@drawable/ic_feed_share_normal"
         android:tag="mwar"
@@ -203,7 +192,7 @@
         android:layout_marginRight="@dimen/px_30"
         android:layout_marginTop="@dimen/px_20"
         android:layout_toLeftOf="@+id/ivFeedShare"
-        android:background="?attr/selectableItemBackground"
+        android:background="@drawable/bg_transp_menu_color_selector"
         android:padding="@dimen/px_10"
         android:src="@drawable/ic_feed_like_normal"
         android:tag="mwar"
@@ -212,9 +201,9 @@
     <View
         android:id="@+id/vShadowDown"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/shadow_new_height"
+        android:layout_height="30px"
         android:layout_below="@+id/tvLikeShareCount"
-        android:background="@drawable/shadow_down_new"
+        android:background="@drawable/shadow_feed_sep"
         />
 
 

@@ -176,6 +176,9 @@ public class FetchFeedbackResponse {
 		}
 
 		public Integer getLikeCount() {
+			if(likeCount == null){
+				likeCount = 0;
+			}
 			return likeCount;
 		}
 
@@ -184,6 +187,9 @@ public class FetchFeedbackResponse {
 		}
 
 		public Integer getShareCount() {
+			if(shareCount == null){
+				shareCount = 0;
+			}
 			return shareCount;
 		}
 
@@ -192,6 +198,9 @@ public class FetchFeedbackResponse {
 		}
 
 		public Integer getLiked() {
+			if(liked == null){
+				liked = 0;
+			}
 			return liked;
 		}
 
@@ -200,6 +209,9 @@ public class FetchFeedbackResponse {
 		}
 
 		public Integer getShared() {
+			if(shared == null){
+				shared = 0;
+			}
 			return shared;
 		}
 
@@ -208,6 +220,9 @@ public class FetchFeedbackResponse {
 		}
 
 		public Integer getEditable() {
+			if(editable == null){
+				editable = 0;
+			}
 			return editable;
 		}
 
@@ -225,7 +240,7 @@ public class FetchFeedbackResponse {
 	}
 
 
-	public class ReviewImage{
+	public static class ReviewImage{
 		@SerializedName("url")
 		@Expose
 		private String url;

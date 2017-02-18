@@ -1514,5 +1514,9 @@
     <string name="payment_summary">Payment Summary</string>
     <string name="payable_amount">Payable amount</string>
     <string name="comments">Comments...</string>
+    <string name="likes">Likes</string>
+    <string name="like">Like</string>
+    <string name="shares">Shares</string>
+    <string name="share">Share</string>
 
 </resources>
