@@ -31,9 +31,11 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 	private FreshActivity activity;
 	private ArrayList<FetchFeedbackResponse.Review> restaurantReviews;
+	private onReviewClick onReviewClick;
 
-	public RestaurantReviewsAdapter(FreshActivity activity, ArrayList<FetchFeedbackResponse.Review> restaurantReviews) {
+	public RestaurantReviewsAdapter(FreshActivity activity,onReviewClick onReviewClick, ArrayList<FetchFeedbackResponse.Review> restaurantReviews) {
 		this.activity = activity;
+		this.onReviewClick=onReviewClick;
 		this.restaurantReviews = restaurantReviews;
 	}
 
@@ -48,9 +50,11 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	}
 
 	@Override
-	public void onBindViewHolder(RestaurantReviewsAdapter.ViewHolderReview holder, int position) {
+	public void onBindViewHolder(final RestaurantReviewsAdapter.ViewHolderReview holder, final int position) {
 		try {
-			FetchFeedbackResponse.Review review = restaurantReviews.get(position);
+
+
+			final FetchFeedbackResponse.Review review = restaurantReviews.get(position);
 
 			holder.tvNameCap.setText(review.getUserName().substring(0, 1));
 			if (!TextUtils.isEmpty(review.getUserImage())) {
@@ -123,7 +127,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.ivFeedEdit.setVisibility(review.getEditable() == 1 ? View.VISIBLE : View.GONE);
 
 
-			List<FetchFeedbackResponse.ReviewImage> reviewImages = new ArrayList<>();
+		/*	List<FetchFeedbackResponse.ReviewImage> reviewImages = new ArrayList<>();
 			FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage();
 			reviewImage.setUrl("http://eskipaper.com/images/serene-landscape-1.jpg");
 			reviewImage.setThumbnail("http://eskipaper.com/images/serene-landscape-1.jpg");
@@ -141,7 +145,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			reviewImage.setThumbnail("http://img15.deviantart.net/05d7/i/2012/307/c/5/serene_landscape_by_rambled-d5ju302.jpg");
 			reviewImages.add(reviewImage);
 			review.setImages(reviewImages);
-
+*/
 			if (review.getImages() != null && review.getImages().size() > 0) {
 				holder.rvFeedImages.setVisibility(View.VISIBLE);
 				if(holder.imagesAdapter == null){
@@ -173,17 +177,18 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.ivFeedEdit.setTag(position);
 			holder.ivFeedLike.setTag(position);
 			holder.ivFeedShare.setTag(position);
-
-			holder.ivFeedEdit.setOnClickListener(new View.OnClickListener() {
+            holder.ivFeedEdit.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-
+					onReviewClick.onEdit(restaurantReviews.get((int)holder.ivFeedEdit.getTag()));
 				}
 			});
 
 			holder.ivFeedLike.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					onReviewClick.onLike(restaurantReviews.get((int)holder.ivFeedLike.getTag()));
+
 
 				}
 			});
@@ -191,6 +196,8 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.ivFeedShare.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					onReviewClick.onShare(restaurantReviews.get((int)holder.ivFeedShare.getTag()));
+
 
 				}
 			});
@@ -249,6 +256,13 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		}
 	};
 
+
+	public interface  onReviewClick{
+
+		void onEdit(FetchFeedbackResponse.Review review);
+		void onShare(FetchFeedbackResponse.Review review);
+		void onLike(FetchFeedbackResponse.Review review);
+	}
 
 
 }

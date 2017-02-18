@@ -3,6 +3,8 @@ package com.sabkuchfresh.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -11,11 +13,15 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
+import com.sabkuchfresh.adapters.RestaurantReviewImagesAdapter1;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
+
+import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Events;
@@ -30,146 +36,215 @@ import product.clicklabs.jugnoo.utils.Utils;
  * Created by Shankar on 15/11/16.
  */
 public class RestaurantAddReviewFragment extends Fragment {
-	private final String TAG = RestaurantAddReviewFragment.class.getSimpleName();
+    private final String TAG = RestaurantAddReviewFragment.class.getSimpleName();
 
-	private RelativeLayout rlRoot;
-	private EditText etFeedback;
-	private Button bSubmit;
+    private LinearLayout rlRoot;
+    private EditText etFeedback;
+    private Button bSubmit;
 
-	private View rootView;
-	private FreshActivity activity;
-	private int restaurantId;
-
-	public static RestaurantAddReviewFragment newInstance(int restaurantId) {
-		RestaurantAddReviewFragment fragment = new RestaurantAddReviewFragment();
-		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.KEY_RESTAURANT_ID, restaurantId);
-		fragment.setArguments(bundle);
-		return fragment;
-	}
+    private View rootView;
+    private FreshActivity activity;
+    private int restaurantId;
+    private ArrayList<FetchFeedbackResponse.ReviewImage> serverImages;
+    private ArrayList<Object> objectList;
+    private RestaurantReviewImagesAdapter1 restaurantReviewImagesAdapter1;
+    private RecyclerView displayImagesRecycler;
 
 
-	private void fetchArguments() {
-		Bundle bundle = getArguments();
-		restaurantId = bundle.getInt(Constants.KEY_RESTAURANT_ID, 0);
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.fragment_restaurant_add_review, container, false);
-
-		fetchArguments();
-
-		activity = (FreshActivity) getActivity();
-		activity.fragmentUISetup(this);
-
-		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
-		try {
-			if (rlRoot != null) {
-				new ASSL(activity, rlRoot, 1134, 720, false);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		etFeedback = (EditText) rootView.findViewById(R.id.etFeedback);
-		bSubmit = (Button) rootView.findViewById(R.id.bSubmit);
-
-		bSubmit.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String reviewDesc = etFeedback.getText().toString().trim();
-				if(reviewDesc.length() == 0){
-					etFeedback.requestFocus();
-					etFeedback.setError(activity.getString(R.string.please_enter_some_feedback));
-				} else if(reviewDesc.length() > 500){
-					etFeedback.requestFocus();
-					etFeedback.setError(activity.getString(R.string.feedback_must_be_in_500));
-				} else {
-					submitFeedback(reviewDesc);
-				}
-			}
-		});
-
-		rlRoot.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(rlRoot, null, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
-			}
-
-			@Override
-			public void keyBoardClosed() {
-			}
-		}));
-
-		activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
-		etFeedback.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				bSubmit.setEnabled(s.length() > 0);
-			}
-		});
-		bSubmit.setEnabled(false);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				etFeedback.requestFocus();
-				Utils.showSoftKeyboard(activity, etFeedback);
-			}
-		}, 10);
-
-		return rootView;
-	}
-
-	@Override
-	public void onHiddenChanged(boolean hidden) {
-		super.onHiddenChanged(hidden);
-		if (!hidden) {
-			activity.fragmentUISetup(this);
-		}
-	}
+    public static RestaurantAddReviewFragment newInstance(int restaurantId) {
+        RestaurantAddReviewFragment fragment = new RestaurantAddReviewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.KEY_RESTAURANT_ID, restaurantId);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
 
-	SendFeedbackQuery sendFeedbackQuery;
-	private void submitFeedback(String reviewDesc){
-		DialogPopup.showLoadingDialog(activity, "");
-		if(sendFeedbackQuery == null) {
-			sendFeedbackQuery = new SendFeedbackQuery();
-		}
-		sendFeedbackQuery.sendQuery(-1, restaurantId, ProductType.MENUS, -1,null, "", reviewDesc, activity,
-				new SendFeedbackQuery.FeedbackResultListener() {
-					@Override
-					public void onSendFeedbackResult(boolean isSuccess, int rating) {
-						if (isSuccess) {
-							FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.SUBMITTED);
-							activity.performBackPressed();
-							Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
-							RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
-							if(frag != null) {
-								frag.fetchFeedback();
-							}
-						}
-					}
-				});
-	}
+    private void fetchArguments() {
+        Bundle bundle = getArguments();
+        restaurantId = bundle.getInt(Constants.KEY_RESTAURANT_ID, 0);
+    }
 
-	@Override
-	public void onDestroyView() {
-		activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		super.onDestroyView();
-		ASSL.closeActivity(rlRoot);
-		System.gc();
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_restaurant_add_review, container, false);
+
+        fetchArguments();
+
+        activity = (FreshActivity) getActivity();
+        activity.fragmentUISetup(this);
+
+        rlRoot = (LinearLayout) rootView.findViewById(R.id.rlRoot);
+        try {
+            if (rlRoot != null) {
+                new ASSL(activity, rlRoot, 1134, 720, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        etFeedback = (EditText) rootView.findViewById(R.id.etFeedback);
+        bSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
+        bSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String reviewDesc = etFeedback.getText().toString().trim();
+                if (reviewDesc.length() == 0) {
+                    etFeedback.requestFocus();
+                    etFeedback.setError(activity.getString(R.string.please_enter_some_feedback));
+                } else if (reviewDesc.length() > 500) {
+                    etFeedback.requestFocus();
+                    etFeedback.setError(activity.getString(R.string.feedback_must_be_in_500));
+                } else {
+                    submitFeedback(reviewDesc);
+                }
+            }
+        });
+
+        rlRoot.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(rlRoot, null, new KeyboardLayoutListener.KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+            }
+
+            @Override
+            public void keyBoardClosed() {
+            }
+        }));
+
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
+        etFeedback.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                bSubmit.setEnabled(s.length() > 0);
+            }
+        });
+        bSubmit.setEnabled(false);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                etFeedback.requestFocus();
+                Utils.showSoftKeyboard(activity, etFeedback);
+            }
+        }, 10);
+
+		/*
+            Edited By Parminder
+		 */
+
+        displayImagesRecycler = (RecyclerView) rootView.findViewById(R.id.rvFeedImages);
+        rootView.findViewById(R.id.ib_access_camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        rootView.findViewById(R.id.ib_access_star).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        if (objectList == null) objectList = new ArrayList<>();
+
+
+        if (activity.currentReview != null && activity.currentReview.getImages() != null && activity.currentReview.getImages().size() != 0)
+            serverImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) activity.currentReview.getImages();
+        if (serverImages != null)
+            objectList.addAll(serverImages);
+
+        setUpAdapter(objectList);
+        return rootView;
+    }
+
+    private void setUpAdapter(final ArrayList<Object> objectList) {
+
+
+        if (objectList == null || objectList.size() == 0) {
+            displayImagesRecycler.setVisibility(View.GONE);
+            return;
+        }
+
+        if (restaurantReviewImagesAdapter1 == null) {
+            restaurantReviewImagesAdapter1 = new RestaurantReviewImagesAdapter1(activity, objectList, new RestaurantReviewImagesAdapter1.Callback() {
+                @Override
+                public void onImageClick(Object object) {
+                    //View full Image
+                }
+
+                @Override
+                public void onDelete(Object object) {
+                    objectList.remove(object);
+
+                }
+            });
+            displayImagesRecycler.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
+            displayImagesRecycler.setAdapter(restaurantReviewImagesAdapter1);
+        } else {
+            restaurantReviewImagesAdapter1.setList(objectList);
+        }
+
+        if (displayImagesRecycler.getVisibility() != View.VISIBLE)
+            displayImagesRecycler.setVisibility(View.VISIBLE);
+
+
+    }
+
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            activity.fragmentUISetup(this);
+        }
+    }
+
+
+    SendFeedbackQuery sendFeedbackQuery;
+
+    private void submitFeedback(String reviewDesc) {
+        DialogPopup.showLoadingDialog(activity, "");
+        if (sendFeedbackQuery == null) {
+            sendFeedbackQuery = new SendFeedbackQuery();
+        }
+        sendFeedbackQuery.sendQuery(-1, restaurantId, ProductType.MENUS, -1, null, "", reviewDesc, activity,
+                new SendFeedbackQuery.FeedbackResultListener() {
+                    @Override
+                    public void onSendFeedbackResult(boolean isSuccess, int rating) {
+                        if (isSuccess) {
+                            FlurryEventLogger.eventGA(Events.MENUS, Events.REVIEW, Events.SUBMITTED);
+                            activity.performBackPressed();
+                            Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
+                            RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
+                            if (frag != null) {
+                                frag.fetchFeedback();
+                            }
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onDestroyView() {
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        super.onDestroyView();
+        ASSL.closeActivity(rlRoot);
+        System.gc();
+    }
 
 }

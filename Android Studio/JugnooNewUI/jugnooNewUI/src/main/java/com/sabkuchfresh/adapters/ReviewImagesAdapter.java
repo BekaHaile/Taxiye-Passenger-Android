@@ -34,10 +34,8 @@ public final class ReviewImagesAdapter extends RecyclerView.Adapter<ReviewImages
 
 
 
-    */
-/**
-     * Interface for receiving click events from cells.
-     *//*
+
+
 
     public interface OnItemClickListener {
         void onClickItem(int ID, int position, Object serverImage);
@@ -53,12 +51,6 @@ public final class ReviewImagesAdapter extends RecyclerView.Adapter<ReviewImages
         onItemClickListener = (OnItemClickListener) context;
 
     }
-
-
-    */
-/*
-        For viewing images thumbnails from server
-     *//*
 
     public ReviewImagesAdapter(Activity context, ArrayList<Image> stringImageList) {
         this.context = context;
@@ -172,26 +164,7 @@ public final class ReviewImagesAdapter extends RecyclerView.Adapter<ReviewImages
 
 
     }
-    private class Image{
-        private String original;
-        private String thumbnail;
 
-        public String getThumbnail() {
-            return thumbnail;
-        }
-
-        public void setThumbnail(String thumbnail) {
-            this.thumbnail = thumbnail;
-        }
-
-        public String getOrigninal() {
-            return original;
-        }
-
-        public void setOrigninal(String origninal) {
-            this.original = origninal;
-        }
-    }
 
 }
 */

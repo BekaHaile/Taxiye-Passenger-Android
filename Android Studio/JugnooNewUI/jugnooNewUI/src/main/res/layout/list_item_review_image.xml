@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -12,7 +11,15 @@
         android:layout_margin="@dimen/px_10"
         android:tag="mwar"
         android:src="@drawable/ic_fresh_item_placeholder"
-        android:scaleType="centerCrop"
-        />
+        android:scaleType="centerCrop" />
+
+
+    <Button
+        android:id="@+id/btn_remove"
+        android:layout_toRightOf="@id/ivImage"
+        android:layout_alignTop="@id/ivImage"
+        android:layout_marginLeft="-30dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
 
 </RelativeLayout>

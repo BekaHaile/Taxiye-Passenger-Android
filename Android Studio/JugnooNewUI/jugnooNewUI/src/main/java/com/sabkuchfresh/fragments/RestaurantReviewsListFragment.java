@@ -81,7 +81,24 @@ public class RestaurantReviewsListFragment extends Fragment{
         recyclerViewReviews.setItemAnimator(new DefaultItemAnimator());
         recyclerViewReviews.setHasFixedSize(false);
         restaurantReviews = new ArrayList<>();
-        reviewsAdapter = new RestaurantReviewsAdapter(activity, restaurantReviews);
+        reviewsAdapter = new RestaurantReviewsAdapter(activity, new RestaurantReviewsAdapter.onReviewClick() {
+            @Override
+            public void onEdit(FetchFeedbackResponse.Review review) {
+                activity.currentReview =review;
+                activity.openRestaurantAddReviewFragment(false);
+            }
+
+            @Override
+            public void onShare(FetchFeedbackResponse.Review review) {
+                activity.currentReview =review;
+                activity.openRestaurantAddReviewFragment(false);
+            }
+
+            @Override
+            public void onLike(FetchFeedbackResponse.Review review) {
+
+            }
+        }, restaurantReviews);
         recyclerViewReviews.setAdapter(reviewsAdapter);
 
 
