@@ -386,6 +386,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
     private void apiFetchTotalSavings() {
         try {
             if (MyApplication.getInstance().isOnline()) {
+                DialogPopup.showLoadingDialog(JugnooStarSubscribedActivity.this, "Loading...");
                 llSavingsValue.removeAllViews();
                 llSavingsValue.addView(progressWheel);
                 progressWheel.spin();
@@ -399,6 +400,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i("fetchSubscriptionSavings response = ", "" + responseStr);
                         try {
+                            DialogPopup.dismissLoadingDialog();
                             if (savingsResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 llSavingsValue.removeAllViews();
                                 subscriptionSavingsResponse = savingsResponse;
@@ -419,6 +421,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
 
                     @Override
                     public void failure(RetrofitError error) {
+                        DialogPopup.dismissLoadingDialog();
                         Log.e("fetchSubscriptionSavings error=", "" + error.toString());
                         llSavingsValue.removeAllViews();
                         llSavingsValue.addView(tvSavingsMeterRetry);
@@ -443,7 +446,16 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                 tvExpiredTitle.setVisibility(View.VISIBLE);
                 tvExpiredTitle.setText(savingsResponse.getRenewalData().getWarning().getText());
             }
-            if(savingsResponse.getRenewalData().getRenewPlan() != null){
+
+            if(savingsResponse.getRenewalData().getUpgradePlan() == null
+                    && savingsResponse.getRenewalData().getRenewPlan() != null){
+                rlPlan1.setVisibility(View.GONE);
+                rlPlan2.setVisibility(View.GONE);
+                subscription = savingsResponse.getRenewalData().getRenewPlan();
+                purchaseType = StarPurchaseType.RENEW.getOrdinal();
+                selectedPlan(ivRadio1, savingsResponse.getRenewalData().getRenewPlan());
+                bConfirm.setText(getResources().getString(R.string.renew));
+            } else if(savingsResponse.getRenewalData().getRenewPlan() != null){
                 rlPlan1.setVisibility(View.VISIBLE);
                 tvPeriod1.setText(savingsResponse.getRenewalData().getRenewPlan().getPlanString());
                 tvAmount1.setText(String.valueOf(savingsResponse.getRenewalData().getRenewPlan().getAmount()));
@@ -457,6 +469,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                 purchaseType = StarPurchaseType.RENEW.getOrdinal();
                 bConfirm.setText(getResources().getString(R.string.confirm));
             }
+
             if(savingsResponse.getRenewalData().getUpgradePlan() != null && savingsResponse.getRenewalData().getUpgradePlan().size() > 0){
                 rlPlan2.setVisibility(View.VISIBLE);
                 tvPeriod2.setText(savingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0).getPlanString());
