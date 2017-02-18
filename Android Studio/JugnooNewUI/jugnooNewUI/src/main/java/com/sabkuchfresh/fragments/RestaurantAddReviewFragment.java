@@ -1,11 +1,13 @@
 package com.sabkuchfresh.fragments;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,22 +17,44 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.adapters.RestaurantReviewImagesAdapter1;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Events;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.MultipartTypedOutput;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
+
+import net.yazeed44.imagepicker.model.ImageEntry;
+import net.yazeed44.imagepicker.util.Picker;
+
 
 /**
  * Created by Shankar on 15/11/16.
@@ -148,6 +172,25 @@ public class RestaurantAddReviewFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                int alreadyPresent = objectList==null?0:objectList.size();
+                new Picker.Builder(activity, new Picker.PickListener() {
+                    @Override
+                    public void onPickedSuccessfully(ArrayList<ImageEntry> images) {
+                        if(images!=null && images.size()!=0){
+                            objectList.addAll(images);
+                            setUpAdapter(objectList);
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                }, R.style.AppThemePicker_NoActionBar)
+                        .setPickMode(Picker.PickMode.MULTIPLE_IMAGES)
+                        .setLimit(5-alreadyPresent)
+                        .build()
+                        .startActivity();
             }
         });
 
@@ -222,7 +265,13 @@ public class RestaurantAddReviewFragment extends Fragment {
         if (sendFeedbackQuery == null) {
             sendFeedbackQuery = new SendFeedbackQuery();
         }
-        sendFeedbackQuery.sendQuery(-1, restaurantId, ProductType.MENUS, -1, null, "", reviewDesc, activity,
+
+        int orderId=-1;
+        int rating =-1;
+        String ratingType=null;
+        String comments="";
+        ProductType productType = ProductType.MENUS;
+/*        sendFeedbackQuery.sendQuery(-1, restaurantId, ProductType.MENUS, -1, null, "", reviewDesc, activity,
                 new SendFeedbackQuery.FeedbackResultListener() {
                     @Override
                     public void onSendFeedbackResult(boolean isSuccess, int rating) {
@@ -236,7 +285,79 @@ public class RestaurantAddReviewFragment extends Fragment {
                             }
                         }
                     }
-                });
+                });*/
+
+        try {
+            if (MyApplication.getInstance().isOnline()) {
+                if (orderId > 0) {
+                    if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+                        Data.getFreshData().setPendingFeedback(0);
+                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
+                        Data.getMealsData().setPendingFeedback(0);
+                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
+                        Data.getGroceryData().setPendingFeedback(0);
+                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
+                        Data.getMenusData().setPendingFeedback(0);
+                    }
+                }
+
+                MultipartTypedOutput params = new MultipartTypedOutput();
+//                HashMap<String, String> params = new HashMap<>();
+                params.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
+                params.addPart(Constants.RATING_TYPE, new TypedString("0"));
+                params.addPart(Constants.INTERATED, new TypedString("1"));
+
+
+                if (!TextUtils.isEmpty(reviewDesc)) {
+                    params.addPart(Constants.KEY_REVIEW_DESC, new TypedString(reviewDesc));
+                }
+                if (restaurantId > 0) {
+                    params.addPart(Constants.KEY_RESTAURANT_ID, new TypedString(String.valueOf(restaurantId)));
+                }
+
+                params.addPart(Constants.KEY_CLIENT_ID,new TypedString( "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())));
+
+                if(objectList!=null && objectList.size()>0){
+                    if(objectList.get(2) instanceof ImageEntry)
+                          params.addPart("new_image",new TypedFile("/image*",new File(((ImageEntry) objectList.get(2)).path)));
+                          params.addPart("new_image",new TypedFile("/image*",new File(((ImageEntry) objectList.get(3)).path)));
+                }
+
+                Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
+                    @Override
+                    public void success(final OrderHistoryResponse notificationInboxResponse, Response response) {
+                        DialogPopup.dismissLoadingDialog();
+                        try {
+                            if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+//                                 FlurryEventLogger.eventGA(Events.MENUS, Events.REVIEW, Events.SUBMITTED);
+                                activity.performBackPressed();
+                                Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
+                                RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
+                                if (frag != null) {
+                                    frag.fetchFeedback();
+                                }
+                            } else {
+                                DialogPopup.alertPopup(activity, "", notificationInboxResponse.getMessage());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        DialogPopup.dismissLoadingDialog();
+//                        retryDialog(DialogErrorType.CONNECTION_LOST, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener);
+                    }
+                };
+                RestClient.getMenusApiService().orderFeedback(params, callback);
+            } else {
+//                retryDialog(DialogErrorType.NO_NET, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener);
+            }
+        } catch (Exception e) {
+            DialogPopup.dismissLoadingDialog();
+            e.printStackTrace();
+        }
     }
 
     @Override

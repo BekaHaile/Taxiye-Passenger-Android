@@ -14,9 +14,12 @@ import java.util.Map;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.mime.MultipartTypedOutput;
 
 /**
  * Created by shankar on 4/7/16.
@@ -56,6 +59,12 @@ public interface MenusApiService {
 	@FormUrlEncoded
 	@POST("/v1/customer/submit_feedback")
 	void orderFeedback(@FieldMap Map<String, String> params,
+					   Callback<OrderHistoryResponse> callback);
+
+
+
+	@POST("/v1/customer/submit_feedback")
+	void orderFeedback(@Body MultipartTypedOutput params,
 					   Callback<OrderHistoryResponse> callback);
 
 	@FormUrlEncoded

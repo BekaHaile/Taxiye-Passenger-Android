@@ -7,11 +7,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
 
+import net.yazeed44.imagepicker.model.ImageEntry;
+
+import java.io.File;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
@@ -51,21 +55,34 @@ public class RestaurantReviewImagesAdapter1 extends RecyclerView.Adapter<Restaur
     public void onBindViewHolder(RestaurantReviewImagesAdapter1.ViewHolderReviewImage holder, final int position) {
         try {
 
-            String path =null;
+            String path ;
             if (reviewImages.get(position) instanceof FetchFeedbackResponse.ReviewImage) {
                 FetchFeedbackResponse.ReviewImage reviewImage = (FetchFeedbackResponse.ReviewImage) reviewImages.get(position);
                 path=reviewImage.getUrl();
+                Picasso.with(activity).load(path)
+                        .resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
+                        .centerCrop()
+                        .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
+                        .placeholder(R.drawable.ic_fresh_item_placeholder)
+                        .into(holder.ivImage);
             }
-            else if(reviewImages.get(position) instanceof ImageEntry) path=((ImageEntry)reviewImages.get(position)).path;
+            else if(reviewImages.get(position) instanceof ImageEntry) {
+                path=((ImageEntry)reviewImages.get(position)).path;
+                Picasso.with(activity).load(new File(path))
+                        .resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
+                        .centerCrop()
+                        .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
+                        .placeholder(R.drawable.ic_fresh_item_placeholder)
+                        .into(holder.ivImage);
+            }
 
 
-            Picasso.with(activity).load(path)
-                    .resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
-                    .centerCrop()
-                    .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
-                    .placeholder(R.drawable.ic_fresh_item_placeholder)
-                    .into(holder.ivImage);
+
+
+
+
             holder.ivImage.setTag(position);
+            holder.btnRemove.setTag(position);
             holder.ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -79,7 +96,8 @@ public class RestaurantReviewImagesAdapter1 extends RecyclerView.Adapter<Restaur
                 public void onClick(View v) {
                     int pos = (int) v.getTag();
                     callback.onDelete(reviewImages.get(pos));
-                    notifyItemRemoved(position);
+                    notifyDataSetChanged();
+
                 }
             });
 

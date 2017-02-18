@@ -180,14 +180,14 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
             holder.ivFeedEdit.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					onReviewClick.onEdit(restaurantReviews.get((int)holder.ivFeedEdit.getTag()));
+					onReviewClick.onEdit(restaurantReviews.get((int)v.getTag()));
 				}
 			});
 
 			holder.ivFeedLike.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					onReviewClick.onLike(restaurantReviews.get((int)holder.ivFeedLike.getTag()));
+					onReviewClick.onLike(restaurantReviews.get((int)v.getTag()));
 
 
 				}
@@ -196,7 +196,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.ivFeedShare.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					onReviewClick.onShare(restaurantReviews.get((int)holder.ivFeedShare.getTag()));
+					onReviewClick.onShare(restaurantReviews.get((int)v.getTag()));
 
 
 				}

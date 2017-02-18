@@ -19,6 +19,18 @@
     </style>
 
 
+    <style name="AppThemePicker" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">@android:color/darker_gray</item>
+        <item name="colorAccent">@android:color/holo_orange_dark</item>
+
+    </style>
+
+    <style name="AppThemePicker.NoActionBar" parent="AppThemePicker">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="YellowRatingBarNew" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/rating_star_theme_selector</item>
         <item name="android:minHeight">50dp</item>
