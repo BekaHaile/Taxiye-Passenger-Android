@@ -12,16 +12,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.commoncalls.ApiRestLikeShareFeedback;
+import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -31,11 +35,11 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 	private FreshActivity activity;
 	private ArrayList<FetchFeedbackResponse.Review> restaurantReviews;
-	private onReviewClick onReviewClick;
+	private Callback callback;
 
-	public RestaurantReviewsAdapter(FreshActivity activity,onReviewClick onReviewClick, ArrayList<FetchFeedbackResponse.Review> restaurantReviews) {
+	public RestaurantReviewsAdapter(FreshActivity activity, Callback callback, ArrayList<FetchFeedbackResponse.Review> restaurantReviews) {
 		this.activity = activity;
-		this.onReviewClick=onReviewClick;
+		this.callback = callback;
 		this.restaurantReviews = restaurantReviews;
 	}
 
@@ -50,13 +54,11 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	}
 
 	@Override
-	public void onBindViewHolder(final RestaurantReviewsAdapter.ViewHolderReview holder, final int position) {
+	public void onBindViewHolder(ViewHolderReview holder, int position) {
 		try {
+			FetchFeedbackResponse.Review review = restaurantReviews.get(position);
 
-
-			final FetchFeedbackResponse.Review review = restaurantReviews.get(position);
-
-			holder.tvNameCap.setText(review.getUserName().substring(0, 1));
+			holder.tvNameCap.setText(!TextUtils.isEmpty(review.getUserName()) ? review.getUserName().substring(0, 1) : "");
 			if (!TextUtils.isEmpty(review.getUserImage())) {
 				holder.ivImage.setVisibility(View.VISIBLE);
 				Picasso.with(activity).load(review.getUserImage())
@@ -98,8 +100,6 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 			if (review.getRating() != null) {
 				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor());
-//				int colorAlpha = (color & 0x00FFFFFF) | 0x99000000;
-//				holder.tvNameCap.setTextColor(color);
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, color);
 				if (review.getRatingFlag() == 1) {
 					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_uparrow, 0);
@@ -127,52 +127,58 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.ivFeedEdit.setVisibility(review.getEditable() == 1 ? View.VISIBLE : View.GONE);
 
 
-		/*	List<FetchFeedbackResponse.ReviewImage> reviewImages = new ArrayList<>();
-			FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage();
-			reviewImage.setUrl("http://eskipaper.com/images/serene-landscape-1.jpg");
-			reviewImage.setThumbnail("http://eskipaper.com/images/serene-landscape-1.jpg");
-			reviewImages.add(reviewImage);
-			reviewImage = new FetchFeedbackResponse.ReviewImage();
-			reviewImage.setUrl("http://orig04.deviantart.net/2ff9/f/2010/202/6/9/serene_landscape_by_futuramajsp.jpg");
-			reviewImage.setThumbnail("http://orig04.deviantart.net/2ff9/f/2010/202/6/9/serene_landscape_by_futuramajsp.jpg");
-			reviewImages.add(reviewImage);
-			reviewImage = new FetchFeedbackResponse.ReviewImage();
-			reviewImage.setUrl("http://wallpaperswide.com/download/serene_autumn_landscape-wallpaper-1280x1024.jpg");
-			reviewImage.setThumbnail("http://wallpaperswide.com/download/serene_autumn_landscape-wallpaper-1280x1024.jpg");
-			reviewImages.add(reviewImage);
-			reviewImage = new FetchFeedbackResponse.ReviewImage();
-			reviewImage.setUrl("http://img15.deviantart.net/05d7/i/2012/307/c/5/serene_landscape_by_rambled-d5ju302.jpg");
-			reviewImage.setThumbnail("http://img15.deviantart.net/05d7/i/2012/307/c/5/serene_landscape_by_rambled-d5ju302.jpg");
-			reviewImages.add(reviewImage);
-			review.setImages(reviewImages);
-*/
+			RelativeLayout.LayoutParams paramsSep = (RelativeLayout.LayoutParams) holder.vSepBelowMessage.getLayoutParams();
 			if (review.getImages() != null && review.getImages().size() > 0) {
-				holder.rvFeedImages.setVisibility(View.VISIBLE);
-				if(holder.imagesAdapter == null){
-					holder.imagesAdapter = new RestaurantReviewImagesAdapter(activity,
-							(ArrayList<FetchFeedbackResponse.ReviewImage>) review.getImages(),
-							new RestaurantReviewImagesAdapter.Callback() {
-						@Override
-						public void onImageClick(FetchFeedbackResponse.ReviewImage reviewImage) {
-
-						}
-					});
-					holder.rvFeedImages.setAdapter(holder.imagesAdapter);
+				if(review.getImages().size() > 1) {
+					holder.rvFeedImages.setVisibility(View.VISIBLE);
+					holder.ivFeedImageSingle.setVisibility(View.GONE);
+					paramsSep.addRule(RelativeLayout.BELOW, holder.rvFeedImages.getId());
+					if (holder.imagesAdapter == null) {
+						holder.imagesAdapter = new RestaurantReviewImagesAdapter(activity, review,
+								new RestaurantReviewImagesAdapter.Callback() {
+									@Override
+									public void onImageClick(int positionImageClicked, FetchFeedbackResponse.Review review) {
+										activity.setCurrentReview(review);
+										ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(positionImageClicked);
+										dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+									}
+								});
+						holder.rvFeedImages.setAdapter(holder.imagesAdapter);
+					} else {
+						holder.imagesAdapter.setList(review);
+						holder.rvFeedImages.setAdapter(holder.imagesAdapter);
+					}
 				} else {
-					holder.imagesAdapter.setList((ArrayList<FetchFeedbackResponse.ReviewImage>) review.getImages());
-					holder.rvFeedImages.setAdapter(holder.imagesAdapter);
+					holder.rvFeedImages.setVisibility(View.GONE);
+					holder.ivFeedImageSingle.setVisibility(View.VISIBLE);
+					paramsSep.addRule(RelativeLayout.BELOW, holder.ivFeedImageSingle.getId());
+					holder.imagesAdapter = null;
+					Picasso.with(activity).load(review.getImages().get(0).getThumbnail())
+							.resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
+							.centerCrop()
+							.transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
+							.placeholder(R.drawable.ic_fresh_item_placeholder)
+							.into(holder.ivFeedImageSingle);
 				}
-				holder.rvFeedImages.startNestedScroll(RecyclerView.SCROLL_AXIS_HORIZONTAL);
 			} else {
 				holder.rvFeedImages.setVisibility(View.GONE);
+				holder.ivFeedImageSingle.setVisibility(View.GONE);
+				paramsSep.addRule(RelativeLayout.BELOW, holder.rvFeedImages.getId());
 				holder.imagesAdapter = null;
 			}
+			holder.vSepBelowMessage.setLayoutParams(paramsSep);
 
-			holder.ivFeedLike.setImageResource(review.getLiked() == 1 ?
-					R.drawable.ic_feed_like_active : R.drawable.ic_feed_like_normal);
+			if(review.getLiked() == 1){
+				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
+			} else {
+				holder.ivFeedLike.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_like_normal, R.drawable.ic_feed_like_active));
+			}
 
-			holder.ivFeedShare.setImageResource(review.getShared() == 1 ?
-					R.drawable.ic_feed_share_active : R.drawable.ic_feed_share_normal);
+			if(review.getShared() == 1){
+				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_active);
+			} else {
+				holder.ivFeedShare.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_share_normal, R.drawable.ic_feed_share_active));
+			}
 
 			holder.ivFeedEdit.setTag(position);
 			holder.ivFeedLike.setTag(position);
@@ -180,28 +186,41 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
             holder.ivFeedEdit.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					onReviewClick.onEdit(restaurantReviews.get((int)v.getTag()));
+					try {
+						int pos = (int) v.getTag();
+						callback.onEdit(restaurantReviews.get(pos));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			});
 
 			holder.ivFeedLike.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					onReviewClick.onLike(restaurantReviews.get((int)v.getTag()));
-
-
+					try {
+						int pos = (int) v.getTag();
+						callback.onLike(restaurantReviews.get(pos));
+						likeShareReview(pos, restaurantReviews.get(pos).getFeedbackId(), ACTION_LIKE);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			});
 
 			holder.ivFeedShare.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					onReviewClick.onShare(restaurantReviews.get((int)v.getTag()));
-
-
+					try {
+						int pos = (int) v.getTag();
+						callback.onShare(restaurantReviews.get(pos));
+						likeShareReview(pos, restaurantReviews.get(pos).getFeedbackId(), ACTION_SHARE);
+						ReferralActions.genericShareDialog(activity, null, "Subject", "Body", "");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			});
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -219,7 +238,8 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		public ImageView ivImage;
 		public RecyclerView rvFeedImages;
 		public TextView tvLikeShareCount;
-		public ImageView ivFeedEdit, ivFeedShare, ivFeedLike;
+		public ImageView ivFeedImageSingle, ivFeedEdit, ivFeedShare, ivFeedLike;
+		public View vSepBelowMessage;
 		public RestaurantReviewImagesAdapter imagesAdapter = null;
 
 		public ViewHolderReview(View itemView) {
@@ -235,11 +255,13 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			rvFeedImages.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
 			rvFeedImages.setItemAnimator(new DefaultItemAnimator());
 			rvFeedImages.setHasFixedSize(true);
+			rvFeedImages.addOnScrollListener(onScrollListener);
 			tvLikeShareCount = (TextView) itemView.findViewById(R.id.tvLikeShareCount);
 			ivFeedEdit = (ImageView) itemView.findViewById(R.id.ivFeedEdit);
 			ivFeedShare = (ImageView) itemView.findViewById(R.id.ivFeedShare);
 			ivFeedLike = (ImageView) itemView.findViewById(R.id.ivFeedLike);
-
+			ivFeedImageSingle = (ImageView) itemView.findViewById(R.id.ivFeedImageSingle);
+			vSepBelowMessage = itemView.findViewById(R.id.vSepBelowMessage);
 		}
 	}
 
@@ -247,7 +269,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		@Override
 		public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 			super.onScrollStateChanged(recyclerView, newState);
-
+			callback.onScrollStateChanged(newState);
 		}
 
 		@Override
@@ -257,12 +279,37 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	};
 
 
-	public interface  onReviewClick{
-
+	public interface Callback {
 		void onEdit(FetchFeedbackResponse.Review review);
 		void onShare(FetchFeedbackResponse.Review review);
 		void onLike(FetchFeedbackResponse.Review review);
+		void onScrollStateChanged(int newState);
+		int getRestaurantId();
 	}
 
+
+	public final String ACTION_LIKE = "LIKE";
+	public final String ACTION_SHARE = "SHARE";
+
+	private ApiRestLikeShareFeedback apiRestLikeShareFeedback;
+	private void likeShareReview(final int position, int feedback, String action){
+		if(apiRestLikeShareFeedback == null){
+			apiRestLikeShareFeedback = new ApiRestLikeShareFeedback(activity, new ApiRestLikeShareFeedback.Callback() {
+				@Override
+				public void onSuccess(FetchFeedbackResponse.Review review) {
+					if(review != null){
+						restaurantReviews.set(position, review);
+						notifyDataSetChanged();
+					}
+				}
+
+				@Override
+				public void onFailure() {
+
+				}
+			});
+		}
+		apiRestLikeShareFeedback.hit(callback.getRestaurantId(), feedback, action);
+	}
 
 }

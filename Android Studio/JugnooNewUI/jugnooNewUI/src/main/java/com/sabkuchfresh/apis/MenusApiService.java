@@ -17,7 +17,6 @@ import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
-import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.mime.MultipartTypedOutput;
 
@@ -87,5 +86,10 @@ public interface MenusApiService {
 	@POST("/v1/restaurant/fetch_feedbacks")
 	void restaurantFetchFeedbacks(@FieldMap Map<String, String> params,
 						   Callback<FetchFeedbackResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/v1/customer/like_share_feedback")
+	void customerLikeShareFeedback(@FieldMap Map<String, String> params,
+								  Callback<FetchFeedbackResponse> callback);
 
 }

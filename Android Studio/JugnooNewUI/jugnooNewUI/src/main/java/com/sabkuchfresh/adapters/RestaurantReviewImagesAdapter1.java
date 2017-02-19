@@ -4,10 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.Picasso;
@@ -115,12 +113,12 @@ public class RestaurantReviewImagesAdapter1 extends RecyclerView.Adapter<Restaur
 
     class ViewHolderReviewImage extends RecyclerView.ViewHolder {
         public ImageView ivImage;
-        public Button btnRemove;
+        public ImageView btnRemove;
         public ViewHolderReviewImage(View itemView) {
             super(itemView);
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
-            btnRemove=(Button)itemView.findViewById(R.id.btn_remove);
-
+            btnRemove = (ImageView)itemView.findViewById(R.id.ivClose);
+            btnRemove.setVisibility(View.VISIBLE);
         }
 
     }

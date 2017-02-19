@@ -11,8 +11,6 @@ import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
 
-import java.util.ArrayList;
-
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 
@@ -23,17 +21,17 @@ import product.clicklabs.jugnoo.utils.ASSL;
 public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<RestaurantReviewImagesAdapter.ViewHolderReviewImage> {
 
     private FreshActivity activity;
-    private ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages;
+    private FetchFeedbackResponse.Review review;
     private Callback callback;
 
-    public RestaurantReviewImagesAdapter(FreshActivity activity, ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages, Callback callback) {
+    public RestaurantReviewImagesAdapter(FreshActivity activity, FetchFeedbackResponse.Review review, Callback callback) {
         this.activity = activity;
-        this.reviewImages = reviewImages;
+        this.review = review;
         this.callback = callback;
     }
 
-    public void setList(ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages){
-        this.reviewImages = reviewImages;
+    public void setList(FetchFeedbackResponse.Review review){
+        this.review = review;
         notifyDataSetChanged();
     }
 
@@ -49,7 +47,7 @@ public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<Restaura
     @Override
     public void onBindViewHolder(RestaurantReviewImagesAdapter.ViewHolderReviewImage holder, int position) {
         try {
-            FetchFeedbackResponse.ReviewImage reviewImage = reviewImages.get(position);
+            FetchFeedbackResponse.ReviewImage reviewImage = review.getImages().get(position);
             Picasso.with(activity).load(reviewImage.getThumbnail())
                     .resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
                     .centerCrop()
@@ -60,11 +58,16 @@ public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<Restaura
             holder.ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos = (int) v.getTag();
-                    callback.onImageClick(reviewImages.get(pos));
+                    try {
+                        int pos = (int) v.getTag();
+                        callback.onImageClick(pos, review);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
+            holder.ivClose.setVisibility(View.GONE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,18 +75,23 @@ public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<Restaura
 
     @Override
     public int getItemCount() {
-        return reviewImages == null ? 0 : reviewImages.size();
+        return review.getImages() == null ? 0 : review.getImages().size();
     }
 
     class ViewHolderReviewImage extends RecyclerView.ViewHolder {
-        public ImageView ivImage;
+        public ImageView ivImage, ivClose;
         public ViewHolderReviewImage(View itemView) {
             super(itemView);
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
+            ivClose = (ImageView) itemView.findViewById(R.id.ivClose);
         }
     }
 
+
+	/**
+	 * onImageClick positionImageClicked is for opening that image in ReviewImageDialog
+     */
     public interface Callback{
-        void onImageClick(FetchFeedbackResponse.ReviewImage reviewImage);
+        void onImageClick(int positionImageClicked, FetchFeedbackResponse.Review review);
     }
 }

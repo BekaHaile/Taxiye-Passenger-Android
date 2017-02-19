@@ -1,6 +1,5 @@
 package com.sabkuchfresh.fragments;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,28 +16,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.adapters.RestaurantReviewImagesAdapter1;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 
+import net.yazeed44.imagepicker.model.ImageEntry;
+import net.yazeed44.imagepicker.util.Picker;
+
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.ProductType;
-import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -51,9 +47,6 @@ import retrofit.client.Response;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
-
-import net.yazeed44.imagepicker.model.ImageEntry;
-import net.yazeed44.imagepicker.util.Picker;
 
 
 /**
@@ -206,10 +199,14 @@ public class RestaurantAddReviewFragment extends Fragment {
         if (objectList == null) objectList = new ArrayList<>();
 
 
-        if (activity.currentReview != null && activity.currentReview.getImages() != null && activity.currentReview.getImages().size() != 0)
-            serverImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) activity.currentReview.getImages();
-        if (serverImages != null)
+        if (activity.getCurrentReview() != null
+                && activity.getCurrentReview().getImages() != null
+                && activity.getCurrentReview().getImages().size() != 0) {
+            serverImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) activity.getCurrentReview().getImages();
+        }
+        if (serverImages != null) {
             objectList.addAll(serverImages);
+        }
 
         setUpAdapter(objectList);
         return rootView;

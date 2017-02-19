@@ -81,25 +81,42 @@ public class RestaurantReviewsListFragment extends Fragment{
         recyclerViewReviews.setItemAnimator(new DefaultItemAnimator());
         recyclerViewReviews.setHasFixedSize(false);
         restaurantReviews = new ArrayList<>();
-        reviewsAdapter = new RestaurantReviewsAdapter(activity, new RestaurantReviewsAdapter.onReviewClick() {
+        reviewsAdapter = new RestaurantReviewsAdapter(activity, new RestaurantReviewsAdapter.Callback() {
             @Override
             public void onEdit(FetchFeedbackResponse.Review review) {
-                activity.currentReview =review;
+                activity.setCurrentReview(review);
                 activity.openRestaurantAddReviewFragment(false);
             }
 
             @Override
             public void onShare(FetchFeedbackResponse.Review review) {
-                activity.currentReview =review;
-                activity.openRestaurantAddReviewFragment(false);
+
             }
 
             @Override
             public void onLike(FetchFeedbackResponse.Review review) {
 
             }
+
+            @Override
+            public void onScrollStateChanged(int newState) {
+				/**
+				 * if an item's image recyclerView is starting to scroll, main recyclerViews scrolling to be stopped
+                 */
+                if(newState != RecyclerView.SCROLL_STATE_IDLE){
+                    recyclerViewReviews.setEnabled(false);
+                } else {
+                    recyclerViewReviews.setEnabled(true);
+                }
+            }
+
+            @Override
+            public int getRestaurantId() {
+                return restaurantId;
+            }
         }, restaurantReviews);
         recyclerViewReviews.setAdapter(reviewsAdapter);
+        recyclerViewReviews.setEnabled(true);
 
 
         rlNoReviews = (RelativeLayout) rootView.findViewById(R.id.rlNoReviews);

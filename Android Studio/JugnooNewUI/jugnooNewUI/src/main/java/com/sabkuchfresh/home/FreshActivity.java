@@ -203,7 +203,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public String mContactNo = "";
 
     private View topView;
-    public FetchFeedbackResponse.Review currentReview;
+    private FetchFeedbackResponse.Review currentReview;
 
     /**
      * this holds the reference for the Otto Bus which we declared in LavocalApplication
@@ -3602,4 +3602,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     }
 
+    public FetchFeedbackResponse.Review getCurrentReview() {
+        return currentReview;
+    }
+
+    public void setCurrentReview(FetchFeedbackResponse.Review currentReview) {
+        this.currentReview = currentReview;
+    }
 }

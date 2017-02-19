@@ -319,4 +319,6 @@
         <item name="android:tag">mwar</item>
     </style>
 
+    <style name="DialogFragmentTrans" parent="@android:style/Theme.Translucent.NoTitleBar"/>
+
 </resources>

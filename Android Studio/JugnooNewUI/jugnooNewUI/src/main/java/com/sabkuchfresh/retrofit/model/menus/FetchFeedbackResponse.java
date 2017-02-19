@@ -22,6 +22,9 @@ public class FetchFeedbackResponse {
 	@SerializedName("reviews")
 	@Expose
 	private List<Review> reviews = null;
+	@SerializedName("review")
+	@Expose
+	private List<Review> review = null;
 
 	public Integer getFlag() {
 		return flag;
@@ -55,8 +58,19 @@ public class FetchFeedbackResponse {
 		this.error = error;
 	}
 
+	public List<Review> getReview() {
+		return review;
+	}
+
+	public void setReview(List<Review> review) {
+		this.review = review;
+	}
+
 	public class Review {
 
+		@SerializedName("feedback_id")
+		@Expose
+		private Integer feedbackId;
 		@SerializedName("order_id")
 		@Expose
 		private Integer orderId;
@@ -90,13 +104,13 @@ public class FetchFeedbackResponse {
 		@SerializedName("share_count")
 		@Expose
 		private Integer shareCount;
-		@SerializedName("liked")
+		@SerializedName("is_liked")
 		@Expose
 		private Integer liked;
-		@SerializedName("shared")
+		@SerializedName("is_shared")
 		@Expose
 		private Integer shared;
-		@SerializedName("editable")
+		@SerializedName("is_editable")
 		@Expose
 		private Integer editable;
 		@SerializedName("images")
@@ -236,6 +250,14 @@ public class FetchFeedbackResponse {
 
 		public void setImages(List<ReviewImage> images) {
 			this.images = images;
+		}
+
+		public Integer getFeedbackId() {
+			return feedbackId;
+		}
+
+		public void setFeedbackId(Integer feedbackId) {
+			this.feedbackId = feedbackId;
 		}
 	}
 

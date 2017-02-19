@@ -9,17 +9,21 @@
         android:layout_width="@dimen/px_310"
         android:layout_height="@dimen/px_310"
         android:layout_margin="@dimen/px_10"
-        android:tag="mwar"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_fresh_item_placeholder"
-        android:scaleType="centerCrop" />
+        android:tag="mwar"/>
 
 
-    <Button
-        android:id="@+id/btn_remove"
-        android:layout_toRightOf="@id/ivImage"
-        android:layout_alignTop="@id/ivImage"
-        android:layout_marginLeft="-30dp"
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="70px"
+        android:layout_height="70px"
+        android:layout_alignTop="@+id/ivImage"
+        android:layout_alignRight="@+id/ivImage"
+        android:padding="10px"
+        android:rotation="45"
+        android:src="@drawable/ic_add_grey_bg_selector"
+        android:tag="mwar"
+        />
 
 </RelativeLayout>

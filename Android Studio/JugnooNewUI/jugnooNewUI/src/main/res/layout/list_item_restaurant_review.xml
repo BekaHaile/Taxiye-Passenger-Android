@@ -44,7 +44,7 @@
         android:layout_marginTop="@dimen/px_36"
         android:layout_toLeftOf="@+id/tvDateTime"
         android:layout_toRightOf="@+id/tvNameCap"
-        android:text="Sample"
+        android:text=""
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_32"
         app:font="maven"
@@ -58,7 +58,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/px_40"
         android:layout_marginTop="@dimen/px_40"
-        android:text="Sample"
+        android:text=""
         android:textColor="@color/document_layout_bordor_color"
         android:textSize="@dimen/text_size_24"
         app:font="maven"
@@ -93,7 +93,7 @@
         android:layout_toRightOf="@+id/tvRating"
         android:drawablePadding="@dimen/dp_2"
         android:drawableRight="@drawable/ic_uparrow"
-        android:text="Sample"
+        android:text=""
         android:textColor="@color/document_layout_bordor_color"
         android:textSize="@dimen/text_size_22"
         app:font="maven"
@@ -107,7 +107,7 @@
         android:layout_marginLeft="@dimen/px_40"
         android:layout_marginRight="@dimen/px_40"
         android:layout_marginTop="@dimen/px_24"
-        android:text="@string/sample_address"
+        android:text=""
         android:textColor="@color/color_menu_item_desc"
         android:textSize="@dimen/text_size_26"
         app:font="maven"
@@ -122,6 +122,16 @@
         android:layout_marginTop="@dimen/px_20"
         android:scrollbars="horizontal"
         android:translationZ="1dp"
+        />
+    
+    <ImageView
+        android:id="@+id/ivFeedImageSingle"
+        android:layout_width="@dimen/px_644"
+        android:layout_height="@dimen/px_310"
+        android:layout_below="@+id/tvReviewMessage"
+        android:layout_marginTop="@dimen/px_20"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"
         />
 
 
@@ -177,7 +187,6 @@
         android:layout_marginRight="@dimen/px_30"
         android:layout_marginTop="@dimen/px_20"
         android:layout_toLeftOf="@+id/ivFeedEdit"
-        android:background="@drawable/bg_transp_menu_color_selector"
         android:padding="@dimen/px_10"
         android:src="@drawable/ic_feed_share_normal"
         android:tag="mwar"
@@ -192,7 +201,6 @@
         android:layout_marginRight="@dimen/px_30"
         android:layout_marginTop="@dimen/px_20"
         android:layout_toLeftOf="@+id/ivFeedShare"
-        android:background="@drawable/bg_transp_menu_color_selector"
         android:padding="@dimen/px_10"
         android:src="@drawable/ic_feed_like_normal"
         android:tag="mwar"
