@@ -27,6 +27,9 @@ public class FetchSubscriptionSavingsResponse {
 	@SerializedName("renewal_data")
 	@Expose
 	private RenewalData renewalData;
+	@SerializedName("expired_data")
+	@Expose
+	private ExpiredData expiredData;
 
 	public Integer getFlag() {
 		return flag;
@@ -66,6 +69,14 @@ public class FetchSubscriptionSavingsResponse {
 
 	public void setRenewalData(RenewalData renewalData) {
 		this.renewalData = renewalData;
+	}
+
+	public ExpiredData getExpiredData() {
+		return expiredData;
+	}
+
+	public void setExpiredData(ExpiredData expiredData) {
+		this.expiredData = expiredData;
 	}
 
 	public class UpgradeDatum {
@@ -139,6 +150,137 @@ public class FetchSubscriptionSavingsResponse {
 
 		public void setUpgradePlan(List<UpgradeDatum> upgradePlan) {
 			this.upgradePlan = upgradePlan;
+		}
+
+	}
+
+	public class ExpiredData {
+
+		@SerializedName("warning")
+		@Expose
+		private Warning warning;
+		@SerializedName("last_subscription")
+		@Expose
+		private LastSubscription lastSubscription;
+		@SerializedName("subscriptions")
+		@Expose
+		private List<SubscriptionData.Subscription> subscriptions = null;
+
+		public Warning getWarning() {
+			return warning;
+		}
+
+		public void setWarning(Warning warning) {
+			this.warning = warning;
+		}
+
+		public LastSubscription getLastSubscription() {
+			return lastSubscription;
+		}
+
+		public void setLastSubscription(LastSubscription lastSubscription) {
+			this.lastSubscription = lastSubscription;
+		}
+
+		public List<SubscriptionData.Subscription> getSubscriptions() {
+			return subscriptions;
+		}
+
+		public void setSubscriptions(List<SubscriptionData.Subscription> subscriptions) {
+			this.subscriptions = subscriptions;
+		}
+
+	}
+
+	public class LastSubscription {
+
+		@SerializedName("user_sub_id")
+		@Expose
+		private Integer userSubId;
+		@SerializedName("id")
+		@Expose
+		private Integer id;
+		@SerializedName("valid_till")
+		@Expose
+		private String validTill;
+		@SerializedName("valid_from")
+		@Expose
+		private String validFrom;
+		@SerializedName("amount")
+		@Expose
+		private Integer amount;
+		@SerializedName("renewal_limit")
+		@Expose
+		private Integer renewalLimit;
+		@SerializedName("plan_duration")
+		@Expose
+		private Integer planDuration;
+		@SerializedName("plan_string")
+		@Expose
+		private String planString;
+
+		public Integer getUserSubId() {
+			return userSubId;
+		}
+
+		public void setUserSubId(Integer userSubId) {
+			this.userSubId = userSubId;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+
+		public String getValidTill() {
+			return validTill;
+		}
+
+		public void setValidTill(String validTill) {
+			this.validTill = validTill;
+		}
+
+		public String getValidFrom() {
+			return validFrom;
+		}
+
+		public void setValidFrom(String validFrom) {
+			this.validFrom = validFrom;
+		}
+
+		public Integer getAmount() {
+			return amount;
+		}
+
+		public void setAmount(Integer amount) {
+			this.amount = amount;
+		}
+
+		public Integer getRenewalLimit() {
+			return renewalLimit;
+		}
+
+		public void setRenewalLimit(Integer renewalLimit) {
+			this.renewalLimit = renewalLimit;
+		}
+
+		public Integer getPlanDuration() {
+			return planDuration;
+		}
+
+		public void setPlanDuration(Integer planDuration) {
+			this.planDuration = planDuration;
+		}
+
+		public String getPlanString() {
+			return planString;
+		}
+
+		public void setPlanString(String planString) {
+			this.planString = planString;
 		}
 
 	}

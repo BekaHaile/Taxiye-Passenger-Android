@@ -152,6 +152,7 @@
                         android:background="@color/menu_item_selector_color" />
 
                     <RelativeLayout
+                        android:id="@+id/rlExpire"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/px_100"
                         android:layout_marginLeft="@dimen/px_28"
