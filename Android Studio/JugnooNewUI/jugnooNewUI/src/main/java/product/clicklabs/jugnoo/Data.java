@@ -263,6 +263,7 @@ public class Data {
 			Prefs.with(context).remove(Constants.SP_MENUS_CHECKOUT_SAVE_DATA);
 
 			Prefs.with(context).remove(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+			Prefs.with(context).remove(Constants.SHOW_GEANIE_HELP);
 
 
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_address_selected));

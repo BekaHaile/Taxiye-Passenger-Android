@@ -107,7 +107,12 @@ public class FABViewTest {
                         isOpened = true;
                         if(activity instanceof HomeActivity){
                             ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
+                            ((HomeActivity)activity).getRlGenieHelp().setVisibility(View.GONE);
+                            Prefs.with(activity).save(Constants.SHOW_GEANIE_HELP, 1);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
+                        } else if(activity instanceof FreshActivity){
+                            ((FreshActivity)activity).getRlGenieHelp().setVisibility(View.GONE);
+                            Prefs.with(activity).save(Constants.SHOW_GEANIE_HELP, 1);
                         }
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
                         FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Opened");

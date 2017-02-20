@@ -611,6 +611,6 @@ public interface Constants {
     String KEY_EMPTY_CART = "empty_cart";
     String FEEDBACK_TITLE = "feedback_title";
     String KEY_REVIEW_DESC = "review_desc";
-    
+    String SHOW_GEANIE_HELP = "geanie_help";
 
 }

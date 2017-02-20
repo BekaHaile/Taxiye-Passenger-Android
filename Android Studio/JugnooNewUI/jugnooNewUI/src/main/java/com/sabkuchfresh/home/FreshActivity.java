@@ -232,6 +232,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     private FreshSortingAdapter sortingAdapter;
     private CoordinatorLayout coordinatorLayout;
     private static final float COLLAPSE_TOOLBAR_HEIGHT = 270f;
+    private RelativeLayout rlGenieHelp;
+    private TextView tvGenieHelp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -296,7 +298,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
             topBar.etSearch.addTextChangedListener(textWatcher);
 
-
+            rlGenieHelp = (RelativeLayout) findViewById(R.id.rlGenieHelp);
+            tvGenieHelp = (TextView) findViewById(R.id.tvGenieHelp); tvGenieHelp.setTypeface(Fonts.mavenMedium(this));
 
 
 
@@ -693,6 +696,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         fetchWalletBalance(this);
     }
 
+    public RelativeLayout getRlGenieHelp() {
+        return rlGenieHelp;
+    }
+
     public FreshHomeFragment getFreshHomeFragment() {
         return (FreshHomeFragment) getSupportFragmentManager().findFragmentByTag(FreshHomeFragment.class.getName());
     }
@@ -936,6 +943,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
 
+                if(Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0){
+                    rlGenieHelp.setVisibility(View.VISIBLE);
+                } else{
+                    rlGenieHelp.setVisibility(View.GONE);
+                }
+
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     float marginBottom = 40f;
                     int dpAsPixels = (int) (marginBottom * scale + 0.5f);
@@ -1013,6 +1026,13 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
                 rlFilterVis = View.VISIBLE;
+
+                if(Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0){
+                    Prefs.with(this).save(Constants.SHOW_GEANIE_HELP, 1);
+                    rlGenieHelp.setVisibility(View.VISIBLE);
+                } else{
+                    rlGenieHelp.setVisibility(View.GONE);
+                }
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.menus));
