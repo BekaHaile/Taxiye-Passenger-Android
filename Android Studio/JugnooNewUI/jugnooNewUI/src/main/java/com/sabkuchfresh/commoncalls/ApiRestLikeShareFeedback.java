@@ -24,11 +24,9 @@ public class ApiRestLikeShareFeedback {
 	private final String TAG = ApiRestLikeShareFeedback.class.getSimpleName();
 
 	private Activity activity;
-	private Callback callback;
 
-	public ApiRestLikeShareFeedback(Activity activity, Callback callback){
+	public ApiRestLikeShareFeedback(Activity activity){
 		this.activity = activity;
-		this.callback = callback;
 	}
 
 	/**
@@ -37,7 +35,7 @@ public class ApiRestLikeShareFeedback {
 	 * @param feedbackId id of feedback/review
 	 * @param action LIKE or SHARE
 	 */
-	public void hit(int restaurantId, int feedbackId, String action) {
+	public void hit(int restaurantId, int feedbackId, String action, final Callback callback) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
 				/**

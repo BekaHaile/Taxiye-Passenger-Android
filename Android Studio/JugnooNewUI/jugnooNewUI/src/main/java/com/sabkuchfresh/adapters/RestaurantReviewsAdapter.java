@@ -212,10 +212,16 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				@Override
 				public void onClick(View v) {
 					try {
-						int pos = (int) v.getTag();
+						final int pos = (int) v.getTag();
 						callback.onShare(restaurantReviews.get(pos));
-						likeShareReview(pos, restaurantReviews.get(pos).getFeedbackId(), ACTION_SHARE);
-						ReferralActions.genericShareDialog(activity, null, "Subject", "Body", "");
+						ReferralActions.genericShareDialog(activity, null, "Subject", "Body", "", true,
+								new ReferralActions.ShareDialogCallback() {
+							@Override
+							public void onShareClicked(String appName) {
+								likeShareReview(pos, restaurantReviews.get(pos).getFeedbackId(), ACTION_SHARE);
+							}
+						}, false);
+
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -294,22 +300,22 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	private ApiRestLikeShareFeedback apiRestLikeShareFeedback;
 	private void likeShareReview(final int position, int feedback, String action){
 		if(apiRestLikeShareFeedback == null){
-			apiRestLikeShareFeedback = new ApiRestLikeShareFeedback(activity, new ApiRestLikeShareFeedback.Callback() {
-				@Override
-				public void onSuccess(FetchFeedbackResponse.Review review) {
-					if(review != null){
-						restaurantReviews.set(position, review);
-						notifyDataSetChanged();
-					}
-				}
-
-				@Override
-				public void onFailure() {
-
-				}
-			});
+			apiRestLikeShareFeedback = new ApiRestLikeShareFeedback(activity);
 		}
-		apiRestLikeShareFeedback.hit(callback.getRestaurantId(), feedback, action);
+		apiRestLikeShareFeedback.hit(callback.getRestaurantId(), feedback, action, new ApiRestLikeShareFeedback.Callback() {
+			@Override
+			public void onSuccess(FetchFeedbackResponse.Review review) {
+				if(review != null){
+					restaurantReviews.set(position, review);
+					notifyDataSetChanged();
+				}
+			}
+
+			@Override
+			public void onFailure() {
+
+			}
+		});
 	}
 
 }
