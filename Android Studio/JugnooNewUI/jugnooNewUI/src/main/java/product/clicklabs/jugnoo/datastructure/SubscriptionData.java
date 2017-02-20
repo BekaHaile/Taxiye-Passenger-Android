@@ -43,6 +43,9 @@ public class SubscriptionData {
     @SerializedName("sub_text_grocery")
     @Expose
     private String subTextGrocery;
+    @SerializedName("subscribed_user")
+    @Expose
+    private Integer subscribedUser;
 
     public List<UserSubscription> getUserSubscriptions() {
         return userSubscriptions;
@@ -135,6 +138,14 @@ public class SubscriptionData {
 
     public void setSubscriptionBenefits(List<SubscriptionBenefits> subscriptionBenefits) {
         this.subscriptionBenefits = subscriptionBenefits;
+    }
+
+    public Integer getSubscribedUser() {
+        return subscribedUser;
+    }
+
+    public void setSubscribedUser(Integer subscribedUser) {
+        this.subscribedUser = subscribedUser;
     }
 
     public class UserSubscription {
@@ -275,6 +286,9 @@ public class SubscriptionData {
         @SerializedName("final_amount_text")
         @Expose
         private String finalAmountText;
+        @SerializedName("cross_text")
+        @Expose
+        private String crossText;
 
         public Integer getPlanDuration() {
             return planDuration;
@@ -363,6 +377,14 @@ public class SubscriptionData {
 
         public void setPlanStringNew(String planStringNew) {
             this.planStringNew = planStringNew;
+        }
+
+        public String getCrossText() {
+            return crossText;
+        }
+
+        public void setCrossText(String crossText) {
+            this.crossText = crossText;
         }
     }
 
