@@ -55,7 +55,7 @@
         android:gravity="left"
         android:hint="@string/what_you_love_about_restaurant"
         android:imeOptions="actionDone"
-        android:maxLength="500"
+        android:maxLength="@integer/edt_add_review_max_length"
         android:paddingLeft="@dimen/px_60"
         android:paddingRight="@dimen/px_60"
 
@@ -158,6 +158,8 @@ android:layout_height="100px">
     android:layout_centerVertical="true"
     android:layout_toRightOf="@+id/ib_access_camera"
     />
+
+
 <TextView
     android:text="400"
     android:gravity="right"

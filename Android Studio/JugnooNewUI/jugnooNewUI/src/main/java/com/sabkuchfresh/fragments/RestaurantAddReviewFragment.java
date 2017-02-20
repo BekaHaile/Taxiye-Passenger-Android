@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -48,7 +47,6 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.StringAPIService;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -90,6 +88,9 @@ public class RestaurantAddReviewFragment extends Fragment {
     private Handler handler;
     private Runnable startEnableStateRunnable;
     private View dividerBelowRating;
+    private TextView tvCharCount;
+    private  int etReviewMaxLength;
+    private View ibAccessCamera;
     // TODO: 19/02/17 Show errror when submitting without entering any char
 
 
@@ -125,6 +126,7 @@ public class RestaurantAddReviewFragment extends Fragment {
             e.printStackTrace();
         }
 
+        etReviewMaxLength = getResources().getInteger(R.integer.edt_add_review_max_length);
         etFeedback = (EditText) rootView.findViewById(R.id.etFeedback);
         bSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
         bSubmit.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +157,50 @@ public class RestaurantAddReviewFragment extends Fragment {
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
+
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                etFeedback.requestFocus();
+                Utils.showSoftKeyboard(activity, etFeedback);
+            }
+        }, 10);
+
+		/*
+            Edited By Parminder
+		 */
+        //init Views
+        tvCharCount= (TextView) rootView.findViewById(R.id.tv_char_count);
+        dividerBelowRating = (View)rootView.findViewById(R.id.line_below_rating);
+        customRatingBar=(RatingBarMenuFeedback)rootView.findViewById(R.id.rating_bar);
+        displayImagesRecycler = (RecyclerView) rootView.findViewById(R.id.rvFeedImages);
+        ibAccessStar = (ImageButton) rootView.findViewById(R.id.ib_access_star);
+        ibAccessCamera = rootView.findViewById(R.id.ib_access_camera);
+        bSubmit.setEnabled(false);
+        if (objectList == null) objectList = new ArrayList<>();
+
+        setUpImagePicker();
+
+        setUpRatingBar();
+
+        setupReviewEditText();
+
+        loadDataIfEditingFeedback();
+
+
+        setUpAdapter(objectList);
+
+        updateTextCount();
+        etFeedback.setSelection(etFeedback.length());
+
+
+
+        return rootView;
+    }
+
+    private void setupReviewEditText() {
         etFeedback.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -169,27 +215,18 @@ public class RestaurantAddReviewFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 bSubmit.setEnabled(s.length() > 0);
+                updateTextCount();
             }
         });
-        bSubmit.setEnabled(false);
+    }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                etFeedback.requestFocus();
-                Utils.showSoftKeyboard(activity, etFeedback);
-            }
-        }, 10);
+    private void updateTextCount() {
+        tvCharCount.setText(String.valueOf(etReviewMaxLength-etFeedback.getText().toString().length()));
+    }
 
-		/*
-            Edited By Parminder
-		 */
+    private void setUpImagePicker() {
 
-        dividerBelowRating = (View)rootView.findViewById(R.id.line_below_rating);
-        customRatingBar=(RatingBarMenuFeedback)rootView.findViewById(R.id.rating_bar);
-        displayImagesRecycler = (RecyclerView) rootView.findViewById(R.id.rvFeedImages);
-        ibAccessStar = (ImageButton) rootView.findViewById(R.id.ib_access_star);
-        rootView.findViewById(R.id.ib_access_camera).setOnClickListener(new View.OnClickListener() {
+        ibAccessCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -219,8 +256,32 @@ public class RestaurantAddReviewFragment extends Fragment {
 
             }
         });
+    }
 
+    private void loadDataIfEditingFeedback() {
+        if (activity.getCurrentReview() != null){
 
+            if(!TextUtils.isEmpty(activity.getCurrentReview().getReviewDesc()))
+               etFeedback.setText(activity.getCurrentReview().getReviewDesc());
+
+              serverImages=null;
+              if( activity.getCurrentReview().getImages() != null && activity.getCurrentReview().getImages().size() != 0) {
+                  serverImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) activity.getCurrentReview().getImages();
+        }
+
+            if(activity.getCurrentReview().getRating()!=null && activity.getCurrentReview().getRating()>=1)
+            {
+                customRatingBar.setScore(activity.getCurrentReview().getRating().floatValue());
+                ibAccessStar.performClick();//shows the rating bar
+            }
+
+        }
+        if (serverImages != null) {
+            objectList.addAll(serverImages);
+        }
+    }
+
+    private void setUpRatingBar() {
         ibAccessStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,7 +294,6 @@ public class RestaurantAddReviewFragment extends Fragment {
                     ibAccessStar.setSelected(false);
                     customRatingBar.setVisibility(View.GONE);
                     dividerBelowRating.setVisibility(View.GONE);
-//                    etFeedback.animate().translationYBy(-(ibAccessStar.getHeight())).setDuration(400).start();
                     customRatingBar.startAnimation(starCloseAnim);
 
                 }
@@ -245,7 +305,6 @@ public class RestaurantAddReviewFragment extends Fragment {
                    customRatingBar.setVisibility(View.VISIBLE);
                     ibAccessStar.setSelected(true);
                     dividerBelowRating.setVisibility(View.VISIBLE);
-//                    etFeedback.animate().translationYBy(ibAccessStar.getHeight()).setDuration(400).start();
                     customRatingBar.startAnimation(starOpenAnim);
 
                 }
@@ -268,28 +327,6 @@ public class RestaurantAddReviewFragment extends Fragment {
                 handler.postDelayed(startEnableStateRunnable,400);
             }
         });
-
-
-        if (objectList == null) objectList = new ArrayList<>();
-
-
-        if (activity.getCurrentReview() != null){
-
-            if(!TextUtils.isEmpty(activity.getCurrentReview().getReviewDesc()))
-               etFeedback.setText(activity.getCurrentReview().getReviewDesc());
-
-            serverImages=null;
-           if( activity.getCurrentReview().getImages() != null && activity.getCurrentReview().getImages().size() != 0) {
-                serverImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) activity.getCurrentReview().getImages();
-        }
-
-        }
-        if (serverImages != null) {
-            objectList.addAll(serverImages);
-        }
-
-        setUpAdapter(objectList);
-        return rootView;
     }
 
     private void setUpAdapter(final ArrayList<Object> objectList) {
@@ -323,6 +360,11 @@ public class RestaurantAddReviewFragment extends Fragment {
 
         if (displayImagesRecycler.getVisibility() != View.VISIBLE)
             displayImagesRecycler.setVisibility(View.VISIBLE);
+
+
+      ibAccessCamera.setEnabled(objectList.size()<5);
+
+
 
 
     }
@@ -488,12 +530,15 @@ public class RestaurantAddReviewFragment extends Fragment {
 
                 }
             params.addPart(Constants.KEY_IMAGES, new TypedString(gson.toJson((gson.toJsonTree(myArray).getAsJsonObject().get("values")))));
+
              Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
                     @Override
                     public void success(final OrderHistoryResponse notificationInboxResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
                         try {
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+
+
                                 FlurryEventLogger.eventGA(Events.MENUS, Events.REVIEW, Events.SUBMITTED);
                                 activity.performBackPressed();
                                 Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
@@ -535,11 +580,14 @@ public class RestaurantAddReviewFragment extends Fragment {
 
                 //hit finally
 
-            if(activity.getCurrentReview()==null)
+            if(activity.getCurrentReview()==null) {
+                //Adding A new Review
                 RestClient.getMenusApiService().orderFeedback(params, callback);
+            }
             else
             {
-                params.addPart("feedback_id",new TypedString(activity.getCurrentReview().getFeedbackId()+""));
+                //Editing old review
+                params.addPart(Constants.KEY_FEEDBACK_ID,new TypedString(activity.getCurrentReview().getFeedbackId()+""));
                 RestClient.getMenusApiService().editFeedback(params, callback);
             }
 

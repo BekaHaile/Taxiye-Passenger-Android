@@ -143,5 +143,6 @@
     <dimen name="labels_text_size">14sp</dimen>
     <item name="fab_label" type="id" />
 
+    <item type="integer" name="edt_add_review_max_length">500</item>
 
 </resources>
