@@ -168,13 +168,13 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			}
 			holder.vSepBelowMessage.setLayoutParams(paramsSep);
 
-			if(review.getLiked() == 1){
+			if(review.getLiked() >= 1){
 				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
 			} else {
 				holder.ivFeedLike.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_like_normal, R.drawable.ic_feed_like_active));
 			}
 
-			if(review.getShared() == 1){
+			if(review.getShared() >= 1){
 				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_active);
 			} else {
 				holder.ivFeedShare.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_share_normal, R.drawable.ic_feed_share_active));
@@ -214,7 +214,22 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 					try {
 						final int pos = (int) v.getTag();
 						callback.onShare(restaurantReviews.get(pos));
-						ReferralActions.genericShareDialog(activity, null, "Subject", "Body", "", true,
+
+						StringBuilder sb = new StringBuilder();
+						sb.append("I have ordered food from ")
+								.append(activity.getVendorOpened().getName())
+								.append(", ")
+								.append(activity.getVendorOpened().getRestaurantAddress())
+								.append(" using Jugnoo!\nMy experience: ")
+								.append(restaurantReviews.get(pos).getReviewDesc())
+								.append("\n")
+								.append("https://jugnoo.in/review/")
+								.append(activity.getVendorOpened().getRestaurantId());
+
+
+						ReferralActions.genericShareDialog(activity, null,
+								"Sharing my experience on Jugnoo!",
+								sb.toString(), "", true,
 								new ReferralActions.ShareDialogCallback() {
 							@Override
 							public void onShareClicked(String appName) {
