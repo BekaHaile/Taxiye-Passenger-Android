@@ -270,6 +270,11 @@ public class FetchFeedbackResponse {
 		@Expose
 		private String thumbnail;
 
+		@SerializedName("id")
+		@Expose
+		private String id;
+
+
 		public String getUrl() {
 			return url;
 		}

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,9 @@ import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 
 import net.yazeed44.imagepicker.model.ImageEntry;
 import net.yazeed44.imagepicker.util.Picker;
+
+import org.json.JSONArray;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -269,10 +273,16 @@ public class RestaurantAddReviewFragment extends Fragment {
         if (objectList == null) objectList = new ArrayList<>();
 
 
-        if (activity.getCurrentReview() != null
-                && activity.getCurrentReview().getImages() != null
-                && activity.getCurrentReview().getImages().size() != 0) {
-            serverImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) activity.getCurrentReview().getImages();
+        if (activity.getCurrentReview() != null){
+
+            if(!TextUtils.isEmpty(activity.getCurrentReview().getReviewDesc()))
+               etFeedback.setText(activity.getCurrentReview().getReviewDesc());
+
+            serverImages=null;
+           if( activity.getCurrentReview().getImages() != null && activity.getCurrentReview().getImages().size() != 0) {
+                serverImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) activity.getCurrentReview().getImages();
+        }
+
         }
         if (serverImages != null) {
             objectList.addAll(serverImages);
@@ -458,29 +468,27 @@ public class RestaurantAddReviewFragment extends Fragment {
 
          params.addPart(Constants.KEY_CLIENT_ID, new TypedString("" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())));
 
+            //send back old images if any exist else send empty array
+            JSONArray myArray = new JSONArray();
+            if(gson==null)
+                gson = new Gson();
 
-                //send back old images if any exist
                 if (objectList != null && objectList.size() > 0) {
+
 
 
                     for (Object image : objectList) {
 
-
                         if (image instanceof FetchFeedbackResponse.ReviewImage) {
-
-                            if(gson==null)
-                                 gson = new Gson();
-
-                            params.addPart(Constants.KEY_IMAGES, new TypedString(gson.toJson(image)));
-
+                                  myArray.put(image);
                         }
 
 
                     }
 
                 }
-
-                Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
+            params.addPart(Constants.KEY_IMAGES, new TypedString(gson.toJson((gson.toJsonTree(myArray).getAsJsonObject().get("values")))));
+             Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
                     @Override
                     public void success(final OrderHistoryResponse notificationInboxResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
@@ -526,7 +534,14 @@ public class RestaurantAddReviewFragment extends Fragment {
                 };
 
                 //hit finally
+
+            if(activity.getCurrentReview()==null)
                 RestClient.getMenusApiService().orderFeedback(params, callback);
+            else
+            {
+                params.addPart("feedback_id",new TypedString(activity.getCurrentReview().getFeedbackId()+""));
+                RestClient.getMenusApiService().editFeedback(params, callback);
+            }
 
         } catch (Exception e) {
             DialogPopup.dismissLoadingDialog();

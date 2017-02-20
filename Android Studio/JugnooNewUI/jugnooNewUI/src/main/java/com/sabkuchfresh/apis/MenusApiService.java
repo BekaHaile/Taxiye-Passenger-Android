@@ -66,6 +66,10 @@ public interface MenusApiService {
 	void orderFeedback(@Body MultipartTypedOutput params,
 					   Callback<OrderHistoryResponse> callback);
 
+	@POST("/v1/customer/edit_feedback")
+	void editFeedback(@Body MultipartTypedOutput params,
+					   Callback<OrderHistoryResponse> callback);
+
 	@FormUrlEncoded
 	@POST("/place_order_callback")
 	void placeOrderCallback(@FieldMap Map<String, String> params,
