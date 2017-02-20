@@ -809,11 +809,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         rlGenieHelp = (RelativeLayout) findViewById(R.id.rlGenieHelp);
         tvGenieHelp = (TextView) findViewById(R.id.tvGenieHelp); tvGenieHelp.setTypeface(Fonts.mavenMedium(this));
-        if(Prefs.with(this).getInt(SHOW_GEANIE_HELP, 0) == 0){
-            rlGenieHelp.setVisibility(View.VISIBLE);
-        } else{
-            rlGenieHelp.setVisibility(View.GONE);
-        }
 
 
         ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback); ratingBarRSFeedback.setRating(0);
@@ -5006,6 +5001,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
                         fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
+
+                        if (Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
+                            rlGenieHelp.setVisibility(View.VISIBLE);
+                        } else {
+                            rlGenieHelp.setVisibility(View.GONE);
+                        }
                     }
                 }
             } else {

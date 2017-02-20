@@ -934,6 +934,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             topBar.ivAddReview.setVisibility(View.GONE);
             topBar.tvNameCap.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
+            rlGenieHelp.setVisibility(View.GONE);
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -942,12 +943,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
-
-                if(Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0){
-                    rlGenieHelp.setVisibility(View.VISIBLE);
-                } else{
-                    rlGenieHelp.setVisibility(View.GONE);
-                }
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     float marginBottom = 40f;
@@ -962,6 +957,13 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 if (setMinOrderAmountText(fragment) == 1) {
                     textViewMinOrderVis = -1;
+                }
+
+                if(fabViewTest.relativeLayoutFABTest.getVisibility() == View.VISIBLE
+                        && Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0){
+                    rlGenieHelp.setVisibility(View.VISIBLE);
+                } else{
+                    rlGenieHelp.setVisibility(View.GONE);
                 }
 
             } else if (fragment instanceof FreshFragment) {
