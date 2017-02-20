@@ -26,9 +26,7 @@ public class BlurImageTask extends AsyncTask<String, Void, Pair<Bitmap, Bitmap>>
     public static Bitmap blurRenderScript(Context context, Bitmap smallBitmap, int radius) {
         try {
             smallBitmap = RGB565toARGB888(smallBitmap);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         Bitmap bitmap = Bitmap.createBitmap(
                 smallBitmap.getWidth(), smallBitmap.getHeight(),
@@ -49,6 +47,11 @@ public class BlurImageTask extends AsyncTask<String, Void, Pair<Bitmap, Bitmap>>
         renderScript.destroy();
 
         return bitmap;
+        } catch (Exception|OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
+
 
     }
 
@@ -85,6 +88,8 @@ public class BlurImageTask extends AsyncTask<String, Void, Pair<Bitmap, Bitmap>>
                 Bitmap originalBitmap = Picasso.with(context).load(params[0]).get();
                 Bitmap blurredBitmap = blurRenderScript(context, originalBitmap, 25);
 
+                if(blurredBitmap==null)
+                    blurredBitmap=originalBitmap;
                 return new Pair<>(originalBitmap, blurredBitmap);
             } catch (IOException e) {
                 e.printStackTrace();
