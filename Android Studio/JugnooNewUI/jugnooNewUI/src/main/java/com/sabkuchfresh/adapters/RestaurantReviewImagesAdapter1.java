@@ -117,8 +117,10 @@ public class RestaurantReviewImagesAdapter1 extends RecyclerView.Adapter<Restaur
         public ViewHolderReviewImage(View itemView) {
             super(itemView);
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
-            btnRemove = (ImageView)itemView.findViewById(R.id.ivClose);
+            btnRemove=(ImageView)itemView.findViewById(R.id.btn_remove);
             btnRemove.setVisibility(View.VISIBLE);
+
+
         }
 
     }

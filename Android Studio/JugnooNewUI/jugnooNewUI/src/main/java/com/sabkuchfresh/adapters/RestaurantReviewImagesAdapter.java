@@ -67,7 +67,7 @@ public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<Restaura
                 }
             });
 
-            holder.ivClose.setVisibility(View.GONE);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,11 +79,10 @@ public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<Restaura
     }
 
     class ViewHolderReviewImage extends RecyclerView.ViewHolder {
-        public ImageView ivImage, ivClose;
+        public ImageView ivImage;
         public ViewHolderReviewImage(View itemView) {
             super(itemView);
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
-            ivClose = (ImageView) itemView.findViewById(R.id.ivClose);
         }
     }
 

@@ -14,16 +14,17 @@
         android:tag="mwar"/>
 
 
+
     <ImageView
-        android:id="@+id/ivClose"
+        android:id="@+id/btn_remove"
         android:layout_width="70px"
         android:layout_height="70px"
         android:layout_alignTop="@+id/ivImage"
         android:layout_alignRight="@+id/ivImage"
         android:padding="10px"
         android:rotation="45"
+        android:visibility="gone"
         android:src="@drawable/ic_add_grey_bg_selector"
-        android:tag="mwar"
-        />
+        android:tag="mwar" />
 
 </RelativeLayout>

@@ -24,7 +24,7 @@ import de.greenrobot.event.EventBus;
  */
 public final class Picker {
 
-    public final int limit;
+    public int limit;
     public final Context context;
     public final int fabBackgroundColor;
     public final int fabBackgroundColorWhenPressed;
@@ -87,6 +87,9 @@ public final class Picker {
 
     }
 
+    public void setLimit(int limit){
+        this.limit=limit;
+    }
 
     public enum PickMode {
 
@@ -295,6 +298,8 @@ public final class Picker {
             mVideoIconTintColor = color;
             return this;
         }
+
+
 
         public Picker build() {
             return new Picker(this);
