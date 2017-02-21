@@ -242,7 +242,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginTop="@dimen/px_10"
+                            android:layout_marginTop="@dimen/px_30"
                             android:visibility="gone">
 
                             <ImageView

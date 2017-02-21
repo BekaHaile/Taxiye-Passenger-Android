@@ -328,7 +328,13 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                 openStarCheckoutFragment(JugnooStarSubscribedActivity.this, rlFragment, purchaseType);
                 break;
             case R.id.ivStarInfo:
-                DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", getResources().getString(R.string.star_info_text));
+                DialogPopup.alertPopupWithListener(JugnooStarSubscribedActivity.this, "", getResources().getString(R.string.star_info_text)
+                        , getResources().getString(R.string.ok), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }, false, false, true);
                 break;
         }
     }
@@ -426,6 +432,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
     private void setRenewView(FetchSubscriptionSavingsResponse savingsResponse) {
         llRenew.setVisibility(View.GONE);
         if(savingsResponse.getRenewalData() != null){
+            rlExpire.setVisibility(View.GONE);
             llUpgradeContainer.setVisibility(View.GONE);
             llRenew.setVisibility(View.VISIBLE);
             if(savingsResponse.getRenewalData().getWarning() != null && savingsResponse.getRenewalData().getWarning().getText() != null) {
@@ -447,13 +454,13 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                 tvPeriod1.setText(savingsResponse.getRenewalData().getRenewPlan().getPlanString());
 
                 if(savingsResponse.getRenewalData().getRenewPlan().getCrossText() != null && !savingsResponse.getRenewalData().getRenewPlan().getCrossText().equalsIgnoreCase("")){
-                    String temp = savingsResponse.getRenewalData().getRenewPlan().getDescription().replace(crossTextFormatter, savingsResponse.getRenewalData().getRenewPlan().getCrossText());
-                    String split[] = savingsResponse.getRenewalData().getRenewPlan().getDescription().split(Pattern.quote(crossTextFormatter));
+                    String temp = savingsResponse.getRenewalData().getRenewPlan().getFinalAmountText().replace(crossTextFormatter, savingsResponse.getRenewalData().getRenewPlan().getCrossText());
+                    String split[] = savingsResponse.getRenewalData().getRenewPlan().getFinalAmountText().split(Pattern.quote(crossTextFormatter));
                     if(split.length == 1){
                         int first = split[0].length();
                         tvAmount1.setText(temp, TextView.BufferType.SPANNABLE);
                         Spannable spannable = (Spannable) tvAmount1.getText();
-                        if(savingsResponse.getRenewalData().getRenewPlan().getDescription().startsWith(crossTextFormatter)){
+                        if(savingsResponse.getRenewalData().getRenewPlan().getFinalAmountText().startsWith(crossTextFormatter)){
                             spannable.setSpan(STRIKE_THROUGH_SPAN, 0, tvAmount1.length()-first, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         } else{
                             spannable.setSpan(STRIKE_THROUGH_SPAN, first, tvAmount1.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -468,7 +475,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                     //tvAmount2.setText(temp);
                     tvAmount1.setTextColor(ContextCompat.getColor(this, R.color.green));
                 } else{
-                    tvAmount1.setText(savingsResponse.getRenewalData().getRenewPlan().getDescription());
+                    tvAmount1.setText(savingsResponse.getRenewalData().getRenewPlan().getFinalAmountText());
                 }
 
                 selectedPlan(ivRadio1, savingsResponse.getRenewalData().getRenewPlan());
@@ -483,13 +490,13 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                 SubscriptionData.Subscription upgradeSubscription = savingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0);
                 tvPeriod2.setText(upgradeSubscription.getPlanString());
                 if(upgradeSubscription.getCrossText() != null && !upgradeSubscription.getCrossText().equalsIgnoreCase("")){
-                    String temp = upgradeSubscription.getDescription().replace(crossTextFormatter, upgradeSubscription.getCrossText());
-                    String split[] = upgradeSubscription.getDescription().split(Pattern.quote(crossTextFormatter));
+                    String temp = upgradeSubscription.getFinalAmountText().replace(crossTextFormatter, upgradeSubscription.getCrossText());
+                    String split[] = upgradeSubscription.getFinalAmountText().split(Pattern.quote(crossTextFormatter));
                     if(split.length == 1){
                         int first = split[0].length();
                         tvAmount2.setText(temp, TextView.BufferType.SPANNABLE);
                         Spannable spannable = (Spannable) tvAmount2.getText();
-                        if(upgradeSubscription.getDescription().startsWith(crossTextFormatter)){
+                        if(upgradeSubscription.getFinalAmountText().startsWith(crossTextFormatter)){
                             spannable.setSpan(STRIKE_THROUGH_SPAN, 0, tvAmount2.length()-first, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         } else{
                             //STRIKE_THROUGH_SPAN.updateDrawState(paint);
@@ -505,7 +512,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                     //tvAmount2.setText(temp);
                     tvAmount2.setTextColor(ContextCompat.getColor(this, R.color.green));
                 } else{
-                    tvAmount2.setText(upgradeSubscription.getDescription());
+                    tvAmount2.setText(upgradeSubscription.getFinalAmountText());
                 }
 
                 if(rlPlan1.getVisibility() == View.VISIBLE){

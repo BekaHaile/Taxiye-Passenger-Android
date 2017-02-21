@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="@dimen/px_20"
+                android:padding="@dimen/px_30"
                 android:text="@string/jugnoo_Star_title"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_30" />
@@ -52,13 +52,13 @@
                 android:layout_below="@+id/rlBenefits"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/px_60">
+                android:paddingBottom="@dimen/px_30">
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/px_46"
+                    android:layout_marginTop="@dimen/px_20"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -225,9 +225,8 @@
                     android:layout_height="match_parent"
                     android:divider="@color/transparent"
                     android:dividerHeight="@dimen/px_0"
-
                     android:fadeScrollbars="true"
-                    android:paddingTop="@dimen/px_15"
+                    android:paddingTop="@dimen/px_2"
                     android:scrollbars="vertical" />
             </RelativeLayout>
 
