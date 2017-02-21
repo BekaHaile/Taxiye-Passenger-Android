@@ -59,7 +59,7 @@ import retrofit.mime.TypedByteArray;
 
 public class JugnooStarSubscribedActivity extends BaseFragmentActivity implements View.OnClickListener {
 
-    private RelativeLayout relative, rlAutoRenewal, rlFragment, rlPlan1, rlPlan2, rlExpire;
+    private RelativeLayout relative, rlAutoRenewal, rlFragment, rlPlan1, rlPlan2, rlExpire, rlWarning;
     private TextView textViewTitle, tvAutoRenewal, tvUpgradingText;
     private ImageView imageViewBack, ivAutoRenewalSwitch, ivRadio1, ivRadio2, ivStarInfo;
     private TextView tvCurrentPlanValue, tvExpiresOnValue, tvSavingsMeterRetry, tvBenefits, tvExpiredTitle,
@@ -112,6 +112,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
         tvSavingsMeterRetry.setTypeface(Fonts.mavenMedium(this));
 
         llRenew = (LinearLayout) findViewById(R.id.llRenew);
+        rlWarning = (RelativeLayout) findViewById(R.id.rlWarning);
         tvExpiredTitle = (TextView) findViewById(R.id.tvExpiredTitle); tvExpiredTitle.setTypeface(Fonts.mavenRegular(this));
         rlPlan1 = (RelativeLayout) findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(this); rlPlan1.setVisibility(View.GONE);
         rlPlan2 = (RelativeLayout) findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(this); rlPlan2.setVisibility(View.GONE);
@@ -428,7 +429,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
             llUpgradeContainer.setVisibility(View.GONE);
             llRenew.setVisibility(View.VISIBLE);
             if(savingsResponse.getRenewalData().getWarning() != null && savingsResponse.getRenewalData().getWarning().getText() != null) {
-                tvExpiredTitle.setVisibility(View.VISIBLE);
+                rlWarning.setVisibility(View.VISIBLE);
                 tvExpiredTitle.setText(savingsResponse.getRenewalData().getWarning().getText());
             }
 
@@ -537,6 +538,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
 
     private void setExpiredView(FetchSubscriptionSavingsResponse savingsResponse) {
         if(savingsResponse.getExpiredData() != null) {
+            llRenew.setVisibility(View.VISIBLE);
             tvCurrentPlan.setText(getResources().getString(R.string.previous_plan));
             if (savingsResponse.getExpiredData().getLastSubscription() != null
                     && savingsResponse.getExpiredData().getLastSubscription().getPlanString() != null) {
@@ -546,7 +548,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
 
             if (savingsResponse.getExpiredData().getWarning() != null
                     && savingsResponse.getExpiredData().getWarning().getText() != null) {
-                tvExpiredTitle.setVisibility(View.VISIBLE);
+                rlWarning.setVisibility(View.VISIBLE);
                 tvExpiredTitle.setText(savingsResponse.getExpiredData().getWarning().getText());
             }
 
@@ -581,8 +583,6 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                         tvPeriod2.setText(String.valueOf(subscriptionTemp.getPlanStringNew()));
                     }
                 }
-
-
                 bConfirm.setText(getResources().getString(R.string.renew));
             }
         }
