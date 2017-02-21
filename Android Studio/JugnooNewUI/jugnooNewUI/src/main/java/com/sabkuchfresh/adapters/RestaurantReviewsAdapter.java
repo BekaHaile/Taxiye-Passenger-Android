@@ -138,9 +138,13 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 								new RestaurantReviewImagesAdapter.Callback() {
 									@Override
 									public void onImageClick(int positionImageClicked, FetchFeedbackResponse.Review review) {
-										activity.setCurrentReview(review);
-										ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(positionImageClicked);
-										dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+										try {
+											activity.setCurrentReview(review);
+											ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(positionImageClicked);
+											dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
 									}
 								});
 						holder.rvFeedImages.setAdapter(holder.imagesAdapter);
@@ -153,12 +157,26 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 					holder.ivFeedImageSingle.setVisibility(View.VISIBLE);
 					paramsSep.addRule(RelativeLayout.BELOW, holder.ivFeedImageSingle.getId());
 					holder.imagesAdapter = null;
-					Picasso.with(activity).load(review.getImages().get(0).getThumbnail())
-							.resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
+					Picasso.with(activity).load(review.getImages().get(0).getUrl())
+							.resize((int) (ASSL.minRatio() * 644f), (int) (ASSL.minRatio() * 310f))
 							.centerCrop()
 							.transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
 							.placeholder(R.drawable.ic_fresh_item_placeholder)
 							.into(holder.ivFeedImageSingle);
+					holder.ivFeedImageSingle.setTag(position);
+					holder.ivFeedImageSingle.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							try {
+								int pos = (int) v.getTag();
+								activity.setCurrentReview(restaurantReviews.get(pos));
+								ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0);
+								dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
 				}
 			} else {
 				holder.rvFeedImages.setVisibility(View.GONE);
@@ -220,10 +238,13 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 								.append(activity.getVendorOpened().getName())
 								.append(", ")
 								.append(activity.getVendorOpened().getRestaurantAddress())
-								.append(" using Jugnoo!\nMy experience: ")
-								.append(restaurantReviews.get(pos).getReviewDesc())
-								.append("\n")
-								.append("https://jugnoo.in/review/")
+								.append(" using Jugnoo!\n");
+						if(!TextUtils.isEmpty(restaurantReviews.get(pos).getReviewDesc())){
+							sb.append("My experience: ");
+							sb.append(restaurantReviews.get(pos).getReviewDesc()).append("\n");
+						}
+
+								sb.append("https://jugnoo.in/review/")
 								.append(activity.getVendorOpened().getRestaurantId());
 
 
