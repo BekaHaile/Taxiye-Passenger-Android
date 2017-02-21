@@ -42,6 +42,11 @@
                 android:orientation="vertical"
                 android:layout_marginTop="@dimen/px_90">
 
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
                 <TextView
                     android:id="@+id/tvSavingsMeter"
                     android:layout_width="wrap_content"
@@ -51,6 +56,17 @@
                     android:text="@string/savings_meter"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34" />
+
+                    <ImageView
+                        android:id="@+id/ivStarInfo"
+                        android:layout_width="@dimen/px_42"
+                        android:layout_height="@dimen/px_42"
+                        android:src="@drawable/ic_star_info"
+                        android:padding="@dimen/px_10"
+                        android:tag="mwar"
+                        android:layout_toRightOf="@+id/tvSavingsMeter"/>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/llSavingsValue"
@@ -152,6 +168,7 @@
                         android:background="@color/menu_item_selector_color" />
 
                     <RelativeLayout
+                        android:id="@+id/rlExpire"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/px_100"
                         android:layout_marginLeft="@dimen/px_28"
@@ -212,6 +229,193 @@
                             android:tag="mwar" />
 
                     </RelativeLayout>
+                    
+                    <LinearLayout
+                        android:id="@+id/llRenew"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/px_10"
+                            android:layout_gravity="center">
+
+                            <ImageView
+                                android:id="@+id/ivExpireWarning"
+                                android:layout_width="@dimen/px_24"
+                                android:layout_height="@dimen/px_24"
+                                android:src="@drawable/ic_star_warning"
+                                android:layout_centerVertical="true"
+                                android:tag="mwar"/>
+                        
+                        <TextView
+                            android:id="@+id/tvExpiredTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/ivExpireWarning"
+                            android:text="Your star status has expired."
+                            android:layout_marginLeft="@dimen/px_10"
+                            android:textColor="#fd4f3a"
+                            android:gravity="center"
+                            android:visibility="visible"
+                            android:textSize="@dimen/text_size_30"/>
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/px_30"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <RelativeLayout
+                                android:id="@+id/rlPlan1"
+                                android:layout_width="@dimen/px_320"
+                                android:layout_height="@dimen/px_135"
+                                android:visibility="visible"
+                                android:background="@color/transparent">
+
+                                <ImageView
+                                    android:id="@+id/ivRadio1"
+                                    android:layout_width="@dimen/px_50"
+                                    android:layout_height="@dimen/px_50"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="@dimen/px_50"
+                                    android:src="@drawable/ic_radio_button_normal"
+                                    android:tag="mwar" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="@dimen/px_24"
+                                    android:layout_toRightOf="@+id/ivRadio1"
+                                    android:orientation="vertical">
+
+
+                                    <TextView
+                                        android:id="@+id/tvPeriod1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:ellipsize="end"
+                                        android:maxLines="1"
+                                        android:text="Monthly"
+                                        android:textColor="@color/text_color"
+                                        android:textSize="@dimen/text_size_36" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <com.sabkuchfresh.utils.TextViewStrikeThrough
+                                            android:id="@+id/tvActualAmount1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginBottom="-10px"
+                                            android:ellipsize="end"
+                                            android:maxLines="1"
+                                            android:text="2388"
+                                            android:textColor="@color/text_color"
+                                            android:textSize="@dimen/text_size_24"
+                                            android:visibility="gone" />
+
+                                        <TextView
+                                            android:id="@+id/tvAmount1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="0px"
+                                            android:ellipsize="end"
+                                            android:text="199"
+                                            android:textColor="@color/document_layout_bordor_color"
+                                            android:textSize="@dimen/text_size_24" />
+
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/rlPlan2"
+                                android:layout_width="@dimen/px_320"
+                                android:layout_height="@dimen/px_135"
+                                android:visibility="visible"
+                                android:background="@color/transparent">
+
+                                <ImageView
+                                    android:id="@+id/ivRadio2"
+                                    android:layout_width="@dimen/px_50"
+                                    android:layout_height="@dimen/px_50"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="@dimen/px_25"
+                                    android:src="@drawable/ic_radio_button_normal"
+                                    android:tag="mwar" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="@dimen/px_24"
+                                    android:layout_toRightOf="@+id/ivRadio2"
+                                    android:orientation="vertical">
+
+
+                                    <TextView
+                                        android:id="@+id/tvPeriod2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:ellipsize="end"
+                                        android:maxLines="1"
+                                        android:text="Annual"
+                                        android:textColor="@color/text_color"
+                                        android:textSize="@dimen/text_size_36" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <com.sabkuchfresh.utils.TextViewStrikeThrough
+                                            android:id="@+id/tvActualAmount2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginBottom="-10px"
+                                            android:ellipsize="end"
+                                            android:maxLines="1"
+                                            android:text="2388"
+                                            android:visibility="gone"
+                                            android:textColor="@color/text_color"
+                                            android:textSize="@dimen/text_size_24" />
+
+                                        <TextView
+                                            android:id="@+id/tvAmount2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="0px"
+                                            android:ellipsize="end"
+                                            android:text="999"
+                                            android:textColor="@color/document_layout_bordor_color"
+                                            android:textSize="@dimen/text_size_24" />
+
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/bConfirm"
+                            style="@style/ButtonTheme"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="@dimen/px_46"
+                            android:text="@string/confirm"
+                            android:layout_marginBottom="@dimen/px_40"/>
+                    </LinearLayout>
 
 
                 </LinearLayout>

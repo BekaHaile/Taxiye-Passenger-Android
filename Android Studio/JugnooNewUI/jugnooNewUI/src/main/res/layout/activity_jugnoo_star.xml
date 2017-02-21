@@ -3,7 +3,7 @@
     android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menu_item_selector_color">
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/topBar"
@@ -34,25 +34,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/tvSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="@dimen/px_20"
+                android:text="@string/jugnoo_Star_title"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30" />
+
             <LinearLayout
                 android:id="@+id/llContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/rlBenefits"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/px_60">
 
-                <TextView
-                    android:id="@+id/tvSubTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/px_40"
-                    android:layout_marginRight="@dimen/px_40"
-                    android:layout_marginTop="@dimen/px_30"
-                    android:gravity="center"
-                    android:text="@string/jugnoo_Star_title"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_34" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -63,7 +64,7 @@
 
                     <RelativeLayout
                         android:id="@+id/rlPlan1"
-                        android:layout_width="@dimen/px_270"
+                        android:layout_width="@dimen/px_360"
                         android:layout_height="@dimen/px_135"
                         android:background="@color/transparent">
 
@@ -72,7 +73,7 @@
                             android:layout_width="@dimen/px_50"
                             android:layout_height="@dimen/px_50"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/px_25"
+                            android:layout_marginLeft="@dimen/px_50"
                             android:src="@drawable/ic_radio_button_normal"
                             android:tag="mwar" />
 
@@ -84,55 +85,54 @@
                             android:layout_toRightOf="@+id/ivRadio1"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/tvActualAmount1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="-10px"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:text="2388"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_24"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:id="@+id/tvAmount1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:text="199"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_54" />
 
                             <TextView
                                 android:id="@+id/tvPeriod1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="-10px"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="1 Month"
+                                android:text="Monthly"
                                 android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_24" />
+                                android:textSize="@dimen/text_size_36" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <com.sabkuchfresh.utils.TextViewStrikeThrough
+                                    android:id="@+id/tvActualAmount1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="-10px"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:text="2388"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/text_size_24"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/tvAmount1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="0px"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:text="199"
+                                    android:textColor="@color/document_layout_bordor_color"
+                                    android:textSize="@dimen/text_size_24" />
+
+                            </LinearLayout>
                         </LinearLayout>
 
                     </RelativeLayout>
 
-                    <View
-                        android:id="@+id/divider"
-                        android:layout_width="@dimen/px_2"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="@dimen/px_30"
-                        android:layout_marginTop="@dimen/px_30"
-                        android:background="@color/search_view_radius" />
-
                     <RelativeLayout
                         android:id="@+id/rlPlan2"
-                        android:layout_width="@dimen/px_270"
+                        android:layout_width="@dimen/px_360"
                         android:layout_height="@dimen/px_135"
-                        android:layout_marginLeft="@dimen/px_20"
                         android:background="@color/transparent">
 
                         <ImageView
@@ -152,37 +152,45 @@
                             android:layout_toRightOf="@+id/ivRadio2"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/tvActualAmount2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="-10px"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:text="2388"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_24" />
-
-                            <TextView
-                                android:id="@+id/tvAmount2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:text="199"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_54" />
 
                             <TextView
                                 android:id="@+id/tvPeriod2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="-10px"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="1 Month"
+                                android:text="Annual"
                                 android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_24" />
+                                android:textSize="@dimen/text_size_36" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <com.sabkuchfresh.utils.TextViewStrikeThrough
+                                    android:id="@+id/tvActualAmount2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="-10px"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:text="2388"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/text_size_24" />
+
+                                <TextView
+                                    android:id="@+id/tvAmount2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="0px"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:text="999"
+                                    android:textColor="@color/document_layout_bordor_color"
+                                    android:textSize="@dimen/text_size_24" />
+
+                            </LinearLayout>
                         </LinearLayout>
 
                     </RelativeLayout>
@@ -200,15 +208,24 @@
 
 
             <RelativeLayout
+                android:id="@+id/rlBenefits"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/llContainer"
-                android:background="@color/grey_lb_list">
+                android:layout_below="@+id/tvSubTitle"
+                android:background="@color/white">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/divider_color" />
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/rvBenefits"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="@dimen/px_0"
+
                     android:fadeScrollbars="true"
                     android:paddingTop="@dimen/px_15"
                     android:scrollbars="vertical" />
@@ -218,7 +235,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="6px"
                 android:layout_below="@+id/llContainer"
-                android:background="@drawable/shadow_down" />
+                android:background="@drawable/shadow_down"
+                android:visibility="gone" />
 
         </RelativeLayout>
 

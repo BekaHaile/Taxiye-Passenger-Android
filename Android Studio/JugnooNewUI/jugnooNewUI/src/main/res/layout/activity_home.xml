@@ -157,6 +157,7 @@
             layout="@layout/layout_home_activity_fab_test"/>
 
 
+
         <!-- search layout -->
         <RelativeLayout
             android:id="@+id/relativeLayoutSearch"

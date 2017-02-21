@@ -234,6 +234,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     private FreshSortingAdapter sortingAdapter;
     private CoordinatorLayout coordinatorLayout;
     private static final float COLLAPSE_TOOLBAR_HEIGHT = 270f;
+    private RelativeLayout rlGenieHelp;
+    private TextView tvGenieHelp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -298,7 +300,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
             topBar.etSearch.addTextChangedListener(textWatcher);
 
-
+            rlGenieHelp = (RelativeLayout) findViewById(R.id.rlGenieHelp);
+            tvGenieHelp = (TextView) findViewById(R.id.tvGenieHelp); tvGenieHelp.setTypeface(Fonts.mavenMedium(this));
 
 
 
@@ -695,6 +698,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         fetchWalletBalance(this);
     }
 
+    public RelativeLayout getRlGenieHelp() {
+        return rlGenieHelp;
+    }
+
     public FreshHomeFragment getFreshHomeFragment() {
         return (FreshHomeFragment) getSupportFragmentManager().findFragmentByTag(FreshHomeFragment.class.getName());
     }
@@ -929,6 +936,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             topBar.ivAddReview.setVisibility(View.GONE);
             topBar.tvNameCap.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
+            rlGenieHelp.setVisibility(View.GONE);
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -951,6 +959,13 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 if (setMinOrderAmountText(fragment) == 1) {
                     textViewMinOrderVis = -1;
+                }
+
+                if(fabViewTest.relativeLayoutFABTest.getVisibility() == View.VISIBLE
+                        && Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0){
+                    rlGenieHelp.setVisibility(View.VISIBLE);
+                } else{
+                    rlGenieHelp.setVisibility(View.GONE);
                 }
 
             } else if (fragment instanceof FreshFragment) {
@@ -1015,6 +1030,13 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
                 rlFilterVis = View.VISIBLE;
+
+                if(Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0){
+                    Prefs.with(this).save(Constants.SHOW_GEANIE_HELP, 1);
+                    rlGenieHelp.setVisibility(View.VISIBLE);
+                } else{
+                    rlGenieHelp.setVisibility(View.GONE);
+                }
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.menus));
@@ -1296,12 +1318,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         try {
             if (getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                 int textViewMinOrderVis = View.VISIBLE;
-                if (getProductsResponse() != null && totalQuantity > 0
+                if (getProductsResponse() != null
                         && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)) {
                     if (Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
                         textViewMinOrderVis = View.VISIBLE;
                         textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
-                    } else if (totalPrice < getSuperCategoriesData().getDeliveryInfo().getMinAmount()) {
+                    } else if (totalQuantity > 0 && totalPrice < getSuperCategoriesData().getDeliveryInfo().getMinAmount()) {
                         textViewMinOrderVis = View.VISIBLE;
                         double leftAmount = getSuperCategoriesData().getDeliveryInfo().getMinAmount() - totalPrice;
                         textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,

@@ -633,7 +633,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.ABOUT, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "About");
             } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(tag)){
-                if(Data.userData.isSubscriptionActive()){
+                if((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
+                        || Data.userData.isSubscriptionActive()){
                     activity.startActivity(new Intent(activity, JugnooStarSubscribedActivity.class));
                 } else {
                     activity.startActivity(new Intent(activity, JugnooStarActivity.class));

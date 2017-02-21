@@ -533,6 +533,11 @@ public interface ApiService {
                               Callback<PurchaseSubscriptionResponse> callback);
 
     @FormUrlEncoded
+    @POST("/renew_subscription")
+    void renewSubscription(@FieldMap Map<String, String> params,
+                             Callback<PurchaseSubscriptionResponse> callback);
+
+    @FormUrlEncoded
     @POST("/push_tracking")
     void pushTracking(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);

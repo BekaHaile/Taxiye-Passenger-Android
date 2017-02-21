@@ -485,6 +485,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private boolean setPickupAddressZoomedOnce = false;
     private GoogleApiClient mGoogleApiClient;
     private float previousZoomLevel = -1.0f;
+    private RelativeLayout rlGenieHelp;
+    private TextView tvGenieHelp;
 
 
     @SuppressLint("NewApi")
@@ -805,6 +807,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         bChatDriver = (Button) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
         tvChatCount = (TextView) findViewById(R.id.tvChatCount); tvChatCount.setTypeface(Fonts.mavenMedium(this));
 
+        rlGenieHelp = (RelativeLayout) findViewById(R.id.rlGenieHelp);
+        tvGenieHelp = (TextView) findViewById(R.id.tvGenieHelp); tvGenieHelp.setTypeface(Fonts.mavenMedium(this));
 
 
         ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback); ratingBarRSFeedback.setRating(0);
@@ -3641,6 +3645,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    public RelativeLayout getRlGenieHelp() {
+        return rlGenieHelp;
+    }
+
     public View getViewPoolInfoBarAnim() {
         return viewPoolInfoBarAnim;
     }
@@ -4993,6 +5001,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
                         fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
+
+                        if (Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
+                            rlGenieHelp.setVisibility(View.VISIBLE);
+                        } else {
+                            rlGenieHelp.setVisibility(View.GONE);
+                        }
                     }
                 }
             } else {

@@ -107,7 +107,12 @@ public class FABViewTest {
                         isOpened = true;
                         if(activity instanceof HomeActivity){
                             ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
+                            ((HomeActivity)activity).getRlGenieHelp().setVisibility(View.GONE);
+                            Prefs.with(activity).save(Constants.SHOW_GEANIE_HELP, 1);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
+                        } else if(activity instanceof FreshActivity){
+                            ((FreshActivity)activity).getRlGenieHelp().setVisibility(View.GONE);
+                            Prefs.with(activity).save(Constants.SHOW_GEANIE_HELP, 1);
                         }
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
                         FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Opened");
@@ -212,13 +217,19 @@ public class FABViewTest {
                     }
                 }
 
-//                if (Data.userData.getDeliveryEnabled() != 1) {
-//                    fabDeliveryTest.setVisibility(View.GONE);
-//                } else {
-//                    if(isOpened) {
-//                        fabDeliveryTest.setVisibility(View.VISIBLE);
-//                    }
-//                }
+                /*if(activity instanceof HomeActivity) {
+                    if (Prefs.with(activity).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
+                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.VISIBLE);
+                    } else {
+                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.GONE);
+                    }
+                } else if(activity instanceof HomeActivity){
+                    if (Prefs.with(activity).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
+                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.VISIBLE);
+                    } else {
+                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.GONE);
+                    }
+                }*/
             }
         } catch (Exception e) {
             e.printStackTrace();
