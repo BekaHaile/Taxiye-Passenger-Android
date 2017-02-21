@@ -96,8 +96,7 @@ public class MyApplication extends Application {
 
         Typekit.getInstance()
                 .add("maven", Typekit.createFromAsset(this, "fonts/maven_pro_medium.ttf"))
-				.add("avenir",Typekit.createFromAsset(this,  "fonts/avenir_next_demi.otf"))
-		;
+				.add("avenir",Typekit.createFromAsset(this,  "fonts/avenir_next_demi.otf"));
 
 
         super.onCreate();

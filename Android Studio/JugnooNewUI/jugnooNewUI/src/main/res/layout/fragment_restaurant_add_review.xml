@@ -1,39 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<LinearLayout
     android:id="@+id/rlRoot"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:fillViewport="true"
+    android:layout_height="0dp"
+    android:layout_weight="1"
     android:background="@color/white"
     android:orientation="vertical">
+
+
+<LinearLayout
+    android:animateLayoutChanges="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <com.sabkuchfresh.utils.RatingBarMenuFeedback
+        android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:numStars="5"
+        android:rating="0"
+        android:tag="DontTouchMe"
+        android:visibility="gone"
+        app:halfStars="false"
+        app:maxStars="5"
+        app:onlyForDisplay="false"
+        app:starOff="@drawable/ic_menu_feedback_star_off"
+        app:starOn="@drawable/ic_menu_feedback_star_on" />
+
+    <View
+        android:id="@+id/line_below_rating"
+        style="@style/HorizontalDivider" android:layout_marginBottom="@dimen/px_24"  android:visibility="gone" />
 
     <EditText
         android:id="@+id/etFeedback"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bSubmit"
+        android:minHeight="100dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@drawable/background_transparent"
         android:fadeScrollbars="true"
         android:gravity="left"
         android:hint="@string/what_you_love_about_restaurant"
         android:imeOptions="actionDone"
-        android:maxLength="500"
-        android:padding="@dimen/px_60"
+        android:maxLength="@integer/edt_add_review_max_length"
+        android:paddingLeft="@dimen/px_60"
+        android:paddingRight="@dimen/px_60"
+
         android:scrollbars="vertical"
         android:tag="mwar"
         android:textColor="@color/text_color"
         android:textColorHint="@color/text_color_hint"
         android:textCursorDrawable="@drawable/cursor_black"
         android:textSize="@dimen/px_42"
-        app:font="maven"
         android:inputType="textCapSentences|textMultiLine"
-        />
+        app:font="maven" />
+
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvFeedImages"
+        android:layout_width="match_parent"
+        android:layout_height="310px"
+        android:layout_marginTop="@dimen/px_10"
+        android:scrollbars="horizontal" />
+
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_below="@+id/etFeedback"
         android:background="@color/stroke_light_grey_alpha"
         />
 
@@ -44,17 +91,92 @@
         android:background="@drawable/shadow_down_new"
         />
 
-    <Button
+
+
+   <!-- <Button
         android:id="@+id/bSubmit"
         style="@style/ButtonTheme"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/px_30"
         android:layout_marginTop="@dimen/px_30"
         android:text="@string/submit"
-        app:font="maven"
+        app:font="maven" />-->
 
-        />
+
+  </LinearLayout>
+      </ScrollView>
+    <RelativeLayout
+android:id="@+id/layout_controller"
+android:layout_gravity="bottom"
+android:layout_width="match_parent"
+android:paddingLeft="20px"
+android:paddingRight="24px"
+android:paddingTop="10px"
+android:paddingBottom="32px"
+android:layout_height="100px">
+
+
+<ImageButton
+    android:id="@+id/ib_access_camera"
+    android:background="@android:color/transparent"
+    android:src="@drawable/ic_add_review_camera"
+    android:layout_marginRight="20px"
+    android:padding="15px"
+    android:layout_width="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_height="wrap_content" />
+
+<Button
+    android:id="@+id/btnSubmit"
+    android:layout_marginTop="-10px"
+    android:paddingBottom="-20px"
+    android:layout_alignParentRight="true"
+    android:layout_centerVertical="true"
+    android:layout_gravity="end"
+    android:text="Submit"
+    app:font="maven"
+    android:textColor="@color/text_color_light_selector"
+    android:textSize="32px"
+    android:background="@null"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent" />
+
+<View
+    android:id="@+id/submitDivider"
+    android:layout_toLeftOf="@id/btnSubmit"
+    android:layout_centerVertical="true"
+    android:layout_height="match_parent"
+    android:layout_width="2px" android:background="@color/dull_line"/>
+<ImageButton
+    android:id="@+id/ib_access_star"
+    android:padding="15px"
+    android:layout_gravity="center"
+    android:background="@android:color/transparent"
+    android:src="@drawable/ic_add_review_star"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_toRightOf="@+id/ib_access_camera"
+    />
+
+
+<TextView
+    android:text="400"
+    android:gravity="right"
+    android:maxLines="1"
+    app:font="maven"
+    android:textSize="26px"
+    android:textColor="@color/text_color_dark_1"
+    android:layout_toRightOf="@id/ib_access_star"
+    android:layout_centerVertical="true"
+    android:layout_toLeftOf="@id/submitDivider"
+    android:layout_marginRight="10dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/tv_char_count" />
+
+
 
 
 </RelativeLayout>
+</LinearLayout>

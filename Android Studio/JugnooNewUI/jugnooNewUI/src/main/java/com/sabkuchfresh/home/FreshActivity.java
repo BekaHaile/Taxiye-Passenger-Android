@@ -100,6 +100,7 @@ import com.sabkuchfresh.retrofit.model.SubItemComparePriceLowToHigh;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriority;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemCompareAtoZ;
 import com.sabkuchfresh.retrofit.model.menus.ItemComparePriceHighToLow;
@@ -202,6 +203,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public String mContactNo = "";
 
     private View topView;
+    private FetchFeedbackResponse.Review currentReview;
 
     /**
      * this holds the reference for the Otto Bus which we declared in LavocalApplication
@@ -3579,9 +3581,13 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         }
     }
 
-    public void openRestaurantAddReviewFragment() {
+    public void openRestaurantAddReviewFragment(boolean isPlusButtonClicked) {
         if (getVendorOpened() != null) {
-            FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.PLUS_BUTTON);
+            if(isPlusButtonClicked){
+                this.currentReview=null;
+                FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.PLUS_BUTTON);
+
+            }
             getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
     }
@@ -3596,4 +3602,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     }
 
+    public FetchFeedbackResponse.Review getCurrentReview() {
+        return currentReview;
+    }
+
+    public void setCurrentReview(FetchFeedbackResponse.Review currentReview) {
+        this.currentReview = currentReview;
+    }
 }

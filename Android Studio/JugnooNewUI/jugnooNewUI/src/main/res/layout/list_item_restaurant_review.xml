@@ -31,8 +31,8 @@
         android:layout_marginLeft="@dimen/px_30"
         android:layout_marginRight="@dimen/px_16"
         android:layout_marginTop="@dimen/px_30"
-        android:tag="mwar"
         android:scaleType="centerCrop"
+        android:tag="mwar"
         />
 
 
@@ -41,10 +41,10 @@
         android:layout_width="@dimen/px_350"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/px_15"
-        android:layout_marginTop="@dimen/px_40"
+        android:layout_marginTop="@dimen/px_36"
         android:layout_toLeftOf="@+id/tvDateTime"
         android:layout_toRightOf="@+id/tvNameCap"
-        android:text="Sample"
+        android:text=""
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_32"
         app:font="maven"
@@ -58,7 +58,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/px_40"
         android:layout_marginTop="@dimen/px_40"
-        android:text="Sample"
+        android:text=""
         android:textColor="@color/document_layout_bordor_color"
         android:textSize="@dimen/text_size_24"
         app:font="maven"
@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/px_40"
         android:layout_below="@+id/tvName"
-        android:layout_marginTop="@dimen/px_10"
+        android:layout_marginTop="@dimen/px_8"
         android:layout_toRightOf="@+id/tvNameCap"
         android:background="@drawable/capsule_text_color"
         android:gravity="center_vertical"
@@ -78,7 +78,7 @@
         android:paddingRight="@dimen/px_15"
         android:text=""
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_20"
+        android:textSize="@dimen/text_size_22"
         android:visibility="visible"
         app:font="maven"/>
 
@@ -87,15 +87,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvName"
-        android:layout_marginLeft="@dimen/px_20"
+        android:layout_marginLeft="@dimen/px_18"
         android:layout_marginRight="@dimen/px_40"
-        android:layout_marginTop="@dimen/px_14"
+        android:layout_marginTop="@dimen/px_16"
         android:layout_toRightOf="@+id/tvRating"
         android:drawablePadding="@dimen/dp_2"
         android:drawableRight="@drawable/ic_uparrow"
-        android:text="Sample"
+        android:text=""
         android:textColor="@color/document_layout_bordor_color"
-        android:textSize="@dimen/text_size_26"
+        android:textSize="@dimen/text_size_22"
         app:font="maven"
         />
 
@@ -103,24 +103,116 @@
         android:id="@+id/tvReviewMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvReviewTag"
-        android:layout_marginBottom="@dimen/px_40"
+        android:layout_below="@+id/tvNameCap"
+        android:layout_marginLeft="@dimen/px_40"
         android:layout_marginRight="@dimen/px_40"
-        android:layout_marginTop="@dimen/px_12"
-        android:layout_toRightOf="@+id/tvNameCap"
-        android:text="@string/sample_address"
+        android:layout_marginTop="@dimen/px_24"
+        android:text=""
         android:textColor="@color/color_menu_item_desc"
         android:textSize="@dimen/text_size_26"
         app:font="maven"
         />
 
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvFeedImages"
+        android:layout_width="match_parent"
+        android:layout_height="310px"
+        android:layout_below="@+id/tvReviewMessage"
+        android:layout_marginTop="@dimen/px_20"
+        android:scrollbars="horizontal"
+        android:translationZ="1dp"
+        />
+    
+    <ImageView
+        android:id="@+id/ivFeedImageSingle"
+        android:layout_width="@dimen/px_644"
+        android:layout_height="@dimen/px_310"
+        android:layout_below="@+id/tvReviewMessage"
+        android:layout_marginTop="@dimen/px_20"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"
+        />
+
+
     <View
-        android:id="@+id/vSep"
+        android:id="@+id/vSepBelowMessage"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_2"
-        android:layout_marginLeft="@dimen/px_20"
-        android:layout_marginRight="@dimen/px_20"
+        android:layout_below="@+id/rvFeedImages"
         android:background="@color/stroke_light_grey_alpha"
+        android:layout_marginTop="@dimen/px_20"
         />
+
+
+    <TextView
+        android:id="@+id/tvLikeShareCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vSepBelowMessage"
+        android:layout_marginBottom="@dimen/px_36"
+        android:layout_marginLeft="@dimen/px_40"
+        android:layout_marginTop="@dimen/px_36"
+        android:text="1 Like | 1 Share"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_24"
+        app:font="maven"
+        />
+
+
+    <ImageView
+        android:id="@+id/ivFeedEdit"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/vSepBelowMessage"
+        android:layout_marginBottom="@dimen/px_20"
+        android:layout_marginRight="@dimen/px_20"
+        android:layout_marginTop="@dimen/px_20"
+        android:background="@drawable/bg_transp_menu_color_selector"
+        android:padding="@dimen/px_10"
+        android:src="@drawable/ic_feed_edit"
+        android:tag="mwar"
+        android:visibility="visible"
+
+        />
+
+    <ImageView
+        android:id="@+id/ivFeedShare"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@+id/vSepBelowMessage"
+        android:layout_marginBottom="@dimen/px_20"
+        android:layout_marginRight="@dimen/px_30"
+        android:layout_marginTop="@dimen/px_20"
+        android:layout_toLeftOf="@+id/ivFeedEdit"
+        android:padding="@dimen/px_10"
+        android:src="@drawable/ic_feed_share_normal"
+        android:tag="mwar"
+        />
+
+    <ImageView
+        android:id="@+id/ivFeedLike"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:layout_below="@+id/vSepBelowMessage"
+        android:layout_marginBottom="@dimen/px_20"
+        android:layout_marginRight="@dimen/px_30"
+        android:layout_marginTop="@dimen/px_20"
+        android:layout_toLeftOf="@+id/ivFeedShare"
+        android:padding="@dimen/px_10"
+        android:src="@drawable/ic_feed_like_normal"
+        android:tag="mwar"
+        />
+
+    <View
+        android:id="@+id/vShadowDown"
+        android:layout_width="match_parent"
+        android:layout_height="30px"
+        android:layout_below="@+id/tvLikeShareCount"
+        android:background="@drawable/shadow_feed_sep"
+        />
+
 
 </RelativeLayout>

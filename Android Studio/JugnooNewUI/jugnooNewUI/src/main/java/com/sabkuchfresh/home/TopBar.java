@@ -234,7 +234,7 @@ public class TopBar implements FlurryEventNames {
 
                 case R.id.ivAddReview:
                     if (activity instanceof FreshActivity) {
-                        ((FreshActivity) activity).openRestaurantAddReviewFragment();
+                        ((FreshActivity) activity).openRestaurantAddReviewFragment(true);
                     }
                     break;
 

@@ -331,6 +331,22 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                             }, 100);
                                         }
                                     }
+
+                                    try {
+                                        if (!TextUtils.isEmpty(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""))) {
+                                            int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""));
+                                            for (MenusResponse.Vendor vendor : vendors) {
+                                                if (restId == vendor.getRestaurantId()) {
+                                                    getVendorMenu(vendor);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    } finally {
+                                        Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
