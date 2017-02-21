@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -322,7 +321,7 @@ public class AddToAddressBookFragment extends Fragment {
         });
 
 
-        new Handler().postDelayed(new Runnable() {
+        activity.getWindow().getDecorView().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Utils.hideSoftKeyboard(activity, houseNumber);
@@ -475,7 +474,7 @@ public class AddToAddressBookFragment extends Fragment {
 
         locationEdited = (Utils.compareDouble(oldLatitude, current_latitude) != 0 && Utils.compareDouble(oldLongitude, current_longitude) != 0);
 
-        new Handler().postDelayed(new Runnable() {
+        activity.getWindow().getDecorView().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 extractMapSnapShot(current_latitude, current_longitude);

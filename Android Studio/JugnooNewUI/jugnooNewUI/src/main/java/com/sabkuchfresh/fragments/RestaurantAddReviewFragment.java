@@ -160,7 +160,7 @@ public class RestaurantAddReviewFragment extends Fragment {
 
 
 
-        new Handler().postDelayed(new Runnable() {
+        activity.getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 etFeedback.requestFocus();
@@ -310,7 +310,7 @@ public class RestaurantAddReviewFragment extends Fragment {
                 }
 
                 if(handler==null){
-                    handler = new Handler();
+                    handler = activity.getHandler();
 
                 }
                 if(startEnableStateRunnable==null){

@@ -120,12 +120,14 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 //			ImageView ivReviewImage = (ImageView) layout.findViewById(R.id.ivReviewImage);
 			Picasso.with(context).load(reviewImages.get(position).getUrl())
-					.placeholder(R.drawable.ic_fresh_item_placeholder)
+					.placeholder(R.drawable.ic_fresh_new_placeholder)
 					.into(ivReviewImage);
 
 			container.addView(ivReviewImage);
 			return ivReviewImage;
 		}
+
+
 
 		@Override
 		public int getCount() {
@@ -139,7 +141,6 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
-			super.destroyItem(container, position, object);
 			try {
 				container.removeView((View)object);
 			} catch (Exception e) {

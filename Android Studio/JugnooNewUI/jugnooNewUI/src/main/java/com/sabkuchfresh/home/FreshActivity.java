@@ -514,7 +514,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public void openCart() {
         try {
             if (getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, false)) {
-                new Handler().postDelayed(new Runnable() {
+                getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -1505,7 +1505,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
         updateCartValuesGetTotalPrice();
 
-        new Handler().postDelayed(new Runnable() {
+        getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 setLocalityAddressFirstTime(Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType));
@@ -2991,7 +2991,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public void resetCollapseToolbar() {
 
 
-        new Handler().postDelayed(new Runnable() {
+        getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
@@ -3631,4 +3631,13 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public void setCurrentReview(FetchFeedbackResponse.Review currentReview) {
         this.currentReview = currentReview;
     }
+
+    private Handler handler;
+    public Handler getHandler(){
+        if(handler == null){
+            handler = new Handler();
+        }
+        return handler;
+    }
+
 }

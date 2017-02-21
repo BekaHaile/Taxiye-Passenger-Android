@@ -96,12 +96,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
+        timerHandler = activity.getHandler();
         timerHandler.postDelayed(timerRunnable, 1000);
         restaurantName = ""; locality = ""; telephone = "";
         searchApiHitOnce = false;
     }
 
-    Handler timerHandler = new Handler();
+    Handler timerHandler;
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
