@@ -91,7 +91,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -948,7 +947,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     public void placeOrderApi() {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 productList.clear();
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
@@ -1158,16 +1157,15 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                         final int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                                         final int isEmpty = jObj.optInt(Constants.KEY_IS_EMPTY, 0);
+                                        final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
                                         DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 Log.v("redirect value","redirect value"+redirect);
-                                                if(appType == AppConstant.ApplicationType.MENUS && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag && isEmpty == 1) {
-                                                    activity.clearMenusCart();
-                                                    activity.setRefreshCart(true);
-                                                    activity.performBackPressed();
-                                                    activity.setRefreshCart(true);
-                                                    activity.performBackPressed();
+                                                if(emptyCart == 1){
+                                                    clearMenusCartAndGoToMenusFragment();
+                                                } else if(appType == AppConstant.ApplicationType.MENUS && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag && isEmpty == 1) {
+                                                    clearMenusCartAndGoToMenusFragment();
                                                 }
                                                 else if(redirect == 1) {
                                                     activity.setRefreshCart(true);
@@ -1209,6 +1207,14 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
         }
         buttonPlaceOrder.setEnabled(true);
+    }
+
+    private void clearMenusCartAndGoToMenusFragment(){
+        activity.clearMenusCart();
+        activity.setRefreshCart(true);
+        activity.performBackPressed();
+        activity.setRefreshCart(true);
+        activity.performBackPressed();
     }
 
     private void retryDialog(DialogErrorType dialogErrorType, final int apiHit) {
@@ -1444,7 +1450,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     public void getCheckoutDataAPI() {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
@@ -1549,10 +1555,13 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                                 } else{
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
+                                    final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            if(redirect == 1) {
+                                            if(emptyCart == 1){
+                                                clearMenusCartAndGoToMenusFragment();
+                                            } else if(redirect == 1) {
                                                 activity.performBackPressed();
                                             }
                                         }

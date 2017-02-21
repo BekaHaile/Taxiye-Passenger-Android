@@ -200,11 +200,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
-                mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark);
+                mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
                 if (subItem.getSubItemQuantitySelected() == 0) {
                     if(subItem.getStock() > 0){
-                        mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme);
+                        mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme_selector);
                         mHolder.imageViewMinus.setVisibility(View.GONE);
                         mHolder.textViewQuantity.setVisibility(View.GONE);
                     } else{
@@ -233,6 +233,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     mHolder.deliveryTime.setText(subItem.getDeliveryTimeText()+"\n"+ DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()) + " to "
                             + DateOperations.convertDayTimeAPViaFormat(subItem.getOrderEnd()));
                     mHolder.deliveryTime.setVisibility(View.GONE);
+                }
+
+                if(subItem.getEarliestDeliveryMessage() != null && !subItem.getEarliestDeliveryMessage().equalsIgnoreCase("")){
+                    mHolder.rlEarliestDelivery.setVisibility(View.VISIBLE);
+                    mHolder.tvEarliestDelivery.setText(subItem.getEarliestDeliveryMessage());
+                } else{
+                    mHolder.rlEarliestDelivery.setVisibility(View.GONE);
                 }
 
 
@@ -428,11 +435,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class ViewHolderSlot extends RecyclerView.ViewHolder {
         public LinearLayout linear;
-        public RelativeLayout belowLayout;
+        public RelativeLayout belowLayout, rlEarliestDelivery;
         public LinearLayout linearLayoutQuantitySelector, cartLayout;
         private ImageView imageViewMmeals, foodType;
         private ImageView imageViewMinus, imageViewPlus, imageClosed;
-        public TextView textViewTitle, textPrice, textViewdetails, deliveryTime, textViewQuantity;
+        public TextView textViewTitle, textPrice, textViewdetails, deliveryTime, textViewQuantity, tvEarliestDelivery;
 
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
@@ -440,6 +447,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             cartLayout = (LinearLayout) itemView.findViewById(R.id.cart_layout);
             belowLayout = (RelativeLayout) itemView.findViewById(R.id.below_layout);
+            rlEarliestDelivery = (RelativeLayout) itemView.findViewById(R.id.rlEarliestDelivery);
 
             imageViewMmeals = (ImageView) itemView.findViewById(R.id.imageViewMmeals);
             foodType = (ImageView) itemView.findViewById(R.id.food_type);
@@ -457,6 +465,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             deliveryTime.setTypeface(Fonts.mavenMedium(context));
             textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuantity);
             textViewQuantity.setTypeface(Fonts.mavenRegular(context));
+            tvEarliestDelivery = (TextView) itemView.findViewById(R.id.tvEarliestDelivery);
+            tvEarliestDelivery.setTypeface(Fonts.mavenMedium(context));
 
         }
     }

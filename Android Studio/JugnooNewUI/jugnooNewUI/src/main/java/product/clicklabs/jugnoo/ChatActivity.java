@@ -29,7 +29,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchChatResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -100,7 +99,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			chatSuggestionAdapter = new ChatSuggestionAdapter(this, chatSuggestions,  new ChatSuggestionAdapter.Callback() {
 				@Override
 				public void onSuggestionClick(int position, FetchChatResponse.Suggestion suggestion) {
-					if(AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+					if(MyApplication.getInstance().isOnline()) {
 						sendChat(suggestion.getSuggestion());
 						chatSuggestions.remove(position);
 					}
@@ -118,7 +117,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-						if(AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())){
+						if(MyApplication.getInstance().isOnline()){
 							if(input.getText().toString().trim().length() > 0) {
 								sendChat(input.getText().toString().trim());
 							}
@@ -185,7 +184,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
                 performBackPressed();
             	break;
 			case R.id.action_send:
-				if(AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				if(MyApplication.getInstance().isOnline()) {
 					if (input.getText().toString().trim().length() > 0) {
 						sendChat(input.getText().toString().trim());
 					}
@@ -252,7 +251,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 
 
 	private void loadDiscussions(){
-		if (!AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (!MyApplication.getInstance().isOnline()) {
 			DialogPopup.dialogNoInternet(ChatActivity.this,
 					Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 					new Utils.AlertCallBackWithButtonsInterface() {
@@ -278,7 +277,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 
     private void fetchChat(final Activity activity) {
         try {
-            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+            if (MyApplication.getInstance().isOnline()) {
                 //DialogPopup.showLoadingDialog(ChatActivity.this, getResources().getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -342,7 +341,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 
     private void postChat(final Activity activity, final String message) {
         try {
-            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+            if (MyApplication.getInstance().isOnline()) {
                 //DialogPopup.showLoadingDialog(ChatActivity.this, getResources().getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);

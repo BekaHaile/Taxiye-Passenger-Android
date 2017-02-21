@@ -22,7 +22,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -164,7 +163,7 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
 
     private void referDriver(){
         try {
-            if(AppStatus.getInstance(ReferDriverActivity.this).isOnline(ReferDriverActivity.this)) {
+            if(MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(ReferDriverActivity.this, getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();

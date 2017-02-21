@@ -28,7 +28,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -224,7 +223,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 	
 	
 	public void submitDuplicateRegistrationRequestAPI(final Activity activity, String messageStr, String name, String email, String phone) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			

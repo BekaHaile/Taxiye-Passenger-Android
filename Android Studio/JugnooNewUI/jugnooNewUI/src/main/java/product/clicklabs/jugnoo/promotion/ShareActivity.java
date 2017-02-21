@@ -35,7 +35,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -219,7 +218,7 @@ public class ShareActivity extends BaseFragmentActivity {
 
 	public void getLeaderboardCall() {
 		try {
-			if(!HomeActivity.checkIfUserDataNull(this) && AppStatus.getInstance(this).isOnline(this)) {
+			if(!HomeActivity.checkIfUserDataNull(this) && MyApplication.getInstance().isOnline()) {
 				if(Data.userData.getReferralLeaderboardEnabled() == 1) {
 					DialogPopup.showLoadingDialog(this, "Loading...");
 
@@ -318,7 +317,7 @@ public class ShareActivity extends BaseFragmentActivity {
 
 	public void getLeaderboardActivityCall() {
 		try {
-			if(!HomeActivity.checkIfUserDataNull(this) && AppStatus.getInstance(this).isOnline(this)) {
+			if(!HomeActivity.checkIfUserDataNull(this) && MyApplication.getInstance().isOnline()) {
 				if(Data.userData.getReferralActivityEnabled() == 1) {
 					DialogPopup.showLoadingDialog(this, "Loading...");
 

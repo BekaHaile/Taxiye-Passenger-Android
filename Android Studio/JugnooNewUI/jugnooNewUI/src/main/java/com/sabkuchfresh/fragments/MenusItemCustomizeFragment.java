@@ -2,6 +2,7 @@ package com.sabkuchfresh.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -99,6 +100,11 @@ public class MenusItemCustomizeFragment extends Fragment {
 									tvItemTotalValue.setText(activity.getString(R.string.rupees_value_format,
 											Utils.getMoneyDecimalFormat().format(itemSelected.getTotalPriceWithQuantity())));
 								}
+
+								@Override
+								public void onItemMinusClick() {
+									activity.performBackPressed();
+								}
 							});
 					rvCustomizeItem.setAdapter(menusItemCustomizeAdapter);
 
@@ -131,6 +137,17 @@ public class MenusItemCustomizeFragment extends Fragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Utils.hideSoftKeyboard(activity, activity.getTopBar().etSearch);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}, 200);
 
 
 		return rootView;

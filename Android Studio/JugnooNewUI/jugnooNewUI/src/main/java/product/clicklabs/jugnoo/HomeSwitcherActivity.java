@@ -29,7 +29,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 
 
-public class HomeSwitcherActivity extends Activity implements LocationUpdate {
+public class HomeSwitcherActivity extends Activity {
 
     RelativeLayout relative,relativeLayoutHomeData;
 
@@ -46,17 +46,11 @@ public class HomeSwitcherActivity extends Activity implements LocationUpdate {
     DrawerLayout drawerLayout;
     private MenuBar menuBar;
 
-    private LocationFetcher locationFetcher = null;
-
     @Override
     protected void onResume() {
         super.onResume();
         HomeActivity.checkForAccessTokenChange(this);
-        if(locationFetcher == null){
-            locationFetcher = new LocationFetcher(this, 1000);
-        } else {
-            locationFetcher.connect();
-        }
+        MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 1000);
     }
 
     @Override
@@ -477,17 +471,19 @@ public class HomeSwitcherActivity extends Activity implements LocationUpdate {
     @Override
     protected void onPause() {
         super.onPause();
-        if(locationFetcher != null){
-            locationFetcher.destroy();
-        }
+        MyApplication.getInstance().getLocationFetcher().destroy();
     }
 
 
     private Location location;
-    @Override
-    public void onLocationChanged(Location location) {
-        this.location = location;
-    }
+
+    private LocationUpdate locationUpdate = new LocationUpdate() {
+        @Override
+        public void onLocationChanged(Location location) {
+            HomeSwitcherActivity.this.location = location;
+        }
+    };
+
 
     @Override
     protected void onDestroy() {

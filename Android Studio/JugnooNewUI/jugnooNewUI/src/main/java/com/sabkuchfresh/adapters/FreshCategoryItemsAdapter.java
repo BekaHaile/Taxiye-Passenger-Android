@@ -280,7 +280,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                                     subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
                             callback.onMinusClicked(pos, subItems.get(pos));
 
-                            notifyItemChanged(pos);
+                            notifyDataSetChanged();
                             int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
                             if(appType == AppConstant.ApplicationType.FRESH){
                                 FlurryEventLogger.event(FRESH_FRAGMENT, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
@@ -309,7 +309,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                                 Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
                             }
                             callback.onPlusClicked(pos, subItems.get(pos));
-                            notifyItemChanged(pos);
+                            notifyDataSetChanged();
 
                             if(subItems.get(pos).getSubItemQuantitySelected() == 1) {
                                 FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());

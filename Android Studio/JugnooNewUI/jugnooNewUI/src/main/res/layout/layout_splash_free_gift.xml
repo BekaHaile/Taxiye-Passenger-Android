@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlClaimGift"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:visibility="gone">
+
+    <ImageView
+        android:id="@+id/ivFreeGiftTop"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:src="@drawable/bg_top_2"
+        android:tag="mwar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ivFreeGiftTop"
+        android:gravity="center_horizontal"
+        android:layout_above="@+id/ivBottom">
+
+        <ImageView
+            android:id="@+id/ivUser"
+            android:layout_width="@dimen/px_154"
+            android:layout_height="@dimen/px_154"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/px_50"
+            android:src="@drawable/ic_profile_img_placeholder"
+            android:tag="mwar"/>
+
+        <TextView
+            android:id="@+id/tvGiftFrom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_44"
+            android:layout_below="@+id/ivUser"
+            android:text="Free Gift from friend"
+            android:layout_marginTop="@dimen/px_54"
+            android:paddingLeft="@dimen/px_20"
+            android:paddingRight="@dimen/px_20"
+            android:gravity="center"
+            android:textColor="@color/text_color"/>
+
+        <TextView
+            android:id="@+id/tvGiftDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_36"
+            android:layout_below="@+id/tvGiftFrom"
+            android:text="Your friend just gifted you a cashback coupon for your first transaction."
+            android:paddingLeft="@dimen/px_50"
+            android:paddingRight="@dimen/px_50"
+            android:textColor="@color/text_color"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/px_88"/>
+
+        <Button
+            android:id="@+id/btnClaimGift"
+            style="@style/ButtonTheme"
+            android:text="@string/claim_gift"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/px_76"
+            android:layout_below="@+id/tvGiftDetail"
+            android:layout_marginTop="@dimen/px_100"/>
+
+    </RelativeLayout>
+
+
+
+    <ImageView
+        android:id="@+id/ivBottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:src="@drawable/splash_bottom_building_bg2"
+        android:layout_alignParentBottom="true"
+        android:tag="mwar" />
+
+</RelativeLayout>

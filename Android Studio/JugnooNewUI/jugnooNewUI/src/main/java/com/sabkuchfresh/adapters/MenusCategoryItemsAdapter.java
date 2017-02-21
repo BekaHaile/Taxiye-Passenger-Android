@@ -1,7 +1,6 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
@@ -11,6 +10,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,50 +144,17 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             MainViewHolder mHolder = ((MainViewHolder) holder);
             Item item = subItems.get(position);
 
-            Item itemUp = position == 0 ? null : subItems.get(position - 1);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mHolder.cardViewRecycler.getLayoutParams();
-            int topMargin, bottomMargin;
-            if(itemUp == null){
-                topMargin = (int)(25.0f*ASSL.Yscale());
-            } else if(itemUp.getIsSubCategory() == 1){
-                topMargin = (int)(6.0f*ASSL.Yscale());
-            } else{
-                topMargin = (int)(-6.0f*ASSL.Yscale());
-            }
-
-            Item itemDown = (position < (subItems.size()-1)) ? subItems.get(position + 1) : null;
-            if(itemDown == null){
-                mHolder.saperatorImage.setVisibility(View.GONE);
-                bottomMargin = (int)(25.0f*ASSL.Yscale());
-            } else if(itemDown.getIsSubCategory() == 1){
-                mHolder.saperatorImage.setVisibility(View.GONE);
-                bottomMargin = (int)(6.0f*ASSL.Yscale());
-            } else{
-                mHolder.saperatorImage.setVisibility(View.VISIBLE);
-                bottomMargin = (int)(-8.0f*ASSL.Yscale());
-            }
-            layoutParams.setMargins((int) (25.0f*ASSL.Xscale()), topMargin, (int)(25.0f*ASSL.Xscale()), bottomMargin);
-            mHolder.cardViewRecycler.setLayoutParams(layoutParams);
-
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
 
-            StringBuilder sb = new StringBuilder();
-            sb.append(item.getItemName())
-            .append("\n");
-            if(!TextUtils.isEmpty(item.getDisplayPrice())){
-                sb.append(item.getDisplayPrice());
-            } else {
-                sb.append(context.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(item.getPrice())));
-            }
-
-            mHolder.textViewItemCategoryName.setText(sb);
+            setItemNameToTextView(item, mHolder.textViewItemCategoryName);
+            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 90f)));
 
             int total = item.getTotalQuantity();
             mHolder.textViewQuantity.setText(String.valueOf(total));
-            mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark);
+            mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
             mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
             if (total == 0) {
-                mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme);
+                mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme_selector);
                 mHolder.imageViewMinus.setVisibility(View.GONE);
                 mHolder.textViewQuantity.setVisibility(View.GONE);
             } else {
@@ -195,10 +162,10 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 mHolder.textViewQuantity.setVisibility(View.VISIBLE);
             }
 
-            mHolder.textViewAboutItemDescription.setVisibility(item.getItemDetails() != null ? View.VISIBLE : View.GONE);
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
             mHolder.textViewAboutItemDescription.setTag(position);
-
+            int visibilityDesc;
+            RelativeLayout.LayoutParams paramsSep = (RelativeLayout.LayoutParams) mHolder.saperatorImage.getLayoutParams();
             if(!TextUtils.isEmpty(item.getItemDetails())){
                 if(item.getItemDetails().length() > 80){
                     SpannableStringBuilder ssb;
@@ -216,7 +183,15 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     mHolder.textViewAboutItemDescription.append(" ");
                     mHolder.textViewAboutItemDescription.append(ssb);
                 }
+                visibilityDesc = View.VISIBLE;
+                paramsSep.addRule(RelativeLayout.BELOW, mHolder.textViewAboutItemDescription.getId());
+            } else {
+                visibilityDesc = View.GONE;
+                paramsSep.addRule(RelativeLayout.BELOW, mHolder.textViewItemCategoryName.getId());
             }
+            mHolder.textViewAboutItemDescription.setVisibility(visibilityDesc);
+            mHolder.saperatorImage.setLayoutParams(paramsSep);
+
             mHolder.textViewAboutItemDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -230,7 +205,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             } else {
                                 item1.setExpanded(true);
                             }
-                            notifyItemChanged(pos);
+                            notifyDataSetChanged();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -307,7 +282,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             titleholder.relative.setVisibility(View.VISIBLE);
         } else if(holder instanceof SubCategoryViewHolder) {
             SubCategoryViewHolder subCategoryHolder = ((SubCategoryViewHolder) holder);
-            subCategoryHolder.textViewSubCategoryName.setText(subItems.get(position).getItemName().toUpperCase());
+            subCategoryHolder.tvSubCategoryName.setText(subItems.get(position).getItemName().toUpperCase());
         }
 
 	}
@@ -330,7 +305,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     itemSelected.setTotalPrice(item1.getPrice());
                     item1.getItemSelectedList().add(itemSelected);
                 }
-                notifyItemChanged(pos);
+                notifyDataSetChanged();
                 callback.onPlusClicked(pos, item1);
             }
         } else {
@@ -346,25 +321,23 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     class MainViewHolder extends RecyclerView.ViewHolder {
 
-        public CardView cardViewRecycler;
         public RelativeLayout relativeLayoutItem;
         public LinearLayout linearLayoutQuantitySelector;
-        private ImageView imageViewFoodType, saperatorImage, imageViewMinus, imageViewPlus;
+        private ImageView imageViewFoodType, imageViewMinus, imageViewPlus, saperatorImage;
         public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity;
 
         public MainViewHolder(View itemView, Context context) {
             super(itemView);
-            cardViewRecycler = (CardView) itemView.findViewById(R.id.cvRoot);
             relativeLayoutItem = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutItem);
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
-            saperatorImage = (ImageView) itemView.findViewById(R.id.saperatorImage);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
+            saperatorImage = (ImageView) itemView.findViewById(R.id.saperatorImage);
 
-            textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
-            textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenRegular(context));
-            textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenRegular(context));
+            textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
+            textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenMedium(context));
+            textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenMedium(context));
         }
     }
 
@@ -379,11 +352,11 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     class SubCategoryViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView textViewSubCategoryName;
+        public TextView tvSubCategoryName;
         public SubCategoryViewHolder(View itemView, Context context) {
             super(itemView);
-            textViewSubCategoryName = (TextView) itemView.findViewById(R.id.tvSubCategoryName);textViewSubCategoryName.setTypeface(Fonts.mavenRegular(context));
-
+            tvSubCategoryName = (TextView) itemView.findViewById(R.id.tvSubCategoryName);
+            tvSubCategoryName.setTypeface(Fonts.avenirNext(context));
         }
     }
 
@@ -472,4 +445,18 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         return ssb;
     }
 
+
+    private void setItemNameToTextView(Item item, TextView textView){
+        final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+        final SpannableStringBuilder sb = new SpannableStringBuilder(item.getItemName());
+        sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        textView.setText(sb);
+        textView.append("\n");
+        if(!TextUtils.isEmpty(item.getDisplayPrice())){
+            textView.append(item.getDisplayPrice());
+        } else {
+            textView.append(context.getString(R.string.rupees_value_format, com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(item.getPrice())));
+        }
+    }
 }

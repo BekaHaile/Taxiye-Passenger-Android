@@ -23,7 +23,7 @@ public class FlurryEventLogger {
 //		} catch (Exception e){}
 	}
 
-    public static void event(String screenName) {
+    public static void trackScreenView(String screenName) {
         try{ MyApplication.getInstance().trackScreenView(screenName);
         }catch (Exception e){}
     }
@@ -32,7 +32,14 @@ public class FlurryEventLogger {
         try{ MyApplication.getInstance().trackEvent(category, action, label);
         } catch (Exception e){}
     }
-	
+
+	public static void eventGA(String category, String action, String label){
+		try{ MyApplication.getInstance().trackEvent(category, action, label);} catch(Exception e){e.printStackTrace();}
+	}
+
+	public static void eventGA(String category, String action, String label, long value){
+		try{ MyApplication.getInstance().trackEvent(category, action, label, value);} catch(Exception e){e.printStackTrace();}
+	}
 	
 	public static void facebookLoginClicked(String fbId){
 		try{

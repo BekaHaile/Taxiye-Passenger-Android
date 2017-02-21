@@ -47,7 +47,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -63,7 +62,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
+public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, Constants{
 
 	private final String TAG = "OTP screen";
 
@@ -107,7 +106,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	private boolean runAfterDelay;
 	private TextView tvProgress;
 	private boolean onlyDigits, openHomeSwitcher = false;
-	private LocationFetcher locationFetcher = null;
 
 	@Override
 	protected void onStart() {
@@ -623,11 +621,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, OTPConfirmScreen.class.getName());
 		Utils.enableSMSReceiver(this);
 
-		if(locationFetcher == null){
-			locationFetcher = new LocationFetcher(OTPConfirmScreen.this, 1000);
-		} else {
-			locationFetcher.connect();
-		}
+		MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 1000);
 		HomeActivity.checkForAccessTokenChange(this);
 
 		try {
@@ -705,9 +699,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
 		Utils.disableSMSReceiver(this);
 		try{
-			if(locationFetcher != null){
-				locationFetcher.destroy();
-			}
+			MyApplication.getInstance().getLocationFetcher().destroy();
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -728,16 +720,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	 */
 	public void verifyOtpViaEmail(final Activity activity, String otp, final int linkedWallet) {
         if(!checkIfRegisterDataNull(activity)) {
-            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 
                 HashMap<String, String> params = new HashMap<>();
 
-                if (locationFetcher != null) {
-                    Data.loginLatitude = locationFetcher.getLatitude();
-                    Data.loginLongitude = locationFetcher.getLongitude();
-                }
+				Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+				Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
                 params.put("email", emailRegisterData.emailId);
                 params.put("password", emailRegisterData.password);
@@ -785,8 +775,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 												loginResponse, LoginVia.EMAIL_OTP,
 												new LatLng(Data.loginLatitude, Data.loginLongitude));
-										Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
-										Database.getInstance(OTPConfirmScreen.this).close();
+										MyApplication.getInstance().getDatabase().insertEmail(emailRegisterData.emailId);
+										MyApplication.getInstance().getDatabase().close();
 										loginDataFetched = true;
 										firebaseEventWalletAtSignup();
 									}
@@ -829,16 +819,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	public void verifyOtpViaFB(final Activity activity, String otp, final int linkedWallet) {
         if(!checkIfRegisterDataNull(activity)) {
-            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 
                 HashMap<String, String> params = new HashMap<>();
 
-                if (locationFetcher != null) {
-                    Data.loginLatitude = locationFetcher.getLatitude();
-                    Data.loginLongitude = locationFetcher.getLongitude();
-                }
+				Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+				Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
 
                 params.put("user_fb_id", facebookRegisterData.fbId);
@@ -892,8 +880,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 												loginResponse, LoginVia.FACEBOOK_OTP,
 												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										loginDataFetched = true;
-										Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
-										Database.getInstance(OTPConfirmScreen.this).close();
+										MyApplication.getInstance().getDatabase().insertEmail(facebookRegisterData.fbUserEmail);
+										MyApplication.getInstance().getDatabase().close();
 										firebaseEventWalletAtSignup();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
@@ -931,16 +919,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	public void verifyOtpViaGoogle(final Activity activity, String otp, final int linkedWallet) {
 		if(!checkIfRegisterDataNull(activity)) {
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			if (MyApplication.getInstance().isOnline()) {
 
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 
 				HashMap<String, String> params = new HashMap<>();
 
-				if (locationFetcher != null) {
-					Data.loginLatitude = locationFetcher.getLatitude();
-					Data.loginLongitude = locationFetcher.getLongitude();
-				}
+				Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+				Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
 				params.put("user_google_id", googleRegisterData.id);
 				params.put("email", googleRegisterData.email);
@@ -991,8 +977,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 												loginResponse, LoginVia.GOOGLE_OTP,
 												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										loginDataFetched = true;
-										Database.getInstance(OTPConfirmScreen.this).insertEmail(googleRegisterData.email);
-										Database.getInstance(OTPConfirmScreen.this).close();
+										MyApplication.getInstance().getDatabase().insertEmail(googleRegisterData.email);
+										MyApplication.getInstance().getDatabase().close();
 										firebaseEventWalletAtSignup();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
@@ -1031,7 +1017,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	 * ASync for initiating OTP Call from server
 	 */
 	public void initiateOTPCallAsync(final Activity activity, String phoneNo) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
@@ -1137,9 +1123,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	@Override
 	protected void onDestroy() {
 		try{
-			if(locationFetcher != null){
-				locationFetcher.destroy();
-			}
 			if(handler != null){
 				handler.removeCallbacks(runnable);
 			}
@@ -1151,12 +1134,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
         System.gc();
 	}
 
-
-	@Override
-	public void onLocationChanged(Location location) {
-		Data.loginLatitude = location.getLatitude();
-		Data.loginLongitude = location.getLongitude();
-	}
 
 
 	private void retrieveOTPFromSMS(Intent intent){
@@ -1183,7 +1160,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	public void generateOTP(final String accessToken, final int linkedWallet) {
 		try {
-			if(AppStatus.getInstance(OTPConfirmScreen.this).isOnline(OTPConfirmScreen.this)) {
+			if(MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
 				params.put(KEY_ACCESS_TOKEN, accessToken);
@@ -1257,7 +1234,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	private void sendOTP(final String otp) {
 		try {
-			if(AppStatus.getInstance(OTPConfirmScreen.this).isOnline(OTPConfirmScreen.this)) {
+			if(MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -1333,16 +1310,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	 * ASync for login from server
 	 */
 	public void sendLoginValues(final Activity activity, final String emailId, String password, final boolean isPhoneNumber) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 			//resetFlags();
 			//DialogPopup.showLoadingDialog(activity, "Trying to verify through missed call...");
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (locationFetcher != null) {
-				Data.loginLatitude = locationFetcher.getLatitude();
-				Data.loginLongitude = locationFetcher.getLongitude();
-			}
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
 			if (isPhoneNumber) {
 				params.put("phone_no", emailId);
@@ -1365,7 +1340,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -1409,7 +1384,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL,
 											new LatLng(Data.loginLatitude, Data.loginLongitude));
-									Database.getInstance(OTPConfirmScreen.this).insertEmail(emailId);
+									MyApplication.getInstance().getDatabase().insertEmail(emailId);
 									loginDataFetched = true;
 									DialogPopup.showLoadingDialog(activity, "Loading...");
 									DialogPopup.dismissLoadingDialog();
@@ -1446,15 +1421,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	}
 
 	public void sendFacebookLoginValues(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 			//DialogPopup.showLoadingDialog(activity, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (locationFetcher != null) {
-				Data.loginLatitude = locationFetcher.getLatitude();
-				Data.loginLongitude = locationFetcher.getLongitude();
-			}
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
 
 			params.put("user_fb_id", Data.facebookUserData.fbId);
@@ -1478,7 +1451,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -1521,7 +1494,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 											new LatLng(Data.loginLatitude, Data.loginLongitude));
 									loginDataFetched = true;
 
-									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
+									MyApplication.getInstance().getDatabase().insertEmail(Data.facebookUserData.userEmail);
 									DialogPopup.showLoadingDialog(activity, "Loading...");
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -1557,15 +1530,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	}
 
 	public void sendGoogleLoginValues(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 			//DialogPopup.showLoadingDialog(activity, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (locationFetcher != null) {
-				Data.loginLatitude = locationFetcher.getLatitude();
-				Data.loginLongitude = locationFetcher.getLongitude();
-			}
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
@@ -1584,7 +1555,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -1631,7 +1602,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 
-									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.googleSignInAccount.getEmail());
+									MyApplication.getInstance().getDatabase().insertEmail(Data.googleSignInAccount.getEmail());
 									DialogPopup.showLoadingDialog(activity, "Loading...");
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -1667,6 +1638,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 
 	}
+
+	private LocationUpdate locationUpdate = new LocationUpdate() {
+		@Override
+		public void onLocationChanged(Location location) {
+			Data.loginLatitude = location.getLatitude();
+			Data.loginLongitude = location.getLongitude();
+		}
+	};
 
 }
 

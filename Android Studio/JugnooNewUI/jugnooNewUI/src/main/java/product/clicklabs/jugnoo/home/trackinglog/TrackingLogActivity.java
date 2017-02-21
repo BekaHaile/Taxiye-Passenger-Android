@@ -44,6 +44,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
@@ -52,7 +53,6 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -236,7 +236,7 @@ public class TrackingLogActivity extends BaseFragmentActivity implements FlurryE
 
 
     public void customerFetchRideLogAPI(final Activity activity, final String engagementId) {
-        if(AppStatus.getInstance(activity).isOnline(activity)) {
+        if(MyApplication.getInstance().isOnline()) {
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 

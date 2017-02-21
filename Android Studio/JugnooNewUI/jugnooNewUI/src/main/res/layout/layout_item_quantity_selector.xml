@@ -16,7 +16,7 @@
         android:layout_width="70px"
         android:layout_height="70px"
         android:padding="20px"
-        android:src="@drawable/ic_minus_dark"
+        android:src="@drawable/ic_minus_dark_selector"
         android:tag="mwar"
         android:visibility="visible"
         />
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:singleLine="true"
-        android:text=""
+        android:text="0"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_34"
         android:visibility="visible"

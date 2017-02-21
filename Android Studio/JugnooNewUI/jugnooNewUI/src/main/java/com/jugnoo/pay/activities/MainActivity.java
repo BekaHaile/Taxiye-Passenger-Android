@@ -73,7 +73,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -507,7 +506,7 @@ public class MainActivity extends BaseActivity {
 
 
     private void callVerifyUserApi(final VerifyRegisterResponse verifyRegisterResponse) {
-        if(AppStatus.getInstance(this).isOnline(this)) {
+        if(MyApplication.getInstance().isOnline()) {
             CallProgressWheel.showLoadingDialog(this, AppConstant.PLEASE);
             VerifyUserRequest request = new VerifyUserRequest();
             request.setDeviceToken(MyApplication.getInstance().getDeviceToken());
@@ -542,21 +541,30 @@ public class MainActivity extends BaseActivity {
                     CallProgressWheel.dismissLoadingDialog();
                     try {
                         int flag = fetchPayDataResponse.getFlag();
-                        if (flag == 401) {
+                        if (flag == ApiResponseFlags.AUTH_REGISTRATION_SUCCESSFUL.getOrdinal()) {
                             updateTransactions(fetchPayDataResponse);
                             Data.getPayData().getPay().setHasVpa(1);
 
                             // set First time launch false in prefManager
-                            prefManager.setFirstTimeLaunch(false);
+                            // prefManager.setFirstTimeLaunch(false);
                             if(goBack == 1){
                                 finish();
                                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
                             }
 
-                        } else if (flag == 403) {
+                        } else if (flag == ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal()) {
 //                            logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
-
-                        } else {
+                        }
+                        else if(flag == com.jugnoo.pay.utils.ApiResponseFlags.VPA_NOT_FOUND.getOrdinal())
+                        {
+                            DialogPopup.alertPopupWithListener(MainActivity.this, "Error", fetchPayDataResponse.getMessage(), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    MyApplication.getInstance().getAppSwitcher().switchApp(MainActivity.this, Config.getAutosClientId(), new LatLng(Data.latitude, Data.longitude), false);
+                                }
+                            });
+                        }
+                        else {
                             retryDialogVerifyUser(DialogErrorType.SERVER_ERROR, verifyRegisterResponse);
                         }
                     } catch (Exception e) {
@@ -581,7 +589,7 @@ public class MainActivity extends BaseActivity {
 
     public void apiFetchPayData() {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
                 CallProgressWheel.showLoadingDialog(this, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -787,7 +795,7 @@ public class MainActivity extends BaseActivity {
 
     private void apiChangeMPIN() {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
 				CallProgressWheel.showLoadingDialog(this, getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -906,7 +914,7 @@ public class MainActivity extends BaseActivity {
 
     private void apiResetAccount() {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
 				CallProgressWheel.showLoadingDialog(this, getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -969,7 +977,7 @@ public class MainActivity extends BaseActivity {
 
     private void apiAccountManagement(){
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
                 CallProgressWheel.showLoadingDialog(MainActivity.this, getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
 

@@ -17,6 +17,7 @@ import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -109,13 +110,14 @@ public class FABViewTest {
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
                         }
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
-                        FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, "Close");
+                        FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Opened");
                     } else {
                         isOpened = false;
                         if(activity instanceof HomeActivity){
                             ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.GONE);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
                         }
+                        FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Closed");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -340,6 +342,7 @@ public class FABViewTest {
                         @Override
                         public void run() {
                             MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.PAY, null);
+                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.PAY);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getPayClientId(), finalLatLng, false);
                         }
                     }, 300);

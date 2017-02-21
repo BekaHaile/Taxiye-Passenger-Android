@@ -10,6 +10,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -17,7 +18,6 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -42,7 +42,7 @@ public class ApiFetchUserAddress {
 
 	public void hit(boolean showDialog) {
 		try {
-			if (AppStatus.getInstance(activity).isOnline(activity)) {
+			if (MyApplication.getInstance().isOnline()) {
 
 				if(showDialog) {
 					DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));

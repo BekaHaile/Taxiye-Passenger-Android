@@ -37,13 +37,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.SupportActivity;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -262,7 +262,7 @@ public class TranscCompletedActivity extends BaseActivity {
     // used to send the  money
     private void callingSendMoneyCallbackApi(final MessageRequest message, final String orderId, final String accessToken) {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
                 CallProgressWheel.showLoadingDialog(TranscCompletedActivity.this, AppConstant.PLEASE);
                 HashMap<String, String> params = new HashMap<>();
 
@@ -298,6 +298,16 @@ public class TranscCompletedActivity extends BaseActivity {
                                         commonResponse.getTxnMessage(), commonResponse.getMessage());
                                 updateUI(txnDetail, false, true, false);
 							}
+                            else if(flag == ApiResponseFlags.TXN_NOT_EXISTS.getOrdinal())
+                            {
+                                // DialogPopup.alertPopup(TranscCompletedActivity.this, "", commonResponse.getMessage(), false);
+                                DialogPopup.alertPopupWithListener(TranscCompletedActivity.this, "Error", commonResponse.getMessage(), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        onBackPressed();
+                                    }
+                                });
+                            }
                             else {
                                 retryDialogSendMoneyCallbackApi(DialogErrorType.SERVER_ERROR, message, orderId, accessToken);
 							}
@@ -407,7 +417,7 @@ public class TranscCompletedActivity extends BaseActivity {
 
     public void apiGetTransactionSummary(final int orderId, final int txnType, final TransactionInfo transactionInfo) {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
                 CallProgressWheel.showLoadingDialog(this, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);

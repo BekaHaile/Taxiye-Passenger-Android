@@ -22,11 +22,11 @@ import java.util.TreeSet;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.ContactsEntityBean;
 import product.clicklabs.jugnoo.utils.Log;
@@ -369,7 +369,7 @@ public class ContactsUploadService extends IntentService {
 
     private void uploadContactsApi(String requestParam, final ContactSyncEntry currentSyncEntry){
         HashMap<String, String> params = new HashMap<>();
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+        if (MyApplication.getInstance().isOnline()) {
 
             //DialogPopup.showLoadingDialog(this, "Loading...");
             params.put("access_token", accessToken);

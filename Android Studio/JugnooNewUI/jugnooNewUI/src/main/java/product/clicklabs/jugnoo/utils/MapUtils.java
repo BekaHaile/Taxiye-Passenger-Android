@@ -20,6 +20,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import retrofit.client.Response;
@@ -313,7 +314,7 @@ public class MapUtils {
 	}
 
 	public static void drawPathFromGoogle(Activity activity, final GoogleMap map, final LatLng sourceLatLng, final LatLng destinationLatLng){
-		if (AppStatus.getInstance(activity).isOnline(activity)) {
+		if (MyApplication.getInstance().isOnline()) {
 			Response response = RestClient.getGoogleApiService().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
 					destinationLatLng.latitude + "," + destinationLatLng.longitude, false, "driving", false);
 			String result = new String(((TypedByteArray)response.getBody()).getBytes());

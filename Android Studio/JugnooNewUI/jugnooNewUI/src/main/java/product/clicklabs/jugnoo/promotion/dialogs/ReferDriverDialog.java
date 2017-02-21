@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -25,7 +26,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -170,7 +170,7 @@ public class ReferDriverDialog {
 
 	private void referDriver(){
 		try {
-			if(AppStatus.getInstance(activity).isOnline(activity)) {
+			if(MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
 				HashMap<String, String> params = new HashMap<>();

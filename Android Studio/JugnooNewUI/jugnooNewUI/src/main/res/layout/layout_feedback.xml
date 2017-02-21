@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,8 +22,8 @@
         android:id="@+id/scrollViewRideSummary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/menu_item_selector_color"
-        android:layout_below="@+id/linearLayoutRideSummaryContainer">
+        android:layout_below="@+id/linearLayoutRideSummaryContainer"
+        android:background="@color/menu_item_selector_color">
 
         <LinearLayout
             android:id="@+id/linearLayoutRideSummary"
@@ -114,12 +115,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10px"
-                        android:text=""
-                        android:maxLines="2"
                         android:ellipsize="end"
-                        android:visibility="gone"
+                        android:maxLines="2"
+                        android:text=""
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26" />
+                        android:textSize="@dimen/text_size_26"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ImageView
@@ -129,8 +130,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="44px"
                     android:layout_toLeftOf="@+id/amountLayout"
-                    android:visibility="gone"
-                    android:src="@color/grey_dark_less" />
+                    android:src="@color/grey_dark_less"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/amountLayout"
@@ -225,19 +226,37 @@
             </RelativeLayout>
 
 
-            <RatingBar
-                android:id="@+id/ratingBarRSFeedback"
-                style="@style/YellowRatingBarNew"
+            <!--   <RatingBar
+                   android:id="@+id/ratingBarRSFeedback"
+                   style="@style/YellowRatingBarNew"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center_horizontal"
+                   android:layout_marginTop="30px"
+                   android:numStars="5"
+                   android:rating="1"
+                   android:stepSize="1.0"
+                   android:visibility="visible" />-->
+            <com.sabkuchfresh.utils.RatingBarMenuFeedback
+                android:id="@+id/rating_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30px"
+                android:layout_gravity="center"
+                android:layout_marginBottom="7dp"
+                android:layout_marginTop="20dp"
                 android:numStars="5"
-                android:rating="1"
-                android:stepSize="1.0"
-                android:visibility="gone" />
+                android:rating="0"
+                android:tag="DontTouchMe"
+                android:visibility="gone"
+                app:halfStars="false"
+                app:maxStars="5"
+                app:onlyForDisplay="false"
+                app:starOff="@drawable/ic_menu_feedback_star_off"
+                app:starOn="@drawable/ic_menu_feedback_star_on" />
+
 
             <LinearLayout
+                android:id="@+id/ll_thumbs_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -300,17 +319,18 @@
                 android:id="@+id/llBadReason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textViewRSWhatImprove"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15px"
                     android:text="@string/oh_no_what_went_wrong"
                     android:textColor="@color/text_color"
-                    android:layout_gravity="center_horizontal"
                     android:textSize="@dimen/text_size_42"
                     android:visibility="visible" />
 
@@ -318,15 +338,15 @@
                     android:id="@+id/gridViewRSFeedbackReasons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20px"
                     android:layout_marginLeft="40px"
                     android:layout_marginRight="40px"
-                    android:verticalSpacing="20px"
-                    android:horizontalSpacing="22px"
+                    android:layout_marginTop="40px"
                     android:divider="@color/transparent"
                     android:dividerHeight="0px"
+                    android:horizontalSpacing="22px"
                     android:numColumns="2"
                     android:splitMotionEvents="false"
+                    android:verticalSpacing="20px"
                     android:visibility="visible" />
 
 
@@ -343,9 +363,11 @@
                     android:padding="20px"
                     android:scrollbars="vertical"
                     android:textColor="@color/grey_dark_more"
+                    android:textCursorDrawable="@drawable/cursor_black"
                     android:textSize="28px"
                     android:visibility="visible"
-                    android:textCursorDrawable="@drawable/cursor_black" />
+                    app:font="maven"
+                    />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

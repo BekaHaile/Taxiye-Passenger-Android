@@ -22,11 +22,16 @@ public class MenusData {
 	private int feedbackViewType;
 	private int isFatafatEnabled;
 	private JSONArray negativeFeedbackReasons;
+	private JSONArray positiveFeedbackReasons;
+	private String restaurantName;
 
+	public JSONArray getPositiveFeedbackReasons() {
+		return positiveFeedbackReasons;
+	}
 
-	public MenusData(String question, String orderId, int questionType, int pendingFeedback,
-					 ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate,
-					 int feedbackViewType, int isFatafatEnabled, String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons) {
+	public MenusData(String question, String orderId, int questionType, int pendingFeedback, ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate,
+					 int feedbackViewType, int isFatafatEnabled, String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons, JSONArray positiveFeedbackReasons,
+					 String restaurantName) {
 		this.question = question;
 		this.orderId = orderId;
 		this.questionType = questionType;
@@ -39,6 +44,8 @@ public class MenusData {
 		this.isFatafatEnabled = isFatafatEnabled;
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 		this.negativeFeedbackReasons = negativeFeedbackReasons;
+		this.positiveFeedbackReasons = positiveFeedbackReasons;
+		this.restaurantName = restaurantName;
 	}
 
 	public String getQuestion() {
@@ -143,5 +150,13 @@ public class MenusData {
 
 	public void setNegativeFeedbackReasons(JSONArray negativeFeedbackReasons) {
 		this.negativeFeedbackReasons = negativeFeedbackReasons;
+	}
+
+	public String getRestaurantName() {
+		return restaurantName;
+	}
+
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
 	}
 }

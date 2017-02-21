@@ -71,7 +71,13 @@ import android.widget.TextView;
 /*     */   {
 /* 124 */     return scaleX;
 /*     */   }
-/*     */
+
+         public static float minRatio(){
+               return Math.min(ASSL.Xscale(), ASSL.Yscale());
+         }
+
+
+    /*     */
 /*     */   public static float Yscale() {
 /* 128 */     return scaleY;
 /*     */   }
@@ -228,7 +234,7 @@ import android.widget.TextView;
 /* 302 */       (int)(rootLayout.getPaddingTop() * scaleY),
 /* 304 */       (int)(rootLayout.getPaddingRight() * scaleX),
 /* 306 */       (int)(rootLayout.getPaddingBottom() * scaleY));
-/*     */ 
+
 /* 312 */     if ((rootLayout instanceof ViewGroup))
 /*     */     {
 /* 314 */       ViewGroup vg = (ViewGroup)rootLayout;
@@ -244,6 +250,8 @@ import android.widget.TextView;
 /* 323 */           DoMagic(vg.getChildAt(i));
 /*     */     }
 /*     */   }
+
+
 /*     */ }
 
 /* Location:           /Users/shankar/Desktop/assl_sdk_rmn_jugnoo.jar

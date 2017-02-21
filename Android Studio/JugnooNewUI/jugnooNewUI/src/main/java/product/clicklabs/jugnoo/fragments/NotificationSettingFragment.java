@@ -30,7 +30,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
@@ -98,7 +97,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
      */
     private void getNotificationStatus() {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -181,7 +180,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
      */
     public void updateNotificationPreferenceStatus(final String name, final int status, final int position) {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);

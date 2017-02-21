@@ -21,18 +21,18 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="634px" />
+            android:layout_height="634px"/>
 
         <View
             android:id="@+id/viewSortFake"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px_500"
-            android:visibility="visible" />
+            android:layout_height="@dimen/px_510"
+            android:visibility="visible"/>
 
         <RelativeLayout
             android:id="@+id/rlSortBg"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px_500"
+            android:layout_height="@dimen/px_510"
             android:layout_alignParentBottom="true"
             android:animateLayoutChanges="true"
             android:background="@color/white">

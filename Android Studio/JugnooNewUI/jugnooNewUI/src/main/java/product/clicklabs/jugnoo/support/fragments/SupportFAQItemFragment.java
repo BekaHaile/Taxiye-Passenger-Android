@@ -41,7 +41,6 @@ import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -293,7 +292,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 
 	public void submitFeedback(final Activity activity, final int engagementId, String feedbackText,
 							   String parentName, int supportId, final String rideDate, final int orderId, final String orderDate) {
-		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+		if (!HomeActivity.checkIfUserDataNull(activity) && MyApplication.getInstance().isOnline()) {
 			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();

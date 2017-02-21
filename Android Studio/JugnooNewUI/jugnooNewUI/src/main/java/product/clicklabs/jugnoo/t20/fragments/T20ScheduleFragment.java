@@ -18,7 +18,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchT20Schedule;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -130,9 +130,9 @@ public class T20ScheduleFragment extends Fragment implements FlurryEventNames, C
 		String savedScheduleVersion = Prefs.with(activity).getString(Constants.KEY_SP_T20_WC_SCHEDULE_VERSION, "-1");
 		if(savedScheduleVersion.equalsIgnoreCase(Data.userData.getT20WCScheduleVersion())){
 
-			List<Schedule> schedules = Database2.getInstance(activity).getT20DataItems(T20DataType.SCHEDULE.getOrdinal());
-			List<Selection> selections = Database2.getInstance(activity).getT20DataItems(T20DataType.SELECTION.getOrdinal());
-			List<Team> teams = Database2.getInstance(activity).getT20DataItems(T20DataType.TEAM.getOrdinal());
+			List<Schedule> schedules = MyApplication.getInstance().getDatabase2().getT20DataItems(T20DataType.SCHEDULE.getOrdinal());
+			List<Selection> selections = MyApplication.getInstance().getDatabase2().getT20DataItems(T20DataType.SELECTION.getOrdinal());
+			List<Team> teams = MyApplication.getInstance().getDatabase2().getT20DataItems(T20DataType.TEAM.getOrdinal());
 
 			matchScheduleResponse = new MatchScheduleResponse(ApiResponseFlags.ACTION_COMPLETE.getOrdinal(),
 					schedules, teams, selections, "");
@@ -145,11 +145,11 @@ public class T20ScheduleFragment extends Fragment implements FlurryEventNames, C
 					T20ScheduleFragment.this.matchScheduleResponse = matchScheduleResponse;
 					matchScheduleAdapter.setResults(T20ScheduleFragment.this.matchScheduleResponse);
 
-					Database2.getInstance(activity)
+					MyApplication.getInstance().getDatabase2()
 							.insertUpdateT20Data(T20DataType.SCHEDULE.getOrdinal(), matchScheduleResponse.getSchedule());
-					Database2.getInstance(activity)
+					MyApplication.getInstance().getDatabase2()
 							.insertUpdateT20Data(T20DataType.SELECTION.getOrdinal(), matchScheduleResponse.getSelections());
-					Database2.getInstance(activity)
+					MyApplication.getInstance().getDatabase2()
 							.insertUpdateT20Data(T20DataType.TEAM.getOrdinal(), matchScheduleResponse.getTeams());
 
 					Prefs.with(activity).save(Constants.KEY_SP_T20_WC_SCHEDULE_VERSION,

@@ -7,10 +7,11 @@
 
     <string name="filter_title">Jugnoo</string>
     <string name="no_more_than">Can\'t order more than %d units</string>
+    <string name="no_more_than_star">Can\'t add more than %d unit</string>
 
     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-   <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
+    <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -880,7 +881,7 @@
     <string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith Jugnoo Grocery!</string>
     <string name="thank_you_for_placing_order_menus_format">Order placed with %s.\nWe will send you the confirmation once your order is accepted.</string>
     <string name="your_order_id">Your Order ID:</string>
-    <string name="will_be_delivered_by">will be delivered by</string>
+    <string name="will_be_delivered_between">will be delivered between</string>
     <string name="your_cart_is_empty">Your cart is empty</string>
     <string name="search_items">Search Items</string>
     <string name="item_cancelled">Cancelled</string>
@@ -1184,7 +1185,7 @@
     <string name="location">Location</string>
     <string name="vendor_colon">Vendor:</string>
     <string name="mins_format">%s mins</string>
-    <string name="opens_at_format">Opens at %s</string>
+    <string name="opens_at">Opens at</string>
     <string name="delivered_from_colon">Delivered from:</string>
     <string name="oh_snap">Oh snap!</string>
     <string name="nothing_found_near_you">Nothing found near you\ntry to search with a different location.</string>
@@ -1423,12 +1424,13 @@
     <string name="no_menus_available_with_these_filters">Sorry, no results found. Try again with fewer filters.</string>
     <string name="no_menus_available_your_location">Sorry, online ordering isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
     <string name="no_menus_available_with_this_name">No Restaurant found with this name.</string>
+    <string name="oops_no_results_found">Oops, No results found</string>
     <string name="quick_filters">Quick Filters</string>
     <string name="offers_discount">Offers Discount</string>
     <string name="pure_veg">Pure Vegetarian</string>
     <string name="free_delivery">Free Delivery</string>
 
-    <string name="delivers_in_format">Delivers in %s mins</string>
+    <string name="delivers_in">Delivers in</string>
     <string name="minimum_order_rupee_format">Minimum Order \u20B9%s</string>
     <string name="jugnoo_star">Jugnoo star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>
@@ -1481,5 +1483,36 @@
     <string name="send_free_gift">Send free gift</string>
     <string name="thank_you">Thank you!</string>
     <string name="your_order_will_be_delivered_between">Your order will be delivered between</string>
+    <string name="could_not_find_favorite_restaurant">Couldn’t find your favourite restaurant yet?</string>
+    <string name="why_not_recommend_it">Why not recommend it!</string>
+    <string name="restaurant_name_star">Restaurant name*</string>
+    <string name="locality_optional">Locality (optional)</string>
+    <string name="telephone_number_optional">Telephone Number (optional)</string>
+    <string name="restaurant_name_is_neccessary">Restaurant name is neccessary</string>
+
+    <string name="star_icon">&#xe9d9;</string>
+    <string name="thanks_for_recommendation">Thanks for your recommendation!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="zoom_view">zoom_view_transition</string>
+    <string name="star_could_not_be_added">Jugnoo star couldn\'t be added. Please try next time.</string>
+    <string name="claim_gift">Claim gift</string>
+    <string name="auto_renewal">Auto Renewal</string>
+    <string name="upgrade_now">Upgrade Now</string>
+    <string name="what_you_love_about_restaurant">What you love about this restaurant?</string>
+    <string name="please_enter_some_feedback">Please enter some feedback</string>
+    <string name="feedback_must_be_in_500">Feedback must be in 500 characters</string>
+    <string name="thanks_for_your_valuable_feedback">Thanks for your valuable feedback</string>
+    <string name="feedback_menu_what_amazing">What was amazing?</string>
+    <string name="feedback_menu_what_wrong">Oh no,what went wrong?</string>
+    <string name="feed_is_empty">Feed is empty!</string>
+    <string name="be_first_one_to_add">BE THE FIRST ONE TO ADD...</string>
+    <string name="items_summary">Item(s) Summary</string>
+    <string name="bill_summary">Bill Summary</string>
+    <string name="dont_touch_me">DontTouchMe</string>
+    <string name="payment_summary">Payment Summary</string>
+    <string name="payable_amount">Payable amount</string>
+    <string name="comments">Comments...</string>
 
 </resources>

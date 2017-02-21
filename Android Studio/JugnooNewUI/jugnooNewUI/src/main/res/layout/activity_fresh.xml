@@ -6,9 +6,17 @@
     android:background="@color/white">
 
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:splitMotionEvents="false">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
@@ -16,29 +24,51 @@
             android:layout_height="wrap_content"
             app:elevation="0dp">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/toolbar_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:contentInsetLeft="0dp"
-                android:contentInsetStart="0dp"
-                app:contentInsetLeft="0dp"
-                app:contentInsetStart="0dp"
-                app:layout_scrollFlags="scroll|enterAlways|snap">
+                android:layout_height="match_parent"
+                app:contentScrim="@android:color/white"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:scrimVisibleHeightTrigger="85dp">
+                <!-- app:scrimAnimationDuration="400"
 
-                <include
-                    android:id="@+id/topBarMain"
-                    layout="@layout/layout_top_bar_fresh" />
-            </android.support.v7.widget.Toolbar>
+                 app:scrimVisibleHeightTrigger="50px">-->
+
+
+                <include layout="@layout/restaurant_collapse_details" />
+
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:background="@android:color/white"
+                    android:contentInsetLeft="0dp"
+                    android:contentInsetStart="0dp"
+                    app:contentInsetLeft="0dp"
+                    app:contentInsetStart="0dp"
+                    app:layout_collapseMode="pin">
+                    <!--  -->
+                    <!--app:layout_scrollFlags="scroll|enterAlways|snap">-->
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <include
+                            android:id="@+id/topBarMain"
+                            layout="@layout/layout_top_bar_fresh" />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.Toolbar>
+
+
+            </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <LinearLayout
             android:layout_width="match_parent"

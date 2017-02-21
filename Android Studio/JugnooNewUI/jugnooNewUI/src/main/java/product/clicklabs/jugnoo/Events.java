@@ -69,4 +69,35 @@ public interface Events {
     String REGISTERED_CITY = "Registered city";
     String PROMO_CODE_USED = "PromoCodeUsed";
 
+
+    /**
+     Edited by Parminder Singh on 2/15/17 at 4:00 PM
+     **/
+
+    String MENUS = "Menus";
+    String SECOND_RESTAURANT_ORDER = "Second Restaurant Order";
+    String POPUP_ORDER = "Popup Order";
+    String FEEDBACK = "Feedback";
+    String COMMENT_ADDED = "Comment Added";
+    java.lang.String RATING = "Rating";
+    String REVIEW = "Review";
+    String PLUS_BUTTON = "Plus Button";
+    String SUBMITTED = "Submitted";
+    String CLICKED = "Clicked";
+    String SEARCH = "Search";
+    String NOT_SEARCHED = "Not Searched";
+    String SEARCH_MATCHED = "Search Matched";
+    String ADD_RESTRO = "Add Restro";
+    String INFORMATION = "Information";
+    String CLAIM_GIFT = "Claim Gift";
+    String FRESH_SCREEN = "Fresh Screen";
+    String MEALS_SCREEN = "Meals Screen";
+    String MENUS_SCREEN = "Menus Screen";
+    String SIDE_MENU_CATEGORIES = "Side Menu Categories";
+    String RIDES = "Rides";
+    String FRESH = "Fresh";
+    String MEALS = "Meals";
+    String GROCERY = "Grocery";
+    String PAY = "Pay";
+    String GENIE = "Genie";
 }

@@ -4,13 +4,14 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by shankar on 11/15/16.
  */
-public class MenusResponse {
+public class MenusResponse implements Serializable {
 
 	@SerializedName("flag")
 	@Expose
@@ -34,6 +35,26 @@ public class MenusResponse {
 	@Expose
 	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
 
+	@SerializedName("rating")
+	private Double rating;
+
+	@SerializedName("review_count")
+	private long reviewCount;
+
+	public Double getRating() {
+		return rating==null?null:Math.round(rating * 10.0) / 10.0;
+	}
+
+	public long getReviewCount() {
+		return reviewCount;
+	}
+
+	@SerializedName("rating_color")
+	private String colorCode;
+
+	public String getColorCode() {
+		return colorCode;
+	}
 
 	/**
 	 *
@@ -214,6 +235,45 @@ public class MenusResponse {
 		@SerializedName("close_in_buffer")
 		@Expose
 		private Long bufferTime;
+
+
+
+		@SerializedName("rating")
+		private Double rating;
+
+		@SerializedName("review_count")
+		private long reviewCount;
+
+		public Double getRating() {
+			return rating==null?null:Math.round(rating * 10.0) / 10.0;
+		}
+
+		public long getReviewCount() {
+			return reviewCount;
+		}
+
+		@SerializedName("rating_color")
+		private String colorCode;
+
+		public String getColorCode() {
+			return colorCode;
+		}
+
+		public void setRestaurantAdd(String restaurantAdd) {
+			this.restaurantAdd = restaurantAdd;
+		}
+
+		public void setRating(Double rating) {
+			this.rating = rating;
+		}
+
+		public void setReviewCount(long reviewCount) {
+			this.reviewCount = reviewCount;
+		}
+
+		public void setColorCode(String colorCode) {
+			this.colorCode = colorCode;
+		}
 
 		/**
 		 *

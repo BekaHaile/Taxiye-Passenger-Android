@@ -15,7 +15,8 @@
         android:layout_height="match_parent"
         >
 
-        <include layout="@layout/layout_offering_not_available"/>
+        <include layout="@layout/layout_offering_not_available"
+            />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
@@ -49,5 +50,10 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvScroll"
+        android:layout_width="1px"
+        android:layout_height="1px"/>
 
 </LinearLayout>

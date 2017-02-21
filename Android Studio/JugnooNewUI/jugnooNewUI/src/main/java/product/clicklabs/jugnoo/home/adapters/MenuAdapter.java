@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
@@ -50,7 +51,6 @@ import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -340,6 +340,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_AUTOS, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.RIDES);
                 }
             });
 
@@ -350,6 +351,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_FRESH, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.FRESH);
                 }
             });
 
@@ -360,6 +362,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     holder.imageViewArrow.setRotation(270);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_MEALS, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.MEALS);
                 }
             });
 
@@ -379,6 +382,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_GROCERY, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.GROCERY);
                 }
             });
 
@@ -389,6 +393,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_MENUS, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.MENUS);
                 }
             });
 
@@ -399,6 +404,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_PAY, new Bundle());
+                    FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.PAY);
                 }
             });
         }
@@ -575,7 +581,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Data.latitude = currLatLng.latitude;
                     Data.longitude = currLatLng.longitude;
                 }
-                if (AppStatus.getInstance(activity).isOnline(activity)) {
+                if (MyApplication.getInstance().isOnline()) {
                     activity.startActivity(new Intent(activity, PromotionActivity.class));
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PROMOTIONS_SCREEN);

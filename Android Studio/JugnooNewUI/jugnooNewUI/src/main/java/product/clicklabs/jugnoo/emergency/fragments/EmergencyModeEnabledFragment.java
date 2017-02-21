@@ -83,7 +83,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(activity);
 		if(locationFetcher != null) {
-			locationFetcher.connect();
+			locationFetcher.connect(locationUpdate, 1000);
 		}
 	}
 
@@ -94,6 +94,13 @@ public class EmergencyModeEnabledFragment extends Fragment {
 			locationFetcher.destroy();
 		}
 	}
+
+	private LocationUpdate locationUpdate = new LocationUpdate() {
+		@Override
+		public void onLocationChanged(Location location) {
+			EmergencyModeEnabledFragment.this.location = location;
+		}
+	};
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -172,12 +179,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		buttonDisableEmergencyMode.setOnClickListener(onClickListener);
 
 		if(locationFetcher == null) {
-			locationFetcher = new LocationFetcher(activity, new LocationUpdate() {
-				@Override
-				public void onLocationChanged(Location location) {
-					EmergencyModeEnabledFragment.this.location = location;
-				}
-			}, 1000);
+			locationFetcher = new LocationFetcher(MyApplication.getInstance());
 		}
 
 

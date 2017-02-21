@@ -1,12 +1,14 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,17 +147,14 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             ViewHolderItem mHolder = (ViewHolderItem) holder;
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
             mHolder.textViewItemCategoryName.setText(item.getItemName());
-
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mHolder.cardViewRecycler.getLayoutParams();
-            layoutParams.setMargins((int) (25.0f*ASSL.Xscale()), (int) (25.0f*ASSL.Yscale()), (int)(25.0f*ASSL.Xscale()), (int) (6.0f*ASSL.Yscale()));
-            mHolder.cardViewRecycler.setLayoutParams(layoutParams);
+            mHolder.textViewItemCategoryName.setMinimumHeight((int)(Math.min(ASSL.Xscale(), ASSL.Yscale()) * 90f));
 
             int total = itemSelected.getQuantity();
             mHolder.textViewQuantity.setText(String.valueOf(total));
-            mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark);
+            mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
             mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
             if (total == 0) {
-                mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme);
+                mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme_selector);
                 mHolder.imageViewMinus.setVisibility(View.GONE);
                 mHolder.textViewQuantity.setVisibility(View.GONE);
             } else {
@@ -163,8 +162,21 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 mHolder.textViewQuantity.setVisibility(View.VISIBLE);
             }
 
-            mHolder.textViewAboutItemDescription.setVisibility(!TextUtils.isEmpty(item.getItemDetails()) ? View.VISIBLE : View.GONE);
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
+            int gravity, visibilityDesc;
+            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+            if(!TextUtils.isEmpty(item.getItemDetails())){
+                gravity = Gravity.LEFT;
+                visibilityDesc = View.VISIBLE;
+                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 30f), paramsFT.rightMargin, paramsFT.bottomMargin);
+            } else {
+                gravity = Gravity.CENTER_VERTICAL;
+                visibilityDesc = View.GONE;
+                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 45f), paramsFT.rightMargin, paramsFT.bottomMargin);
+            }
+            mHolder.textViewAboutItemDescription.setVisibility(visibilityDesc);
+            mHolder.textViewItemCategoryName.setGravity(gravity);
+            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
 
             if(context instanceof FreshActivity
                     && ((FreshActivity)context).getVendorOpened() != null
@@ -200,6 +212,8 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                             itemSelected.setQuantity(itemSelected.getQuantity() - 1);
                             notifyDataSetChanged();
                             callback.updateItemTotalPrice(itemSelected);
+                        } else {
+                            callback.onItemMinusClick();
                         }
                     } catch (Exception e){}
                 }
@@ -330,7 +344,6 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
     class ViewHolderItem extends RecyclerView.ViewHolder {
 
-        public CardView cardViewRecycler;
         public RelativeLayout relativeLayoutItem ;
         public LinearLayout linearLayoutQuantitySelector;
         private ImageView imageViewFoodType, saperatorImage, imageViewMinus, imageViewPlus;
@@ -338,7 +351,6 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
         public ViewHolderItem(View itemView, Context context) {
             super(itemView);
-            cardViewRecycler = (CardView) itemView.findViewById(R.id.cvRoot);
             relativeLayoutItem = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutItem);
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
@@ -347,9 +359,9 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
 
-            textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
-            textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenRegular(context));
-            textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenRegular(context));
+            textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
+            textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+            textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenMedium(context));
         }
     }
 
@@ -391,6 +403,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
     public interface Callback{
         void updateItemTotalPrice(ItemSelected itemSelected);
+        void onItemMinusClick();
     }
 
 }

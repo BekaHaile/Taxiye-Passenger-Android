@@ -3,17 +3,18 @@ package product.clicklabs.jugnoo;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -26,17 +27,18 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
+import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
@@ -47,17 +49,20 @@ import retrofit.mime.TypedByteArray;
  * Created by ankit on 27/12/16.
  */
 
-public class JugnooStarSubscribedActivity extends BaseActivity implements View.OnClickListener {
+public class JugnooStarSubscribedActivity extends BaseFragmentActivity implements View.OnClickListener {
 
-    private RelativeLayout relative;
-    private TextView textViewTitle;
-    private ImageView imageViewBack;
+    private RelativeLayout relative, rlAutoRenewal, rlFragment;
+    private TextView textViewTitle, tvAutoRenewal, tvUpgradingText;
+    private ImageView imageViewBack, ivAutoRenewalSwitch;
     private TextView tvCurrentPlanValue, tvExpiresOnValue, tvSavingsMeterRetry, tvBenefits;
-    private LinearLayout llSavingsValue;
+    private LinearLayout llSavingsValue, llUpgradeContainer;
     private ProgressWheel progressWheel;
     private NonScrollListView rvBenefits;
     private StarMembershipAdapter starMembershipAdapter;
+    private Button btnUpgradeNow;
     private ArrayList<String> benefits = new ArrayList<>();
+    private SubscriptionData.Subscription subscription;
+    private String selectedSubId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +96,14 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
         progressWheel = (ProgressWheel) findViewById(R.id.progressWheel);
         tvSavingsMeterRetry = (TextView) findViewById(R.id.tvSavingsMeterRetry);
         tvSavingsMeterRetry.setTypeface(Fonts.mavenMedium(this));
+
+        rlFragment = (RelativeLayout) findViewById(R.id.rlFragment);
+        llUpgradeContainer = (LinearLayout) findViewById(R.id.llUpgradeContainer);
+        rlAutoRenewal = (RelativeLayout) findViewById(R.id.rlAutoRenewal);
+        tvAutoRenewal = (TextView) findViewById(R.id.tvAutoRenewal); tvAutoRenewal.setTypeface(Fonts.mavenMedium(this));
+        ivAutoRenewalSwitch = (ImageView) findViewById(R.id.ivAutoRenewalSwitch);
+        tvUpgradingText = (TextView) findViewById(R.id.tvUpgradingText); tvUpgradingText.setTypeface(Fonts.mavenMedium(this));
+        btnUpgradeNow = (Button) findViewById(R.id.btnUpgradeNow); btnUpgradeNow.setTypeface(Fonts.mavenMedium(this));
         apiFetchTotalSavings();
 
         tvSavingsMeterRetry.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +113,25 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
             }
         });
 
+        ivAutoRenewalSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    //ivAutoRenewalSwitch.setImageResource(R.drawable.jugnoo_sticky_off);
+                    //ivAutoRenewalSwitch.setImageResource(R.drawable.jugnoo_sticky_on);
+            }
+        });
+
+        btnUpgradeNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openStarCheckoutFragment(JugnooStarSubscribedActivity.this, rlFragment);
+            }
+        });
+
         try {
+            tvCurrentPlanValue.setText(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getPlanString());
+            tvExpiresOnValue.setText(DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getValidTill())));
+
             String tempStr = Data.userData.getSubscriptionData().getSubTextAutos() + ";;;" + Data.userData.getSubscriptionData().getSubTextFresh() + ";;;" +
                     Data.userData.getSubscriptionData().getSubTextMeals()+";;;"+Data.userData.getSubscriptionData().getSubTextMenus()+";;;"+
                     Data.userData.getSubscriptionData().getSubTextGrocery();
@@ -183,8 +214,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
                 }
             }, 200);
 
-            tvCurrentPlanValue.setText(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getPlanString());
-            tvExpiresOnValue.setText(DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getValidTill())));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -192,7 +222,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
 
     private void apiCancelSubscription() {
         try {
-            if (AppStatus.getInstance(JugnooStarSubscribedActivity.this).isOnline(JugnooStarSubscribedActivity.this)) {
+            if (MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(JugnooStarSubscribedActivity.this, getResources().getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -269,8 +299,15 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
 
 
     public void performBackPressed() {
-        finish();
-        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                rlFragment.setVisibility(View.GONE);
+            }
+            super.onBackPressed();
+        } else {
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
     }
 
     @Override
@@ -311,7 +348,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
 
     private void apiFetchTotalSavings() {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
                 llSavingsValue.removeAllViews();
                 llSavingsValue.addView(progressWheel);
                 progressWheel.spin();
@@ -328,6 +365,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
                             if (savingsResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 llSavingsValue.removeAllViews();
                                 setTotalSavingsValueText(llSavingsValue, savingsResponse.getTotalSavings());
+                                setUpgradeView(savingsResponse);
                             } else {
                                 DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", savingsResponse.getMessage());
                                 llSavingsValue.removeAllViews();
@@ -357,8 +395,32 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
         }
     }
 
+    private void setUpgradeView(FetchSubscriptionSavingsResponse savingsResponse) {
+        try {
+            llUpgradeContainer.setVisibility(View.GONE);
+            if(savingsResponse.getUpgradeData() != null && savingsResponse.getUpgradeData().size() > 0){
+                llUpgradeContainer.setVisibility(View.VISIBLE);
+                tvUpgradingText.setText(savingsResponse.getUpgradeData().get(0).getUpgradingText());
+                subscription = savingsResponse.getUpgradeData().get(0).getUpgradeArray().get(0);
+                selectedSubId = new Gson().toJson(subscription);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onBackPressed() {
         performBackPressed();
+    }
+
+    public void openStarCheckoutFragment(FragmentActivity activity, View container) {
+        rlFragment.setVisibility(View.VISIBLE);
+        activity.getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                .add(container.getId(), StarSubscriptionCheckoutFragment.newInstance(selectedSubId, true),
+                        StarSubscriptionCheckoutFragment.class.getName())
+                .addToBackStack(StarSubscriptionCheckoutFragment.class.getName())
+                .commitAllowingStateLoss();
     }
 }

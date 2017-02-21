@@ -11,8 +11,8 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -27,7 +27,6 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.ParseUtils;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.support.models.SupportCategory;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -65,7 +64,7 @@ public class ApiGetRideSummary {
 		if(savedSupportVersion.equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
 			showRideMenu = false;
 		}
-		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+		if (!HomeActivity.checkIfUserDataNull(activity) && MyApplication.getInstance().isOnline()) {
 			final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
@@ -134,7 +133,7 @@ public class ApiGetRideSummary {
 									Prefs.with(activity).save(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION,
 											Data.userData.getInAppSupportPanelVersion());
 								} else{
-									itemsMain = Database2.getInstance(activity).getSupportDataItems(supportCategory);
+									itemsMain = MyApplication.getInstance().getDatabase2().getSupportDataItems(supportCategory);
 								}
 
 								callback.onSuccess(endRideData, finalDatum, itemsMain);
