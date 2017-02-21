@@ -5002,8 +5002,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
 
-                        if (Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
-                            rlGenieHelp.setVisibility(View.VISIBLE);
+                        if (Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0
+                                && passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    rlGenieHelp.setVisibility(View.VISIBLE);
+                                }
+                            }, 1500);
                         } else {
                             rlGenieHelp.setVisibility(View.GONE);
                         }

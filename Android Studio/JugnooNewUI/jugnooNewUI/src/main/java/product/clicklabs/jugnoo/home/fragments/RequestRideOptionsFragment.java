@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
+import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -288,9 +289,14 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
                 @Override
                 public void onInviteFriends() {
-                    Intent intent = new Intent(activity, ShareActivity.class);
+                    /*Intent intent = new Intent(activity, ShareActivity.class);
                     startActivity(intent);
-                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);*/
+                    if(Utils.appInstalledOrNot(activity, "com.whatsapp")){
+                        ReferralActions.shareToWhatsapp(activity);
+                    } else {
+                        ReferralActions.openGenericShareIntent(activity, null);
+                    }
                 }
 
             });
