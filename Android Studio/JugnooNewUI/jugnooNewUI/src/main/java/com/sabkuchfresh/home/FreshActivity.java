@@ -805,6 +805,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     public Pair<Double, Integer> updateCartValuesGetTotalPrice() {
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
+
             return updateCartValuesGetTotalPriceMenus();
         } else {
             return updateCartValuesGetTotalPriceFMG();
@@ -1352,11 +1353,16 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     topBar.title.setVisibility(View.GONE);
                     topBar.title.invalidate();
                     topBar.animateSearchBar(true);
+
+
+                    FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_SEARCH_BUTTON_MENUS, Events.MENU_SEARCH);
                 } else if (getTopFragment() instanceof VendorMenuFragment || getTopFragment() instanceof RestaurantImageFragment) {
                     if (canExitVendorMenu())
                         getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
 
                 }
+
+
             } else {
                 if (getFreshFragment() != null) {
                     getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer, getFreshFragment().getSuperCategory().getSuperCategoryId(),
@@ -1371,6 +1377,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     }
 
     public void openMenusFilter() {
+        FlurryEventLogger.eventGA(Events.MENUS, Events.FILTERS, Events.MENU_FILTERS);
         getTransactionUtils().openMenusFilterFragment(this, getRelativeLayoutContainer());
     }
 
@@ -2515,8 +2522,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     private void openCart(int appType) {
         if (appType == AppConstant.ApplicationType.MENUS && getVendorOpened() != null) {
-            if (canExitVendorMenu())
+            if (canExitVendorMenu()){
+                FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_CART_BUTTON, Events.MENU_CART_VIEW);
                 getTransactionUtils().openMenusCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+            }
+
         } else {
             getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         }
@@ -2931,6 +2941,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 if (getFreshCheckoutMergedFragment() != null
                         && (getDeliveryAddressesFragment() != null || getAddToAddressBookFragmentDirect() != null)) {
                     getFreshCheckoutMergedFragment().setDeliveryAddressUpdated(true);
+                }
+
+
+                if(getTopFragment()!=null && getTopFragment() instanceof  MenusFragment)
+                {
+                    FlurryEventLogger.eventGA(Events.MENUS, Events.CHANGE_ADDRESS, Events.MENU_CHANGE_ADDRESS);
                 }
             }
         } catch (Exception e) {
@@ -3598,7 +3614,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             appBarLayout.setExpanded(false, false);
             topBar.llCartContainer.setVisibility(View.GONE);
             topBar.ivSearch.setVisibility(View.GONE);
-            FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.CLICKED);
+            FlurryEventLogger.eventGA(Events.MENUS,Events.CLICK_ON_RATING_BUTTON_RESTRO,Events.MENU_RESTRO_RATING_CLICK);
             getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
     }
@@ -3607,7 +3623,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         if (getVendorOpened() != null) {
             if(isPlusButtonClicked){
                 this.currentReview=null;
-                FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.PLUS_BUTTON);
+                FlurryEventLogger.eventGA(Events.MENUS,Events.CLICK_ON_PLUS_BUTTON,Events.MENU_ADD_FEED);
 
             }
             getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());

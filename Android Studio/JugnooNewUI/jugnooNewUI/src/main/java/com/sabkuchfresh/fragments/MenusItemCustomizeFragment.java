@@ -13,13 +13,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusItemCustomizeAdapter;
+import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
+import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -126,6 +129,8 @@ public class MenusItemCustomizeFragment extends Fragment {
 							} else {
 								menusItemCustomizeAdapter.getItem().getItemSelectedList().add(menusItemCustomizeAdapter.getItemSelected());
 							}
+							if (activity.getAppType() == AppConstant.ApplicationType.MENUS)
+								FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_ADD_BUTTON_ITEM, Events.MENU_ADD_ITEM);
 							activity.performBackPressed();
 							activity.getVendorMenuFragment().onUpdateListEvent(new UpdateMainList(true));
 						}

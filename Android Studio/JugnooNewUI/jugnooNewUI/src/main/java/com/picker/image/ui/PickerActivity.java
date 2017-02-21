@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 
 
 public class PickerActivity extends AppCompatActivity {
@@ -252,6 +253,7 @@ public class PickerActivity extends AppCompatActivity {
         }
 
 
+        FlurryEventLogger.eventGA(product.clicklabs.jugnoo.Events.MENUS, product.clicklabs.jugnoo.Events.USER_CLICK_ON_CAMERA, product.clicklabs.jugnoo.Events.JUGNOO_OPEN_CAMERA);
         if (!mPickOptions.videosEnabled) {
             capturePhoto();
             return;
