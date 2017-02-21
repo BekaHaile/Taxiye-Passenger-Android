@@ -1493,7 +1493,6 @@
     <string name="star_icon">&#xe9d9;</string>
     <string name="thanks_for_recommendation">Thanks for your recommendation!</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="zoom_view">zoom_view_transition</string>
     <string name="star_could_not_be_added">Jugnoo star couldn\'t be added. Please try next time.</string>

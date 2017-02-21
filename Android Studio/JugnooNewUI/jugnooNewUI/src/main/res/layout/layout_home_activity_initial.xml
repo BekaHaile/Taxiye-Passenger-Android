@@ -280,35 +280,4 @@
 
     </LinearLayout>
 
-
-    <RelativeLayout
-        android:id="@+id/rlGenieHelp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px_20"
-        android:layout_marginBottom="-50px"
-        android:layout_above="@+id/linearLayoutRequestMain"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="40px"
-            android:layout_height="40px"
-            android:layout_marginLeft="60px"
-            android:layout_below="@+id/tvGenieHelp"
-            android:background="@drawable/triangle_help_text"
-            android:rotation="180"
-            android:tag="mwar" />
-
-        <TextView
-            android:id="@+id/tvGenieHelp"
-            android:layout_width="@dimen/px_400"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_black_80_r"
-            android:padding="15px"
-            android:text="Explore more from Jugnoo"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_30" />
-    </RelativeLayout>
-
-
 </RelativeLayout>

@@ -200,7 +200,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             @Override
             public void keyboardOpened() {
                 if (activity.getTopFragment() instanceof MenusFragment) {
-                    activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+                    activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
                 }
             }
 
@@ -208,7 +208,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             public void keyBoardClosed() {
                 if (activity.getTopFragment() instanceof MenusFragment) {
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                        activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                        activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -525,7 +525,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             activity.getTopBar().etSearch.setText("");
           //  activity.fragmentUISetup(this);
             if (keyboardLayoutListener.getKeyBoardState() == 1) {
-                activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+                activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
             }
             if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);

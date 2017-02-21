@@ -234,8 +234,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     private FreshSortingAdapter sortingAdapter;
     private CoordinatorLayout coordinatorLayout;
     private static final float COLLAPSE_TOOLBAR_HEIGHT = 270f;
-    private RelativeLayout rlGenieHelp;
-    private TextView tvGenieHelp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -299,9 +297,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
 
             topBar.etSearch.addTextChangedListener(textWatcher);
-
-            rlGenieHelp = (RelativeLayout) findViewById(R.id.rlGenieHelp);
-            tvGenieHelp = (TextView) findViewById(R.id.tvGenieHelp); tvGenieHelp.setTypeface(Fonts.mavenMedium(this));
 
 
 
@@ -419,7 +414,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
 
             try {
-                float marginBottom = 77f;
+                float marginBottom = 40f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                     addMealFragment();
@@ -436,7 +431,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
                     lastClientId = Config.getMenusClientId();
-                    marginBottom = 33f;
 
                 } else {
                     openCart();
@@ -445,7 +439,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     lastClientId = Config.getFreshClientId();
                 }
                 int dpAsPixels = (int) (marginBottom * scale + 0.5f);
-                fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+                fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
+                fabViewTest.setRlGenieHelpBottomMargin(170f);
                 Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -679,11 +674,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                             (getMealFragment() != null && !getMealFragment().isHidden()) ||
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
                             || (getMenusFragment() != null && !getMenusFragment().isHidden())) {
-                        fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-                        fabViewTest.setFABButtons();
+                        fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                        fabViewTest.setFABButtons(true);
                     }
                 } else {
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 }
             }
         } catch (Exception e) {
@@ -696,10 +691,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         menuBar.setUserData();
 
         fetchWalletBalance(this);
-    }
-
-    public RelativeLayout getRlGenieHelp() {
-        return rlGenieHelp;
     }
 
     public FreshHomeFragment getFreshHomeFragment() {
@@ -927,7 +918,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             topBar.textViewReset.setVisibility(View.GONE);
             if (topView.getVisibility() != View.VISIBLE)
                 topView.setVisibility(View.VISIBLE);
-            fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+            fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
             topBar.editTextDeliveryAddress.setVisibility(View.GONE);
 
             rlSort.setVisibility(View.GONE);
@@ -936,7 +927,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             topBar.ivAddReview.setVisibility(View.GONE);
             topBar.tvNameCap.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
-            rlGenieHelp.setVisibility(View.GONE);
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -947,10 +937,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewBack.setVisibility(View.GONE);
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    float marginBottom = 40f;
-                    int dpAsPixels = (int) (marginBottom * scale + 0.5f);
-                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
 
 
@@ -959,13 +946,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 if (setMinOrderAmountText(fragment) == 1) {
                     textViewMinOrderVis = -1;
-                }
-
-                if(fabViewTest.relativeLayoutFABTest.getVisibility() == View.VISIBLE
-                        && Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0){
-                    rlGenieHelp.setVisibility(View.VISIBLE);
-                } else{
-                    rlGenieHelp.setVisibility(View.GONE);
                 }
 
             } else if (fragment instanceof FreshFragment) {
@@ -994,10 +974,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 }
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    float marginBottom = 40f;
-                    int dpAsPixels = (int) (marginBottom * scale + 0.5f);
-                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
 
                 topBar.title.setVisibility(View.VISIBLE);
@@ -1009,10 +986,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewBack.setVisibility(View.GONE);
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-                    float marginBottom = 85f;
-                    int dpAsPixels = (int) (marginBottom * scale + 0.5f);
-                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.grocery));
@@ -1027,21 +1001,18 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
                 rlFilterVis = View.VISIBLE;
-
-                if(Prefs.with(this).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0){
-                    Prefs.with(this).save(Constants.SHOW_GEANIE_HELP, 1);
-                    rlGenieHelp.setVisibility(View.VISIBLE);
-                } else{
-                    rlGenieHelp.setVisibility(View.GONE);
-                }
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.menus));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 topBar.getLlSearchCart().setLayoutTransition(null);
+
+                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                }
 
             } else if (fragment instanceof VendorMenuFragment || fragment instanceof RestaurantImageFragment) {
                 llCartContainerVis = View.VISIBLE;

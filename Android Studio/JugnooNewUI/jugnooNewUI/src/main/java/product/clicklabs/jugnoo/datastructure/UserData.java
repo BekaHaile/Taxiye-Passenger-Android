@@ -81,6 +81,8 @@ public class UserData {
 	private int showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled;
 	private SubscriptionData subscriptionData;
 
+	private int showJeanieHelpText;
+
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -99,7 +101,7 @@ public class UserData {
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled){
+					int slideCheckoutPayEnabled, int showJeanieHelpText){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -174,6 +176,7 @@ public class UserData {
 		this.showHomeScreen = showHomeScreen;
 		this.showSubscriptionData = showSubscriptionData;
 		this.slideCheckoutPayEnabled = slideCheckoutPayEnabled;
+		this.showJeanieHelpText = showJeanieHelpText;
 	}
 
 	private void checkUserImage(){
@@ -956,6 +959,14 @@ public class UserData {
 
 	public void setSlideCheckoutPayEnabled(int slideCheckoutPayEnabled) {
 		this.slideCheckoutPayEnabled = slideCheckoutPayEnabled;
+	}
+
+	public int getShowJeanieHelpText() {
+		return showJeanieHelpText;
+	}
+
+	public void setShowJeanieHelpText(int showJeanieHelpText) {
+		this.showJeanieHelpText = showJeanieHelpText;
 	}
 
 	//	"meals_enabled": 1,

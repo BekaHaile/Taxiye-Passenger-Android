@@ -401,8 +401,10 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
                     }
                 }
 
-                if(endRideData.getVehicleType() == VehicleTypeValue.TAXI.getOrdinal()){
+                if(endRideData.getInvoiceAdditionalTextCabs() != null
+                        && !endRideData.getInvoiceAdditionalTextCabs().equalsIgnoreCase("")){
                     tvIncludeToll.setVisibility(View.VISIBLE);
+                    tvIncludeToll.setText(endRideData.getInvoiceAdditionalTextCabs());
                 }
 
                 if (endRideData.discountTypes.size() > 0) {

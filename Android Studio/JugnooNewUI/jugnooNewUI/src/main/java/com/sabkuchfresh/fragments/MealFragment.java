@@ -448,12 +448,15 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
         activity.updateCartValuesGetTotalPrice();
+        activity.getFabViewTest().hideJeanieHelpInSession();
     }
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
         activity.updateCartValuesGetTotalPrice();
+        activity.getFabViewTest().hideJeanieHelpInSession();
     }
+
 
     @Override
     public boolean checkForMinus(int position, SubItem subItem) {

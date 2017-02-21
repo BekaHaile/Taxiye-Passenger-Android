@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,10 +16,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -46,7 +49,7 @@ public class PromoCouponsDialog {
 	private Button buttonContinue, buttonInviteFriends;
 	private LinearLayout linearLayoutNoCurrentOffers;
 	private TextView textViewNoCurrentOffers, tvAvailableOffers;
-	private ImageView imageViewOffers;
+	private ImageView imageViewOffers, ivNoOffer;
 	private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
 	public PromoCouponsDialog(Activity activity, Callback callback) {
@@ -140,22 +143,36 @@ public class PromoCouponsDialog {
 			tvAvailableOffers = (TextView) dialog.findViewById(R.id.tvAvailableOffers); tvAvailableOffers.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 			buttonInviteFriends = (Button)dialog.findViewById(R.id.buttonInviteFriends);buttonInviteFriends.setTypeface(Fonts.mavenMedium(activity));
 			imageViewOffers = (ImageView)dialog.findViewById(R.id.imageViewOffers);
+			ivNoOffer = (ImageView) dialog.findViewById(R.id.ivNoOffer);
 
-			if(promoCoupons.size() > 0){
-				listViewPromoCoupons.setVisibility(View.VISIBLE);
-				linearLayoutNoCurrentOffers.setVisibility(View.GONE);
-				imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
-				if(activity instanceof HomeActivity){
-					relativeLayoutBottomButtons.setVisibility(View.VISIBLE);
-				} else if(activity instanceof FreshActivity){
-					relativeLayoutBottomButtons.setVisibility(View.GONE);
-				}
-			} else{
-				listViewPromoCoupons.setVisibility(View.GONE);
-				relativeLayoutBottomButtons.setVisibility(View.GONE);
-				linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
-				imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
-				tvAvailableOffers.setText(activity.getResources().getString(R.string.no_available_offers));
+			try {
+				if(promoCoupons.size() > 0){
+                    listViewPromoCoupons.setVisibility(View.VISIBLE);
+                    linearLayoutNoCurrentOffers.setVisibility(View.GONE);
+                    imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
+                    if(activity instanceof HomeActivity){
+                        relativeLayoutBottomButtons.setVisibility(View.VISIBLE);
+                    } else if(activity instanceof FreshActivity){
+                        relativeLayoutBottomButtons.setVisibility(View.GONE);
+                    }
+                } else{
+                    listViewPromoCoupons.setVisibility(View.GONE);
+                    relativeLayoutBottomButtons.setVisibility(View.GONE);
+                    linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
+                    imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
+                    tvAvailableOffers.setText(activity.getResources().getString(R.string.no_available_offers));
+
+                    if(!"".equalsIgnoreCase(Data.userData.getInviteEarnScreenImage())){
+                        Picasso.with(activity).load(Data.userData.getInviteEarnScreenImage())
+                                .placeholder(R.drawable.ic_promotions_friend_refer)
+                                .error(R.drawable.ic_promotions_friend_refer)
+                                .into(ivNoOffer);
+                    }
+
+                    textViewNoCurrentOffers.setText(Data.userData.getReferralMessages().referralShortMessage);
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 			buttonSkip.setOnClickListener(new View.OnClickListener() {

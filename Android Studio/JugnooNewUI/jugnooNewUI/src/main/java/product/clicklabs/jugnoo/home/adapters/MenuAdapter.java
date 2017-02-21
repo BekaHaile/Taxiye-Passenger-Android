@@ -211,8 +211,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_star_selector);
-                    if(Data.userData.isSubscriptionActive()){
-//                        hideLayout(holder.relative);
+                    if(!Data.userData.isSubscriptionActive()){
                         holder.textViewNew.setVisibility(View.GONE);
                     }
                 } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(menuInfo.getTag())){
