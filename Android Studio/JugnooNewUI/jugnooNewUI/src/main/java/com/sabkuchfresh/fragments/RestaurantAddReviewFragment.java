@@ -91,7 +91,6 @@ public class RestaurantAddReviewFragment extends Fragment {
     private TextView tvCharCount;
     private  int etReviewMaxLength;
     private View ibAccessCamera;
-    // TODO: 19/02/17 Show errror when submitting without entering any char
 
 
     public static RestaurantAddReviewFragment newInstance(int restaurantId) {
@@ -448,7 +447,6 @@ public class RestaurantAddReviewFragment extends Fragment {
                     @Override
                     public  void onError(){
                         DialogPopup.dismissLoadingDialog();
-                        // TODO: 19/02/17 Show Error for not compressing
 
                     }
                 },activity);

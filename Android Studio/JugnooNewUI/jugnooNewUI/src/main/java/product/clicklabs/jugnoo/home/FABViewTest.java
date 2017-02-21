@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.activities.MainActivity;
@@ -21,7 +22,9 @@ import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
@@ -45,6 +48,9 @@ public class FABViewTest {
     private boolean isOpened;
     private final String GENIE_OPEN = "Genie Open";
     //public View fabExtra;
+
+    private RelativeLayout rlGenieHelp;
+    private TextView tvGenieHelp;
 
     public FABViewTest(Activity activity, View view) {
         this.activity = activity;
@@ -93,6 +99,10 @@ public class FABViewTest {
             //menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
 
 
+            rlGenieHelp = (RelativeLayout) view.findViewById(R.id.rlGenieHelp);
+            tvGenieHelp = (TextView) view.findViewById(R.id.tvGenieHelp); tvGenieHelp.setTypeface(Fonts.mavenMedium(activity));
+
+            setRlGenieHelpBottomMargin(170f);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,13 +117,10 @@ public class FABViewTest {
                         isOpened = true;
                         if(activity instanceof HomeActivity){
                             ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
-                            ((HomeActivity)activity).getRlGenieHelp().setVisibility(View.GONE);
-                            Prefs.with(activity).save(Constants.SHOW_GEANIE_HELP, 1);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
-                        } else if(activity instanceof FreshActivity){
-                            ((FreshActivity)activity).getRlGenieHelp().setVisibility(View.GONE);
-                            Prefs.with(activity).save(Constants.SHOW_GEANIE_HELP, 1);
                         }
+                        Prefs.with(activity).save(Constants.SP_SHOW_GEANIE_HELP, 1);
+                        setRlGenieHelpVisibility();
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
                         FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Opened");
                     } else {
@@ -130,7 +137,12 @@ public class FABViewTest {
             }
         });
 
-
+        rlGenieHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menuLabelsRightTest.open(true);
+            }
+        });
 
         createCustomAnimation();
 
@@ -168,7 +180,7 @@ public class FABViewTest {
     }
 
 
-    public void setFABButtons(){
+    public void setFABButtons(boolean toShowJeanieHelp){
         try {
             if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
                     && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
@@ -230,11 +242,15 @@ public class FABViewTest {
                         ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.GONE);
                     }
                 }*/
+
+                setRlGenieHelpVisibility();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private Handler handler = new Handler();
 
     private void setButtonsVisibilityOnOpen(){
         try {
@@ -371,6 +387,64 @@ public class FABViewTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setRlGenieHelpVisibility(){
+        if(Data.userData.getShowJeanieHelpText() == 1
+                && Prefs.with(activity).getInt(Constants.SP_SHOW_GEANIE_HELP, 0) == 0
+                && !Data.isJeanieShownInSession()){
+            handler.postDelayed(runnableJeanieHelpShow, 2000);
+        } else {
+            rlGenieHelp.setVisibility(View.GONE);
+            handler.removeCallbacks(runnableJeanieHelpShow);
+        }
+    }
+
+    private Runnable runnableJeanieHelpShow = new Runnable() {
+        @Override
+        public void run() {
+            rlGenieHelp.setVisibility(View.VISIBLE);
+            Data.setJeanieShownInSession(true);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    rlGenieHelp.setVisibility(View.GONE);
+                }
+            }, 4000);
+        }
+    };
+
+    public void setRelativeLayoutFABTestVisibility(int visibility){
+        relativeLayoutFABTest.setVisibility(visibility);
+        if(visibility != View.VISIBLE){
+            hideJeanieHelpInSession();
+        }
+    }
+
+    public void hideJeanieHelpInSession(){
+        Data.setJeanieShownInSession(true);
+        setRlGenieHelpVisibility();
+    }
+
+    public void setRlGenieHelpBottomMargin(float bottomMargin){
+        setRlGenieHelpBottomMargin((int) (ASSL.Yscale() * bottomMargin));
+    }
+
+    public void setRlGenieHelpBottomMargin(int bottomMargin){
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rlGenieHelp.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, bottomMargin);
+        rlGenieHelp.setLayoutParams(params);
+    }
+
+    public void setMenuLabelsRightTestPadding(float paddingBottom){
+        float scale = activity.getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (paddingBottom * scale + 0.5f);
+        setMenuLabelsRightTestPadding(dpAsPixels);
+    }
+
+    public void setMenuLabelsRightTestPadding(int paddingBottom){
+        menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, paddingBottom);
+        setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
     }
 
 }
