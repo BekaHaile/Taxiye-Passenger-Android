@@ -1,15 +1,12 @@
-package net.yazeed44.imagepicker.util;
+package com.picker.image.util;
 
 import com.melnykov.fab.FloatingActionButton;
 
-import net.yazeed44.imagepicker.model.AlbumEntry;
-import net.yazeed44.imagepicker.model.ImageEntry;
+import com.picker.image.model.AlbumEntry;
+import com.picker.image.model.ImageEntry;
 
 import java.util.ArrayList;
 
-/**
- * Created by yazeed44 on 6/13/15.
- */
 public final class Events {
 
     private Events() {
@@ -69,6 +66,17 @@ public final class Events {
         public final ImageEntry currentImage;
 
         public OnChangingDisplayedImageEvent(ImageEntry currentImage) {
+
+            this.currentImage = currentImage;
+        }
+    }
+
+
+    public final static class onItemRemovedEventNotify {
+
+        public final ImageEntry currentImage;
+
+        public onItemRemovedEventNotify(ImageEntry currentImage) {
 
             this.currentImage = currentImage;
         }

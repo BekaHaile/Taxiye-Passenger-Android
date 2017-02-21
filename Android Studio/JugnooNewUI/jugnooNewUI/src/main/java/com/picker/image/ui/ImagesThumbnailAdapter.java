@@ -1,4 +1,4 @@
-package net.yazeed44.imagepicker.ui;
+package com.picker.image.ui;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -15,18 +15,16 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import net.yazeed44.imagepicker.library.R;
-import net.yazeed44.imagepicker.model.AlbumEntry;
-import net.yazeed44.imagepicker.model.ImageEntry;
-import net.yazeed44.imagepicker.util.Events;
-import net.yazeed44.imagepicker.util.Picker;
-import net.yazeed44.imagepicker.util.Util;
+import product.clicklabs.jugnoo.R;
+import com.picker.image.model.AlbumEntry;
+import com.picker.image.model.ImageEntry;
+import com.picker.image.util.Events;
+import com.picker.image.util.Picker;
+import com.picker.image.util.Util;
 
 import de.greenrobot.event.EventBus;
 
-/**
- * Created by yazeed44 on 11/23/14.
- */
+
 public class ImagesThumbnailAdapter extends RecyclerView.Adapter<ImagesThumbnailAdapter.ImageViewHolder> implements Util.OnClickImage {
 
 
@@ -60,7 +58,7 @@ public class ImagesThumbnailAdapter extends RecyclerView.Adapter<ImagesThumbnail
         if (!mPickOptions.videosEnabled) {
             return null;
         }
-        Drawable videoIcon = ContextCompat.getDrawable(mRecyclerView.getContext(), R.drawable.ic_play_arrow);
+        Drawable videoIcon = ContextCompat.getDrawable(mRecyclerView.getContext(),android.R.drawable.ic_media_play);
         videoIcon = DrawableCompat.wrap(videoIcon);
         DrawableCompat.setTint(videoIcon, mPickOptions.videoIconTintColor);
         return videoIcon;
@@ -167,6 +165,17 @@ public class ImagesThumbnailAdapter extends RecyclerView.Adapter<ImagesThumbnail
         }
 
         drawGrid(holder, imageEntry);
+
+    }
+
+    public void notifyItemUnchecked(ImageEntry redrawImage) {
+
+        int pos=mAlbum.imageList.indexOf(redrawImage);
+        if(pos!=-1)
+        {
+            mAlbum.imageList.get(pos).isPicked=false;
+            notifyItemChanged(pos);
+        }
 
     }
 

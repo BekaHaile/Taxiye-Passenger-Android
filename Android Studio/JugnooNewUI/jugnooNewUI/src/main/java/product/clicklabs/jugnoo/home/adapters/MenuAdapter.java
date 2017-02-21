@@ -320,7 +320,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         //holder.linearLayoutCategories.startAnimation(animation);
                     }
 
-                        //notifyItemChanged(0);
+                        //notifyItemUnchecked(0);
 //                    }
 //                    drawerLayout.closeDrawer(GravityCompat.START);
                 }

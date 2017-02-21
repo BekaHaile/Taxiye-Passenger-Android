@@ -1,4 +1,4 @@
-package net.yazeed44.imagepicker.ui;
+package com.picker.image.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,16 +13,14 @@ import android.view.ViewGroup;
 
 import com.melnykov.fab.FloatingActionButton;
 
-import net.yazeed44.imagepicker.library.R;
-import net.yazeed44.imagepicker.model.AlbumEntry;
-import net.yazeed44.imagepicker.util.Events;
+import product.clicklabs.jugnoo.R;
+import com.picker.image.model.AlbumEntry;
+import com.picker.image.util.Events;
 
 import de.greenrobot.event.EventBus;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-/**
- * Created by yazeed44 on 6/20/15.
- */
+
 public class ImagesPagerFragment extends Fragment implements PhotoViewAttacher.OnViewTapListener, ViewPager.OnPageChangeListener {
 
     public static final String TAG = ImagesPagerFragment.class.getSimpleName();

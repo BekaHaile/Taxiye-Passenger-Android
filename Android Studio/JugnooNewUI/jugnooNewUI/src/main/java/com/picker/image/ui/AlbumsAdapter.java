@@ -1,4 +1,4 @@
-package net.yazeed44.imagepicker.ui;
+package com.picker.image.ui;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -12,19 +12,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import net.yazeed44.imagepicker.library.R;
-import net.yazeed44.imagepicker.model.AlbumEntry;
-import net.yazeed44.imagepicker.util.Events;
-import net.yazeed44.imagepicker.util.Picker;
-import net.yazeed44.imagepicker.util.Util;
+import product.clicklabs.jugnoo.R;
+import com.picker.image.model.AlbumEntry;
+import com.picker.image.util.Events;
+import com.picker.image.util.Picker;
+import com.picker.image.util.Util;
 
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
-/**
- * Created by yazeed44 on 11/22/14.
- */
+
 public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewHolder> implements Util.OnClickAlbum {
 
     public final RecyclerView mRecycler;

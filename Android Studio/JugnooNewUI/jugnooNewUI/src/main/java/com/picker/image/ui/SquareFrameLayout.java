@@ -1,12 +1,10 @@
-package net.yazeed44.imagepicker.ui;
+package com.picker.image.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-/**
- * Created by yazeed44 on 6/16/15.
- */
+
 public class SquareFrameLayout extends FrameLayout {
 
     public SquareFrameLayout(Context context) {

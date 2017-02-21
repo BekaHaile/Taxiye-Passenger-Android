@@ -1,4 +1,4 @@
-package net.yazeed44.imagepicker.util;
+package com.picker.image.util;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -12,17 +12,15 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 
-import net.yazeed44.imagepicker.library.R;
-import net.yazeed44.imagepicker.model.AlbumEntry;
-import net.yazeed44.imagepicker.model.ImageEntry;
-import net.yazeed44.imagepicker.ui.PickerActivity;
+import product.clicklabs.jugnoo.R;
+import com.picker.image.model.AlbumEntry;
+import com.picker.image.model.ImageEntry;
+import com.picker.image.ui.PickerActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by yazeed44 on 11/22/14.
- */
+
 public final class Util {
 
 
@@ -125,6 +123,10 @@ public final class Util {
                 for (final ImageEntry imageEntry : allPhotosAlbum.imageList) {
 
                     if(checkedImage.path.equals(imageEntry.path)){
+
+                        if(checkedImage.isCameraClicked)
+                            PickerActivity.sCheckedImages.set(PickerActivity.sCheckedImages.indexOf(checkedImage),imageEntry);
+
                         imageEntry.isPicked = true;
                         break;
                     }
