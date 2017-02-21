@@ -1,12 +1,10 @@
-package net.yazeed44.imagepicker.ui;
+package com.picker.image.ui;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-/**
- * Created by yazeed44 on 7/15/15.
- */
+
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
     private final int mSpace;

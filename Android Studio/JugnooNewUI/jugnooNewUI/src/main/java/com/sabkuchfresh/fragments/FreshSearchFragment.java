@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -109,7 +108,7 @@ public class FreshSearchFragment extends Fragment {
 		textViewPlaceholder = (TextView) rootView.findViewById(R.id.textViewPlaceholder); textViewPlaceholder.setTypeface(Fonts.mavenRegular(activity));
 		textViewPlaceholder.setVisibility(View.GONE);
 
-        new Handler().postDelayed(new Runnable() {
+        activity.getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
 				try {
@@ -286,7 +285,7 @@ public class FreshSearchFragment extends Fragment {
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if(!hidden){
-            new Handler().postDelayed(new Runnable() {
+            activity.getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -304,7 +303,7 @@ public class FreshSearchFragment extends Fragment {
 				activity.updateCartValuesGetTotalPrice();
 			}
 			activity.setCartChangedAtCheckout(false);
-			new Handler().postDelayed(new Runnable() {
+			activity.getHandler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					activity.setMinOrderAmountText(FreshSearchFragment.this);

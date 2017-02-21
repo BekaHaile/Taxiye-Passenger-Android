@@ -2,7 +2,6 @@ package com.sabkuchfresh.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -138,7 +137,7 @@ public class MenusItemCustomizeFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		new Handler().postDelayed(new Runnable() {
+		activity.getHandler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				try {

@@ -1,5 +1,6 @@
-package net.yazeed44.imagepicker.ui;
+package com.picker.image.ui;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,8 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -27,12 +30,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.yazeed44.imagepicker.library.R;
-import net.yazeed44.imagepicker.model.AlbumEntry;
-import net.yazeed44.imagepicker.model.ImageEntry;
-import net.yazeed44.imagepicker.util.CameraSupport;
-import net.yazeed44.imagepicker.util.Events;
-import net.yazeed44.imagepicker.util.Picker;
+import product.clicklabs.jugnoo.R;
+import com.picker.image.model.AlbumEntry;
+import com.picker.image.model.ImageEntry;
+import com.picker.image.util.CameraSupport;
+import com.picker.image.util.Events;
+import com.picker.image.util.Picker;
+import com.tsengvn.typekit.TypekitContextWrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,13 +75,13 @@ public class PickerActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private CoordinatorLayout coordinatorLayout;
     private TextView tvImageCount;
+    private TextView toolbarTitle;
+    private RecyclerView recyclerViewSelectedImages;
 
     //TODO Add animation
     //TODO Fix bugs with changing orientation
     //TODO Add support for gif
-    //TODO Use robust method for capturing photos
     //TODO Add support for picking videos
-    //TODO When photo is captured a new album created for it
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +89,16 @@ public class PickerActivity extends AppCompatActivity {
         initTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick);
+        toolbarTitle=(TextView)findViewById(R.id.toolbar_title);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.root_layout);
+        recyclerViewSelectedImages =(RecyclerView)findViewById(R.id.selected_images) ;
+//        setUpRecycler();
+        findViewById(R.id.imageViewBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         tvImageCount = (TextView) findViewById(R.id.tv_count);
         tvImageCount.setText("0");
         addToolbarToLayout();
@@ -94,36 +107,14 @@ public class PickerActivity extends AppCompatActivity {
         initFab();
         updateFab();
     }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_ACTION_BAR_TITLE, getSupportActionBar().getTitle().toString());
+        outState.putString(KEY_ACTION_BAR_TITLE, toolbarTitle.getText().toString());
         outState.putBoolean(KEY_SHOULD_SHOW_ACTIONBAR_UP, mShouldShowUp);
     }
 
-    private void initTheme() {
-        setTheme(mPickOptions.themeResId);
-     /*   mToolbar = new Toolbar(new ContextThemeWrapper(mPickOptions.context, Util.getToolbarThemeResId(this)));
-        mToolbar.setPopupTheme(mPickOptions.popupThemeResId);*/
-    }
 
-    private void addToolbarToLayout() {
-       /* final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
-
-        final AppBarLayout.LayoutParams toolbarParams = new AppBarLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getActionBarHeight(this));
-        toolbarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-
-        appBarLayout.addView(mToolbar, toolbarParams);*/
-
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-
-
-
-    }
 
 
     @Override
@@ -145,12 +136,15 @@ public class PickerActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             mShouldShowUp = mPickOptions.backBtnInMainActivity;
-            getSupportActionBar().setDisplayHomeAsUpEnabled(mPickOptions.backBtnInMainActivity);
-            getSupportActionBar().setTitle(R.string.albums_title);
+////            getSupportActionBar().setDisplayHomeAsUpEnabled(mPickOptions.backBtnInMainActivity);
+
+//            getSupportActionBar().setTitle(R.string.albums_title);
+            toolbarTitle.setText(R.string.albums_title);
         } else {
             mShouldShowUp = savedInstanceState.getBoolean(KEY_SHOULD_SHOW_ACTIONBAR_UP);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(mShouldShowUp && mPickOptions.backBtnInMainActivity);
-            getSupportActionBar().setTitle(savedInstanceState.getString(KEY_ACTION_BAR_TITLE));
+////            getSupportActionBar().setDisplayHomeAsUpEnabled(mShouldShowUp && mPickOptions.backBtnInMainActivity);
+//            getSupportActionBar().setTitle(savedInstanceState.getString(KEY_ACTION_BAR_TITLE));
+            toolbarTitle.setText(savedInstanceState.getString(KEY_ACTION_BAR_TITLE));
 
 
         }
@@ -234,6 +228,7 @@ public class PickerActivity extends AppCompatActivity {
         sCheckedImages.clear();
         EventBus.getDefault().removeAllStickyEvents();
 
+
     }
 
     public void onCancel() {
@@ -299,36 +294,9 @@ public class PickerActivity extends AppCompatActivity {
         return captureTempFile;
     }
 
-    public void captureVideo() {
-        final File captureVideoFile = createTemporaryFileForCapturing(".mp4");
-        CameraSupport.startVideoCaptureActivity(this,
-                captureVideoFile, mPickOptions.videoLengthLimit, REQUEST_PORTRAIT_FFC);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            Bundle extras = data.getExtras();
-            Toast.makeText(this, "Succcess", Toast.LENGTH_SHORT).show();
-//            galleryAddPic();
-            refreshMediaScanner(mCurrentPhotoPath);
 
-           /* Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(imageBitmap);*/
-        }
-
-        if (resultCode == RESULT_OK && requestCode == REQUEST_PORTRAIT_FFC) {
-            //For capturing image from camera
-            galleryAddPic();
-            refreshMediaScanner(data.getData().getPath());
-
-
-        } else {
-            Log.i("onActivityResult", "User canceled the camera activity");
-        }
-    }
 
     private void refreshMediaScanner(final String imagePath) {
         MediaScannerConnection.scanFile(this,
@@ -345,20 +313,23 @@ public class PickerActivity extends AppCompatActivity {
                                 ImageEntry imageEntry;
                                 try {
                                     imageEntry = new ImageEntry.Builder(path).imageId(Integer.parseInt(uri.getLastPathSegment())).dateAdded(SystemClock.currentThreadTimeMillis()).build();
+                                    imageEntry.isCameraClicked=true;
                                 } catch (NumberFormatException e) {
                                     e.printStackTrace();
                                     imageEntry = null;
                                 }
                                 if (imageEntry != null)
-                                    EventBus.getDefault().postSticky(new Events.OnPickImageEvent(imageEntry));
+                                    onEvent(new Events.OnPickImageEvent(imageEntry));
+
 
 
                                 reloadAlbums();
+                                Log.d("onActivityResult", "New image should appear in Folder Name folder");
                             }
                         });
 
 
-                        Log.d("onActivityResult", "New image should appear in camera folder");
+
                     }
                 });
     }
@@ -375,6 +346,393 @@ public class PickerActivity extends AppCompatActivity {
 
 
     }
+
+
+    @Override
+    public void onBackPressed() {
+
+        if (isImagesThumbnailShown()) {
+            //Return to albums fragment
+            getSupportFragmentManager().popBackStack();
+//            getSupportActionBar().setTitle(R.string.albums_title);
+            toolbarTitle.setText(R.string.albums_title);
+            mShouldShowUp = mPickOptions.backBtnInMainActivity;
+////            getSupportActionBar().setDisplayHomeAsUpEnabled(mShouldShowUp);
+            hideSelectAll();
+            hideDeselectAll();
+
+        } else if (isImagesPagerShown()) {
+            //Returns to images thumbnail fragment
+
+            if (mSelectedAlbum == null) {
+                mSelectedAlbum = EventBus.getDefault().getStickyEvent(Events.OnClickAlbumEvent.class).albumEntry;
+            }
+            mDoneFab.setVisibility(View.GONE);
+            getSupportFragmentManager().popBackStack(ImagesThumbnailFragment.TAG, 0);
+//            getSupportActionBar().setTitle(mSelectedAlbum.name);
+            toolbarTitle.setText(mSelectedAlbum.name);
+//            getSupportActionBar().show();
+            showSelectAll();
+
+        } else {
+            //User on album fragment
+            super.onBackPressed();
+            onCancel();
+        }
+    }
+
+    private boolean isImagesThumbnailShown() {
+        return isFragmentShown(ImagesThumbnailFragment.TAG);
+    }
+
+    private boolean isImagesPagerShown() {
+        return isFragmentShown(ImagesPagerFragment.TAG);
+    }
+
+
+    private boolean isFragmentShown(final String tag) {
+
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+
+        return fragment != null && fragment.isVisible();
+    }
+
+
+
+
+    private void handleMultipleModeAddition(final ImageEntry imageEntry) {
+
+        if (mPickOptions.pickMode != Picker.PickMode.MULTIPLE_IMAGES) {
+            return;
+        }
+
+        if (sCheckedImages.size() < mPickOptions.limit || mPickOptions.limit == NO_LIMIT) {
+            imageEntry.isPicked = true;
+            sCheckedImages.add(imageEntry);
+        } else {
+            Snackbar.make(coordinatorLayout, "You cannot select more than "+ mPickOptions.limit  +" images", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+//            Toast.makeText(this, R.string.you_cant_check_more_images, Toast.LENGTH_SHORT).show();
+            Log.i("onPickImage", "You can't check more images");
+        }
+
+    }
+
+    private boolean shouldShowDeselectAll() {
+
+        if (mSelectedAlbum == null) {
+            return false;
+        }
+
+        boolean isAllImagesSelected = true;
+        for (final ImageEntry albumChildImage : mSelectedAlbum.imageList) {
+
+            if (!sCheckedImages.contains(albumChildImage)) {
+                isAllImagesSelected = false;
+                break;
+            }
+        }
+
+        final Fragment imageThumbnailFragment = getSupportFragmentManager().findFragmentByTag(ImagesThumbnailFragment.TAG);
+
+        return isAllImagesSelected && imageThumbnailFragment != null && imageThumbnailFragment.isVisible();
+    }
+
+    private void handleToolbarVisibility(final boolean show) {
+
+        final AppBarLayout appBarLayout = (AppBarLayout) mToolbar.getParent();
+        final CoordinatorLayout rootLayout = (CoordinatorLayout) appBarLayout.getParent();
+
+        final CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        final AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+
+        if (show) {
+            //Show appBar
+            behavior.setTopAndBottomOffset(0);
+            behavior.onNestedPreScroll(rootLayout, appBarLayout, null, 0, 1, new int[2]);
+
+        } else {
+            //Hide appBar
+            behavior.onNestedFling(rootLayout, appBarLayout, null, 0, 10000, true);
+        }
+
+    }
+
+    private void updateCount() {
+        tvImageCount.setText(sCheckedImages != null ? sCheckedImages.size() + "" : "0");
+    }
+
+    /**
+     * Bus Events
+     *
+     */
+    public void onEvent(final Events.OnClickAlbumEvent albumEvent) {
+        mSelectedAlbum = albumEvent.albumEntry;
+
+
+        final ImagesThumbnailFragment imagesThumbnailFragment;
+
+
+        if (getSupportFragmentManager().findFragmentByTag(ImagesThumbnailFragment.TAG) != null) {
+            imagesThumbnailFragment = (ImagesThumbnailFragment) getSupportFragmentManager().findFragmentByTag(ImagesThumbnailFragment.TAG);
+        } else {
+            imagesThumbnailFragment = new ImagesThumbnailFragment();
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, imagesThumbnailFragment, ImagesThumbnailFragment.TAG)
+                .addToBackStack(ImagesThumbnailFragment.TAG)
+                .commit();
+
+//        getSupportActionBar().setTitle(albumEvent.albumEntry.name);
+        toolbarTitle.setText(albumEvent.albumEntry.name);
+        mShouldShowUp = true;
+////        getSupportActionBar().setDisplayHomeAsUpEnabled(mShouldShowUp);
+        showSelectAll();
+
+        if (shouldShowDeselectAll()) {
+            showDeselectAll();
+        } else {
+            hideDeselectAll();
+        }
+
+
+    }
+
+
+
+
+
+    public void onEvent(final Events.OnPickImageEvent pickImageEvent) {
+        if (mPickOptions.videosEnabled && mPickOptions.videoLengthLimit > 0 && pickImageEvent.imageEntry.isVideo) {
+            // Check to see if the selected video is too long in length
+            final MediaPlayer mp = MediaPlayer.create(this, Uri.parse(pickImageEvent.imageEntry.path));
+            final int duration = mp.getDuration();
+            mp.release();
+            if (duration > (mPickOptions.videoLengthLimit)) {
+                Toast.makeText(this, getResources().getString(R.string.video_too_long).replace("$", String.valueOf(mPickOptions.videoLengthLimit / 1000)), Toast.LENGTH_SHORT).show();
+                return; // Don't allow selection
+            }
+        }
+
+        if (mPickOptions.pickMode == Picker.PickMode.MULTIPLE_IMAGES) {
+            handleMultipleModeAddition(pickImageEvent.imageEntry);
+
+
+        } else if (mPickOptions.pickMode == Picker.PickMode.SINGLE_IMAGE) {
+            //Single image pick mode
+
+
+            final ImagesPagerFragment pagerFragment;
+
+            if (getSupportFragmentManager().findFragmentByTag(ImagesPagerFragment.TAG) != null) {
+
+                pagerFragment = (ImagesPagerFragment) getSupportFragmentManager().findFragmentByTag(ImagesPagerFragment.TAG);
+            } else {
+                pagerFragment = new ImagesPagerFragment();
+            }
+
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, pagerFragment, ImagesPagerFragment.TAG)
+                    .addToBackStack(ImagesPagerFragment.TAG)
+                    .commit();
+
+
+        }
+
+
+        updateFab();
+        updateCount();
+//        updateRecycler();
+
+    }
+
+
+
+
+    public void onEvent(final Events.OnUnpickImageEvent unpickImageEvent) {
+        sCheckedImages.remove(unpickImageEvent.imageEntry);
+        unpickImageEvent.imageEntry.isPicked = false;
+
+        updateCount();
+        updateFab();
+        hideDeselectAll();
+//        updateRecycler();
+    }
+
+    public void onEvent(final Events.OnChangingDisplayedImageEvent newImageEvent) {
+        mCurrentlyDisplayedImage = newImageEvent.currentImage;
+
+    }
+
+    public void onEvent(final Events.OnShowingToolbarEvent showingToolbarEvent) {
+        handleToolbarVisibility(true);
+    }
+
+
+    public void onEvent(final Events.OnHidingToolbarEvent hidingToolbarEvent) {
+        handleToolbarVisibility(false);
+    }
+
+
+    /*
+        Recycler View shown below methods
+     */
+    private   ArrayList<Object> images = new ArrayList<>();
+    private    DisplaySelectedImagesAdapter displaySelectedImagesAdapter;
+    private void setUpRecycler(){
+
+        displaySelectedImagesAdapter = new DisplaySelectedImagesAdapter(this, images, new DisplaySelectedImagesAdapter.Callback() {
+            @Override
+            public void onImageClick(Object object) {
+
+            }
+
+            @Override
+            public void onDelete(Object object) {
+                onEvent(new Events.OnUnpickImageEvent((ImageEntry) object));
+                EventBus.getDefault().post(new Events.onItemRemovedEventNotify((ImageEntry) object));
+            }
+        });
+        recyclerViewSelectedImages.setAdapter(displaySelectedImagesAdapter);
+        recyclerViewSelectedImages.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+    }
+
+    private void updateRecycler() {
+        images.clear();
+        images.addAll(sCheckedImages);
+        displaySelectedImagesAdapter.setList(images);
+        if(sCheckedImages!=null && images!=null && images.size()==0)
+            recyclerViewSelectedImages.setVisibility(View.GONE);
+        else
+            recyclerViewSelectedImages.setVisibility(View.VISIBLE);
+
+
+    }
+
+
+
+
+    /*
+       Handling Camera
+     */
+    private String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = createDirectory();
+
+
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+
+        return image;
+    }
+
+    private File createDirectory() {
+        File directory1 = Environment.getExternalStorageDirectory();
+        String appName = "Jugnoo";
+        String appDirectory = directory1.getAbsolutePath() + File.separator + appName;
+        File fileAppDirectory = new File(appDirectory);
+        if (!fileAppDirectory.exists()) {
+            fileAppDirectory.mkdir();
+        }
+
+        String appTypeDirectory = fileAppDirectory.getAbsolutePath() + File.separator  + Environment.DIRECTORY_PICTURES;
+        File finalDirectory = new File(appTypeDirectory);
+        if (!finalDirectory.exists()) {
+            finalDirectory.mkdir();
+        }
+
+        if (finalDirectory == null) {
+            throw new RuntimeException("Couldn\'t initialize External Storage Path");
+        } else {
+            return finalDirectory;
+        }
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+                Toast.makeText(this, "Camera is not accessible", Toast.LENGTH_SHORT).show();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, "com.jugnoo.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+            refreshMediaScanner(mCurrentPhotoPath);
+
+
+        }
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_PORTRAIT_FFC) {
+            //For capturing image from camera
+            galleryAddPic();
+            refreshMediaScanner(data.getData().getPath());
+
+
+        } else {
+            Log.i("onActivityResult", "User canceled the camera activity");
+        }
+    }
+
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+    }
+
+
+
+
+
+
+
+    /*
+    Unused methods
+     */
+
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -414,7 +772,7 @@ public class PickerActivity extends AppCompatActivity {
     }
 
     private void initCaptureMenuItem(final Menu menu) {
-        if (CameraSupport.isEnabled()) {
+       /* if (CameraSupport.isEnabled()) {
             getMenuInflater().inflate(R.menu.menu_take_photo, menu);
             Drawable captureIconDrawable = ContextCompat.getDrawable(this, R.drawable.ic_action_camera_white);
             captureIconDrawable = DrawableCompat.wrap(captureIconDrawable);
@@ -422,7 +780,7 @@ public class PickerActivity extends AppCompatActivity {
             DrawableCompat.setTint(captureIconDrawable, mPickOptions.captureItemIconTintColor);
 
             menu.findItem(R.id.action_take_photo).setIcon(captureIconDrawable);
-        }
+        }*/
     }
 
     private void hideDeselectAll() {
@@ -513,55 +871,35 @@ public class PickerActivity extends AppCompatActivity {
 
     }
 
-
-    @Override
-    public void onBackPressed() {
-
-        if (isImagesThumbnailShown()) {
-            //Return to albums fragment
-            getSupportFragmentManager().popBackStack();
-            getSupportActionBar().setTitle(R.string.albums_title);
-            mShouldShowUp = mPickOptions.backBtnInMainActivity;
-            getSupportActionBar().setDisplayHomeAsUpEnabled(mShouldShowUp);
-            hideSelectAll();
-            hideDeselectAll();
-
-        } else if (isImagesPagerShown()) {
-            //Returns to images thumbnail fragment
-
-            if (mSelectedAlbum == null) {
-                mSelectedAlbum = EventBus.getDefault().getStickyEvent(Events.OnClickAlbumEvent.class).albumEntry;
-            }
-            mDoneFab.setVisibility(View.GONE);
-            getSupportFragmentManager().popBackStack(ImagesThumbnailFragment.TAG, 0);
-            getSupportActionBar().setTitle(mSelectedAlbum.name);
-            getSupportActionBar().show();
-            showSelectAll();
-
-        } else {
-            //User on album fragment
-            super.onBackPressed();
-            onCancel();
-        }
-    }
-
-    private boolean isImagesThumbnailShown() {
-        return isFragmentShown(ImagesThumbnailFragment.TAG);
-    }
-
-    private boolean isImagesPagerShown() {
-        return isFragmentShown(ImagesPagerFragment.TAG);
+    public void captureVideo() {
+        final File captureVideoFile = createTemporaryFileForCapturing(".mp4");
+        CameraSupport.startVideoCaptureActivity(this,
+                captureVideoFile, mPickOptions.videoLengthLimit, REQUEST_PORTRAIT_FFC);
     }
 
 
-    private boolean isFragmentShown(final String tag) {
-
-        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-
-        return fragment != null && fragment.isVisible();
+    private void initTheme() {
+        setTheme(mPickOptions.themeResId);
+     /*   mToolbar = new Toolbar(new ContextThemeWrapper(mPickOptions.context, Util.getToolbarThemeResId(this)));
+        mToolbar.setPopupTheme(mPickOptions.popupThemeResId);*/
     }
 
+    private void addToolbarToLayout() {
+       /* final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
 
+        final AppBarLayout.LayoutParams toolbarParams = new AppBarLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getActionBarHeight(this));
+        toolbarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+
+        appBarLayout.addView(mToolbar, toolbarParams);*/
+
+        /*mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);*/
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+
+
+    }
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -582,248 +920,4 @@ public class PickerActivity extends AppCompatActivity {
         mSelectAllMenuItem.setVisible(true);*/
 
     }
-
-    private void handleMultipleModeAddition(final ImageEntry imageEntry) {
-
-        if (mPickOptions.pickMode != Picker.PickMode.MULTIPLE_IMAGES) {
-            return;
-        }
-
-        if (sCheckedImages.size() < mPickOptions.limit || mPickOptions.limit == NO_LIMIT) {
-            imageEntry.isPicked = true;
-            sCheckedImages.add(imageEntry);
-        } else {
-            Snackbar.make(coordinatorLayout, "You cannot select more than "+ mPickOptions.limit  +" images", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//            Toast.makeText(this, R.string.you_cant_check_more_images, Toast.LENGTH_SHORT).show();
-            Log.i("onPickImage", "You can't check more images");
-        }
-
-    }
-
-    private boolean shouldShowDeselectAll() {
-
-        if (mSelectedAlbum == null) {
-            return false;
-        }
-
-        boolean isAllImagesSelected = true;
-        for (final ImageEntry albumChildImage : mSelectedAlbum.imageList) {
-
-            if (!sCheckedImages.contains(albumChildImage)) {
-                isAllImagesSelected = false;
-                break;
-            }
-        }
-
-        final Fragment imageThumbnailFragment = getSupportFragmentManager().findFragmentByTag(ImagesThumbnailFragment.TAG);
-
-        return isAllImagesSelected && imageThumbnailFragment != null && imageThumbnailFragment.isVisible();
-    }
-
-    private void handleToolbarVisibility(final boolean show) {
-
-        final AppBarLayout appBarLayout = (AppBarLayout) mToolbar.getParent();
-        final CoordinatorLayout rootLayout = (CoordinatorLayout) appBarLayout.getParent();
-
-        final CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        final AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-
-        if (show) {
-            //Show appBar
-            behavior.setTopAndBottomOffset(0);
-            behavior.onNestedPreScroll(rootLayout, appBarLayout, null, 0, 1, new int[2]);
-
-        } else {
-            //Hide appBar
-            behavior.onNestedFling(rootLayout, appBarLayout, null, 0, 10000, true);
-        }
-
-    }
-
-
-    public void onEvent(final Events.OnClickAlbumEvent albumEvent) {
-        mSelectedAlbum = albumEvent.albumEntry;
-
-
-        final ImagesThumbnailFragment imagesThumbnailFragment;
-
-
-        if (getSupportFragmentManager().findFragmentByTag(ImagesThumbnailFragment.TAG) != null) {
-            imagesThumbnailFragment = (ImagesThumbnailFragment) getSupportFragmentManager().findFragmentByTag(ImagesThumbnailFragment.TAG);
-        } else {
-            imagesThumbnailFragment = new ImagesThumbnailFragment();
-        }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, imagesThumbnailFragment, ImagesThumbnailFragment.TAG)
-                .addToBackStack(ImagesThumbnailFragment.TAG)
-                .commit();
-
-        getSupportActionBar().setTitle(albumEvent.albumEntry.name);
-        mShouldShowUp = true;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(mShouldShowUp);
-        showSelectAll();
-
-        if (shouldShowDeselectAll()) {
-            showDeselectAll();
-        } else {
-            hideDeselectAll();
-        }
-
-
-    }
-
-
-    public void onEvent(final Events.OnPickImageEvent pickImageEvent) {
-        if (mPickOptions.videosEnabled && mPickOptions.videoLengthLimit > 0 && pickImageEvent.imageEntry.isVideo) {
-            // Check to see if the selected video is too long in length
-            final MediaPlayer mp = MediaPlayer.create(this, Uri.parse(pickImageEvent.imageEntry.path));
-            final int duration = mp.getDuration();
-            mp.release();
-            if (duration > (mPickOptions.videoLengthLimit)) {
-                Toast.makeText(this, getResources().getString(R.string.video_too_long).replace("$", String.valueOf(mPickOptions.videoLengthLimit / 1000)), Toast.LENGTH_SHORT).show();
-                return; // Don't allow selection
-            }
-        }
-
-        if (mPickOptions.pickMode == Picker.PickMode.MULTIPLE_IMAGES) {
-            handleMultipleModeAddition(pickImageEvent.imageEntry);
-
-
-        } else if (mPickOptions.pickMode == Picker.PickMode.SINGLE_IMAGE) {
-            //Single image pick mode
-
-
-            final ImagesPagerFragment pagerFragment;
-
-            if (getSupportFragmentManager().findFragmentByTag(ImagesPagerFragment.TAG) != null) {
-
-                pagerFragment = (ImagesPagerFragment) getSupportFragmentManager().findFragmentByTag(ImagesPagerFragment.TAG);
-            } else {
-                pagerFragment = new ImagesPagerFragment();
-            }
-
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, pagerFragment, ImagesPagerFragment.TAG)
-                    .addToBackStack(ImagesPagerFragment.TAG)
-                    .commit();
-
-
-        }
-
-
-        updateFab();
-        updateCount();
-
-    }
-
-    private void updateCount() {
-        tvImageCount.setText(sCheckedImages != null ? sCheckedImages.size() + "" : "0");
-    }
-
-
-    public void onEvent(final Events.OnUnpickImageEvent unpickImageEvent) {
-        sCheckedImages.remove(unpickImageEvent.imageEntry);
-        unpickImageEvent.imageEntry.isPicked = false;
-
-        updateCount();
-        updateFab();
-        hideDeselectAll();
-    }
-
-    public void onEvent(final Events.OnChangingDisplayedImageEvent newImageEvent) {
-        mCurrentlyDisplayedImage = newImageEvent.currentImage;
-
-    }
-
-    public void onEvent(final Events.OnShowingToolbarEvent showingToolbarEvent) {
-        handleToolbarVisibility(true);
-    }
-
-
-    public void onEvent(final Events.OnHidingToolbarEvent hidingToolbarEvent) {
-        handleToolbarVisibility(false);
-    }
-
-
-    private String mCurrentPhotoPath;
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = createDirectory();
-
-
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-
-        return image;
-    }
-
-    private File createDirectory() {
-        File directory1 = Environment.getExternalStorageDirectory();
-        String appName = "Jugnoo";
-        String appDirectory = directory1.getAbsolutePath() + File.separator + appName;
-        File fileAppDirectory = new File(appDirectory);
-        if (!fileAppDirectory.exists()) {
-            fileAppDirectory.mkdir();
-        }
-
-        String appTypeDirectory = fileAppDirectory.getAbsolutePath() + File.separator  + Environment.DIRECTORY_PICTURES;
-        File finalDirectory = new File(appTypeDirectory);
-        if (!finalDirectory.exists()) {
-            finalDirectory.mkdir();
-        }
-
-        if (finalDirectory == null) {
-            throw new RuntimeException("Couldn\'t initialize External Storage Path");
-        } else {
-            return finalDirectory;
-        }
-    }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                ex.printStackTrace();
-                Toast.makeText(this, "Camera is not accessible", Toast.LENGTH_SHORT).show();
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.jugnoo.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
-
-
-    }
-
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
-
-
 }

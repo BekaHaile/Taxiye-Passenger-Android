@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -462,7 +461,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                new Handler().postDelayed(new Runnable() {
+                activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {

@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import com.sabkuchfresh.adapters.RestaurantReviewImagesAdapter1;
+import com.sabkuchfresh.adapters.EditReviewImagesAdapter;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
@@ -30,8 +30,8 @@ import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.ImageCompression;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 
-import net.yazeed44.imagepicker.model.ImageEntry;
-import net.yazeed44.imagepicker.util.Picker;
+import com.picker.image.model.ImageEntry;
+import com.picker.image.util.Picker;
 
 import org.json.JSONArray;
 
@@ -76,7 +76,7 @@ public class RestaurantAddReviewFragment extends Fragment {
     private int restaurantId;
     private ArrayList<FetchFeedbackResponse.ReviewImage> serverImages;
     private ArrayList<Object> objectList;
-    private RestaurantReviewImagesAdapter1 restaurantReviewImagesAdapter1;
+    private EditReviewImagesAdapter editReviewImagesAdapter;
     private RecyclerView displayImagesRecycler;
     private Gson gson;
     private ImageCompression imageCompressionTask;
@@ -160,7 +160,7 @@ public class RestaurantAddReviewFragment extends Fragment {
 
 
 
-        new Handler().postDelayed(new Runnable() {
+        activity.getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 etFeedback.requestFocus();
@@ -310,7 +310,7 @@ public class RestaurantAddReviewFragment extends Fragment {
                 }
 
                 if(handler==null){
-                    handler = new Handler();
+                    handler = activity.getHandler();
 
                 }
                 if(startEnableStateRunnable==null){
@@ -337,8 +337,8 @@ public class RestaurantAddReviewFragment extends Fragment {
             return;
         }
 
-        if (restaurantReviewImagesAdapter1 == null) {
-            restaurantReviewImagesAdapter1 = new RestaurantReviewImagesAdapter1(activity, objectList, new RestaurantReviewImagesAdapter1.Callback() {
+        if (editReviewImagesAdapter == null) {
+            editReviewImagesAdapter = new EditReviewImagesAdapter(activity, objectList, new EditReviewImagesAdapter.Callback() {
                 @Override
                 public void onImageClick(Object object) {
                     //View full Image
@@ -349,13 +349,14 @@ public class RestaurantAddReviewFragment extends Fragment {
                     objectList.remove(object);
                     if(objectList.size()==0)
                         displayImagesRecycler.setVisibility(View.GONE);
+                    ibAccessCamera.setEnabled(objectList.size()<5);
 
                 }
             });
             displayImagesRecycler.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
-            displayImagesRecycler.setAdapter(restaurantReviewImagesAdapter1);
+            displayImagesRecycler.setAdapter(editReviewImagesAdapter);
         } else {
-            restaurantReviewImagesAdapter1.setList(objectList);
+            editReviewImagesAdapter.setList(objectList);
         }
 
         if (displayImagesRecycler.getVisibility() != View.VISIBLE)

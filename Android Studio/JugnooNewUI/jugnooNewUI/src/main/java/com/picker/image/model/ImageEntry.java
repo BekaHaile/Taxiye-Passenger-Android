@@ -1,4 +1,4 @@
-package net.yazeed44.imagepicker.model;
+package com.picker.image.model;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -6,15 +6,14 @@ import android.provider.MediaStore;
 
 import java.io.Serializable;
 
-/**
- * Created by yazeed44 on 6/14/15.
- */
+
 public class ImageEntry implements Serializable {
     public final int imageId;
     public final String path;
     public final long dateAdded;
     public boolean isPicked = false;
     public boolean isVideo = false;
+    public boolean isCameraClicked;
 
     public ImageEntry(final Builder builder) {
         this.path = builder.mPath;

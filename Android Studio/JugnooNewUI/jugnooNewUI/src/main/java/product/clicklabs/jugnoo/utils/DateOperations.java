@@ -9,8 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import product.clicklabs.jugnoo.Constants;
-
 /**
  * date and time related operations functions
  * @author shankar
@@ -166,7 +164,7 @@ public class DateOperations {
 	public static String convertDateViaFormat(String dateTime) {
 
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy hh:mm a");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
@@ -492,7 +490,7 @@ public class DateOperations {
 
 	public static String convertDayTimeAPViaFormat(String dateTime) {
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("hh:mm a");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("h:mm a");
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);

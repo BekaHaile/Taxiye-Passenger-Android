@@ -2,7 +2,6 @@ package com.sabkuchfresh.fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -200,7 +199,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
         try {
             if(Data.getGroceryData() != null && Data.getGroceryData().pendingFeedback == 1) {
-                new Handler().postDelayed(new Runnable() {
+                activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         activity.openFeedback();
@@ -289,7 +288,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
-			new Handler().postDelayed(new Runnable() {
+			activity.getHandler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					activity.setMinOrderAmountText(GroceryFragment.this);

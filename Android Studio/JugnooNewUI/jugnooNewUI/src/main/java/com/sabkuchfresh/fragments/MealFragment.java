@@ -3,7 +3,6 @@ package com.sabkuchfresh.fragments;
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -156,7 +155,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         try {
             if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
                 //activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
-                new Handler().postDelayed(new Runnable() {
+                activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         activity.openFeedback();
@@ -195,7 +194,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 activity.updateCartValuesGetTotalPrice();
             }
             activity.setCartChangedAtCheckout(false);
-            new Handler().postDelayed(new Runnable() {
+            activity.getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if(activity.isRefreshCart()){

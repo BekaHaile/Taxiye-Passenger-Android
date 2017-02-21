@@ -1,7 +1,6 @@
 package com.sabkuchfresh.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -189,7 +188,7 @@ public class MenusFilterFragment extends Fragment{
 
 		buttonApply = (Button) rootView.findViewById(R.id.buttonApply); buttonApply.setTypeface(Fonts.mavenRegular(activity));
 
-		new Handler().postDelayed(new Runnable() {
+		activity.getHandler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				Utils.hideSoftKeyboard(activity, textViewDeliveryTime);

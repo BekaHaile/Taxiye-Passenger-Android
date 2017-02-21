@@ -3,7 +3,6 @@ package com.sabkuchfresh.fragments;
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -156,7 +155,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         try {
             if (Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {
 
-                new Handler().postDelayed(new Runnable() {
+                activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
 
@@ -245,7 +244,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 searchOpened = false;
                 openSearch(false);
             }
-            new Handler().postDelayed(new Runnable() {
+
+            activity.getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (activity.isRefreshCart()) {
@@ -323,7 +323,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                         if (searchOpened) {
                                             openSearch(true);
-                                            new Handler().postDelayed(new Runnable() {
+                                            activity.getHandler().postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     Utils.hideSoftKeyboard(activity, activity.getTopBar().etSearch);

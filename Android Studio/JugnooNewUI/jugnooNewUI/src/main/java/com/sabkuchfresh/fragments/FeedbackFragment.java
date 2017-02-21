@@ -3,7 +3,6 @@ package com.sabkuchfresh.fragments;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -295,7 +294,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
                     if (llBadReason.getVisibility() != View.VISIBLE) {
                         llBadReason.setVisibility(View.VISIBLE);
-                        new Handler().postDelayed(new Runnable() {
+                        activity.getHandler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 scrollViewRideSummary.smoothScrollTo(0, (int) buttonRSSubmitFeedback.getY());
@@ -422,7 +421,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                     imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down_active);
                     if (negativeReasons.size() > 0) {
                         llBadReason.setVisibility(View.VISIBLE);
-                        new Handler().postDelayed(new Runnable() {
+                        activity.getHandler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 scrollViewRideSummary.smoothScrollTo(0, (int) buttonRSSubmitFeedback.getY());
@@ -511,7 +510,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void updateUI() {
-        new Handler().postDelayed(new Runnable() {
+        activity.getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 update();
@@ -535,7 +534,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 .placeholder(R.drawable.great_place_holder)
                 //.fitCenter()
                 .into(imageViewTarget);
-        new Handler().postDelayed(new Runnable() {
+        activity.getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 imageViewThumbsUpGif.setImageDrawable(null);
@@ -623,7 +622,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                                 if (rating == 1) {
                                     // for Good rating
                                     if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
-                                        new Handler().postDelayed(new Runnable() {
+                                        activity.getHandler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
                                                 backPressed(true);
@@ -847,7 +846,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                                 // for Good rating
                                 afterGoodRating();
                                 if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
-                                    new Handler().postDelayed(new Runnable() {
+                                    activity.getHandler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
                                             backPressed(true);

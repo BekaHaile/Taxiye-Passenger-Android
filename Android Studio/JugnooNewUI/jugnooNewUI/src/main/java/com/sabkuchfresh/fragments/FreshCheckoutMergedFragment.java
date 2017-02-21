@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -574,7 +573,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                new Handler().postDelayed(new Runnable() {
+                activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -1351,7 +1350,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         FreshCheckoutMergedFragment.this.placeOrderResponse = placeOrderResponse;
                                         final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity,
                                                 activity.getString(R.string.loading));
-                                            new Handler().postDelayed(new Runnable() {
+                                            activity.getHandler().postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     if (progressDialog != null) {
@@ -2094,7 +2093,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         activity.setRefreshCart(true);
                         deliveryAddressUpdated = true;
                         if(!checkoutApiDoneOnce) {
-                            new Handler().postDelayed(new Runnable() {
+                            activity.getHandler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     getCheckoutDataAPI(selectedSubscription);

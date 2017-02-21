@@ -158,7 +158,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     try {
                         int position = (int) v.getTag();
                         /*notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
-                        notifyItemChanged(position);*/
+                        notifyItemUnchecked(position);*/
                         openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl());
                         Bundle bundle = new Bundle();
                         bundle.putString("message", ""+msg);

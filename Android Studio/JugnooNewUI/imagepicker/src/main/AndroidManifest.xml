@@ -13,11 +13,10 @@
         android:label="@string/app_name">
 
 
-        <activity android:name="net.yazeed44.imagepicker.ui.PickerActivity"
-            android:theme="@style/RecyclerView"/>
+        <activity android:name="com.picker.image.ui.PickerActivity"  android:theme="@style/AppThemePicker.NoActionBar" />
 
         <service
-            android:name="net.yazeed44.imagepicker.util.OfflineSpiceService"
+            android:name="com.picker.image.util.OfflineSpiceService"
             android:exported="false" />
 
         <provider

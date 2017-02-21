@@ -1,4 +1,4 @@
-package net.yazeed44.imagepicker.ui;
+package com.picker.image.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,22 +14,20 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import net.yazeed44.imagepicker.library.R;
-import net.yazeed44.imagepicker.model.AlbumEntry;
-import net.yazeed44.imagepicker.util.Events;
-import net.yazeed44.imagepicker.util.LoadingAlbumsRequest;
-import net.yazeed44.imagepicker.util.OfflineSpiceService;
-import net.yazeed44.imagepicker.util.Picker;
-import net.yazeed44.imagepicker.util.Util;
+import product.clicklabs.jugnoo.R;
+import com.picker.image.model.AlbumEntry;
+import com.picker.image.util.Events;
+import com.picker.image.util.LoadingAlbumsRequest;
+import com.picker.image.util.OfflineSpiceService;
+import com.picker.image.util.Picker;
+import com.picker.image.util.Util;
 
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
 
-/**
- * Created by yazeed44 on 11/22/14.
- */
+
 public class AlbumsFragment extends Fragment implements RequestListener<ArrayList> {
     public static final String TAG = AlbumsFragment.class.getSimpleName();
     protected RecyclerView mAlbumsRecycler;

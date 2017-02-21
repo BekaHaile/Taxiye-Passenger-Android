@@ -1,4 +1,4 @@
-package net.yazeed44.imagepicker.util;
+package com.picker.image.util;
 
 import android.app.Application;
 import android.content.Context;
@@ -8,9 +8,7 @@ import com.octo.android.robospice.networkstate.NetworkStateChecker;
 import com.octo.android.robospice.persistence.CacheManager;
 import com.octo.android.robospice.persistence.exception.CacheCreationException;
 
-/**
- * Created by yazeed44 on 6/13/15.
- */
+
 public class OfflineSpiceService extends SpiceService {
 
     @Override

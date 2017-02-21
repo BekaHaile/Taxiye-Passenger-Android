@@ -1,4 +1,4 @@
-package net.yazeed44.imagepicker.util;
+package com.picker.image.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,17 +11,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.util.TypedValue;
 
-import net.yazeed44.imagepicker.library.R;
-import net.yazeed44.imagepicker.model.ImageEntry;
-import net.yazeed44.imagepicker.ui.PickerActivity;
+import com.picker.image.model.ImageEntry;
+import com.picker.image.ui.PickerActivity;
 
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import product.clicklabs.jugnoo.R;
 
-/**
- * Created by yazeed44 on 6/14/15.
- */
+
 public final class Picker {
 
     public int limit;

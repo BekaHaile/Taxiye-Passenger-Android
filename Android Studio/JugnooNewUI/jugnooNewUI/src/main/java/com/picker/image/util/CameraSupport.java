@@ -1,7 +1,6 @@
-package net.yazeed44.imagepicker.util;
+package com.picker.image.util;
 
 import android.app.Activity;
-import android.content.Intent;
 
 import java.io.File;
 
@@ -9,8 +8,8 @@ import java.io.File;
  * Encapsulate cwac-cam2 integration. This way the camera function can be optional, only if
  * present on the classpath.
  *
- * @author drochetti
- * @since 01/21/2016
+ *
+ *
  */
 public final class CameraSupport {
 

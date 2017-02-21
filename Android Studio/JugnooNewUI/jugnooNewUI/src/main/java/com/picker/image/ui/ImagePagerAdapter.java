@@ -1,4 +1,4 @@
-package net.yazeed44.imagepicker.ui;
+package com.picker.image.ui;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -8,15 +8,13 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import net.yazeed44.imagepicker.model.AlbumEntry;
-import net.yazeed44.imagepicker.model.ImageEntry;
+import com.picker.image.model.AlbumEntry;
+import com.picker.image.model.ImageEntry;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-/**
- * Created by yazeed44 on 6/20/15.
- */
+
 public class ImagePagerAdapter extends PagerAdapter {
 
 

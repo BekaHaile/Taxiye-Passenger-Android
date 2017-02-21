@@ -1,4 +1,4 @@
-package net.yazeed44.imagepicker.ui;
+package com.picker.image.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,16 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.yazeed44.imagepicker.library.R;
-import net.yazeed44.imagepicker.util.Events;
-import net.yazeed44.imagepicker.util.Picker;
+import product.clicklabs.jugnoo.R;
+import com.picker.image.util.Events;
+import com.picker.image.util.Picker;
 
 import de.greenrobot.event.EventBus;
 
 
-/**
- * Created by yazeed44 on 11/23/14.
- */
+
 public class ImagesThumbnailFragment extends Fragment {
 
     public static final String TAG = ImagesThumbnailFragment.class.getSimpleName();
@@ -75,7 +73,19 @@ public class ImagesThumbnailFragment extends Fragment {
     public void onEvent(final Events.OnUpdateImagesThumbnailEvent redrawImage) {
         mImagesRecycler.getAdapter().notifyDataSetChanged();
 
+
+
+
+
     }
+
+    public void onEvent(final Events.onItemRemovedEventNotify redrawImage) {
+        ((ImagesThumbnailAdapter)mImagesRecycler.getAdapter()).notifyItemUnchecked(redrawImage.currentImage);
+
+    }
+
+
+
 
 
 }
