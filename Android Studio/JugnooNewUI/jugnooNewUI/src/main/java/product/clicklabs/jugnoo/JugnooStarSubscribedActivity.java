@@ -280,7 +280,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
     public void performBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-                rlFragment.setVisibility(View.GONE);
+                //rlFragment.setVisibility(View.GONE);
             }
             super.onBackPressed();
         } else {
