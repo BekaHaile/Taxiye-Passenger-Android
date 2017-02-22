@@ -23,6 +23,8 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
 
     <permission
         android:name="product.clicklabs.jugnoo.permission.MAPS_RECEIVE"

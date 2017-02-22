@@ -27,7 +27,7 @@
                 android:id="@+id/imageViewBack"
                 android:layout_width="23dp"
                 android:layout_height="23dp"
-
+                android:layout_marginRight="10dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_back_selector"
                 android:scaleType="centerInside" />

@@ -105,9 +105,9 @@ public interface Events {
     String FEED_EDITED = "MenuFeedEdited";
     String ADD_TEXT = "Add Text";
     String JUGNOO_ADD_TEXT = "JugnoAddText";
-    String ADDS_IMAGES = "adds Images";
+    String ADDS_IMAGES = "Adds Images";
     String JUGNOO_ADD_IMAGES = "JugnooAddImage";
-    String USER_CLICK_ON_CAMERA = "user click on camera button";
+    String USER_CLICK_ON_CAMERA = "User click on camera button";
     String JUGNOO_OPEN_CAMERA = "JugnooOpenCamera";
     String FILTERS = "Filters";
     String MENU_FILTERS = "Menu Filters";
@@ -123,13 +123,21 @@ public interface Events {
     String MENU_RESTRO_RATING_CLICK = "MenuRestroRatingClick";
     String CLICK_SEARCH_BUTTON_MENUS = "Click on Search button on home screen of menus";
     String MENU_SEARCH = "MenuSearch";
-    String CLICK_ADD_BUTTON_ITEM = "click on add button of item";
+    String CLICK_ADD_BUTTON_ITEM = "Click on add button of item";
     String MENU_ADD_ITEM = "MenuAddItem";
-    String CLICK_PAY_BUTTON = "click on pay button";
+    String CLICK_PAY_BUTTON = "Cick on pay button";
     String MENU_BILL_PAY = "MenuBillPay";
     String CLICK_CART_BUTTON = "Click on cart button";
     String MENU_CART_VIEW = "MenuCartView";
-    String CART_ITEM_EDIT = "cart Item Edit";
+    String CART_ITEM_EDIT = "Cart Item Edit";
     String MENU_CART_EDIT = "MenuCartEdit";
     String MENU_SEARCH_MATCH = "MenuSearchMatch";
+    String FEEDBACK_COMMENTS = "Feedback Page: Comments";
+    String MENU_FEEDBACK_COMMENTS = "MenuFeedbackComments";
+    String FEEDBACK_TAGS = "Feedback page: Tags";
+    String MENU_FEEDBACK_TAGS = "MenuFeedbackTags- ";
+    String FEEDBACK_STAR = "Feedback page: Star Icon";
+    String STAR_ICON = "MenuStarIcon";
+    String MENU_FEEDBACK_SUBMIT = "MenuFeedbackSubmit";
+    String FEEDBACK_SUBMIT = "Feedback page: Submit button";
 }
