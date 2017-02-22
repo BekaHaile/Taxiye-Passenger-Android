@@ -109,7 +109,7 @@
         android:layout_marginTop="@dimen/px_24"
         android:text=""
         android:textColor="@color/color_menu_item_desc"
-        android:textSize="@dimen/text_size_26"
+        android:textSize="@dimen/text_size_28"
         app:font="maven"
         />
 

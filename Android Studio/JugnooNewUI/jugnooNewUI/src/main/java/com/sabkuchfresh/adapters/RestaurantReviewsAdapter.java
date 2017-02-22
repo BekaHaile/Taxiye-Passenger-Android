@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -189,13 +188,13 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			if(review.getIsLiked() >= 1){
 				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
 			} else {
-				holder.ivFeedLike.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_like_normal, R.drawable.ic_feed_like_active));
+				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_normal);
 			}
 
 			if(review.getIsShared() >= 1){
 				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_active);
 			} else {
-				holder.ivFeedShare.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_share_normal, R.drawable.ic_feed_share_active));
+				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_normal);
 			}
 
 			holder.ivFeedEdit.setTag(position);
@@ -234,7 +233,6 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 						FetchFeedbackResponse.Review review1 = restaurantReviews.get(pos);
 						callback.onShare(review1);
 
-						String subject = "";
 						StringBuilder sb = new StringBuilder();
 						if(review1.getIsEditable() == 1){
 							sb.append("Here's my experience of ");
@@ -244,7 +242,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 						sb.append(activity.getVendorOpened().getName())
 								.append(", ")
 								.append(activity.getVendorOpened().getRestaurantAddress())
-								.append(" @ Jugnoo!\n");
+								.append(" @ Jugnoo!\n\n");
 						if(!TextUtils.isEmpty(review1.getReviewDesc())){
 							sb.append(review1.getReviewDesc()).append("\n");
 						}
