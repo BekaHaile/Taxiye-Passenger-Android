@@ -1,5 +1,6 @@
 package com.picker.image.ui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -14,9 +16,11 @@ import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.PermissionChecker;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +40,7 @@ import com.picker.image.model.ImageEntry;
 import com.picker.image.util.CameraSupport;
 import com.picker.image.util.Events;
 import com.picker.image.util.Picker;
+import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 import java.io.File;
@@ -78,6 +83,7 @@ public class PickerActivity extends AppCompatActivity {
     private TextView tvImageCount;
     private TextView toolbarTitle;
     private RecyclerView recyclerViewSelectedImages;
+    private String[] permissionsRequestArray;
 
     //TODO Add animation
     //TODO Fix bugs with changing orientation
@@ -247,8 +253,21 @@ public class PickerActivity extends AppCompatActivity {
             return;
         }
 
+
+
+
         if (sCheckedImages != null && sCheckedImages.size() >= mPickOptions.limit) {
             Snackbar.make(coordinatorLayout, "You cannot select more than "+ mPickOptions.limit  +" images", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            return;
+        }
+
+
+
+        if(PermissionChecker.checkSelfPermission(this, Manifest.permission.CAMERA) != PermissionChecker.PERMISSION_GRANTED)
+        {
+            permissionsRequestArray = new String[1];
+            permissionsRequestArray[0]=Manifest.permission.CAMERA;
+            ActivityCompat.requestPermissions(this, permissionsRequestArray,20);
             return;
         }
 
@@ -649,7 +668,7 @@ public class PickerActivity extends AppCompatActivity {
             fileAppDirectory.mkdir();
         }
 
-        String appTypeDirectory = fileAppDirectory.getAbsolutePath() + File.separator  + Environment.DIRECTORY_PICTURES;
+        String appTypeDirectory = fileAppDirectory.getAbsolutePath() + File.separator  + appName + " " + Environment.DIRECTORY_PICTURES;
         File finalDirectory = new File(appTypeDirectory);
         if (!finalDirectory.exists()) {
             finalDirectory.mkdir();

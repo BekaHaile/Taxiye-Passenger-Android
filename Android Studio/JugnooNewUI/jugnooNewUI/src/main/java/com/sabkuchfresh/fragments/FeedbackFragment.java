@@ -838,9 +838,11 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                     public void onSendFeedbackResult(boolean isSuccess, int rating) {
                         if (isSuccess) {
 
-                            if(!TextUtils.isEmpty(comments)) FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK,Events.COMMENT_ADDED);
-                            if(!TextUtils.isEmpty(reviewDesc))FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK,"Tag- " + reviewDesc);
-                            if(score>0)FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK,Events.RATING,score);
+
+                            FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_SUBMIT,Events.MENU_FEEDBACK_SUBMIT);
+                            if(!TextUtils.isEmpty(comments)) FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_COMMENTS,Events.MENU_FEEDBACK_COMMENTS);
+                            if(!TextUtils.isEmpty(reviewDesc))FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_TAGS,Events.MENU_FEEDBACK_TAGS + reviewDesc);
+                            if(score>0)FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_STAR,Events.STAR_ICON,score);
 
                             if (rating > 2) {
                                 // for Good rating

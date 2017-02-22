@@ -1,8 +1,11 @@
 package com.sabkuchfresh.fragments;
 
+import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -62,7 +65,7 @@ import retrofit.mime.TypedString;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class RestaurantAddReviewFragment extends Fragment {
+public class RestaurantAddReviewFragment extends Fragment  {
     private final String TAG = RestaurantAddReviewFragment.class.getSimpleName();
 
     private RelativeLayout rlRoot;
@@ -90,6 +93,8 @@ public class RestaurantAddReviewFragment extends Fragment {
     private  int etReviewMaxLength;
     private View ibAccessCamera;
     private View scrollView;
+    private String[] permissionsRequest;
+    private int MAX_NO_IMAGES = 5;
 
 
     public static RestaurantAddReviewFragment newInstance(int restaurantId) {
@@ -131,10 +136,10 @@ public class RestaurantAddReviewFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String reviewDesc = etFeedback.getText().toString().trim();
-                if (reviewDesc.length() == 0) {
+              /*  if (reviewDesc.length() == 0) {
                     etFeedback.requestFocus();
                     etFeedback.setError(activity.getString(R.string.please_enter_some_feedback));
-                } else if (reviewDesc.length() > 500) {
+                } else*/ if (reviewDesc.length() > 500) {
                     etFeedback.requestFocus();
                     etFeedback.setError(activity.getString(R.string.feedback_must_be_in_500));
                 } else {
@@ -193,9 +198,7 @@ public class RestaurantAddReviewFragment extends Fragment {
 
         updateTextCount();
         etFeedback.setSelection(etFeedback.length());
-
-
-
+        updateSubmitButtonStatus();
         return rootView;
     }
 
@@ -213,10 +216,20 @@ public class RestaurantAddReviewFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                bSubmit.setEnabled(s.length() > 0);
+                if(s.length()==0||s.length()==1)
+                updateSubmitButtonStatus();
+
+//                bSubmit.setEnabled(s.length() > 0);
                 updateTextCount();
             }
         });
+    }
+
+    private void updateSubmitButtonStatus() {
+        if(etFeedback.getText().toString().trim().length()>0||(objectList!=null && objectList.size()>0) )
+            bSubmit.setEnabled(true);
+        else
+            bSubmit.setEnabled(false);
     }
 
     private void updateTextCount() {
@@ -229,8 +242,30 @@ public class RestaurantAddReviewFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                int alreadyPresent = objectList == null ? 0 : objectList.size();
 
+                if(PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
+                   PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED)
+                {
+                    if (permissionsRequest==null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            permissionsRequest = new String[2];
+                            permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                            permissionsRequest[1]=Manifest.permission.READ_EXTERNAL_STORAGE;
+                        }
+                        {
+                          permissionsRequest = new String[1];
+                          permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                       }
+                    }
+
+
+                      (RestaurantAddReviewFragment.this).requestPermissions(permissionsRequest, 20);
+                      return;
+                }
+
+
+                etFeedback.setText(etFeedback.getText().toString().trim());
+                int alreadyPresent = objectList == null ? 0 : objectList.size();
                 if(picker==null){
                     picker = new Picker.Builder(activity, new Picker.PickListener() {
                         @Override
@@ -238,8 +273,6 @@ public class RestaurantAddReviewFragment extends Fragment {
                             if (images != null && images.size() != 0) {
                                 objectList.addAll(images);
                                 setUpAdapter(objectList);
-                                etFeedback.clearFocus();
-                                scrollView.scrollTo(0,scrollView.getBottom());
 
                             }
                         }
@@ -253,12 +286,17 @@ public class RestaurantAddReviewFragment extends Fragment {
                             .build();
                 }
 
-                picker.setLimit(5-alreadyPresent);
+
+                picker.setLimit(MAX_NO_IMAGES -alreadyPresent);
                 picker.startActivity();
+
 
             }
         });
     }
+
+
+
 
     private void loadDataIfEditingFeedback() {
         if (activity.getCurrentReview() != null){
@@ -287,6 +325,9 @@ public class RestaurantAddReviewFragment extends Fragment {
         ibAccessStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
 
                 if(customRatingBar.getVisibility()==View.VISIBLE)
                 {
@@ -327,6 +368,7 @@ public class RestaurantAddReviewFragment extends Fragment {
 
                 ibAccessStar.setEnabled(false);
                 handler.postDelayed(startEnableStateRunnable,400);
+
             }
         });
     }
@@ -352,6 +394,7 @@ public class RestaurantAddReviewFragment extends Fragment {
                     if(objectList.size()==0)
                         displayImagesRecycler.setVisibility(View.GONE);
                     ibAccessCamera.setEnabled(objectList.size()<5);
+                    updateSubmitButtonStatus();
 
                 }
             });
@@ -366,6 +409,7 @@ public class RestaurantAddReviewFragment extends Fragment {
 
 
       ibAccessCamera.setEnabled(objectList.size()<5);
+        updateSubmitButtonStatus();
 
 
 
@@ -628,5 +672,10 @@ public class RestaurantAddReviewFragment extends Fragment {
         ASSL.closeActivity(rlRoot);
         System.gc();
     }
+
+
+
+
+
 
 }
