@@ -17,11 +17,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-
+import com.picker.image.model.ImageEntry;
+import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.EditReviewImagesAdapter;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
@@ -29,9 +30,6 @@ import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.ImageCompression;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
-
-import com.picker.image.model.ImageEntry;
-import com.picker.image.util.Picker;
 
 import org.json.JSONArray;
 
@@ -67,7 +65,7 @@ import retrofit.mime.TypedString;
 public class RestaurantAddReviewFragment extends Fragment {
     private final String TAG = RestaurantAddReviewFragment.class.getSimpleName();
 
-    private LinearLayout rlRoot;
+    private RelativeLayout rlRoot;
     private EditText etFeedback;
     private Button bSubmit;
 
@@ -91,6 +89,7 @@ public class RestaurantAddReviewFragment extends Fragment {
     private TextView tvCharCount;
     private  int etReviewMaxLength;
     private View ibAccessCamera;
+    private View scrollView;
 
 
     public static RestaurantAddReviewFragment newInstance(int restaurantId) {
@@ -115,8 +114,8 @@ public class RestaurantAddReviewFragment extends Fragment {
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
-
-        rlRoot = (LinearLayout) rootView.findViewById(R.id.rlRoot);
+        scrollView =rootView.findViewById(R.id.scroll_view);
+        rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
         try {
             if (rlRoot != null) {
                 new ASSL(activity, rlRoot, 1134, 720, false);
@@ -140,6 +139,7 @@ public class RestaurantAddReviewFragment extends Fragment {
                     etFeedback.setError(activity.getString(R.string.feedback_must_be_in_500));
                 } else {
                     submitFeedback(reviewDesc);
+                    Utils.hideSoftKeyboard(activity, etFeedback);
                 }
             }
         });
@@ -238,6 +238,9 @@ public class RestaurantAddReviewFragment extends Fragment {
                             if (images != null && images.size() != 0) {
                                 objectList.addAll(images);
                                 setUpAdapter(objectList);
+                                etFeedback.clearFocus();
+                                scrollView.scrollTo(0,scrollView.getBottom());
+
                             }
                         }
 
@@ -388,6 +391,7 @@ public class RestaurantAddReviewFragment extends Fragment {
                     new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                         @Override
                         public void positiveClick(View view) {
+                            submitFeedback(reviewDesc);
                         }
 
                         @Override
@@ -573,10 +577,11 @@ public class RestaurantAddReviewFragment extends Fragment {
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                        DialogPopup.dialogNoInternet(activity, DialogErrorType.NO_NET,
+                        DialogPopup.dialogNoInternet(activity, DialogErrorType.CONNECTION_LOST,
                                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                                     @Override
                                     public void positiveClick(View view) {
+                                        uploadFeedback(reviewDesc, params);
                                     }
 
                                     @Override

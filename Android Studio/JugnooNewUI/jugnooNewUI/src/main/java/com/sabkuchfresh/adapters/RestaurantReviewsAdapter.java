@@ -244,7 +244,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 							sb.append(restaurantReviews.get(pos).getReviewDesc()).append("\n");
 						}
 
-								sb.append("https://jugnoo.in/review/")
+								sb.append("https://share.jugnoo.in/review/")
 								.append(activity.getVendorOpened().getRestaurantId());
 
 
