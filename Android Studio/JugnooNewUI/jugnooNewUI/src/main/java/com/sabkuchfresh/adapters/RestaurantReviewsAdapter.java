@@ -124,7 +124,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			}
 			holder.tvLikeShareCount.setText(likeCount.toString() + " | " + shareCount.toString());
 
-			holder.ivFeedEdit.setVisibility(review.getEditable() == 1 ? View.VISIBLE : View.GONE);
+			holder.ivFeedEdit.setVisibility(review.getIsEditable() == 1 ? View.VISIBLE : View.GONE);
 
 
 			RelativeLayout.LayoutParams paramsSep = (RelativeLayout.LayoutParams) holder.vSepBelowMessage.getLayoutParams();
@@ -186,13 +186,13 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			}
 			holder.vSepBelowMessage.setLayoutParams(paramsSep);
 
-			if(review.getLiked() >= 1){
+			if(review.getIsLiked() >= 1){
 				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
 			} else {
 				holder.ivFeedLike.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_like_normal, R.drawable.ic_feed_like_active));
 			}
 
-			if(review.getShared() >= 1){
+			if(review.getIsShared() >= 1){
 				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_active);
 			} else {
 				holder.ivFeedShare.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_share_normal, R.drawable.ic_feed_share_active));
@@ -231,25 +231,29 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				public void onClick(View v) {
 					try {
 						final int pos = (int) v.getTag();
-						callback.onShare(restaurantReviews.get(pos));
+						FetchFeedbackResponse.Review review1 = restaurantReviews.get(pos);
+						callback.onShare(review1);
 
+						String subject = "";
 						StringBuilder sb = new StringBuilder();
-						sb.append("I have ordered food from ")
-								.append(activity.getVendorOpened().getName())
+						if(review1.getIsEditable() == 1){
+							sb.append("Here's my experience of ");
+						} else {
+							sb.append("Have a look at this experience of ");
+						}
+						sb.append(activity.getVendorOpened().getName())
 								.append(", ")
 								.append(activity.getVendorOpened().getRestaurantAddress())
-								.append(" using Jugnoo!\n");
-						if(!TextUtils.isEmpty(restaurantReviews.get(pos).getReviewDesc())){
-							sb.append("My experience: ");
-							sb.append(restaurantReviews.get(pos).getReviewDesc()).append("\n");
+								.append(" @ Jugnoo!\n");
+						if(!TextUtils.isEmpty(review1.getReviewDesc())){
+							sb.append(review1.getReviewDesc()).append("\n");
 						}
-
-								sb.append("https://share.jugnoo.in/review/")
+						sb.append("https://share.jugnoo.in/review/")
 								.append(activity.getVendorOpened().getRestaurantId());
 
 
 						ReferralActions.genericShareDialog(activity, null,
-								"Sharing my experience on Jugnoo!",
+								"Sharing experience of "+activity.getVendorOpened().getName()+" @ Jugnoo!",
 								sb.toString(), "", true,
 								new ReferralActions.ShareDialogCallback() {
 							@Override

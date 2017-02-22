@@ -106,13 +106,13 @@ public class FetchFeedbackResponse {
 		private Integer shareCount;
 		@SerializedName("is_liked")
 		@Expose
-		private Integer liked;
+		private Integer isLiked;
 		@SerializedName("is_shared")
 		@Expose
-		private Integer shared;
+		private Integer isShared;
 		@SerializedName("is_editable")
 		@Expose
-		private Integer editable;
+		private Integer isEditable;
 		@SerializedName("images")
 		@Expose
 		private List<ReviewImage> images;
@@ -211,37 +211,37 @@ public class FetchFeedbackResponse {
 			this.shareCount = shareCount;
 		}
 
-		public Integer getLiked() {
-			if(liked == null){
-				liked = 0;
+		public Integer getIsLiked() {
+			if(isLiked == null){
+				isLiked = 0;
 			}
-			return liked;
+			return isLiked;
 		}
 
-		public void setLiked(Integer liked) {
-			this.liked = liked;
+		public void setIsLiked(Integer isLiked) {
+			this.isLiked = isLiked;
 		}
 
-		public Integer getShared() {
-			if(shared == null){
-				shared = 0;
+		public Integer getIsShared() {
+			if(isShared == null){
+				isShared = 0;
 			}
-			return shared;
+			return isShared;
 		}
 
-		public void setShared(Integer shared) {
-			this.shared = shared;
+		public void setIsShared(Integer isShared) {
+			this.isShared = isShared;
 		}
 
-		public Integer getEditable() {
-			if(editable == null){
-				editable = 0;
+		public Integer getIsEditable() {
+			if(isEditable == null){
+				isEditable = 0;
 			}
-			return editable;
+			return isEditable;
 		}
 
-		public void setEditable(Integer editable) {
-			this.editable = editable;
+		public void setIsEditable(Integer isEditable) {
+			this.isEditable = isEditable;
 		}
 
 		public List<ReviewImage> getImages() {
