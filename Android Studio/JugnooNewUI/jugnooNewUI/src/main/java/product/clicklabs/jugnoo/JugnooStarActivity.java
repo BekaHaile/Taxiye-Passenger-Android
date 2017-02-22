@@ -167,7 +167,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         } else {
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-                    rlFragment.setVisibility(View.GONE);
+                    //rlFragment.setVisibility(View.GONE);
                 }
                 super.onBackPressed();
             } else {
