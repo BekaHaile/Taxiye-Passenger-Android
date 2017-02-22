@@ -82,6 +82,7 @@ public class UserData {
 	private SubscriptionData subscriptionData;
 
 	private int showJeanieHelpText;
+	private int showOfferDialog;
 
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
@@ -101,7 +102,7 @@ public class UserData {
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled, int showJeanieHelpText){
+					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -177,6 +178,7 @@ public class UserData {
 		this.showSubscriptionData = showSubscriptionData;
 		this.slideCheckoutPayEnabled = slideCheckoutPayEnabled;
 		this.showJeanieHelpText = showJeanieHelpText;
+		this.showOfferDialog = showOfferDialog;
 	}
 
 	private void checkUserImage(){
@@ -705,6 +707,14 @@ public class UserData {
 
 	public void setIntegratedJugnooEnabled(int integratedJugnooEnabled) {
 		this.integratedJugnooEnabled = integratedJugnooEnabled;
+	}
+
+	public int getShowOfferDialog() {
+		return showOfferDialog;
+	}
+
+	public void setShowOfferDialog(int showOfferDialog) {
+		this.showOfferDialog = showOfferDialog;
 	}
 
 	public int getTotalCouponCount() {
