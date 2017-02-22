@@ -44,7 +44,7 @@
         android:layout_marginTop="@dimen/px_36"
         android:layout_toLeftOf="@+id/tvDateTime"
         android:layout_toRightOf="@+id/tvNameCap"
-        android:text=""
+        android:text="dasjkl"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_32"
         app:font="maven"

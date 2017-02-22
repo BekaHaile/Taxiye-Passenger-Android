@@ -92,11 +92,27 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			} else if (review.getRating() == null && !TextUtils.isEmpty(review.getReviewDesc())) {
 				ratingVis = View.GONE;
 				holder.tvReviewTag.setVisibility(View.GONE);
+			} else if(review.getRating() == null && TextUtils.isEmpty(review.getReviewDesc())){
+				messageVis = View.GONE;
+				ratingVis = View.GONE;
+				holder.tvReviewTag.setVisibility(View.GONE);
 			}
 			holder.tvRating.setLayoutParams(paramsRating);
 			holder.tvReviewTag.setLayoutParams(paramsRatingTag);
 			holder.tvRating.setVisibility(ratingVis);
 			holder.tvReviewMessage.setVisibility(messageVis);
+
+			RelativeLayout.LayoutParams paramsName = (RelativeLayout.LayoutParams) holder.tvName.getLayoutParams();
+			RelativeLayout.LayoutParams paramsTime = (RelativeLayout.LayoutParams) holder.tvDateTime.getLayoutParams();
+			if(ratingVis == View.VISIBLE){
+				paramsName.setMargins(paramsName.leftMargin, (int)(ASSL.Yscale() * 36f), paramsName.rightMargin, paramsName.bottomMargin);
+				paramsTime.setMargins(paramsTime.leftMargin, (int)(ASSL.Yscale() * 40f), paramsTime.rightMargin, paramsTime.bottomMargin);
+			} else {
+				paramsName.setMargins(paramsName.leftMargin, (int)(ASSL.Yscale() * 61f), paramsName.rightMargin, paramsName.bottomMargin);
+				paramsTime.setMargins(paramsTime.leftMargin, (int)(ASSL.Yscale() * 65f), paramsTime.rightMargin, paramsTime.bottomMargin);
+			}
+			holder.tvName.setLayoutParams(paramsName);
+			holder.tvDateTime.setLayoutParams(paramsTime);
 
 			if (review.getRating() != null) {
 				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor());

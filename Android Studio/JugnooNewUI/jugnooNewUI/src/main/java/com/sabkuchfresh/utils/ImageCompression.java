@@ -6,11 +6,12 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
-import android.os.Environment;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
 /**
  * Created by Parminder Singh on 29/09/16.
@@ -97,13 +98,15 @@ public final class ImageCompression extends AsyncTask<String, Void, File[]> {
         options.inTempStorage = new byte[16 * 1024];
         try {
             bmp = BitmapFactory.decodeFile(imagePath, options);
-        } catch (OutOfMemoryError exception) {
+        } catch (OutOfMemoryError|Exception exception) {
             exception.printStackTrace();
+            return null;
         }
         try {
             scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.RGB_565);
-        } catch (OutOfMemoryError exception) {
+        } catch (OutOfMemoryError|Exception exception) {
             exception.printStackTrace();
+            return null;
         }
         if (scaledBitmap == null || bmp == null)
             return null;
