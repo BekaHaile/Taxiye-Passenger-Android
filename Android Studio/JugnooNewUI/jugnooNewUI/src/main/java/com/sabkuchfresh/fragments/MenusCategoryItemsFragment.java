@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
+import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Item;
@@ -24,6 +25,7 @@ import com.squareup.otto.Subscribe;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -119,6 +121,8 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                             @Override
                             public void onPlusClicked(int position, Item item) {
                                 activity.updateCartValuesGetTotalPrice();
+                                if (activity.getAppType() == AppConstant.ApplicationType.MENUS)
+                                   FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_ADD_BUTTON_ITEM, Events.MENU_ADD_ITEM);
                             }
 
                             @Override

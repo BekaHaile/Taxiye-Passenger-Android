@@ -468,7 +468,7 @@ public class RestaurantAddReviewFragment extends Fragment {
 
     }
 
-    private void uploadFeedback(String reviewDesc,MultipartTypedOutput params) {
+    private void uploadFeedback(final String reviewDesc, final MultipartTypedOutput params) {
 
         try {
             if (!MyApplication.getInstance().isOnline())
@@ -538,7 +538,23 @@ public class RestaurantAddReviewFragment extends Fragment {
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 
 
-                                FlurryEventLogger.eventGA(Events.MENUS, Events.REVIEW, Events.SUBMITTED);
+
+                                if(activity.getCurrentReview()==null){
+                                    if (!TextUtils.isEmpty(reviewDesc)) {
+                                        FlurryEventLogger.eventGA(Events.MENUS, Events.ADD_TEXT, Events.JUGNOO_ADD_TEXT);
+
+                                    }
+
+                                    if(objectList!=null && objectList.size()>0)
+                                        FlurryEventLogger.eventGA(Events.MENUS, Events.ADDS_IMAGES, Events.JUGNOO_ADD_IMAGES);
+
+
+                                    FlurryEventLogger.eventGA(Events.MENUS, Events.SUBMIT_FEED, Events.SUBMITTED);
+                                } else{
+                                    FlurryEventLogger.eventGA(Events.MENUS, Events.EDIT_FEED, Events.FEED_EDITED);
+
+                                }
+
                                 activity.performBackPressed();
                                 Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
                                 RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
@@ -577,7 +593,7 @@ public class RestaurantAddReviewFragment extends Fragment {
                     }
                 };
 
-                //hit finally
+
 
             if(activity.getCurrentReview()==null) {
                 //Adding A new Review

@@ -393,6 +393,9 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     } else if(type == AppConstant.ApplicationType.MENUS){
+
+
+                        FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_PAY_BUTTON, Events.MENU_BILL_PAY);
                         MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     } else{
@@ -1679,6 +1682,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     public void onUpdateListEvent(AddressAdded event) {
         if (event.flag) {
             updateAddressView();
+
         }
     }
 
@@ -1724,6 +1728,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
         updateCartDataView();
+        FlurryEventLogger.eventGA(Events.MENUS, Events.CART_ITEM_EDIT, Events.MENU_CART_EDIT);
     }
 
     @Override
@@ -1731,9 +1736,11 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
         updateCartDataView();
+        FlurryEventLogger.eventGA(Events.MENUS, Events.CART_ITEM_EDIT, Events.MENU_CART_EDIT);
         if(itemTotalQuantity == 0){
             itemsInCart.remove(position);
             checkIfEmpty();
+
         }
     }
 

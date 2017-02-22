@@ -20,6 +20,7 @@ import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -363,6 +364,9 @@ public class MenusFilterFragment extends Fragment{
 				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Sort By", String.valueOf(activity.getSortBySelected()));
 				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Min Order", String.valueOf(activity.getMoSelected()));
 				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Delivery Time", String.valueOf(activity.getDtSelected()));
+
+				FlurryEventLogger.eventGA(Events.MENUS, Events.APPLY_FILTERS, Events.MENU_APPLY_FILTER);
+
 				activity.performBackPressed();
 			}
 		});

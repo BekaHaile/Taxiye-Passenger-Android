@@ -442,6 +442,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                     if (vendor.getIsClosed() == 1) {
                                         activity.clearMenusCart();
                                     }
+
+                                    FlurryEventLogger.eventGA(Events.MENUS, Events.SELECT_RESTAURANT, Events.MENU_SELECT_RESTAURANT);
                                     activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
