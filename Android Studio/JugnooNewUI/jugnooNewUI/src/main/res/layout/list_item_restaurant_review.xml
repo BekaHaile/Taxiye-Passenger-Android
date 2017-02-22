@@ -169,7 +169,6 @@
         android:layout_marginBottom="@dimen/px_20"
         android:layout_marginRight="@dimen/px_20"
         android:layout_marginTop="@dimen/px_20"
-        android:background="@drawable/bg_transp_menu_color_selector"
         android:padding="@dimen/px_10"
         android:src="@drawable/ic_feed_edit"
         android:tag="mwar"

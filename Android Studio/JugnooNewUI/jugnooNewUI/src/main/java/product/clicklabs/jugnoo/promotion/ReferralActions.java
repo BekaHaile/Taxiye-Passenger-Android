@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 
 import com.facebook.CallbackManager;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -270,11 +273,11 @@ public class ReferralActions implements FirebaseEvents {
 
     public static void genericShareDialog(final Activity activity, final CallbackManager callbackManager,
                                           final String subject, final String body, final String link){
-        genericShareDialog(activity, callbackManager, subject, body, link, false, null, false);
+        genericShareDialog(activity, callbackManager, subject, body, link, "", false, null, false);
     }
 
     public static void genericShareDialog(final Activity activity, final CallbackManager callbackManager,
-                                          final String subject, final String body, final String link,
+                                          final String subject, final String body, final String link, final String imageUrl,
                                           final boolean showCustomDialog,
                                           final ShareDialogCallback callback,
                                           final boolean hitAnalyticEvents) {
@@ -300,11 +303,32 @@ public class ReferralActions implements FirebaseEvents {
                     try {
                         ResolveInfo info = (ResolveInfo) adapter.getItem(which);
                         if(info != null) {
-							Intent intent = new Intent(Intent.ACTION_SEND);
-							intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-							intent.setType("text/plain");
-							intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-							intent.putExtra(Intent.EXTRA_TEXT, body);
+                            if ((info.activityInfo.packageName.equalsIgnoreCase("com.facebook.katana")
+                                    || info.activityInfo.packageName.equalsIgnoreCase("com.facebook.work")) && ShareDialog.canShow(ShareLinkContent.class)) {
+                                ShareDialog shareDialog = new ShareDialog(activity);
+                                ShareLinkContent.Builder builder1 = new ShareLinkContent.Builder();
+                                if (!TextUtils.isEmpty(subject)) {
+                                    builder1.setContentTitle(subject);
+                                } else {
+                                    builder1.setContentTitle("Jugnoo");
+                                }
+                                builder1.setContentDescription(body);
+                                if (!TextUtils.isEmpty(link)) {
+                                    builder1.setContentUrl(Uri.parse(link));
+                                }
+                                if (!TextUtils.isEmpty(imageUrl)) {
+                                    builder1.setImageUrl(Uri.parse(imageUrl));
+                                }
+                                ShareLinkContent linkContent = builder1.build();
+                                shareDialog.show(linkContent);
+                            } else {
+                                Intent intent = new Intent(Intent.ACTION_SEND);
+                                intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+                                intent.setType("text/plain");
+                                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                                intent.putExtra(Intent.EXTRA_TEXT, body);
+                                activity.startActivity(intent);
+                            }
 
                             try {
                                 if(callback != null){
@@ -313,7 +337,6 @@ public class ReferralActions implements FirebaseEvents {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            activity.startActivity(intent);
 
                             if(hitAnalyticEvents) {
 								if (info.activityInfo.packageName.contains("com.facebook.katana")) {

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -197,6 +198,8 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_normal);
 			}
 
+			holder.ivFeedEdit.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_edit, R.drawable.ic_feed_edit_pressed));
+
 			holder.ivFeedEdit.setTag(position);
 			holder.ivFeedLike.setTag(position);
 			holder.ivFeedShare.setTag(position);
@@ -233,6 +236,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 						FetchFeedbackResponse.Review review1 = restaurantReviews.get(pos);
 						callback.onShare(review1);
 
+						String link = "https://share.jugnoo.in/review/"+activity.getVendorOpened().getRestaurantId();
 						StringBuilder sb = new StringBuilder();
 						if(review1.getIsEditable() == 1){
 							sb.append("Here's my experience of ");
@@ -246,13 +250,12 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 						if(!TextUtils.isEmpty(review1.getReviewDesc())){
 							sb.append(review1.getReviewDesc()).append("\n");
 						}
-						sb.append("https://share.jugnoo.in/review/")
-								.append(activity.getVendorOpened().getRestaurantId());
+						sb.append(link);
 
 
 						ReferralActions.genericShareDialog(activity, null,
 								"Sharing experience of "+activity.getVendorOpened().getName()+" @ Jugnoo!",
-								sb.toString(), "", true,
+								sb.toString(), link, activity.getVendorOpened().getImage(), true,
 								new ReferralActions.ShareDialogCallback() {
 							@Override
 							public void onShareClicked(String appName) {

@@ -49,6 +49,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -235,6 +236,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     private CoordinatorLayout coordinatorLayout;
     private static final float COLLAPSE_TOOLBAR_HEIGHT = 270f;
 
+    public CallbackManager callbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -247,6 +250,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
             appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+            callbackManager = CallbackManager.Factory.create();
 
 
             Data.currentActivity = FreshActivity.class.getName();
@@ -2969,6 +2973,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     getFreshCheckoutMergedFragment().apiPlaceOrderPayCallback(null);
                 }
             }
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         } catch (Exception e) {
             e.printStackTrace();
         }
