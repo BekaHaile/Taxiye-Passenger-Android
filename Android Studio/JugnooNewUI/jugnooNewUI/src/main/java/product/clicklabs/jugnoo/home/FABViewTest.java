@@ -417,7 +417,7 @@ public class FABViewTest {
     public void setRelativeLayoutFABTestVisibility(int visibility){
         relativeLayoutFABTest.setVisibility(visibility);
         if(visibility != View.VISIBLE){
-            hideJeanieHelpInSession();
+//            hideJeanieHelpInSession();
         }
     }
 
