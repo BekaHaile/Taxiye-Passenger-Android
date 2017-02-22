@@ -78,7 +78,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
             textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue,
             textViewEndRideMobikwikValue, textViewEndRideFreeChargeValue,
             textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
-            textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
+            textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue,
+            tvIncludeToll;
     TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
     EndRideDiscountsAdapter endRideDiscountsAdapter;
@@ -224,6 +225,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
             textViewEndRideWaitTimeValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFareFactorValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareFactorValue);
             textViewEndRideFareFactorValue.setTypeface(Fonts.mavenRegular(activity));
+            tvIncludeToll = (TextView) rootView.findViewById(R.id.tvIncludeToll);
 
             relativeLayoutLuggageCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLuggageCharge);
             relativeLayoutConvenienceCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutConvenienceCharge);
@@ -395,7 +397,14 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
                     }
                     else if(endRideData.getVehicleType() == VehicleTypeValue.TAXI.getOrdinal()){
                         imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_history_carpool);
+                        tvIncludeToll.setVisibility(View.VISIBLE);
                     }
+                }
+
+                if(endRideData.getInvoiceAdditionalTextCabs() != null
+                        && !endRideData.getInvoiceAdditionalTextCabs().equalsIgnoreCase("")){
+                    tvIncludeToll.setVisibility(View.VISIBLE);
+                    tvIncludeToll.setText(endRideData.getInvoiceAdditionalTextCabs());
                 }
 
                 if (endRideData.discountTypes.size() > 0) {

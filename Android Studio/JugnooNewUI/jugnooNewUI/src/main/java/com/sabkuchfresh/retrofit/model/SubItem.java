@@ -182,6 +182,9 @@ public class SubItem {
      * The price
      */
     public Double getPrice() {
+        if(price == null){
+            price = 0d;
+        }
         return price;
     }
 

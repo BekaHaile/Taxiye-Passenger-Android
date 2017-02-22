@@ -3,7 +3,6 @@ package com.sabkuchfresh.fragments;
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -210,7 +209,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
         try {
             if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
-                new Handler().postDelayed(new Runnable() {
+                activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         activity.openFeedback();
@@ -291,11 +290,11 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 				activity.updateCartValuesGetTotalPrice();
 			}
 			activity.setCartChangedAtCheckout(false);
-            new Handler().postDelayed(new Runnable() {
+            activity.getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     activity.setMinOrderAmountText(FreshFragment.this);
-					if(activity.isRefreshCart()){
+					if(activity.isRefreshCart() && !activity.refreshCart2){
                         getAllProducts(true, activity.getSelectedLatLng());
 					}
 					activity.setRefreshCart(false);

@@ -211,8 +211,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_star_selector);
-                    if(Data.userData.isSubscriptionActive()){
-//                        hideLayout(holder.relative);
+                    if(!Data.userData.isSubscriptionActive() && Data.userData.getSubscriptionData().getSubscribedUser() == 0){
+                        holder.textViewNew.setVisibility(View.VISIBLE);
+                    } else{
                         holder.textViewNew.setVisibility(View.GONE);
                     }
                 } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(menuInfo.getTag())){
@@ -320,7 +321,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         //holder.linearLayoutCategories.startAnimation(animation);
                     }
 
-                        //notifyItemChanged(0);
+                        //notifyItemUnchecked(0);
 //                    }
 //                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
@@ -633,7 +634,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.ABOUT, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "About");
             } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(tag)){
-                if(Data.userData.isSubscriptionActive()){
+                if((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
+                        || Data.userData.isSubscriptionActive()){
                     activity.startActivity(new Intent(activity, JugnooStarSubscribedActivity.class));
                 } else {
                     activity.startActivity(new Intent(activity, JugnooStarActivity.class));

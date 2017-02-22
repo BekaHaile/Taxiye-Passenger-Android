@@ -1,7 +1,6 @@
 package com.sabkuchfresh.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -21,6 +20,7 @@ import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -189,7 +189,7 @@ public class MenusFilterFragment extends Fragment{
 
 		buttonApply = (Button) rootView.findViewById(R.id.buttonApply); buttonApply.setTypeface(Fonts.mavenRegular(activity));
 
-		new Handler().postDelayed(new Runnable() {
+		activity.getHandler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				Utils.hideSoftKeyboard(activity, textViewDeliveryTime);
@@ -364,6 +364,9 @@ public class MenusFilterFragment extends Fragment{
 				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Sort By", String.valueOf(activity.getSortBySelected()));
 				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Min Order", String.valueOf(activity.getMoSelected()));
 				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Delivery Time", String.valueOf(activity.getDtSelected()));
+
+				FlurryEventLogger.eventGA(Events.MENUS, Events.APPLY_FILTERS, Events.MENU_APPLY_FILTER);
+
 				activity.performBackPressed();
 			}
 		});

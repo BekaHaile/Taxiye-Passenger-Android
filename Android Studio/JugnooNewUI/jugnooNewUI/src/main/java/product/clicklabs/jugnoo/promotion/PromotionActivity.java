@@ -320,7 +320,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                     int flag = jObj.getInt("flag");
                                     String message = JSONParser.getServerMessage(jObj);
                                     if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
-                                        // TODO: 24/08/16
                                         promoCoupons.clear();
                                         if(promCouponResponse.getCommonPromotions() != null)
                                             promoCoupons.addAll(promCouponResponse.getCommonPromotions());

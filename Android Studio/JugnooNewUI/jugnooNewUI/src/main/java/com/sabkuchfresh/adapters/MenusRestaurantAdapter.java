@@ -96,12 +96,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
+        timerHandler = activity.getHandler();
         timerHandler.postDelayed(timerRunnable, 1000);
         restaurantName = ""; locality = ""; telephone = "";
         searchApiHitOnce = false;
     }
 
-    Handler timerHandler = new Handler();
+    Handler timerHandler;
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
@@ -380,7 +381,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             int pos = (int) v.getTag();
                             callback.onRestaurantSelected(pos, vendorsToShow.get(pos));
                             if(searchApiHitOnce && searchText.length() > 0){
-                                FlurryEventLogger.eventGA(Events.MENUS, Events.SEARCH_MATCHED, searchText);
+                                FlurryEventLogger.eventGA(Events.MENUS, Events.SEARCH_MATCHED, Events.MENU_SEARCH_MATCH);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -81,6 +81,9 @@ public class UserData {
 	private int showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled;
 	private SubscriptionData subscriptionData;
 
+	private int showJeanieHelpText;
+	private int showOfferDialog;
+
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -99,7 +102,7 @@ public class UserData {
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled){
+					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -174,6 +177,8 @@ public class UserData {
 		this.showHomeScreen = showHomeScreen;
 		this.showSubscriptionData = showSubscriptionData;
 		this.slideCheckoutPayEnabled = slideCheckoutPayEnabled;
+		this.showJeanieHelpText = showJeanieHelpText;
+		this.showOfferDialog = showOfferDialog;
 	}
 
 	private void checkUserImage(){
@@ -704,6 +709,14 @@ public class UserData {
 		this.integratedJugnooEnabled = integratedJugnooEnabled;
 	}
 
+	public int getShowOfferDialog() {
+		return showOfferDialog;
+	}
+
+	public void setShowOfferDialog(int showOfferDialog) {
+		this.showOfferDialog = showOfferDialog;
+	}
+
 	public int getTotalCouponCount() {
 		int count = 0;
 		try {
@@ -956,6 +969,14 @@ public class UserData {
 
 	public void setSlideCheckoutPayEnabled(int slideCheckoutPayEnabled) {
 		this.slideCheckoutPayEnabled = slideCheckoutPayEnabled;
+	}
+
+	public int getShowJeanieHelpText() {
+		return showJeanieHelpText;
+	}
+
+	public void setShowJeanieHelpText(int showJeanieHelpText) {
+		this.showJeanieHelpText = showJeanieHelpText;
 	}
 
 	//	"meals_enabled": 1,

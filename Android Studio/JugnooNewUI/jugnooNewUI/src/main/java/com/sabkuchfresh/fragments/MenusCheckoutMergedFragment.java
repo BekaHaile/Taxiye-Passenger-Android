@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -394,6 +393,9 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     } else if(type == AppConstant.ApplicationType.MENUS){
+
+
+                        FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_PAY_BUTTON, Events.MENU_BILL_PAY);
                         MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     } else{
@@ -462,7 +464,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                new Handler().postDelayed(new Runnable() {
+                activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -1680,6 +1682,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     public void onUpdateListEvent(AddressAdded event) {
         if (event.flag) {
             updateAddressView();
+
         }
     }
 
@@ -1725,6 +1728,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
         updateCartDataView();
+        FlurryEventLogger.eventGA(Events.MENUS, Events.CART_ITEM_EDIT, Events.MENU_CART_EDIT);
     }
 
     @Override
@@ -1732,9 +1736,11 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
         updateCartDataView();
+        FlurryEventLogger.eventGA(Events.MENUS, Events.CART_ITEM_EDIT, Events.MENU_CART_EDIT);
         if(itemTotalQuantity == 0){
             itemsInCart.remove(position);
             checkIfEmpty();
+
         }
     }
 

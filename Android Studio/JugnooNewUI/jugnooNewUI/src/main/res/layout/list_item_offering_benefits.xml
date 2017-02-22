@@ -8,14 +8,15 @@
         android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/sliding_bottom_bg_color"
         android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="98px"
             android:layout_height="98px"
-            android:layout_marginBottom="20px"
-            android:layout_marginLeft="28px"
-            android:layout_marginTop="20px"
+            android:layout_marginBottom="30px"
+            android:layout_marginLeft="30px"
+            android:layout_marginTop="30px"
             android:background="@drawable/circle_white_stroke_grey"
             android:tag="mwar">
 
@@ -52,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10px"
-                android:text="ajhdjkas\njkdask\ndjhsj\ndsjhj\nakdlaskd\njdkasjkdj\ndajskdjk\"
+                android:text="ajhdjkas"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_24" />
 
@@ -63,7 +64,8 @@
     <ImageView
         android:id="@+id/ivSep"
         android:layout_width="match_parent"
-        android:layout_height="2px"
+        android:layout_height="1dp"
+        android:tag="@string/dont_touch_me"
         android:layout_below="@+id/llMain"
         android:background="@color/divider_color" />
 

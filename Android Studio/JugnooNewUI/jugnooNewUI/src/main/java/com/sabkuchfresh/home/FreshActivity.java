@@ -49,6 +49,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -100,6 +101,7 @@ import com.sabkuchfresh.retrofit.model.SubItemComparePriceLowToHigh;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriority;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemCompareAtoZ;
 import com.sabkuchfresh.retrofit.model.menus.ItemComparePriceHighToLow;
@@ -202,6 +204,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public String mContactNo = "";
 
     private View topView;
+    private FetchFeedbackResponse.Review currentReview;
 
     /**
      * this holds the reference for the Otto Bus which we declared in LavocalApplication
@@ -233,6 +236,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     private CoordinatorLayout coordinatorLayout;
     private static final float COLLAPSE_TOOLBAR_HEIGHT = 270f;
 
+    public CallbackManager callbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -245,6 +250,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
             appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+            callbackManager = CallbackManager.Factory.create();
 
 
             Data.currentActivity = FreshActivity.class.getName();
@@ -295,8 +301,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
 
             topBar.etSearch.addTextChangedListener(textWatcher);
-
-
 
 
 
@@ -414,7 +418,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
 
             try {
-                float marginBottom = 77f;
+                float marginBottom = 40f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                     addMealFragment();
@@ -431,7 +435,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
                     lastClientId = Config.getMenusClientId();
-                    marginBottom = 33f;
 
                 } else {
                     openCart();
@@ -440,7 +443,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     lastClientId = Config.getFreshClientId();
                 }
                 int dpAsPixels = (int) (marginBottom * scale + 0.5f);
-                fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+                fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
+                fabViewTest.setRlGenieHelpBottomMargin(170f);
                 Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -509,7 +513,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public void openCart() {
         try {
             if (getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, false)) {
-                new Handler().postDelayed(new Runnable() {
+                getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -674,11 +678,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                             (getMealFragment() != null && !getMealFragment().isHidden()) ||
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
                             || (getMenusFragment() != null && !getMenusFragment().isHidden())) {
-                        fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-                        fabViewTest.setFABButtons();
+                        fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                        fabViewTest.setFABButtons(true);
                     }
                 } else {
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 }
             }
         } catch (Exception e) {
@@ -796,6 +800,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     public Pair<Double, Integer> updateCartValuesGetTotalPrice() {
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
+
             return updateCartValuesGetTotalPriceMenus();
         } else {
             return updateCartValuesGetTotalPriceFMG();
@@ -918,7 +923,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             topBar.textViewReset.setVisibility(View.GONE);
             if (topView.getVisibility() != View.VISIBLE)
                 topView.setVisibility(View.VISIBLE);
-            fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+            fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
             topBar.editTextDeliveryAddress.setVisibility(View.GONE);
 
             rlSort.setVisibility(View.GONE);
@@ -937,10 +942,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewBack.setVisibility(View.GONE);
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    float marginBottom = 40f;
-                    int dpAsPixels = (int) (marginBottom * scale + 0.5f);
-                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
 
 
@@ -977,10 +979,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 }
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    float marginBottom = 40f;
-                    int dpAsPixels = (int) (marginBottom * scale + 0.5f);
-                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
 
                 topBar.title.setVisibility(View.VISIBLE);
@@ -992,10 +991,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewBack.setVisibility(View.GONE);
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-                    float marginBottom = 85f;
-                    int dpAsPixels = (int) (marginBottom * scale + 0.5f);
-                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.grocery));
@@ -1010,7 +1006,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
                 rlFilterVis = View.VISIBLE;
 
@@ -1018,6 +1014,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.title.setText(getResources().getString(R.string.menus));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 topBar.getLlSearchCart().setLayoutTransition(null);
+
+                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                }
 
             } else if (fragment instanceof VendorMenuFragment || fragment instanceof RestaurantImageFragment) {
                 llCartContainerVis = View.VISIBLE;
@@ -1195,10 +1195,15 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             RelativeLayout.LayoutParams titleLayoutParams = (RelativeLayout.LayoutParams) topBar.title.getLayoutParams();
             if (topBar.getLlSearchCart().getVisibility() == View.VISIBLE) {
                 topBar.title.setGravity(Gravity.LEFT);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20), 0, 0, 0);
-            } else {
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20f), 0, 0, 0);
+                titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.getLlSearchCart().getId());
+            }
+            else {
                 topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32), 0, 0, 0);
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
+            }
+            if(topBar.ivAddReview.getVisibility() == View.VISIBLE){
+                titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.ivAddReview.getId());
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
@@ -1289,12 +1294,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         try {
             if (getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                 int textViewMinOrderVis = View.VISIBLE;
-                if (getProductsResponse() != null && totalQuantity > 0
+                if (getProductsResponse() != null
                         && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)) {
                     if (Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
                         textViewMinOrderVis = View.VISIBLE;
                         textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
-                    } else if (totalPrice < getSuperCategoriesData().getDeliveryInfo().getMinAmount()) {
+                    } else if (totalQuantity > 0 && totalPrice < getSuperCategoriesData().getDeliveryInfo().getMinAmount()) {
                         textViewMinOrderVis = View.VISIBLE;
                         double leftAmount = getSuperCategoriesData().getDeliveryInfo().getMinAmount() - totalPrice;
                         textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
@@ -1323,11 +1328,16 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     topBar.title.setVisibility(View.GONE);
                     topBar.title.invalidate();
                     topBar.animateSearchBar(true);
+
+
+                    FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_SEARCH_BUTTON_MENUS, Events.MENU_SEARCH);
                 } else if (getTopFragment() instanceof VendorMenuFragment || getTopFragment() instanceof RestaurantImageFragment) {
                     if (canExitVendorMenu())
                         getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
 
                 }
+
+
             } else {
                 if (getFreshFragment() != null) {
                     getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer, getFreshFragment().getSuperCategory().getSuperCategoryId(),
@@ -1342,6 +1352,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     }
 
     public void openMenusFilter() {
+        FlurryEventLogger.eventGA(Events.MENUS, Events.FILTERS, Events.MENU_FILTERS);
         getTransactionUtils().openMenusFilterFragment(this, getRelativeLayoutContainer());
     }
 
@@ -1476,7 +1487,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
         updateCartValuesGetTotalPrice();
 
-        new Handler().postDelayed(new Runnable() {
+        getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 setLocalityAddressFirstTime(Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType));
@@ -2486,8 +2497,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     private void openCart(int appType) {
         if (appType == AppConstant.ApplicationType.MENUS && getVendorOpened() != null) {
-            if (canExitVendorMenu())
+            if (canExitVendorMenu()){
+                FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_CART_BUTTON, Events.MENU_CART_VIEW);
                 getTransactionUtils().openMenusCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+            }
+
         } else {
             getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         }
@@ -2903,6 +2917,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                         && (getDeliveryAddressesFragment() != null || getAddToAddressBookFragmentDirect() != null)) {
                     getFreshCheckoutMergedFragment().setDeliveryAddressUpdated(true);
                 }
+
+
+                if(getTopFragment()!=null && getTopFragment() instanceof  MenusFragment)
+                {
+                    FlurryEventLogger.eventGA(Events.MENUS, Events.CHANGE_ADDRESS, Events.MENU_CHANGE_ADDRESS);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2953,6 +2973,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     getFreshCheckoutMergedFragment().apiPlaceOrderPayCallback(null);
                 }
             }
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2962,7 +2983,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public void resetCollapseToolbar() {
 
 
-        new Handler().postDelayed(new Runnable() {
+        getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
@@ -3569,14 +3590,18 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             appBarLayout.setExpanded(false, false);
             topBar.llCartContainer.setVisibility(View.GONE);
             topBar.ivSearch.setVisibility(View.GONE);
-            FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.CLICKED);
+            FlurryEventLogger.eventGA(Events.MENUS,Events.CLICK_ON_RATING_BUTTON_RESTRO,Events.MENU_RESTRO_RATING_CLICK);
             getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
     }
 
-    public void openRestaurantAddReviewFragment() {
+    public void openRestaurantAddReviewFragment(boolean isPlusButtonClicked) {
         if (getVendorOpened() != null) {
-            FlurryEventLogger.eventGA(Events.MENUS,Events.REVIEW,Events.PLUS_BUTTON);
+            if(isPlusButtonClicked){
+                this.currentReview=null;
+                FlurryEventLogger.eventGA(Events.MENUS,Events.CLICK_ON_PLUS_BUTTON,Events.MENU_ADD_FEED);
+
+            }
             getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
     }
@@ -3589,6 +3614,22 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         else
             return true;
 
+    }
+
+    public FetchFeedbackResponse.Review getCurrentReview() {
+        return currentReview;
+    }
+
+    public void setCurrentReview(FetchFeedbackResponse.Review currentReview) {
+        this.currentReview = currentReview;
+    }
+
+    private Handler handler;
+    public Handler getHandler(){
+        if(handler == null){
+            handler = new Handler();
+        }
+        return handler;
     }
 
 }

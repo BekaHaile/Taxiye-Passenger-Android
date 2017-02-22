@@ -22,6 +22,9 @@ public class FetchFeedbackResponse {
 	@SerializedName("reviews")
 	@Expose
 	private List<Review> reviews = null;
+	@SerializedName("review")
+	@Expose
+	private List<Review> review = null;
 
 	public Integer getFlag() {
 		return flag;
@@ -55,8 +58,19 @@ public class FetchFeedbackResponse {
 		this.error = error;
 	}
 
+	public List<Review> getReview() {
+		return review;
+	}
+
+	public void setReview(List<Review> review) {
+		this.review = review;
+	}
+
 	public class Review {
 
+		@SerializedName("feedback_id")
+		@Expose
+		private Integer feedbackId;
 		@SerializedName("order_id")
 		@Expose
 		private Integer orderId;
@@ -84,6 +98,24 @@ public class FetchFeedbackResponse {
 		@SerializedName("date")
 		@Expose
 		private String date;
+		@SerializedName("like_count")
+		@Expose
+		private Integer likeCount;
+		@SerializedName("share_count")
+		@Expose
+		private Integer shareCount;
+		@SerializedName("is_liked")
+		@Expose
+		private Integer isLiked;
+		@SerializedName("is_shared")
+		@Expose
+		private Integer isShared;
+		@SerializedName("is_editable")
+		@Expose
+		private Integer isEditable;
+		@SerializedName("images")
+		@Expose
+		private List<ReviewImage> images;
 
 		public Integer getOrderId() {
 			return orderId;
@@ -155,6 +187,108 @@ public class FetchFeedbackResponse {
 
 		public void setDate(String date) {
 			this.date = date;
+		}
+
+		public Integer getLikeCount() {
+			if(likeCount == null){
+				likeCount = 0;
+			}
+			return likeCount;
+		}
+
+		public void setLikeCount(Integer likeCount) {
+			this.likeCount = likeCount;
+		}
+
+		public Integer getShareCount() {
+			if(shareCount == null){
+				shareCount = 0;
+			}
+			return shareCount;
+		}
+
+		public void setShareCount(Integer shareCount) {
+			this.shareCount = shareCount;
+		}
+
+		public Integer getIsLiked() {
+			if(isLiked == null){
+				isLiked = 0;
+			}
+			return isLiked;
+		}
+
+		public void setIsLiked(Integer isLiked) {
+			this.isLiked = isLiked;
+		}
+
+		public Integer getIsShared() {
+			if(isShared == null){
+				isShared = 0;
+			}
+			return isShared;
+		}
+
+		public void setIsShared(Integer isShared) {
+			this.isShared = isShared;
+		}
+
+		public Integer getIsEditable() {
+			if(isEditable == null){
+				isEditable = 0;
+			}
+			return isEditable;
+		}
+
+		public void setIsEditable(Integer isEditable) {
+			this.isEditable = isEditable;
+		}
+
+		public List<ReviewImage> getImages() {
+			return images;
+		}
+
+		public void setImages(List<ReviewImage> images) {
+			this.images = images;
+		}
+
+		public Integer getFeedbackId() {
+			return feedbackId;
+		}
+
+		public void setFeedbackId(Integer feedbackId) {
+			this.feedbackId = feedbackId;
+		}
+	}
+
+
+	public static class ReviewImage{
+		@SerializedName("url")
+		@Expose
+		private String url;
+		@SerializedName("thumbnail")
+		@Expose
+		private String thumbnail;
+
+		@SerializedName("id")
+		@Expose
+		private String id;
+
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+		public String getThumbnail() {
+			return thumbnail;
+		}
+
+		public void setThumbnail(String thumbnail) {
+			this.thumbnail = thumbnail;
 		}
 	}
 }

@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
-import com.sabkuchfresh.home.FreshActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -138,7 +137,6 @@ public class WalletCore {
 		}
 		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
 		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
-            //TOdo: NudgeClient tracker event here
         }
 	}
 
@@ -587,7 +585,6 @@ public class WalletCore {
 		}
 	}
 
-    //Todo: change logic or ask shankar
 	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas(UserData userData) {
 
 //		for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){

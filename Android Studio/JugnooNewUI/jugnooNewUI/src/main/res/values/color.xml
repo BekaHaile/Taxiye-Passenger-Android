@@ -61,6 +61,7 @@
     <color name="black_translucent_level_3">#33000000</color>
     <color name="black_translucent_more">#BB000000</color>
     <color name="black_80">#CC000000</color>
+    <color name="black_70">#B3000000</color>
     <color name="black_20">#33000000</color>
 
 
@@ -265,6 +266,7 @@
     <color name="text_color_blue">#2BC9EC</color>
     <color name="text_color_red">#DE5B5B</color>
 
+    <color name="stroke_light_grey">#979797</color>
     <color name="stroke_light_grey_alpha">#33979797</color>
     <color name="no_internet_text_color">#979797</color>
     <color name="order_history_status_color">#1fbd2a</color>
@@ -298,5 +300,7 @@
     <color name="red_very_light">#ffe9e9</color>
     <color name="red_dark_more">#d0021b</color>
     <color name="dull_background">#eeeeee</color>
+    <color name="dull_line">#eaeaea</color>
+    <color name="text_color_submit">#595968</color>
 
 </resources>

@@ -386,10 +386,11 @@
     </ScrollView>
 
 
+
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_alignParentTop="true"
-        android:src="@color/stroke_light_grey_alpha" />
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        />
 
 </RelativeLayout>

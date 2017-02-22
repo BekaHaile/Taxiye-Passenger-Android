@@ -3,7 +3,6 @@ package com.sabkuchfresh.fragments;
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -156,7 +155,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         try {
             if (Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {
 
-                new Handler().postDelayed(new Runnable() {
+                activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
 
@@ -201,7 +200,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             @Override
             public void keyboardOpened() {
                 if (activity.getTopFragment() instanceof MenusFragment) {
-                    activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+                    activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
                 }
             }
 
@@ -209,7 +208,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             public void keyBoardClosed() {
                 if (activity.getTopFragment() instanceof MenusFragment) {
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                        activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                        activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -245,7 +244,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 searchOpened = false;
                 openSearch(false);
             }
-            new Handler().postDelayed(new Runnable() {
+
+            activity.getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (activity.isRefreshCart()) {
@@ -323,13 +323,29 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                         if (searchOpened) {
                                             openSearch(true);
-                                            new Handler().postDelayed(new Runnable() {
+                                            activity.getHandler().postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     Utils.hideSoftKeyboard(activity, activity.getTopBar().etSearch);
                                                 }
                                             }, 100);
                                         }
+                                    }
+
+                                    try {
+                                        if (!TextUtils.isEmpty(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""))) {
+                                            int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""));
+                                            for (MenusResponse.Vendor vendor : vendors) {
+                                                if (restId == vendor.getRestaurantId()) {
+                                                    getVendorMenu(vendor);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    } finally {
+                                        Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
                                     }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -426,7 +442,10 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                     if (vendor.getIsClosed() == 1) {
                                         activity.clearMenusCart();
                                     }
+
+                                    FlurryEventLogger.eventGA(Events.MENUS, Events.SELECT_RESTAURANT, Events.MENU_SELECT_RESTAURANT);
                                     activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+                                    activity.getFabViewTest().hideJeanieHelpInSession();
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -509,7 +528,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             activity.getTopBar().etSearch.setText("");
           //  activity.fragmentUISetup(this);
             if (keyboardLayoutListener.getKeyBoardState() == 1) {
-                activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+                activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
             }
             if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);

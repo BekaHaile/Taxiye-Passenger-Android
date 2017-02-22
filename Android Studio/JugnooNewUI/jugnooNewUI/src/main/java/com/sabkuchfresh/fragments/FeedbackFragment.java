@@ -3,7 +3,6 @@ package com.sabkuchfresh.fragments;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -287,7 +286,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
             llThumbsRating.setVisibility(View.GONE);
             ratingBarMenuFeedback.setVisibility(View.VISIBLE);
-            editTextRSFeedback.setHint("Comments..");
+            editTextRSFeedback.setHint(R.string.comments);
             textViewRSWhatImprove.setTag(null);
             ratingBarMenuFeedback.setOnScoreChanged(new RatingBarMenuFeedback.IRatingBarCallbacks() {
                 @Override
@@ -295,7 +294,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
                     if (llBadReason.getVisibility() != View.VISIBLE) {
                         llBadReason.setVisibility(View.VISIBLE);
-                        new Handler().postDelayed(new Runnable() {
+                        activity.getHandler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 scrollViewRideSummary.smoothScrollTo(0, (int) buttonRSSubmitFeedback.getY());
@@ -422,7 +421,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                     imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down_active);
                     if (negativeReasons.size() > 0) {
                         llBadReason.setVisibility(View.VISIBLE);
-                        new Handler().postDelayed(new Runnable() {
+                        activity.getHandler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 scrollViewRideSummary.smoothScrollTo(0, (int) buttonRSSubmitFeedback.getY());
@@ -511,7 +510,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void updateUI() {
-        new Handler().postDelayed(new Runnable() {
+        activity.getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 update();
@@ -535,7 +534,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 .placeholder(R.drawable.great_place_holder)
                 //.fitCenter()
                 .into(imageViewTarget);
-        new Handler().postDelayed(new Runnable() {
+        activity.getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 imageViewThumbsUpGif.setImageDrawable(null);
@@ -623,7 +622,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                                 if (rating == 1) {
                                     // for Good rating
                                     if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
-                                        new Handler().postDelayed(new Runnable() {
+                                        activity.getHandler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
                                                 backPressed(true);
@@ -815,10 +814,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.menus));
             }
-            if(!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())){
-                activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
-            } else {
-                activity.getTopBar().title.setText(activity.getString(R.string.menus));
+            if(productType == ProductType.MENUS) {
+                if (!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())) {
+                    activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
+                } else {
+                    activity.getTopBar().title.setText(activity.getString(R.string.menus));
+                }
             }
         }
     }
@@ -837,15 +838,17 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                     public void onSendFeedbackResult(boolean isSuccess, int rating) {
                         if (isSuccess) {
 
-                            if(!TextUtils.isEmpty(comments)) FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK,Events.COMMENT_ADDED);
-                            if(!TextUtils.isEmpty(reviewDesc))FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK,"Tag- " + reviewDesc);
-                            if(score>0)FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK,Events.RATING,score);
+
+                            FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_SUBMIT,Events.MENU_FEEDBACK_SUBMIT);
+                            if(!TextUtils.isEmpty(comments)) FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_COMMENTS,Events.MENU_FEEDBACK_COMMENTS);
+                            if(!TextUtils.isEmpty(reviewDesc))FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_TAGS,Events.MENU_FEEDBACK_TAGS + reviewDesc);
+                            if(score>0)FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_STAR,Events.STAR_ICON,score);
 
                             if (rating > 2) {
                                 // for Good rating
                                 afterGoodRating();
                                 if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
-                                    new Handler().postDelayed(new Runnable() {
+                                    activity.getHandler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
                                             backPressed(true);

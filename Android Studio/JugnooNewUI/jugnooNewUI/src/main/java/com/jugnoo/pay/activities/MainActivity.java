@@ -242,18 +242,16 @@ public class MainActivity extends BaseActivity {
             imageViewSharePaymentId = (ImageView) findViewById(R.id.imageViewSharePaymentId);
 
 
-            float marginBottom = 77f;
-            float scale = getResources().getDisplayMetrics().density;
+            float marginBottom = 40f;
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
-            int dpAsPixels = (int) (marginBottom*scale + 0.5f);
-            fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+            fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
 
             if(Prefs.with(this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
                     Data.userData.getIntegratedJugnooEnabled() == 1) {
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-                    fabViewTest.setFABButtons();
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                    fabViewTest.setFABButtons(true);
             } else{
-                fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+                fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
             }
 
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
@@ -268,9 +269,6 @@ public class Data {
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_address_selected));
 
 
-//            TODO ask gurmail if(!BuildConfig.DEBUG_MODE)
-//			Prefs.with(context).removeAll();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -302,6 +300,22 @@ public class Data {
 			Log.e("action", "=" + action);
 			Log.e("data", "=" + data);
 
+			boolean dontTryParsingDeeplink = false;
+			if(data != null && !TextUtils.isEmpty(data.getPath()) && data.getPath().contains(Constants.KEY_REVIEW)){
+				try {
+					String[] arr = data.getPath().split(Constants.KEY_REVIEW+"/");
+					String[] arr1 = arr[1].split("/");
+					Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, arr1[0]);
+					Data.deepLinkIndex = AppLinkIndex.MENUS_PAGE.getOrdinal();
+					dontTryParsingDeeplink = true;
+				} catch (Exception e) {
+					e.printStackTrace();
+					Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+				}
+			} else {
+				Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+			}
+
 			if(intent.getIntExtra(Constants.KEY_CAMPAIGN_ID, 0) > 0){
 				int campaignId = intent.getIntExtra(Constants.KEY_CAMPAIGN_ID, 0);
 				new ApiTrackPush().hit(context, campaignId, ApiTrackPush.Status.OPENED);
@@ -315,13 +329,14 @@ public class Data {
 				FlurryEventLogger.event(context, FlurryEventNames.WHO_CLICKED_THE_PUSH);
 			}
 
-			if(data.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
+			if(!dontTryParsingDeeplink && data.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
 				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter(Constants.KEY_DEEPINDEX));
 				if(intent.getIntExtra(Constants.KEY_ORDER_ID, 0) != 0){
 					Data.deepLinkOrderId = intent.getIntExtra(Constants.KEY_ORDER_ID, 0);
 					Data.deepLinkProductType = intent.getIntExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
 				}
 			}
+
 
 			if(intent.hasExtra(Constants.KEY_TAB_INDEX)){
 				Data.tabLinkIndex = intent.getIntExtra(Constants.KEY_TAB_INDEX, 0);
@@ -497,5 +512,13 @@ public class Data {
 
 	public static void setDatumToReOrder(HistoryResponse.Datum datumToReOrder) {
 		Data.datumToReOrder = datumToReOrder;
+	}
+
+	private static boolean jeanieShownInSession = false;
+	public static void setJeanieShownInSession(boolean someBoolean){
+		jeanieShownInSession = someBoolean;
+	}
+	public static boolean isJeanieShownInSession(){
+		return jeanieShownInSession;
 	}
 }

@@ -2,7 +2,6 @@ package com.sabkuchfresh.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,13 +13,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusItemCustomizeAdapter;
+import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
+import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -100,6 +102,11 @@ public class MenusItemCustomizeFragment extends Fragment {
 									tvItemTotalValue.setText(activity.getString(R.string.rupees_value_format,
 											Utils.getMoneyDecimalFormat().format(itemSelected.getTotalPriceWithQuantity())));
 								}
+
+								@Override
+								public void onItemMinusClick() {
+									activity.performBackPressed();
+								}
 							});
 					rvCustomizeItem.setAdapter(menusItemCustomizeAdapter);
 
@@ -122,6 +129,8 @@ public class MenusItemCustomizeFragment extends Fragment {
 							} else {
 								menusItemCustomizeAdapter.getItem().getItemSelectedList().add(menusItemCustomizeAdapter.getItemSelected());
 							}
+							if (activity.getAppType() == AppConstant.ApplicationType.MENUS)
+								FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_ADD_BUTTON_ITEM, Events.MENU_ADD_ITEM);
 							activity.performBackPressed();
 							activity.getVendorMenuFragment().onUpdateListEvent(new UpdateMainList(true));
 						}
@@ -133,7 +142,7 @@ public class MenusItemCustomizeFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		new Handler().postDelayed(new Runnable() {
+		activity.getHandler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				try {

@@ -14,9 +14,11 @@ import java.util.Map;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
+import retrofit.mime.MultipartTypedOutput;
 
 /**
  * Created by shankar on 4/7/16.
@@ -58,6 +60,16 @@ public interface MenusApiService {
 	void orderFeedback(@FieldMap Map<String, String> params,
 					   Callback<OrderHistoryResponse> callback);
 
+
+
+	@POST("/v1/customer/submit_feedback")
+	void orderFeedback(@Body MultipartTypedOutput params,
+					   Callback<OrderHistoryResponse> callback);
+
+	@POST("/v1/customer/edit_feedback")
+	void editFeedback(@Body MultipartTypedOutput params,
+					   Callback<OrderHistoryResponse> callback);
+
 	@FormUrlEncoded
 	@POST("/place_order_callback")
 	void placeOrderCallback(@FieldMap Map<String, String> params,
@@ -78,5 +90,10 @@ public interface MenusApiService {
 	@POST("/v1/restaurant/fetch_feedbacks")
 	void restaurantFetchFeedbacks(@FieldMap Map<String, String> params,
 						   Callback<FetchFeedbackResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/v1/customer/like_share_feedback")
+	void customerLikeShareFeedback(@FieldMap Map<String, String> params,
+								  Callback<FetchFeedbackResponse> callback);
 
 }
