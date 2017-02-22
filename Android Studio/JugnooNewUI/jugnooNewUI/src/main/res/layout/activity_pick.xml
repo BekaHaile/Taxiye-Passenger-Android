@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top">
 
+
         <RelativeLayout
             android:animateLayoutChanges="true"
             android:background="@android:color/transparent"
@@ -74,13 +75,11 @@
 
         </RelativeLayout>
 
-
-
-
     </android.support.design.widget.AppBarLayout>
 
 
-    <LinearLayout
+
+    <RelativeLayout
         android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -90,9 +89,10 @@
         <LinearLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_above="@+id/selected_images"
+            />
 
 
         <android.support.v7.widget.RecyclerView
@@ -100,10 +100,18 @@
             android:visibility="gone"
             android:background="@drawable/shadow_down"
             android:layout_width="match_parent"
-            android:layout_height="80dp" />
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            />
 
 
-    </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            android:background="@drawable/shadow_down_new"
+            />
+
+    </RelativeLayout>
 
 
     <com.melnykov.fab.FloatingActionButton
