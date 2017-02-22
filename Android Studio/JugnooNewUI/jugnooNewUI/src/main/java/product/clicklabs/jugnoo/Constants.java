@@ -623,5 +623,5 @@ public interface Constants {
     String SP_RESTAURANT_ID_TO_DEEP_LINK = "sp_restaurant_id_to_deep_link";
     String SP_SHOW_GEANIE_HELP = "geanie_help";
     String KEY_SHOW_JEANIE_HELP_TEXT = "show_jeanie_help_text";
-
+    String KEY_SHOW_OFFER_DIALOG = "show_offer_dialog";
 }

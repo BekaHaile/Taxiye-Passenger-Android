@@ -64,7 +64,8 @@
     <ImageView
         android:id="@+id/ivSep"
         android:layout_width="match_parent"
-        android:layout_height="2px"
+        android:layout_height="1dp"
+        android:tag="@string/dont_touch_me"
         android:layout_below="@+id/llMain"
         android:background="@color/divider_color" />
 

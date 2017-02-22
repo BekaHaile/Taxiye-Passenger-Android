@@ -141,6 +141,9 @@ public class SubscriptionData {
     }
 
     public Integer getSubscribedUser() {
+        if(subscribedUser == null){
+            subscribedUser = 0;
+        }
         return subscribedUser;
     }
 
