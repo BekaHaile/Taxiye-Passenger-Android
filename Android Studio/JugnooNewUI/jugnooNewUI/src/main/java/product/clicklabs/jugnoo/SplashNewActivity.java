@@ -113,7 +113,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	//adding drop location
 
 	RelativeLayout root, rlSplashLogo;
-	LinearLayout linearLayoutMain;
+	LinearLayout linearLayoutMain, llLoginContainer;
 	TextView textViewScroll;
 
 	private final String TAG = "Splash Screen";
@@ -414,7 +414,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			buttonLogin.setTypeface(Fonts.mavenRegular(this));
 			buttonRegister = (Button) findViewById(R.id.buttonRegister);
 			buttonRegister.setTypeface(Fonts.mavenRegular(this));
-			((TextView) findViewById(R.id.textViewAlreadyHaveAccount)).setTypeface(Fonts.mavenMedium(this));
 
 			rlSplashLogo = (RelativeLayout) findViewById(R.id.rlSplashLogo); rlSplashLogo.setVisibility(View.VISIBLE);
 			linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
@@ -509,6 +508,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			llLoginBtn = (LinearLayout) findViewById(R.id.llLoginBtn);
 			textViewWalletOptionMessage.setTypeface(Fonts.mavenMedium(this));
 			extra = (View) findViewById(R.id.extra);
+
+			llLoginContainer = (LinearLayout) findViewById(R.id.llLoginContainer);
 
 			tvScroll = (TextView) findViewById(R.id.tvScroll);
 			llSignupMain = (LinearLayout) findViewById(R.id.llSignupMain);
@@ -707,7 +708,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					String password = editTextPassword.getText().toString().trim();
 					if ("".equalsIgnoreCase(email)) {
 						editTextEmail.requestFocus();
-						editTextEmail.setError(getResources().getString(R.string.nl_login_email_empty_error));
+						editTextEmail.setError(getResources().getString(R.string.nl_login_phone_empty_error));
 					} else {
 						if ("".equalsIgnoreCase(password)) {
 							editTextPassword.requestFocus();
@@ -1131,6 +1132,24 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			@Override
 			public void keyBoardClosed() {
 
+			}
+		}));
+
+		llLoginContainer.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llLoginContainer, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+			@Override
+			public void keyboardOpened() {
+				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
+				params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+				params.setMargins(0, (int)(ASSL.Yscale()*150), 0, 0);
+				llLoginContainer.setLayoutParams(params);
+			}
+
+			@Override
+			public void keyBoardClosed() {
+				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
+				params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
+				params.setMargins(0, 0, 0, 0);
+				llLoginContainer.setLayoutParams(params);
 			}
 		}));
 

@@ -372,6 +372,7 @@
     <string name="nl_login_facebook">Facebook</string>
     <string name="nl_login_google">Google</string>
     <string name="nl_login_email_empty_error">Please enter email or phone number</string>
+    <string name="nl_login_phone_empty_error">Please enter phone number</string>
     <string name="nl_login_empty_password_error">Please enter password</string>
     <string name="invalid_phone_error">Please enter valid phone number</string>
     <string name="invalid_email_error">Please enter valid email</string>
@@ -1525,5 +1526,8 @@
     <string name="maven_r">maven_regular</string>
     <string name="view_more">View more</string>
     <string name="view_less">View less</string>
+    <string name="or_login_with">Or login with</string>
+    <string name="welcome_to_jugnoo">Welcome to Jugnoo</string>
+    <string name="or_signup_with">Or signup with</string>
 
 </resources>

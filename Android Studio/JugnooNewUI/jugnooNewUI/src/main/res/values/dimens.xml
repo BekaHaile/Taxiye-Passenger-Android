@@ -447,5 +447,7 @@
     <dimen name="px_644">
         644px
     </dimen>
+    <dimen name="px_86">86px</dimen>
+    <dimen name="px_68">68px</dimen>
 
 </resources>
