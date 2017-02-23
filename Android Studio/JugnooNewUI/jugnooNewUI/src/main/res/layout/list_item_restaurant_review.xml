@@ -48,6 +48,8 @@
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_32"
         app:font="maven"
+        android:maxLines="1"
+        android:ellipsize="end"
         />
 
 
