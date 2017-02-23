@@ -50,8 +50,7 @@
             <EditText
                 android:id="@+id/etFeedback"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:paddingTop="35px"
                 android:background="@drawable/background_transparent"
                 android:fadeScrollbars="true"
@@ -72,6 +71,10 @@
                 android:textSize="@dimen/px_34"
                 app:font="maven"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvFeedImages"
