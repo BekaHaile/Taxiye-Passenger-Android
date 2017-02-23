@@ -13,8 +13,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+        <include
+            android:id="@+id/layout_offer_title"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="36px"
+            android:layout_marginLeft="36px"
+            layout="@layout/item_vendor_menu_offer_heading" android:visibility="visible"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_below="@id/layout_offer_title"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/ivShadowBelowOffer"
+            android:layout_width="match_parent"
+            android:layout_below="@id/layout_offer_title"
+            android:layout_height="@dimen/shadow_new_height"
+            android:src="@drawable/shadow_down_new"
+            android:visibility="visible" />
+
+
+
+
         <LinearLayout
             android:id="@+id/mainLayout"
+            android:layout_below="@id/ivShadowBelowOffer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"

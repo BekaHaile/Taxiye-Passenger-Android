@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:drawable/list_selector_background"
+    android:layout_height="match_parent"
+      android:paddingTop="14px" android:layout_width="match_parent">
+
+
+    <TextView
+        android:id="@+id/tv_offer_title"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/ib_arrow"
+        android:layout_width="wrap_content"
+        android:text="Flat 20% Off\nOn PAYMENT VIA Freecharge"
+        android:layout_marginBottom="14px"
+        android:layout_marginRight="30px"
+        android:textSize="30px"
+        android:textColor="@android:color/black"
+        android:layout_height="wrap_content"/>
+
+    <ImageButton
+        android:background="@android:color/transparent"
+        android:layout_marginRight="20px"
+        android:layout_alignTop="@id/tv_offer_title"
+        android:layout_alignBottom="@id/tv_offer_title"
+        android:src="@drawable/ic_back_pay_pressed"
+        android:id="@id/ib_arrow"
+         android:rotation="-90"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_below="@id/tv_offer_title"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginBottom="26px"
+        android:background="@color/stroke_light_grey"/>
+
+
+    <TextView
+        android:id="@+id/tv_terms_and_conditions"
+        android:layout_below="@id/divider"
+        android:layout_alignParentLeft="true"
+        android:layout_width="match_parent"
+        android:text="1. 20% cashback on your first Menus order.\n2. Minimum order size should be Rs 500.\n3. Cashback will be credited to your Jugnoo wallet within 24 hours."
+        android:paddingLeft="20px"
+        android:paddingRight="20px"
+        android:paddingBottom="37px"
+        android:layout_height="wrap_content"
+        android:textSize="26px"
+        android:textColor="@android:color/black" />
+
+
+
+
+
+</RelativeLayout>

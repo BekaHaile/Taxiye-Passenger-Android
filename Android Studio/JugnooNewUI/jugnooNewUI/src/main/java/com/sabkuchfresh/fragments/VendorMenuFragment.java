@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -67,6 +68,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh, container, false);
 
+        View view = rootView.findViewById(R.id.layout_offer_title);
+        view.findViewById(R.id.divider).setVisibility(View.GONE);
+        view.findViewById(R.id.tv_terms_and_conditions).setVisibility(View.GONE);
+        ((TextView)  view.findViewById(R.id.tv_offer_title)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         activity = (FreshActivity) getActivity();
         mBus = (activity).getBus();
         activity.setSwipeAvailable(false);
