@@ -71,6 +71,16 @@ public interface ApiService {
                         Callback<LoginResponse> callback);
 
     @FormUrlEncoded
+    @POST("/v3/customer/login_using_otp")
+    void loginUsingOtp(@FieldMap Map<String, String> params,
+                   Callback<LoginResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/v3/customer/generate_login_otp")
+    void generateLoginOtp(@FieldMap Map<String, String> params,
+                   Callback<LoginResponse> callback);
+
+    @FormUrlEncoded
     @POST("/fetch_referee_user_details")
     void claimGift(@FieldMap Map<String, String> params,
                    Callback<ReferralClaimGift> callback);
