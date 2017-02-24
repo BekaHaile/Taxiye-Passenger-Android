@@ -9369,6 +9369,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             } else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
                                 tvChatCount.setVisibility(View.VISIBLE);
                                 tvChatCount.setText(String.valueOf(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 1)));
+                            } else if (Constants.OPEN_DEEP_INDEX == flag) {
+                                deepLinkAction.openDeepLink(menuBar);
                             }
                         }
                     } catch (Exception e) {

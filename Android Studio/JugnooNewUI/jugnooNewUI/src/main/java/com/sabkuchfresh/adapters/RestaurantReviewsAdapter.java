@@ -21,10 +21,15 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -249,35 +254,71 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				public void onClick(View v) {
 					try {
 						final int pos = (int) v.getTag();
-						FetchFeedbackResponse.Review review1 = restaurantReviews.get(pos);
+						final FetchFeedbackResponse.Review review1 = restaurantReviews.get(pos);
 						callback.onShare(review1);
 
-						String link = "https://share.jugnoo.in/review/"+activity.getVendorOpened().getRestaurantId();
-						StringBuilder sb = new StringBuilder();
-						if(review1.getIsEditable() == 1){
-							sb.append("Here's my experience of ");
-						} else {
-							sb.append("Have a look at this experience of ");
-						}
-						sb.append(activity.getVendorOpened().getName())
-								.append(", ")
-								.append(activity.getVendorOpened().getRestaurantAddress())
-								.append(" @ Jugnoo!\n\n");
-						if(!TextUtils.isEmpty(review1.getReviewDesc())){
-							sb.append(review1.getReviewDesc()).append("\n");
-						}
-						sb.append(link);
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put(Constants.KEY_DEEPINDEX, String.valueOf(AppLinkIndex.MENUS_PAGE.getOrdinal()));
+						map.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
 
-
-						ReferralActions.genericShareDialog(activity, null,
-								"Sharing experience of "+activity.getVendorOpened().getName()+" @ Jugnoo!",
-								sb.toString(), link, activity.getVendorOpened().getImage(), true,
-								new ReferralActions.ShareDialogCallback() {
+						BranchMetricsUtils.getBranchLink(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
 							@Override
-							public void onShareClicked(String appName) {
-								likeShareReview(pos, restaurantReviews.get(pos).getFeedbackId(), ACTION_SHARE);
+							public void onBranchLinkCreated(String link) {
+								String content = "";
+								if(review1.getIsEditable() == 1 && !TextUtils.isEmpty(callback.getShareTextSelf())){
+										content = callback.getShareTextSelf()
+												.replace("{{{restaurant_name}}", activity.getVendorOpened().getName())
+												.replace("{{{restaurant_address}}", activity.getVendorOpened().getRestaurantAddress())
+												.replace("{{{review_desc}}}", "\n"+review1.getReviewDesc())
+												.replace("{{{link}}}", "\n"+link);
+								} else if(review1.getIsEditable() == 0 && !TextUtils.isEmpty(callback.getShareTextOther())) {
+									content = callback.getShareTextOther()
+											.replace("{{{restaurant_name}}", activity.getVendorOpened().getName())
+											.replace("{{{restaurant_address}}", activity.getVendorOpened().getRestaurantAddress())
+											.replace("{{{review_desc}}}", "\n"+review1.getReviewDesc())
+											.replace("{{{link}}}", "\n"+link);
+								}
+
+								if(TextUtils.isEmpty(content)){
+									StringBuilder sb = new StringBuilder();
+									if(review1.getIsEditable() == 1){
+										sb.append("Here's my experience of ");
+									} else {
+										sb.append("Have a look at this experience of ");
+									}
+									sb.append(activity.getVendorOpened().getName())
+											.append(", ")
+											.append(activity.getVendorOpened().getRestaurantAddress())
+											.append(" @ Jugnoo!\n\n");
+									if(!TextUtils.isEmpty(review1.getReviewDesc())){
+										sb.append(review1.getReviewDesc()).append("\n");
+									}
+									sb.append(link);
+									content = sb.toString();
+								}
+
+								ReferralActions.genericShareDialog(activity, null,
+										"Sharing experience of "+activity.getVendorOpened().getName()+" @ Jugnoo!",
+										content, link, activity.getVendorOpened().getImage(), true,
+										new ReferralActions.ShareDialogCallback() {
+											@Override
+											public void onShareClicked(String appName) {
+												likeShareReview(pos, restaurantReviews.get(pos).getFeedbackId(), ACTION_SHARE);
+											}
+										}, false);
 							}
-						}, false);
+
+							@Override
+							public void onBranchError(String error) {
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
+							}
+						}, activity.getVendorOpened().getName(),
+								"https://jugnoo.in",
+								activity.getVendorOpened().getImage(),
+								BranchMetricsUtils.BRANCH_CHANNEL_MENUS_REVIEW_SHARE,
+								map);
+
+
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -348,6 +389,8 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		void onLike(FetchFeedbackResponse.Review review);
 		void onScrollStateChanged(int newState);
 		int getRestaurantId();
+		String getShareTextSelf();
+		String getShareTextOther();
 	}
 
 

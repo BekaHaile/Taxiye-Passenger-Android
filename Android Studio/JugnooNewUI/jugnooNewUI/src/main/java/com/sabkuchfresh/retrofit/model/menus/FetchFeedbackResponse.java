@@ -25,6 +25,16 @@ public class FetchFeedbackResponse {
 	@SerializedName("review")
 	@Expose
 	private List<Review> review = null;
+	@SerializedName("review_image_limit")
+	@Expose
+	private Integer reviewImageLimit;
+	@SerializedName("share_text_self")
+	@Expose
+	private String shareTextSelf;
+	@SerializedName("share_text_other")
+	@Expose
+	private String shareTextOther;
+
 
 	public Integer getFlag() {
 		return flag;
@@ -64,6 +74,30 @@ public class FetchFeedbackResponse {
 
 	public void setReview(List<Review> review) {
 		this.review = review;
+	}
+
+	public Integer getReviewImageLimit() {
+		return reviewImageLimit;
+	}
+
+	public void setReviewImageLimit(Integer reviewImageLimit) {
+		this.reviewImageLimit = reviewImageLimit;
+	}
+
+	public String getShareTextSelf() {
+		return shareTextSelf;
+	}
+
+	public void setShareTextSelf(String shareTextSelf) {
+		this.shareTextSelf = shareTextSelf;
+	}
+
+	public String getShareTextOther() {
+		return shareTextOther;
+	}
+
+	public void setShareTextOther(String shareTextOther) {
+		this.shareTextOther = shareTextOther;
 	}
 
 	public class Review {
