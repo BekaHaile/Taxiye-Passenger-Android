@@ -41,6 +41,8 @@
         android:text="Sector 28 B"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_16"
+        android:maxLines="2"
+        android:ellipsize="end"
         />
 
     <TextView

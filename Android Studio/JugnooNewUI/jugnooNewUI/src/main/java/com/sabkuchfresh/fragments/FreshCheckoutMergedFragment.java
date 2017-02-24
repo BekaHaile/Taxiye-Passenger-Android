@@ -225,6 +225,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private ArrayList<Item> itemsInCart = new ArrayList<>();
     private MenusCartItemsAdapter menusCartItemsAdapter;
     private double totalTaxAmount = 0d;
+    private LinearLayout llDeliveryFrom;
+    private RelativeLayout rlDeliveryFrom;
+    private TextView tvRestName, tvRestAddress;
 
     @Override
     public void onStart() {
@@ -252,6 +255,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
         activity.setCartChangedAtCheckout(false);
+        type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
 
         linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
         try {
@@ -264,7 +268,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         deliveryAddressUpdated = false;
 
-        type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+
         mBus = (activity).getBus();
         orderPlaced = false;
         checkoutSaveData = new CheckoutSaveData();
@@ -429,6 +433,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         textViewAddressName = (TextView) rootView.findViewById(R.id.textViewAddressName); textViewAddressName.setTypeface(Fonts.mavenMedium(activity));
         textViewAddressValue = (TextView) rootView.findViewById(R.id.textViewAddressValue); textViewAddressValue.setTypeface(Fonts.mavenRegular(activity));
 
+        llDeliveryFrom = (LinearLayout) rootView.findViewById(R.id.llDeliveryFrom);
+        rlDeliveryFrom = (RelativeLayout) rootView.findViewById(R.id.rlDeliveryFrom);
+        tvRestName = (TextView) rootView.findViewById(R.id.tvRestName);
+        tvRestAddress = (TextView) rootView.findViewById(R.id.tvRestAddress);
+
 
         linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
@@ -498,6 +507,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
             }
         });
+
+        rlDeliveryFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.performBackPressed();
+            }
+        });
+        rlDeliveryFrom.setMinimumHeight((int)(ASSL.Yscale() * 116f));
 
         relativeLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -588,6 +605,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         activity.setSplInstr(checkoutSaveData.getSpecialInstructions());
 
         updateAddressView();
+        updateDeliveryFromView();
 
         updateCartDataView();
 
@@ -2775,6 +2793,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             return totalCharge;
         } else {
             return 0d;
+        }
+    }
+
+    private void updateDeliveryFromView(){
+        if(isMenusOpen() && activity.getVendorOpened() != null){
+            llDeliveryFrom.setVisibility(View.VISIBLE);
+            tvRestName.setText(activity.getVendorOpened().getName());
+            tvRestAddress.setText(activity.getVendorOpened().getRestaurantAddress());
+        } else {
+            llDeliveryFrom.setVisibility(View.GONE);
         }
     }
 
