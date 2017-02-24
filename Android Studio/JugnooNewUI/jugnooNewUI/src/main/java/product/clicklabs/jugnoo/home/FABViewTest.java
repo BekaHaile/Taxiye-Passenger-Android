@@ -107,7 +107,7 @@ public class FABViewTest {
             e.printStackTrace();
         }
         //setFABButtons();
-
+        isOpened = false;
         menuLabelsRightTest.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
@@ -116,8 +116,8 @@ public class FABViewTest {
                         setButtonsVisibilityOnOpen();
                         isOpened = true;
                         if(activity instanceof HomeActivity){
-                            ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
+//                            ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
                         }
                         Prefs.with(activity).save(Constants.SP_SHOW_GEANIE_HELP, 1);
                         setRlGenieHelpVisibility();
@@ -126,8 +126,8 @@ public class FABViewTest {
                     } else {
                         isOpened = false;
                         if(activity instanceof HomeActivity){
-                            ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.GONE);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
+//                            ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
                         }
                         FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Closed");
                     }
@@ -136,6 +136,8 @@ public class FABViewTest {
                 }
             }
         });
+
+
 
         rlGenieHelp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,6 +171,13 @@ public class FABViewTest {
             public void onAnimationStart(Animator animation) {
                 menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
                         ? R.drawable.ic_fab_jeanie : R.drawable.ic_fab_cross);
+                if(activity instanceof HomeActivity) {
+                    if (menuLabelsRightTest.isOpened()) {
+                        ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
+                    } else {
+                        ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
+                    }
+                }
             }
         });
 
