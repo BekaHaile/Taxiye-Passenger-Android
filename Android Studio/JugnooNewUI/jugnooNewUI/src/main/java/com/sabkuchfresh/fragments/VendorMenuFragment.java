@@ -2,16 +2,27 @@ package com.sabkuchfresh.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.DisplayOffersAdapter;
 import com.sabkuchfresh.adapters.MenusCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -45,6 +56,13 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
+    private Animation starCloseAnim;
+    private Animation starOpenAnim;
+    private Handler handler;
+    private Runnable startEnableStateRunnable;
+    private RecyclerView recyclerViewOffers;
+    private TextView tvOfferTitle;
+    private View viewPromoTitle;
 
     public VendorMenuFragment() {
     }
@@ -67,12 +85,13 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh, container, false);
-
-        View view = rootView.findViewById(R.id.layout_offer_title);
-        view.findViewById(R.id.divider).setVisibility(View.GONE);
-        view.findViewById(R.id.tv_terms_and_conditions).setVisibility(View.GONE);
-        ((TextView)  view.findViewById(R.id.tv_offer_title)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         activity = (FreshActivity) getActivity();
+        viewPromoTitle = rootView.findViewById(R.id.layout_offer_title);
+        //ifHasAnyOffers
+        setUpPromoDisplayView();
+
+
         mBus = (activity).getBus();
         activity.setSwipeAvailable(false);
 
@@ -86,7 +105,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             e.printStackTrace();
         }
 
-        mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
+
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
 
         viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
@@ -100,7 +119,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         tabs.setOnMyTabClickListener(this);
         ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
         ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
-
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -129,6 +147,86 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         activity.setSortingList(this);
 
         return rootView;
+    }
+
+    private void setUpPromoDisplayView() {
+        recyclerViewOffers = (RecyclerView) rootView.findViewById(R.id.recycler_view_offers);
+        tvOfferTitle = (TextView)  viewPromoTitle.findViewById(R.id.tv_offer_title);
+        View.OnClickListener expandClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(recyclerViewOffers.getVisibility()==View.VISIBLE)
+                {
+                    if( starCloseAnim ==null) {
+                        starCloseAnim = AnimationUtils.loadAnimation(activity, R.anim.recycler_offer_close_anim);
+                    }
+//                    mainLayout.animate().translationYBy(-recyclerViewOffers.getLayoutParams().height).setDuration(300).start();
+                    recyclerViewOffers.setVisibility(View.GONE);
+                    recyclerViewOffers.startAnimation(starCloseAnim);
+
+                } else{
+
+                    if(starOpenAnim ==null) {
+                        starOpenAnim = AnimationUtils.loadAnimation(activity, R.anim.recycler_offer_open_anim);
+                    }
+                    recyclerViewOffers.setVisibility(View.VISIBLE);
+                    recyclerViewOffers.startAnimation(starOpenAnim);
+
+                }
+
+                if(handler ==null){
+                    handler = activity.getHandler();
+
+                }
+                if(startEnableStateRunnable ==null){
+                    startEnableStateRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            viewPromoTitle.findViewById(R.id.tv_offer_title).setEnabled(true);
+                            viewPromoTitle.findViewById(R.id.ib_arrow).setEnabled(true);
+                        }
+                    };
+                }
+
+
+                viewPromoTitle.findViewById(R.id.tv_offer_title).setEnabled(false);
+                viewPromoTitle.findViewById(R.id.ib_arrow).setEnabled(false);
+                handler.postDelayed(startEnableStateRunnable,activity.getResources().getInteger(R.integer.anim_time_promo_recycler));
+
+            }
+        };
+
+        tvOfferTitle.setOnClickListener(expandClickListener);
+        viewPromoTitle.findViewById(R.id.ib_arrow).setOnClickListener(expandClickListener);
+        recyclerViewOffers.setAdapter(new DisplayOffersAdapter(activity,true));
+        recyclerViewOffers.setLayoutManager(new LinearLayoutManager(activity));
+        String heading = "FLAT 20% OFF";
+        String subHeading="ON FIRST ORDER";
+        viewPromoTitle.setVisibility(View.VISIBLE);
+        tvOfferTitle.setVisibility(View.VISIBLE);
+        tvOfferTitle.setText(setUpOfferTitle(heading,null));
+
+
+    }
+
+    private SpannableString setUpOfferTitle(String heading, String subHeading) {
+        if(TextUtils.isEmpty(heading))
+            return null;
+
+        tvOfferTitle.setTypeface(Fonts.mavenMedium(activity), Typeface.NORMAL);
+        SpannableString spannableContent ;
+
+        if(subHeading==null || subHeading.trim().length()<1)
+            spannableContent=new SpannableString(heading);
+        else
+            spannableContent= new SpannableString(heading + "\n" + subHeading);
+
+        spannableContent.setSpan(new StyleSpan(Typeface.BOLD),0,heading.length(),0);
+        spannableContent.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.color_orange_menus)), 0, heading.length(), 0);
+        if(subHeading!=null && subHeading.trim().length()>0)
+          spannableContent.setSpan(new RelativeSizeSpan(0.6f), spannableContent.length()-subHeading.length(),spannableContent.length(), 0);
+        return spannableContent;
+
     }
 
 
@@ -261,8 +359,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
             if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
                 activity.tvCollapRestaurantRating.setVisibility(View.VISIBLE);
-                activity.setRatingAndGetColor(activity.tvCollapRestaurantRating, activity.getVendorOpened().getRating(),
-                        activity.getVendorOpened().getColorCode());
+                activity.setRatingAndGetColor(activity.tvCollapRestaurantRating, activity.getVendorOpened().getRating(), null, false);
             } else {
                 activity.tvCollapRestaurantRating.setVisibility(View.GONE);
             }
@@ -271,7 +368,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             activity.ivCollapseRestImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.openRestaurantFragment();
+                    activity.openRestaurantReviewsListFragment();
                 }
             });
 

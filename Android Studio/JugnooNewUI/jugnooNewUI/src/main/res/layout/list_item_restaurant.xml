@@ -17,13 +17,14 @@
         android:gravity="center"
         android:textSize="18px"
         android:layout_width="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_height="32px" />
     <View
+        android:id="@+id/tv_offer_view"
         android:layout_toRightOf="@id/tv_offer"
         android:background="@drawable/drawable_menu_strip_offer_triangle"
         android:layout_width="40px"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_height="32px"/>
     
     

@@ -115,7 +115,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.tvDateTime.setLayoutParams(paramsTime);
 
 			if (review.getRating() != null) {
-				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor());
+				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor(), true);
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, color);
 				if (review.getRatingFlag() == 1) {
 					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_uparrow, 0);

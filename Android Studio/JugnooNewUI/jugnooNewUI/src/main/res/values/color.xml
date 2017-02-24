@@ -301,7 +301,7 @@
     <color name="red_dark_more">#d0021b</color>
     <color name="dull_background">#eeeeee</color>
     <color name="dull_line">#eaeaea</color>
-    <color name="text_color_submit">#595968</color>
+    <color name="text_color_grey_menus">#595968</color>
     <color name="color_orange_menus"> #ff834e</color>
 
 </resources>
