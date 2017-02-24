@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/relativeLayoutFABTest"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/transparent"
-    android:splitMotionEvents="false"
-    android:visibility="visible">
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                xmlns:app="http://schemas.android.com/tools"
+                android:id="@+id/relativeLayoutFABTest"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:splitMotionEvents="false"
+                android:visibility="visible">
 
     <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu
         android:id="@+id/menu_labels_right_Test"
@@ -149,7 +150,20 @@
             android:padding="15px"
             android:text="Explore more from Jugnoo"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_30" />
+            android:textSize="@dimen/text_size_30"
+            app:font="maven"
+            />
     </RelativeLayout>
+    
+    <ImageView
+        android:id="@+id/ivJeanieHelp"
+        android:layout_width="528px"
+        android:layout_height="670px"
+        android:src="@drawable/bg_jeanie_help"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        />
+    
 
 </RelativeLayout>

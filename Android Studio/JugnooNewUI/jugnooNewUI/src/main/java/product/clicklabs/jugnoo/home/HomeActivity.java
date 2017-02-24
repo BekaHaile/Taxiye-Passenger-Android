@@ -2877,6 +2877,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     case P_INITIAL:
 
                         fabViewTest = new FABViewTest(this, fabViewIntial);
+                        getHandler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(fabViewTest != null) {
+                                    fabViewTest.showTutorial();
+                                }
+                            }
+                        }, 1000);
                         GCMIntentService.clearNotifications(HomeActivity.this);
                         Prefs.with(HomeActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
 
@@ -9481,4 +9489,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private HomeUtil.SavedAddressState savedAddressState = HomeUtil.SavedAddressState.BLANK;
+
+    private Handler handler;
+    public Handler getHandler(){
+        if(handler == null){
+            handler = new Handler();
+        }
+        return handler;
+    }
 }

@@ -83,6 +83,7 @@ public class UserData {
 
 	private int showJeanieHelpText;
 	private int showOfferDialog;
+	private int showTutorial;
 
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
@@ -102,7 +103,7 @@ public class UserData {
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog){
+					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -179,6 +180,7 @@ public class UserData {
 		this.slideCheckoutPayEnabled = slideCheckoutPayEnabled;
 		this.showJeanieHelpText = showJeanieHelpText;
 		this.showOfferDialog = showOfferDialog;
+		this.showTutorial = showTutorial;
 	}
 
 	private void checkUserImage(){
@@ -977,6 +979,14 @@ public class UserData {
 
 	public void setShowJeanieHelpText(int showJeanieHelpText) {
 		this.showJeanieHelpText = showJeanieHelpText;
+	}
+
+	public int getShowTutorial() {
+		return showTutorial;
+	}
+
+	public void setShowTutorial(int showTutorial) {
+		this.showTutorial = showTutorial;
 	}
 
 	//	"meals_enabled": 1,
