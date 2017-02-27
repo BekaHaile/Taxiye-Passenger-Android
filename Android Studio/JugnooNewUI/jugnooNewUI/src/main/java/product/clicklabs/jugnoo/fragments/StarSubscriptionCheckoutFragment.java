@@ -495,6 +495,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         @Override
         public void onWalletAdd(PaymentOption paymentOption) {
         }
+
+        @Override
+        public String getAmountToPrefill() {
+            return "";
+        }
     };
 
     private void setPaymentOptionUI() {

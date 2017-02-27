@@ -901,6 +901,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         public void onWalletAdd(PaymentOption paymentOption) {
             activity.setPaymentOption(paymentOption);
         }
+
+        @Override
+        public String getAmountToPrefill() {
+            return dfNoDecimal.format(Math.ceil(payableAmount()));
+        }
     };
 
 
@@ -1735,10 +1740,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
+    private DecimalFormat dfNoDecimal = new DecimalFormat("#");
 
     private void intentToWallet(PaymentOption paymentOption) {
         try {
-            DecimalFormat df = new DecimalFormat("#");
+
             Intent intent = new Intent(activity, PaymentActivity.class);
             intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption.getOrdinal());
             if (paymentOption == PaymentOption.PAYTM) {
@@ -1746,7 +1752,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         (Data.userData.getPaytmEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(payableAmount()
+                        dfNoDecimal.format(Math.ceil(payableAmount()
                                 - Data.userData.getPaytmBalance())));
             }
             else if (paymentOption == PaymentOption.MOBIKWIK) {
@@ -1754,7 +1760,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         (Data.userData.getMobikwikEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(payableAmount()
+                        dfNoDecimal.format(Math.ceil(payableAmount()
                                 - Data.userData.getMobikwikBalance())));
             }
             else if (paymentOption == PaymentOption.FREECHARGE) {
@@ -1762,7 +1768,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         (Data.userData.getFreeChargeEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(payableAmount()
+                        dfNoDecimal.format(Math.ceil(payableAmount()
                                 - Data.userData.getFreeChargeBalance())));
             }
             else if (paymentOption == PaymentOption.JUGNOO_PAY) {
@@ -2023,6 +2029,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         setSubscriptionView();
                                         if(isMenusOpen()) {
                                             getSubscriptionFromCheckout(userCheckoutResponse);
+                                            if(userCheckoutResponse.getCharges() != null){
+                                                activity.getMenuProductsResponse().setCharges(userCheckoutResponse.getCharges());
+                                            }
                                         } else {
                                             updateCartFromCheckoutData(userCheckoutResponse);
                                         }

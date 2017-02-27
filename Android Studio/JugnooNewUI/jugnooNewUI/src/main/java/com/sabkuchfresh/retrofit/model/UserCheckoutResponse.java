@@ -2,11 +2,11 @@ package com.sabkuchfresh.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.retrofit.model.menus.Charges;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 
@@ -55,6 +55,9 @@ public class UserCheckoutResponse{
 	@SerializedName("star_subscription_text")
 	@Expose
 	private String starSubscriptionText;
+	@SerializedName("charges")
+	@Expose
+	private List<Charges> charges = null;
 
 	/**
 	 *
@@ -194,6 +197,14 @@ public class UserCheckoutResponse{
 
 	public void setStarSubscriptionTitle(String starSubscriptionTitle) {
 		this.starSubscriptionTitle = starSubscriptionTitle;
+	}
+
+	public List<Charges> getCharges() {
+		return charges;
+	}
+
+	public void setCharges(List<Charges> charges) {
+		this.charges = charges;
 	}
 
 	public class Subscription {
