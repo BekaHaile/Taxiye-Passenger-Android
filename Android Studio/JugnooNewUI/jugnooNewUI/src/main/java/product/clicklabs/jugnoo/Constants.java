@@ -627,4 +627,7 @@ public interface Constants {
     String KEY_SHOW_TUTORIAL = "show_tutorial";
 
     int OPEN_DEEP_INDEX = 122112;
+
+    String KEY_LIKE_IS_ENABLED = "like_is_enabled";
+    String KEY_SHARE_IS_ENABLED = "share_is_enabled";
 }

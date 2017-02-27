@@ -124,6 +124,16 @@ public class RestaurantReviewsListFragment extends Fragment{
             public String getShareTextOther() {
                 return fetchFeedbackResponse == null ? "" : fetchFeedbackResponse.getShareTextOther();
             }
+
+            @Override
+            public int getShareIsEnabled() {
+                return fetchFeedbackResponse == null ? 1 : fetchFeedbackResponse.getShareIsEnabled();
+            }
+
+            @Override
+            public int getLikeIsEnabled() {
+                return fetchFeedbackResponse == null ? 1 : fetchFeedbackResponse.getLikeIsEnabled();
+            }
         }, restaurantReviews);
         recyclerViewReviews.setAdapter(reviewsAdapter);
         recyclerViewReviews.setEnabled(true);

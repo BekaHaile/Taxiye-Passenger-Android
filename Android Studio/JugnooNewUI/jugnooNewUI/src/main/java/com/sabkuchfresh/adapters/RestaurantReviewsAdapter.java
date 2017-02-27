@@ -131,22 +131,6 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, ContextCompat.getColor(activity, R.color.text_color_light));
 			}
 
-			StringBuilder likeCount = new StringBuilder();
-			StringBuilder shareCount = new StringBuilder();
-			if (review.getLikeCount() > 1) {
-				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.likes));
-			} else {
-				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.like));
-			}
-			if (review.getShareCount() > 1) {
-				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.shares));
-			} else {
-				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.share));
-			}
-			holder.tvLikeShareCount.setText(likeCount.toString() + " | " + shareCount.toString());
-
-			holder.ivFeedEdit.setVisibility(review.getIsEditable() == 1 ? View.VISIBLE : View.GONE);
-
 
 			RelativeLayout.LayoutParams paramsSep = (RelativeLayout.LayoutParams) holder.vSepBelowMessage.getLayoutParams();
 			if (review.getImages() != null && review.getImages().size() > 0) {
@@ -161,7 +145,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 									public void onImageClick(int positionImageClicked, FetchFeedbackResponse.Review review) {
 										try {
 											activity.setCurrentReview(review);
-											ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(positionImageClicked);
+											ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(positionImageClicked, callback.getLikeIsEnabled(), callback.getShareIsEnabled());
 											dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
 										} catch (Exception e) {
 											e.printStackTrace();
@@ -191,7 +175,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 							try {
 								int pos = (int) v.getTag();
 								activity.setCurrentReview(restaurantReviews.get(pos));
-								ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0);
+								ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0, callback.getLikeIsEnabled(), callback.getShareIsEnabled());
 								dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -207,19 +191,52 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			}
 			holder.vSepBelowMessage.setLayoutParams(paramsSep);
 
+
+			StringBuilder likeCount = new StringBuilder();
+			StringBuilder shareCount = new StringBuilder();
+			if (review.getLikeCount() > 1) {
+				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.likes));
+			} else {
+				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.like));
+			}
+			if (review.getShareCount() > 1) {
+				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.shares));
+			} else {
+				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.share));
+			}
+			holder.ivFeedLike.setVisibility(callback.getLikeIsEnabled() == 1 ? View.VISIBLE : View.GONE);
+			holder.ivFeedShare.setVisibility(callback.getShareIsEnabled() == 1 ? View.VISIBLE : View.GONE);
+			if(callback.getLikeIsEnabled() != 1){
+				likeCount.delete(0, likeCount.length());
+			}
+			if(callback.getShareIsEnabled() != 1){
+				shareCount.delete(0, shareCount.length());
+			}
+			String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
+			holder.tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
+			holder.tvLikeShareCount.setVisibility((likeCount.length() == 0 && shareCount.length() == 0) ? View.GONE : View.VISIBLE);
+
 			if(review.getIsLiked() >= 1){
 				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
 			} else {
 				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_normal);
 			}
-
 			if(review.getIsShared() >= 1){
 				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_active);
 			} else {
 				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_normal);
 			}
 
+			holder.ivFeedEdit.setVisibility(review.getIsEditable() == 1 ? View.VISIBLE : View.GONE);
 			holder.ivFeedEdit.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_edit, R.drawable.ic_feed_edit_pressed));
+
+			RelativeLayout.LayoutParams paramsVShadowDown = (RelativeLayout.LayoutParams) holder.vShadowDown.getLayoutParams();
+			if(review.getIsEditable() == 1){
+				paramsVShadowDown.addRule(RelativeLayout.BELOW, holder.ivFeedEdit.getId());
+			} else {
+				paramsVShadowDown.addRule(RelativeLayout.BELOW, holder.tvLikeShareCount.getId());
+			}
+			holder.vShadowDown.setLayoutParams(paramsVShadowDown);
 
 			holder.ivFeedEdit.setTag(position);
 			holder.ivFeedLike.setTag(position);
@@ -343,7 +360,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		public RecyclerView rvFeedImages;
 		public TextView tvLikeShareCount;
 		public ImageView ivFeedImageSingle, ivFeedEdit, ivFeedShare, ivFeedLike;
-		public View vSepBelowMessage;
+		public View vSepBelowMessage, vShadowDown;
 		public RestaurantReviewImagesAdapter imagesAdapter = null;
 
 		public ViewHolderReview(View itemView) {
@@ -366,6 +383,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			ivFeedLike = (ImageView) itemView.findViewById(R.id.ivFeedLike);
 			ivFeedImageSingle = (ImageView) itemView.findViewById(R.id.ivFeedImageSingle);
 			vSepBelowMessage = itemView.findViewById(R.id.vSepBelowMessage);
+			vShadowDown = itemView.findViewById(R.id.vShadowDown);
 		}
 	}
 
@@ -391,6 +409,8 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		int getRestaurantId();
 		String getShareTextSelf();
 		String getShareTextOther();
+		int getShareIsEnabled();
+		int getLikeIsEnabled();
 	}
 
 

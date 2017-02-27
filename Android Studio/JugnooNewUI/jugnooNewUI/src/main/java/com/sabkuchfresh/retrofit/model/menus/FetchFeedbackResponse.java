@@ -34,6 +34,12 @@ public class FetchFeedbackResponse {
 	@SerializedName("share_text_other")
 	@Expose
 	private String shareTextOther;
+	@SerializedName("like_is_enabled")
+	@Expose
+	private Integer likeIsEnabled;
+	@SerializedName("share_is_enabled")
+	@Expose
+	private Integer shareIsEnabled;
 
 
 	public Integer getFlag() {
@@ -98,6 +104,28 @@ public class FetchFeedbackResponse {
 
 	public void setShareTextOther(String shareTextOther) {
 		this.shareTextOther = shareTextOther;
+	}
+
+	public Integer getLikeIsEnabled() {
+		if(likeIsEnabled == null){
+			likeIsEnabled = 1;
+		}
+		return likeIsEnabled;
+	}
+
+	public void setLikeIsEnabled(Integer likeIsEnabled) {
+		this.likeIsEnabled = likeIsEnabled;
+	}
+
+	public Integer getShareIsEnabled() {
+		if(shareIsEnabled == null){
+			shareIsEnabled = 1;
+		}
+		return shareIsEnabled;
+	}
+
+	public void setShareIsEnabled(Integer shareIsEnabled) {
+		this.shareIsEnabled = shareIsEnabled;
 	}
 
 	public class Review {
