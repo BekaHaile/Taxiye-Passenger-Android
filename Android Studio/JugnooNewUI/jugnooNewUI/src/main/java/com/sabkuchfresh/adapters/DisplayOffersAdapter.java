@@ -3,6 +3,7 @@ package com.sabkuchfresh.adapters;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
@@ -32,15 +33,20 @@ import product.clicklabs.jugnoo.utils.Fonts;
  */
 public class DisplayOffersAdapter extends RecyclerView.Adapter<DisplayOffersAdapter.ViewHolderReviewImage> {
 
+
+
+    /*
+    Recycler view is used because there may be multiple promotions in the coming sprint for now only T&C is to be displayed
+     */
     private FreshActivity activity;
     private ArrayList<String> data;
     private boolean displayOnlyTerms;
+    private String TandC;
 
-
-    public DisplayOffersAdapter(FreshActivity activity,boolean displayOnlyTerms) {
+    public DisplayOffersAdapter(FreshActivity activity,boolean displayOnlyTerms,String TandC) {
         this.activity = activity;
         this.displayOnlyTerms=displayOnlyTerms;
-
+        this.TandC = TandC;
     }
 
 
@@ -59,7 +65,8 @@ public class DisplayOffersAdapter extends RecyclerView.Adapter<DisplayOffersAdap
         try {
 
 
-            holder.tvTerms.setText("1. 20% cashback on your first Menus order.\n2. Minimum order size should be Rs 500.\n3. Cashback will be credited to your Jugnoo wallet within 24 hours.");
+//            holder.tvTerms.setText("1. 20% cashback on your first Menus order.\n2. Minimum order size should be Rs 500.\n3. Cashback will be credited to your Jugnoo wallet within 24 hours.");
+            holder.tvTerms.setText(Html.fromHtml(TandC));
 
 
 

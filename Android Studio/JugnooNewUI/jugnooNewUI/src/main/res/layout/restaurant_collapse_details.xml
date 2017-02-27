@@ -55,7 +55,7 @@
 
     <LinearLayout
         android:id="@+id/llCollapseRating"
-        android:minWidth="30dp"
+
         android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,8 +71,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/px_30"
             android:layout_marginRight="@dimen/px_5"
-            android:ellipsize="end"
-            android:maxLines="1"
+
             android:text=""
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_36"

@@ -2,6 +2,7 @@ package com.sabkuchfresh.retrofit.model.menus;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.jugnoo.pay.models.PromotionInfo;
 
 import java.util.List;
 
@@ -37,11 +38,14 @@ public class VendorMenuResponse {
     @Expose
     private List<Charges> charges = null;
 
+    @SerializedName("promotion_info")
+    @Expose
+    private MenusPromotionInfo menusPromotionInfo;
 
 
-
-
-
+    public MenusPromotionInfo getMenusPromotionInfo() {
+        return menusPromotionInfo;
+    }
 
     public Integer getFlag() {
         return flag;
@@ -144,6 +148,21 @@ public class VendorMenuResponse {
             this.minimumOrderAmount = minimumOrderAmount;
         }
 
+    }
+
+    public class MenusPromotionInfo{
+            @SerializedName("promo_text")
+            private String promoText;
+            @SerializedName("promo_tnc")
+            private String promoTC;
+
+        public String getPromoText() {
+            return promoText;
+        }
+
+        public String getPromoTC() {
+            return promoTC;
+        }
     }
 
 }

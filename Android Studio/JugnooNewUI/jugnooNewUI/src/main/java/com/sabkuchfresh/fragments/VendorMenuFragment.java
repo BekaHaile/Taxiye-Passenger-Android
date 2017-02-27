@@ -89,7 +89,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         activity = (FreshActivity) getActivity();
         viewPromoTitle = rootView.findViewById(R.id.layout_offer_title);
         //ifHasAnyOffers
-        setUpPromoDisplayView();
+
 
 
         mBus = (activity).getBus();
@@ -149,7 +149,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         return rootView;
     }
 
-    private void setUpPromoDisplayView() {
+    private void setUpPromoDisplayView(String promoText,String TandC) {
         recyclerViewOffers = (RecyclerView) rootView.findViewById(R.id.recycler_view_offers);
         tvOfferTitle = (TextView)  viewPromoTitle.findViewById(R.id.tv_offer_title);
         View.OnClickListener expandClickListener = new View.OnClickListener() {
@@ -198,13 +198,13 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
         tvOfferTitle.setOnClickListener(expandClickListener);
         viewPromoTitle.findViewById(R.id.ib_arrow).setOnClickListener(expandClickListener);
-        recyclerViewOffers.setAdapter(new DisplayOffersAdapter(activity,true));
+        recyclerViewOffers.setAdapter(new DisplayOffersAdapter(activity,true,TandC));
         recyclerViewOffers.setLayoutManager(new LinearLayoutManager(activity));
-        String heading = "FLAT 20% OFF";
-        String subHeading="ON FIRST ORDER";
+   /*     String heading = "FLAT 20% OFF";
+        String subHeading="ON FIRST ORDER";*/
         viewPromoTitle.setVisibility(View.VISIBLE);
         tvOfferTitle.setVisibility(View.VISIBLE);
-        tvOfferTitle.setText(setUpOfferTitle(heading,null));
+        tvOfferTitle.setText(setUpOfferTitle(promoText,null));
 
 
     }
@@ -318,30 +318,42 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             mainLayout.setVisibility(View.VISIBLE);
             activity.setMenuProductsResponse(productsResponse);
 
-            if (activity.getMenuProductsResponse() != null
-                    && activity.getMenuProductsResponse().getCategories() != null) {
-                tabs.setVisibility(View.VISIBLE);
-                ivShadowAboveTab.setVisibility(View.VISIBLE);
-                ivShadowBelowTab.setVisibility(View.VISIBLE);
+            if (activity.getMenuProductsResponse() != null) {
 
-                activity.updateCartFromSP();
-                activity.updateCartValuesGetTotalPrice();
-                menusCategoryFragmentsAdapter.setCategories(activity.getMenuProductsResponse().getCategories());
-                tabs.setViewPager(viewPager);
-                viewPager.setCurrentItem(Data.tabLinkIndex);
-                Data.tabLinkIndex = 0;
-                tabs.setBackgroundColor(activity.getResources().getColor(R.color.white_light_grey));
-                tabs.notifyDataSetChanged();
+                if(activity.getMenuProductsResponse().getCategories()!=null){
+                    tabs.setVisibility(View.VISIBLE);
+                    ivShadowAboveTab.setVisibility(View.VISIBLE);
+                    ivShadowBelowTab.setVisibility(View.VISIBLE);
 
-                if (activity.updateCart) {
-                    activity.updateCart = false;
-                    activity.openCart();
+                    activity.updateCartFromSP();
+                    activity.updateCartValuesGetTotalPrice();
+                    menusCategoryFragmentsAdapter.setCategories(activity.getMenuProductsResponse().getCategories());
+                    tabs.setViewPager(viewPager);
+                    viewPager.setCurrentItem(Data.tabLinkIndex);
+                    Data.tabLinkIndex = 0;
+                    tabs.setBackgroundColor(activity.getResources().getColor(R.color.white_light_grey));
+                    tabs.notifyDataSetChanged();
+
+                    if (activity.updateCart) {
+                        activity.updateCart = false;
+                        activity.openCart();
+                    }
+                    activity.getBus().post(new SortSelection(activity.menusSort));
+
+
+                    setUpCollapseToolbarData();
                 }
-                activity.getBus().post(new SortSelection(activity.menusSort));
+
+                if(activity.getMenuProductsResponse().getMenusPromotionInfo()!=null)
+                {
+                    setUpPromoDisplayView(activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText(),activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoTC());
+                }
 
 
-                setUpCollapseToolbarData();
+
             }
+
+
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -364,7 +376,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 activity.tvCollapRestaurantRating.setVisibility(View.GONE);
             }
 
-
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) activity.tvCollapRestaurantName.getLayoutParams();
+            layoutParams.weight=1;
+            activity.tvCollapRestaurantName.setLayoutParams(layoutParams);
+            activity.tvCollapRestaurantName.requestLayout();
             activity.ivCollapseRestImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

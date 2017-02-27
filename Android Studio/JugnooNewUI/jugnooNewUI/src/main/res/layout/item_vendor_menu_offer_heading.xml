@@ -13,7 +13,7 @@
         android:gravity="center|left"
         android:layout_alignParentLeft="true"
         android:layout_width="wrap_content"
-        android:minHeight="40dp"
+        android:minHeight="42dp"
         android:text="Flat 20% Off\nON FIRST ORDER"
         android:paddingRight="30px"
         android:textSize="30px"
@@ -27,8 +27,8 @@
     <ImageButton
         android:paddingLeft="20px"
         android:paddingRight="36px"
+        android:layout_marginTop="22px"
         android:layout_alignTop="@id/tv_offer_title"
-        android:layout_alignBottom="@id/tv_offer_title"
         android:src="@drawable/ic_back_pay_pressed"
         android:id="@id/ib_arrow"
         android:rotation="-90"
