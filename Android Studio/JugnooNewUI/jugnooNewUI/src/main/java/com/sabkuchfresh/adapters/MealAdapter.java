@@ -298,10 +298,10 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 try {
                     if (subItem.getSubItemImage() != null && !"".equalsIgnoreCase(subItem.getSubItemImage())) {
                         Picasso.with(activity).load(subItem.getSubItemImage())
-                                .placeholder(R.drawable.ic_meal_place_holder)
+                                .placeholder(R.drawable.ic_fresh_new_placeholder)
                                 .fit()
                                 .centerCrop()
-                                .error(R.drawable.ic_meal_place_holder)
+                                .error(R.drawable.ic_fresh_new_placeholder)
                                 .into(mHolder.imageViewMmeals);
                     } else {
                         throw new Exception();
@@ -309,11 +309,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Picasso.with(activity).load(R.drawable.ic_meal_place_holder)
-                            .placeholder(R.drawable.ic_meal_place_holder)
+                    Picasso.with(activity).load(R.drawable.ic_fresh_new_placeholder)
+                            .placeholder(R.drawable.ic_fresh_new_placeholder)
                             .fit()
                             .centerCrop()
-                            .error(R.drawable.ic_meal_place_holder)
+                            .error(R.drawable.ic_fresh_new_placeholder)
                             .into(mHolder.imageViewMmeals);
                 }
             } else if (holder instanceof ViewTitleHolder) {

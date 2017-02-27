@@ -181,13 +181,13 @@
             <ImageView
                 android:id="@+id/imageViewProductType"
                 android:layout_width="50px"
-                android:layout_height="42px"
+                android:layout_height="50px"
                 android:layout_above="@+id/viewExtra"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="right"
-                android:layout_marginBottom="20px"
-                android:layout_marginRight="30px"
-                android:src="@drawable/ic_history_auto"
+                android:layout_marginBottom="16px"
+                android:layout_marginRight="20px"
+                android:src="@drawable/ic_auto_grey"
                 android:tag="mwar" />
 
 

@@ -478,17 +478,17 @@
                                     android:layout_marginLeft="30px" />
 
                                 <ImageView
-                                    android:layout_width="47px"
-                                    android:layout_height="47px"
-                                    android:layout_marginLeft="24px"
-                                    android:src="@drawable/ic_fab_pay"
+                                    android:layout_width="45px"
+                                    android:layout_height="45px"
+                                    android:layout_marginLeft="23px"
+                                    android:src="@drawable/ic_pay_grey"
                                     android:tag="mwar" />
 
                                 <TextView
                                     android:id="@+id/textViewJugnooPay"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="16px"
+                                    android:layout_marginLeft="14px"
                                     android:text="@string/jugnoo_pay"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34" />

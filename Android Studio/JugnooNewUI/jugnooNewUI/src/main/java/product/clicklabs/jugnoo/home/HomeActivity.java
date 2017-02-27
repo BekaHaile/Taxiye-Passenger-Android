@@ -2822,7 +2822,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if(Data.autoData.getEndRideData().getIsPooled() == 1){
                             ivEndRideType.setImageResource(R.drawable.ic_history_pool);
                         } else{
-                            ivEndRideType.setImageResource(R.drawable.ic_support_auto_big);
+                            ivEndRideType.setImageResource(R.drawable.ic_auto_grey);
                         }
 
                         linearLayoutRideSummary.setLayoutTransition(null);

@@ -178,8 +178,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="90px"
-                android:layout_height="81px"
+                android:layout_width="53px"
+                android:layout_height="53px"
                 android:layout_marginLeft="110px"
                 android:src="@drawable/ic_menu_category_auto_selector"
                 android:tag="mwar"
@@ -207,8 +207,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="90px"
-                android:layout_height="81px"
+                android:layout_width="53px"
+                android:layout_height="53px"
                 android:layout_marginLeft="110px"
                 android:src="@drawable/ic_menu_category_meals_selector"
                 android:tag="mwar"/>
@@ -234,10 +234,9 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="61px"
-                android:layout_height="61px"
-                android:layout_marginLeft="122px"
-                android:layout_marginRight="18px"
+                android:layout_width="53px"
+                android:layout_height="53px"
+                android:layout_marginLeft="110px"
                 android:src="@drawable/ic_menu_category_fresh_selector"
                 android:tag="mwar"/>
 
@@ -262,8 +261,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="90px"
-                android:layout_height="81px"
+                android:layout_width="53px"
+                android:layout_height="53px"
                 android:layout_marginLeft="110px"
                 android:src="@drawable/ic_menu_category_grocery_selector"
                 android:tag="mwar"/>
@@ -290,10 +289,9 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="32px"
-                android:layout_height="36px"
-                android:layout_marginLeft="140px"
-                android:layout_marginRight="30px"
+                android:layout_width="53px"
+                android:layout_height="53px"
+                android:layout_marginLeft="110px"
                 android:src="@drawable/ic_menu_category_menus_selector"
                 android:tag="mwar"
                 android:layout_gravity="center_vertical"
@@ -320,10 +318,9 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="32px"
-                android:layout_height="36px"
-                android:layout_marginLeft="140px"
-                android:layout_marginRight="30px"
+                android:layout_width="53px"
+                android:layout_height="53px"
+                android:layout_marginLeft="110px"
                 android:src="@drawable/ic_menu_category_pay_selector"
                 android:tag="mwar"
                 android:layout_gravity="center_vertical"
@@ -342,34 +339,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayoutSubDelivery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            >
-
-            <ImageView
-                android:layout_width="90px"
-                android:layout_height="81px"
-                android:layout_marginLeft="110px"
-                android:src="@drawable/ic_menu_category_delivery_selector"
-                android:tag="mwar"/>
-
-            <TextView
-                android:id="@+id/textViewDelivery"
-                android:layout_width="match_parent"
-                android:layout_height="81px"
-                android:layout_centerVertical="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/menu_text_margin_offerings"
-                android:text="Delivery"
-                android:textColor="@color/text_color_white_theme_selector"
-                android:textSize="@dimen/text_size_38"/>
-
-        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

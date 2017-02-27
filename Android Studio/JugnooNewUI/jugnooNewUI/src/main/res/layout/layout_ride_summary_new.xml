@@ -47,10 +47,10 @@
                 >
                 <ImageView
                     android:id="@+id/ivEndRideType"
-                    android:layout_width="49px"
-                    android:layout_height="36px"
+                    android:layout_width="60px"
+                    android:layout_height="60px"
                     android:tag="mwar"
-                    android:src="@drawable/ic_support_auto_big"
+                    android:src="@drawable/ic_auto_grey"
                     android:layout_gravity="center_vertical"
 
                     />
@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/thanks_for_riding_with_jugnoo"
                     android:textSize="@dimen/text_size_36"
-                    android:layout_marginLeft="20px"
+                    android:layout_marginLeft="15px"
                     android:textColor="@color/text_color"/>
 
             </LinearLayout>
