@@ -636,6 +636,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                                     intent1.putExtra(Constants.KEY_FLAG, flag);
                                     LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
                                 }
+                            } else if (Constants.OPEN_DEEP_INDEX == flag) {
+                                deepLinkAction.openDeepLink(menuBar);
                             }
                         }
                     } catch (Exception e) {
