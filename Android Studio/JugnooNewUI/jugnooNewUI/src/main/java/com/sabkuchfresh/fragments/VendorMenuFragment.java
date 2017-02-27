@@ -21,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.DisplayOffersAdapter;
@@ -168,7 +169,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 
 
-//                    ibArrow.animate().rotationBy(-180).setDuration(200).start();
+                    ibArrow.animate().rotationBy(-180).translationYBy(-10).setDuration(200).start();
+
 
                 } else{
 
@@ -178,7 +180,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     recyclerViewOffers.setVisibility(View.VISIBLE);
                     recyclerViewOffers.startAnimation(starOpenAnim);
 
-//                    ibArrow.animate().rotationBy(180).setDuration(200).start();
+                    ibArrow.animate().rotationBy(180).translationYBy(10).setDuration(200).start();
                 }
 
                 if(handler ==null){

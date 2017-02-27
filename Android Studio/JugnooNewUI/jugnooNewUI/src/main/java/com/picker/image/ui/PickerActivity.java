@@ -99,7 +99,7 @@ public class PickerActivity extends AppCompatActivity {
         toolbarTitle=(TextView)findViewById(R.id.toolbar_title);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.root_layout);
         recyclerViewSelectedImages =(RecyclerView)findViewById(R.id.selected_images) ;
-//        setUpRecycler();
+       setUpRecycler();
         findViewById(R.id.imageViewBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,7 +261,7 @@ public class PickerActivity extends AppCompatActivity {
 
 
         if (sCheckedImages != null && sCheckedImages.size() >= mPickOptions.limit) {
-            Snackbar.make(coordinatorLayout, "You cannot select more than "+ mPickOptions.limit  +" images", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            Snackbar.make(coordinatorLayout, "You cannot select more than "+ mPickOptions.limit  +" image(s)", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             return;
         }
 
@@ -435,7 +435,7 @@ public class PickerActivity extends AppCompatActivity {
             imageEntry.isPicked = true;
             sCheckedImages.add(imageEntry);
         } else {
-            Snackbar.make(coordinatorLayout, "You cannot select more than "+ mPickOptions.limit  +" images", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            Snackbar.make(coordinatorLayout, "You cannot select more than "+ mPickOptions.limit  +" image(s)", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 //            Toast.makeText(this, R.string.you_cant_check_more_images, Toast.LENGTH_SHORT).show();
             Log.i("onPickImage", "You can't check more images");
         }
@@ -568,7 +568,7 @@ public class PickerActivity extends AppCompatActivity {
 
         updateFab();
         updateCount();
-//        updateRecycler();
+        updateRecycler();
 
     }
 
@@ -582,7 +582,7 @@ public class PickerActivity extends AppCompatActivity {
         updateCount();
         updateFab();
         hideDeselectAll();
-//        updateRecycler();
+       updateRecycler();
     }
 
     public void onEvent(final Events.OnChangingDisplayedImageEvent newImageEvent) {
@@ -606,7 +606,8 @@ public class PickerActivity extends AppCompatActivity {
     private   ArrayList<Object> images = new ArrayList<>();
     private    DisplaySelectedImagesAdapter displaySelectedImagesAdapter;
     private void setUpRecycler(){
-
+        images.clear();
+        images.addAll(sCheckedImages);
         displaySelectedImagesAdapter = new DisplaySelectedImagesAdapter(this, images, new DisplaySelectedImagesAdapter.Callback() {
             @Override
             public void onImageClick(Object object) {
@@ -632,6 +633,8 @@ public class PickerActivity extends AppCompatActivity {
         else
             recyclerViewSelectedImages.setVisibility(View.VISIBLE);
 
+        if(images.size()>0)
+          recyclerViewSelectedImages.smoothScrollToPosition(images.size());
 
     }
 

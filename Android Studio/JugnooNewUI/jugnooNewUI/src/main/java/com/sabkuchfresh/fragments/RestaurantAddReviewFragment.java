@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -92,7 +93,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
     private TextView tvCharCount;
     private  int etReviewMaxLength;
     private View ibAccessCamera;
-    private View scrollView;
+    private ScrollView scrollView;
     private String[] permissionsRequest;
     private int MAX_NO_IMAGES = 5;
 
@@ -119,7 +120,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
-        scrollView =rootView.findViewById(R.id.scroll_view);
+        scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
         try {
             if (rlRoot != null) {
@@ -273,6 +274,8 @@ public class RestaurantAddReviewFragment extends Fragment  {
                             if (images != null && images.size() != 0) {
                                 objectList.addAll(images);
                                 setUpAdapter(objectList);
+                                scrollView.fullScroll(View.FOCUS_DOWN);
+
 
                             }
                         }
@@ -411,7 +414,8 @@ public class RestaurantAddReviewFragment extends Fragment  {
       ibAccessCamera.setEnabled(objectList.size()<5);
         updateSubmitButtonStatus();
 
-
+    if(objectList.size()>0)
+        displayImagesRecycler.smoothScrollToPosition(objectList.size());
 
 
     }
