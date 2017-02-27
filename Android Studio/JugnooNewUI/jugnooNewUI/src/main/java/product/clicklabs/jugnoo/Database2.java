@@ -685,7 +685,6 @@ public class Database2 {                                                        
                 insertSupportData(category, jsonArray.toString());
             }
         } catch(Exception e){
-            e.printStackTrace();
         }
     }
 

@@ -654,7 +654,14 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         public void onWalletAdd(PaymentOption paymentOption) {
             activity.setPaymentOption(paymentOption);
         }
+
+        @Override
+        public String getAmountToPrefill() {
+            return dfNoDecimal.format(Math.ceil(payableAmount()));
+        }
     };
+
+    private DecimalFormat dfNoDecimal = new DecimalFormat("#");
 
 
     @Override

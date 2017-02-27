@@ -2421,6 +2421,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     public boolean checkForMinus(int position, SubItem subItem) {
         if (isMealAddonItemsAvailable()) {
+            updateCartFromSPFMG(null);
             boolean addOnAdded = false;
             boolean itemIsAddon = false;
             for (SubItem si : getProductsResponse().getCategories().get(1).getSubItems()) {
