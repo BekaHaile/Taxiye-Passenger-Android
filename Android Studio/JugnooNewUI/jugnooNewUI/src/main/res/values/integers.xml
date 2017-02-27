@@ -2,4 +2,6 @@
 <resources>
     <integer name="num_columns_images">3</integer>
     <integer name="num_columns_albums">2</integer>
+    <integer name="anim_time_star">400</integer>
+    <integer name="anim_time_promo_recycler">400</integer>
 </resources>

@@ -33,18 +33,7 @@
         android:visibility="gone" />
 
 
-    <TextView
-        android:id="@+id/tv_rest_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/tvCollapRestaurantDeliveryTime"
-        android:layout_marginLeft="@dimen/px_30"
-        android:layout_marginRight="@dimen/px_30"
-        android:text="Resta"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_36"
-        android:layout_toLeftOf="@+id/llCollapseRating"
-        app:font="avenir" />
+
 
 
     <TextView
@@ -60,33 +49,44 @@
         android:text=""
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_22"
-        android:layout_toLeftOf="@+id/llCollapseRating"
         android:layout_alignParentLeft="true"
         app:font="maven" />
 
 
     <LinearLayout
         android:id="@+id/llCollapseRating"
+
+        android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentRight="true"
-        android:layout_alignBottom="@id/tvCollapRestaurantDeliveryTime"
+        android:orientation="horizontal"
+        android:layout_above="@+id/tvCollapRestaurantDeliveryTime"
         android:layout_marginRight="@dimen/px_20"
         android:layout_marginBottom="-10px"
-        android:visibility="visible"
-        >
+        android:visibility="visible">
+        <TextView
+            android:id="@+id/tv_rest_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/px_30"
+            android:layout_marginRight="@dimen/px_5"
+
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_36"
+            app:font="avenir" />
         <!--android:background="?attr/selectableItemBackground"-->
         <TextView
             android:id="@+id/tvCollapRestaurantRating"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/px_40"
-            android:background="@drawable/capsule_text_color"
+            android:background="@drawable/capsule_text_color_vendor_menu"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/px_15"
             android:paddingRight="@dimen/px_15"
             android:layout_margin="@dimen/px_10"
-            android:text="5.6"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_20"
             android:visibility="visible"

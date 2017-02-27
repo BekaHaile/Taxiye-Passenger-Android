@@ -3329,7 +3329,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public TextView tvCollapRestaurantName;
     public TextView tvCollapRestaurantRating, tvCollapRestaurantDeliveryTime;
     private RelativeLayout rlCollapseDetails;
-    private LinearLayout llCartContainer, llCollapseRating;
+    private LinearLayout llCartContainer;
+    public LinearLayout llCollapseRating;
     private LinearLayout llToolbarLayout;
     public ImageView ivCollapseRestImage;
     private int currentVerticalOffSet;
@@ -3373,11 +3374,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                     }
                     topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha2);
-
+/*
                     if (!topBar.llCartContainer.isSelected())
                         topBar.llCartContainer.setSelected(true);
 
-                    topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha2);
+                    topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha2);*/
                     topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.argb((int) searchAndCapsuleAlpha2, 255, 255, 255), PorterDuff.Mode.SRC_ATOP);
                 } else {
 
@@ -3390,11 +3391,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                     }
 
-                    topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha1);
-                    if (topBar.llCartContainer.isSelected())
+                   topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha1);
+                   /*  if (topBar.llCartContainer.isSelected())
                         topBar.llCartContainer.setSelected(false);
 
-                    topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha1);
+                    topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha1);*/
                     topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.argb((int) searchAndCapsuleAlpha1, 89, 89, 104), PorterDuff.Mode.SRC_ATOP);
 
                 }
@@ -3447,12 +3448,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         topBar.getLlSearchCart().setLayoutTransition(layoutTransition);*/
 
 
-        llCollapseRating.setOnClickListener(new View.OnClickListener() {
+       /* llCollapseRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openRestaurantReviewsListFragment();
             }
-        });
+        });*/
 
     }
 
@@ -3467,8 +3468,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.title.setVisibility(View.INVISIBLE);
 
                 //Cart and Search Button
-                llCartContainer.getBackground().setAlpha(255);
-                llCartContainer.setSelected(true);
+              /*  llCartContainer.getBackground().setAlpha(255);
+                llCartContainer.setSelected(true);*/
                 topBar.getIvSearch().setSelected(true);
                 topBar.getIvSearch().setAlpha(255);
 
@@ -3495,8 +3496,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
 
                 //Cart and Search Button
-                llCartContainer.getBackground().setAlpha(255);
-                llCartContainer.setSelected(false);
+              /*  llCartContainer.getBackground().setAlpha(255);
+                llCartContainer.setSelected(false);*/
                 topBar.getIvSearch().setSelected(false);
                 topBar.getIvSearch().setAlpha(255);
 
@@ -3565,20 +3566,19 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         return fabViewTest;
     }
 
-    public int setRatingAndGetColor(TextView tv, Double rating, String colorCode) {
+    public int setRatingAndGetColor(TextView tv, Double rating, String colorCode, boolean setBackgroundColor) {
         Spannable spannable = new SpannableString(getString(R.string.star_icon) + " " + rating);
         Typeface star = Typeface.createFromAsset(getAssets(), "fonts/icomoon.ttf");
         spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv.setText(spannable);
         int ratingColor;
-        if (colorCode != null
-                && colorCode.startsWith("#")
-                && colorCode.length() == 7)
-            ratingColor = Color.parseColor(colorCode);
+        if (colorCode != null && colorCode.startsWith("#") && colorCode.length() == 7) ratingColor = Color.parseColor(colorCode);
         else
-            ratingColor = Color.parseColor("#8dd061"); //default Green Color
+            ratingColor = Color.GREEN; //default Green Color
 
-        setTextViewBackgroundDrawableColor(tv, ratingColor);
+        if (setBackgroundColor) {
+            setTextViewBackgroundDrawableColor(tv, ratingColor);
+        }
 
         return ratingColor;
     }

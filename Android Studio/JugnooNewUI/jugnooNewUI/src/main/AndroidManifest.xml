@@ -467,7 +467,8 @@
 
         </activity>
 
-        <activity android:name="com.picker.image.ui.PickerActivity"  android:theme="@style/AppThemePicker.NoActionBar" />
+        <activity android:name="com.picker.image.ui.PickerActivity"  android:theme="@style/AppThemePicker.NoActionBar"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name="com.picker.image.util.OfflineSpiceService"
