@@ -2507,7 +2507,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         if (appType == AppConstant.ApplicationType.MENUS && getVendorOpened() != null) {
             if (canExitVendorMenu()){
                 FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_CART_BUTTON, Events.MENU_CART_VIEW);
-                getTransactionUtils().openMenusCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+//                getTransactionUtils().openMenusCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+                getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
             }
 
         } else {
@@ -3638,6 +3639,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             handler = new Handler();
         }
         return handler;
+    }
+
+    public double getTotalPrice(){
+        return totalPrice;
     }
 
 }

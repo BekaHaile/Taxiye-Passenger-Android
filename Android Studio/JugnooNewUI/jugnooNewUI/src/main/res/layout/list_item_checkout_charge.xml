@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rlRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="82px"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="0px"
+        android:gravity="center_vertical"
+        android:text="@string/sub_total"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_30"
+        app:font="maven"
+        />
+
+
+    <TextView
+        android:id="@+id/tvValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="0px"
+        android:gravity="center_vertical"
+        android:text="@string/rupee_0"
+        android:textAllCaps="true"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_36"
+        app:font="maven"
+        />
+
+    <View
+        android:id="@+id/vSep"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="0px"
+        android:layout_marginRight="0px"
+        android:background="@color/stroke_color_light"
+        />
+
+</RelativeLayout>
