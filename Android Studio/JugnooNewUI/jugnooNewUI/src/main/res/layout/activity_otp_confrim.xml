@@ -7,31 +7,10 @@
     android:background="@color/white"
     android:splitMotionEvents="false">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/px_160"
-        android:src="@drawable/bg_top_2"
-        android:tag="mwar" />
-
-    <RelativeLayout
-        android:id="@+id/topRl"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/top_bar_height"
-        android:background="@color/transparent"
-        android:splitMotionEvents="false">
-
-        <ImageView
-            android:id="@+id/imageViewBack"
-            style="@style/back_image" />
-
-    </RelativeLayout>
-
-
     <include
         layout="@layout/layout_otp_screen"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/topRl"/>
+        android:layout_height="match_parent"/>
 
     <RelativeLayout
         android:id="@+id/rlProgress"
@@ -73,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black_60"
-        android:visibility="visible">
+        android:visibility="gone">
 
 
             <LinearLayout
@@ -162,6 +141,21 @@
                     android:textSize="@dimen/text_size_32" />
 
         </LinearLayout>
+
+    </RelativeLayout>
+
+    <include layout="@layout/layout_splash_login_after_otp"/>
+
+    <RelativeLayout
+        android:id="@+id/topRl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@color/transparent"
+        android:splitMotionEvents="false">
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            style="@style/back_image" />
 
     </RelativeLayout>
 

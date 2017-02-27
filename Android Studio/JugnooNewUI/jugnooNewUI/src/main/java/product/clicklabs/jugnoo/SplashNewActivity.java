@@ -851,6 +851,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					}
 				}
 			});
+
 			textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -2033,7 +2034,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 //						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					}
 				}
-				else if(State.SIGNUP == state){ //else if(State.LOGIN == state || State.SIGNUP == state){
+				else if(State.LOGIN == state || State.SIGNUP == state){ //else if(State.SIGNUP == state){ //
 					if(SplashNewActivity.this.hasWindowFocus() && loginDataFetched){
 						Map<String, String> articleParams = new HashMap<String, String>();
 						articleParams.put("username", Data.userData.userName);
@@ -2380,7 +2381,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			RestClient.getApiService().generateLoginOtp(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
-					DialogPopup.dismissLoadingDialog();
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 					Log.i(TAG, "generateLoginOtp response = " + responseStr);
 					try {
@@ -2409,6 +2409,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								DialogPopup.dismissLoadingDialog();
 								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									DialogPopup.showLoadingDialog(activity, "Loading...");
