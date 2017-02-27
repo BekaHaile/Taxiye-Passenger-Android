@@ -416,6 +416,13 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 }
             });
 
+            if(savedInstanceState!=null)
+            {
+                FragmentManager fm = getSupportFragmentManager();
+                for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                    fm.popBackStack();
+                }
+            }
 
             try {
                 float marginBottom = 40f;
@@ -1472,6 +1479,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             }
         }
     }
+
+
 
     public void orderComplete() {
         clearAllCartAtOrderComplete();
