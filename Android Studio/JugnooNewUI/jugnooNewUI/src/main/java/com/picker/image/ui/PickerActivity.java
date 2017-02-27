@@ -107,7 +107,7 @@ public class PickerActivity extends AppCompatActivity {
             }
         });
         tvImageCount = (TextView) findViewById(R.id.tv_count);
-        tvImageCount.setText("0");
+        updateCount();
         addToolbarToLayout();
         initActionbar(savedInstanceState);
         setupAlbums(savedInstanceState);
@@ -117,12 +117,16 @@ public class PickerActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString("photoPath",mCurrentPhotoPath);
         outState.putString(KEY_ACTION_BAR_TITLE, toolbarTitle.getText().toString());
         outState.putBoolean(KEY_SHOULD_SHOW_ACTIONBAR_UP, mShouldShowUp);
     }
 
-
-
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCurrentPhotoPath = savedInstanceState.getString("photoPath",null);
+    }
 
     @Override
     protected void onStart() {

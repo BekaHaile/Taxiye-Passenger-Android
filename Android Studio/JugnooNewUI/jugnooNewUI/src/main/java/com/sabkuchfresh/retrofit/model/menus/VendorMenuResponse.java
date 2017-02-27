@@ -151,9 +151,9 @@ public class VendorMenuResponse {
     }
 
     public class MenusPromotionInfo{
-            @SerializedName("promo_text")
+            @SerializedName("promotion_text")
             private String promoText;
-            @SerializedName("promo_tnc")
+            @SerializedName("promotion_tnc")
             private String promoTC;
 
         public String getPromoText() {

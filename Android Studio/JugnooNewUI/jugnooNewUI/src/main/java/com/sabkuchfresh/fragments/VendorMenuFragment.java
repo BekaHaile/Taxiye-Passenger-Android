@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -152,6 +153,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private void setUpPromoDisplayView(String promoText,String TandC) {
         recyclerViewOffers = (RecyclerView) rootView.findViewById(R.id.recycler_view_offers);
         tvOfferTitle = (TextView)  viewPromoTitle.findViewById(R.id.tv_offer_title);
+        final ImageButton ibArrow = (ImageButton) viewPromoTitle.findViewById(R.id.ib_arrow);
         View.OnClickListener expandClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,6 +166,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     recyclerViewOffers.setVisibility(View.GONE);
                     recyclerViewOffers.startAnimation(starCloseAnim);
 
+
+
+//                    ibArrow.animate().rotationBy(-180).setDuration(200).start();
+
                 } else{
 
                     if(starOpenAnim ==null) {
@@ -172,6 +178,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     recyclerViewOffers.setVisibility(View.VISIBLE);
                     recyclerViewOffers.startAnimation(starOpenAnim);
 
+//                    ibArrow.animate().rotationBy(180).setDuration(200).start();
                 }
 
                 if(handler ==null){
@@ -197,7 +204,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         };
 
         tvOfferTitle.setOnClickListener(expandClickListener);
-        viewPromoTitle.findViewById(R.id.ib_arrow).setOnClickListener(expandClickListener);
+        ibArrow.setOnClickListener(expandClickListener);
         recyclerViewOffers.setAdapter(new DisplayOffersAdapter(activity,true,TandC));
         recyclerViewOffers.setLayoutManager(new LinearLayoutManager(activity));
    /*     String heading = "FLAT 20% OFF";
@@ -344,7 +351,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     setUpCollapseToolbarData();
                 }
 
-                if(activity.getMenuProductsResponse().getMenusPromotionInfo()!=null)
+                if(activity.getMenuProductsResponse().getMenusPromotionInfo()!=null && activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText()!=null)
                 {
                     setUpPromoDisplayView(activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText(),activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoTC());
                 }

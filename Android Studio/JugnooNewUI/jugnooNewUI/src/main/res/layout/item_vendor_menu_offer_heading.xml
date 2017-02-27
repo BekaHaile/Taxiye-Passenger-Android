@@ -14,7 +14,7 @@
         android:layout_alignParentLeft="true"
         android:layout_width="wrap_content"
         android:minHeight="42dp"
-        android:text="Flat 20% Off\nON FIRST ORDER"
+
         android:paddingRight="30px"
         android:textSize="30px"
         android:paddingLeft="36px"
@@ -27,7 +27,7 @@
     <ImageButton
         android:paddingLeft="20px"
         android:paddingRight="36px"
-        android:layout_marginTop="22px"
+        android:layout_marginTop="20px"
         android:layout_alignTop="@id/tv_offer_title"
         android:src="@drawable/ic_back_pay_pressed"
         android:id="@id/ib_arrow"
@@ -51,7 +51,6 @@
         android:layout_below="@id/divider"
         android:layout_alignParentLeft="true"
         android:layout_width="match_parent"
-        android:text="1. 20% cashback on your first Menus order.\n2. Minimum order size should be Rs 500.\n3. Cashback will be credited to your Jugnoo wallet within 24 hours."
         android:paddingLeft="20px"
         app:font="maven"
         android:visibility="gone"
