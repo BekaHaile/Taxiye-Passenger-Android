@@ -1890,6 +1890,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             } else {
                 linearLayoutOffers.setVisibility(View.GONE);
             }
+            for(PromoCoupon promoCoupon : promoCoupons){
+                if(promoCoupon.getIsSelected() == 1){
+                    activity.setSelectedPromoCoupon(promoCoupon);
+                    break;
+                }
+            }
             promoCouponsAdapter.setList(promoCoupons);
         }
     }
