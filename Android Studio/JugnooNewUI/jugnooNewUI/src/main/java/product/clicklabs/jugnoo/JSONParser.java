@@ -225,6 +225,7 @@ public class JSONParser implements Constants {
         int showSubscriptionData = userData.optInt(SHOW_SUBSCRIPTION_DATA, 0);
         int showJeanieHelpText = userData.optInt(KEY_SHOW_JEANIE_HELP_TEXT, 0);
         int showOfferDialog = userData.optInt(KEY_SHOW_OFFER_DIALOG, 1);
+        int showTutorial = userData.optInt(KEY_SHOW_TUTORIAL, 0);
 
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
@@ -241,7 +242,7 @@ public class JSONParser implements Constants {
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled,
                 inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
-                showOfferDialog);
+                showOfferDialog, showTutorial);
 
         Data.userData.setSubscriptionData(loginUserData.getSubscriptionData());
 

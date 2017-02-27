@@ -299,6 +299,14 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             menuBar = new MenuBar(this, drawerLayout);
             topBar = new TopBar(this, drawerLayout);
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(fabViewTest != null) {
+                        fabViewTest.showTutorial();
+                    }
+                }
+            }, 1000);
 
             topBar.etSearch.addTextChangedListener(textWatcher);
 
