@@ -115,6 +115,17 @@
                 android:layout_gravity="center_horizontal"
                 android:src="@color/stroke_light_grey" />
 
+            <LinearLayout
+                android:id="@+id/llOTP"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px_100"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:visibility="gone">
+
+                <include layout="@layout/layout_otp_edittext"/>
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -126,6 +137,7 @@
                 android:textSize="@dimen/text_size_34"
                 android:textStyle="bold"
                 app:font="maven" />
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -202,43 +214,41 @@
                     android:textSize="@dimen/text_size_28"
                     android:visibility="gone" />
 
+            </LinearLayout>
 
-                <!-- Missed call Button -->
-                <LinearLayout
-                    android:id="@+id/linearLayoutGiveAMissedCall"
-                    android:layout_width="460px"
-                    android:layout_height="@dimen/px_94"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="25px"
-                    android:background="@drawable/capsule_login_button_selector"
+            <!-- Missed call Button -->
+            <LinearLayout
+                android:id="@+id/linearLayoutGiveAMissedCall"
+                android:layout_width="460px"
+                android:layout_height="@dimen/px_94"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25px"
+                android:background="@drawable/capsule_login_button_selector"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="37px"
+                    android:layout_height="34px"
+                    android:layout_marginRight="16px"
+                    android:src="@drawable/ic_otp_missed_call"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewGiveAMissedCall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="37px"
-                        android:layout_height="34px"
-                        android:layout_marginRight="16px"
-                        android:src="@drawable/ic_otp_missed_call"
-                        android:tag="mwar" />
-
-                    <TextView
-                        android:id="@+id/textViewGiveAMissedCall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/nl_otp_give_missed_call"
-                        android:textColor="@color/text_color_light_selector"
-                        android:textSize="@dimen/text_size_30" />
-                </LinearLayout>
-
-
+                    android:text="@string/nl_otp_give_missed_call"
+                    android:textColor="@color/text_color_light_selector"
+                    android:textSize="@dimen/text_size_30" />
             </LinearLayout>
 
             <!-- Password Login -->
             <LinearLayout
                 android:id="@+id/llPasswordLogin"
                 android:layout_width="460px"
-                android:layout_height="@dimen/px_94"
+                android:layout_height="@dimen/px_96"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="25px"
                 android:background="@drawable/capsule_login_button_selector"

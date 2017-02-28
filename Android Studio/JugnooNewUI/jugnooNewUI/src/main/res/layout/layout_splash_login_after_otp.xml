@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
 
     <RelativeLayout
@@ -120,12 +120,12 @@
                         android:src="@drawable/ic_password"
                         android:tag="mhar" />
 
-                    <AutoCompleteTextView
+                    <EditText
                         android:id="@+id/etPasswordNew"
                         android:layout_width="match_parent"
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
+                        android:layout_marginLeft="22px"
                         android:layout_toLeftOf="@+id/textViewPasswordRequired"
                         android:layout_toRightOf="@+id/imageViewPassword"
                         android:background="#0000"

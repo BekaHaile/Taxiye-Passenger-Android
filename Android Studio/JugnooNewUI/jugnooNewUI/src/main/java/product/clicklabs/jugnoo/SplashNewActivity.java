@@ -2417,12 +2417,14 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 //									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 //											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									signUpBy = "email";
+									Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER, jObj.optString("knowlarity_missed_call_number", ""));
 									Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 									intent.putExtra("show_timer", 1);
 									//intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
 									intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
 									intent.putExtra("signup_by", signUpBy);
 									intent.putExtra("email", editTextEmail.getText().toString().trim());
+									intent.putExtra("otp_length", jObj.optString("otp_length", String.valueOf(4)));
 									startActivity(intent);
 									finish();
 									overridePendingTransition(R.anim.right_in, R.anim.right_out);

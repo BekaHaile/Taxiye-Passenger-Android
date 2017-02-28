@@ -77,7 +77,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 	ImageView imageViewYellowLoadingBar, imageViewWalletIcon, ivResend;
 
 	Button buttonVerify, buttonOtpViaCall;
-	LinearLayout linearLayoutOtherOptions, linearLayoutGiveAMissedCall, llPasswordLogin;
+	LinearLayout linearLayoutOtherOptions, linearLayoutGiveAMissedCall, llPasswordLogin, llOTP;
 	private Animation tweenAnimation;
 
 	RelativeLayout relative, rlOTPTimer;
@@ -104,7 +104,9 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 	private TextView tvProgress;
 	private boolean onlyDigits, openHomeSwitcher = false;
 	public static boolean phoneNoLogin = false;
-	int duration = 500;
+	int duration = 500, otpLength = 4;
+	private EditText etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6;
+	private View view1, view2, view3, view4, view5;
 
 	@Override
 	protected void onStart() {
@@ -143,6 +145,10 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
                 signupBy = getIntent().getStringExtra("signup_by");
                 email = getIntent().getStringExtra("email");
                 password = getIntent().getStringExtra("password");
+				if(getIntent().hasExtra("otp_length")){
+					otpLength = Integer.parseInt(getIntent().getStringExtra("otp_length"));
+				}
+
 
                 if(email.length() > 0){
                     onlyDigits = Utils.checkIfOnlyDigits(email);
@@ -201,8 +207,39 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 		etPasswordNew = (EditText) findViewById(R.id.etPasswordNew);
 		bEmailLoginNew = (Button) findViewById(R.id.bEmailLoginNew);
 
+		etOtp1 = (EditText) findViewById(R.id.etOtp1);
+		etOtp2 = (EditText) findViewById(R.id.etOtp2);
+		etOtp3 = (EditText) findViewById(R.id.etOtp3);
+		etOtp4 = (EditText) findViewById(R.id.etOtp4);
+		etOtp5 = (EditText) findViewById(R.id.etOtp5);
+		etOtp6 = (EditText) findViewById(R.id.etOtp6);
+
+		view1 = (View) findViewById(R.id.view1);
+		view2 = (View) findViewById(R.id.view2);
+		view3 = (View) findViewById(R.id.view3);
+		view4 = (View) findViewById(R.id.view4);
+		view5 = (View) findViewById(R.id.view5);
+
+		/*etOtp1.addTextChangedListener(new CustomTextWatcher(null, etOtp2));
+		etOtp2.addTextChangedListener(new CustomTextWatcher(etOtp1, etOtp3));
+		etOtp3.addTextChangedListener(new CustomTextWatcher(etOtp2, etOtp4));
+		etOtp4.addTextChangedListener(new CustomTextWatcher(etOtp3, etOtp5));
+		etOtp5.addTextChangedListener(new CustomTextWatcher(etOtp4, etOtp6));
+		etOtp6.addTextChangedListener(new CustomTextWatcher(etOtp5, null));*/
+
+		etOtp1.setOnKeyListener(new CustomBackKeyListener(null, etOtp2));
+		etOtp2.setOnKeyListener(new CustomBackKeyListener(etOtp1, etOtp3));
+		etOtp3.setOnKeyListener(new CustomBackKeyListener(etOtp2, etOtp4));
+		etOtp4.setOnKeyListener(new CustomBackKeyListener(etOtp3, etOtp5));
+		etOtp5.setOnKeyListener(new CustomBackKeyListener(etOtp4, etOtp6));
+		etOtp6.setOnKeyListener(new CustomBackKeyListener(etOtp5, null));
+
+
+		llOTP = (LinearLayout) findViewById(R.id.llOTP);
+
 		tweenAnimation = AnimationUtils.loadAnimation(OTPConfirmScreen.this, R.anim.tween);
 
+		createEditTextOtp();
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -296,6 +333,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 				if(s.length() == 4){
 					buttonVerify.performClick();
+					rlOTPTimer.setVisibility(View.GONE);
 				}
 			}
 		});
@@ -565,6 +603,20 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			}
 		}, 100);
 
+	}
+
+	private void createEditTextOtp(){
+		if(otpLength == 4){
+			view4.setVisibility(View.GONE);
+			etOtp5.setVisibility(View.GONE);
+			view5.setVisibility(View.GONE);
+			etOtp6.setVisibility(View.GONE);
+			//etOtp4.addTextChangedListener(new CustomTextWatcher(etOtp3, null));
+		} else if(otpLength == 5){
+			view5.setVisibility(View.GONE);
+			etOtp6.setVisibility(View.GONE);
+			//etOtp5.addTextChangedListener(new CustomTextWatcher(etOtp4, null));
+		}
 	}
 
 	private void startOTPTimer(){
@@ -1896,6 +1948,62 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			Data.loginLongitude = location.getLongitude();
 		}
 	};
+
+	private class CustomTextWatcher implements TextWatcher{
+
+		EditText previousEt, nextEt;
+
+		public CustomTextWatcher(EditText previousET, EditText nextEt) {
+			this.previousEt = previousET;
+			this.nextEt = nextEt;
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			Log.v("customTextWatcher before", "---> "+s.length());
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			Log.v("customTextWatcher onText", "---> "+s.length());
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			Log.v("customTextWatcher afterText", "---> "+s.length());
+			if(s.length() > 0 && nextEt != null) {
+				nextEt.requestFocus();
+				nextEt.setEnabled(true);
+			}
+		}
+	}
+
+	private class CustomBackKeyListener implements View.OnKeyListener{
+
+		EditText previousEt, nextEt;
+
+		public CustomBackKeyListener(EditText previousEt, EditText nextEt) {
+			this.previousEt = previousEt;
+			this.nextEt = nextEt;
+		}
+
+		@Override
+		public boolean onKey(View v, int keyCode, KeyEvent event) {
+			if(keyCode == KeyEvent.KEYCODE_DEL){
+				if(((EditText)v).getText().length() == 0 && previousEt != null) {
+					previousEt.setEnabled(true);
+					previousEt.requestFocus();
+				}
+			} else if(((EditText)v).getText().length() == 1 && nextEt != null){
+				nextEt.requestFocus();
+			} else if(((EditText)v).getText().length() == 2 && nextEt != null){
+				nextEt.setText(((EditText)v).getText().subSequence(((EditText)v).getText().length()-1, ((EditText)v).getText().length()));
+				((EditText)v).setText(((EditText)v).getText().subSequence(0, ((EditText)v).getText().length()-1));
+				nextEt.requestFocus();
+			}
+			return false;
+		}
+	}
 
 }
 
