@@ -2036,8 +2036,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				}
 				else if(State.LOGIN == state || State.SIGNUP == state){ //else if(State.SIGNUP == state){ //
 					if(SplashNewActivity.this.hasWindowFocus() && loginDataFetched){
-						Map<String, String> articleParams = new HashMap<String, String>();
-						articleParams.put("username", Data.userData.userName);
+						//Map<String, String> articleParams = new HashMap<String, String>();
+						//articleParams.put("username", Data.userData.userName);
 //						FlurryAgent.logEvent("App Login", articleParams);
 
 						loginDataFetched = false;

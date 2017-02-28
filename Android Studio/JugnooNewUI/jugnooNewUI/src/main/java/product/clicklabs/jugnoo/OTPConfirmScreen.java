@@ -82,8 +82,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 	RelativeLayout relative, rlOTPTimer;
 
-	ScrollView scrollView;
-	LinearLayout linearLayoutMain, rlResendOTP;
+	LinearLayout rlResendOTP;
 	TextView textViewScroll;
 	
 	boolean loginDataFetched = false;
@@ -195,12 +194,10 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 		llPasswordLogin = (LinearLayout) findViewById(R.id.llPasswordLogin);
 
-		scrollView = (ScrollView) findViewById(R.id.scrollView);
-		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 		tvOtpPhoneNumber = (TextView) findViewById(R.id.tvOtpPhoneNumber); tvOtpPhoneNumber.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 		textViewForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword);
-		etPhoneNew = (EditText) findViewById(R.id.etPhoneNew);
+		etPhoneNew = (EditText) findViewById(R.id.etPhoneNew); etPhoneNew.setText(email);
 		etPasswordNew = (EditText) findViewById(R.id.etPasswordNew);
 		bEmailLoginNew = (Button) findViewById(R.id.bEmailLoginNew);
 
@@ -272,21 +269,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 					Utils.disableSMSReceiver(OTPConfirmScreen.this);
 					editTextOTP.setError(null);
 					rlProgress.setVisibility(View.GONE);
-					if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
-							|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()
-							|| linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
-						generateOTP(getLoggedInAccesToken(), linkedWallet);
-					} else{
-						if (1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)) {
-							if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
-								initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
-							} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
-								initiateOTPCallAsync(OTPConfirmScreen.this, googleRegisterData.phoneNo);
-							} else {
-								initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
-							}
-						}
-					}
+					apiGenerateLoginOtp(OTPConfirmScreen.this, email);
 
 				} catch(Exception e){
 					e.printStackTrace();
@@ -517,10 +500,9 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			e.printStackTrace();
 		}
 
-		long timerDuration = 20000;
-		textViewCounter.setText("0:20");
+		textViewCounter.setText("0:10");
 
-		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+		/*if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
 			imageViewWalletIcon.setVisibility(View.VISIBLE);
 			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
 			ivResend.setVisibility(View.VISIBLE);
@@ -542,23 +524,9 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			imageViewWalletIcon.setVisibility(View.GONE);
 			ivResend.setVisibility(View.GONE);
 			tvOtpViaCall.setText(getResources().getString(R.string.receive_otp_via_call));
-		}
+		}*/
 
-		try{
-			if(getIntent().getIntExtra("show_timer", 0) == 1){
-				rlOTPTimer.setVisibility(View.VISIBLE);
-				linearLayoutOtherOptions.setVisibility(View.GONE);
-				CustomCountDownTimer customCountDownTimer = new CustomCountDownTimer(timerDuration, 5);
-				customCountDownTimer.start();
-			}
-			else{
-				throw new Exception();
-			}
-		} catch(Exception e){
-			rlOTPTimer.setVisibility(View.GONE);
-			linearLayoutOtherOptions.setVisibility(View.VISIBLE);
-
-		}
+		startOTPTimer();
 
 		try{
 			if(!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
@@ -568,7 +536,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
-			if(1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)
+			/*if(1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)
 					|| linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
 					|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()
 					|| linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()) {
@@ -576,11 +544,11 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			}
 			else{
 				rlResendOTP.setVisibility(View.GONE);
-			}
+			}*/
 		} catch(Exception e){
 			e.printStackTrace();
 			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
-			rlResendOTP.setVisibility(View.GONE);
+			//rlResendOTP.setVisibility(View.GONE);
 		}
 
 		rlOTPTimer.setOnClickListener(new View.OnClickListener() {
@@ -597,6 +565,24 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			}
 		}, 100);
 
+	}
+
+	private void startOTPTimer(){
+		try{
+			long timerDuration = 10000;
+			if(getIntent().getIntExtra("show_timer", 0) == 1){
+				rlOTPTimer.setVisibility(View.VISIBLE);
+				linearLayoutOtherOptions.setVisibility(View.GONE);
+				CustomCountDownTimer customCountDownTimer = new CustomCountDownTimer(timerDuration, 5);
+				customCountDownTimer.start();
+			}
+			else{
+				throw new Exception();
+			}
+		} catch(Exception e){
+			rlOTPTimer.setVisibility(View.GONE);
+			linearLayoutOtherOptions.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private String getLoggedInAccesToken(){
@@ -652,11 +638,11 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 					@Override
 					public void run() {
 						rlProgress.setVisibility(View.GONE);
-						if(rlOTPTimer.getVisibility() == View.VISIBLE){
+						/*if(rlOTPTimer.getVisibility() == View.VISIBLE){
 							scrollView.smoothScrollTo(0, editTextOTP.getBottom());
 						} else {
 							scrollView.smoothScrollTo(0, buttonVerify.getTop());
-						}
+						}*/
 					}
 				}, 200);
 			} else {
@@ -677,11 +663,11 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 				@Override
 				public void run() {
 					rlProgress.setVisibility(View.GONE);
-					if(rlOTPTimer.getVisibility() == View.VISIBLE){
+					/*if(rlOTPTimer.getVisibility() == View.VISIBLE){
 						scrollView.smoothScrollTo(0, editTextOTP.getBottom());
 					} else {
 						scrollView.smoothScrollTo(0, buttonVerify.getTop());
-					}
+					}*/
 				}
 			}, 200);
 			try {
@@ -888,6 +874,84 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			} else{
 				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			}
+	}
+
+	private void apiGenerateLoginOtp(final Activity activity, final String phoneNumber){
+		if(MyApplication.getInstance().isOnline()){
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			HashMap<String, String> params = new HashMap<>();
+
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+
+			params.put("phone_no", "+91"+phoneNumber);
+			params.put("device_token", MyApplication.getInstance().getDeviceToken());
+			params.put("device_name", MyApplication.getInstance().deviceName());
+			params.put("os_version", MyApplication.getInstance().osVersion());
+			params.put("country", MyApplication.getInstance().country());
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
+			params.put("client_id", Config.getAutosClientId());
+			params.put("login_type", "0");
+
+			if (Utils.isDeviceRooted()) {
+				params.put("device_rooted", "1");
+			} else {
+				params.put("device_rooted", "0");
+			}
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
+			params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
+
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
+
+			Log.i("params", "=" + params);
+			new HomeUtil().putDefaultParams(params);
+
+			RestClient.getApiService().generateLoginOtp(params, new Callback<LoginResponse>() {
+				@Override
+				public void success(LoginResponse loginResponse, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "generateLoginOtp response = " + responseStr);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						int flag = jObj.getInt("flag");
+
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								DialogPopup.dismissLoadingDialog();
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									Utils.enableSMSReceiver(OTPConfirmScreen.this);
+									startOTPTimer();
+								}
+							} else {
+								DialogPopup.alertPopup(activity, "", jObj.optString("error"));
+							}
+							DialogPopup.dismissLoadingDialog();
+						}
+
+
+					} catch (Exception e){
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+		} else{
+			DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.CHECK_INTERNET_MSG);
+		}
 	}
 
 	/**
@@ -1272,7 +1336,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
-		super.onBackPressed();
 	}
 
 
