@@ -4,7 +4,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -183,6 +186,22 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 						}
 					});
 				}
+				if(review.getReviewDesc().length() > 80) {
+					SpannableStringBuilder ssb;
+					int end;
+					if(review.isExpanded()){
+						ssb = new SpannableStringBuilder(activity.getString(R.string.view_less));
+						end = review.getReviewDesc().length();
+					} else {
+						ssb = new SpannableStringBuilder(activity.getString(R.string.view_more));
+						end = 80;
+					}
+					holder.tvReviewMessage.setText(review.getReviewDesc().substring(0, end));
+					ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.theme_color)), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					holder.tvReviewMessage.append(" ");
+					holder.tvReviewMessage.append(ssb);
+				}
+
 			} else {
 				holder.rvFeedImages.setVisibility(View.GONE);
 				holder.ivFeedImageSingle.setVisibility(View.GONE);
@@ -190,6 +209,27 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				holder.imagesAdapter = null;
 			}
 			holder.vSepBelowMessage.setLayoutParams(paramsSep);
+			holder.tvReviewMessage.setTag(position);
+			holder.tvReviewMessage.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						int pos = (int) v.getTag();
+						FetchFeedbackResponse.Review item1 = restaurantReviews.get(pos);
+						TextView tv = (TextView) v;
+						if(item1.getReviewDesc().length() > 80) {
+							if (tv.getText().toString().length() > 90) {
+								item1.setExpanded(false);
+							} else {
+								item1.setExpanded(true);
+							}
+							notifyItemChanged(pos);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 
 
 			StringBuilder likeCount = new StringBuilder();

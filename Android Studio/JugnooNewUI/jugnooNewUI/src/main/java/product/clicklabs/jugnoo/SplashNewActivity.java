@@ -49,7 +49,6 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -349,7 +348,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			}
 
 
-			FacebookSdk.sdkInitialize(this);
 
 			Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
 			Utils.disableSMSReceiver(this);

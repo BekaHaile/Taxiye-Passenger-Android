@@ -539,7 +539,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        FacebookSdk.sdkInitialize(this);
 
         callbackManager = CallbackManager.Factory.create();
 

@@ -895,7 +895,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 }
                 updateTotalAmountPrice(totalPrice);
                 if (getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
-                    if (getMenusCheckoutMergedFragment() == null && getRestaurantImageFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
+                    if (getFreshCheckoutMergedFragment() == null && getMenusCheckoutMergedFragment() == null && getRestaurantImageFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
                     } else {
                         textViewMinOrder.setVisibility(View.GONE);

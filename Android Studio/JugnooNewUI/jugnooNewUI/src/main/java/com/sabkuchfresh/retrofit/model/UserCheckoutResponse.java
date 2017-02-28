@@ -21,6 +21,9 @@ public class UserCheckoutResponse{
 	@SerializedName("message")
 	@Expose
 	private String message;
+	@SerializedName("error")
+	@Expose
+	private String error;
 	@SerializedName("checkout_data")
 	@Expose
 	private CheckoutData checkoutData;
@@ -58,6 +61,9 @@ public class UserCheckoutResponse{
 	@SerializedName("charges")
 	@Expose
 	private List<Charges> charges = null;
+	@SerializedName("address")
+	@Expose
+	private String address;
 
 	/**
 	 *
@@ -205,6 +211,22 @@ public class UserCheckoutResponse{
 
 	public void setCharges(List<Charges> charges) {
 		this.charges = charges;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
 	}
 
 	public class Subscription {

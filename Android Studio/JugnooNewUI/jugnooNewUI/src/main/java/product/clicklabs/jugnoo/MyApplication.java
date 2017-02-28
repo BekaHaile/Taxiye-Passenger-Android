@@ -17,6 +17,8 @@ import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.crashlytics.android.Crashlytics;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
@@ -88,6 +90,9 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         ActivityLifecycleCallback.register(this);
+
+		FacebookSdk.sdkInitialize(getApplicationContext());
+		AppEventsLogger.activateApp(this);
 
         /**
          Edited by Parminder Singh on 1/30/17 at 3:47 PM

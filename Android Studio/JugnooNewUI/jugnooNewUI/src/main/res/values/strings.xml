@@ -1523,5 +1523,7 @@
     <string name="star_info_text">Shows the total amount you\'ve saved by subscribing to star</string>
     <string name="delivery_from">Delivery from</string>
     <string name="maven_r">maven_regular</string>
+    <string name="view_more">View more</string>
+    <string name="view_less">View less</string>
 
 </resources>

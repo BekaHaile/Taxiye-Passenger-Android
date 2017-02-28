@@ -178,6 +178,7 @@ public class FetchFeedbackResponse {
 		@SerializedName("images")
 		@Expose
 		private List<ReviewImage> images;
+		private boolean expanded;
 
 		public Integer getOrderId() {
 			return orderId;
@@ -321,6 +322,14 @@ public class FetchFeedbackResponse {
 		public void setFeedbackId(Integer feedbackId) {
 			this.feedbackId = feedbackId;
 		}
+
+		public boolean isExpanded() {
+			return expanded;
+		}
+
+		public void setExpanded(boolean expanded) {
+			this.expanded = expanded;
+		}
 	}
 
 
@@ -351,6 +360,14 @@ public class FetchFeedbackResponse {
 
 		public void setThumbnail(String thumbnail) {
 			this.thumbnail = thumbnail;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
 		}
 	}
 }

@@ -542,8 +542,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 if((type == AppConstant.ApplicationType.MENUS && getSubTotalAmount(false) < activity.getVendorOpened().getMinimumOrderAmount())) {
                     Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
                             Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getVendorOpened().getMinimumOrderAmount())));
-                }
-                else if (buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
+                    setSlideInitial();
+                } else if (buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
                     getCheckoutDataAPI(selectedSubscription);
                 } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
@@ -605,7 +605,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         activity.setSplInstr(checkoutSaveData.getSpecialInstructions());
 
         updateAddressView();
-        updateDeliveryFromView();
+        updateDeliveryFromView("");
 
         updateCartDataView();
 
@@ -1998,7 +1998,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     @Override
                     public void success(UserCheckoutResponse userCheckoutResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = JSONParser.getServerMessage(jObj);
@@ -2052,6 +2051,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         setDeliverySlotsDataUI();
 
                                         updateAddressView();
+
+                                        if(type == AppConstant.ApplicationType.MENUS
+                                                && !TextUtils.isEmpty(userCheckoutResponse.getAddress())){
+                                            updateDeliveryFromView(userCheckoutResponse.getAddress());
+                                        }
+
 
                                         if (type == AppConstant.ApplicationType.MEALS) {
                                             if (Data.getMealsData().getPromoCoupons() == null) {
@@ -2811,11 +2816,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
-    private void updateDeliveryFromView(){
+    private void updateDeliveryFromView(String address){
         if(isMenusOpen() && activity.getVendorOpened() != null){
             llDeliveryFrom.setVisibility(View.VISIBLE);
             tvRestName.setText(activity.getVendorOpened().getName());
-            tvRestAddress.setText(activity.getVendorOpened().getRestaurantAddress());
+            if(TextUtils.isEmpty(address)) {
+                tvRestAddress.setText(activity.getVendorOpened().getRestaurantAddress());
+            } else {
+                tvRestAddress.setText(address);
+            }
         } else {
             llDeliveryFrom.setVisibility(View.GONE);
         }
