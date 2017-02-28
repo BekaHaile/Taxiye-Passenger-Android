@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,11 +64,14 @@ import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * Created by Shankar on 15/11/16.
  */
 public class RestaurantAddReviewFragment extends Fragment  {
+
     private final String TAG = RestaurantAddReviewFragment.class.getSimpleName();
 
     private RelativeLayout rlRoot;
@@ -96,7 +101,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
     private ScrollView scrollView;
     private String[] permissionsRequest;
     private int MAX_NO_IMAGES = 5;
-
+    private static final int REQUEST_CODE_SELECT_IMAGES=99;
 
     public static RestaurantAddReviewFragment newInstance(int restaurantId) {
         RestaurantAddReviewFragment fragment = new RestaurantAddReviewFragment();
@@ -268,30 +273,12 @@ public class RestaurantAddReviewFragment extends Fragment  {
                 etFeedback.setText(etFeedback.getText().toString().trim());
                 int alreadyPresent = objectList == null ? 0 : objectList.size();
                 if(picker==null){
-                    picker = new Picker.Builder(activity, new Picker.PickListener() {
-                        @Override
-                        public void onPickedSuccessfully(ArrayList<ImageEntry> images) {
-                            if (images != null && images.size() != 0) {
-                                objectList.addAll(images);
-                                setUpAdapter(objectList);
-                                scrollView.fullScroll(View.FOCUS_DOWN);
-
-
-                            }
-                        }
-
-                        @Override
-                        public void onCancel() {
-
-                        }
-                    }, R.style.AppThemePicker_NoActionBar)
-                            .setPickMode(Picker.PickMode.MULTIPLE_IMAGES)
-                            .build();
+                    picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
                 }
 
 
                 picker.setLimit(MAX_NO_IMAGES -alreadyPresent);
-                picker.startActivity();
+                picker.startActivity(RestaurantAddReviewFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
 
 
             }
@@ -299,7 +286,26 @@ public class RestaurantAddReviewFragment extends Fragment  {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode== REQUEST_CODE_SELECT_IMAGES && resultCode==RESULT_OK){
+            if(data!=null && data.getSerializableExtra("imagesList")!=null)
+            {
+
+                ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
+                if (images != null && images.size() != 0) {
+                    objectList.addAll(images);
+                    setUpAdapter(objectList);
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+
+
+                }
+            }
+        }
+
+    }
 
     private void loadDataIfEditingFeedback() {
         if (activity.getCurrentReview() != null){

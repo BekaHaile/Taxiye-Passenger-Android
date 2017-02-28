@@ -16,15 +16,16 @@
         android:textColor="@android:color/white"
         android:gravity="center"
         android:textSize="18px"
+        android:layout_marginBottom="-5px"
         android:layout_width="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="32px" />
     <View
         android:id="@+id/tv_offer_view"
         android:layout_toRightOf="@id/tv_offer"
         android:background="@drawable/drawable_menu_strip_offer_triangle"
         android:layout_width="40px"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="32px"/>
     
     
@@ -140,6 +141,7 @@
 
     <TextView
         android:id="@+id/tvRating"
+        android:layout_below="@id/tv_offer"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/px_40"
         android:layout_alignParentRight="true"
@@ -151,8 +153,8 @@
         android:paddingRight="@dimen/px_15"
         android:text="Rating 2.1"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_20"
-        android:visibility="gone"
+        android:textSize="@dimen/text_size_22"
+        android:visibility="visible"
         app:font="maven"
         />
 

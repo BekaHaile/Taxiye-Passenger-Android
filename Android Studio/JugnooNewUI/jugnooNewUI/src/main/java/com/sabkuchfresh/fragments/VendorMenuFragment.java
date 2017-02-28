@@ -65,6 +65,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private RecyclerView recyclerViewOffers;
     private TextView tvOfferTitle;
     private View viewPromoTitle;
+    private ImageButton ibArrow;
 
     public VendorMenuFragment() {
     }
@@ -154,33 +155,30 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private void setUpPromoDisplayView(String promoText,String TandC) {
         recyclerViewOffers = (RecyclerView) rootView.findViewById(R.id.recycler_view_offers);
         tvOfferTitle = (TextView)  viewPromoTitle.findViewById(R.id.tv_offer_title);
-        final ImageButton ibArrow = (ImageButton) viewPromoTitle.findViewById(R.id.ib_arrow);
+        ibArrow = (ImageButton) viewPromoTitle.findViewById(R.id.ib_arrow);
         View.OnClickListener expandClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(recyclerViewOffers.getVisibility()==View.VISIBLE)
                 {
-                    if( starCloseAnim ==null) {
+                  /*  if( starCloseAnim ==null) {
                         starCloseAnim = AnimationUtils.loadAnimation(activity, R.anim.recycler_offer_close_anim);
                     }
-//                    mainLayout.animate().translationYBy(-recyclerViewOffers.getLayoutParams().height).setDuration(300).start();
+                    //                    recyclerViewOffers.startAnimation(starCloseAnim);*/
                     recyclerViewOffers.setVisibility(View.GONE);
-                    recyclerViewOffers.startAnimation(starCloseAnim);
 
-
-
-                    ibArrow.animate().rotationBy(-180).translationYBy(-10).setDuration(200).start();
+                    ibArrow.animate().rotationBy(-180).translationYBy(-10).setDuration(0).start();
 
 
                 } else{
 
-                    if(starOpenAnim ==null) {
+                 /*   if(starOpenAnim ==null) {
                         starOpenAnim = AnimationUtils.loadAnimation(activity, R.anim.recycler_offer_open_anim);
                     }
-                    recyclerViewOffers.setVisibility(View.VISIBLE);
-                    recyclerViewOffers.startAnimation(starOpenAnim);
+                    //                    recyclerViewOffers.startAnimation(starOpenAnim);*/
 
-                    ibArrow.animate().rotationBy(180).translationYBy(10).setDuration(200).start();
+                    recyclerViewOffers.setVisibility(View.VISIBLE);
+                    ibArrow.animate().rotationBy(180).translationYBy(10).setDuration(0).start();
                 }
 
                 if(handler ==null){
@@ -262,7 +260,12 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             }
             activity.setRefreshCart(false);
 
-
+        }
+        else{
+            if(recyclerViewOffers!=null && recyclerViewOffers.getVisibility()==View.VISIBLE)
+            {
+                ibArrow.performClick();
+            }
         }
     }
 

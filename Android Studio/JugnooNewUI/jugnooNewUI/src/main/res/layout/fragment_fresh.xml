@@ -17,6 +17,7 @@
 
         <include
             android:id="@+id/layout_offer_title"
+            android:animateLayoutChanges="true"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             layout="@layout/item_vendor_menu_offer_heading"

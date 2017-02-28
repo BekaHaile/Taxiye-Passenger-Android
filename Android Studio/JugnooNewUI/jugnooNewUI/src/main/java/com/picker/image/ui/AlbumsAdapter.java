@@ -30,11 +30,12 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
     protected final Picker mPickOptions;
     private final Fragment mFragment;
 
-    public AlbumsAdapter(final Fragment fragment, final ArrayList<AlbumEntry> albums, final RecyclerView recyclerView) {
+    public AlbumsAdapter(final Fragment fragment, final ArrayList<AlbumEntry> albums, final RecyclerView recyclerView, Picker mPickOptions) {
         mFragment = fragment;
         this.mAlbumList = albums;
         this.mRecycler = recyclerView;
-        mPickOptions = EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class).options;
+//        this.mPickOptions = EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class).options;
+        this.mPickOptions=mPickOptions;
     }
 
 
