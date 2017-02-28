@@ -275,7 +275,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="26px"
-                    android:text="@string/payment_mode"
+                    android:text="@string/payment_via"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_26"

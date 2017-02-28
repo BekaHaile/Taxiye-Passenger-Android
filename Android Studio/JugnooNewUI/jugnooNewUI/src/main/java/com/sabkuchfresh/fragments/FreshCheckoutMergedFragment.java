@@ -1893,6 +1893,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             for(PromoCoupon promoCoupon : promoCoupons){
                 if(promoCoupon.getIsSelected() == 1){
                     activity.setSelectedPromoCoupon(promoCoupon);
+                    setPromoAmount();
+                    updateCartUI();
                     break;
                 }
             }
@@ -2053,8 +2055,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         updateAddressView();
 
                                         if(type == AppConstant.ApplicationType.MENUS
-                                                && !TextUtils.isEmpty(userCheckoutResponse.getAddress())){
-                                            updateDeliveryFromView(userCheckoutResponse.getAddress());
+                                                && userCheckoutResponse.getRestaurantInfo() != null
+                                                && !TextUtils.isEmpty(userCheckoutResponse.getRestaurantInfo().getAddress())){
+                                            updateDeliveryFromView(userCheckoutResponse.getRestaurantInfo().getAddress());
                                         }
 
 

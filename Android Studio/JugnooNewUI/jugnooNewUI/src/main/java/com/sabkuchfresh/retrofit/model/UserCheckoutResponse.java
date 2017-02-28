@@ -61,9 +61,9 @@ public class UserCheckoutResponse{
 	@SerializedName("charges")
 	@Expose
 	private List<Charges> charges = null;
-	@SerializedName("address")
+	@SerializedName("restaurant_info")
 	@Expose
-	private String address;
+	private RestaurantInfo restaurantInfo;
 
 	/**
 	 *
@@ -213,20 +213,20 @@ public class UserCheckoutResponse{
 		this.charges = charges;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public String getError() {
 		return error;
 	}
 
 	public void setError(String error) {
 		this.error = error;
+	}
+
+	public RestaurantInfo getRestaurantInfo() {
+		return restaurantInfo;
+	}
+
+	public void setRestaurantInfo(RestaurantInfo restaurantInfo) {
+		this.restaurantInfo = restaurantInfo;
 	}
 
 	public class Subscription {
@@ -581,6 +581,20 @@ public class UserCheckoutResponse{
 
 		public void setPrice(Integer price) {
 			this.price = price;
+		}
+	}
+
+	public class RestaurantInfo{
+		@SerializedName("address")
+		@Expose
+		private String address;
+
+		public String getAddress() {
+			return address;
+		}
+
+		public void setAddress(String address) {
+			this.address = address;
 		}
 	}
 }
