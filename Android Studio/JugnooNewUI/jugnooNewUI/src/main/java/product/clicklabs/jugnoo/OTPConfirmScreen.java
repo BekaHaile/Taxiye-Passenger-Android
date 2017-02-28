@@ -1402,7 +1402,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 				if(!"".equalsIgnoreCase(otp)) {
 					editTextOTP.setText(otp);
 					editTextOTP.setSelection(editTextOTP.getText().length());
-					buttonVerify.performClick();
+					//buttonVerify.performClick();
 				}
 			}
 		} catch(Exception e){
