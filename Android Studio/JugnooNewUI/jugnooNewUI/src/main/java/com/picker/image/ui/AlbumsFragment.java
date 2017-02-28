@@ -42,10 +42,10 @@ public class AlbumsFragment extends Fragment implements RequestListener<ArrayLis
                              Bundle savedInstanceState) {
         mAlbumsRecycler = (RecyclerView) inflater.inflate(R.layout.fragment_album_browse, container, false);
 
-        if (mPickOptions == null) {
+       /* if (mPickOptions == null) {
             mPickOptions = EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class).options;
-        }
-
+        }*/
+        mPickOptions=((PickerActivity)getActivity()).mPickOptions;
         if (mAlbumList == null) {
 
             final Events.OnAlbumsLoadedEvent albumLoadedEvent = EventBus.getDefault().getStickyEvent(Events.OnAlbumsLoadedEvent.class);
@@ -91,7 +91,7 @@ public class AlbumsFragment extends Fragment implements RequestListener<ArrayLis
         if (hasLoadedSuccessfully(albumEntries)) {
             mAlbumList = albumEntries;
 
-            final AlbumsAdapter albumsAdapter = new AlbumsAdapter(this, albumEntries, mAlbumsRecycler);
+            final AlbumsAdapter albumsAdapter = new AlbumsAdapter(this, albumEntries, mAlbumsRecycler,mPickOptions);
             mAlbumsRecycler.setAdapter(albumsAdapter);
 
             EventBus.getDefault().postSticky(new Events.OnAlbumsLoadedEvent(mAlbumList));
@@ -136,7 +136,7 @@ public class AlbumsFragment extends Fragment implements RequestListener<ArrayLis
             mSpiceManager.execute(loadingRequest, this);
         } else {
 
-            mAlbumsRecycler.setAdapter(new AlbumsAdapter(this, mAlbumList, mAlbumsRecycler));
+            mAlbumsRecycler.setAdapter(new AlbumsAdapter(this, mAlbumList, mAlbumsRecycler, mPickOptions));
         }
     }
 

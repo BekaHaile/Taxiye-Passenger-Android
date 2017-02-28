@@ -6,10 +6,10 @@
         android:pivotY="0%"
         android:duration="600" android:fillBefore="false" />-->
     <translate
-        android:duration="300"
+        android:duration="@integer/anim_time_promo_recycler"
         android:fromYDelta="0"
         android:fillBefore="false"
         android:fillAfter="false"
        android:toYDelta="-20%" />
-    <alpha android:fromAlpha="1" android:toAlpha="0" android:duration="300"/>
+    <alpha android:fromAlpha="1" android:toAlpha="0" android:duration="@integer/anim_time_promo_recycler"/>
 </set>

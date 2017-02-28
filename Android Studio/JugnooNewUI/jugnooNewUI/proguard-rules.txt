@@ -137,3 +137,7 @@
 -keep class uk.co.senab.photoview.** { *; }
 -dontwarn uk.co.senab.photoview.**
 -keep public class com.picker.image.** { *; }
+
+-keepclassmembers class com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse$ReviewImage {
+    private <fields>;
+}

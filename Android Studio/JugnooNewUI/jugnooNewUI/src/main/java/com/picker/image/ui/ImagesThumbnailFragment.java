@@ -30,8 +30,8 @@ public class ImagesThumbnailFragment extends Fragment {
 
         setupRecycler();
 
-        mPickOptions = EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class).options;
-
+//        mPickOptions = EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class).options;
+        mPickOptions=((PickerActivity)getActivity()).mPickOptions;
         return mImagesRecycler;
     }
 

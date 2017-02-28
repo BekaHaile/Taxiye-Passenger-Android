@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
@@ -41,6 +43,7 @@ import com.picker.image.util.CameraSupport;
 import com.picker.image.util.Events;
 import com.picker.image.util.Picker;
 import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
+import com.sabkuchfresh.home.FreshActivity;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 import java.io.File;
@@ -48,6 +51,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
@@ -71,7 +75,7 @@ public class PickerActivity extends AppCompatActivity {
     private boolean mShouldShowUp = false;
 
     private com.melnykov.fab.FloatingActionButton mDoneFab;
-    private Picker mPickOptions;
+    public Picker mPickOptions;
     //For ViewPager
     private ImageEntry mCurrentlyDisplayedImage;
     private AlbumEntry mSelectedAlbum;
@@ -92,15 +96,18 @@ public class PickerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mPickOptions = (EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class)).options;
+        if(savedInstanceState==null)
+          mPickOptions = (EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class)).options;
+        else
+           mPickOptions= (Picker) savedInstanceState.getSerializable("pickOptions");
         initTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick);
         toolbarTitle=(TextView)findViewById(R.id.toolbar_title);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.root_layout);
         recyclerViewSelectedImages =(RecyclerView)findViewById(R.id.selected_images) ;
-       setUpRecycler();
-        findViewById(R.id.imageViewBack).setOnClickListener(new View.OnClickListener() {
+         setUpRecycler();
+         findViewById(R.id.imageViewBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -118,6 +125,8 @@ public class PickerActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("photoPath",mCurrentPhotoPath);
+        outState.putSerializable("pickOptions",mPickOptions);
+        outState.putSerializable("photos",sCheckedImages);
         outState.putString(KEY_ACTION_BAR_TITLE, toolbarTitle.getText().toString());
         outState.putBoolean(KEY_SHOULD_SHOW_ACTIONBAR_UP, mShouldShowUp);
     }
@@ -126,6 +135,10 @@ public class PickerActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mCurrentPhotoPath = savedInstanceState.getString("photoPath",null);
+        mPickOptions= (Picker) savedInstanceState.getSerializable("pickOptions");
+        sCheckedImages= (ArrayList<ImageEntry>) savedInstanceState.getSerializable("photos");
+        updateCount();
+        updateRecycler();
     }
 
     @Override
@@ -232,10 +245,12 @@ public class PickerActivity extends AppCompatActivity {
             //No need to modify sCheckedImages for Multiple images mode
         }
 
-        super.finish();
+
 
         //New object because sCheckedImages will get cleared
-        mPickOptions.pickListener.onPickedSuccessfully(new ArrayList<>(sCheckedImages));
+        setResult(RESULT_OK,new Intent(this, FreshActivity.class).putExtra("imagesList",new ArrayList<>(sCheckedImages)));
+        super.finish();
+//        mPickOptions.pickListener.onPickedSuccessfully(new ArrayList<>(sCheckedImages));
         sCheckedImages.clear();
         EventBus.getDefault().removeAllStickyEvents();
 
@@ -243,7 +258,9 @@ public class PickerActivity extends AppCompatActivity {
     }
 
     public void onCancel() {
-        mPickOptions.pickListener.onCancel();
+
+        setResult(RESULT_CANCELED,new Intent(this, FreshActivity.class));
+//        mPickOptions.pickListener.onCancel();
         sCheckedImages.clear();
         EventBus.getDefault().removeAllStickyEvents();
 
@@ -701,12 +718,22 @@ public class PickerActivity extends AppCompatActivity {
                 ex.printStackTrace();
                 Toast.makeText(this, "Camera is not accessible", Toast.LENGTH_SHORT).show();
             }
+
+
+
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.jugnoo.fileprovider",
-                        photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this, "com.jugnoo.fileprovider", photoFile);
+
+                List<ResolveInfo> resolvedIntentActivities = getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                for (ResolveInfo resolvedIntentInfo : resolvedIntentActivities) {
+                    String packageName = resolvedIntentInfo.activityInfo.packageName;
+                    grantUriPermission(packageName, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                }
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
             }
         }
 

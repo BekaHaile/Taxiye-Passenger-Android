@@ -3032,9 +3032,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 getTransactionUtils().openMenusItemCustomizeFragment(FreshActivity.this, getRelativeLayoutContainer(), categoryPos, subCategoryPos, itemPos);
             }
         }, 100);*/
-        if (canExitVendorMenu())
+        if (canExitVendorMenu()) {
+            appBarLayout.setExpanded(false, false);
             getTransactionUtils().openMenusItemCustomizeFragment(FreshActivity.this, getRelativeLayoutContainer(), categoryPos, subCategoryPos, itemPos);
-
+        }
     }
 
     public int getAppType() {
