@@ -13,6 +13,7 @@
         android:textColor="@color/text_color"
         android:textSize="@dimen/px_60"
         android:gravity="center"
+        android:enabled="false"
         android:inputType="number"
         android:background="@color/transparent"/>
 
@@ -22,6 +23,7 @@
         android:layout_height="match_parent"
         android:background="@color/stroke_light_grey"
         android:layout_marginTop="@dimen/px_20"
+        android:visibility="gone"
         android:layout_marginBottom="@dimen/px_20"/>
 
     <EditText
@@ -32,6 +34,7 @@
         android:textSize="@dimen/px_60"
         android:gravity="center"
         android:inputType="number"
+        android:enabled="false"
         android:background="@color/transparent"/>
 
     <View
@@ -50,6 +53,7 @@
         android:textSize="@dimen/px_60"
         android:gravity="center"
         android:inputType="number"
+        android:enabled="false"
         android:background="@color/transparent"/>
 
     <View
@@ -68,6 +72,7 @@
         android:textSize="@dimen/px_60"
         android:gravity="center"
         android:inputType="number"
+        android:enabled="false"
         android:background="@color/transparent"/>
 
     <View
@@ -86,6 +91,7 @@
         android:textSize="@dimen/px_60"
         android:gravity="center"
         android:inputType="number"
+        android:enabled="false"
         android:background="@color/transparent"/>
 
     <View
@@ -94,6 +100,7 @@
         android:layout_height="match_parent"
         android:background="@color/stroke_light_grey"
         android:layout_marginTop="@dimen/px_20"
+        android:visibility="gone"
         android:layout_marginBottom="@dimen/px_20"/>
 
     <EditText
@@ -104,6 +111,7 @@
         android:textSize="@dimen/px_60"
         android:gravity="center"
         android:inputType="number"
+        android:enabled="false"
         android:background="@color/transparent"/>
 
 

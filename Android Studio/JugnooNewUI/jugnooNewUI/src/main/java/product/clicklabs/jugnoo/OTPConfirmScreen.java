@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -56,6 +57,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.widgets.PinEntryEditText;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -107,6 +109,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 	int duration = 500, otpLength = 4;
 	private EditText etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6;
 	private View view1, view2, view3, view4, view5;
+	private PinEntryEditText txtPinEntry;
 
 	@Override
 	protected void onStart() {
@@ -197,6 +200,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 		progressBar = (ProgressWheel) findViewById(R.id.progressBar);
 
 		llLoginNew = (RelativeLayout) findViewById(R.id.llLoginNew); llLoginNew.setVisibility(View.GONE);
+		txtPinEntry = (PinEntryEditText) findViewById(R.id.txt_pin_entry);
 
 		llPasswordLogin = (LinearLayout) findViewById(R.id.llPasswordLogin);
 
@@ -239,7 +243,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 		tweenAnimation = AnimationUtils.loadAnimation(OTPConfirmScreen.this, R.anim.tween);
 
-		createEditTextOtp();
+		//createEditTextOtp();
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -247,6 +251,26 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			public void onClick(View v) {
 				FlurryEventLogger.eventGA(ACQUISITION, TAG, "Back");
 				performBackPressed();
+			}
+		});
+
+		txtPinEntry.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(s.length() == 4){
+					buttonVerify.performClick();
+					rlOTPTimer.setVisibility(View.GONE);
+				}
 			}
 		});
 
@@ -262,7 +286,8 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 			@Override
 			public void onClick(View v) {
-				String otpCode = editTextOTP.getText().toString().trim();
+				//String otpCode = editTextOTP.getText().toString().trim();
+				String otpCode = txtPinEntry.getText().toString().trim();
 				if (otpCode.length() > 0) {
 					rlProgress.setVisibility(View.GONE);
 					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
@@ -284,14 +309,25 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
                     MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.VERIFY_ME, bundle);
 					FlurryEventLogger.eventGA(ACQUISITION, TAG, "Verify me");
 				} else {
-					editTextOTP.requestFocus();
-					editTextOTP.setError("OTP can't be empty");
+//					editTextOTP.requestFocus();
+//					editTextOTP.setError("OTP can't be empty");
+
+					txtPinEntry.requestFocus();
+					txtPinEntry.setError("OTP can't be empty");
 				}
 			}
 		});
 
 
 		editTextOTP.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				buttonVerify.performClick();
+				return true;
+			}
+		});
+
+		txtPinEntry.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
 				buttonVerify.performClick();
@@ -350,6 +386,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 				try {
 					Utils.disableSMSReceiver(OTPConfirmScreen.this);
 					editTextOTP.setError(null);
+					txtPinEntry.setError(null);
 					tweenAnimation.cancel();
 					rlProgress.setVisibility(View.GONE);
 					linearLayoutGiveAMissedCall.clearAnimation();
@@ -511,8 +548,12 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 					textViewOtpNumber.setText(emailRegisterData.phoneNo);
 				}
 				if(otp != null && !"".equalsIgnoreCase(otp)){
-					editTextOTP.setText(otp);
-					editTextOTP.setSelection(editTextOTP.getText().length());
+//					editTextOTP.setText(otp);
+//					editTextOTP.setSelection(editTextOTP.getText().length());
+//					buttonVerify.performClick();
+
+					txtPinEntry.setText(otp);
+					txtPinEntry.setSelection(txtPinEntry.getText().length());
 					buttonVerify.performClick();
 				}
 			}
@@ -1452,8 +1493,10 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 			if(Utils.checkIfOnlyDigits(otp)){
 				if(!"".equalsIgnoreCase(otp)) {
-					editTextOTP.setText(otp);
-					editTextOTP.setSelection(editTextOTP.getText().length());
+					//editTextOTP.setText(otp);
+					//editTextOTP.setSelection(editTextOTP.getText().length());
+					txtPinEntry.setText(otp);
+					txtPinEntry.setSelection(txtPinEntry.getText().length());
 					//buttonVerify.performClick();
 				}
 			}
