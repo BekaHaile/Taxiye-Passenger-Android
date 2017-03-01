@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -110,6 +111,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 	private EditText etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6;
 	private View view1, view2, view3, view4, view5;
 	private PinEntryEditText txtPinEntry;
+	private ProgressDialog missedCallDialog;
 
 	@Override
 	protected void onStart() {
@@ -289,7 +291,10 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 				//String otpCode = editTextOTP.getText().toString().trim();
 				String otpCode = txtPinEntry.getText().toString().trim();
 				if (otpCode.length() > 0) {
-					rlProgress.setVisibility(View.GONE);
+					if(missedCallDialog != null) {
+						missedCallDialog.dismiss();
+					}
+					//rlProgress.setVisibility(View.GONE);
 					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 						verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
 						/*if(userVerified == 1){
@@ -341,7 +346,10 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 				try{
 					Utils.disableSMSReceiver(OTPConfirmScreen.this);
 					editTextOTP.setError(null);
-					rlProgress.setVisibility(View.GONE);
+					if(missedCallDialog != null) {
+						missedCallDialog.dismiss();
+					}
+//					rlProgress.setVisibility(View.GONE);
 					apiGenerateLoginOtp(OTPConfirmScreen.this, email);
 
 				} catch(Exception e){
@@ -388,7 +396,10 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 					editTextOTP.setError(null);
 					txtPinEntry.setError(null);
 					tweenAnimation.cancel();
-					rlProgress.setVisibility(View.GONE);
+					if(missedCallDialog != null) {
+						missedCallDialog.dismiss();
+					}
+//					rlProgress.setVisibility(View.GONE);
 					linearLayoutGiveAMissedCall.clearAnimation();
 					if(!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
 						DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
@@ -730,7 +741,10 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						rlProgress.setVisibility(View.GONE);
+						if(missedCallDialog != null) {
+							missedCallDialog.dismiss();
+						}
+//						rlProgress.setVisibility(View.GONE);
 						/*if(rlOTPTimer.getVisibility() == View.VISIBLE){
 							scrollView.smoothScrollTo(0, editTextOTP.getBottom());
 						} else {
@@ -755,7 +769,10 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					rlProgress.setVisibility(View.GONE);
+					if(missedCallDialog != null) {
+						missedCallDialog.dismiss();
+					}
+//					rlProgress.setVisibility(View.GONE);
 					/*if(rlOTPTimer.getVisibility() == View.VISIBLE){
 						scrollView.smoothScrollTo(0, editTextOTP.getBottom());
 					} else {
@@ -788,14 +805,16 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			if(giveAMissedCall) {
 				giveAMissedCall = false;
 				//buttonVerify.performClick();
-				rlProgress.setVisibility(View.VISIBLE);
+				missedCallDialog = DialogPopup.showLoadingDialogNewInstance(OTPConfirmScreen.this, "Loading...");
+				//rlProgress.setVisibility(View.VISIBLE);
 				progressBar.setVisibility(View.VISIBLE);
 				tvProgress.setText(getResources().getString(R.string.trying_to_verify));
 				progressBar.spin();
 				if (signupBy.equalsIgnoreCase("email")) {
 					if (onlyDigits) {
 						email = "+91" + email;
-						sendLoginValues(OTPConfirmScreen.this, email, password, true, false);
+						//sendLoginValues(OTPConfirmScreen.this, email, password, true, false);
+						apiLoginUsingOtp(OTPConfirmScreen.this, "99999", email);
 					} else {
 						sendLoginValues(OTPConfirmScreen.this, email, password, false, false);
 					}
@@ -805,7 +824,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 					sendGoogleLoginValues(OTPConfirmScreen.this);
 				}
 				// api call
-				handler.postDelayed(runnable, 5000);
+				//handler.postDelayed(runnable, 5000);
 			}
 			if(backFromMissedCall){
 				backFromMissedCall = false;
@@ -823,7 +842,8 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			if(signupBy.equalsIgnoreCase("email")){
 				if(onlyDigits){
 					email = "+91"+email;
-					sendLoginValues(OTPConfirmScreen.this, email, password, true, false);
+					//sendLoginValues(OTPConfirmScreen.this, email, password, true, false);
+					apiLoginUsingOtp(OTPConfirmScreen.this, "99999", email);
 				} else{
 					sendLoginValues(OTPConfirmScreen.this, email, password, false, false);
 				}
@@ -869,9 +889,13 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 	private void showErrorOnMissedCallBack(){
 		if(runAfterDelay) {
 			runAfterDelay = false;
-			rlProgress.setVisibility(View.VISIBLE);
-			progressBar.setVisibility(View.GONE);
-			tvProgress.setText(getResources().getString(R.string.we_could_not_verify));
+			if(missedCallDialog != null){
+				missedCallDialog.dismiss();
+			}
+			DialogPopup.alertPopup(OTPConfirmScreen.this, "", getResources().getString(R.string.we_could_not_verify));
+			//rlProgress.setVisibility(View.VISIBLE);
+			//progressBar.setVisibility(View.GONE);
+			//tvProgress.setText(getResources().getString(R.string.we_could_not_verify));
 		}
 	}
 
@@ -884,7 +908,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 				Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
 				Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
-				params.put("phone_no", "+91"+phoneNumber);
+				params.put("phone_no", "+91"+Utils.retrievePhoneNumberTenChars(phoneNumber));
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
 				params.put("device_name", MyApplication.getInstance().deviceName());
 				params.put("os_version", MyApplication.getInstance().osVersion());
@@ -911,6 +935,9 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 						DialogPopup.dismissLoadingDialog();
+						if(missedCallDialog != null){
+							missedCallDialog.dismiss();
+						}
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "verifyOtp response = " + responseStr);
 
@@ -960,6 +987,9 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 					@Override
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "loginUsingOtp error="+error.toString());
+						if(missedCallDialog != null){
+							missedCallDialog.dismiss();
+						}
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 					}

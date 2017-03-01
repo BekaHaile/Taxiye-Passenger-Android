@@ -20,7 +20,8 @@
         android:layout_marginBottom="50px"
         android:visibility="gone">
 
-        <product.clicklabs.jugnoo.utils.ProgressWheel xmlns:wheel="http://schemas.android.com/apk/res-auto"
+        <product.clicklabs.jugnoo.utils.ProgressWheel
+            xmlns:wheel="http://schemas.android.com/apk/res-auto"
             android:id="@+id/progressBar"
             android:layout_width="100px"
             android:layout_height="100px"
@@ -104,7 +105,7 @@
                         android:padding="15px"
                         android:src="@drawable/ic_otp_edit_number_selector"
                         android:tag="mwar"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <RelativeLayout
