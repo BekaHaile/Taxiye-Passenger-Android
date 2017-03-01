@@ -1532,7 +1532,6 @@
     <string name="enter_otp_recieved_on">Enter OTP received on:</string>
     <string name="did_not_receive_otp">Didn\'t receive OTP?</string>
     <string name="try_one_of_the_following">Try one of the following:</string>
-    <string name="maven_r">maven_regular</string>
     <string name="autodetecting_otp_sent_to">Autodetecting OTP sent to</string>
     <string name="use_password_to_login">Use Password to Login</string>
 
