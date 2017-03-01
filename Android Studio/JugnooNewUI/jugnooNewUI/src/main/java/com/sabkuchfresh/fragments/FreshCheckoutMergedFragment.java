@@ -784,7 +784,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             chargesList.add(new Tax(activity.getString(R.string.jugnoo_cash), jcUsed()));
         }
 
-        taxTotal.setValue(payableAmount());
+        taxTotal.setValue((double)Math.round(payableAmount()));
         chargesList.add(taxTotal);
         chargesAdapter.notifyDataSetChanged();
 

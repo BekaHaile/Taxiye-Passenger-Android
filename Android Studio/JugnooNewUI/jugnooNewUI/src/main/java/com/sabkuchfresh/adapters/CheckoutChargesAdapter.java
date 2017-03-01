@@ -67,7 +67,14 @@ public class CheckoutChargesAdapter extends BaseAdapter {
 		}
 		try {
 			holder.tvName.setText(taxes.get(position).getKey());
-			holder.tvValue.setText(context.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(taxes.get(position).getValue())));
+
+
+			String finalVal ;
+			if(taxes.get(position).getValue()%1==0)
+				finalVal = String.valueOf(taxes.get(position).getValue().intValue());
+			else
+				finalVal = Utils.getDecimalFormat2Decimal().format(taxes.get(position).getValue());
+			holder.tvValue.setText(context.getString(R.string.rupees_value_format, finalVal));
 
 			if (taxes.get(position).getValue() > 0) {
 				holder.tvValue.setTextColor(context.getResources().getColor(R.color.text_color));
