@@ -220,12 +220,12 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 		view4 = (View) findViewById(R.id.view4);
 		view5 = (View) findViewById(R.id.view5);
 
-		/*etOtp1.addTextChangedListener(new CustomTextWatcher(null, etOtp2));
-		etOtp2.addTextChangedListener(new CustomTextWatcher(etOtp1, etOtp3));
-		etOtp3.addTextChangedListener(new CustomTextWatcher(etOtp2, etOtp4));
-		etOtp4.addTextChangedListener(new CustomTextWatcher(etOtp3, etOtp5));
-		etOtp5.addTextChangedListener(new CustomTextWatcher(etOtp4, etOtp6));
-		etOtp6.addTextChangedListener(new CustomTextWatcher(etOtp5, null));*/
+		etOtp1.addTextChangedListener(new CustomTextWatcher(null, etOtp1, etOtp2));
+		etOtp2.addTextChangedListener(new CustomTextWatcher(etOtp1, etOtp2, etOtp3));
+		etOtp3.addTextChangedListener(new CustomTextWatcher(etOtp2, etOtp3, etOtp4));
+		etOtp4.addTextChangedListener(new CustomTextWatcher(etOtp3, etOtp4, etOtp5));
+		etOtp5.addTextChangedListener(new CustomTextWatcher(etOtp4, etOtp5, etOtp6));
+		etOtp6.addTextChangedListener(new CustomTextWatcher(etOtp5, etOtp6, null));
 
 		etOtp1.setOnKeyListener(new CustomBackKeyListener(null, etOtp2));
 		etOtp2.setOnKeyListener(new CustomBackKeyListener(etOtp1, etOtp3));
@@ -611,11 +611,11 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 			etOtp5.setVisibility(View.GONE);
 			view5.setVisibility(View.GONE);
 			etOtp6.setVisibility(View.GONE);
-			//etOtp4.addTextChangedListener(new CustomTextWatcher(etOtp3, null));
+			etOtp4.addTextChangedListener(new CustomTextWatcher(etOtp3, etOtp4, null));
 		} else if(otpLength == 5){
 			view5.setVisibility(View.GONE);
 			etOtp6.setVisibility(View.GONE);
-			//etOtp5.addTextChangedListener(new CustomTextWatcher(etOtp4, null));
+			etOtp5.addTextChangedListener(new CustomTextWatcher(etOtp4, etOtp5, null));
 		}
 	}
 
@@ -1951,10 +1951,11 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 	private class CustomTextWatcher implements TextWatcher{
 
-		EditText previousEt, nextEt;
+		EditText previousEt, currentEt, nextEt;
 
-		public CustomTextWatcher(EditText previousET, EditText nextEt) {
+		public CustomTextWatcher(EditText previousET, EditText currentEt, EditText nextEt) {
 			this.previousEt = previousET;
+			this.currentEt = currentEt;
 			this.nextEt = nextEt;
 		}
 
@@ -1971,8 +1972,15 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 		@Override
 		public void afterTextChanged(Editable s) {
 			Log.v("customTextWatcher afterText", "---> "+s.length());
+			Log.v("currentEt length afterText", "---> "+currentEt.getText().length());
+			Log.v("s length afterText", "---> "+s.length());
+			if(s.length() == 2 && nextEt != null){
+				currentEt.setText(s.subSequence(0, s.length()-1));
+				nextEt.setText(s.subSequence(s.length()-1, s.length()));
+			}
 			if(s.length() > 0 && nextEt != null) {
 				nextEt.requestFocus();
+				nextEt.setSelection(nextEt.getText().length());
 				nextEt.setEnabled(true);
 			}
 		}
@@ -1993,14 +2001,15 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 				if(((EditText)v).getText().length() == 0 && previousEt != null) {
 					previousEt.setEnabled(true);
 					previousEt.requestFocus();
+					previousEt.setSelection(previousEt.getText().length());
 				}
-			} else if(((EditText)v).getText().length() == 1 && nextEt != null){
+			} /*else if(((EditText)v).getText().length() == 1 && nextEt != null){
 				nextEt.requestFocus();
 			} else if(((EditText)v).getText().length() == 2 && nextEt != null){
 				nextEt.setText(((EditText)v).getText().subSequence(((EditText)v).getText().length()-1, ((EditText)v).getText().length()));
 				((EditText)v).setText(((EditText)v).getText().subSequence(0, ((EditText)v).getText().length()-1));
 				nextEt.requestFocus();
-			}
+			}*/
 			return false;
 		}
 	}

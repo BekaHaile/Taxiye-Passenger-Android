@@ -121,7 +121,7 @@
                 android:layout_height="@dimen/px_100"
                 android:orientation="horizontal"
                 android:gravity="center_horizontal"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <include layout="@layout/layout_otp_edittext"/>
 
@@ -269,7 +269,7 @@
                     android:text="@string/use_password_to_login"
                     android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_30"
-                    app:font="maven" />
+                    app:font="@string/maven_r" />
             </LinearLayout>
 
             <TextView
