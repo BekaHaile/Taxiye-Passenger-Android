@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -36,13 +35,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import product.clicklabs.jugnoo.R;
 import com.picker.image.model.AlbumEntry;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.CameraSupport;
 import com.picker.image.util.Events;
 import com.picker.image.util.Picker;
-import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
@@ -55,6 +52,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 
 
@@ -89,10 +87,6 @@ public class PickerActivity extends AppCompatActivity {
     private RecyclerView recyclerViewSelectedImages;
     private String[] permissionsRequestArray;
 
-    //TODO Add animation
-    //TODO Fix bugs with changing orientation
-    //TODO Add support for gif
-    //TODO Add support for picking videos
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

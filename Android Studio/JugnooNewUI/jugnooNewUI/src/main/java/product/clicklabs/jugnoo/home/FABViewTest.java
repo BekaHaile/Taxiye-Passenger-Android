@@ -7,6 +7,8 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -65,6 +67,8 @@ public class FABViewTest {
 
     private void initComponent(){
         try {
+
+
 //            relativeLayoutFABTest = (RelativeLayout) view.findViewById(R.id.relativeLayoutFABTest);
             relativeLayoutFABTest = (RelativeLayout) view;
             menuLabelsRightTest = (FloatingActionMenu) view.findViewById(R.id.menu_labels_right_Test);
@@ -462,7 +466,11 @@ public class FABViewTest {
     public void showTutorial(){
         if(Data.userData != null && Data.userData.getShowTutorial() == 1) {
             menuLabelsRightTest.open(true);
+            Animation animation = new AlphaAnimation(0f, 1f);
+            animation.setDuration(1000);
+            animation.setFillAfter(false);
             ivJeanieHelp.setVisibility(View.VISIBLE);
+            ivJeanieHelp.startAnimation(animation);
             Data.userData.setShowTutorial(0);
         }
     }

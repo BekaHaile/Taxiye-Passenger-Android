@@ -26,7 +26,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -126,6 +125,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Events;
@@ -171,7 +171,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends AppCompatActivity implements FlurryEventNames {
+public class FreshActivity extends BaseAppCompatActivity implements FlurryEventNames {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -433,7 +433,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             }
 
             try {
-                float marginBottom = 40f;
+                float marginBottom = 60f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                     addMealFragment();
@@ -459,7 +459,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 }
                 int dpAsPixels = (int) (marginBottom * scale + 0.5f);
                 fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
-                fabViewTest.setRlGenieHelpBottomMargin(170f);
+                fabViewTest.setRlGenieHelpBottomMargin(200f);
                 Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             } catch (Exception e) {
                 e.printStackTrace();
