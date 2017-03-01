@@ -27,7 +27,7 @@ public class FetchFeedbackResponse {
 	private List<Review> review = null;
 	@SerializedName("review_image_limit")
 	@Expose
-	private Integer reviewImageLimit;
+	private int reviewImageLimit;
 	@SerializedName("share_text_self")
 	@Expose
 	private String shareTextSelf;
@@ -82,11 +82,11 @@ public class FetchFeedbackResponse {
 		this.review = review;
 	}
 
-	public Integer getReviewImageLimit() {
+	public int getReviewImageLimit() {
 		return reviewImageLimit;
 	}
 
-	public void setReviewImageLimit(Integer reviewImageLimit) {
+	public void setReviewImageLimit(int reviewImageLimit) {
 		this.reviewImageLimit = reviewImageLimit;
 	}
 
