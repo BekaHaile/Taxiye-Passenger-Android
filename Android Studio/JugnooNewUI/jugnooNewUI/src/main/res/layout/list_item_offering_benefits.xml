@@ -22,11 +22,11 @@
 
             <ImageView
                 android:id="@+id/ivOfferring"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50px"
+                android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_fab_autos"
-                android:tag="DontTouchMe" />
+                android:src="@drawable/ic_auto_grey"
+                android:tag="mwar" />
         </RelativeLayout>
 
         <LinearLayout

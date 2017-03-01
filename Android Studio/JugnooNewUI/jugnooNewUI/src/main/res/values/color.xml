@@ -62,6 +62,7 @@
     <color name="black_translucent_more">#BB000000</color>
     <color name="black_80">#CC000000</color>
     <color name="black_70">#B3000000</color>
+    <color name="black_50">#80000000</color>
     <color name="black_20">#33000000</color>
 
 
@@ -301,6 +302,21 @@
     <color name="red_dark_more">#d0021b</color>
     <color name="dull_background">#eeeeee</color>
     <color name="dull_line">#eaeaea</color>
-    <color name="text_color_submit">#595968</color>
+    <color name="text_color_grey_menus">#595968</color>
+    <color name="color_orange_menus"> #ff834e</color>
+
+
+    <color name="orange_rides_fab_pressed">#eb693f</color>
+    <color name="pink_meals_fab">#ef6692</color>
+    <color name="pink_meals_fab_pressed">#db527e</color>
+    <color name="green_fresh_fab">#72c559</color>
+    <color name="green_fresh_fab_pressed">#5eb145</color>
+    <color name="purple_menus_fab">#b368a9</color>
+    <color name="purple_menus_fab_pressed">#9f5495</color>
+    <color name="yellow_pay_fab">#faaf40</color>
+    <color name="yellow_pay_fab_pressed">#e69b2c</color>
+
+
+
 
 </resources>

@@ -76,7 +76,7 @@ public class RideOrderShortView {
 			DecimalFormat df = new DecimalFormat("#.#");
 			DecimalFormat df0 = new DecimalFormat("#");
 			if(endRideData != null){
-				imageViewProductType.setImageResource(R.drawable.ic_support_auto);
+				imageViewProductType.setImageResource(R.drawable.ic_auto_grey);
 				textViewIssueWithRide.setText(context.getString(R.string.issue_with_the_recent_ride));
 				textViewDriverName.setText(endRideData.driverName);
 				textViewDriverCarNumber.setText(endRideData.driverCarNumber);
@@ -110,15 +110,15 @@ public class RideOrderShortView {
 			}
 			else if(datum != null){
 				if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
-					imageViewProductType.setImageResource(R.drawable.ic_fab_fresh);
+					imageViewProductType.setImageResource(R.drawable.ic_fresh_grey);
 				} else if(datum.getProductType() == ProductType.MEALS.getOrdinal()){
-					imageViewProductType.setImageResource(R.drawable.ic_support_meals);
+					imageViewProductType.setImageResource(R.drawable.ic_meals_grey);
 				} else if(datum.getProductType() == ProductType.GROCERY.getOrdinal()){
-					imageViewProductType.setImageResource(R.drawable.ic_history_grocery);
+					imageViewProductType.setImageResource(R.drawable.ic_fresh_grey);
 				} else if(datum.getProductType() == ProductType.MENUS.getOrdinal()){
-					imageViewProductType.setImageResource(R.drawable.ic_history_menus);
+					imageViewProductType.setImageResource(R.drawable.ic_menus_grey);
 				} else if(datum.getProductType() == ProductType.PAY.getOrdinal()){
-					imageViewProductType.setImageResource(R.drawable.ic_history_pay);
+					imageViewProductType.setImageResource(R.drawable.ic_pay_grey);
 				}
 				textViewIssueWithRide.setText(context.getString(R.string.issue_with_the_recent_order));
 				if(datum.getProductType() == ProductType.MENUS.getOrdinal()){

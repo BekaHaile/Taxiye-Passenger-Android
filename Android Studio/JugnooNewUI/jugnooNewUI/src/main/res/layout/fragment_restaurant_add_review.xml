@@ -14,9 +14,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:fillViewport="true"
-        android:orientation="vertical"
-        android:layout_above="@+id/layout_controller"
-        >
+        android:layout_above="@+id/layout_controller">
 
 
         <LinearLayout

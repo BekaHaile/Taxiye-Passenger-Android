@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/ic_menu_category_grocery_selected" android:state_pressed="true"/>
-    <item android:drawable="@drawable/ic_menu_category_grocery"/>
+    <item android:drawable="@drawable/ic_fresh_orange" android:state_pressed="true"/>
+    <item android:drawable="@drawable/ic_fresh_grey"/>
 
 </selector>

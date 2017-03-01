@@ -255,6 +255,15 @@ public class MenusResponse implements Serializable {
 		@SerializedName("rating_color")
 		private String colorCode;
 
+
+		@SerializedName("offer_text")
+		private String offerText;
+
+
+		public String getOfferText() {
+			return offerText;
+		}
+
 		public String getColorCode() {
 			return colorCode;
 		}

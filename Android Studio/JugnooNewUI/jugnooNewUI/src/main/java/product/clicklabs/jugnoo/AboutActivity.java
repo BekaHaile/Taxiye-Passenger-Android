@@ -17,7 +17,6 @@ import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -87,10 +86,6 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
                 bundle = new Bundle();
                 MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+PLAYSTORE_RATING, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Playstore rating");
-                //TODO remove this
-                Prefs.with(AboutActivity.this).save(Constants.SP_SHOW_GEANIE_HELP, 0);
-                Data.setJeanieShownInSession(false);
-                Data.userData.setShowJeanieHelpText(1);
             }
         });
 

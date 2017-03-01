@@ -21,7 +21,6 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
@@ -43,6 +42,7 @@ public class RestaurantReviewsListFragment extends Fragment{
     private FreshActivity activity;
     private ArrayList<FetchFeedbackResponse.Review> restaurantReviews;
     private int restaurantId;
+    private FetchFeedbackResponse fetchFeedbackResponse;
 
     public static RestaurantReviewsListFragment newInstance(int restaurantId){
         RestaurantReviewsListFragment fragment = new RestaurantReviewsListFragment();
@@ -114,6 +114,26 @@ public class RestaurantReviewsListFragment extends Fragment{
             public int getRestaurantId() {
                 return restaurantId;
             }
+
+            @Override
+            public String getShareTextSelf() {
+                return fetchFeedbackResponse == null ? "" : fetchFeedbackResponse.getShareTextSelf();
+            }
+
+            @Override
+            public String getShareTextOther() {
+                return fetchFeedbackResponse == null ? "" : fetchFeedbackResponse.getShareTextOther();
+            }
+
+            @Override
+            public int getShareIsEnabled() {
+                return fetchFeedbackResponse == null ? 1 : fetchFeedbackResponse.getShareIsEnabled();
+            }
+
+            @Override
+            public int getLikeIsEnabled() {
+                return fetchFeedbackResponse == null ? 1 : fetchFeedbackResponse.getLikeIsEnabled();
+            }
         }, restaurantReviews);
         recyclerViewReviews.setAdapter(reviewsAdapter);
         recyclerViewReviews.setEnabled(true);
@@ -146,11 +166,12 @@ public class RestaurantReviewsListFragment extends Fragment{
         if(apiRestaurantFetchFeedback == null){
             apiRestaurantFetchFeedback = new ApiRestaurantFetchFeedback(activity, new ApiRestaurantFetchFeedback.Callback() {
                 @Override
-                public void onSuccess(List<FetchFeedbackResponse.Review> reviews) {
+                public void onSuccess(FetchFeedbackResponse fetchFeedbackResponse) {
                     restaurantReviews.clear();
-                    restaurantReviews.addAll(reviews);
+                    restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
                     reviewsAdapter.notifyDataSetChanged();
                     rlNoReviews.setVisibility(restaurantReviews.size() == 0 ? View.VISIBLE : View.GONE);
+                    RestaurantReviewsListFragment.this.fetchFeedbackResponse = fetchFeedbackResponse;
                 }
 
                 @Override

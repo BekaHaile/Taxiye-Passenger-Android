@@ -49,7 +49,6 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -223,16 +222,31 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 						Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
 						try {
-							if (referringParams.has("pickup_lat") && referringParams.has("pickup_lng")) {
-								Data.deepLinkPickup = 1;
-								Data.deepLinkPickupLatitude = Double.parseDouble(referringParams.optString("pickup_lat"));
-								Data.deepLinkPickupLongitude = Double.parseDouble(referringParams.optString("pickup_lng"));
-							} else {
-								if (Data.deepLinkIndex == -1) {
+							if(referringParams.has(KEY_DEEPINDEX) && referringParams.has(KEY_RESTAURANT_ID)){
+								try {
+									Prefs.with(SplashNewActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, referringParams.optString(KEY_RESTAURANT_ID, ""));
 									Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
-									Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
-									Log.v("deepLinkReferralCode", "---> "+Data.deepLinkReferralCode);
-									refreeUserId = referringParams.optString(KEY_USER_ID, "");
+									Intent intent = new Intent(Data.LOCAL_BROADCAST);
+									intent.putExtra(Constants.KEY_FLAG, OPEN_DEEP_INDEX);
+									LocalBroadcastManager.getInstance(SplashNewActivity.this).sendBroadcast(intent);
+
+								} catch (Exception e) {
+									e.printStackTrace();
+									Prefs.with(SplashNewActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+								}
+							} else {
+								Prefs.with(SplashNewActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+								if (referringParams.has("pickup_lat") && referringParams.has("pickup_lng")) {
+									Data.deepLinkPickup = 1;
+									Data.deepLinkPickupLatitude = Double.parseDouble(referringParams.optString("pickup_lat"));
+									Data.deepLinkPickupLongitude = Double.parseDouble(referringParams.optString("pickup_lng"));
+								} else {
+									if (Data.deepLinkIndex == -1) {
+										Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
+										Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
+										Log.v("deepLinkReferralCode", "---> "+Data.deepLinkReferralCode);
+										refreeUserId = referringParams.optString(KEY_USER_ID, "");
+									}
 								}
 							}
 							Log.e("Deeplink =", "=" + Data.deepLinkIndex);
@@ -334,7 +348,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			}
 
 
-			FacebookSdk.sdkInitialize(this);
 
 			Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
 			Utils.disableSMSReceiver(this);

@@ -47,7 +47,7 @@ public class ReferralActions implements FirebaseEvents {
             if(Data.userData != null){
                 String channel = isMessenger ? BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK_MESSENGER : BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK;
                 String channelLinkSP = isMessenger ? SPLabels.BRANCH_FACEBOOK_MESSENGER_LINK : SPLabels.BRANCH_FACEBOOK_LINK;
-                new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+                BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                     @Override
                     public void onBranchLinkCreated(final String link) {
                         if(Data.userData != null) {
@@ -88,7 +88,7 @@ public class ReferralActions implements FirebaseEvents {
                     public void onBranchError(String error) {
                         Utils.showToast(activity, error);
                     }
-                }).getBranchLinkForChannel(channel,
+                }, channel,
                         channelLinkSP,
                         Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                         Data.userData.getReferralMessages().getTitle(),
@@ -127,7 +127,7 @@ public class ReferralActions implements FirebaseEvents {
     public static void shareToWhatsapp(final Activity activity) {
 
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+            BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
 //                    PackageManager pm = activity.getPackageManager();
@@ -167,7 +167,7 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchError(String error) {
                     Utils.showToast(activity, error);
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP,
+            }, BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP,
                     SPLabels.BRANCH_WHATSAPP_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                     Data.userData.getReferralMessages().getTitle(),
@@ -183,7 +183,7 @@ public class ReferralActions implements FirebaseEvents {
 
     public static void sendSMSIntent(final Activity activity){
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+            BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     Uri sms_uri = Uri.parse("smsto:");
@@ -197,7 +197,7 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchError(String error) {
                     Utils.showToast(activity, error);
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_SMS,
+            }, BranchMetricsUtils.BRANCH_CHANNEL_SMS,
                     SPLabels.BRANCH_SMS_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                     Data.userData.getReferralMessages().getTitle(),
@@ -214,7 +214,7 @@ public class ReferralActions implements FirebaseEvents {
     public static void openMailIntent(final Activity activity){
         try {
 
-            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+            BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     Intent email = new Intent(Intent.ACTION_SEND);
@@ -230,7 +230,7 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchError(String error) {
                     Utils.showToast(activity, error);
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_EMAIL,
+            }, BranchMetricsUtils.BRANCH_CHANNEL_EMAIL,
                     SPLabels.BRANCH_EMAIL_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                     Data.userData.getReferralMessages().getTitle(),
@@ -245,7 +245,7 @@ public class ReferralActions implements FirebaseEvents {
 
     public static void openGenericShareIntent(final Activity activity, final CallbackManager callbackManager){
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+            BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     genericShareDialog(activity, callbackManager,
@@ -258,7 +258,7 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchError(String error) {
                     Utils.showToast(activity, error);
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_GENERIC,
+            }, BranchMetricsUtils.BRANCH_CHANNEL_GENERIC,
                     SPLabels.BRANCH_GENERIC_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                     Data.userData.getReferralMessages().getTitle(),
@@ -304,7 +304,8 @@ public class ReferralActions implements FirebaseEvents {
                         ResolveInfo info = (ResolveInfo) adapter.getItem(which);
                         if(info != null) {
                             if ((info.activityInfo.packageName.equalsIgnoreCase("com.facebook.katana")
-                                    || info.activityInfo.packageName.equalsIgnoreCase("com.facebook.work")) && ShareDialog.canShow(ShareLinkContent.class)) {
+                                    || info.activityInfo.packageName.equalsIgnoreCase("com.facebook.work"))
+                                    && ShareDialog.canShow(ShareLinkContent.class)) {
                                 ShareDialog shareDialog = new ShareDialog(activity);
                                 ShareLinkContent.Builder builder1 = new ShareLinkContent.Builder();
                                 if (!TextUtils.isEmpty(subject)) {

@@ -949,6 +949,7 @@ public class WalletCore {
 								try {
 									Intent intent = new Intent(activity, PaymentActivity.class);
 									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+									intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE, callbackPaymentOptionSelector.getAmountToPrefill());
 									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 									activity.startActivity(intent);
 									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -1002,6 +1003,7 @@ public class WalletCore {
 								try {
 									Intent intent = new Intent(activity, PaymentActivity.class);
 									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+									intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE, callbackPaymentOptionSelector.getAmountToPrefill());
 									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
 									activity.startActivity(intent);
 									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -1055,6 +1057,7 @@ public class WalletCore {
 								try {
 									Intent intent = new Intent(activity, PaymentActivity.class);
 									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+									intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE, callbackPaymentOptionSelector.getAmountToPrefill());
 									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.FREECHARGE.getOrdinal());
 									activity.startActivity(intent);
 									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);

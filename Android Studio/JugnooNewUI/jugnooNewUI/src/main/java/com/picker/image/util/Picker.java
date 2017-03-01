@@ -1,5 +1,6 @@
 package com.picker.image.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.util.TypedValue;
@@ -14,23 +16,23 @@ import android.util.TypedValue;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.ui.PickerActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 import product.clicklabs.jugnoo.R;
 
 
-public final class Picker {
+public final class Picker implements Serializable{
 
     public int limit;
-    public final Context context;
     public final int fabBackgroundColor;
     public final int fabBackgroundColorWhenPressed;
     public final int imageBackgroundColorWhenChecked;
     public final int imageBackgroundColor;
     public final int imageCheckColor;
     public final int checkedImageOverlayColor;
-    public final PickListener pickListener;
+//    public final PickListener pickListener;
     public final int albumImagesCountTextColor;
     public final int albumBackgroundColor;
     public final int albumNameTextColor;
@@ -48,7 +50,7 @@ public final class Picker {
     public final boolean backBtnInMainActivity;
 
     private Picker(final Builder builder) {
-        context = builder.mContext;
+
         limit = builder.mLimit;
         fabBackgroundColor = builder.mFabBackgroundColor;
         fabBackgroundColorWhenPressed = builder.mFabBackgroundColorWhenPressed;
@@ -56,7 +58,7 @@ public final class Picker {
         imageBackgroundColor = builder.mImageBackgroundColor;
         imageCheckColor = builder.mImageCheckColor;
         checkedImageOverlayColor = builder.mCheckedImageOverlayColor;
-        pickListener = builder.mPickListener;
+//        pickListener = builder.mPickListener;
         albumBackgroundColor = builder.mAlbumBackgroundColor;
         albumImagesCountTextColor = builder.mAlbumImagesCountTextColor;
         albumNameTextColor = builder.mAlbumNameTextColor;
@@ -75,13 +77,13 @@ public final class Picker {
 
     }
 
-    public void startActivity() {
+    public void startActivity(Fragment fragment,Activity activity,int reqCode) {
 
         EventBus.getDefault().postSticky(new Events.OnPublishPickOptionsEvent(this));
 
-        final Intent intent = new Intent(context, PickerActivity.class);
+        final Intent intent = new Intent(activity, PickerActivity.class);
 
-        context.startActivity(intent);
+        fragment.startActivityForResult(intent,reqCode);
 
     }
 
@@ -104,7 +106,7 @@ public final class Picker {
     public static class Builder {
 
         private final Context mContext;
-        private final PickListener mPickListener;
+
         private final int mThemeResId;
         private int mLimit = PickerActivity.NO_LIMIT;
         private int mFabBackgroundColor;
@@ -136,16 +138,14 @@ public final class Picker {
             mThemeResId = R.style.Theme_AppCompat_Light_NoActionBar;
             mContext = context;
             mContext.setTheme(mThemeResId);
-            mPickListener = listener;
             init();
 
 
         }
 
-        public Builder(@NonNull final Context context, @NonNull final PickListener listener, @StyleRes final int themeResId) {
+        public Builder(@NonNull final Context context, @StyleRes final int themeResId) {
             mContext = context;
             mContext.setTheme(themeResId);
-            mPickListener = listener;
             mThemeResId = themeResId;
             init();
 

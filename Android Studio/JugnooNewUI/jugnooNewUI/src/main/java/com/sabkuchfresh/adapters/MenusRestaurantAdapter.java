@@ -394,6 +394,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
 
+
+
                 try {
                     if (!TextUtils.isEmpty(vendor.getImage())) {
                         float ratio = Math.min(ASSL.Xscale(), ASSL.Yscale());
@@ -415,9 +417,20 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 int visibilityRating = View.GONE;
                 if (vendor.getRating() != null && vendor.getRating() >= 1d) {
                     visibilityRating = View.VISIBLE;
-                    activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(), vendor.getColorCode());
+                    activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(), vendor.getColorCode(), true);
                 }
                 mHolder.tvRating.setVisibility(visibilityRating);
+
+
+
+/**
+ Edited by Parminder Singh on 2/24/17 at 6:10 PM
+ Displaying Offers strip
+ **/
+
+            ((ViewHolder) holder).tvOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.GONE:View.VISIBLE);
+                ((ViewHolder) holder).viewOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.GONE:View.VISIBLE);
+              ((ViewHolder) holder).tvOffer.setText(vendor.getOfferText());
 
             } else if (holder instanceof ViewHolderRestaurantForm) {
                 ViewHolderRestaurantForm titleHolder = ((ViewHolderRestaurantForm) holder);
@@ -593,10 +606,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout rlRoot;
-        public View vSep;
+        public View vSep, viewOffer;
         public ImageView imageViewRestaurantImage;
         public TextView textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
-        public TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery, tvRating;
+        public TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery, tvRating,tvOffer;
+
 
 
         public ViewHolder(View itemView, Context context) {
@@ -611,6 +625,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);textViewAddressLine.setTypeface(Fonts.mavenMedium(context));
             textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);textViewDelivery.setTypeface(Fonts.mavenMedium(context));
             tvRating = (TextView) itemView.findViewById(R.id.tvRating);
+            tvOffer = (TextView)itemView.findViewById(R.id.tv_offer);
+            viewOffer = (View) itemView.findViewById(R.id.tv_offer_view);
         }
     }
 

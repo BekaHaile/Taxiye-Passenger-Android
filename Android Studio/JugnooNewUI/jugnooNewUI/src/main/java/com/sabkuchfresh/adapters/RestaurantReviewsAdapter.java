@@ -4,7 +4,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +24,15 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -115,7 +123,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.tvDateTime.setLayoutParams(paramsTime);
 
 			if (review.getRating() != null) {
-				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor());
+				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor(), true);
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, color);
 				if (review.getRatingFlag() == 1) {
 					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_uparrow, 0);
@@ -125,22 +133,6 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			} else {
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, ContextCompat.getColor(activity, R.color.text_color_light));
 			}
-
-			StringBuilder likeCount = new StringBuilder();
-			StringBuilder shareCount = new StringBuilder();
-			if (review.getLikeCount() > 1) {
-				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.likes));
-			} else {
-				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.like));
-			}
-			if (review.getShareCount() > 1) {
-				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.shares));
-			} else {
-				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.share));
-			}
-			holder.tvLikeShareCount.setText(likeCount.toString() + " | " + shareCount.toString());
-
-			holder.ivFeedEdit.setVisibility(review.getIsEditable() == 1 ? View.VISIBLE : View.GONE);
 
 
 			RelativeLayout.LayoutParams paramsSep = (RelativeLayout.LayoutParams) holder.vSepBelowMessage.getLayoutParams();
@@ -156,7 +148,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 									public void onImageClick(int positionImageClicked, FetchFeedbackResponse.Review review) {
 										try {
 											activity.setCurrentReview(review);
-											ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(positionImageClicked);
+											ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(positionImageClicked, callback.getLikeIsEnabled(), callback.getShareIsEnabled());
 											dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
 										} catch (Exception e) {
 											e.printStackTrace();
@@ -186,7 +178,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 							try {
 								int pos = (int) v.getTag();
 								activity.setCurrentReview(restaurantReviews.get(pos));
-								ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0);
+								ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0, callback.getLikeIsEnabled(), callback.getShareIsEnabled());
 								dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -194,6 +186,22 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 						}
 					});
 				}
+				if(review.getReviewDesc().length() > 80) {
+					SpannableStringBuilder ssb;
+					int end;
+					if(review.isExpanded()){
+						ssb = new SpannableStringBuilder(activity.getString(R.string.view_less));
+						end = review.getReviewDesc().length();
+					} else {
+						ssb = new SpannableStringBuilder(activity.getString(R.string.view_more));
+						end = 80;
+					}
+					holder.tvReviewMessage.setText(review.getReviewDesc().substring(0, end));
+					ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.theme_color)), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					holder.tvReviewMessage.append(" ");
+					holder.tvReviewMessage.append(ssb);
+				}
+
 			} else {
 				holder.rvFeedImages.setVisibility(View.GONE);
 				holder.ivFeedImageSingle.setVisibility(View.GONE);
@@ -201,20 +209,74 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				holder.imagesAdapter = null;
 			}
 			holder.vSepBelowMessage.setLayoutParams(paramsSep);
+			holder.tvReviewMessage.setTag(position);
+			holder.tvReviewMessage.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						int pos = (int) v.getTag();
+						FetchFeedbackResponse.Review item1 = restaurantReviews.get(pos);
+						TextView tv = (TextView) v;
+						if(item1.getReviewDesc().length() > 80) {
+							if (tv.getText().toString().length() > 90) {
+								item1.setExpanded(false);
+							} else {
+								item1.setExpanded(true);
+							}
+							notifyItemChanged(pos);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
+
+			StringBuilder likeCount = new StringBuilder();
+			StringBuilder shareCount = new StringBuilder();
+			if (review.getLikeCount() > 1) {
+				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.likes));
+			} else {
+				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.like));
+			}
+			if (review.getShareCount() > 1) {
+				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.shares));
+			} else {
+				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.share));
+			}
+			holder.ivFeedLike.setVisibility(callback.getLikeIsEnabled() == 1 ? View.VISIBLE : View.GONE);
+			holder.ivFeedShare.setVisibility(callback.getShareIsEnabled() == 1 ? View.VISIBLE : View.GONE);
+			if(callback.getLikeIsEnabled() != 1){
+				likeCount.delete(0, likeCount.length());
+			}
+			if(callback.getShareIsEnabled() != 1){
+				shareCount.delete(0, shareCount.length());
+			}
+			String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
+			holder.tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
+			holder.tvLikeShareCount.setVisibility((likeCount.length() == 0 && shareCount.length() == 0) ? View.GONE : View.VISIBLE);
 
 			if(review.getIsLiked() >= 1){
 				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
 			} else {
 				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_normal);
 			}
-
 			if(review.getIsShared() >= 1){
 				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_active);
 			} else {
 				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_normal);
 			}
 
+			holder.ivFeedEdit.setVisibility(review.getIsEditable() == 1 ? View.VISIBLE : View.GONE);
 			holder.ivFeedEdit.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_edit, R.drawable.ic_feed_edit_pressed));
+
+			RelativeLayout.LayoutParams paramsVShadowDown = (RelativeLayout.LayoutParams) holder.vShadowDown.getLayoutParams();
+			if(review.getIsEditable() == 1){
+				paramsVShadowDown.addRule(RelativeLayout.BELOW, holder.ivFeedEdit.getId());
+			} else {
+				paramsVShadowDown.addRule(RelativeLayout.BELOW, holder.tvLikeShareCount.getId());
+			}
+			holder.vShadowDown.setLayoutParams(paramsVShadowDown);
 
 			holder.ivFeedEdit.setTag(position);
 			holder.ivFeedLike.setTag(position);
@@ -249,35 +311,71 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				public void onClick(View v) {
 					try {
 						final int pos = (int) v.getTag();
-						FetchFeedbackResponse.Review review1 = restaurantReviews.get(pos);
+						final FetchFeedbackResponse.Review review1 = restaurantReviews.get(pos);
 						callback.onShare(review1);
 
-						String link = "https://share.jugnoo.in/review/"+activity.getVendorOpened().getRestaurantId();
-						StringBuilder sb = new StringBuilder();
-						if(review1.getIsEditable() == 1){
-							sb.append("Here's my experience of ");
-						} else {
-							sb.append("Have a look at this experience of ");
-						}
-						sb.append(activity.getVendorOpened().getName())
-								.append(", ")
-								.append(activity.getVendorOpened().getRestaurantAddress())
-								.append(" @ Jugnoo!\n\n");
-						if(!TextUtils.isEmpty(review1.getReviewDesc())){
-							sb.append(review1.getReviewDesc()).append("\n");
-						}
-						sb.append(link);
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put(Constants.KEY_DEEPINDEX, String.valueOf(AppLinkIndex.MENUS_PAGE.getOrdinal()));
+						map.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
 
-
-						ReferralActions.genericShareDialog(activity, null,
-								"Sharing experience of "+activity.getVendorOpened().getName()+" @ Jugnoo!",
-								sb.toString(), link, activity.getVendorOpened().getImage(), true,
-								new ReferralActions.ShareDialogCallback() {
+						BranchMetricsUtils.getBranchLink(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
 							@Override
-							public void onShareClicked(String appName) {
-								likeShareReview(pos, restaurantReviews.get(pos).getFeedbackId(), ACTION_SHARE);
+							public void onBranchLinkCreated(String link) {
+								String content = "";
+								if(review1.getIsEditable() == 1 && !TextUtils.isEmpty(callback.getShareTextSelf())){
+										content = callback.getShareTextSelf()
+												.replace("{{{restaurant_name}}", activity.getVendorOpened().getName())
+												.replace("{{{restaurant_address}}", activity.getVendorOpened().getRestaurantAddress())
+												.replace("{{{review_desc}}}", "\n"+review1.getReviewDesc())
+												.replace("{{{link}}}", "\n"+link);
+								} else if(review1.getIsEditable() == 0 && !TextUtils.isEmpty(callback.getShareTextOther())) {
+									content = callback.getShareTextOther()
+											.replace("{{{restaurant_name}}", activity.getVendorOpened().getName())
+											.replace("{{{restaurant_address}}", activity.getVendorOpened().getRestaurantAddress())
+											.replace("{{{review_desc}}}", "\n"+review1.getReviewDesc())
+											.replace("{{{link}}}", "\n"+link);
+								}
+
+								if(TextUtils.isEmpty(content)){
+									StringBuilder sb = new StringBuilder();
+									if(review1.getIsEditable() == 1){
+										sb.append("Here's my experience of ");
+									} else {
+										sb.append("Have a look at this experience of ");
+									}
+									sb.append(activity.getVendorOpened().getName())
+											.append(", ")
+											.append(activity.getVendorOpened().getRestaurantAddress())
+											.append(" @ Jugnoo!\n\n");
+									if(!TextUtils.isEmpty(review1.getReviewDesc())){
+										sb.append(review1.getReviewDesc()).append("\n");
+									}
+									sb.append(link);
+									content = sb.toString();
+								}
+
+								ReferralActions.genericShareDialog(activity, null,
+										"Sharing experience of "+activity.getVendorOpened().getName()+" @ Jugnoo!",
+										content, link, activity.getVendorOpened().getImage(), true,
+										new ReferralActions.ShareDialogCallback() {
+											@Override
+											public void onShareClicked(String appName) {
+												likeShareReview(pos, restaurantReviews.get(pos).getFeedbackId(), ACTION_SHARE);
+											}
+										}, false);
 							}
-						}, false);
+
+							@Override
+							public void onBranchError(String error) {
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
+							}
+						}, activity.getVendorOpened().getName(),
+								"https://jugnoo.in",
+								activity.getVendorOpened().getImage(),
+								BranchMetricsUtils.BRANCH_CHANNEL_MENUS_REVIEW_SHARE,
+								map);
+
+
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -302,7 +400,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		public RecyclerView rvFeedImages;
 		public TextView tvLikeShareCount;
 		public ImageView ivFeedImageSingle, ivFeedEdit, ivFeedShare, ivFeedLike;
-		public View vSepBelowMessage;
+		public View vSepBelowMessage, vShadowDown;
 		public RestaurantReviewImagesAdapter imagesAdapter = null;
 
 		public ViewHolderReview(View itemView) {
@@ -325,6 +423,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			ivFeedLike = (ImageView) itemView.findViewById(R.id.ivFeedLike);
 			ivFeedImageSingle = (ImageView) itemView.findViewById(R.id.ivFeedImageSingle);
 			vSepBelowMessage = itemView.findViewById(R.id.vSepBelowMessage);
+			vShadowDown = itemView.findViewById(R.id.vShadowDown);
 		}
 	}
 
@@ -348,6 +447,10 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		void onLike(FetchFeedbackResponse.Review review);
 		void onScrollStateChanged(int newState);
 		int getRestaurantId();
+		String getShareTextSelf();
+		String getShareTextOther();
+		int getShareIsEnabled();
+		int getLikeIsEnabled();
 	}
 
 

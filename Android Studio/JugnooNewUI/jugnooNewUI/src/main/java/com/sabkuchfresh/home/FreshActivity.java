@@ -26,7 +26,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -126,6 +125,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Events;
@@ -171,7 +171,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends AppCompatActivity implements FlurryEventNames {
+public class FreshActivity extends BaseAppCompatActivity implements FlurryEventNames {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -299,6 +299,14 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             menuBar = new MenuBar(this, drawerLayout);
             topBar = new TopBar(this, drawerLayout);
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(fabViewTest != null) {
+                        fabViewTest.showTutorial();
+                    }
+                }
+            }, 1000);
 
             topBar.etSearch.addTextChangedListener(textWatcher);
 
@@ -416,9 +424,16 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 }
             });
 
+            if(savedInstanceState!=null)
+            {
+                FragmentManager fm = getSupportFragmentManager();
+                for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                    fm.popBackStack();
+                }
+            }
 
             try {
-                float marginBottom = 40f;
+                float marginBottom = 60f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                     addMealFragment();
@@ -444,7 +459,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 }
                 int dpAsPixels = (int) (marginBottom * scale + 0.5f);
                 fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
-                fabViewTest.setRlGenieHelpBottomMargin(170f);
+                fabViewTest.setRlGenieHelpBottomMargin(200f);
                 Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -628,6 +643,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                                     intent1.putExtra(Constants.KEY_FLAG, flag);
                                     LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
                                 }
+                            } else if (Constants.OPEN_DEEP_INDEX == flag) {
+                                deepLinkAction.openDeepLink(menuBar);
                             }
                         }
                     } catch (Exception e) {
@@ -878,7 +895,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 }
                 updateTotalAmountPrice(totalPrice);
                 if (getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
-                    if (getMenusCheckoutMergedFragment() == null && getRestaurantImageFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
+                    if (getFreshCheckoutMergedFragment() == null && getMenusCheckoutMergedFragment() == null && getRestaurantImageFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
                     } else {
                         textViewMinOrder.setVisibility(View.GONE);
@@ -1472,6 +1489,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             }
         }
     }
+
+
 
     public void orderComplete() {
         clearAllCartAtOrderComplete();
@@ -2421,6 +2440,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     public boolean checkForMinus(int position, SubItem subItem) {
         if (isMealAddonItemsAvailable()) {
+            updateCartFromSPFMG(null);
             boolean addOnAdded = false;
             boolean itemIsAddon = false;
             for (SubItem si : getProductsResponse().getCategories().get(1).getSubItems()) {
@@ -2499,7 +2519,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         if (appType == AppConstant.ApplicationType.MENUS && getVendorOpened() != null) {
             if (canExitVendorMenu()){
                 FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_CART_BUTTON, Events.MENU_CART_VIEW);
-                getTransactionUtils().openMenusCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+//                getTransactionUtils().openMenusCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+                getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
             }
 
         } else {
@@ -3011,9 +3032,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 getTransactionUtils().openMenusItemCustomizeFragment(FreshActivity.this, getRelativeLayoutContainer(), categoryPos, subCategoryPos, itemPos);
             }
         }, 100);*/
-        if (canExitVendorMenu())
+        if (canExitVendorMenu()) {
+            appBarLayout.setExpanded(false, false);
             getTransactionUtils().openMenusItemCustomizeFragment(FreshActivity.this, getRelativeLayoutContainer(), categoryPos, subCategoryPos, itemPos);
-
+        }
     }
 
     public int getAppType() {
@@ -3317,7 +3339,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public TextView tvCollapRestaurantName;
     public TextView tvCollapRestaurantRating, tvCollapRestaurantDeliveryTime;
     private RelativeLayout rlCollapseDetails;
-    private LinearLayout llCartContainer, llCollapseRating;
+    private LinearLayout llCartContainer;
+    public LinearLayout llCollapseRating;
     private LinearLayout llToolbarLayout;
     public ImageView ivCollapseRestImage;
     private int currentVerticalOffSet;
@@ -3361,11 +3384,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                     }
                     topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha2);
-
+/*
                     if (!topBar.llCartContainer.isSelected())
                         topBar.llCartContainer.setSelected(true);
 
-                    topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha2);
+                    topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha2);*/
                     topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.argb((int) searchAndCapsuleAlpha2, 255, 255, 255), PorterDuff.Mode.SRC_ATOP);
                 } else {
 
@@ -3378,11 +3401,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                     }
 
-                    topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha1);
-                    if (topBar.llCartContainer.isSelected())
+                   topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha1);
+                   /*  if (topBar.llCartContainer.isSelected())
                         topBar.llCartContainer.setSelected(false);
 
-                    topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha1);
+                    topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha1);*/
                     topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.argb((int) searchAndCapsuleAlpha1, 89, 89, 104), PorterDuff.Mode.SRC_ATOP);
 
                 }
@@ -3435,12 +3458,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         topBar.getLlSearchCart().setLayoutTransition(layoutTransition);*/
 
 
-        llCollapseRating.setOnClickListener(new View.OnClickListener() {
+       /* llCollapseRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openRestaurantReviewsListFragment();
             }
-        });
+        });*/
 
     }
 
@@ -3455,8 +3478,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.title.setVisibility(View.INVISIBLE);
 
                 //Cart and Search Button
-                llCartContainer.getBackground().setAlpha(255);
-                llCartContainer.setSelected(true);
+              /*  llCartContainer.getBackground().setAlpha(255);
+                llCartContainer.setSelected(true);*/
                 topBar.getIvSearch().setSelected(true);
                 topBar.getIvSearch().setAlpha(255);
 
@@ -3483,8 +3506,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
 
                 //Cart and Search Button
-                llCartContainer.getBackground().setAlpha(255);
-                llCartContainer.setSelected(false);
+              /*  llCartContainer.getBackground().setAlpha(255);
+                llCartContainer.setSelected(false);*/
                 topBar.getIvSearch().setSelected(false);
                 topBar.getIvSearch().setAlpha(255);
 
@@ -3553,20 +3576,19 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         return fabViewTest;
     }
 
-    public int setRatingAndGetColor(TextView tv, Double rating, String colorCode) {
+    public int setRatingAndGetColor(TextView tv, Double rating, String colorCode, boolean setBackgroundColor) {
         Spannable spannable = new SpannableString(getString(R.string.star_icon) + " " + rating);
         Typeface star = Typeface.createFromAsset(getAssets(), "fonts/icomoon.ttf");
         spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv.setText(spannable);
         int ratingColor;
-        if (colorCode != null
-                && colorCode.startsWith("#")
-                && colorCode.length() == 7)
-            ratingColor = Color.parseColor(colorCode);
+        if (colorCode != null && colorCode.startsWith("#") && colorCode.length() == 7) ratingColor = Color.parseColor(colorCode);
         else
-            ratingColor = Color.parseColor("#8dd061"); //default Green Color
+            ratingColor = Color.GREEN; //default Green Color
 
-        setTextViewBackgroundDrawableColor(tv, ratingColor);
+        if (setBackgroundColor) {
+            setTextViewBackgroundDrawableColor(tv, ratingColor);
+        }
 
         return ratingColor;
     }
@@ -3630,6 +3652,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             handler = new Handler();
         }
         return handler;
+    }
+
+    public double getTotalPrice(){
+        return totalPrice;
     }
 
 }

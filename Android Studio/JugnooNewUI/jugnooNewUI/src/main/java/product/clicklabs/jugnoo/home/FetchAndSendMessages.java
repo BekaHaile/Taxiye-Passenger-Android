@@ -257,8 +257,10 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 						for(KeywordDatum keywordDatum : keywordData){
 							if(keywordDatum.isBody && body.toLowerCase().contains(keywordDatum.keyword)){
 								messages.add(new MSenderBody(sender, body, date));
+								break;
 							} else if(!keywordDatum.isBody && sender.toLowerCase().contains(keywordDatum.keyword)){
 								messages.add(new MSenderBody(sender, body, date));
+								break;
 							}
 						}
 					} catch (Exception e) {

@@ -624,4 +624,10 @@ public interface Constants {
     String SP_SHOW_GEANIE_HELP = "geanie_help";
     String KEY_SHOW_JEANIE_HELP_TEXT = "show_jeanie_help_text";
     String KEY_SHOW_OFFER_DIALOG = "show_offer_dialog";
+    String KEY_SHOW_TUTORIAL = "show_tutorial";
+
+    int OPEN_DEEP_INDEX = 122112;
+
+    String KEY_LIKE_IS_ENABLED = "like_is_enabled";
+    String KEY_SHARE_IS_ENABLED = "share_is_enabled";
 }

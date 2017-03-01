@@ -89,8 +89,8 @@ public class PushDialog {
 				try {
 					if(!"".equalsIgnoreCase(picture)) {
 						Picasso.with(activity).load(picture)
-								.placeholder(R.drawable.ic_fresh_noti_placeholder)
-								.error(R.drawable.ic_fresh_noti_placeholder)
+								.placeholder(R.drawable.ic_fresh_new_placeholder)
+								.error(R.drawable.ic_fresh_new_placeholder)
 								.into(imageView);
 					} else{
 						imageView.setVisibility(View.GONE);
