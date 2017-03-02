@@ -23,11 +23,11 @@
 
             <ImageView
                 android:id="@+id/imageViewGridViewScreen"
-                android:layout_width="85px"
-                android:layout_height="75px"
+                android:layout_width="70px"
+                android:layout_height="70px"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/px_40"
-                android:src="@drawable/home_switcher_auto" />
+                android:layout_marginTop="@dimen/px_35"
+                android:src="@drawable/ic_auto_grey" />
 
             <TextView
                 android:id="@+id/textViewGridViewScreen"

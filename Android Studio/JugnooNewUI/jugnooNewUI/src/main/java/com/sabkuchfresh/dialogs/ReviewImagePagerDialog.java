@@ -35,10 +35,12 @@ public class ReviewImagePagerDialog extends DialogFragment {
 	private ViewPager vpImages;
 	private TextView tvLikeShareCount;
 
-	public static ReviewImagePagerDialog newInstance(int positionImageClicked){
+	public static ReviewImagePagerDialog newInstance(int positionImageClicked, int likeIsEnabled, int shareIsEnabled){
 		ReviewImagePagerDialog dialog = new ReviewImagePagerDialog();
 		Bundle bundle = new Bundle();
 		bundle.putInt(Constants.KEY_POSITION, positionImageClicked);
+		bundle.putInt(Constants.KEY_LIKE_IS_ENABLED, likeIsEnabled);
+		bundle.putInt(Constants.KEY_SHARE_IS_ENABLED, shareIsEnabled);
 		dialog.setArguments(bundle);
 		return dialog;
 	}
@@ -56,6 +58,8 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		rootView = inflater.inflate(R.layout.dialog_fragment_review_images, container, false);
 
 		int positionImageClicked = getArguments().getInt(Constants.KEY_POSITION, 0);
+		int likeIsEnabled = getArguments().getInt(Constants.KEY_LIKE_IS_ENABLED, 1);
+		int shareIsEnabled = getArguments().getInt(Constants.KEY_SHARE_IS_ENABLED, 1);
 
 		activity = (FreshActivity) getActivity();
 
@@ -85,7 +89,15 @@ public class ReviewImagePagerDialog extends DialogFragment {
 			} else {
 				shareCount.append(activity.getCurrentReview().getShareCount()).append(" ").append(activity.getString(R.string.share));
 			}
-			tvLikeShareCount.setText(likeCount.toString() + " | " + shareCount.toString());
+
+			if(likeIsEnabled != 1){
+				likeCount.delete(0, likeCount.length());
+			}
+			if(shareIsEnabled != 1){
+				shareCount.delete(0, shareCount.length());
+			}
+			String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
+			tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
 
 			WindowManager.LayoutParams layoutParams = getDialog().getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
@@ -118,7 +130,6 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		public Object instantiateItem(ViewGroup container, int position) {
 			ImageView ivReviewImage = (ImageView) inflater.inflate(R.layout.dialog_item_review_image, container, false);
 
-//			ImageView ivReviewImage = (ImageView) layout.findViewById(R.id.ivReviewImage);
 			Picasso.with(context).load(reviewImages.get(position).getUrl())
 					.placeholder(R.drawable.ic_fresh_new_placeholder)
 					.into(ivReviewImage);

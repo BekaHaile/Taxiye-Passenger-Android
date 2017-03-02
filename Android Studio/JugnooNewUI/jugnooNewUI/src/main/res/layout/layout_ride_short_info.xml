@@ -13,12 +13,12 @@
         >
         <ImageView
             android:id="@+id/imageViewProductType"
-            android:layout_width="45px"
-            android:layout_height="37px"
+            android:layout_width="50px"
+            android:layout_height="50px"
             android:tag="mwar"
-            android:src="@drawable/ic_support_auto"
+            android:src="@drawable/ic_auto_grey"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="36px"
+            android:layout_marginLeft="30px"
             />
 
 
@@ -30,7 +30,7 @@
             android:textColor="@color/text_color_light_selector"
             android:text="@string/issue_with_the_recent_ride"
             android:textSize="@dimen/text_size_32"
-            android:layout_marginLeft="24px"
+            android:layout_marginLeft="20px"
             android:layout_centerVertical="true"
             />
 

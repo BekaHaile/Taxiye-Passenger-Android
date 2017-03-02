@@ -41,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_meal_place_holder"
+                    android:src="@drawable/ic_fresh_new_placeholder"
                     android:tag="mwar"
                     android:visibility="visible" />
 

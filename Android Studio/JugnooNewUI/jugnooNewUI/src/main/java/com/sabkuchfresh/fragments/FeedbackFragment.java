@@ -269,16 +269,16 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         ratingBarMenuFeedback = (RatingBarMenuFeedback) rootView.findViewById(R.id.rating_bar);
 
         if (Config.getFreshClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
-            imageviewType.setImageResource(R.drawable.feedback_fresh);
-            ivOffering.setImageResource(R.drawable.ic_fab_fresh);
+            imageviewType.setImageResource(R.drawable.ic_fresh_grey);
+            ivOffering.setImageResource(R.drawable.ic_fresh_grey);
         } else if (Config.getGroceryClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
-            imageviewType.setImageResource(R.drawable.feedback_grocery);
-            ivOffering.setImageResource(R.drawable.ic_fab_grocery);
+            imageviewType.setImageResource(R.drawable.ic_fresh_grey);
+            ivOffering.setImageResource(R.drawable.ic_fresh_grey);
         } else if (Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
 
 
-            imageviewType.setImageResource(R.drawable.ic_fab_menus);
-            ivOffering.setImageResource(R.drawable.ic_fab_menus);
+            imageviewType.setImageResource(R.drawable.ic_menus_grey);
+            ivOffering.setImageResource(R.drawable.ic_menus_grey);
 
             /**
              Edited by Parminder Singh on 2/10/17 at 12:46 PM
@@ -332,8 +332,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
 
         } else {
-            imageviewType.setImageResource(R.drawable.feedback_meals);
-            ivOffering.setImageResource(R.drawable.ic_fab_meals);
+            imageviewType.setImageResource(R.drawable.ic_meals_grey);
+            ivOffering.setImageResource(R.drawable.ic_meals_grey);
 
 
         }

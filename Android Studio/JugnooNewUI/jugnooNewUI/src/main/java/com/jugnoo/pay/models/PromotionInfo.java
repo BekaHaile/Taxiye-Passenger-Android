@@ -37,6 +37,9 @@ public class PromotionInfo extends PromoCoupon {
 	@SerializedName("discount")
 	@Expose
 	private Double discount = 0d;
+	@SerializedName("is_selected")
+	@Expose
+	private Integer isSelected;
 
 
 	public PromotionInfo(int id, String title, String terms, String endOn){
@@ -95,5 +98,16 @@ public class PromotionInfo extends PromoCoupon {
 
 	public void setDiscount(Double discount) {
 		this.discount = discount;
+	}
+
+	public Integer getIsSelected() {
+		if(isSelected == null){
+			isSelected = 0;
+		}
+		return isSelected;
+	}
+
+	public void setIsSelected(Integer isSelected) {
+		this.isSelected = isSelected;
 	}
 }

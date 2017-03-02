@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.picker.image.model.ImageEntry;
-import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
@@ -25,6 +24,8 @@ import product.clicklabs.jugnoo.utils.ASSL;
  */
 public class DisplaySelectedImagesAdapter extends RecyclerView.Adapter<DisplaySelectedImagesAdapter.ViewHolderReviewImage>{
 
+    private static final float IMAGE_DISPLAY_WIDTH = 300f;
+    private  static  final float IMAGE_DISPLAY_HEIGHT = 300f;
     private Activity activity;
     private ArrayList<Object> reviewImages;
     private Callback callback;
@@ -34,6 +35,8 @@ public class DisplaySelectedImagesAdapter extends RecyclerView.Adapter<DisplaySe
         this.reviewImages = reviewImages;
         this.callback = callback;
     }
+
+
 
     public void setList(ArrayList<Object> reviewImages){
         this.reviewImages = reviewImages;
@@ -57,7 +60,7 @@ public class DisplaySelectedImagesAdapter extends RecyclerView.Adapter<DisplaySe
             if (reviewImages.get(position) instanceof FetchFeedbackResponse.ReviewImage) {
                 FetchFeedbackResponse.ReviewImage reviewImage = (FetchFeedbackResponse.ReviewImage) reviewImages.get(position);
                 path=reviewImage.getUrl();
-                Picasso.with(activity).load(path).resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
+                Picasso.with(activity).load(path).resize((int) (ASSL.minRatio() * IMAGE_DISPLAY_WIDTH), (int) (ASSL.minRatio() * IMAGE_DISPLAY_HEIGHT))
                         .centerCrop()
                         .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
                         .placeholder(R.drawable.ic_fresh_item_placeholder)
@@ -66,7 +69,7 @@ public class DisplaySelectedImagesAdapter extends RecyclerView.Adapter<DisplaySe
             else if(reviewImages.get(position) instanceof ImageEntry) {
                 path=((ImageEntry)reviewImages.get(position)).path;
                 Picasso.with(activity).load(new File(path))
-                        .resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
+                        .resize((int) (ASSL.minRatio() * IMAGE_DISPLAY_WIDTH), (int) (ASSL.minRatio() * IMAGE_DISPLAY_HEIGHT))
                         .centerCrop()
                         .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
                         .placeholder(R.drawable.ic_fresh_item_placeholder)

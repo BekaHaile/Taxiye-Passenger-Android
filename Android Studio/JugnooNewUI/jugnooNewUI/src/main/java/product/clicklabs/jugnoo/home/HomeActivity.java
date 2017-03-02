@@ -539,7 +539,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        FacebookSdk.sdkInitialize(this);
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -2822,7 +2821,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if(Data.autoData.getEndRideData().getIsPooled() == 1){
                             ivEndRideType.setImageResource(R.drawable.ic_history_pool);
                         } else{
-                            ivEndRideType.setImageResource(R.drawable.ic_support_auto_big);
+                            ivEndRideType.setImageResource(R.drawable.ic_auto_grey);
                         }
 
                         linearLayoutRideSummary.setLayoutTransition(null);
@@ -2877,6 +2876,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     case P_INITIAL:
 
                         fabViewTest = new FABViewTest(this, fabViewIntial);
+                        getHandler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(fabViewTest != null) {
+                                    fabViewTest.showTutorial();
+                                }
+                            }
+                        }, 1000);
                         GCMIntentService.clearNotifications(HomeActivity.this);
                         Prefs.with(HomeActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
 
@@ -9369,6 +9376,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             } else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
                                 tvChatCount.setVisibility(View.VISIBLE);
                                 tvChatCount.setText(String.valueOf(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 1)));
+                            } else if (Constants.OPEN_DEEP_INDEX == flag) {
+                                deepLinkAction.openDeepLink(menuBar);
                             }
                         }
                     } catch (Exception e) {
@@ -9481,4 +9490,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private HomeUtil.SavedAddressState savedAddressState = HomeUtil.SavedAddressState.BLANK;
+
+    private Handler handler;
+    public Handler getHandler(){
+        if(handler == null){
+            handler = new Handler();
+        }
+        return handler;
+    }
 }

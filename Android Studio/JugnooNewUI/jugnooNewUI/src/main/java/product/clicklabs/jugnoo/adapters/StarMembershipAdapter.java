@@ -8,18 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.adapters.AddOnItemsAdapter;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -50,19 +45,19 @@ public class StarMembershipAdapter extends BaseAdapter {
 			viewHolder.tvOfferingName.setText(benefits.get(position).getTitle());
 
 			if(benefits.get(position).getProductType() == ProductType.AUTO.getOrdinal()){
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_autos);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_auto_grey);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.FRESH.getOrdinal()){
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_fresh);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fresh_grey);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.MEALS.getOrdinal()){
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_meals);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_meals_grey);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.GROCERY.getOrdinal()){
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_grocery);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fresh_grey);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.MENUS.getOrdinal()){
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_menus);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_menus_grey);
 			}
 
 			//viewHolder.ivSep.setVisibility((position < getCount()-1) ? View.VISIBLE : View.GONE);

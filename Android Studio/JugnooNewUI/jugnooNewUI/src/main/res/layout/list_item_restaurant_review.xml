@@ -134,6 +134,7 @@
         android:layout_marginTop="@dimen/px_20"
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop"
+        android:tag="mwar"
         />
 
 
@@ -174,7 +175,6 @@
         android:padding="@dimen/px_10"
         android:src="@drawable/ic_feed_edit"
         android:tag="mwar"
-        android:visibility="visible"
 
         />
 
@@ -197,6 +197,7 @@
         android:id="@+id/ivFeedLike"
         android:layout_width="60px"
         android:layout_height="60px"
+        android:layout_alignWithParentIfMissing="true"
         android:layout_below="@+id/vSepBelowMessage"
         android:layout_marginBottom="@dimen/px_20"
         android:layout_marginRight="@dimen/px_30"

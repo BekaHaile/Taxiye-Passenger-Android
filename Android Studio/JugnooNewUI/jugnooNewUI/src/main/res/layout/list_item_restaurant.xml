@@ -4,19 +4,41 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_white_menu_item_selector_color_selector"
-    >
+                android:background="@drawable/bg_white_menu_item_selector_color_selector">
 
+    
+    
+    <TextView
+        android:id="@+id/tv_offer"
+        android:background="@color/color_orange_menus"
+        android:paddingLeft="10dp"
+        android:text="Cashback 20%"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:textSize="18px"
+        android:layout_marginBottom="-10px"
+        android:layout_width="wrap_content"
+        android:visibility="visible"
+        android:layout_height="32px" />
+    <View
+        android:id="@+id/tv_offer_view"
+        android:layout_toRightOf="@id/tv_offer"
+        android:background="@drawable/drawable_menu_strip_offer_triangle"
+        android:layout_width="40px"
+        android:visibility="visible"
+        android:layout_height="32px"/>
+    
+    
     <ImageView
+        android:layout_below="@id/tv_offer"
         android:id="@+id/imageViewRestaurantImage"
         android:layout_width="@dimen/px_150"
         android:layout_height="@dimen/px_150"
         android:layout_margin="@dimen/px_30"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_meal_place_holder"
+        android:src="@drawable/ic_fresh_item_placeholder"
         android:tag="mwar"
-        android:visibility="visible"
-        />
+        android:visibility="visible" />
 
     <View
         android:layout_width="@dimen/px_150"
@@ -41,9 +63,12 @@
         android:text="Sector 28 B"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_16"
+        android:maxLines="2"
+        android:ellipsize="end"
         />
 
     <TextView
+        android:layout_below="@id/tv_offer"
         android:id="@+id/textViewRestaurantName"
         android:layout_width="@dimen/px_380"
         android:layout_height="wrap_content"
@@ -116,6 +141,7 @@
 
     <TextView
         android:id="@+id/tvRating"
+        android:layout_below="@id/tv_offer"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/px_40"
         android:layout_alignParentRight="true"
@@ -127,8 +153,8 @@
         android:paddingRight="@dimen/px_15"
         android:text="Rating 2.1"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_20"
-        android:visibility="gone"
+        android:textSize="@dimen/text_size_22"
+        android:visibility="visible"
         app:font="maven"
         />
 

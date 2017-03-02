@@ -15,12 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItem;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeOption;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 import com.sabkuchfresh.utils.AppConstant;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 	private Callback callback;
 	private boolean checkForCouponApplied;
 	private int appType;
+	private UserCheckoutResponse.SubscriptionInfo subscription;
 
 	public MenusCartItemsAdapter(Activity context, ArrayList<Item> items, boolean checkForCouponApplied,
 								 Callback callback) {
@@ -58,6 +61,12 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
 	}
 
+	public synchronized void setResults(ArrayList<Item> items, UserCheckoutResponse.SubscriptionInfo subscription) {
+		this.items = items;
+		this.subscription = subscription;
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public int getCount() {
 		int count = 0;
@@ -67,6 +76,9 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 					count++;
 				}
 			}
+		}
+		if(subscription != null){
+			count++;
 		}
 		return count;
 	}
@@ -182,7 +194,17 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		MainViewHolder mHolder = ((MainViewHolder) holder);
-		MenuCartViewModel mcv = getItem(position);
+		MenuCartViewModel mcv;
+
+		if(isPositionSubscription(position)){
+			mcv = new MenuCartViewModel();
+			mcv.setName(subscription.getDescription());
+			mcv.setPrice((double)subscription.getPrice());
+			mcv.setQuantity(1);
+			mcv.setIsVeg(-1);
+		} else {
+			mcv = getItem(position);
+		}
 
 		mHolder.textViewItemName.setText(mcv.getName());
 		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
@@ -206,8 +228,17 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		}
 
 		mHolder.imageViewItemImage.setVisibility(View.GONE);
+		if(isPositionSubscription(position)){
+			mHolder.imageViewItemImage.setVisibility(View.VISIBLE);
+			Picasso.with(context).load(R.drawable.star)
+					.placeholder(R.drawable.ic_fresh_item_placeholder)
+					.fit()
+					.centerCrop()
+					.error(R.drawable.ic_fresh_item_placeholder)
+					.into(mHolder.imageViewItemImage);
+		}
 
-		mHolder.imageViewFoodType.setVisibility(appType == AppConstant.ApplicationType.MENUS ? View.VISIBLE : View.GONE);
+		mHolder.imageViewFoodType.setVisibility((mcv.getIsVeg() > -1 && appType == AppConstant.ApplicationType.MENUS) ? View.VISIBLE : View.GONE);
 		mHolder.imageViewFoodType.setImageResource(mcv.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
 
 		mHolder.imageViewMinus.setTag(position);
@@ -281,19 +312,31 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 	}
 
 	private void doMinus(int pos) {
-		Pair<Integer, Integer> pair = doItemPlusMinus(pos, false);
-		if(pair != null) {
-			callback.onMinusClicked(pair.first, pair.second);
+		if(isPositionSubscription(pos)){
+			callback.deleteStarSubscription();
+		} else {
+			Pair<Integer, Integer> pair = doItemPlusMinus(pos, false);
+			if (pair != null) {
+				callback.onMinusClicked(pair.first, pair.second);
+			}
+			notifyDataSetChanged();
 		}
-		notifyDataSetChanged();
 	}
 
 	private void doPlus(int pos){
-		Pair<Integer, Integer> pair = doItemPlusMinus(pos, true);
-		if(pair != null) {
-			callback.onPlusClicked(pair.first, pair.second);
+		if(isPositionSubscription(pos)){
+			Utils.showToast(context, context.getResources().getString(R.string.no_more_than_star, 1));
+		} else {
+			Pair<Integer, Integer> pair = doItemPlusMinus(pos, true);
+			if (pair != null) {
+				callback.onPlusClicked(pair.first, pair.second);
+			}
+			notifyDataSetChanged();
 		}
-		notifyDataSetChanged();
+	}
+
+	private boolean isPositionSubscription(int pos){
+		return (subscription != null && pos == getCount()-1);
 	}
 
 	static class MainViewHolder extends RecyclerView.ViewHolder {
@@ -325,6 +368,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		void onMinusClicked(int position, int itemTotalQuantity);
 		PromoCoupon getSelectedCoupon();
 		void removeCoupon();
+		void deleteStarSubscription();
 	}
 
 

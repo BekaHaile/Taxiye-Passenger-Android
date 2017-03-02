@@ -33,7 +33,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
-import com.sabkuchfresh.adapters.MenusItemChargesAdapter;
+import com.sabkuchfresh.adapters.CheckoutChargesAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressAdded;
@@ -120,7 +120,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     private LinearLayout linearLayoutCartDetails, linearLayoutCartExpansion;
     private NonScrollListView listViewCart;
     private NonScrollListView listViewMenusCharges;
-    private MenusItemChargesAdapter menusItemChargesAdapter;
+    private CheckoutChargesAdapter checkoutChargesAdapter;
     private MenusCartItemsAdapter menusCartItemsAdapter;
 
     private RelativeLayout relativeLayoutDeliveryAddress;
@@ -280,8 +280,8 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
         listViewMenusCharges = (NonScrollListView) rootView.findViewById(R.id.listViewMenusCharges);
 
-        menusItemChargesAdapter = new MenusItemChargesAdapter(activity, taxList);
-        listViewMenusCharges.setAdapter(menusItemChargesAdapter);
+        checkoutChargesAdapter = new CheckoutChargesAdapter(activity, taxList);
+        listViewMenusCharges.setAdapter(checkoutChargesAdapter);
 
         menusCartItemsAdapter = new MenusCartItemsAdapter(activity, itemsInCart, true, this);
         listViewCart.setAdapter(menusCartItemsAdapter);
@@ -555,7 +555,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         if (totalAmount() > 0 && jcUsed() > 0) {
             taxList.add(new Tax(getString(R.string.jugnoo_cash), jcUsed()));
         }
-        menusItemChargesAdapter.notifyDataSetChanged();
+        checkoutChargesAdapter.notifyDataSetChanged();
 
         if(taxList.size() > 0){
             linearLayoutCartDetails.setVisibility(View.VISIBLE);
@@ -581,7 +581,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             double cashbackValue = activity.getUserCheckoutResponse().getSubscription().getCashback(totalUndiscounted);
             cashbackValue = Math.round(cashbackValue);
             if(cashbackValue > 0d) {
-//                cashbackValue = Math.round(totalUndiscounted - Math.round(totalUndiscounted - cashbackValue));
                 cvStarSavings.setVisibility(View.VISIBLE);
                 String cashbackText = TextUtils.isEmpty(activity.getUserCheckoutResponse().getSubscription().getCashbackText())
                         ?
@@ -655,7 +654,14 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         public void onWalletAdd(PaymentOption paymentOption) {
             activity.setPaymentOption(paymentOption);
         }
+
+        @Override
+        public String getAmountToPrefill() {
+            return dfNoDecimal.format(Math.ceil(payableAmount()));
+        }
     };
+
+    private DecimalFormat dfNoDecimal = new DecimalFormat("#");
 
 
     @Override
@@ -1386,28 +1392,23 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     private void updateCouponsDataView(){
         try {
             String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
-            if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
+            if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                 promoCoupons = Data.userData.getCoupons(ProductType.MEALS);
-            } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+            } else if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
                 promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
-            } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
-                if(promoCoupons == null){
+            } else if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                if (promoCoupons == null) {
                     promoCoupons = new ArrayList<>();
                 }
                 promoCoupons.clear();
                 ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(ProductType.MENUS);
-                if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal())
-                {
-                    for(PromoCoupon promoCoupon : promoCouponsList)
-                    {
-                        if(MyApplication.getInstance().getWalletCore().couponOfWhichWallet(promoCoupon) == PaymentOption.CASH.getOrdinal())
-                        {
+                if (activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()) {
+                    for (PromoCoupon promoCoupon : promoCouponsList) {
+                        if (MyApplication.getInstance().getWalletCore().couponOfWhichWallet(promoCoupon) == PaymentOption.CASH.getOrdinal()) {
                             promoCoupons.add(promoCoupon);
                         }
                     }
-                }
-                else
-                {
+                } else {
                     promoCoupons.addAll(promoCouponsList);
                 }
             } else {
@@ -1463,7 +1464,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                 params.put(Constants.KEY_CURRENT_LATITUDE, String.valueOf(Data.latitude));
                 params.put(Constants.KEY_CURRENT_LONGITUDE, String.valueOf(Data.longitude));
 
-                JSONArray jCart = new JSONArray();
                 params.put(Constants.KEY_CART, cartItems());
                 params.put(Constants.ORDER_AMOUNT, Utils.getMoneyDecimalFormat().format(subTotalAmount));
 
@@ -1852,4 +1852,8 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
+    @Override
+    public void deleteStarSubscription() {
+
+    }
 }

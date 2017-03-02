@@ -80,11 +80,11 @@
 
                     <ImageView
                         android:id="@+id/imageViewEndRideAutoIcon"
-                        android:layout_width="50px"
-                        android:layout_height="42px"
+                        android:layout_width="53px"
+                        android:layout_height="53px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="15px"
-                        android:src="@drawable/ic_auto_invoice"
+                        android:layout_marginLeft="10px"
+                        android:src="@drawable/ic_auto_grey"
                         android:tag="mwar" />
 
                     <TextView
@@ -92,7 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
+                        android:layout_marginLeft="8px"
                         android:layout_marginRight="5px"
                         android:layout_toRightOf="@+id/imageViewEndRideAutoIcon"
                         android:gravity="center_vertical"

@@ -18,7 +18,6 @@ import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SubItem;
-import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -44,10 +43,10 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
     private TextView textViewProceed;
 
     private RelativeLayout relativeLayoutCartTop;
-    private TextView textViewCartItems, textViewCartTotalUndiscount, textViewCartTotal;
+    private TextView textViewCartItems, textViewCartTotalUndiscount;
     private ImageView imageViewCartArrow, imageViewDeleteCart, imageViewCartSep;
-    private LinearLayout linearLayoutCartDetails, linearLayoutCartExpansion;
-    private NonScrollListView listViewCart;
+    private LinearLayout linearLayoutCartExpansion;
+    private NonScrollListView listViewCart, listViewCharges;
     private FreshCartItemsAdapter freshCartItemsAdapter;
 
     private Bus mBus;
@@ -113,14 +112,13 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         textViewCartItems = (TextView) rootView.findViewById(R.id.textViewCartItems); textViewCartItems.setTypeface(Fonts.mavenMedium(activity));
         textViewCartTotalUndiscount = (TextView) rootView.findViewById(R.id.textViewCartTotalUndiscount);
         textViewCartTotalUndiscount.setVisibility(View.GONE);
-        textViewCartTotal = (TextView) rootView.findViewById(R.id.textViewCartTotal); textViewCartTotal.setTypeface(Fonts.mavenMedium(activity));
         imageViewCartArrow = (ImageView) rootView.findViewById(R.id.imageViewCartArrow);
         imageViewDeleteCart = (ImageView) rootView.findViewById(R.id.imageViewDeleteCart);
         imageViewCartSep = (ImageView) rootView.findViewById(R.id.imageViewCartSep);
         imageViewCartSep.setVisibility(View.GONE);
         linearLayoutCartExpansion = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartExpansion);
-        linearLayoutCartDetails = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartDetails);
-        linearLayoutCartDetails.setVisibility(View.GONE);
+        listViewCharges = (NonScrollListView) rootView.findViewById(R.id.listViewCharges);
+        listViewCharges.setVisibility(View.GONE);
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
         freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, FlurryEventNames.REVIEW_CART, false,
                 new FreshCartItemsAdapter.Callback() {
@@ -281,8 +279,6 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
     private void updateCartTopBarView(Pair<Double, Integer> pair){
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
-        textViewCartTotal.setText(activity.getString(R.string.rupees_value_format_without_space,
-                Utils.getMoneyDecimalFormatWithoutFloat().format(pair.first)));
     }
 
     private void updateCartDataView(){

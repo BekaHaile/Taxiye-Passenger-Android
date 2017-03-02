@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -61,11 +63,14 @@ import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * Created by Shankar on 15/11/16.
  */
 public class RestaurantAddReviewFragment extends Fragment  {
+
     private final String TAG = RestaurantAddReviewFragment.class.getSimpleName();
 
     private RelativeLayout rlRoot;
@@ -92,10 +97,10 @@ public class RestaurantAddReviewFragment extends Fragment  {
     private TextView tvCharCount;
     private  int etReviewMaxLength;
     private View ibAccessCamera;
-    private View scrollView;
+    private ScrollView scrollView;
     private String[] permissionsRequest;
-    private int MAX_NO_IMAGES = 5;
-
+    private int maxNoImages = 5;
+    private static final int REQUEST_CODE_SELECT_IMAGES=99;
 
     public static RestaurantAddReviewFragment newInstance(int restaurantId) {
         RestaurantAddReviewFragment fragment = new RestaurantAddReviewFragment();
@@ -119,7 +124,8 @@ public class RestaurantAddReviewFragment extends Fragment  {
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
-        scrollView =rootView.findViewById(R.id.scroll_view);
+        maxNoImages = activity.getReviewImageCount();
+        scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
         try {
             if (rlRoot != null) {
@@ -267,28 +273,12 @@ public class RestaurantAddReviewFragment extends Fragment  {
                 etFeedback.setText(etFeedback.getText().toString().trim());
                 int alreadyPresent = objectList == null ? 0 : objectList.size();
                 if(picker==null){
-                    picker = new Picker.Builder(activity, new Picker.PickListener() {
-                        @Override
-                        public void onPickedSuccessfully(ArrayList<ImageEntry> images) {
-                            if (images != null && images.size() != 0) {
-                                objectList.addAll(images);
-                                setUpAdapter(objectList);
-
-                            }
-                        }
-
-                        @Override
-                        public void onCancel() {
-
-                        }
-                    }, R.style.AppThemePicker_NoActionBar)
-                            .setPickMode(Picker.PickMode.MULTIPLE_IMAGES)
-                            .build();
+                    picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
                 }
 
 
-                picker.setLimit(MAX_NO_IMAGES -alreadyPresent);
-                picker.startActivity();
+                picker.setLimit(maxNoImages -alreadyPresent);
+                picker.startActivity(RestaurantAddReviewFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
 
 
             }
@@ -296,7 +286,26 @@ public class RestaurantAddReviewFragment extends Fragment  {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode== REQUEST_CODE_SELECT_IMAGES && resultCode==RESULT_OK){
+            if(data!=null && data.getSerializableExtra("imagesList")!=null)
+            {
+
+                ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
+                if (images != null && images.size() != 0) {
+                    objectList.addAll(images);
+                    setUpAdapter(objectList);
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+
+
+                }
+            }
+        }
+
+    }
 
     private void loadDataIfEditingFeedback() {
         if (activity.getCurrentReview() != null){
@@ -411,7 +420,8 @@ public class RestaurantAddReviewFragment extends Fragment  {
       ibAccessCamera.setEnabled(objectList.size()<5);
         updateSubmitButtonStatus();
 
-
+    if(objectList.size()>0)
+        displayImagesRecycler.smoothScrollToPosition(objectList.size());
 
 
     }

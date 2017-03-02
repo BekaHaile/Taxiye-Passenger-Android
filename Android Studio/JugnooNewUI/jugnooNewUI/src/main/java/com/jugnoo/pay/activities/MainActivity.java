@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity {
             imageViewSharePaymentId = (ImageView) findViewById(R.id.imageViewSharePaymentId);
 
 
-            float marginBottom = 40f;
+            float marginBottom = 60f;
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
             fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
 

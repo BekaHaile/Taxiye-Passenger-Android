@@ -25,6 +25,22 @@ public class FetchFeedbackResponse {
 	@SerializedName("review")
 	@Expose
 	private List<Review> review = null;
+	@SerializedName("review_image_limit")
+	@Expose
+	private int reviewImageLimit;
+	@SerializedName("share_text_self")
+	@Expose
+	private String shareTextSelf;
+	@SerializedName("share_text_other")
+	@Expose
+	private String shareTextOther;
+	@SerializedName("like_is_enabled")
+	@Expose
+	private Integer likeIsEnabled;
+	@SerializedName("share_is_enabled")
+	@Expose
+	private Integer shareIsEnabled;
+
 
 	public Integer getFlag() {
 		return flag;
@@ -64,6 +80,52 @@ public class FetchFeedbackResponse {
 
 	public void setReview(List<Review> review) {
 		this.review = review;
+	}
+
+	public int getReviewImageLimit() {
+		return reviewImageLimit;
+	}
+
+	public void setReviewImageLimit(int reviewImageLimit) {
+		this.reviewImageLimit = reviewImageLimit;
+	}
+
+	public String getShareTextSelf() {
+		return shareTextSelf;
+	}
+
+	public void setShareTextSelf(String shareTextSelf) {
+		this.shareTextSelf = shareTextSelf;
+	}
+
+	public String getShareTextOther() {
+		return shareTextOther;
+	}
+
+	public void setShareTextOther(String shareTextOther) {
+		this.shareTextOther = shareTextOther;
+	}
+
+	public Integer getLikeIsEnabled() {
+		if(likeIsEnabled == null){
+			likeIsEnabled = 1;
+		}
+		return likeIsEnabled;
+	}
+
+	public void setLikeIsEnabled(Integer likeIsEnabled) {
+		this.likeIsEnabled = likeIsEnabled;
+	}
+
+	public Integer getShareIsEnabled() {
+		if(shareIsEnabled == null){
+			shareIsEnabled = 1;
+		}
+		return shareIsEnabled;
+	}
+
+	public void setShareIsEnabled(Integer shareIsEnabled) {
+		this.shareIsEnabled = shareIsEnabled;
 	}
 
 	public class Review {
@@ -116,6 +178,7 @@ public class FetchFeedbackResponse {
 		@SerializedName("images")
 		@Expose
 		private List<ReviewImage> images;
+		private boolean expanded;
 
 		public Integer getOrderId() {
 			return orderId;
@@ -259,6 +322,14 @@ public class FetchFeedbackResponse {
 		public void setFeedbackId(Integer feedbackId) {
 			this.feedbackId = feedbackId;
 		}
+
+		public boolean isExpanded() {
+			return expanded;
+		}
+
+		public void setExpanded(boolean expanded) {
+			this.expanded = expanded;
+		}
 	}
 
 
@@ -275,6 +346,8 @@ public class FetchFeedbackResponse {
 		private String id;
 
 
+
+
 		public String getUrl() {
 			return url;
 		}
@@ -289,6 +362,14 @@ public class FetchFeedbackResponse {
 
 		public void setThumbnail(String thumbnail) {
 			this.thumbnail = thumbnail;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
 		}
 	}
 }

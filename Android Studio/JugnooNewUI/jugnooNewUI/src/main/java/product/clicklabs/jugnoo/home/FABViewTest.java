@@ -7,7 +7,10 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,7 +27,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
@@ -51,6 +53,7 @@ public class FABViewTest {
 
     private RelativeLayout rlGenieHelp;
     private TextView tvGenieHelp;
+    private ImageView ivJeanieHelp;
 
     public FABViewTest(Activity activity, View view) {
         this.activity = activity;
@@ -64,6 +67,8 @@ public class FABViewTest {
 
     private void initComponent(){
         try {
+
+
 //            relativeLayoutFABTest = (RelativeLayout) view.findViewById(R.id.relativeLayoutFABTest);
             relativeLayoutFABTest = (RelativeLayout) view;
             menuLabelsRightTest = (FloatingActionMenu) view.findViewById(R.id.menu_labels_right_Test);
@@ -100,14 +105,15 @@ public class FABViewTest {
 
 
             rlGenieHelp = (RelativeLayout) view.findViewById(R.id.rlGenieHelp);
-            tvGenieHelp = (TextView) view.findViewById(R.id.tvGenieHelp); tvGenieHelp.setTypeface(Fonts.mavenMedium(activity));
+            tvGenieHelp = (TextView) view.findViewById(R.id.tvGenieHelp);
+            ivJeanieHelp = (ImageView) view.findViewById(R.id.ivJeanieHelp);
 
             setRlGenieHelpBottomMargin(170f);
         } catch (Exception e) {
             e.printStackTrace();
         }
         //setFABButtons();
-
+        isOpened = false;
         menuLabelsRightTest.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
@@ -116,8 +122,8 @@ public class FABViewTest {
                         setButtonsVisibilityOnOpen();
                         isOpened = true;
                         if(activity instanceof HomeActivity){
-                            ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
+//                            ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
                         }
                         Prefs.with(activity).save(Constants.SP_SHOW_GEANIE_HELP, 1);
                         setRlGenieHelpVisibility();
@@ -126,9 +132,10 @@ public class FABViewTest {
                     } else {
                         isOpened = false;
                         if(activity instanceof HomeActivity){
-                            ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.GONE);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
+//                            ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
                         }
+                        ivJeanieHelp.setVisibility(View.GONE);
                         FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Closed");
                     }
                 } catch (Exception e) {
@@ -136,6 +143,8 @@ public class FABViewTest {
                 }
             }
         });
+
+
 
         rlGenieHelp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,6 +178,13 @@ public class FABViewTest {
             public void onAnimationStart(Animator animation) {
                 menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
                         ? R.drawable.ic_fab_jeanie : R.drawable.ic_fab_cross);
+                if(activity instanceof HomeActivity) {
+                    if (menuLabelsRightTest.isOpened()) {
+                        ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
+                    } else {
+                        ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
+                    }
+                }
             }
         });
 
@@ -445,6 +461,18 @@ public class FABViewTest {
     public void setMenuLabelsRightTestPadding(int paddingBottom){
         menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, paddingBottom);
         setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
+    }
+
+    public void showTutorial(){
+        if(Data.userData != null && Data.userData.getShowTutorial() == 1) {
+            menuLabelsRightTest.open(true);
+            Animation animation = new AlphaAnimation(0f, 1f);
+            animation.setDuration(1000);
+            animation.setFillAfter(false);
+            ivJeanieHelp.setVisibility(View.VISIBLE);
+            ivJeanieHelp.startAnimation(animation);
+            Data.userData.setShowTutorial(0);
+        }
     }
 
 }
