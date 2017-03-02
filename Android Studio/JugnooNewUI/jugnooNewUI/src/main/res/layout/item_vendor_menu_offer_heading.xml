@@ -56,7 +56,7 @@
         app:font="maven"
         android:visibility="gone"
         android:paddingRight="20px"
-        android:paddingBottom="20px"
+        android:paddingBottom="10px"
         android:layout_height="wrap_content"
         android:textSize="26px"
         android:textColor="@color/text_color_grey_menus" />

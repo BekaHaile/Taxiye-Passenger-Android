@@ -3658,4 +3658,13 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
         return totalPrice;
     }
 
+    private int reviewImageCount = 5;
+    public void setReviewImageCount(int count){
+        this.reviewImageCount = count;
+    }
+
+    public int getReviewImageCount(){
+        return reviewImageCount;
+    }
+
 }

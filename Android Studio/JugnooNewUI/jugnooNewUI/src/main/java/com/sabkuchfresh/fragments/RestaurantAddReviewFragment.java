@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,7 +99,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
     private View ibAccessCamera;
     private ScrollView scrollView;
     private String[] permissionsRequest;
-    private int MAX_NO_IMAGES = 5;
+    private int maxNoImages = 5;
     private static final int REQUEST_CODE_SELECT_IMAGES=99;
 
     public static RestaurantAddReviewFragment newInstance(int restaurantId) {
@@ -125,6 +124,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
+        maxNoImages = activity.getReviewImageCount();
         scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
         try {
@@ -277,7 +277,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
                 }
 
 
-                picker.setLimit(MAX_NO_IMAGES -alreadyPresent);
+                picker.setLimit(maxNoImages -alreadyPresent);
                 picker.startActivity(RestaurantAddReviewFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
 
 

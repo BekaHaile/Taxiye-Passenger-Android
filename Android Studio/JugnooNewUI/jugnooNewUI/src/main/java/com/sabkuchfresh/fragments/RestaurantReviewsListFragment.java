@@ -172,6 +172,9 @@ public class RestaurantReviewsListFragment extends Fragment{
                     reviewsAdapter.notifyDataSetChanged();
                     rlNoReviews.setVisibility(restaurantReviews.size() == 0 ? View.VISIBLE : View.GONE);
                     RestaurantReviewsListFragment.this.fetchFeedbackResponse = fetchFeedbackResponse;
+                    if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
+                        activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
+                    }
                 }
 
                 @Override

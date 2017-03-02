@@ -183,7 +183,6 @@
                 android:layout_marginLeft="110px"
                 android:src="@drawable/ic_menu_category_auto_selector"
                 android:tag="mwar"
-                android:scaleX="-1"
                 />
 
             <TextView
