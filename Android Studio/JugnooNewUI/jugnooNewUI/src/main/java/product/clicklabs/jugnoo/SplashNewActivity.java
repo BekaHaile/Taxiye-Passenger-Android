@@ -1,21 +1,28 @@
 package product.clicklabs.jugnoo;
 
+import android.*;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
@@ -46,9 +53,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
+import com.facebook.accountkit.AccessToken;
+import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.AccountKitLoginResult;
+import com.facebook.accountkit.ui.AccountKitActivity;
+import com.facebook.accountkit.ui.AccountKitConfiguration;
+import com.facebook.accountkit.ui.LoginType;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -78,6 +92,8 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.fbaccountkit.ErrorActivity;
+import product.clicklabs.jugnoo.fbaccountkit.TokenActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -197,6 +213,10 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	private boolean openHomeSwitcher = true;
 
 	private String phoneFetchedName = "", phoneFetchedEmail = "";
+	private static final int FRAMEWORK_REQUEST_CODE = 1;
+
+	private int nextPermissionsRequestCode = 4000;
+	private final Map<Integer, OnCompleteListener> permissionsListeners = new HashMap<>();
 
 	@Override
 	protected void onStop() {
@@ -704,7 +724,9 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				@Override
 				public void onClick(View v) {
 
-					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+					startFbAccountKit();
+
+					/*Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 					String phoneNumber = editTextEmail.getText().toString().trim();
 					if ("".equalsIgnoreCase(phoneNumber)) {
 						editTextEmail.requestFocus();
@@ -721,7 +743,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber);
 							}
 						}
-					}
+					}*/
 
 
 					/*Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
@@ -1175,6 +1197,153 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			}
 		}));
 
+	}
+
+	private void startFbAccountKit(){
+		if (AccountKit.getCurrentAccessToken() != null) {
+			startActivity(new Intent(this, TokenActivity.class));
+		} else{
+			onLogin(LoginType.PHONE);
+		}
+	}
+
+	private interface OnCompleteListener {
+		void onComplete();
+	}
+
+	private void onLogin(final LoginType loginType) {
+		final Intent intent = new Intent(this, AccountKitActivity.class);
+		final AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder
+				= new AccountKitConfiguration.AccountKitConfigurationBuilder(
+				loginType,
+				AccountKitActivity.ResponseType.TOKEN);
+		final AccountKitConfiguration configuration = configurationBuilder.build();
+		intent.putExtra(
+				AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
+				configuration);
+		OnCompleteListener completeListener = new OnCompleteListener() {
+			@Override
+			public void onComplete() {
+				startActivityForResult(intent, FRAMEWORK_REQUEST_CODE);
+			}
+		};
+		switch (loginType) {
+			case EMAIL:
+				final OnCompleteListener getAccountsCompleteListener = completeListener;
+				completeListener = new OnCompleteListener() {
+					@Override
+					public void onComplete() {
+						requestPermissions(
+								android.Manifest.permission.GET_ACCOUNTS,
+								R.string.permissions_get_accounts_title,
+								R.string.permissions_get_accounts_message,
+								getAccountsCompleteListener);
+					}
+				};
+				break;
+			case PHONE:
+				if (configuration.isReceiveSMSEnabled()) {
+					final OnCompleteListener receiveSMSCompleteListener = completeListener;
+					completeListener = new OnCompleteListener() {
+						@Override
+						public void onComplete() {
+							requestPermissions(
+									android.Manifest.permission.RECEIVE_SMS,
+									R.string.permissions_receive_sms_title,
+									R.string.permissions_receive_sms_message,
+									receiveSMSCompleteListener);
+						}
+					};
+				}
+				if (configuration.isReadPhoneStateEnabled()) {
+					final OnCompleteListener readPhoneStateCompleteListener = completeListener;
+					completeListener = new OnCompleteListener() {
+						@Override
+						public void onComplete() {
+							requestPermissions(
+									android.Manifest.permission.READ_PHONE_STATE,
+									R.string.permissions_read_phone_state_title,
+									R.string.permissions_read_phone_state_message,
+									readPhoneStateCompleteListener);
+						}
+					};
+				}
+				break;
+		}
+		completeListener.onComplete();
+	}
+
+	private void requestPermissions(
+			final String permission,
+			final int rationaleTitleResourceId,
+			final int rationaleMessageResourceId,
+			final OnCompleteListener listener) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+			if (listener != null) {
+				listener.onComplete();
+			}
+			return;
+		}
+
+		checkRequestPermissions(
+				permission,
+				rationaleTitleResourceId,
+				rationaleMessageResourceId,
+				listener);
+	}
+
+	@TargetApi(23)
+	private void checkRequestPermissions(
+			final String permission,
+			final int rationaleTitleResourceId,
+			final int rationaleMessageResourceId,
+			final OnCompleteListener listener) {
+		if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+			if (listener != null) {
+				listener.onComplete();
+			}
+			return;
+		}
+
+		final int requestCode = nextPermissionsRequestCode++;
+		permissionsListeners.put(requestCode, listener);
+
+		if (shouldShowRequestPermissionRationale(permission)) {
+			new AlertDialog.Builder(this)
+					.setTitle(rationaleTitleResourceId)
+					.setMessage(rationaleMessageResourceId)
+					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(final DialogInterface dialog, final int which) {
+							requestPermissions(new String[] { permission }, requestCode);
+						}
+					})
+					.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(final DialogInterface dialog, final int which) {
+							// ignore and clean up the listener
+							permissionsListeners.remove(requestCode);
+						}
+					})
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.show();
+		} else {
+			requestPermissions(new String[]{ permission }, requestCode);
+		}
+	}
+
+	@TargetApi(23)
+	@SuppressWarnings("unused")
+	@Override
+	public void onRequestPermissionsResult(final int requestCode,
+										   final @NonNull String permissions[],
+										   final @NonNull int[] grantResults) {
+		final OnCompleteListener permissionsListener = permissionsListeners.remove(requestCode);
+		if (permissionsListener != null
+				&& grantResults.length > 0
+				&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+			permissionsListener.onComplete();
+		}
 	}
 
 	private void moveViewToScreenCenter(final View view){
@@ -1668,6 +1837,35 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
 					sendGoogleLoginValues(this);
 				}
+			} else if (requestCode == FRAMEWORK_REQUEST_CODE){
+				final String toastMessage;
+				final AccountKitLoginResult loginResult = AccountKit.loginResultWithIntent(data);
+				if (loginResult == null || loginResult.wasCancelled()) {
+					toastMessage = "Login Cancelled";
+				} else if (loginResult.getError() != null) {
+					toastMessage = loginResult.getError().getErrorType().getMessage();
+					final Intent intent = new Intent(this, ErrorActivity.class);
+					intent.putExtra(ErrorActivity.HELLO_TOKEN_ACTIVITY_ERROR_EXTRA, loginResult.getError());
+
+					startActivity(intent);
+				} else {
+					final AccessToken accessToken = loginResult.getAccessToken();
+					final long tokenRefreshIntervalInSeconds =
+							loginResult.getTokenRefreshIntervalInSeconds();
+					if (accessToken != null) {
+						toastMessage = "Success:" + accessToken.getAccountId()
+								+ tokenRefreshIntervalInSeconds;
+						startActivity(new Intent(this, TokenActivity.class));
+					} else {
+						toastMessage = "Unknown response type";
+					}
+				}
+
+				Toast.makeText(
+						this,
+						toastMessage,
+						Toast.LENGTH_LONG)
+						.show();
 			}
 			else{
 				callbackManager.onActivityResult(requestCode, resultCode, data);
