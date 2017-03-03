@@ -1177,9 +1177,9 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                                                 }
                                                 else if(redirect == 1) {
                                                     activity.setRefreshCart(true);
-                                                    activity.performBackPressed();
+                                                    activity.performBackPressed(false);
                                                     activity.setRefreshCart(true);
-                                                    activity.performBackPressed();
+                                                    activity.performBackPressed(false);
                                                    // activity.performBackPressed();
                                                 }/*activity.performBackPressed();*/
                                             }
@@ -1220,9 +1220,9 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     private void clearMenusCartAndGoToMenusFragment(){
         activity.clearMenusCart();
         activity.setRefreshCart(true);
-        activity.performBackPressed();
+        activity.performBackPressed(false);
         activity.setRefreshCart(true);
-        activity.performBackPressed();
+        activity.performBackPressed(false);
     }
 
     private void retryDialog(DialogErrorType dialogErrorType, final int apiHit) {
@@ -1564,7 +1564,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             if(emptyCart == 1){
                                                 clearMenusCartAndGoToMenusFragment();
                                             } else if(redirect == 1) {
-                                                activity.performBackPressed();
+                                                activity.performBackPressed(false);
                                             }
                                         }
                                     });
@@ -1759,7 +1759,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private void checkIfEmpty(){
         if(itemsInCart.size() == 0){
-            activity.performBackPressed();
+            activity.performBackPressed(false);
         }
     }
 

@@ -55,6 +55,7 @@ public interface GAAction {
 	String ORDER = "Order ";
 	String NEED_HELP = "Need help ";
 	String TICKET_RAISED = "Ticket raised ";
+
 	String AUTO = "Auto ";
 	String REQUESTED = "Requested ";
 	String REQUEST = "Request ";
@@ -90,4 +91,35 @@ public interface GAAction {
 	String PICKUP_LOCATION_DIFFERENT_FROM_CURRENT_LOCATION = "Pickup location different from current location ";
 	String OK = "OK ";
 	String CANCEL = "Cancel ";
+
+	String MENUS = "Menus";
+	String RESTAURANT_CLICKED = "Restaurant Clicked ";
+	String SEARCH_BUTTON = "Search Button ";
+	String FILTER_BUTTON = "Filter Button ";
+	String NEW_RESTAURANT = "New Restaurant ";
+	String SUBMITTED = "Submitted ";
+	String FILTERS = "Filters ";
+	String QUICK_FILTER="Quick Filter ";
+	String SORT_BY="Sort By";
+	String MINIMUM_ORDER="Minimum Order";
+	String DELIVERY_TIME="Delivery Time";
+	String APPLY_BUTTON = "Apply Button ";
+	String RESET_BUTTON = "Reset Button ";
+	String RESTAURANT_HOME = "Restaurant Home";
+	String TABS = "Tabs ";
+	String SLIDED = "Slided ";
+	String EXPANDED = "Expanded ";
+	String FEED = "Feed ";
+	String ADD_FEED = "Add Feed ";
+	String PHOTO = "Photo ";
+	String TEXT = "Text ";
+	String RATING_ADDED = "Rating Added ";
+	String CLOSED = "Closed ";
+	String LIKED = "Liked ";
+	String CUSTOMIZE_ITEM ="Customize Item";
+	String ADD_TO_CART = "Add to Cart ";
+	String BACK_BUTTON = "Back Button ";
+	String RESTAURANT_SEARCH = "Restaurant Search";
+	String SORT_BUTTON = "Sort Button";
+
 }

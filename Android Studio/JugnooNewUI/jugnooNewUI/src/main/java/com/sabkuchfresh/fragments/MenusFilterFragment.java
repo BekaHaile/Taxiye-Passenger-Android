@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.Utils;
@@ -20,7 +20,6 @@ import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -355,7 +354,7 @@ public class MenusFilterFragment extends Fragment{
 				activity.setDtSelected(getDtSelected());
 				activity.setMoSelected(getMoSelected());
 
-				for(String qf : quickFilterLocal){
+		/*		for(String qf : quickFilterLocal){
 					FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Quick Filter", qf);
 				}
 				for(String cuisines : activity.getCuisinesSelected()){
@@ -364,10 +363,31 @@ public class MenusFilterFragment extends Fragment{
 				FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Sort By", String.valueOf(activity.getSortBySelected()));
 				FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Min Order", String.valueOf(activity.getMoSelected()));
 				FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Delivery Time", String.valueOf(activity.getDtSelected()));
+				FlurryEventLogger.eventGA(Events.MENUS, Events.APPLY_FILTERS, Events.MENU_APPLY_FILTER);*/
 
-				FlurryEventLogger.eventGA(Events.MENUS, Events.APPLY_FILTERS, Events.MENU_APPLY_FILTER);
 
-				activity.performBackPressed();
+
+				String quickFilters = null;
+				if (quickFilterLocal!=null) {
+					for(String qf : quickFilterLocal){
+                        quickFilters= qf+", ";
+                    }
+					if(quickFilters!=null) {
+						GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.QUICK_FILTER, quickFilters.substring(0, quickFilters.length() - 2));
+					}
+				}
+
+
+				GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.SORT_BY, String.valueOf(activity.getSortBySelected()));
+				GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.MINIMUM_ORDER, String.valueOf(activity.getMoSelected()));
+				GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.DELIVERY_TIME, String.valueOf(activity.getDtSelected()));
+				GAUtils.event(GAAction.MENUS, GAAction.FILTERS , GAAction.APPLY_BUTTON + GAAction.CLICKED);
+
+
+
+
+
+				activity.performBackPressed(false);
 			}
 		});
 
@@ -538,6 +558,9 @@ public class MenusFilterFragment extends Fragment{
 				updateMinOrderUI();
 				updateDeliveryTimeUI();
 				setFiltersText();
+
+				GAUtils.event(GAAction.MENUS, GAAction.FILTERS , GAAction.RESET_BUTTON + GAAction.CLICKED);
+
 			}
 		});
 	}

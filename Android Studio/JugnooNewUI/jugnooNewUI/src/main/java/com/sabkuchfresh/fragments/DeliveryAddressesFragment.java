@@ -211,9 +211,9 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.RECENT);
-                        if(activity instanceof FreshActivity) {
+//                        if(activity instanceof FreshActivity) {
                             GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES+SELECTED);
-                        }
+//                        }
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                     }
@@ -772,7 +772,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             ((FreshActivity)activity).setSelectedAddressId(addressId);
             ((FreshActivity)activity).setSelectedAddressType(type);
             mBus.post(new AddressAdded(true));
-            ((FreshActivity)activity).performBackPressed();
+            ((FreshActivity)activity).performBackPressed(false);
         }
     }
 

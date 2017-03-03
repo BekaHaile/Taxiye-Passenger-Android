@@ -216,7 +216,7 @@ public class TopBar implements FlurryEventNames {
 
                 case R.id.imageViewBack:
                     if (activity instanceof FreshActivity) {
-                        ((FreshActivity) activity).performBackPressed();
+                        ((FreshActivity) activity).performBackPressed(true);
                     }
                     break;
 

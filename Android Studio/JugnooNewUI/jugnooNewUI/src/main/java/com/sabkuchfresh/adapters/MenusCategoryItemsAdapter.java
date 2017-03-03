@@ -296,17 +296,20 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     ((FreshActivity) context).openMenusItemCustomizeFragment(item1.getCategoryPos(), item1.getSubCategoryPos(), item1.getItemPos());
                 }
             } else {
+                boolean isNewItemAdded =false;
                 if (item1.getItemSelectedList().size() > 0) {
                     item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
+
                 } else {
                     ItemSelected itemSelected = new ItemSelected();
                     itemSelected.setRestaurantItemId(item1.getRestaurantItemId());
                     itemSelected.setQuantity(1);
                     itemSelected.setTotalPrice(item1.getPrice());
                     item1.getItemSelectedList().add(itemSelected);
+                    isNewItemAdded=true;
                 }
                 notifyDataSetChanged();
-                callback.onPlusClicked(pos, item1);
+                callback.onPlusClicked(pos, item1, isNewItemAdded);
             }
         } else {
             Utils.showToast(context, context.getString(R.string.cannot_add_more_than_50));
@@ -362,7 +365,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     public interface Callback{
         boolean checkForAdd(int position, Item item, CallbackCheckForAdd callbackCheckForAdd);
-        void onPlusClicked(int position, Item item);
+        void onPlusClicked(int position, Item item, boolean isNewItemAdded);
         void onMinusClicked(int position, Item item);
         void onMinusFailed(int position, Item item);
     }

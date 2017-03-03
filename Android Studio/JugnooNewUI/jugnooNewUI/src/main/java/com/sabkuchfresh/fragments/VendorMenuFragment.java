@@ -26,6 +26,8 @@ import com.sabkuchfresh.adapters.DisplayOffersAdapter;
 import com.sabkuchfresh.adapters.MenusCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
@@ -132,7 +134,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     tabClickFlag = false;
                 } else {
                     Log.d(TAG, "onPageSelected = " + position);
-                    FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
+                    GAUtils.event(GAAction.MENUS, GAAction.RESTAURANT_HOME , GAAction.TABS + GAAction.SLIDED);
+//                    FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
                 }
             }
 
@@ -164,7 +167,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     }
                     //                    recyclerViewOffers.startAnimation(starCloseAnim);*/
                     recyclerViewOffers.setVisibility(View.GONE);
-
                     ibArrow.animate().rotationBy(-180).translationYBy(-10).setDuration(0).start();
 
 
@@ -191,6 +193,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                             viewPromoTitle.findViewById(R.id.ib_arrow).setEnabled(true);
                         }
                     };
+
+                  GAUtils.event(GAAction.MENUS, GAAction.RESTAURANT_HOME , GAAction.OFFER + GAAction.EXPANDED);
+
                 }
 
 

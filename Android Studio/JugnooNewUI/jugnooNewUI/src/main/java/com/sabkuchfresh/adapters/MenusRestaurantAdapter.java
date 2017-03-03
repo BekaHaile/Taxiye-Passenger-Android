@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
@@ -443,7 +445,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     @Override
                     public void onClick(View v) {
                         apiRecommendRestaurant();
-                        FlurryEventLogger.eventGA(Events.MENUS, Events.ADD_RESTRO, restaurantName);
+                        GAUtils.event(GAAction.MENUS, GAAction.HOME , GAAction.NEW_RESTAURANT + GAAction.SUBMITTED);
+//                        FlurryEventLogger.eventGA(Events.MENUS, Events.ADD_RESTRO, restaurantName);
                     }
                 });
 

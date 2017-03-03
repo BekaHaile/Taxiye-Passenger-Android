@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -140,6 +142,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
+
+
+
                 getVendorMenu(vendor);
                 Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
             }
@@ -444,7 +449,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                         activity.clearMenusCart();
                                     }
 
-                                    FlurryEventLogger.eventGA(Events.MENUS, Events.SELECT_RESTAURANT, Events.MENU_SELECT_RESTAURANT);
+//                                    FlurryEventLogger.eventGA(Events.MENUS, Events.SELECT_RESTAURANT, Events.MENU_SELECT_RESTAURANT);
+
+                                    GAUtils.event(GACategory.MENUS, GAAction.HOME + GAAction.RESTAURANT_CLICKED,vendor.getName());
                                     activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
                                     activity.getFabViewTest().hideJeanieHelpInSession();
                                 } else {

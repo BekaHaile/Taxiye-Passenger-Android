@@ -316,7 +316,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				} else if(productType == ProductType.MENUS.getOrdinal()) {
 					category = GACategory.MENUS;
 				}
-				GAUtils.event(category, SUPPORT, NEED_HELP);
+				GAUtils.event(category, SUPPORT, TICKET_RAISED);
 			}
 
 

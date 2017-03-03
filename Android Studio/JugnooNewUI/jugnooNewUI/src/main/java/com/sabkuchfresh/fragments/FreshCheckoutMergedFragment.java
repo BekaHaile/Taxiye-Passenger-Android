@@ -514,7 +514,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rlDeliveryFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.performBackPressed();
+                activity.performBackPressed(false);
             }
         });
         rlDeliveryFrom.setMinimumHeight((int)(ASSL.Yscale() * 116f));
@@ -1537,15 +1537,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                         && isEmpty == 1) {
                                                     activity.clearMenusCart();
                                                     activity.setRefreshCart(true);
-                                                    activity.performBackPressed();
+                                                    activity.performBackPressed(false);
                                                     activity.setRefreshCart(true);
-                                                    activity.performBackPressed();
+                                                    activity.performBackPressed(false);
                                                 }
                                                 else if(redirect == 1) {
                                                     activity.setRefreshCart(true);
-                                                    activity.performBackPressed();
+                                                    activity.performBackPressed(false);
                                                     activity.setRefreshCart(true);
-                                                    activity.performBackPressed();
+                                                    activity.performBackPressed(false);
                                                    // activity.performBackPressed();
                                                 }/*activity.performBackPressed();*/
                                             }
@@ -2137,7 +2137,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             if(emptyCart == 1){
                                                 clearMenusCartAndGoToMenusFragment();
                                             } else if(redirect == 1) {
-                                                activity.performBackPressed();
+                                                activity.performBackPressed(false);
                                             }
                                         }
                                     });
@@ -2504,15 +2504,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void checkIfEmpty(){
         if(isMenusOpen()){
             if(itemsInCart.size() == 0){
-                activity.performBackPressed();
+                activity.performBackPressed(false);
             }
         } else {
             if (subItemsInCart.size() == 0) {
                 activity.updateTotalAmountPrice(0d);
                 if (activity.isMealAddonItemsAvailable()) {
-                    activity.performBackPressed();
+                    activity.performBackPressed(false);
                 }
-                activity.performBackPressed();
+                activity.performBackPressed(false);
             }
         }
     }
@@ -2789,9 +2789,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void clearMenusCartAndGoToMenusFragment(){
         activity.clearMenusCart();
         activity.setRefreshCart(true);
-        activity.performBackPressed();
+        activity.performBackPressed(false);
         activity.setRefreshCart(true);
-        activity.performBackPressed();
+        activity.performBackPressed(false);
     }
 
     private Double getCalculatedCharges(double amount, Charges charges, List<Charges> chargesList){

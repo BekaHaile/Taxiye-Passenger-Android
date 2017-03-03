@@ -339,7 +339,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     mainLayout.setVisibility(View.GONE);
-									activity.performBackPressed();
+									activity.performBackPressed(false);
 									activity.getFreshHomeFragment().oSnapNotAvailableCase(message);
                                 }
                                 else {

@@ -299,7 +299,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
 
     private void checkIfEmpty(){
         if(subItemsInCart.size() == 0){
-            activity.performBackPressed();
+            activity.performBackPressed(false);
         }
     }
 

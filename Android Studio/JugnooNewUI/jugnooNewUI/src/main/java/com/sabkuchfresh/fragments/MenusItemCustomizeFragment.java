@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusItemCustomizeAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
@@ -101,11 +104,27 @@ public class MenusItemCustomizeFragment extends Fragment {
 								public void updateItemTotalPrice(ItemSelected itemSelected) {
 									tvItemTotalValue.setText(activity.getString(R.string.rupees_value_format,
 											Utils.getMoneyDecimalFormat().format(itemSelected.getTotalPriceWithQuantity())));
+
+
+
 								}
 
 								@Override
-								public void onItemMinusClick() {
-									activity.performBackPressed();
+								public void onItemMinusClick(boolean allItemsFinished) {
+									if(allItemsFinished)
+									activity.performBackPressed(false);
+
+									if(activity.getAppType()== AppConstant.ApplicationType.MENUS) {
+										GAUtils.event(GACategory.MENUS, GAAction.CUSTOMIZE_ITEM, GAAction.ITEM + GAAction.DECREASED);
+									}
+
+								}
+
+								@Override
+								public void onItemPlusClick(){
+									if(activity.getAppType()== AppConstant.ApplicationType.MENUS) {
+										GAUtils.event(GACategory.MENUS, GAAction.CUSTOMIZE_ITEM, GAAction.ITEM + GAAction.INCREASED);
+									}
 								}
 							});
 					rvCustomizeItem.setAdapter(menusItemCustomizeAdapter);
@@ -129,9 +148,10 @@ public class MenusItemCustomizeFragment extends Fragment {
 							} else {
 								menusItemCustomizeAdapter.getItem().getItemSelectedList().add(menusItemCustomizeAdapter.getItemSelected());
 							}
-							if (activity.getAppType() == AppConstant.ApplicationType.MENUS)
-								FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_ADD_BUTTON_ITEM, Events.MENU_ADD_ITEM);
-							activity.performBackPressed();
+							if(activity.getAppType()== AppConstant.ApplicationType.MENUS) {
+								GAUtils.event(GACategory.MENUS, GAAction.CUSTOMIZE_ITEM, GAAction.ADD_TO_CART + GAAction.CLICKED);
+							}
+							activity.performBackPressed(false);
 							activity.getVendorMenuFragment().onUpdateListEvent(new UpdateMainList(true));
 						}
 					});
