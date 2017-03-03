@@ -148,7 +148,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 startActivity(intent);
                 overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.WANT_FREE_RIDES, bundle);
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.WANT_FREE_RIDES, bundle);
                 FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "B_WantFreeRides");
             }
         });
@@ -168,13 +168,11 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
 
             @Override
             public void onClick(View v) {
-                FlurryEventLogger.event(PromotionActivity.this, ENTERED_PROMO_CODE);
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.APPLY, bundle);
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.APPLY, bundle);
                 String promoCode = editTextPromoCode.getText().toString().trim();
                 if (promoCode.length() > 0) {
                     applyPromoCodeAPI(PromotionActivity.this, promoCode);
-                    FlurryEventLogger.event(PromotionActivity.this, CLICKS_ON_APPLY);
                     HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
                     profileUpdate.put(Events.PROMO_CODE_USED, promoCode);
                     MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
@@ -252,7 +250,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
 
     public void performBackPressed(){
         Bundle bundle = new Bundle();
-        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.BACK, bundle);
+        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.BACK, bundle);
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
@@ -479,7 +477,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                     String message = jObj.getString("message");
                                     DialogPopup.dialogBanner(activity, message);
                                     getCouponsAndPromotions(activity);
-                                    FlurryEventLogger.event(PROMO_CODE_APPLIED);
 
                                     new ApiFetchWalletBalance(activity, new ApiFetchWalletBalance.Callback() {
                                         @Override

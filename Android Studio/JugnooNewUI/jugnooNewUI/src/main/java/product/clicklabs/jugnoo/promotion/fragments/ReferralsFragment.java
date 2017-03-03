@@ -30,7 +30,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -101,9 +100,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 					ReferralActions.openGenericShareIntent(activity, activity.getCallbackManager());
 					try {
 						if(activity.fromDeepLink){
-							FlurryEventLogger.event(activity, FlurryEventNames.INVITE_SHARE_GENERIC_THROUGH_PUSH);
 						} else{
-							FlurryEventLogger.event(FlurryEventNames.INVITE_GENERIC);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -123,7 +120,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 				} else {
 					ReferralActions.openGenericShareIntent(activity, null);
 				}
-                MyApplication.getInstance().logEvent(REFERRAL+"_"+OUTSIDE_WHATSAPP, bundle);
+                MyApplication.getInstance().firebaseLogEvent(REFERRAL+"_"+OUTSIDE_WHATSAPP, bundle);
 				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "WhatsApp");
 			}
 		});
@@ -180,9 +177,8 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 				@Override
 				public void onClick(View textView) {
 					try {
-						FlurryEventLogger.event(FlurryEventNames.INVITE_EARN_MORE_INFO);
 						FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Details");
-						MyApplication.getInstance().logEvent(REFERRAL+"_"+DETAILS, bundle);
+						MyApplication.getInstance().firebaseLogEvent(REFERRAL+"_"+DETAILS, bundle);
 						DialogPopup.alertPopupWithListener(activity, "",
 								Data.userData.getReferralMessages().referralMoreInfoMessage, "",
 								new View.OnClickListener() {
@@ -206,7 +202,6 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 						.error(R.drawable.ic_promotions_friend_refer)
 						.into(imageViewLogo);
 			}
-			FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_FREE_RIDE_SCREEN);
 
 			relativeLayoutReferContainer.setVisibility(View.GONE);
 			if (Data.userData != null) {

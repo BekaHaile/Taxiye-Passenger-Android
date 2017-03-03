@@ -23,7 +23,6 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -78,10 +77,8 @@ public class SlidingBottomFareFragment extends Fragment{
                 //activity.startActivity(intent);
                 activity.startActivityForResult(intent, 4);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.GET_FARE_ESTIMATE, bundle);
                 FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "get fare estimate");
             }

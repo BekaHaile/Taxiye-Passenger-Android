@@ -196,7 +196,6 @@ public class JSONParser implements Constants {
             long diffSeconds = diff / 1000;
             HashMap<String, String> map = new HashMap<>();
             map.put(KEY_TIME_DIFF_SEC, String.valueOf(diffSeconds));
-            FlurryEventLogger.event(context, FlurryEventNames.LOGIN_SINCE_FIRST_APP_OPEN_DIFF, map);
             Prefs.with(context).save(SP_FIRST_LOGIN_COMPLETE, 1);
         }
 
@@ -1044,7 +1043,6 @@ public class JSONParser implements Constants {
             new HomeUtil().putDefaultParams(nameValuePairs);
             Response response = RestClient.getApiService().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-            FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_CURRENT_USER_STATUS, startTime);
             Log.i(TAG, "getCurrentUserStatus response="+responseStr);
             if (response == null || responseStr == null) {
                 return Constants.SERVER_TIMEOUT;

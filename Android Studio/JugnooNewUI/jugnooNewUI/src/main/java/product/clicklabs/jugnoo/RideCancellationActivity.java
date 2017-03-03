@@ -34,7 +34,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -478,7 +477,6 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 											performBackPressed();
 										}
 									});
-									FlurryEventLogger.event(RIDE_CANCELLED_COMPLETE);
 								} else {
 									DialogPopup.alertPopup(activity, "", serverMessage);
 								}

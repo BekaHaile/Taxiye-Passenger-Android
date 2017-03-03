@@ -34,7 +34,6 @@ import product.clicklabs.jugnoo.support.models.SupportCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
@@ -117,7 +116,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
                         Bundle bundle = new Bundle();
                         String eventName = item.getText().replaceAll("\\W", "_");
-                        MyApplication.getInstance().logEvent(FirebaseEvents.SUPPORT+"_"+eventName, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.SUPPORT+"_"+eventName, bundle);
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
@@ -126,7 +125,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			@Override
 			public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.ISSUES+"_"+FirebaseEvents.ISSUE_WITH_RECENT_RIDE, bundle);
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.ISSUES+"_"+FirebaseEvents.ISSUE_WITH_RECENT_RIDE, bundle);
 
 				activity.openSupportRideIssuesFragment(EngagementStatus.ENDED.getOrdinal());
 			}
@@ -137,7 +136,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		showPanel();
 		activity.getRideSummaryAPI(activity, ProductType.NOT_SURE, EngagementStatus.ENDED.getOrdinal());
 
-		FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT);
 
 
 		return rootView;

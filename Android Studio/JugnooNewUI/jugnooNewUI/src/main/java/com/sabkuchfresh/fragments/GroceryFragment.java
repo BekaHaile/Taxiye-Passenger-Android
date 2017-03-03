@@ -174,7 +174,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                     tabClickFlag = false;
                 } else {
                     Log.d(TAG, "onPageSelected = "+position);
-                    FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
+                    FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
                 }
 
                 try {
@@ -516,7 +516,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     public void onTabClicked(int position) {
         Log.d(TAG, "onTabClicked = "+position);
         tabClickFlag = true;
-        FlurryEventLogger.event(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.CATEGORY_CHANGE, activity.getProductsResponse().getCategories().get(position).getCategoryName());
+        FlurryEventLogger.eventGA(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.CATEGORY_CHANGE, activity.getProductsResponse().getCategories().get(position).getCategoryName());
     }
 
     @Override

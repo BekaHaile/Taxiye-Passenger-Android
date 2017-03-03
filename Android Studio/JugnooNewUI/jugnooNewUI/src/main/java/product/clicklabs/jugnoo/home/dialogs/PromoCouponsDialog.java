@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -180,7 +179,7 @@ public class PromoCouponsDialog {
 				public void onClick(View v) {
 					if(activity instanceof HomeActivity) {
 						Bundle bundle = new Bundle();
-						MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.B_OFFER + "_"
+						MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.B_OFFER + "_"
 								+ FirebaseEvents.SKIP, bundle);
 						FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "skip");
 						((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
@@ -205,7 +204,7 @@ public class PromoCouponsDialog {
 				@Override
 				public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
                             +FirebaseEvents.CONTINUE, bundle);
 					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "continue");
 					dialog.dismiss();
@@ -217,7 +216,7 @@ public class PromoCouponsDialog {
 				@Override
 				public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
                             +FirebaseEvents.INVITE_FRIENDS, bundle);
 					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "invite friends");
 					dialog.dismiss();

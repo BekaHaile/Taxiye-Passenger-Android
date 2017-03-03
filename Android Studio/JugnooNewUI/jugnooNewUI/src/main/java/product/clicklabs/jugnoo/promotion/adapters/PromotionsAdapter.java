@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.promotion.adapters;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,6 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
@@ -70,10 +67,8 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
                 PromoCoupon promoCoupon = promoCoupons.get(pos);
                 if (promoCoupon instanceof CouponInfo) {
                     DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description, true, true, false, true);
-                    FlurryEventLogger.event(activity, FlurryEventNames.TNC_VIEWS);
                 } else if (promoCoupon instanceof PromotionInfo) {
-                    DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, true, true, true, true);
-                    FlurryEventLogger.event(activity, FlurryEventNames.TNC_VIEWS_PROMO);
+                    DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, false, true, true, true);
                 }
             }
         });

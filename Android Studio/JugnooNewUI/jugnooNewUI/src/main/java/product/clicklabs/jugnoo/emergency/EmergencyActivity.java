@@ -77,7 +77,7 @@ public class EmergencyActivity extends BaseFragmentActivity {
         else if(mode == EmergencyActivityMode.SEND_RIDE_STATUS.getOrdinal()){
             String engagementId = getIntent().getStringExtra(Constants.KEY_ENGAGEMENT_ID);
             Bundle bundle = new Bundle();
-            MyApplication.getInstance().logEvent(Constants.HELP+"_"+FirebaseEvents.SEND_RIDE_STATUS_SCREEN, bundle);
+            MyApplication.getInstance().firebaseLogEvent(Constants.HELP+"_"+FirebaseEvents.SEND_RIDE_STATUS_SCREEN, bundle);
             new FragTransUtils().openEmergencyContactsOperationsFragment(this, relativeLayoutContainer, engagementId,
                     ContactsListAdapter.ListMode.SEND_RIDE_STATUS);
         }

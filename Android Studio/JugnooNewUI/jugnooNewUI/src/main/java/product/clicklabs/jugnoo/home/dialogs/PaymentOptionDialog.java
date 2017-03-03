@@ -133,28 +133,28 @@ public class PaymentOptionDialog implements View.OnClickListener {
 		try {
 			switch (v.getId()){
                 case R.id.relativeLayoutPaytm:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
                             +FirebaseEvents.PAYTM, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.PAYTM);
 					callback.onPaymentModeUpdated();
                     break;
 
 				case R.id.relativeLayoutMobikwik:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
                             +FirebaseEvents.MOBIKWIK, bundle);
 					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MOBIKWIK);
 					callback.onPaymentModeUpdated();
 					break;
 
                 case R.id.linearLayoutCash:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
                             +FirebaseEvents.CASH, bundle);
 					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
 					callback.onPaymentModeUpdated();
                     break;
                 case R.id.relativeLayoutFreeCharge:
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
-					MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+					MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
 							+FirebaseEvents.FREECHARGE_SHORT, bundle);
 					callback.onPaymentModeUpdated();
                     break;

@@ -23,6 +23,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
@@ -70,7 +72,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by gurmail on 24/05/16.
  */
-public class FeedbackFragment extends Fragment implements View.OnClickListener, FlurryEventNames {
+public class FeedbackFragment extends Fragment implements GAAction, View.OnClickListener, FlurryEventNames {
 
 
     private View rootView;
@@ -342,11 +344,13 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             feedbackReasonsAdapter = new FeedbackReasonsAdapter(activity, negativeReasons, positiveReasons,
                     new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
                         @Override
-                        public void onLastItemSelected(boolean selected) {
+                        public void onLastItemSelected(boolean selected, String name) {
                             if (!selected) {
                                 if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
                                     textViewRSOtherError.setText("");
                                 }
+                            } else {
+                                GAUtils.event(activity.getGaCategory(), FEEDBACK, ISSUE+SELECTED+name);
                             }
                         }
                     });
@@ -369,7 +373,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                         if (productType != ProductType.MENUS) {
                             comments = comments + ", " + reviewDescription;
                         }
-
+                        GAUtils.event(activity.getGaCategory(), FEEDBACK, COMMENT+ADDED);
                     }
                 }
 
@@ -432,17 +436,17 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                         sendQuery(0, "");
                     }
 
-
+                    GAUtils.event(activity.getGaCategory(), FEEDBACK, THUMB_DOWN+CLICKED);
                     //openSupportFragment();
 
                     if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_DOWNVOTE, new Bundle());
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FRESH_DOWNVOTE, new Bundle());
                     } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_DOWNVOTE, new Bundle());
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MEALS_DOWNVOTE, new Bundle());
                     } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_DOWNVOTE, new Bundle());
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.GROCERY_DOWNVOTE, new Bundle());
                     } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_DOWNVOTE, new Bundle());
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_DOWNVOTE, new Bundle());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -457,15 +461,16 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down);
                 afterGoodRating();
                 sendQuery(1, "");
+                GAUtils.event(activity.getGaCategory(), FEEDBACK, THUMB_UP+CLICKED);
                 try {
                     if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_UPVOTE, new Bundle());
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FRESH_UPVOTE, new Bundle());
                     } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_UPVOTE, new Bundle());
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MEALS_UPVOTE, new Bundle());
                     } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_UPVOTE, new Bundle());
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.GROCERY_UPVOTE, new Bundle());
                     } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_UPVOTE, new Bundle());
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_UPVOTE, new Bundle());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

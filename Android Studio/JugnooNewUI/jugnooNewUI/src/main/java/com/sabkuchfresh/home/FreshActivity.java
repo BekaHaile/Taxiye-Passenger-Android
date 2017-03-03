@@ -60,6 +60,9 @@ import com.sabkuchfresh.adapters.FreshSortingAdapter;
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
@@ -171,7 +174,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseAppCompatActivity implements FlurryEventNames {
+public class FreshActivity extends BaseAppCompatActivity implements GAAction {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -337,16 +340,16 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
                     int type = getAppType();
                     if (type == AppConstant.ApplicationType.MEALS) {
                         mealSort = position;
-                        MyApplication.getInstance().logEvent(FirebaseEvents.M_SORT + "_" + slot.name, null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_SORT + "_" + slot.name, null);
                     } else if (type == AppConstant.ApplicationType.GROCERY) {
                         freshSort = position;
-                        MyApplication.getInstance().logEvent(FirebaseEvents.G_SORT + "_" + slot.name, null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_SORT + "_" + slot.name, null);
                     } else if (type == AppConstant.ApplicationType.MENUS) {
                         menusSort = position;
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_SORT + "_" + slot.name, null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_SORT + "_" + slot.name, null);
                     } else {
                         freshSort = position;
-                        MyApplication.getInstance().logEvent(FirebaseEvents.F_SORT + "_" + slot.name, null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_SORT + "_" + slot.name, null);
                     }
                     getBus().post(new SortSelection(position));
                     ivSort.performClick();
@@ -359,36 +362,39 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
                 @Override
                 public void onClick(View v) {
                     Utils.hideSoftKeyboard(FreshActivity.this, topBar.etSearch);
-                    FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.CHECKOUT_SCREEN);
+                    FlurryEventLogger.eventGA(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.CHECKOUT_SCREEN);
                     FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.REVIEW_CART, getProduct());
 
                     int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                     updateCartFromSP();
                     if (updateCartValuesGetTotalPrice().second > 0) {
+                        if(getAppType() == AppConstant.ApplicationType.MEALS) {
+                            GAUtils.event(getGaCategory(), HOME, CART+CLICKED);
+                        }
                         if (getMealAddonItemsFragment() == null && isMealAddonItemsAvailable()) {
                             getTransactionUtils().addMealAddonItemsFragment(FreshActivity.this, relativeLayoutContainer);
                         } else {
                             openCart(appType);
 
                             if (appType == AppConstant.ApplicationType.MEALS) {
-                                MyApplication.getInstance().logEvent(FirebaseEvents.M_CART, null);
+                                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_CART, null);
                             } else {
                                 if ((getFreshSearchFragment() != null && !getFreshSearchFragment().isHidden())
                                         || (getMenusSearchFragment() != null && !getMenusSearchFragment().isHidden())) {
                                     if (appType == AppConstant.ApplicationType.GROCERY) {
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_GO, null);
+                                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_SEARCH_GO, null);
                                     } else if (appType == AppConstant.ApplicationType.MENUS) {
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_SEARCH_GO, null);
+                                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_SEARCH_GO, null);
                                     } else {
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_GO, null);
+                                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_SEARCH_GO, null);
                                     }
                                 } else {
                                     if (appType == AppConstant.ApplicationType.GROCERY) {
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_CART, null);
+                                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_CART, null);
                                     } else if (appType == AppConstant.ApplicationType.MENUS) {
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_CART, null);
+                                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_CART, null);
                                     } else {
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_CART, null);
+                                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_CART, null);
                                     }
                                 }
                             }
@@ -1390,7 +1396,7 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.DELETE, FlurryEventNames.ALL);
+                        FlurryEventLogger.eventGA(FlurryEventNames.REVIEW_CART, FlurryEventNames.DELETE, FlurryEventNames.ALL);
 
                         Fragment frag = getFreshCheckoutMergedFragment();
                         if (frag != null) {
@@ -1414,13 +1420,13 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
                             clearMealCart();
                         }
                         if (type == AppConstant.ApplicationType.MEALS) {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.M_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.YES, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.YES, null);
                         } else if (type == AppConstant.ApplicationType.GROCERY) {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.YES, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.YES, null);
                         } else if (type == AppConstant.ApplicationType.MENUS) {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.YES, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.YES, null);
                         } else {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.F_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.YES, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.YES, null);
                         }
                     }
                 },
@@ -1428,13 +1434,13 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
                     @Override
                     public void onClick(View v) {
                         if (type == AppConstant.ApplicationType.MEALS) {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.M_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.NO, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.NO, null);
                         } else if (type == AppConstant.ApplicationType.GROCERY) {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.NO, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.NO, null);
                         } else if (type == AppConstant.ApplicationType.MENUS) {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.NO, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.NO, null);
                         } else {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.F_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.NO, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_CART + "_" + FirebaseEvents.TRASH + "_" + FirebaseEvents.NO, null);
                         }
                     }
                 }, true, false);
@@ -1557,7 +1563,7 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
     }
 
     public void openMapAddress(Bundle bundle) {
-        FlurryEventLogger.event(Address_Screen, SCREEN_TRANSITION, ADD_NEW_ADDRESS);
+        FlurryEventLogger.eventGA(Address_Screen, SCREEN_TRANSITION, ADD_NEW_ADDRESS);
         getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
@@ -1567,6 +1573,14 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
 
 
     public void performBackPressed() {
+
+        if(getTopFragment() instanceof MealAddonItemsFragment){
+            GAUtils.event(getGaCategory(), ADD_ONS, BACK+BUTTON+CLICKED);
+        } else if(getTopFragment() instanceof FreshCheckoutMergedFragment){
+            GAUtils.event(getGaCategory(), CHECKOUT, BACK+BUTTON+CLICKED);
+        } else if(getTopFragment() instanceof DeliveryAddressesFragment){
+            GAUtils.event(getGaCategory(), DELIVERY_ADDRESS, BACK+BUTTON+CLICKED);
+        }
 
         if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finish();
@@ -1611,12 +1625,12 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
         } else {
             if ((getSupportFragmentManager().getBackStackEntryCount() == 2 && getFreshSearchFragment() == null) ||
                     (getSupportFragmentManager().getBackStackEntryCount() == 3 && getFreshSearchFragment() != null)) {
-                FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.HOME_SCREEN);
+                FlurryEventLogger.eventGA(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.HOME_SCREEN);
             }
 
             if ((getSupportFragmentManager().getBackStackEntryCount() == 3 && getFreshSearchFragment() == null) ||
                     (getSupportFragmentManager().getBackStackEntryCount() == 4 && getFreshSearchFragment() != null)) {
-                FlurryEventLogger.event(FlurryEventNames.CHECKOUT, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.REVIEW_CART_SCREEN);
+                FlurryEventLogger.eventGA(FlurryEventNames.CHECKOUT, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.REVIEW_CART_SCREEN);
             }
             if (getTopFragment() instanceof FreshSearchFragment) {
                 getFreshSearchFragment().clearArrays();
@@ -2087,16 +2101,16 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
     private void gaEvents(String category, String action, String label) {
         if (category.equalsIgnoreCase("")) {
             if (getTopFragment() instanceof FreshFragment) {
-                FlurryEventLogger.event(FlurryEventNames.FRESH_FRAGMENT, action, label);
+                FlurryEventLogger.eventGA(FlurryEventNames.FRESH_FRAGMENT, action, label);
             } else if (getTopFragment() instanceof MealFragment) {
-                FlurryEventLogger.event(FlurryEventNames.MEALS_FRAGMENT, action, label);
+                FlurryEventLogger.eventGA(FlurryEventNames.MEALS_FRAGMENT, action, label);
             } else if (getTopFragment() instanceof GroceryFragment) {
-                FlurryEventLogger.event(FlurryEventNames.GROCERY_FRAGMENT, action, label);
+                FlurryEventLogger.eventGA(FlurryEventNames.GROCERY_FRAGMENT, action, label);
             } else if (getTopFragment() instanceof MenusFragment) {
-                FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, action, label);
+                FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, action, label);
             }
         } else {
-            FlurryEventLogger.event(category, action, label);
+            FlurryEventLogger.eventGA(category, action, label);
         }
     }
 
@@ -2318,6 +2332,7 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
                         try {
                             if (getFreshCheckoutMergedFragment() != null) {
                                 getFreshCheckoutMergedFragment().updateAddressView();
+                                GAUtils.event(getGaCategory(), CHECKOUT, DELIVERY_ADDRESS+MODIFIED);
                             } else if (getMenusCheckoutMergedFragment() != null) {
                                 getMenusCheckoutMergedFragment().updateAddressView();
                             }
@@ -2327,6 +2342,8 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+
                 }
 
                 @Override
@@ -2930,6 +2947,7 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
             if (event.flag) {
                 if (getFreshCheckoutMergedFragment() != null || getMenusCheckoutMergedFragment() != null) {
                     setRefreshCart(true);
+                    GAUtils.event(getGaCategory(), GAAction.DELIVERY_ADDRESS_MODIFIED_ON_CHECKOUT, GALabel.DELIVERY_ADDRESS_MODIFICATION);
                 }
                 int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
                 setAddressAndFetchOfferingData(appType);
@@ -3210,6 +3228,7 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
                 @Override
                 public void onClick(View v) {
                     getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
+                    GAUtils.event(getGaCategory(), HOME, DELIVERY_ADDRESS+CLICKED);
                 }
             });
         }
@@ -3665,6 +3684,21 @@ public class FreshActivity extends BaseAppCompatActivity implements FlurryEventN
 
     public int getReviewImageCount(){
         return reviewImageCount;
+    }
+
+    private String gaCategory;
+    public String getGaCategory(){
+        if(gaCategory == null){
+            int type = getAppType();
+            if(type == AppConstant.ApplicationType.MEALS){
+                gaCategory = GACategory.MEALS;
+            } else if(type == AppConstant.ApplicationType.MENUS){
+                gaCategory = GACategory.MENUS;
+            } else {
+                gaCategory = GACategory.FRESH;
+            }
+        }
+        return gaCategory;
     }
 
 }

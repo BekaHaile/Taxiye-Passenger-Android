@@ -113,7 +113,6 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		}
 
 
-		FlurryEventLogger.event(SUPPORT_MAIN_OPENED);
 	}
 
 	

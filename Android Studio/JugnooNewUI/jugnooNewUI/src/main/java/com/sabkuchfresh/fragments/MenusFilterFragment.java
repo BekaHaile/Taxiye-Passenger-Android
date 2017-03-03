@@ -356,14 +356,14 @@ public class MenusFilterFragment extends Fragment{
 				activity.setMoSelected(getMoSelected());
 
 				for(String qf : quickFilterLocal){
-					FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Quick Filter", qf);
+					FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Quick Filter", qf);
 				}
 				for(String cuisines : activity.getCuisinesSelected()){
-					FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Cuisines", cuisines);
+					FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Cuisines", cuisines);
 				}
-				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Sort By", String.valueOf(activity.getSortBySelected()));
-				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Min Order", String.valueOf(activity.getMoSelected()));
-				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Delivery Time", String.valueOf(activity.getDtSelected()));
+				FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Sort By", String.valueOf(activity.getSortBySelected()));
+				FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Min Order", String.valueOf(activity.getMoSelected()));
+				FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Delivery Time", String.valueOf(activity.getDtSelected()));
 
 				FlurryEventLogger.eventGA(Events.MENUS, Events.APPLY_FILTERS, Events.MENU_APPLY_FILTER);
 

@@ -82,9 +82,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
                 startActivity(intent);
-                FlurryEventLogger.event(RATING_ON_PLAYSTORE_ABOUT);
                 bundle = new Bundle();
-                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+PLAYSTORE_RATING, bundle);
+                MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+ABOUT+"_"+PLAYSTORE_RATING, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Playstore rating");
             }
         });
@@ -115,9 +114,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
                     intent.setData(Uri.parse("https://www.facebook.com/" + facebookPageName));
                     startActivity(intent);
                 }
-                FlurryEventLogger.event(LIKING_ON_FACEBOOK_ABOUT);
                 bundle = new Bundle();
-                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+FACEBOOK_LIKE, bundle);
+                MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+ABOUT+"_"+FACEBOOK_LIKE, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Facebook Like");
             }
         });
@@ -129,9 +127,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
                 HelpParticularActivity.helpSection = HelpSection.TERMS;
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(TERMS_AND_CONDITIONS);
                 bundle = new Bundle();
-                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+TERMS_AND_CONDITION, bundle);
+                MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+ABOUT+"_"+TERMS_AND_CONDITION, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Terms and Condition");
             }
         });
@@ -143,9 +140,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
                 HelpParticularActivity.helpSection = HelpSection.PRIVACY;
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(FlurryEventNames.PRIVACY_POLICY);
                 bundle = new Bundle();
-                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+FirebaseEvents.PRIVACY_POLICY, bundle);
+                MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+ABOUT+"_"+FirebaseEvents.PRIVACY_POLICY, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Privacy Policy");
             }
         });
@@ -157,9 +153,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
                 HelpParticularActivity.helpSection = HelpSection.ABOUT;
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(ABOUT_JUGOO_AUTOS);
                 bundle = new Bundle();
-                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+ABOUT_JUGNOO, bundle);
+                MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+ABOUT+"_"+ABOUT_JUGNOO, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "About Jugnoo");
             }
         });
@@ -178,7 +173,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
 
     public void performBackPressed() {
         bundle = new Bundle();
-        MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+BACK, bundle);
+        MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+ABOUT+"_"+BACK, bundle);
 
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);

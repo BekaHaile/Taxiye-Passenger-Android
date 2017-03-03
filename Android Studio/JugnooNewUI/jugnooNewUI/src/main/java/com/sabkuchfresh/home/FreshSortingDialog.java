@@ -108,7 +108,7 @@ public class FreshSortingDialog implements FlurryEventNames {
                             sortList.get(i).setCheck(false);
                         }
                     }
-                    FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.CANCEL);
+                    FlurryEventLogger.eventGA(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.CANCEL);
                     dialog.dismiss();
                 }
             });
@@ -124,13 +124,13 @@ public class FreshSortingDialog implements FlurryEventNames {
 
                     int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                     if(type == AppConstant.ApplicationType.MEALS){
-                        MyApplication.getInstance().logEvent(FirebaseEvents.M_SORT+"_"+slot.name, null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_SORT+"_"+slot.name, null);
                     } else if(type == AppConstant.ApplicationType.GROCERY){
-						MyApplication.getInstance().logEvent(FirebaseEvents.G_SORT+"_"+slot.name, null);
+						MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_SORT+"_"+slot.name, null);
 					} else if(type == AppConstant.ApplicationType.MENUS){
-						MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_SORT+"_"+slot.name, null);
+						MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_SORT+"_"+slot.name, null);
 					} else{
-                        MyApplication.getInstance().logEvent(FirebaseEvents.F_SORT+"_"+slot.name, null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_SORT+"_"+slot.name, null);
                     }
                 }
             });

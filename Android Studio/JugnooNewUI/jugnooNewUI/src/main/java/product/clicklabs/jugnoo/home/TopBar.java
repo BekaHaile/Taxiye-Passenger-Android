@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -20,7 +19,6 @@ import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -77,7 +75,6 @@ public class TopBar implements FirebaseEvents {
             @Override
             public boolean onLongClick(View v) {
                 Utils.showToast(activity, Config.getServerUrlName());
-                FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
                 return false;
             }
         });
@@ -108,14 +105,13 @@ public class TopBar implements FirebaseEvents {
                 case R.id.imageViewMenu:
                     //activity.startActivity(new Intent(activity, FreshActivity.class));
                     drawerLayout.openDrawer(GravityCompat.START);
-                    FlurryEventLogger.event(FlurryEventNames.MENU_LOOKUP);
 
                     try {
                         if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
                             FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "menu");
                         } else {
                             Bundle bundle = new Bundle();
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+MENU, bundle);
+                            MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+MENU, bundle);
 
                             FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION,
                                     "Home Screen", "menu");
@@ -136,7 +132,7 @@ public class TopBar implements FirebaseEvents {
                                 //FlurryEventLogger.eventGA(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
                             } else if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
                                 Bundle bundle = new Bundle();
-                                MyApplication.getInstance().logEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+Constants.HELP, bundle);
+                                MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+Constants.HELP, bundle);
                                 FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "help");
                             }
                         } catch (Exception e) {

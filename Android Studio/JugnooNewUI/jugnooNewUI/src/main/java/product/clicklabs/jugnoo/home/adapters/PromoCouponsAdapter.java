@@ -117,7 +117,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				try {
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
                             +FirebaseEvents.OFFER_T_N_C, bundle);
                     FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "t&c");
 					int position = (int) v.getTag();
@@ -146,7 +146,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 						callback.onCouponSelected();
 					}
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.PROMOTIONS+"_"+FirebaseEvents.COUPON_PROMOTION, bundle);
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.PROMOTIONS+"_"+FirebaseEvents.COUPON_PROMOTION, bundle);
 					notifyDataSetChanged();
 				} catch (Exception e) {
 					e.printStackTrace();

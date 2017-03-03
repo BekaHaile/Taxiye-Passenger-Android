@@ -364,7 +364,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         relativeLayoutDeliveryAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FlurryEventLogger.event(CHECKOUT_SCREEN, SCREEN_TRANSITION, ADDRESS_SCREEN);
+                FlurryEventLogger.eventGA(CHECKOUT_SCREEN, SCREEN_TRANSITION, ADDRESS_SCREEN);
                 activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
             }
         });
@@ -387,22 +387,22 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                     activity.setSplInstr(editTextDeliveryInstructions.getText().toString().trim());
                     placeOrder();
                     if(type == AppConstant.ApplicationType.MEALS){
-                        MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+activity.getPaymentOption(), null);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_PAY+"_"+activity.getPaymentOption(), null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     } else if(type == AppConstant.ApplicationType.GROCERY){
-                        MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+activity.getPaymentOption(), null);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_PAY+"_"+activity.getPaymentOption(), null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     } else if(type == AppConstant.ApplicationType.MENUS){
 
 
                         FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_PAY_BUTTON, Events.MENU_BILL_PAY);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+activity.getPaymentOption(), null);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_PAY+"_"+activity.getPaymentOption(), null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     } else{
-                        MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+activity.getPaymentOption(), null);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_PAY+"_"+activity.getPaymentOption(), null);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     }
-                    FlurryEventLogger.event(PAYMENT_SCREEN, ORDER_PLACED, ORDER_PLACED);
+                    FlurryEventLogger.eventGA(PAYMENT_SCREEN, ORDER_PLACED, ORDER_PLACED);
                 }
             }
         });
@@ -610,28 +610,28 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                 Bundle bundle = new Bundle();
                 switch (v.getId()){
                     case R.id.relativeLayoutPaytm:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix +"_"
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix +"_"
                                 +FirebaseEvents.PAYTM, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.PAYTM,
                                 callbackPaymentOptionSelector);
                         break;
 
                     case R.id.relativeLayoutMobikwik:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix +"_"
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix +"_"
                                 +FirebaseEvents.MOBIKWIK, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.MOBIKWIK,
                                 callbackPaymentOptionSelector);
                         break;
 
                     case R.id.relativeLayoutFreeCharge:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
                                 +FirebaseEvents.FREECHARGE, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.FREECHARGE,
                                 callbackPaymentOptionSelector);
                         break;
 
                     case R.id.relativeLayoutCash:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
                                 +FirebaseEvents.CASH, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH,
                                 callbackPaymentOptionSelector);
@@ -861,19 +861,19 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                             @Override
                             public void onClick(View v) {
                                 if (activity.getPaymentOption().getOrdinal() == 1) {
-                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
+                                    FlurryEventLogger.eventGA(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
                                 } else {
-                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
+                                    FlurryEventLogger.eventGA(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
                                 }
 
                                 if(appType == AppConstant.ApplicationType.MEALS){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 } else if(appType == AppConstant.ApplicationType.GROCERY){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 } else if(appType == AppConstant.ApplicationType.MENUS){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 } else{
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 }
                                 placeOrderApi();
                             }
@@ -883,13 +883,13 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                             public void onClick(View v) {
                                 buttonPlaceOrder.setEnabled(true);
                                 if(appType == AppConstant.ApplicationType.MEALS){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 } else if(appType == AppConstant.ApplicationType.GROCERY){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 } else if(appType == AppConstant.ApplicationType.MENUS){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 } else{
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 }
                             }
                         }, false, false);
@@ -1070,7 +1070,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                                     }
 
                                     FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.ORDER_PLACED, productList);
-                                    FlurryEventLogger.orderedProduct(productList, productAction);
+                                    FlurryEventLogger.trancastionCompleteEvent(productList, productAction);
 
                                     int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                                     String deliverySlot = "", deliveryDay = "";
@@ -1255,13 +1255,13 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             FreshWalletBalanceLowDialog.Callback callback = new FreshWalletBalanceLowDialog.Callback() {
                 @Override
                 public void onRechargeNowClicked() {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_SCREEN, RECHARGE);
+                    FlurryEventLogger.eventGA(PAYMENT_SCREEN, PAYMENT_SCREEN, RECHARGE);
                     intentToWallet(paymentOption);
                 }
 
                 @Override
                 public void onPayByCashClicked() {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_SCREEN, PAY_VIA_CASH);
+                    FlurryEventLogger.eventGA(PAYMENT_SCREEN, PAYMENT_SCREEN, PAY_VIA_CASH);
                 }
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
@@ -1446,7 +1446,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     @Override
     public void onSlotSelected(int position, Slot slot) {
-        FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
+        FlurryEventLogger.eventGA(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
         activity.setSlotSelected(slot);
     }
 

@@ -250,9 +250,8 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 					} else {
 						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
 					}
-					FlurryEventLogger.event(OTP_VERIFIED_WITH_SMS);
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.VERIFY_ME, bundle);
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.VERIFY_ME, bundle);
 					FlurryEventLogger.eventGA(ACQUISITION, TAG, "Verify me");
 				} else {
 					editTextOTP.requestFocus();
@@ -343,9 +342,8 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 										Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
 												.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 										backFromMissedCall = true;
-										FlurryEventLogger.event(GIVE_MISSED_CALL);
                                         Bundle bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.GIVE_A_MISS_CALL, bundle);
+                                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.GIVE_A_MISS_CALL, bundle);
 										FlurryEventLogger.eventGA(ACQUISITION, TAG, "Give a miss call");
 									}
 								},
@@ -369,9 +367,8 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
             @Override
             public void onClick(View v) {
 				editTextOTP.setError(null);
-                FlurryEventLogger.event(CHANGE_PHONE_OTP_NOT_RECEIVED);
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.EDIT_PHONE_NUMBER, bundle);
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.EDIT_PHONE_NUMBER, bundle);
 
                 FlurryEventLogger.eventGA(ACQUISITION, TAG, "Edit phone number");
 				Intent intent = new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class);
@@ -1103,7 +1100,7 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 	public void performBackPressed(){
         Bundle bundle = new Bundle();
-        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.BACK, bundle);
+        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.BACK, bundle);
 		if(intentFromRegister){
 			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
 			intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());
@@ -1298,11 +1295,11 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 	private void firebaseEventWalletAtSignup(){
 		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
-			MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.PAYTM, new Bundle());
+			MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.PAYTM, new Bundle());
 		} else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-			MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.MOBIKWIK, new Bundle());
+			MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.MOBIKWIK, new Bundle());
 		} else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
-			MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.FREECHARGE, new Bundle());
+			MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.FREECHARGE, new Bundle());
 		}
 	}
 

@@ -8,7 +8,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.t20.fragments.GamePredictWebViewFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 
 
@@ -44,7 +43,6 @@ public class T20Activity extends BaseFragmentActivity implements FlurryEventName
 				.commitAllowingStateLoss();
 
 
-		FlurryEventLogger.event(SUPPORT_MAIN_OPENED);
 	}
 
 	

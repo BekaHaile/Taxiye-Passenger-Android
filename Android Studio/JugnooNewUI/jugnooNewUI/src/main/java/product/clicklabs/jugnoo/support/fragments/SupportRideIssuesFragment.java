@@ -191,7 +191,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 						}
 						Bundle bundle = new Bundle();
 						String label = item.getText().replaceAll("\\W", "_");
-						MyApplication.getInstance().logEvent(FirebaseEvents.ISSUES + "_" + FirebaseEvents.ISSUE_WITH_RECENT_RIDE + "_" + label, bundle);
+						MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.ISSUES + "_" + FirebaseEvents.ISSUE_WITH_RECENT_RIDE + "_" + label, bundle);
 						FlurryEventLogger.eventGA(Constants.ISSUES, "Select An Issue", item.getText());
 					}
 				});

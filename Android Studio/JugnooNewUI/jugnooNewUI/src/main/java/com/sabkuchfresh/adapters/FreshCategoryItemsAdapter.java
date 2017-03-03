@@ -283,9 +283,9 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             notifyDataSetChanged();
                             int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
                             if(appType == AppConstant.ApplicationType.FRESH){
-                                FlurryEventLogger.event(FRESH_FRAGMENT, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
+                                FlurryEventLogger.eventGA(FRESH_FRAGMENT, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
                             } else if(appType == AppConstant.ApplicationType.GROCERY){
-                                FlurryEventLogger.event(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
+                                FlurryEventLogger.eventGA(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
                             }
                         } else{
                             callback.minusNotDone(pos, subItems.get(pos));
@@ -312,17 +312,17 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             notifyDataSetChanged();
 
                             if(subItems.get(pos).getSubItemQuantitySelected() == 1) {
-                                FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
+                                FlurryEventLogger.eventGA(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
                                 int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
                                 if (appType == AppConstant.ApplicationType.FRESH) {
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_ADD, null);
                                 } else if (appType == AppConstant.ApplicationType.GROCERY) {
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_ADD, null);
                                 } else if (appType == AppConstant.ApplicationType.MENUS) {
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
+                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_ADD, null);
                                 }
                             } else {
-                                FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
+                                FlurryEventLogger.eventGA(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
                             }
                         }
                     } catch (Exception e) {

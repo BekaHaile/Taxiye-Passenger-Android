@@ -248,7 +248,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			callback.deleteStarSubscription();
 		} else {
 			if (callback.checkForMinus(pos, subItems.get(pos))) {
-				FlurryEventLogger.event(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
+				FlurryEventLogger.eventGA(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
 				subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
 						subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
 				callback.onMinusClicked(pos, subItems.get(pos));
@@ -272,7 +272,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		}
 
 		callback.onPlusClicked(pos, subItems.get(pos));
-		FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
+		FlurryEventLogger.eventGA(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
 		notifyDataSetChanged();
 	}
 

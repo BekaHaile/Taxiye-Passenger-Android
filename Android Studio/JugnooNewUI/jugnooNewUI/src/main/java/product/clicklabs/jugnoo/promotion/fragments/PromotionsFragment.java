@@ -144,11 +144,9 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(activity, ENTERED_PROMO_CODE);
 				String promoCode = editTextPromoCode.getText().toString().trim();
 				if (promoCode.length() > 0) {
 					applyPromoCodeAPI(activity, promoCode);
-					FlurryEventLogger.event(activity, CLICKS_ON_APPLY);
 				} else {
 					editTextPromoCode.requestFocus();
 					editTextPromoCode.setError("Code can't be empty");
@@ -399,7 +397,6 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 									String message = jObj.getString("message");
 									DialogPopup.dialogBanner(activity, message);
 									getCouponsAndPromotions(activity);
-									FlurryEventLogger.event(PROMO_CODE_APPLIED);
 
 									new ApiFetchWalletBalance(activity, new ApiFetchWalletBalance.Callback() {
 										@Override

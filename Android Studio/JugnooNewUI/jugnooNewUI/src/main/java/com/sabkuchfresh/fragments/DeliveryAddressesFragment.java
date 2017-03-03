@@ -26,6 +26,8 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.FreshAddressAdapterCallback;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
@@ -71,7 +73,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by ankit on 14/09/16.
  */
-public class DeliveryAddressesFragment extends Fragment implements FreshAddressAdapterCallback,
+public class DeliveryAddressesFragment extends Fragment implements FreshAddressAdapterCallback, GAAction,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
     private View rootView;
@@ -179,6 +181,9 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.SAVED);
+                        if(activity instanceof FreshActivity) {
+                            GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
+                        }
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                     }
@@ -206,6 +211,9 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.RECENT);
+                        if(activity instanceof FreshActivity) {
+                            GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES+SELECTED);
+                        }
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                     }
@@ -310,6 +318,9 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         if(address != null) {
                             fillAddressDetails(new LatLng(Data.latitude, Data.longitude));
                             FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.NEW);
+                            if(activity instanceof FreshActivity) {
+                                GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, CURRENT_LOCATION+SELECTED);
+                            }
                         }
                     }
                 });
@@ -327,6 +338,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     freshActivity.setEditThisAddress(false);
                     freshActivity.openMapAddress(createAddressBundle(""));
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.NEW);
+                    GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, CHOOSE_ON_MAP+SELECTED);
                 }
                 else if(activity instanceof AddPlaceActivity) {
                     ((AddPlaceActivity)activity).openMapAddress(createAddressBundle(""));
@@ -370,6 +382,9 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     public void onSearchPost() {
                         //progressBarSearch.setVisibility(View.GONE);
 //                        searchListActionsHandler.onSearchPost();
+                        if(activity instanceof FreshActivity) {
+                            GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, ADDRESS_BOX + ENTERED);
+                        }
                     }
 
                     @Override

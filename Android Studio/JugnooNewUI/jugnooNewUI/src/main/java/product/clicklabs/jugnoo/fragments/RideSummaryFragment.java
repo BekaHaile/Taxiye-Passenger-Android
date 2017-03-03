@@ -282,9 +282,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 						new TransactionUtils().openRideIssuesFragment(activity,
 								((RideTransactionsActivity) activity).getContainer(),
 								engagementId, -1, endRideData, items, 0, false, autosStatus, null);
-						FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
 						Bundle bundle = new Bundle();
-						MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.RIDE_HISTORY+"_"+ FirebaseEvents.NEED_HELP_ON_A_RIDE, bundle);
+						MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.RIDE_HISTORY+"_"+ FirebaseEvents.NEED_HELP_ON_A_RIDE, bundle);
 						FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Need help on a ride");
 					} else {
 						performBackPressed();
@@ -566,7 +565,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
     public void performBackPressed() {
         Bundle bundle = new Bundle();
-        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.RIDE_HISTORY+"_"+ FirebaseEvents.BACK, bundle);
+        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.RIDE_HISTORY+"_"+ FirebaseEvents.BACK, bundle);
 
         if (activity instanceof RideTransactionsActivity) {
             ((RideTransactionsActivity) activity).performBackPressed();

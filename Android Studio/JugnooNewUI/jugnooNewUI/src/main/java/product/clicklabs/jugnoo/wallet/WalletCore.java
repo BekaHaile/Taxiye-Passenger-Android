@@ -27,7 +27,6 @@ import product.clicklabs.jugnoo.home.dialogs.WalletSelectionErrorDialog;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
@@ -49,53 +48,51 @@ public class WalletCore {
 		if(walletType == PaymentOption.PAYTM.getOrdinal()) {
             Bundle bundle = new Bundle();
             bundle.putString("amount", amount);
-            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.ADD_PAYTM_CASH, bundle);
+            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.ADD_PAYTM_CASH, bundle);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Add Paytm Cash " + amount);
 		}
 		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
             Bundle bundle = new Bundle();
             bundle.putString("amount", amount);
-            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.ADD_MOBIKWIK_CASH, bundle);
+            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.ADD_MOBIKWIK_CASH, bundle);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Mobikwik Wallet", "Add Mobikwik Cash " + amount);
 		}
 		else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
 			Bundle bundle = new Bundle();
 			bundle.putString("amount", amount);
-			MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.FREECHARGE_WALLET+"_"+FirebaseEvents.ADD_FREECHARGE_CASH, bundle);
+			MyApplication.getInstance().firebaseLogEvent(Constants.REVENUE+"_"+ FirebaseEvents.FREECHARGE_WALLET+"_"+FirebaseEvents.ADD_FREECHARGE_CASH, bundle);
         }
 	}
 
 	public void editWalletFlurryEvent(int walletType){
 		if(walletType == PaymentOption.PAYTM.getOrdinal()) {
             Bundle bundle = new Bundle();
-            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.EDIT, bundle);
+            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.EDIT, bundle);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Edit");
 		}
 		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
             Bundle bundle = new Bundle();
-            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.EDIT, bundle);
+            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.EDIT, bundle);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Mobikwik Wallet", "Edit");
 		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
 			Bundle bundle = new Bundle();
-			MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.FREECHARGE_WALLET+"_"+FirebaseEvents.EDIT, bundle);
+			MyApplication.getInstance().firebaseLogEvent(Constants.REVENUE+"_"+ FirebaseEvents.FREECHARGE_WALLET+"_"+FirebaseEvents.EDIT, bundle);
         }
 	}
 
 	public void removeWalletFlurryEvent(int walletType){
 		if(walletType == PaymentOption.PAYTM.getOrdinal()) {
             Bundle bundle = new Bundle();
-            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
-			FlurryEventLogger.event(context, FlurryEventNames.CLICKS_ON_REMOVE_WALLET);
+            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Remove Wallet");
 		}
 		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
             Bundle bundle = new Bundle();
-            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
-			FlurryEventLogger.event(context, FlurryEventNames.CLICKS_ON_REMOVE_WALLET_MOBIKWIK);
+            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Mobikwik Wallet", "Remove Wallet");
 		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
 			Bundle bundle = new Bundle();
-			MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.FREECHARGE_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
+			MyApplication.getInstance().firebaseLogEvent(Constants.REVENUE+"_"+ FirebaseEvents.FREECHARGE_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
         }
 	}
 
@@ -299,7 +296,6 @@ public class WalletCore {
 //                    Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
 //                    Constants.RETENTION, bundle);
 
-            FlurryEventLogger.event(FlurryEventNames.PAYTM_SELECTED_WHEN_REQUESTING);
             FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, tag, "paytm");
 		}
 		else if (paymentOption == PaymentOption.MOBIKWIK.getOrdinal()) {
@@ -309,13 +305,12 @@ public class WalletCore {
 //                    Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
 //                    Constants.RETENTION, bundle);
 
-			FlurryEventLogger.event(FlurryEventNames.MOBIKWIK_SELECTED_WHEN_REQUESTING);
 			FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, tag, "mobikwik");
 		}
 		else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()) {
 			Bundle bundle = new Bundle();
 			bundle.putString(Constants.HOME_SCREEN, Constants.KEY_FREECHARGE);
-			MyApplication.getInstance().logEvent(Constants.REVENUE +
+			MyApplication.getInstance().firebaseLogEvent(Constants.REVENUE +
 					Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
 					Constants.RETENTION, bundle);
         }
@@ -324,7 +319,6 @@ public class WalletCore {
 //            bundle.putString(Constants.HOME_SCREEN, "cash");
 //            MyApplication.getInstance().logEvent(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, bundle);
 
-            FlurryEventLogger.event(FlurryEventNames.CASH_SELECTED_WHEN_REQUESTING);
             FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, tag, "cash");
 		}
 	}
@@ -553,7 +547,6 @@ public class WalletCore {
 				intent.putExtra(Constants.KEY_GO_BACK, 1);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
 			}
 			else if (Data.userData.getPaytmEnabled() != 1
 					|| Data.userData.getMobikwikEnabled() != 1
@@ -563,7 +556,6 @@ public class WalletCore {
 				intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -908,7 +900,6 @@ public class WalletCore {
             }
 			else if(paymentOption == PaymentOption.CASH){
 				if(Data.autoData.getPickupPaymentOption() == PaymentOption.PAYTM.getOrdinal()){
-					FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
 				}
 				Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
 				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
@@ -1097,7 +1088,6 @@ public class WalletCore {
 			}
 			else if(paymentOption == PaymentOption.CASH){
 				if(Data.autoData.getPickupPaymentOption() == PaymentOption.PAYTM.getOrdinal()){
-					FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
 				}
 				callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.CASH);
 				FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "cash");
@@ -1110,11 +1100,11 @@ public class WalletCore {
 	public void faEventAddWallet(int paymentOption, String suffix){
 		try {
 			if(paymentOption == PaymentOption.PAYTM.getOrdinal()){
-				MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+suffix, new Bundle());
+				MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+suffix, new Bundle());
 			} else if(paymentOption == PaymentOption.MOBIKWIK.getOrdinal()){
-				MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+suffix, new Bundle());
+				MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+suffix, new Bundle());
 			} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
-				MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.FREECHARGE_WALLET+"_"+suffix, new Bundle());
+				MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.FREECHARGE_WALLET+"_"+suffix, new Bundle());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

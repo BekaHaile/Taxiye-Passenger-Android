@@ -93,24 +93,24 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         try {
             switch (v.getId()){
                 case R.id.relativeLayoutPaytm:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
                             +FirebaseEvents.PAYTM, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.PAYTM);
                     break;
 
                 case R.id.relativeLayoutMobikwik:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
                             +FirebaseEvents.MOBIKWIK, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MOBIKWIK);
                     break;
 
                 case R.id.linearLayoutCash:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
                             +FirebaseEvents.CASH, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
                     break;
                 case R.id.relativeLayoutFreeCharge:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
                             +FirebaseEvents.FREECHARGE_SHORT, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
                     break;

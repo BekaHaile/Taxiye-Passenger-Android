@@ -28,8 +28,6 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -326,7 +324,6 @@ public class Data {
 			}
 
 			if(intent.hasExtra(Constants.KEY_PUSH_CLICKED)){
-				FlurryEventLogger.event(context, FlurryEventNames.WHO_CLICKED_THE_PUSH);
 			}
 
 			if(!dontTryParsingDeeplink && data.getQueryParameter(Constants.KEY_DEEPINDEX) != null){

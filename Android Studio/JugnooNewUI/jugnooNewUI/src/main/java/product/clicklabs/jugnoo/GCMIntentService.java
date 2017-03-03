@@ -54,7 +54,6 @@ import product.clicklabs.jugnoo.home.LocationUpdateService;
 import product.clicklabs.jugnoo.home.SyncIntentService;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -641,9 +640,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 
 						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
-							FlurryEventLogger.eventWithSessionOpenAndCloseMap(this, FlurryEventNames.INVITE_PUSH_RECEIVED);
 						}
-						FlurryEventLogger.eventWithSessionOpenAndCloseMap(this, FlurryEventNames.TO_WHOM_A_PUSH_WAS_DELIVERED);
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						double balance = jObj.getDouble("balance");
 						if (HomeActivity.appInterruptHandler != null) {
@@ -848,7 +845,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			if(tryToSave) {
 				int notificationId = jObj.optInt(KEY_NOTIFICATION_ID, flag);
 				if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag && notificationId != flag){
-					FlurryEventLogger.event(this, FlurryEventNames.CAMPAIGN_+notificationId);
 				}
 
 				Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));

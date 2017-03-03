@@ -23,8 +23,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -95,7 +93,6 @@ public class ApiLoginUsingAccessToken {
 			RestClient.getApiService().loginUsingAccessToken(params, new retrofit.Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
-					FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_LOGIN_USING_ACCESS_TOKEN, startTime);
 					String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 					Log.i(TAG, "loginUsingAccessToken response = " + responseStr);
 					performLoginSuccess(activity, responseStr, loginResponse, callback, new LatLng(latitude, longitude));

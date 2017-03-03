@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -36,7 +38,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by gurmail on 15/07/16.
  */
-public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements GAAction{
 
     private String TAG = "Meals Screen";
     private FreshActivity activity;
@@ -264,6 +266,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 callback.onMinusClicked(pos, subItems.get(pos));
 
                                 notifyDataSetChanged();
+                                GAUtils.event(activity.getGaCategory(), HOME, ITEM+DECREASED);
                             } else{
                                 callback.minusNotDone(pos, subItems.get(pos));
                             }
@@ -286,7 +289,10 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
                             if(subItems.get(pos).getSubItemQuantitySelected() == 1){
-                                MyApplication.getInstance().logEvent(FirebaseEvents.M_ADD, null);
+                                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_ADD, null);
+                                GAUtils.event(activity.getGaCategory(), HOME, ITEM+ADDED);
+                            } else {
+                                GAUtils.event(activity.getGaCategory(), HOME, ITEM+INCREASED);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

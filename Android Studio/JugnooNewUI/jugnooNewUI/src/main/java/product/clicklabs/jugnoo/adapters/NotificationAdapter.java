@@ -162,7 +162,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl());
                         Bundle bundle = new Bundle();
                         bundle.putString("message", ""+msg);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.DEEP_INDEX+notificationList.get(position).getDeepIndex(), bundle);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.DEEP_INDEX+notificationList.get(position).getDeepIndex(), bundle);
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Inbox", "Deep Index", notificationList.get(position).getNotificationId());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -216,7 +216,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             else if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == deepInt){
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.INVITE_FRIENDS, bundle);
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.INVITE_FRIENDS, bundle);
                 intent.setClass(activity, ShareActivity.class);
                 activity.startActivity(intent);
             }
@@ -291,7 +291,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 activity.startActivity(new Intent(activity, JugnooStarActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.JUGNOO_STAR, bundle);
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.JUGNOO_STAR, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Notification screen", "Jugnoo star");
             }
             else if(AppLinkIndex.WALLET_TRANSACTIONS.getOrdinal() == deepInt){

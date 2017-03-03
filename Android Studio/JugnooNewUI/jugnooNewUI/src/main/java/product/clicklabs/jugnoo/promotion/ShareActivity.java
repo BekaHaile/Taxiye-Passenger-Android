@@ -38,7 +38,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -147,14 +146,9 @@ public class ShareActivity extends BaseFragmentActivity {
 			@Override
 			public void onPageSelected(int position) {
 				if (position == 0) {
-					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_INVITE_FRIENDS);
 				} else if (position == 1) {
-					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_OFFERS);
 				} else if (position == 2) {
-					FlurryEventLogger.event(ShareActivity.this, Data.userData.getReferralLeaderboardEnabled() == 1 ?
-							FlurryEventNames.WHO_CLICKED_ON_LEADERBOARD : FlurryEventNames.WHO_CLICKED_ON_ACTIVITY);
 				} else if (position == 3) {
-					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_ACTIVITY);
 				}
 				Utils.hideSoftKeyboard(ShareActivity.this, imageViewBack);
 				clearError();
@@ -195,7 +189,7 @@ public class ShareActivity extends BaseFragmentActivity {
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
         Bundle bundle = new Bundle();
-        MyApplication.getInstance().logEvent(FirebaseEvents.REFERRAL+"_"+FirebaseEvents.BACK, bundle);
+        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.REFERRAL+"_"+FirebaseEvents.BACK, bundle);
 
 	}
 	

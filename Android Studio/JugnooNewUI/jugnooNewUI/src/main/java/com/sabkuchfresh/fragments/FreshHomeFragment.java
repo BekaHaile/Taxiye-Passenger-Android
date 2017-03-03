@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshSuperCategoriesAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
@@ -134,7 +134,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             e.printStackTrace();
         }
 
-        FlurryEventLogger.trackScreenView(Events.FRESH_SCREEN);
+        GAUtils.trackScreenView(Events.FRESH_SCREEN);
 
         return rootView;
     }

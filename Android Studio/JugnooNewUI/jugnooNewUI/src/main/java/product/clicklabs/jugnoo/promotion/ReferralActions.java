@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -341,37 +340,31 @@ public class ReferralActions implements FirebaseEvents {
 
                             if(hitAnalyticEvents) {
 								if (info.activityInfo.packageName.contains("com.facebook.katana")) {
-									FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_FACEBOOK);
 									FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Facebook");
 									Bundle bundle = new Bundle();
-									MyApplication.getInstance().logEvent(REFERRAL + "_" + DIALOG_FB_APP, bundle);
+									MyApplication.getInstance().firebaseLogEvent(REFERRAL + "_" + DIALOG_FB_APP, bundle);
 								} else if (info.activityInfo.packageName.contains("com.google.android.gm")
 										|| info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
 										|| info.activityInfo.packageName.contains("com.microsoft.office.outlook")
 										|| info.activityInfo.packageName.contains("com.google.android.apps.inbox")) {
-									FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_EMAIL);
 									Bundle bundle = new Bundle();
-									MyApplication.getInstance().logEvent(REFERRAL + "_" + DIALOG_GMAIL, bundle);
+									MyApplication.getInstance().firebaseLogEvent(REFERRAL + "_" + DIALOG_GMAIL, bundle);
 									FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Gmail");
 								} else if (info.activityInfo.packageName.contains("com.whatsapp")) {
-									FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_WHATSAPP);
 									Bundle bundle = new Bundle();
-									MyApplication.getInstance().logEvent(REFERRAL + "_" + DIALOG_WHATSUPP, bundle);
+									MyApplication.getInstance().firebaseLogEvent(REFERRAL + "_" + DIALOG_WHATSUPP, bundle);
 									FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "WhatsApp");
 								} else {
 									if (info.activityInfo.packageName.contains("com.twitter.android")) {
-										FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_TWITTER);
 										Bundle bundle = new Bundle();
-										MyApplication.getInstance().logEvent(REFERRAL + "_" + FirebaseEvents.DIALOG_TWITTER, bundle);
+										MyApplication.getInstance().firebaseLogEvent(REFERRAL + "_" + FirebaseEvents.DIALOG_TWITTER, bundle);
 									} else if (info.activityInfo.packageName.contains("com.android.mms")) {
-										FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_SMS);
 										Bundle bundle = new Bundle();
-										MyApplication.getInstance().logEvent(REFERRAL + "_" + FirebaseEvents.DIALOG_MOBILE_SMS, bundle);
+										MyApplication.getInstance().firebaseLogEvent(REFERRAL + "_" + FirebaseEvents.DIALOG_MOBILE_SMS, bundle);
 										FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "SMS");
 									} else {
-										FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_OTHERS);
 										Bundle bundle = new Bundle();
-										MyApplication.getInstance().logEvent(REFERRAL + "_" + DIALOG_OTHERS, bundle);
+										MyApplication.getInstance().firebaseLogEvent(REFERRAL + "_" + DIALOG_OTHERS, bundle);
 										FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Other");
 									}
 								}

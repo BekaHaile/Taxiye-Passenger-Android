@@ -155,7 +155,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 					case R.id.buttonCallEmergencyContact:
 						if(activity instanceof EmergencyActivity) {
                             Bundle bundle = new Bundle();
-                            MyApplication.getInstance().logEvent(Constants.HELP+"_"+ FirebaseEvents.CALL_YOUR_CONTACTS, bundle);
+                            MyApplication.getInstance().firebaseLogEvent(Constants.HELP+"_"+ FirebaseEvents.CALL_YOUR_CONTACTS, bundle);
 							FlurryEventLogger.eventGA(Constants.HELP, "emergency mode screen", "cal emergency contact");
 							new FragTransUtils().openEmergencyContactsOperationsFragment(activity,
 									((EmergencyActivity)activity).getContainer(), engagementId,

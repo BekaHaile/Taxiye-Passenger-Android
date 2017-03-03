@@ -19,8 +19,6 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
@@ -241,8 +239,7 @@ public class SlidingBottomPanelV4 {
                 } else {
                     viewPager.setCurrentItem(0, true);
                 }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_PAYMENT_MODE, bundle);
                 break;
 
@@ -252,8 +249,7 @@ public class SlidingBottomPanelV4 {
                 } else {
                     viewPager.setCurrentItem(1, true);
                 }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.FARE_POPUP, bundle);
                 break;
 
@@ -263,8 +259,7 @@ public class SlidingBottomPanelV4 {
                 } else {
                     viewPager.setCurrentItem(2, true);
                 }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_OFFER, bundle);
                 break;
         }

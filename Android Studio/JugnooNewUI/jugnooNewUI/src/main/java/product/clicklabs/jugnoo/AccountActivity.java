@@ -295,7 +295,6 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             public void onClick(View v) {
                 startActivity(new Intent(AccountActivity.this, AboutActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
             }
         });
 
@@ -388,7 +387,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                         } else {
                             updateUserProfileAPI(AccountActivity.this, nameChanged, emailChanged, "+91" + phoneNoChanged,
                                     !Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged));
-                            MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+EDIT_PHONE_NUMBER, bundle);
+                            MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+EDIT_PHONE_NUMBER, bundle);
                             FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "edit phone number");
                         }
                     } else {
@@ -463,7 +462,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                             linearLayoutPasswordChange.setVisibility(View.VISIBLE);
                             linearLayoutPasswordSave.setVisibility(View.VISIBLE);
                             imageViewChangePassword.setVisibility(View.GONE);
-                            MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+CHANGE_PASSWORD, bundle);
+                            MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+CHANGE_PASSWORD, bundle);
                             FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Change Password");
                         } else {
                             linearLayoutPasswordChange.setVisibility(View.GONE);
@@ -576,8 +575,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                         EmergencyActivity.EmergencyActivityMode.EMERGENCY_CONTACTS.getOrdinal());
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(AccountActivity.this, CLICKS_ON_EMERGENCY_CONTACTS);
-                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+EMERGENCY_CONTACTS, bundle);
+                MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+EMERGENCY_CONTACTS, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Emergency contacts");
             }
         });
@@ -590,8 +588,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                 intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
                 startActivityForResult(intent, Constants.REQUEST_CODE_ADD_HOME);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_HOME);
-                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_HOME, bundle);
+                MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_HOME, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Add Home");
             }
         });
@@ -604,8 +601,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                 intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
                 startActivityForResult(intent, Constants.REQUEST_CODE_ADD_WORK);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_WORK);
-                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_WORK, bundle);
+                MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_WORK, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Add Work");
             }
         });
@@ -663,8 +659,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
                             @Override
                             public void onClick(View v) {
-                                FlurryEventLogger.event(AccountActivity.this, CLICKS_ON_LOGOUT);
-                                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+LOGOUT, bundle);
+                                MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+LOGOUT, bundle);
                                 logoutAsync(AccountActivity.this);
                             }
                         },
@@ -740,7 +735,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
 	public void performBackPressed(){
         FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
-        MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+BACK, bundle);
+        MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+BACK, bundle);
         if(getSupportFragmentManager().getBackStackEntryCount() > 0){
             openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
         }

@@ -14,6 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 
@@ -23,6 +27,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -37,7 +42,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class OrderCompleteReferralDialog {
+public class OrderCompleteReferralDialog implements GAAction {
 
 	private Context context;
 	private Callback callback;
@@ -137,7 +142,12 @@ public class OrderCompleteReferralDialog {
 							OrderCompleteReferralDialog.this.orderId,
 							OrderCompleteReferralDialog.this.productType,
 							OrderCompleteReferralDialog.this.referralPopupContent.getButtonId());
-					FlurryEventLogger.event(Constants.INFORMATIVE, "Popup - Send Free Rides", OrderCompleteReferralDialog.this.referralPopupContent.getButtonText());
+					FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Popup - Send Free Rides", OrderCompleteReferralDialog.this.referralPopupContent.getButtonText());
+					if(context instanceof FreshActivity) {
+						GAUtils.event(((FreshActivity)context).getGaCategory(), ORDER_PLACED+REFERRAL_POPUP, REFER+BUTTON+CLICKED+OrderCompleteReferralDialog.this.referralPopupContent.getButtonText());
+					} else if(context instanceof HomeActivity){
+						GAUtils.event(((FreshActivity)context).getGaCategory(), IN_RIDE+REFERRAL_POPUP, REFER+BUTTON+CLICKED+OrderCompleteReferralDialog.this.referralPopupContent.getButtonText());
+					}
 				}
 			});
 
@@ -146,12 +156,17 @@ public class OrderCompleteReferralDialog {
 				public void onClick(View v) {
 					dialog.dismiss();
 					callback.onDialogDismiss();
-					FlurryEventLogger.event(Constants.INFORMATIVE, "Popup - Send Free Rides", "Later");
+					FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Popup - Send Free Rides", "Later");
+					if(context instanceof FreshActivity) {
+						GAUtils.event(((FreshActivity)context).getGaCategory(), ORDER_PLACED+REFERRAL_POPUP, LATER+CLICKED);
+					} else if(context instanceof HomeActivity){
+						GAUtils.event(GACategory.RIDES, IN_RIDE+REFERRAL_POPUP, LATER+CLICKED);
+					}
 				}
 			});
 
 			dialog.show();
-			FlurryEventLogger.event(Constants.INFORMATIVE, "Popup - Send Free Rides", "Send Free Rides");
+			FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Popup - Send Free Rides", "Send Free Rides");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

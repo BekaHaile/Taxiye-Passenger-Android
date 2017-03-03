@@ -128,7 +128,7 @@ public class FABViewTest {
                         Prefs.with(activity).save(Constants.SP_SHOW_GEANIE_HELP, 1);
                         setRlGenieHelpVisibility();
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
-                        FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Opened");
+                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, Events.GENIE, "Opened");
                     } else {
                         isOpened = false;
                         if(activity instanceof HomeActivity){
@@ -136,7 +136,7 @@ public class FABViewTest {
 //                            ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
                         }
                         ivJeanieHelp.setVisibility(View.GONE);
-                        FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Closed");
+                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, Events.GENIE, "Closed");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -330,8 +330,8 @@ public class FABViewTest {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.MEALS, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.MEALS);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.MEALS, null);
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.MEALS);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -341,8 +341,8 @@ public class FABViewTest {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.FRESH, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.FRESH);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.FRESH, null);
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.FRESH);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -352,8 +352,8 @@ public class FABViewTest {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.AUTO, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.AUTO);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.AUTO, null);
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.AUTO);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -363,8 +363,8 @@ public class FABViewTest {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.GROCERY, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.GROCERY);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.GROCERY, null);
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.GROCERY);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getGroceryClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -374,8 +374,8 @@ public class FABViewTest {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.MENUS, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.MENUS);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.MENUS, null);
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.MENUS);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -384,8 +384,8 @@ public class FABViewTest {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.PAY, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.PAY);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.PAY, null);
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.PAY);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getPayClientId(), finalLatLng, false);
                         }
                     }, 300);

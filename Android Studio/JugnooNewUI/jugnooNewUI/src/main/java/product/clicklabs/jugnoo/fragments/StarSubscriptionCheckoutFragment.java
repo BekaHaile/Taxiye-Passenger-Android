@@ -211,28 +211,28 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         }
                         break;
                     case R.id.relativeLayoutPaytm:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix +"_"
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix +"_"
                                 +FirebaseEvents.PAYTM, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.PAYTM,
                                 callbackPaymentOptionSelector);
                         break;
 
                     case R.id.relativeLayoutMobikwik:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix +"_"
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix +"_"
                                 +FirebaseEvents.MOBIKWIK, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.MOBIKWIK,
                                 callbackPaymentOptionSelector);
                         break;
 
                     case R.id.relativeLayoutFreeCharge:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
                                 +FirebaseEvents.FREECHARGE, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.FREECHARGE,
                                 callbackPaymentOptionSelector);
                         break;
 
                     case R.id.relativeLayoutCash:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
                                 +FirebaseEvents.CASH, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH,
                                 callbackPaymentOptionSelector);
@@ -311,9 +311,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 //                        }, false, false);
 
                 if (getPaymentOption().getOrdinal() == 1) {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
+                    FlurryEventLogger.eventGA(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
                 } else {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
+                    FlurryEventLogger.eventGA(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
                 }
 
                 if(purchaseType == StarPurchaseType.RENEW.getOrdinal()) {
@@ -335,13 +335,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             FreshWalletBalanceLowDialog.Callback callback = new FreshWalletBalanceLowDialog.Callback() {
                 @Override
                 public void onRechargeNowClicked() {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_SCREEN, RECHARGE);
+                    FlurryEventLogger.eventGA(PAYMENT_SCREEN, PAYMENT_SCREEN, RECHARGE);
                     intentToWallet(paymentOption);
                 }
 
                 @Override
                 public void onPayByCashClicked() {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_SCREEN, PAY_VIA_CASH);
+                    FlurryEventLogger.eventGA(PAYMENT_SCREEN, PAYMENT_SCREEN, PAY_VIA_CASH);
                 }
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {

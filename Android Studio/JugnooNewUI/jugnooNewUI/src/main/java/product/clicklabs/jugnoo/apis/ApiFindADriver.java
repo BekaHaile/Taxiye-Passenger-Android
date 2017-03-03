@@ -20,8 +20,6 @@ import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.utils.DateOperations;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -85,7 +83,6 @@ public class ApiFindADriver {
 				@Override
 				public void success(FindADriverResponse findADriverResponse, Response response) {
 					try {
-						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_FIND_A_DRIVER, startTime);
 						String resp = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.e(TAG, "findADriverCall response=" + resp);
 

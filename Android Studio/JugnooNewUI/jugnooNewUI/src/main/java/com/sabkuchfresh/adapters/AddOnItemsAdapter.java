@@ -157,11 +157,11 @@ public class AddOnItemsAdapter extends BaseAdapter {
                     if(subItems.get(pos).getSubItemQuantitySelected() == 1){
                         int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
                         if (appType == AppConstant.ApplicationType.FRESH) {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_ADD, null);
                         } else if (appType == AppConstant.ApplicationType.GROCERY) {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_ADD, null);
                         } else if (appType == AppConstant.ApplicationType.MENUS) {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
+                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_ADD, null);
                         }
                     }
 

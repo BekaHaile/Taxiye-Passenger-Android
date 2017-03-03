@@ -136,7 +136,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 			public void onClick(View v) {
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Back");
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+BACK, bundle);
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+BACK, bundle);
 				paymentActivity.finish();
 				paymentActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 			}
@@ -158,9 +158,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
                         } else{
                                 DialogPopup.alertPopupLeftOriented(paymentActivity, "", Data.userData.getJugnooCashTNC(), true, false, false);
                         }
-                        FlurryEventLogger.event(JUGNOO_CASH_CHECKED);
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+JUGNOO_CASH, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+JUGNOO_CASH, bundle);
                         FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Jugnoo Cash");
                     }
 				} catch (Exception e) {
@@ -212,9 +211,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commit();
-				FlurryEventLogger.event(RECENT_TRANSACTIONS);
                 Bundle bundle1 = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+VIEW_RECENT_TRANSACTION, bundle1);
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+VIEW_RECENT_TRANSACTION, bundle1);
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "View Recent Transaction");
 			}
 		});
@@ -257,8 +255,6 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 							.commit();
-					FlurryEventLogger.event(PAYTM_WALLET_OPENED);
-					FlurryEventLogger.event(paymentActivity, CLICKS_ON_PAYTM_WALLET);
 				} else{
 					paymentActivity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
@@ -267,7 +263,6 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 							.commit();
-					FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
 				}
 
 				String suffix = "";
@@ -278,7 +273,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 				} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
 					suffix = FirebaseEvents.FREECHARGE_WALLET;
 				}
-				MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.WALLET+"_"+suffix, new Bundle());
+				MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.WALLET+"_"+suffix, new Bundle());
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
 			}
 		} catch (Exception e) {

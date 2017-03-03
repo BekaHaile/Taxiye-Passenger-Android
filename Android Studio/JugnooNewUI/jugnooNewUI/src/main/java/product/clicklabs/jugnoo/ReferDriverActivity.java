@@ -88,7 +88,7 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
                 if((!editTextName.getText().toString().isEmpty()) && (!editTextPhone.getText().toString().isEmpty())){
                     if((editTextPhone.getText().toString().length() == 10)){
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.REFER_A_DRIVER+"_"+FirebaseEvents.REFER, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.REFER_A_DRIVER+"_"+FirebaseEvents.REFER, bundle);
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Refer a driver", "refer");
                         referDriver();
                     }else {
@@ -143,7 +143,7 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
         Bundle bundle = new Bundle();
-        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.REFER_A_DRIVER+"_"+FirebaseEvents.BACK, bundle);
+        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.REFER_A_DRIVER+"_"+FirebaseEvents.BACK, bundle);
 
         FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Refer a driver", "back");
     }

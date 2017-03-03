@@ -36,11 +36,9 @@ import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
-import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -204,26 +202,24 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             if(v.getId() == R.id.linearLayoutPaymentMode || v.getId() == R.id.linearLayoutPaymentModeMS){
                 getPaymentOptionDialog().show();
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_PAYMENT_MODE, bundle);
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Home Screen", "b_payment_mode");
             } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.linearLayoutMinFareMS){
                 if(getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
                     //getPoolDestinationDialog().show();
                     getFareDetailsDialog().show();
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                             +FirebaseEvents.FARE_POPUP+"_pool", bundle);
                     FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Pool", "base fare");
                 } else{
                     getFareDetailsDialog().show();
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                             +FirebaseEvents.FARE_POPUP+"_auto", bundle);
                     FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Auto", "base fare");
                 }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
 
 
             } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
@@ -240,11 +236,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 //activity.startActivity(intent);
                 activity.startActivityForResult(intent, 4);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
 
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.GET_FARE_ESTIMATE, bundle);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, getRegionSelected().getRegionName(), "get fare estimate");
             } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
@@ -252,9 +246,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                         || Data.userData.getShowOfferDialog() == 1) {
                     getPromoCouponsDialog().show(ProductType.AUTO, Data.userData.getCoupons(ProductType.AUTO));
                 }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_OFFER, bundle);
             }
         }

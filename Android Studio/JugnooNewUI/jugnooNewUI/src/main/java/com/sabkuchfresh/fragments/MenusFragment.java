@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -217,7 +218,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
-        FlurryEventLogger.trackScreenView(Events.MENUS_SCREEN);
+        GAUtils.trackScreenView(Events.MENUS_SCREEN);
 
         return rootView;
     }

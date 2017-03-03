@@ -599,10 +599,9 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				@Override
 				public void onClick(View v) {
 					if (isBranchLinkNotClicked()) {
-						FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Sign up");
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+SPLASH_SCREEN+"_"+LOGIN, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+SPLASH_SCREEN+"_"+LOGIN, bundle);
 						changeUIState(State.LOGIN);
 					} else {
 						clickCount = clickCount + 1;
@@ -614,9 +613,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				@Override
 				public void onClick(View v) {
 					if(isBranchLinkNotClicked()) {
-						FlurryEventLogger.event(SIGNUP);
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+SPLASH_SCREEN+"_"+SIGN_UP, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+SPLASH_SCREEN+"_"+SIGN_UP, bundle);
 						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Log in");
 						SplashNewActivity.registerationType = RegisterationType.EMAIL;
 						changeUIState(State.SIGNUP);
@@ -631,7 +629,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				@Override
 				public void onClick(View v) {
 					Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
-					FlurryEventLogger.event(CALL_WHEN_NO_INTERNET);
 				}
 			});
 
@@ -651,11 +648,11 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					if (State.LOGIN == state) {
 						performLoginBackPressed();
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+BACK, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+BACK, bundle);
 					} else if (State.SIGNUP == state) {
 						performSignupBackPressed();
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+SIGN_UP_PAGE+"_"+BACK, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+SIGN_UP_PAGE+"_"+BACK, bundle);
 					}
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 				}
@@ -735,8 +732,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								}
 							}
                             Bundle bundle = new Bundle();
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN, bundle);
-							FlurryEventLogger.event(LOGIN_VIA_EMAIL);
+                            MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN, bundle);
 						}
 					}
 				}
@@ -772,11 +768,10 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				public void onClick(View v) {
 					if (MyApplication.getInstance().isOnline()) {
 						signUpBy = "facebook";
-						FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
 						Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 						facebookLoginHelper.openFacebookSession();
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN_WITH_FACEBOOK, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN_WITH_FACEBOOK, bundle);
 					} else {
 						DialogPopup.dialogNoInternet(SplashNewActivity.this,
 								Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -801,10 +796,9 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				@Override
 				public void onClick(View v) {
 					if(MyApplication.getInstance().isOnline()) {
-					FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
 						signUpBy = "google";
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN_WITH_GOOGLE, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN_WITH_GOOGLE, bundle);
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 					startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
 							GOOGLE_SIGNIN_REQ_CODE_LOGIN);
@@ -837,9 +831,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					startActivity(new Intent(SplashNewActivity.this, ForgotPasswordScreen.class));
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					finish();
-					FlurryEventLogger.event(FORGOT_PASSWORD);
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+FORGET_PASSWORD, bundle);
+                    MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+FORGET_PASSWORD, bundle);
 					FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Forget password");
 				}
 			});
@@ -852,7 +845,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					Data.facebookUserData = facebookUserData;
 					if(State.LOGIN == state || State.SIGNUP == state) {
 						sendFacebookLoginValues(SplashNewActivity.this);
-						FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
 					}
 				}
 
@@ -895,7 +887,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					try {
 						if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
                             Data.deepLinkIndex = -1;
-                            FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
                             SplashNewActivity.registerationType = RegisterationType.EMAIL;
                             setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, Data.deepLinkReferralCode));
                             changeUIState(State.SIGNUP);
@@ -984,8 +975,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 													sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password, linkedWallet);
 												}
                                                 Bundle bundle = new Bundle();
-                                                MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+SIGN_UP_PAGE+"_"+SIGN_UP, bundle);
-												FlurryEventLogger.event(SIGNUP_FINAL);
+                                                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+SIGN_UP_PAGE+"_"+SIGN_UP, bundle);
 											} else {
 												editTextSPassword.requestFocus();
 												editTextSPassword.setError("Password must be of atleast six characters");
@@ -1061,7 +1051,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					try {
 						FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Terms of use");
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+SIGN_UP_PAGE+"_"+TERMS_OF_USE, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+SIGN_UP_PAGE+"_"+TERMS_OF_USE, bundle);
 						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
 						startActivity(browserIntent);
 					} catch (Exception e) {
@@ -1458,7 +1448,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	private void sendToRegisterThroughSms(boolean openLS) {
 		if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 			Data.deepLinkIndex = -1;
-			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
 			SplashNewActivity.registerationType = RegisterationType.EMAIL;
 			setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, referralCode));
 			//if(!TextUtils.isEmpty(refreeUserId)) {
@@ -1568,7 +1557,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			DialogPopup.dismissLoadingDialog();
 			Log.e("deviceToken received", "> " + MyApplication.getInstance().getDeviceToken());
 			accessTokenLogin(SplashNewActivity.this);
-			FlurryEventLogger.appStarted(MyApplication.getInstance().getDeviceToken());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3500,7 +3488,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                FlurryEventLogger.event(LOGIN_OPTION_MAIN);
                                                 setIntent(new Intent().putExtra(KEY_ALREADY_VERIFIED_EMAIL, email));
                                                 changeUIState(State.LOGIN);
                                             }
@@ -3605,7 +3592,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
         if (!Prefs.with(this).contains(SP_APP_DOWNLOAD_SOURCE_SENT)) {
             HashMap<String, String> map = new HashMap<>();
             map.put(KEY_SOURCE, Config.getDownloadSource());
-            FlurryEventLogger.event(FlurryEventNames.APP_DOWNLOAD_SOURCE, map);
             Prefs.with(this).save(SP_APP_DOWNLOAD_SOURCE_SENT, 1);
         }
     }

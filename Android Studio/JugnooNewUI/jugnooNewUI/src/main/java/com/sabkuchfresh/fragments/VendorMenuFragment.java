@@ -17,11 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.DisplayOffersAdapter;
@@ -134,7 +132,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     tabClickFlag = false;
                 } else {
                     Log.d(TAG, "onPageSelected = " + position);
-                    FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
+                    FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
                 }
             }
 
@@ -316,7 +314,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     public void onTabClicked(int position) {
         Log.d(TAG, "onTabClicked = " + position);
         tabClickFlag = true;
-        FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.TAP);
+        FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.TAP);
     }
 
 
