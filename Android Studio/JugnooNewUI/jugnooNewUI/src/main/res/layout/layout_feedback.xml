@@ -321,7 +321,7 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/textViewRSWhatImprove"
@@ -344,9 +344,9 @@
                     android:divider="@color/transparent"
                     android:dividerHeight="0px"
                     android:horizontalSpacing="22px"
-                    android:numColumns="2"
+                    android:verticalSpacing="-10px"
+                    android:numColumns="3"
                     android:splitMotionEvents="false"
-                    android:verticalSpacing="20px"
                     android:visibility="visible" />
 
 
