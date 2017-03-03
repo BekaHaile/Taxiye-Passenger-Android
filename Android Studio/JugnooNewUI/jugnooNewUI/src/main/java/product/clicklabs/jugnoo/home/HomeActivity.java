@@ -858,6 +858,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                 selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText()+", ";
                 textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
+                GAUtils.event(RIDES, HOME, SPECIAL_PICKUP_CHOOSED);
             }
 
             @Override
@@ -4977,7 +4978,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             || ((passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
                             || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                        fabViewTest.setFABButtons(passengerScreenMode == PassengerScreenMode.P_INITIAL);
+                        fabViewTest.setFABButtons();
                     }
                 }
             } else {

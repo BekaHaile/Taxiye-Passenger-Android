@@ -14,8 +14,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -23,6 +21,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.activities.MainActivity;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -64,7 +65,7 @@ import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 /**
  * Created by Ankit on 4/29/16.
  */
-public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements GAAction, GACategory{
 
     private static final int TYPE_HEADER = 2;
     private static final int TYPE_ITEM = 1;
@@ -289,40 +290,15 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutCategories.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    if(!(activity instanceof HomeSwitcherActivity)) {
-//                        LatLng currLatLng = new LatLng(Data.latitude, Data.longitude);
-//                        if (activity instanceof HomeActivity) {
-//                            currLatLng = ((HomeActivity) activity).getCurrentPlaceLatLng();
-//                        } else if (activity instanceof FreshActivity) {
-//                            currLatLng = ((FreshActivity) activity).getCurrentPlaceLatLng();
-//                        }
-//                        final LatLng finalCurrLatLng = currLatLng;
-//                        new Handler().postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                MyApplication.getInstance().getAppSwitcher().switchApp(activity,
-//                                        Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-//                                        activity.getIntent().getData(), finalCurrLatLng, true);
-//                            }
-//                        }, 500);
-
-
                     if(holder.linearLayoutSubCategories.getVisibility() == View.VISIBLE){
                         holder.linearLayoutSubCategories.setVisibility(View.GONE);
-                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_down);
                         holder.imageViewArrow.setRotation(270);
-                        //holder.linearLayoutCategories.startAnimation(animation);
                         MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENU_CATEGORIES, null);
                     } else {
                         holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
-                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_up);
                         holder.imageViewArrow.setRotation(90);
-                        //holder.linearLayoutCategories.startAnimation(animation);
+                        GAUtils.event(SIDE_MENU, CATEGORY+EXPANDED, "");
                     }
-
-                        //notifyItemUnchecked(0);
-//                    }
-//                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
             });
 
@@ -330,6 +306,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     accountClick();
+                    GAUtils.event(SIDE_MENU, USER+PROFILE+CLICKED, "");
                 }
             });
 
@@ -341,6 +318,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENU_CATEGORIES_AUTOS, new Bundle());
                     FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.RIDES);
+                    GAUtils.event(JUGNOO, RIDES+HOME, LEFT_MENU_ICON+CLICKED);
+                    GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, RIDES);
                 }
             });
 
@@ -352,6 +331,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENU_CATEGORIES_FRESH, new Bundle());
                     FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.FRESH);
+                    GAUtils.event(JUGNOO, FRESH+HOME, LEFT_MENU_ICON+CLICKED);
+                    GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, FRESH);
                 }
             });
 
@@ -363,6 +344,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                     MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENU_CATEGORIES_MEALS, new Bundle());
                     FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.MEALS);
+                    GAUtils.event(JUGNOO, MEALS+HOME, LEFT_MENU_ICON+CLICKED);
+                    GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, MEALS);
                 }
             });
 
@@ -375,6 +358,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENU_CATEGORIES_GROCERY, new Bundle());
                     FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.GROCERY);
+                    GAUtils.event(JUGNOO, FRESH+HOME, LEFT_MENU_ICON+CLICKED);
+                    GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, FRESH);
                 }
             });
 
@@ -386,6 +371,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENU_CATEGORIES_MENUS, new Bundle());
                     FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.MENUS);
+                    GAUtils.event(JUGNOO, GAAction.MENUS+HOME, LEFT_MENU_ICON+CLICKED);
+                    GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, GAAction.MENUS);
                 }
             });
 
@@ -397,6 +384,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENU_CATEGORIES_PAY, new Bundle());
                     FlurryEventLogger.eventGA(Events.INFORMATION, Events.SIDE_MENU_CATEGORIES, Events.PAY);
+                    GAUtils.event(JUGNOO, PAY+HOME, LEFT_MENU_ICON+CLICKED);
+                    GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, PAY);
                 }
             });
         }
@@ -509,7 +498,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //                        FlurryEventLogger.eventGA(Constants.REVENUE+Constants.SLASH+Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Home Screen", "fresh");
 //                    }
                 }
-            } else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(tag)){
+            }
+            else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, ShareActivity.class);
                 intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
                 activity.startActivity(intent);
@@ -517,8 +507,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.FREE_RIDES, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES);
-
-            } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(tag)){
+                GAUtils.event(SIDE_MENU, FREE_GIFT+CLICKED, "");
+            }
+            else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, ReferDriverActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 //MyApplication.getInstance().logEvent(FirebaseEvents.Refer_a_driver);
@@ -533,6 +524,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.WALLET, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "wallet");
+                GAUtils.event(SIDE_MENU, WALLET+CLICKED, "");
 
             } else if(MenuInfoTags.INBOX.getTag().equalsIgnoreCase(tag)){
                 LatLng currLatLng = null;
@@ -551,6 +543,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.INBOX, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "inbox");
+                GAUtils.event(SIDE_MENU, INBOX+CLICKED, "");
 
             }else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(tag)) {
                 LatLng currLatLng = null;
@@ -575,6 +568,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Bundle bundle = new Bundle();
                     MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.PROMOTION, bundle);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "promotion");
+                    GAUtils.event(SIDE_MENU, PROMOTIONS+CLICKED, "");
                 } else {
                     DialogPopup.dialogNoInternet(activity,
                             Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -605,12 +599,16 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.RIDE_HISTORY, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Ride History");
+                GAUtils.event(SIDE_MENU, HISTORY+CLICKED, "");
+
             } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
                 activity.startActivity(new Intent(activity, SupportActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.SUPPORT, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Support");
+                GAUtils.event(SIDE_MENU, SUPPORT+CLICKED, "");
+
             } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, AboutActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -628,6 +626,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.JUGNOO_STAR, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Jugnoo star");
+                GAUtils.event(SIDE_MENU, JUGNOO+STAR+CLICKED, "");
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 drawerLayout.closeDrawer(GravityCompat.START);

@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
@@ -62,10 +65,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-import static com.sabkuchfresh.analytics.FlurryEventNames.CASH;
 import static com.sabkuchfresh.analytics.FlurryEventNames.PAYMENT_METHOD;
 import static com.sabkuchfresh.analytics.FlurryEventNames.PAYMENT_SCREEN;
-import static com.sabkuchfresh.analytics.FlurryEventNames.PAYTM;
 import static com.sabkuchfresh.analytics.FlurryEventNames.PAY_VIA_CASH;
 import static com.sabkuchfresh.analytics.FlurryEventNames.RECHARGE;
 
@@ -73,7 +74,7 @@ import static com.sabkuchfresh.analytics.FlurryEventNames.RECHARGE;
  * Created by ankit on 30/12/16.
  */
 
-public class StarSubscriptionCheckoutFragment extends Fragment implements PromoCouponsAdapter.Callback {
+public class StarSubscriptionCheckoutFragment extends Fragment implements PromoCouponsAdapter.Callback, GAAction, GACategory {
 
     private View rootView;
     private Activity activity;
@@ -206,6 +207,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         if(paymentOption.getOrdinal() != 0 && paymentOption.getOrdinal() != 1) {
                             product.clicklabs.jugnoo.utils.FlurryEventLogger.eventGA("Star Checkout", "Wallet", String.valueOf(getPaymentOption()));
                             placeOrder();
+                            GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT, PAY_NOW+CLICKED);
                         } else{
                             Utils.showToast(activity, "Please select payment option");
                         }
@@ -215,6 +217,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                 +FirebaseEvents.PAYTM, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.PAYTM,
                                 callbackPaymentOptionSelector);
+                        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+WALLET+SELECTED, PAYTM);
                         break;
 
                     case R.id.relativeLayoutMobikwik:
@@ -222,6 +225,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                 +FirebaseEvents.MOBIKWIK, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.MOBIKWIK,
                                 callbackPaymentOptionSelector);
+                        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+WALLET+SELECTED, MOBIKWIK);
                         break;
 
                     case R.id.relativeLayoutFreeCharge:
@@ -229,6 +233,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                 +FirebaseEvents.FREECHARGE, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.FREECHARGE,
                                 callbackPaymentOptionSelector);
+                        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+WALLET+SELECTED, FREECHARGE);
                         break;
 
                     case R.id.relativeLayoutCash:
@@ -236,8 +241,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                 +FirebaseEvents.CASH, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH,
                                 callbackPaymentOptionSelector);
+                        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+WALLET+SELECTED, CASH);
                         break;
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -587,6 +594,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, getPaymentOption().getOrdinal(), promoCoupon)) {
             setSelectedPromoCoupon(promoCoupon);
         }
+        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+OFFER+SELECTED, promoCoupon.getTitle());
     }
 
     private void apiPurchaseSubscription() {

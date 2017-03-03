@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.squareup.picasso.Picasso;
 
 import product.clicklabs.jugnoo.Constants;
@@ -34,7 +37,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class ReferralsFragment extends Fragment implements FirebaseEvents{
+public class ReferralsFragment extends Fragment implements FirebaseEvents, GACategory, GAAction{
 
 	private RelativeLayout relativeLayoutRoot;
 
@@ -105,6 +108,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					GAUtils.event(SIDE_MENU, FREE_GIFT, MORE_SHARING_OPTIONS+CLICKED);
 				} else{
 					DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 				}
@@ -122,6 +126,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 				}
                 MyApplication.getInstance().firebaseLogEvent(REFERRAL+"_"+OUTSIDE_WHATSAPP, bundle);
 				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "WhatsApp");
+				GAUtils.event(SIDE_MENU, FREE_GIFT, GAAction.WHATSAPP+INVITE+CLICKED);
 			}
 		});
 
@@ -134,6 +139,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 							tvReferralCodeValue.getText().toString());
 					clipboard.setPrimaryClip(clip);
 					Utils.showToast(activity, activity.getString(R.string.referral_code_copied));
+					GAUtils.event(SIDE_MENU, FREE_GIFT, GAAction.REFERRAL+CODE_COPIED);
 				} catch (Exception e) {}
 			}
 		});
@@ -186,6 +192,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 							public void onClick(View view) {
 							}
 						}, false, false, true);
+						GAUtils.event(SIDE_MENU, FREE_GIFT, GAAction.DETAILS+CLICKED);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

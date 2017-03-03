@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
@@ -905,6 +906,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         -1, -1, null, null, 0, false, 0, orderHistory);
                 if(activity instanceof FreshActivity) {
                     GAUtils.event(((FreshActivity)activity).getGaCategory(), ORDER_STATUS, NEED_HELP);
+                } else {
+                    GAUtils.event(GACategory.SIDE_MENU, ORDER+DETAILS, NEED_HELP+CLICKED);
                 }
                 break;
         }

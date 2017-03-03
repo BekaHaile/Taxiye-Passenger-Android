@@ -20,6 +20,9 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -57,7 +60,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class AccountActivity extends BaseFragmentActivity implements FlurryEventNames, FirebaseEvents {
+public class AccountActivity extends BaseFragmentActivity implements FlurryEventNames, FirebaseEvents, GAAction, GACategory {
 
     private final String TAG = "View Account";
 
@@ -295,6 +298,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             public void onClick(View v) {
                 startActivity(new Intent(AccountActivity.this, AboutActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                GAUtils.event(SIDE_MENU, USER+PROFILE, GAAction.ABOUT);
             }
         });
 
@@ -403,6 +407,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                         imageViewEditProfile.setVisibility(View.GONE);
                         linearLayoutSave.setVisibility(View.VISIBLE);
                         Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
+                        GAUtils.event(SIDE_MENU, USER+PROFILE, GAAction.EDIT);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -464,6 +469,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                             imageViewChangePassword.setVisibility(View.GONE);
                             MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+CHANGE_PASSWORD, bundle);
                             FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Change Password");
+                            GAUtils.event(SIDE_MENU, USER+PROFILE, GAAction.CHANGE_PASSWORD);
                         } else {
                             linearLayoutPasswordChange.setVisibility(View.GONE);
                             imageViewChangePassword.setVisibility(View.VISIBLE);
@@ -577,6 +583,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 MyApplication.getInstance().firebaseLogEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+EMERGENCY_CONTACTS, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Emergency contacts");
+                GAUtils.event(SIDE_MENU, USER+PROFILE, ADD+GAAction.EMERGENCY_CONTACTS);
             }
         });
 
@@ -635,6 +642,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             @Override
             public void onClick(View v) {
                 openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, true);
+                GAUtils.event(SIDE_MENU, USER+PROFILE, ADDRESS_BOOK);
             }
         });
 
@@ -670,6 +678,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                             }
                         },
                         true, false);
+                GAUtils.event(SIDE_MENU, USER+PROFILE, GAAction.LOGOUT);
 
             }
         });

@@ -92,7 +92,7 @@ public interface GAAction {
 	String OK = "OK ";
 	String CANCEL = "Cancel ";
 
-	String MENUS = "Menus";
+	String MENUS = "Menus ";
 	String RESTAURANT_CLICKED = "Restaurant Clicked ";
 	String SEARCH_BUTTON = "Search Button ";
 	String FILTER_BUTTON = "Filter Button ";
@@ -100,12 +100,12 @@ public interface GAAction {
 	String SUBMITTED = "Submitted ";
 	String FILTERS = "Filters ";
 	String QUICK_FILTER="Quick Filter ";
-	String SORT_BY="Sort By";
-	String MINIMUM_ORDER="Minimum Order";
-	String DELIVERY_TIME="Delivery Time";
+	String SORT_BY="Sort By ";
+	String MINIMUM_ORDER="Minimum Order ";
+	String DELIVERY_TIME="Delivery Time ";
 	String APPLY_BUTTON = "Apply Button ";
 	String RESET_BUTTON = "Reset Button ";
-	String RESTAURANT_HOME = "Restaurant Home";
+	String RESTAURANT_HOME = "Restaurant Home ";
 	String TABS = "Tabs ";
 	String SLIDED = "Slided ";
 	String EXPANDED = "Expanded ";
@@ -116,10 +116,53 @@ public interface GAAction {
 	String RATING_ADDED = "Rating Added ";
 	String CLOSED = "Closed ";
 	String LIKED = "Liked ";
-	String CUSTOMIZE_ITEM ="Customize Item";
+	String CUSTOMIZE_ITEM ="Customize Item ";
 	String ADD_TO_CART = "Add to Cart ";
 	String BACK_BUTTON = "Back Button ";
-	String RESTAURANT_SEARCH = "Restaurant Search";
-	String SORT_BUTTON = "Sort Button";
+	String RESTAURANT_SEARCH = "Restaurant Search ";
+	String SORT_BUTTON = "Sort Button ";
+	String REQUEST_LOCATION_CLOSE_TO_POI = "Request location close to a P.O.I. ";
+	String SPECIAL_PICKUP_CHOOSED = "Special Pickup Choosed ";
+
+	String GENIE = "Genie ";
+	String OPENED = "Opened ";
+	String OPEN = "Open ";
+	String LEFT_MENU_ICON = "Left Menu Icon ";
+
+	String CATEGORY = "Category ";
+	String FREE_GIFT = "Free Gift ";
+	String DETAILS = "Details ";
+	String CODE_COPIED = "Code Copied ";
+	String WHATSAPP = "Whatsapp ";
+	String MORE_SHARING_OPTIONS = "More Sharing Options ";
+	String PROMOTIONS = "Promotions ";
+	String PROMO_CODE = "Promo Code ";
+	String APPLIED = "Applied ";
+	String GET_FREE_JUGNOO_CASH = "Get Free Jugnoo cash ";
+	String STAR = "Star ";
+	String PLAN = "Plan ";
+	String JOIN_NOW = "Join Now ";
+	String CASH = "Cash ";
+	String PAYTM = "Paytm ";
+	String MOBIKWIK = "Mobikwik ";
+	String FREECHARGE = "FreeCharge ";
+	String PAY_NOW = "Pay now ";
+	String INBOX = "Inbox ";
+	String SETTINGS = "Settings ";
+	String TOGGLED = "Toggled ";
+	String SET_PREFERENCES = "Set Preferences ";
+	String TOPUP = "Topup ";
+	String TRANSACTIONS = "Transactions ";
+	String HISTORY = "History ";
+	String SELECT_AN_ISSUE = "Select an Issue ";
+	String USER = "User ";
+	String PROFILE = "Profile ";
+	String EDIT = "Edit ";
+	String CHANGE_PASSWORD = "Change Password ";
+	String EMERGENCY_CONTACTS = "Emergency contacts ";
+	String ADD = "Add ";
+	String ADDRESS_BOOK = "Address Book ";
+	String LOGOUT = "Logout ";
+	String ABOUT = "About ";
 
 }

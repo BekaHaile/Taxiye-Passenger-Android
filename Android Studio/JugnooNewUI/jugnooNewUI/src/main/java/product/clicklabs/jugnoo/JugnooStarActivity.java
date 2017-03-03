@@ -1,13 +1,9 @@
 package product.clicklabs.jugnoo;
 
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -17,12 +13,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import product.clicklabs.jugnoo.adapters.StarMembershipAdapter;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.StarPurchaseType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
@@ -30,20 +25,18 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
-import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by ankit on 27/12/16.
  */
 
-public class JugnooStarActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class JugnooStarActivity extends BaseFragmentActivity implements View.OnClickListener, GAAction, GACategory{
 
     private RelativeLayout relative, rlPlan1, rlPlan2;
     private TextView textViewTitle, tvSubTitle;
     private ImageView imageViewBack, ivRadio1, ivRadio2;
     private TextView tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2;
     private NonScrollListView rvBenefits;
-//    private StarBenefitsAdapter starBenefitsAdapter;
     private StarMembershipAdapter starMembershipAdapter;
     private String selectedSubId;
     private RelativeLayout rlFragment;
@@ -68,7 +61,6 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         imageViewBack.setOnClickListener(this);
 
         textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR);
-        //textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         bJoinNow = (Button) findViewById(R.id.bJoinNow); bJoinNow.setTypeface(Fonts.mavenMedium(this)); bJoinNow.setOnClickListener(this);
 
 
@@ -84,9 +76,6 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         tvPeriod1 = (TextView) findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.mavenMedium(this));
         tvPeriod2 = (TextView) findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.mavenMedium(this));
         rvBenefits = (NonScrollListView) findViewById(R.id.rvBenefits);
-        /*rvBenefits.setLayoutManager(new LinearLayoutManager(this));
-        rvBenefits.setItemAnimator(new DefaultItemAnimator());
-        rvBenefits.setHasFixedSize(false);*/
 
         if(getIntent().hasExtra("checkout_fragment")){
             fromFreshCheckout = true;
@@ -185,9 +174,11 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                 break;
             case R.id.rlPlan1:
                 selectedPlan(rlPlan1, ivRadio1, 0);
+                try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
                 break;
             case R.id.rlPlan2:
                 selectedPlan(rlPlan2, ivRadio2, 1);
+                try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
                 break;
             case R.id.bJoinNow:
                 try {
@@ -197,6 +188,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                     e.printStackTrace();
                 }
                 openStarCheckoutFragment(JugnooStarActivity.this, rlFragment);
+                GAUtils.event(SIDE_MENU, JUGNOO+STAR, JOIN_NOW+CLICKED);
                 break;
         }
     }

@@ -724,7 +724,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
                             || (getMenusFragment() != null && !getMenusFragment().isHidden())) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                        fabViewTest.setFABButtons(true);
+                        fabViewTest.setFABButtons();
                     }
                 } else {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);

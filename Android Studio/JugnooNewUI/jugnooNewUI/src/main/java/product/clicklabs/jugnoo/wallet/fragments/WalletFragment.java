@@ -11,6 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
@@ -32,7 +36,7 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 
-public class WalletFragment extends Fragment implements FlurryEventNames, FirebaseEvents {
+public class WalletFragment extends Fragment implements FlurryEventNames, FirebaseEvents, GAAction, GACategory {
 	
 	RelativeLayout relative;
 	
@@ -161,6 +165,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
                         Bundle bundle = new Bundle();
                         MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+JUGNOO_CASH, bundle);
                         FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Jugnoo Cash");
+						GAUtils.event(SIDE_MENU, GAAction.WALLET, JUGNOO+GAAction.CASH+TOPUP);
                     }
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -173,6 +178,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 			@Override
 			public void onClick(View v) {
 				walletOnClick(PaymentOption.PAYTM.getOrdinal());
+				GAUtils.event(SIDE_MENU, GAAction.WALLET+GAAction.WALLET+SELECTED, GAAction.PAYTM);
 			}
 		});
 
@@ -180,6 +186,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 			@Override
 			public void onClick(View v) {
 				walletOnClick(PaymentOption.MOBIKWIK.getOrdinal());
+				GAUtils.event(SIDE_MENU, GAAction.WALLET+GAAction.WALLET+SELECTED, GAAction.MOBIKWIK);
 			}
 		});
 
@@ -187,6 +194,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
             @Override
             public void onClick(View v) {
 				walletOnClick(PaymentOption.FREECHARGE.getOrdinal());
+				GAUtils.event(SIDE_MENU, GAAction.WALLET+GAAction.WALLET+SELECTED, GAAction.FREECHARGE);
             }
         });
 
@@ -214,6 +222,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
                 Bundle bundle1 = new Bundle();
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+VIEW_RECENT_TRANSACTION, bundle1);
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "View Recent Transaction");
+				GAUtils.event(SIDE_MENU, GAAction.WALLET, GAAction.WALLET+TRANSACTIONS+CLICKED);
 			}
 		});
 

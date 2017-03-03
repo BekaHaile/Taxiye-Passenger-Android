@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,7 +49,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 @SuppressLint("ValidFragment")
-public class SupportMainFragment extends Fragment implements FlurryEventNames, Constants {
+public class SupportMainFragment extends Fragment implements FlurryEventNames, Constants, GAAction, GACategory {
 
 	private final String TAG = SupportMainFragment.class.getSimpleName();
 
@@ -117,6 +121,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
                         Bundle bundle = new Bundle();
                         String eventName = item.getText().replaceAll("\\W", "_");
                         MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.SUPPORT+"_"+eventName, bundle);
+						GAUtils.event(SIDE_MENU, SUPPORT, item.getText());
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);

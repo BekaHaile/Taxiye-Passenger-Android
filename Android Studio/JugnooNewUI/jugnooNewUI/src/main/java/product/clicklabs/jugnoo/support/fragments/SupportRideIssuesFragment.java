@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +46,7 @@ import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerVie
 import product.clicklabs.jugnoo.utils.Prefs;
 
 @SuppressLint("ValidFragment")
-public class SupportRideIssuesFragment extends Fragment implements FlurryEventNames, Constants, FirebaseEvents {
+public class SupportRideIssuesFragment extends Fragment implements FlurryEventNames, Constants, FirebaseEvents, GAAction, GACategory {
 
 	private LinearLayout root;
 
@@ -193,6 +196,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 						String label = item.getText().replaceAll("\\W", "_");
 						MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.ISSUES + "_" + FirebaseEvents.ISSUE_WITH_RECENT_RIDE + "_" + label, bundle);
 						FlurryEventLogger.eventGA(Constants.ISSUES, "Select An Issue", item.getText());
+						GAUtils.event(SIDE_MENU, GAAction.SELECT_AN_ISSUE, item.getText());
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);

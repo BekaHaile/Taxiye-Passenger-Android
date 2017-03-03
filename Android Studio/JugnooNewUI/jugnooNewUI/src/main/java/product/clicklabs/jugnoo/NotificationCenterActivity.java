@@ -10,6 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -293,6 +297,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
                                 NotificationSettingFragment.class.getName())
                         .addToBackStack(NotificationSettingFragment.class.getName())
                         .commitAllowingStateLoss();
+                GAUtils.event(GACategory.SIDE_MENU, GAAction.INBOX, GAAction.SETTINGS+GAAction.CLICKED);
                 break;
         }
     }

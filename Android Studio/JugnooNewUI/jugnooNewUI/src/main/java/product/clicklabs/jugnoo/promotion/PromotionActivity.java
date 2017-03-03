@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,6 +20,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import org.json.JSONObject;
 
@@ -59,7 +65,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by ankit on 6/8/16.
  */
-public class PromotionActivity extends BaseActivity implements Constants, FlurryEventNames {
+public class PromotionActivity extends BaseActivity implements Constants, FlurryEventNames, GAAction, GACategory {
 
     private final String TAG = PromotionActivity.class.getSimpleName();
     private Button buttonAddPromoCode, buttonApplyPromo;
@@ -77,24 +83,14 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
 
     private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-//        FlurryAgent.init(this, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(this, Config.getFlurryKey());
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        FlurryAgent.onEndSession(this);
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
         HomeActivity.checkForAccessTokenChange(this);
     }
+
+    private boolean codeEntered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +146,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.WANT_FREE_RIDES, bundle);
                 FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "B_WantFreeRides");
+                GAUtils.event(SIDE_MENU, PROMOTIONS, GET_FREE_JUGNOO_CASH+CLICKED);
             }
         });
 
@@ -176,6 +173,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                     HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
                     profileUpdate.put(Events.PROMO_CODE_USED, promoCode);
                     MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+                    GAUtils.event(SIDE_MENU, PROMOTIONS, GAAction.PROMO_CODE+APPLIED);
                 } else {
                     editTextPromoCode.requestFocus();
                     editTextPromoCode.setError("Code can't be empty");
@@ -214,6 +212,26 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                     default:
                         return false;
                 }
+            }
+        });
+
+        editTextPromoCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().trim().length()>0 && !codeEntered){
+                    GAUtils.event(SIDE_MENU, PROMOTIONS, GAAction.PROMO_CODE+ENTERED);
+                }
+                codeEntered = true;
             }
         });
 
