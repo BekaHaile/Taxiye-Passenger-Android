@@ -1218,6 +1218,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				loginType,
 				AccountKitActivity.ResponseType.TOKEN);
 		final AccountKitConfiguration configuration = configurationBuilder.build();
+		configurationBuilder.setTheme(R.style.AppLoginTheme_Yellow);
 		intent.putExtra(
 				AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
 				configuration);
