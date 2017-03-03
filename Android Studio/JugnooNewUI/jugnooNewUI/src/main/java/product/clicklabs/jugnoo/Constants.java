@@ -630,4 +630,5 @@ public interface Constants {
 
     String KEY_LIKE_IS_ENABLED = "like_is_enabled";
     String KEY_SHARE_IS_ENABLED = "share_is_enabled";
+    String KEY_RIDE_ACCEPTED = "ride_accepted";
 }

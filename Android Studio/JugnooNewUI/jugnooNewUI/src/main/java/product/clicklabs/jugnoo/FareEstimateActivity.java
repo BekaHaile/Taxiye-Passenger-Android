@@ -26,6 +26,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.List;
 
@@ -48,7 +51,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        SearchListAdapter.SearchListActionsHandler, Constants {
+        SearchListAdapter.SearchListActionsHandler, Constants, GAAction, GACategory {
 
     private final String TAG = FareEstimateActivity.class.getSimpleName();
 
@@ -204,6 +207,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                         intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
                     }
                     setResult(RESULT_OK, intent);
+                    GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET+RIDE+CLICKED);
                     performBackPressed();
                 } catch (Exception e) {
                     e.printStackTrace();

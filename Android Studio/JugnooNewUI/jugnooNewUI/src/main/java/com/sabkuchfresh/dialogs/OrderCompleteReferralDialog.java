@@ -42,7 +42,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class OrderCompleteReferralDialog implements GAAction {
+public class OrderCompleteReferralDialog implements GAAction, GACategory {
 
 	private Context context;
 	private Callback callback;
@@ -146,7 +146,7 @@ public class OrderCompleteReferralDialog implements GAAction {
 					if(context instanceof FreshActivity) {
 						GAUtils.event(((FreshActivity)context).getGaCategory(), ORDER_PLACED+REFERRAL_POPUP, REFER+BUTTON+CLICKED+OrderCompleteReferralDialog.this.referralPopupContent.getButtonText());
 					} else if(context instanceof HomeActivity){
-						GAUtils.event(((FreshActivity)context).getGaCategory(), IN_RIDE+REFERRAL_POPUP, REFER+BUTTON+CLICKED+OrderCompleteReferralDialog.this.referralPopupContent.getButtonText());
+						GAUtils.event(RIDES, RIDE+IN_PROGRESS+REFERRAL_POPUP, REFER+BUTTON+CLICKED+OrderCompleteReferralDialog.this.referralPopupContent.getButtonText());
 					}
 				}
 			});
@@ -160,7 +160,7 @@ public class OrderCompleteReferralDialog implements GAAction {
 					if(context instanceof FreshActivity) {
 						GAUtils.event(((FreshActivity)context).getGaCategory(), ORDER_PLACED+REFERRAL_POPUP, LATER+CLICKED);
 					} else if(context instanceof HomeActivity){
-						GAUtils.event(GACategory.RIDES, IN_RIDE+REFERRAL_POPUP, LATER+CLICKED);
+						GAUtils.event(RIDES, RIDE+IN_PROGRESS+REFERRAL_POPUP, LATER+CLICKED);
 					}
 				}
 			});

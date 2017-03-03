@@ -18,6 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import product.clicklabs.jugnoo.Constants;
@@ -47,7 +50,7 @@ import product.clicklabs.jugnoo.utils.Utils;
  * Created by Shankar on 1/8/16.
  */
 @SuppressLint("ValidFragment")
-public class RequestRideOptionsFragment extends Fragment implements Constants{
+public class RequestRideOptionsFragment extends Fragment implements Constants, GACategory, GAAction{
 
     private View rootView;
     private HomeActivity activity;
@@ -205,6 +208,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_PAYMENT_MODE, bundle);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Home Screen", "b_payment_mode");
+                GAUtils.event(RIDES, HOME, WALLET+CLICKED);
             } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.linearLayoutMinFareMS){
                 if(getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
                     //getPoolDestinationDialog().show();
@@ -220,6 +224,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                             +FirebaseEvents.FARE_POPUP+"_auto", bundle);
                     FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Auto", "base fare");
                 }
+                GAUtils.event(RIDES, HOME, FARE_DETAILS+CLICKED);
 
 
             } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
@@ -241,6 +246,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.GET_FARE_ESTIMATE, bundle);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, getRegionSelected().getRegionName(), "get fare estimate");
+                GAUtils.event(RIDES, HOME, FARE_ESTIMATE+CLICKED);
             } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
                 if(Data.userData.getCoupons(ProductType.AUTO).size() > 0
                         || Data.userData.getShowOfferDialog() == 1) {
@@ -249,6 +255,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_OFFER, bundle);
+                GAUtils.event(RIDES, HOME, OFFER+CLICKED);
             }
         }
     };
@@ -293,6 +300,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                     } else {
                         ReferralActions.openGenericShareIntent(activity, null);
                     }
+                    GAUtils.event(RIDES, NO+OFFER+GAAction.REFERRAL+DIALOG, INVITE+FRIENDS+CLICKED);
                 }
 
             });
@@ -478,6 +486,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         PromoCoupon promoCoupon;
         if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO).size()) {
             promoCoupon = Data.userData.getCoupons(ProductType.AUTO).get(position);
+            GAUtils.event(RIDES, HOME+OFFER+SELECTED, promoCoupon.getTitle());
         } else {
             promoCoupon = noSelectionCoupon;
         }
@@ -531,6 +540,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 @Override
                 public void onPaymentModeUpdated() {
                     activity.updateConfirmedStatePaymentUI();
+                    try {GAUtils.event(RIDES, HOME+WALLET+SELECTED, MyApplication.getInstance().getWalletCore()
+                            .getPaymentOptionName(Data.autoData.getPickupPaymentOption()));} catch (Exception e) {}
                 }
             });
         }

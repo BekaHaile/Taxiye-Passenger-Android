@@ -14,6 +14,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.picasso.Picasso;
 
@@ -36,7 +39,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 /**
  * Created by shankar on 5/2/16.
  */
-public class PromoCouponsDialog {
+public class PromoCouponsDialog implements GACategory, GAAction{
 
 	private final String TAG = PromoCouponsDialog.class.getSimpleName();
 	private Activity activity;
@@ -116,6 +119,7 @@ public class PromoCouponsDialog {
 							}
 						}, 100);
 						callback.onCouponApplied();
+						GAUtils.event(RIDES, TNC+CLICKED, promoCoupon.getTitle());
 					}
 				}
 			});

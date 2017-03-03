@@ -88,6 +88,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
@@ -226,7 +228,8 @@ import retrofit.mime.TypedByteArray;
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, FlurryEventNames,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, FirebaseEvents, View.OnClickListener {
+        SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, FirebaseEvents, View.OnClickListener,
+        GACategory, GAAction{
 
 
     private final String TAG = "Home Screen";
@@ -1344,6 +1347,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     MyApplication.getInstance().firebaseLogEvent(TRANSACTION + "_" + RIDE_START + "_" + SEND_INVITES+"_"+POOL, bundle);
                 }
                 FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "send invites");
+                GAUtils.event(RIDES, RIDE+IN_PROGRESS, Constants.REFERRAL+CLICKED);
             }
         });
 
@@ -1616,6 +1620,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
                             +FirebaseEvents.VIEW_INVOICE, bundle);
                     FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "ride completed", "view invoice");
+                    GAUtils.event(RIDES, FEEDBACK, FirebaseEvents.VIEW_INVOICE+CLICKED);
                 }
             }
         });
@@ -1655,6 +1660,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             updateTopBar();
                             topBar.imageViewHelp.setVisibility(View.GONE);
 						}
+                        GAUtils.event(RIDES, RIDE+FINISHED, THUMB_UP+CLICKED);
 					}
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1679,6 +1685,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     intent.putExtra(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    GAUtils.event(RIDES, RIDE+FINISHED, THUMB_DOWN+CLICKED);
                     //imageViewThumbsUp.clearAnimation();
                     //imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
                     //textViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
@@ -2564,12 +2571,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 public void onDialogDismiss() {
                                                     requestRideDriverCheck();
                                                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup ignored");
+                                                    GAUtils.event(RIDES, PICKUP_LOCATION_DIFFERENT_FROM_CURRENT_LOCATION+POPUP, GAAction.CANCEL+CLICKED);
                                                 }
 
                                                 @Override
                                                 public void yesClicked(SearchResult searchResult) {
                                                     snapPickupLocToNearbyAddress(searchResult);
                                                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup choosed");
+                                                    GAUtils.event(RIDES, PICKUP_LOCATION_DIFFERENT_FROM_CURRENT_LOCATION+POPUP, GAAction.OK+CLICKED);
                                                 }
                                             }).show();
                                         }
@@ -4275,6 +4284,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if(intent.hasExtra(Constants.KEY_EVENT)
+                && intent.getStringExtra(Constants.KEY_EVENT).equalsIgnoreCase(Constants.KEY_RIDE_ACCEPTED)){
+            GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH+CLICKED);
+        }
     }
 
     @Override
@@ -4473,6 +4486,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         tvChatCount.setVisibility(View.GONE);
         startActivity(new Intent(HomeActivity.this, ChatActivity.class));
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        GAUtils.event(RIDES, DRIVER_ENROUTE, CHAT+GAAction.BUTTON+CLICKED);
     }
 
 
@@ -5447,6 +5461,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     callAndHandleStateRestoreAPI(true);
                 }
             });
+            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
+                GAUtils.event(RIDES, HOME,
+                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUEST + CANCELLED);
+            }
         } else {
             //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
             DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
@@ -7174,6 +7192,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     if(Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
                                                         Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.autoData.getPickupPaymentOption());
                                                     }
+
+                                                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null){
+                                                        GAUtils.event(RIDES, HOME, slidingBottomPanel
+                                                                .getRequestRideOptionsFragment().getRegionSelected().getRegionName()+" "+REQUESTED);
+                                                    }
                                                 }
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag
@@ -7540,6 +7563,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Bundle bundle = new Bundle();
                     MyApplication.getInstance().firebaseLogEvent(HELP+"_"+HELP_POP_UP, bundle);
                     FlurryEventLogger.eventGA(HELP, "help pop up", "enable emergency mode");
+                    GAUtils.event(RIDES, GAAction.HELP+POPUP, ENABLE_EMERGENCY_MODE+CLICKED);
                 }
 
                 @Override
@@ -7556,6 +7580,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     intent.putExtra(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    GAUtils.event(RIDES, GAAction.HELP+POPUP, SEND_RIDE_STATUS+CLICKED);
                 }
 
                 @Override
@@ -7566,6 +7591,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.eventGA(HELP, "help pop up", "in app customer supoort");
+                    GAUtils.event(RIDES, GAAction.HELP+POPUP, IN_APP_SUPPORT+CLICKED);
                 }
 
                 @Override
@@ -8432,6 +8458,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							e.printStackTrace();
 						}
 						setSearchResultToPickupCase(searchResult);
+                        GAUtils.event(RIDES, HOME, PICKUP+LOCATION+ENTERED);
 					}
 				} else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
 
@@ -8456,6 +8483,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							shakeAnim > 0 && !updateSpecialPickupScreen()){
 						imageViewRideNow.performClick();
 					}
+                    GAUtils.event(RIDES, HOME, DESTINATION+LOCATION+ENTERED);
 				}
 			}
 			else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
@@ -8471,6 +8499,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
 						getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
+                if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                    GAUtils.event(RIDES, RIDE+IN_PROGRESS, DESTINATION+UPDATED);
+                }
 			}
 
             Log.e("onPlaceSearchPost", "=" + searchResult);

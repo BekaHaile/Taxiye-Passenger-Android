@@ -21,6 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -45,7 +49,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class RideCancellationActivity extends BaseActivity implements ActivityCloser, FlurryEventNames {
+public class RideCancellationActivity extends BaseActivity implements ActivityCloser, FlurryEventNames, GAAction, GACategory {
 
 	private final String TAG = RideCancellationActivity.class.getSimpleName();
 	
@@ -477,6 +481,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 											performBackPressed();
 										}
 									});
+									GAUtils.event(RIDES, WAITING_FOR_DRIVER, RIDE+CANCELLED);
 								} else {
 									DialogPopup.alertPopup(activity, "", serverMessage);
 								}

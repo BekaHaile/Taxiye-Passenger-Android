@@ -11,6 +11,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -25,7 +29,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by shankar on 4/8/16.
  */
-public class TopBar implements FirebaseEvents {
+public class TopBar implements FirebaseEvents, GACategory, GAAction {
 
 
     Activity activity;
@@ -128,12 +132,17 @@ public class TopBar implements FirebaseEvents {
                     if (activity instanceof HomeActivity) {
                         ((HomeActivity) activity).sosDialog(activity);
                         try {
-                            if (PassengerScreenMode.P_DRIVER_ARRIVED == ((HomeActivity) activity).passengerScreenMode) {
+                            if(PassengerScreenMode.P_REQUEST_FINAL == HomeActivity.passengerScreenMode){
+                                GAUtils.event(RIDES, DRIVER_ENROUTE, HELP+GAAction.BUTTON+CLICKED);
+                            } else if (PassengerScreenMode.P_DRIVER_ARRIVED == ((HomeActivity) activity).passengerScreenMode) {
                                 //FlurryEventLogger.eventGA(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
                             } else if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
                                 Bundle bundle = new Bundle();
                                 MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+Constants.HELP, bundle);
                                 FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "help");
+                                GAUtils.event(RIDES, RIDE+IN_PROGRESS, HELP+GAAction.BUTTON+CLICKED);
+                            } else if (PassengerScreenMode.P_RIDE_END == HomeActivity.passengerScreenMode){
+                                GAUtils.event(RIDES, FEEDBACK, HELP+GAAction.BUTTON+CLICKED);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

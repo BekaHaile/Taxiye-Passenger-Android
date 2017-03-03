@@ -7,6 +7,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import product.clicklabs.jugnoo.Data;
@@ -25,7 +28,7 @@ import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 /**
  * Created by Ankit on 1/7/16.
  */
-public class SlidingBottomPanelV4 {
+public class SlidingBottomPanelV4 implements GAAction, GACategory{
 
     private HomeActivity activity;
     private SlidingUpPanelLayout slidingUpPanelLayout;
@@ -241,6 +244,7 @@ public class SlidingBottomPanelV4 {
                 }
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_PAYMENT_MODE, bundle);
+                GAUtils.event(RIDES, HOME, WALLET+CLICKED);
                 break;
 
             case R.id.linearLayoutFare:
@@ -251,6 +255,7 @@ public class SlidingBottomPanelV4 {
                 }
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.FARE_POPUP, bundle);
+                GAUtils.event(RIDES, HOME, FARE_DETAILS+CLICKED);
                 break;
 
             case R.id.linearLayoutOffers:
@@ -261,6 +266,7 @@ public class SlidingBottomPanelV4 {
                 }
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_OFFER, bundle);
+                GAUtils.event(RIDES, HOME, OFFER+CLICKED);
                 break;
         }
     }

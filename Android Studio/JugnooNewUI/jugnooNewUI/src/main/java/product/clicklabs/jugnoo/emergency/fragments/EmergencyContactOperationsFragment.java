@@ -20,6 +20,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.tokenautocomplete.FilteredArrayAdapter;
 
 import java.util.ArrayList;
@@ -52,7 +55,7 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 
 @SuppressLint("ValidFragment")
-public class EmergencyContactOperationsFragment extends Fragment {
+public class EmergencyContactOperationsFragment extends Fragment implements GAAction, GACategory {
 
 	private RelativeLayout relative;
 
@@ -273,6 +276,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 						if(ContactsListAdapter.ListMode.SEND_RIDE_STATUS == listMode) {
 							FlurryEventLogger.eventGA(Constants.HELP, "send ride status screen", "send");
 							clickOnSend();
+							GAUtils.event(RIDES, SEND_RIDE_STATUS, SEND+CLICKED);
 						}
 						break;
 

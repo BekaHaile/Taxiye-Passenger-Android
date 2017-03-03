@@ -14,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -43,7 +47,7 @@ import retrofit.mime.TypedByteArray;
  * Created by ankit on 10/11/16.
  */
 
-public class ChatActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class ChatActivity extends BaseFragmentActivity implements View.OnClickListener, GAAction, GACategory{
 
     private RelativeLayout relative;
     private TextView textViewTitle;
@@ -194,6 +198,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 				break;
 			case R.id.ivCallDriver:
 				Utils.callDriverDuringRide(ChatActivity.this);
+				GAUtils.event(RIDES, CHAT, CALL+BUTTON+CLICKED);
 				break;
         }
     }

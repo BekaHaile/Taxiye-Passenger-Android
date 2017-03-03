@@ -260,19 +260,23 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-			Intent notificationIntent;
+			Intent notificationIntent = new Intent();
 			Log.d("clientID", "clientID = "+clientID);
+			if(Constants.KEY_RIDE_ACCEPTED.equalsIgnoreCase(clientID)){
+				notificationIntent.putExtra(Constants.KEY_EVENT, Constants.KEY_RIDE_ACCEPTED);
+				clientID = "";
+			}
 			if(TextUtils.isEmpty(clientID)) {
 				if (HomeActivity.appInterruptHandler != null) {
-					notificationIntent = new Intent(context, HomeActivity.class);
+					notificationIntent.setClass(context, HomeActivity.class);
 				} else {
-					notificationIntent = new Intent(context, SplashNewActivity.class);
+					notificationIntent.setClass(context, SplashNewActivity.class);
 				}
 			} else {
 //				if(!TextUtils.isEmpty(Data.currentActivity)) {
 //					notificationIntent = new Intent(context, FreshActivity.class);
 //				} else {
-					notificationIntent = new Intent(context, SplashNewActivity.class);
+					notificationIntent.setClass(context, SplashNewActivity.class);
 //				}
 				notificationIntent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientID);
 			}
@@ -484,7 +488,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
-							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, "");
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, Constants.KEY_RIDE_ACCEPTED);
 						} else{
 							notificationManager(this, title, message1, playSound);
 						}

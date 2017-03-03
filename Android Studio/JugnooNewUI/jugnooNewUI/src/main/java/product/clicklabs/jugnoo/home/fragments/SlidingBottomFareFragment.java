@@ -11,6 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -29,7 +32,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by Ankit on 1/8/16.
  */
-public class SlidingBottomFareFragment extends Fragment{
+public class SlidingBottomFareFragment extends Fragment implements GAAction, GACategory{
 
     private View rootView;
     private HomeActivity activity;
@@ -81,6 +84,7 @@ public class SlidingBottomFareFragment extends Fragment{
                 MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.GET_FARE_ESTIMATE, bundle);
                 FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "get fare estimate");
+                GAUtils.event(RIDES, HOME, FARE_ESTIMATE+CLICKED);
             }
         });
 

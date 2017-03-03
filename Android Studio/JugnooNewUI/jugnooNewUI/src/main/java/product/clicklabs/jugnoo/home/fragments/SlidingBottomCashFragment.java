@@ -11,6 +11,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
@@ -26,7 +30,7 @@ import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 /**
  * Created by Ankit on 1/8/16.
  */
-public class SlidingBottomCashFragment extends Fragment implements View.OnClickListener{
+public class SlidingBottomCashFragment extends Fragment implements View.OnClickListener, GAAction, GACategory{
 
     private View rootView;
     private ScrollView linearLayoutRoot;
@@ -115,6 +119,8 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
                     break;
             }
+            try {GAUtils.event(RIDES, HOME+WALLET+SELECTED, MyApplication.getInstance().getWalletCore()
+                        .getPaymentOptionName(Data.autoData.getPickupPaymentOption()));} catch (Exception e) {}
         } catch (Exception e) {
             e.printStackTrace();
         }

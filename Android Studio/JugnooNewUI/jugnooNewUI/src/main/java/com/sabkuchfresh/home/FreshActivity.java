@@ -1563,7 +1563,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
     }
 
     public void openMapAddress(Bundle bundle) {
-        FlurryEventLogger.eventGA(Address_Screen, SCREEN_TRANSITION, ADD_NEW_ADDRESS);
         getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
@@ -2947,7 +2946,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
             if (event.flag) {
                 if (getFreshCheckoutMergedFragment() != null || getMenusCheckoutMergedFragment() != null) {
                     setRefreshCart(true);
-                    GAUtils.event(getGaCategory(), GAAction.DELIVERY_ADDRESS_MODIFIED_ON_CHECKOUT, GALabel.DELIVERY_ADDRESS_MODIFICATION);
+                    GAUtils.event(getGaCategory(), DELIVERY_ADDRESS, MODIFIED);
                 }
                 int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
                 setAddressAndFetchOfferingData(appType);
@@ -2958,8 +2957,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
                 }
 
 
-                if(getTopFragment()!=null && getTopFragment() instanceof  MenusFragment)
-                {
+                if(getTopFragment()!=null && getTopFragment() instanceof  MenusFragment) {
                     FlurryEventLogger.eventGA(Events.MENUS, Events.CHANGE_ADDRESS, Events.MENU_CHANGE_ADDRESS);
                 }
             }

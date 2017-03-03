@@ -54,6 +54,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -108,7 +111,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class SplashNewActivity extends BaseActivity implements FlurryEventNames, Constants, FirebaseEvents {
+public class SplashNewActivity extends BaseActivity implements FlurryEventNames, Constants, FirebaseEvents, GAAction, GACategory {
 
 	//adding drop location
 
@@ -345,6 +348,10 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+			if(getIntent().hasExtra(Constants.KEY_EVENT)
+					&& getIntent().getStringExtra(Constants.KEY_EVENT).equalsIgnoreCase(Constants.KEY_RIDE_ACCEPTED)){
+				GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH+CLICKED);
 			}
 
 
@@ -648,11 +655,11 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 					if (State.LOGIN == state) {
 						performLoginBackPressed();
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+BACK, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+GAAction.BACK, bundle);
 					} else if (State.SIGNUP == state) {
 						performSignupBackPressed();
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+SIGN_UP_PAGE+"_"+BACK, bundle);
+                        MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+SIGN_UP_PAGE+"_"+GAAction.BACK, bundle);
 					}
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 				}

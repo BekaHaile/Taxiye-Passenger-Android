@@ -13,6 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
@@ -32,7 +36,7 @@ import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerVie
 /**
  * Created by Ankit on 1/8/16.
  */
-public class SlidingBottomOffersFragment extends Fragment {
+public class SlidingBottomOffersFragment extends Fragment implements GACategory, GAAction{
 
     private View rootView;
     private LinearLayout linearLayoutRoot;
@@ -161,6 +165,7 @@ public class SlidingBottomOffersFragment extends Fragment {
 							DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo)promoCoupon).terms, false, true, true);
 						}
                         FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "offer t&c");
+                        GAUtils.event(RIDES, TNC+CLICKED, promoCoupon.getTitle());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
