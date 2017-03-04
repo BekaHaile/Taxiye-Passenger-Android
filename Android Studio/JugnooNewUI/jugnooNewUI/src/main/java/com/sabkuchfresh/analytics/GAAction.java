@@ -164,5 +164,20 @@ public interface GAAction {
 	String ADDRESS_BOOK = "Address Book ";
 	String LOGOUT = "Logout ";
 	String ABOUT = "About ";
+	String SUPER = "Super ";
+	String SEARCH = "Search ";
+	String DATA = "Data ";
+	String TABS_SWIPPED = "Tabs Swipped ";
 
+	String SORT_POPUP = "Sort Popup";
+	String PRICE_LOW_TO_HIGH = "Price:Low to high";
+	String PRICE_HIGH_TO_LOW = "Price:High to Low";
+	String A_Z = "A-Z";
+	String DELIVERY_FROM = "Delivery From ";
+	String EDITED = "Edited ";
+	String SUBMIT_BUTTON = "Submit ";
+	String RATING = "Rating ";
+	String TAG = "Tag ";
+	String MINIMIZE = "Minimize ";
+	String POPULARITY = "Popularity ";
 }

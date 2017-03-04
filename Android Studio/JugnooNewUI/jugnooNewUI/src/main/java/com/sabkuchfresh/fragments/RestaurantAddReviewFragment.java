@@ -618,10 +618,10 @@ public class RestaurantAddReviewFragment extends Fragment  {
                                     }
 
 
-                                        GAUtils.event(GACategory.MENUS, GAAction.FEED , GAAction.FEED + GAAction.ADDED);
+                                        GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED , GAAction.FEED + GAAction.ADDED);
 
                                 } else{
-                                    FlurryEventLogger.eventGA(Events.MENUS, Events.EDIT_FEED, Events.FEED_EDITED);
+                                    GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED , GAAction.FEED + GAAction.EDITED);
 
                                 }
 

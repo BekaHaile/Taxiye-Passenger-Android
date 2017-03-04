@@ -24,6 +24,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
@@ -844,10 +845,10 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                         if (isSuccess) {
 
 
-                            FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_SUBMIT,Events.MENU_FEEDBACK_SUBMIT);
-                            if(!TextUtils.isEmpty(comments)) FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_COMMENTS,Events.MENU_FEEDBACK_COMMENTS);
-                            if(!TextUtils.isEmpty(reviewDesc))FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_TAGS,Events.MENU_FEEDBACK_TAGS + reviewDesc);
-                            if(score>0)FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_STAR,Events.STAR_ICON,score);
+                            GAUtils.event(GACategory.MENUS, GAAction.FEEDBACK , GAAction.SUBMIT_BUTTON + GAAction.CLICKED);
+                            if(!TextUtils.isEmpty(comments))  GAUtils.event(GACategory.MENUS, GAAction.FEEDBACK , GAAction.COMMENT + GAAction.ADDED );
+                            if(!TextUtils.isEmpty(reviewDesc)) GAUtils.event(GACategory.MENUS, GAAction.FEEDBACK , GAAction.TAG + GAAction.ADDED );
+                            if(score>0) GAUtils.event(GACategory.MENUS, GAAction.FEEDBACK , GAAction.RATING+ GAAction.ADDED );;
 
                             if (rating > 2) {
                                 // for Good rating

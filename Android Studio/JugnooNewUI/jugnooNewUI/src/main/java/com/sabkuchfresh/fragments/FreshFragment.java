@@ -22,6 +22,9 @@ import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
@@ -65,7 +68,7 @@ import retrofit.mime.TypedByteArray;
 
 
 public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener, PushDialog.Callback,
-        SwipeRefreshLayout.OnRefreshListener{
+        SwipeRefreshLayout.OnRefreshListener, GAAction, GACategory{
 
 	private final String TAG = FreshFragment.class.getSimpleName();
 	private LinearLayout llRoot;
@@ -85,7 +88,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     protected Bus mBus;
     PushDialog pushDialog;
 
-	SuperCategoriesData.SuperCategory superCategory;
+	private SuperCategoriesData.SuperCategory superCategory;
 
 	public static FreshFragment newInstance(SuperCategoriesData.SuperCategory superCategory){
 		Gson gson = new Gson();
@@ -194,6 +197,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 } else {
                     FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
                 }
+				GAUtils.event(FRESH, superCategory.getSuperCategoryName(), TABS_SWIPPED);
             }
 
             @Override

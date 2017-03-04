@@ -52,6 +52,7 @@ import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
@@ -514,11 +515,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rlDeliveryFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(getActivity() instanceof FreshActivity && ((FreshActivity)getActivity()).getAppType()==AppConstant.ApplicationType.MENUS)
+                     GAUtils.event(GACategory.MENUS, GAAction.CHECKOUT, GAAction.DELIVERY_FROM + GAAction.CLICKED);
                 activity.performBackPressed(false);
             }
         });
         rlDeliveryFrom.setMinimumHeight((int)(ASSL.Yscale() * 116f));
-
         relativeLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);

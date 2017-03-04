@@ -174,7 +174,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseAppCompatActivity implements GAAction {
+public class FreshActivity extends BaseAppCompatActivity implements GAAction, GACategory {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -361,13 +361,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
             View.OnClickListener checkoutOnClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-
-
-
-
-
                     Utils.hideSoftKeyboard(FreshActivity.this, topBar.etSearch);
                     FlurryEventLogger.eventGA(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.CHECKOUT_SCREEN);
                     FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.REVIEW_CART, getProduct());
@@ -377,11 +370,11 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
                     if (updateCartValuesGetTotalPrice().second > 0) {
 
 
-                        if(getTopFragment()!=null && getTopFragment() instanceof VendorMenuFragment)
-                        {
+                        if(getTopFragment()!=null && getTopFragment() instanceof VendorMenuFragment) {
                             GAUtils.event(getGaCategory(), RESTAURANT_HOME, CART+CLICKED);
-                        }
-                        else {
+                        } else if(getTopFragment() instanceof FreshFragment){
+                            GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), CART+CLICKED);
+                        } else {
                             GAUtils.event(getGaCategory(), HOME, CART+CLICKED);
 
                         }
@@ -431,8 +424,11 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
 
                     if (viewSortFake.getVisibility() == View.GONE) {
 
-                        if(getAppType()== AppConstant.ApplicationType.MENUS && getTopFragment() instanceof VendorMenuFragment)
-                           GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME ,GAAction.SORT_BUTTON + GAAction.CLICKED);
+                        if(getAppType()== AppConstant.ApplicationType.MENUS && getTopFragment() instanceof VendorMenuFragment) {
+                            GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME, GAAction.SORT_BUTTON + GAAction.CLICKED);
+                        } else if(getAppType() == AppConstant.ApplicationType.FRESH && getFreshFragment() != null){
+                            GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), SORT_BUTTON+CLICKED);
+                        }
 
                         viewSortFake.setVisibility(View.VISIBLE);
                         viewSortFake1.setVisibility(View.VISIBLE);
@@ -1394,8 +1390,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
                 if (getFreshFragment() != null) {
                     getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer, getFreshFragment().getSuperCategory().getSuperCategoryId(),
                             getSuperCategoriesData().getDeliveryInfo().getCityId());
+                    GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), SEARCH_BUTTON+CLICKED);
                 } else {
                     getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer, -1, getSuperCategoriesData().getDeliveryInfo().getCityId());
+                    GAUtils.event(FRESH, HOME, SEARCH_BUTTON+CLICKED);
                 }
             }
         } catch (Exception e) {
@@ -1603,21 +1601,28 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
 
     public void performBackPressed(boolean isBackPressed) {
 
-        if(isBackPressed){
-            if(getTopFragment() instanceof MealAddonItemsFragment){
-                GAUtils.event(getGaCategory(), ADD_ONS, BACK+BUTTON+CLICKED);
-            } else if(getTopFragment() instanceof FreshCheckoutMergedFragment){
-                GAUtils.event(getGaCategory(), CHECKOUT, BACK+BUTTON+CLICKED);
-            } else if(getTopFragment() instanceof DeliveryAddressesFragment){
-                GAUtils.event(getGaCategory(), DELIVERY_ADDRESS, BACK+BUTTON+CLICKED);
-            } else if(getTopFragment() instanceof RestaurantAddReviewFragment){
-                GAUtils.event(getGaCategory(), GAAction.ADD_FEED , GAAction.FEED + GAAction.CLOSED);
-            }else if(getTopFragment() instanceof MenusItemCustomizeFragment)
-                  if(getAppType()== AppConstant.ApplicationType.MENUS) {
+        if (isBackPressed) {
+            if (getTopFragment() instanceof MealAddonItemsFragment) {
+                GAUtils.event(getGaCategory(), ADD_ONS, BACK + BUTTON + CLICKED);
+            } else if (getTopFragment() instanceof FreshCheckoutMergedFragment) {
+                GAUtils.event(getGaCategory(), CHECKOUT, BACK + BUTTON + CLICKED);
+            } else if (getTopFragment() instanceof DeliveryAddressesFragment) {
+                GAUtils.event(getGaCategory(), DELIVERY_ADDRESS, BACK + BUTTON + CLICKED);
+            } else if (getTopFragment() instanceof RestaurantAddReviewFragment) {
+                GAUtils.event(getGaCategory(), GAAction.ADD_FEED, GAAction.FEED + GAAction.CLOSED);
+            } else if (getTopFragment() instanceof MenusItemCustomizeFragment) {
                 GAUtils.event(GACategory.MENUS, GAAction.CUSTOMIZE_ITEM, GAAction.BACK_BUTTON + GAAction.CLICKED);
-            } else if(getTopFragment() instanceof MenusSearchFragment && getAppType()==AppConstant.ApplicationType.MENUS){
-                      GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_SEARCH, GAAction.BACK_BUTTON + GAAction.CLICKED);
-                     }
+            } else if (getTopFragment() instanceof MenusSearchFragment && getAppType() == AppConstant.ApplicationType.MENUS) {
+                GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_SEARCH, GAAction.BACK_BUTTON + GAAction.CLICKED);
+            } else if (getTopFragment() instanceof MenusFilterFragment) {
+                GAUtils.event(getGaCategory(), GAAction.FILTERS + GAAction.MINIMIZE, "");
+            } else if (getTopFragment() instanceof FreshSearchFragment) {
+                if (getFreshFragment() != null) {
+                    GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName() + " " + SEARCH, BACK + BUTTON + CLICKED);
+                } else {
+                    GAUtils.event(FRESH, HOME + SEARCH, BACK + BUTTON + CLICKED);
+                }
+            }
         }
 
 
@@ -2166,15 +2171,17 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
                 switch (event.postion) {
                     case 0:
                         comparator = new ItemCompareAtoZ();
-                        gaEvents("", FlurryEventNames.SORT, FlurryEventNames.A_Z);
+                        GAUtils.event(GACategory.MENUS, GAAction.SORT_POPUP ,GAAction.A_Z);
+
                         break;
                     case 1:
                         comparator = new ItemComparePriceLowToHigh();
-                        gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
+                        GAUtils.event(GACategory.MENUS, GAAction.SORT_POPUP ,GAAction.PRICE_LOW_TO_HIGH);
                         break;
                     case 2:
                         comparator = new ItemComparePriceHighToLow();
-                        gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_HIGH_TO_LOW);
+                        GAUtils.event(GACategory.MENUS, GAAction.SORT_POPUP ,GAAction.PRICE_HIGH_TO_LOW);
+
                         break;
                     default:
                         break;
@@ -2199,18 +2206,22 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
                     case 0:
                         comparator = new SubItemCompareAtoZ();
                         gaEvents("", FlurryEventNames.SORT, FlurryEventNames.A_Z);
+                        GAUtils.event(getGaCategory(), SORT_POPUP, A_Z);
                         break;
                     case 1:
                         comparator = new SubItemComparePriority();
                         gaEvents("", FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
+                        GAUtils.event(getGaCategory(), SORT_POPUP, POPULARITY);
                         break;
                     case 2:
                         comparator = new SubItemComparePriceLowToHigh();
                         gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
+                        GAUtils.event(getGaCategory(), SORT_POPUP, PRICE_LOW_TO_HIGH);
                         break;
                     case 3:
                         comparator = new SubItemComparePriceHighToLow();
                         gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_HIGH_TO_LOW);
+                        GAUtils.event(getGaCategory(), SORT_POPUP, PRICE_HIGH_TO_LOW);
                         break;
                     default:
                         break;
@@ -2992,8 +3003,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction {
                 int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
                 setAddressAndFetchOfferingData(appType);
                 saveOfferingLastAddress(appType);
-                if (getFreshCheckoutMergedFragment() != null
-                        && (getDeliveryAddressesFragment() != null || getAddToAddressBookFragmentDirect() != null)) {
+                if (getFreshCheckoutMergedFragment() != null && (getDeliveryAddressesFragment() != null || getAddToAddressBookFragmentDirect() != null)) {
                     getFreshCheckoutMergedFragment().setDeliveryAddressUpdated(true);
                 }
 

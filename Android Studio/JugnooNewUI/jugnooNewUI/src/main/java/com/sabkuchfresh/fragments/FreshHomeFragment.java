@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshSuperCategoriesAdapter;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
@@ -45,7 +47,7 @@ import retrofit.client.Response;
  * Created by ankit on 19/01/17.
  */
 
-public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction, GACategory{
 
     private View rootView;
     private LinearLayout llRoot;
@@ -107,6 +109,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
                 activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
                 activity.getFabViewTest().hideJeanieHelpInSession();
+                GAUtils.event(FRESH, HOME+SUPER+CATEGORY+CLICKED, superCategory.getSuperCategoryName());
             }
         });
 
