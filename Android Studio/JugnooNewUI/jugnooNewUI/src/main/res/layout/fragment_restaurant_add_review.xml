@@ -32,7 +32,7 @@
                 android:numStars="5"
                 android:rating="0"
                 android:tag="DontTouchMe"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:halfStars="false"
                 app:maxStars="5"
                 app:onlyForDisplay="false"
@@ -43,7 +43,7 @@
                 android:id="@+id/line_below_rating"
                 style="@style/HorizontalDivider"
                 android:layout_marginBottom="@dimen/px_24"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <EditText
                 android:id="@+id/etFeedback"

@@ -45,10 +45,10 @@ public class DisplaySelectedImagesAdapter extends RecyclerView.Adapter<DisplaySe
 
     @Override
     public DisplaySelectedImagesAdapter.ViewHolderReviewImage onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_review_image, parent, false);
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.picker_item_review_image, parent, false);
+      /*  RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
         v.setLayoutParams(layoutParams);
-        ASSL.DoMagic(v);
+        ASSL.DoMagic(v);*/
         return new ViewHolderReviewImage(v);
     }
 
@@ -57,21 +57,12 @@ public class DisplaySelectedImagesAdapter extends RecyclerView.Adapter<DisplaySe
         try {
 
             String path ;
-            if (reviewImages.get(position) instanceof FetchFeedbackResponse.ReviewImage) {
-                FetchFeedbackResponse.ReviewImage reviewImage = (FetchFeedbackResponse.ReviewImage) reviewImages.get(position);
-                path=reviewImage.getUrl();
-                Picasso.with(activity).load(path).resize((int) (ASSL.minRatio() * IMAGE_DISPLAY_WIDTH), (int) (ASSL.minRatio() * IMAGE_DISPLAY_HEIGHT))
-                        .centerCrop()
-                        .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
-                        .placeholder(R.drawable.ic_fresh_item_placeholder)
-                        .into(holder.ivImage);
-            }
-            else if(reviewImages.get(position) instanceof ImageEntry) {
+            if(reviewImages.get(position) instanceof ImageEntry) {
                 path=((ImageEntry)reviewImages.get(position)).path;
                 Picasso.with(activity).load(new File(path))
-                        .resize((int) (ASSL.minRatio() * IMAGE_DISPLAY_WIDTH), (int) (ASSL.minRatio() * IMAGE_DISPLAY_HEIGHT))
+                         .resize((int) IMAGE_DISPLAY_WIDTH, (int) IMAGE_DISPLAY_HEIGHT)
                         .centerCrop()
-                        .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
+                        .transform(new RoundedCornersTransformation(8, 0))
                         .placeholder(R.drawable.ic_fresh_item_placeholder)
                         .into(holder.ivImage);
             }

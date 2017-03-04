@@ -203,6 +203,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
         setUpAdapter(objectList);
 
         updateTextCount();
+
         etFeedback.setSelection(etFeedback.length());
         updateSubmitButtonStatus();
         return rootView;
@@ -331,6 +332,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
     }
 
     private void setUpRatingBar() {
+        ibAccessStar.setSelected(true);
         ibAccessStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

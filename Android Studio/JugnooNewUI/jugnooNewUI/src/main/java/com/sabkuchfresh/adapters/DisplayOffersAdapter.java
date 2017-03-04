@@ -65,16 +65,34 @@ public class DisplayOffersAdapter extends RecyclerView.Adapter<DisplayOffersAdap
         try {
 
 
-//            holder.tvTerms.setText("1. 20% cashback on your first Menus order.\n2. Minimum order size should be Rs 500.\n3. Cashback will be credited to your Jugnoo wallet within 24 hours.");
-            holder.tvTerms.setText(Html.fromHtml(TandC));
 
 
+            holder.tvTerms.setText(trim(Html.fromHtml(TandC)));
 
-
-        } catch (Exception e) {
+          } catch (Exception e) {
             e.printStackTrace();
+
         }
 	}
+
+    public static CharSequence trim(CharSequence s) {
+        if(s.length()==0)
+            return "";
+
+        int start = 0;
+        int end = s.length();
+        while (start < end && Character.isWhitespace(s.charAt(start))) {
+            start++;
+        }
+
+        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
+            end--;
+        }
+
+        return s.subSequence(start, end);
+    }
+
+
     private void setUpOfferTitle(String heading, String subHeading,TextView textView) {
         if(TextUtils.isEmpty(heading)){
             textView.setText(null);
