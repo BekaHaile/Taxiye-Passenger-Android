@@ -37,8 +37,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -154,7 +152,6 @@ public class AddWalletFragment extends Fragment {
 			public void onClick(View v) {
 				Utils.hideSoftKeyboard(paymentActivity, editTextOTP);
 				paymentActivity.goBack();
-				MyApplication.getInstance().getWalletCore().faEventAddWallet(openWalletType, FirebaseEvents.BACK);
 			}
 		});
 
@@ -163,8 +160,6 @@ public class AddWalletFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				generateOTP(false);
-				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Request OTP");
-				MyApplication.getInstance().getWalletCore().faEventAddWallet(openWalletType, FirebaseEvents.REQUEST_OTP);
 			}
 		});
 

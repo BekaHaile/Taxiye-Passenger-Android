@@ -33,6 +33,7 @@ import com.clevertap.android.sdk.NotificationInfo;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -54,14 +55,13 @@ import product.clicklabs.jugnoo.home.LocationUpdateService;
 import product.clicklabs.jugnoo.home.SyncIntentService;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 
-public class GCMIntentService extends FirebaseMessagingService implements Constants {
+public class GCMIntentService extends FirebaseMessagingService implements Constants, GAAction {
 
 	private final String TAG = GCMIntentService.class.getSimpleName();
 
@@ -539,7 +539,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 						notificationManager(this, title, message1, playSound);
 
-						FbEvents.logEvent(this, FlurryEventNames.FB_EVENT_RIDE_STARTED);
+						FbEvents.logEvent(this, FB_EVENT_RIDE_STARTED);
 
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());

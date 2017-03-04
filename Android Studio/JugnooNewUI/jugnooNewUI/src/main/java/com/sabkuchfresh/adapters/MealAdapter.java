@@ -24,14 +24,11 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -149,7 +146,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                                 intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
                                 activity.startActivity(intent);
                                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.ORDER_STATUS);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -289,7 +285,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
                             if(subItems.get(pos).getSubItemQuantitySelected() == 1){
-                                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.M_ADD, null);
                                 GAUtils.event(activity.getGaCategory(), HOME, ITEM+ADDED);
                             } else {
                                 GAUtils.event(activity.getGaCategory(), HOME, ITEM+INCREASED);

@@ -20,8 +20,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -194,8 +192,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
             public void onPageSelected(int position) {
                 if(tabClickFlag) {
                     tabClickFlag = false;
-                } else {
-                    FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
                 }
 				GAUtils.event(FRESH, superCategory.getSuperCategoryName(), TABS_SWIPPED);
             }
@@ -511,7 +507,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     public void onTabClicked(int position) {
         Log.d(TAG, "onTabClicked = "+activity.getProductsResponse().getCategories().get(position).getCategoryName());
         tabClickFlag = true;
-        FlurryEventLogger.eventGA(FlurryEventNames.FRESH_FRAGMENT, FlurryEventNames.CATEGORY_CHANGE, activity.getProductsResponse().getCategories().get(position).getCategoryName());
     }
 
     @Override

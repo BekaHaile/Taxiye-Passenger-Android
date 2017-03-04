@@ -40,8 +40,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
@@ -180,7 +178,6 @@ public class WalletRechargeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Utils.hideSoftKeyboard(paymentActivity, editTextAmount);
-				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Back");
 				performBackPressed();
 			}
 		});
@@ -351,15 +348,6 @@ public class WalletRechargeFragment extends Fragment {
 	}
 
     private void fireBaseEvent(String amount) {
-        Bundle bundle = new Bundle();
-        bundle.putString("amount", amount);
-        if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
-            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.ADD_AMOUNT, bundle);
-        } else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
-            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.ADD_AMOUNT, bundle);
-        } else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()){
-			MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.FREECHARGE_WALLET+"_"+FirebaseEvents.ADD_AMOUNT, bundle);
-		}
     }
 	private void setButtonBackground(Button selected){
 		buttonAmount1.setBackgroundResource(R.drawable.background_white_grey_theme_rb_selector);
@@ -407,13 +395,6 @@ public class WalletRechargeFragment extends Fragment {
 			textViewTitleEdit.setVisibility(View.VISIBLE);
 		} else {
 			paymentActivity.goBack();
-		}
-		if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
-			MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.BACK, bundle);
-		} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
-			MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.BACK, bundle);
-		} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()){
-			MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.FREECHARGE_WALLET+"_"+FirebaseEvents.BACK, bundle);
 		}
 
 	}

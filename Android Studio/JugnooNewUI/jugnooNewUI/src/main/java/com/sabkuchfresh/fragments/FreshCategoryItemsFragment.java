@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -157,7 +156,7 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 							public boolean checkForAdd(int position, SubItem subItem) {
 								return activity.checkForAdd();
 							}
-						} ,AppConstant.ListType.HOME, FlurryEventNames.HOME_SCREEN, 1);
+						} ,AppConstant.ListType.HOME, HOME, 1);
 				recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 			}
 		} catch (Exception e) {

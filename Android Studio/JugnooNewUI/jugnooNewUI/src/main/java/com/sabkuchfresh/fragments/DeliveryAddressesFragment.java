@@ -58,7 +58,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -180,7 +179,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.SAVED);
                         if(activity instanceof FreshActivity) {
                             GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
                         }
@@ -210,10 +208,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.RECENT);
-//                        if(activity instanceof FreshActivity) {
                             GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES+SELECTED);
-//                        }
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                     }
@@ -256,7 +251,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.SAVED);
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
                     }
@@ -287,7 +281,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.SAVED);
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
                     }
@@ -317,7 +310,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     public void onAddressReceived(String address) {
                         if(address != null) {
                             fillAddressDetails(new LatLng(Data.latitude, Data.longitude));
-                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.NEW);
                             if(activity instanceof FreshActivity) {
                                 GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, CURRENT_LOCATION+SELECTED);
                             }
@@ -337,7 +329,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     freshActivity.setSearchResult(null);
                     freshActivity.setEditThisAddress(false);
                     freshActivity.openMapAddress(createAddressBundle(""));
-                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.NEW);
                     GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, CHOOSE_ON_MAP+SELECTED);
                 }
                 else if(activity instanceof AddPlaceActivity) {
@@ -405,7 +396,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                             scrollViewSearch.setVisibility(View.GONE);
 
                             goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false);
-                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.SEARCHED);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

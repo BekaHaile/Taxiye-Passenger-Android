@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.activities.MainActivity;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -24,12 +23,10 @@ import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
@@ -119,7 +116,6 @@ public class FABViewTest implements GACategory, GAAction {
                         Prefs.with(activity).save(Constants.SP_SHOW_GEANIE_HELP, 1);
                         setRlGenieHelpVisibility();
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
-                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, Events.GENIE, "Opened");
                         GAUtils.event(JUGNOO, getOffering()+HOME, GENIE+OPENED);
                     } else {
                         isOpened = false;
@@ -128,7 +124,6 @@ public class FABViewTest implements GACategory, GAAction {
 //                            ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
                         }
                         ivJeanieHelp.setVisibility(View.GONE);
-                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, Events.GENIE, "Closed");
                         GAUtils.event(JUGNOO, getOffering()+HOME, GENIE+CLOSED);
                     }
                 } catch (Exception e) {
@@ -317,8 +312,6 @@ public class FABViewTest implements GACategory, GAAction {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.MEALS, null);
-                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.MEALS);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -328,8 +321,6 @@ public class FABViewTest implements GACategory, GAAction {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.FRESH, null);
-                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.FRESH);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -339,8 +330,6 @@ public class FABViewTest implements GACategory, GAAction {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.AUTO, null);
-                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.AUTO);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -350,8 +339,6 @@ public class FABViewTest implements GACategory, GAAction {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.GROCERY, null);
-                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.GROCERY);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getGroceryClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -361,8 +348,6 @@ public class FABViewTest implements GACategory, GAAction {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.MENUS, null);
-                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.MENUS);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -372,8 +357,6 @@ public class FABViewTest implements GACategory, GAAction {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.PAY, null);
-                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.PAY);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getPayClientId(), finalLatLng, false);
                         }
                     }, 300);

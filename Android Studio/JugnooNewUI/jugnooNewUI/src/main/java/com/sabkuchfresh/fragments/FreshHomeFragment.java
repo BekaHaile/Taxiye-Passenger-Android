@@ -28,7 +28,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -137,7 +136,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             e.printStackTrace();
         }
 
-        GAUtils.trackScreenView(Events.FRESH_SCREEN);
+        GAUtils.trackScreenView(FRESH_SCREEN);
 
         return rootView;
     }

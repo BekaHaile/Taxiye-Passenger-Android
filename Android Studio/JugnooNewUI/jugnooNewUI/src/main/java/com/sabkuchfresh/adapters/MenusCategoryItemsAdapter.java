@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
@@ -39,7 +38,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by Shankar on 7/17/15.
  */
-public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements FlurryEventNames {
+public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     private Context context;
     private List<Item> subItems;

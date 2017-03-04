@@ -21,8 +21,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -42,7 +40,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -66,7 +63,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener {
+public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction {
     private final String TAG = MenusFragment.class.getSimpleName();
 
     private LinearLayout llRoot;
@@ -223,7 +220,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
-        GAUtils.trackScreenView(Events.MENUS_SCREEN);
+        GAUtils.trackScreenView(MENUS_SCREEN);
 
         return rootView;
     }

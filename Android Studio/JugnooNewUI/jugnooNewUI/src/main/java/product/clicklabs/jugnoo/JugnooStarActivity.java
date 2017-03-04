@@ -22,7 +22,6 @@ import product.clicklabs.jugnoo.datastructure.StarPurchaseType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 
@@ -181,12 +180,6 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                 try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
                 break;
             case R.id.bJoinNow:
-                try {
-                    FlurryEventLogger.eventGA("Star Screen", "Price", String.valueOf(subscription.getAmount()));
-                    FlurryEventLogger.eventGA("Star Screen", "Join", "Join clicked");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 openStarCheckoutFragment(JugnooStarActivity.this, rlFragment);
                 GAUtils.event(SIDE_MENU, JUGNOO+STAR, JOIN_NOW+CLICKED);
                 break;

@@ -14,8 +14,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.utils.AppConstant;
@@ -248,7 +246,6 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			callback.deleteStarSubscription();
 		} else {
 			if (callback.checkForMinus(pos, subItems.get(pos))) {
-				FlurryEventLogger.eventGA(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
 				subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
 						subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
 				callback.onMinusClicked(pos, subItems.get(pos));
@@ -272,7 +269,6 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		}
 
 		callback.onPlusClicked(pos, subItems.get(pos));
-		FlurryEventLogger.eventGA(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
 		notifyDataSetChanged();
 	}
 

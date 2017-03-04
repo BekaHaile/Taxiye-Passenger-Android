@@ -26,13 +26,12 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
 @SuppressLint("ValidFragment")
-public class GamePredictWebViewFragment extends Fragment implements FlurryEventNames, Constants {
+public class GamePredictWebViewFragment extends Fragment implements  Constants {
 
 	private final String TAG = GamePredictWebViewFragment.class.getSimpleName();
 

@@ -6,14 +6,12 @@ import android.widget.RelativeLayout;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyContactsFragment;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyModeEnabledFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 
 
 public class EmergencyActivity extends BaseFragmentActivity {
@@ -76,8 +74,6 @@ public class EmergencyActivity extends BaseFragmentActivity {
         }
         else if(mode == EmergencyActivityMode.SEND_RIDE_STATUS.getOrdinal()){
             String engagementId = getIntent().getStringExtra(Constants.KEY_ENGAGEMENT_ID);
-            Bundle bundle = new Bundle();
-            MyApplication.getInstance().firebaseLogEvent(Constants.HELP+"_"+FirebaseEvents.SEND_RIDE_STATUS_SCREEN, bundle);
             new FragTransUtils().openEmergencyContactsOperationsFragment(this, relativeLayoutContainer, engagementId,
                     ContactsListAdapter.ListMode.SEND_RIDE_STATUS);
         }

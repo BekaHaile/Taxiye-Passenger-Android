@@ -46,9 +46,6 @@ import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
@@ -59,7 +56,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 @SuppressLint("ValidFragment")
-public class SupportFAQItemFragment extends Fragment implements FlurryEventNames, Constants, GAAction {
+public class SupportFAQItemFragment extends Fragment implements Constants, GAAction {
 
 	private final String TAG = SupportFAQItemFragment.class.getSimpleName();
 
@@ -180,10 +177,6 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 					} else {
 						textViewRSOtherError.setVisibility(View.GONE);
 						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId(), rideDate, orderId, orderDate);
-                        Bundle bundle = new Bundle();
-                        String str = parentName.replaceAll("\\W", "_");
-						String btnStr = buttonSubmit.getText().toString().replaceAll("\\W", "_");
-                        MyApplication.getInstance().firebaseLogEvent(ISSUES+"_"+btnStr+"_"+str, bundle);
 					}
 				}
 			}
@@ -194,9 +187,6 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			public void onClick(View v) {
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, phoneNumber);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().firebaseLogEvent(ISSUES+"_"+FirebaseEvents.FORGOT_AN_ITEM+"_"+FirebaseEvents.CALL_DRIVER, bundle);
-					FlurryEventLogger.eventGA(Constants.ISSUES, item.getText(), "Call Driver");
 				}
 			}
 		});
@@ -206,9 +196,6 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			public void onClick(View v) {
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, supportNumber);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().firebaseLogEvent(ISSUES+"_"+FirebaseEvents.FORGOT_AN_ITEM+"_"+FirebaseEvents.CALL_JUGNOO, bundle);
-					FlurryEventLogger.eventGA(Constants.ISSUES, item.getText(), "Call Jugnoo");
 				}
 			}
 		});

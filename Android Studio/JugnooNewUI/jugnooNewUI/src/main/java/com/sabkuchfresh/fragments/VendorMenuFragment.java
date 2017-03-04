@@ -24,8 +24,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.DisplayOffersAdapter;
 import com.sabkuchfresh.adapters.MenusCategoryFragmentsAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.SortSelection;
@@ -319,7 +317,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     public void onTabClicked(int position) {
         Log.d(TAG, "onTabClicked = " + position);
         tabClickFlag = true;
-        FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.TAP);
     }
 
 

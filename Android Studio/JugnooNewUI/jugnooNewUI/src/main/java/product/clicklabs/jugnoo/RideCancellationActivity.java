@@ -38,7 +38,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -49,7 +48,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class RideCancellationActivity extends BaseActivity implements ActivityCloser, FlurryEventNames, GAAction, GACategory {
+public class RideCancellationActivity extends BaseActivity implements ActivityCloser, GAAction, GACategory {
 
 	private final String TAG = RideCancellationActivity.class.getSimpleName();
 	

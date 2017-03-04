@@ -22,7 +22,6 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.squareup.picasso.Picasso;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -31,13 +30,11 @@ import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class ReferralsFragment extends Fragment implements FirebaseEvents, GACategory, GAAction{
+public class ReferralsFragment extends Fragment implements  GACategory, GAAction{
 
 	private RelativeLayout relativeLayoutRoot;
 
@@ -64,7 +61,6 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents, GACat
 		try {
 			if(relativeLayoutRoot != null) {
 				new ASSL(activity, relativeLayoutRoot, 1134, 720, false);
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "Referrals");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,7 +95,6 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents, GACat
 			@Override
 			public void onClick(View view) {
 				if(MyApplication.getInstance().isOnline()) {
-					FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "invite friends");
 					ReferralActions.openGenericShareIntent(activity, activity.getCallbackManager());
 					try {
 						if(activity.fromDeepLink){
@@ -124,8 +119,6 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents, GACat
 				} else {
 					ReferralActions.openGenericShareIntent(activity, null);
 				}
-                MyApplication.getInstance().firebaseLogEvent(REFERRAL+"_"+OUTSIDE_WHATSAPP, bundle);
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "WhatsApp");
 				GAUtils.event(SIDE_MENU, FREE_GIFT, GAAction.WHATSAPP+INVITE+CLICKED);
 			}
 		});
@@ -148,7 +141,6 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents, GACat
 			@Override
 			public void onClick(View v) {
 				activity.openLeaderboardFragment();
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Leaderboard");
 			}
 		});
 
@@ -169,7 +161,6 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents, GACat
 		relativeLayoutReferSingle.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Refer a Driver");
 				getReferDriverDialog().show();
 			}
 		});
@@ -183,8 +174,6 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents, GACat
 				@Override
 				public void onClick(View textView) {
 					try {
-						FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Details");
-						MyApplication.getInstance().firebaseLogEvent(REFERRAL+"_"+DETAILS, bundle);
 						DialogPopup.alertPopupWithListener(activity, "",
 								Data.userData.getReferralMessages().referralMoreInfoMessage, "",
 								new View.OnClickListener() {

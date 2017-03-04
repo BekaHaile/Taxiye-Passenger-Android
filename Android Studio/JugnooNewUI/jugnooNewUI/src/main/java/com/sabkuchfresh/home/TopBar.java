@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.fragments.MenusFragment;
 
 import product.clicklabs.jugnoo.Data;
@@ -26,7 +25,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by shankar on 4/8/16.
  */
-public class TopBar implements FlurryEventNames {
+public class TopBar {
 
     Activity activity;
     DrawerLayout drawerLayout;

@@ -51,9 +51,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -65,7 +62,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by ankit on 6/8/16.
  */
-public class PromotionActivity extends BaseActivity implements Constants, FlurryEventNames, GAAction, GACategory {
+public class PromotionActivity extends BaseActivity implements Constants,  GAAction, GACategory {
 
     private final String TAG = PromotionActivity.class.getSimpleName();
     private Button buttonAddPromoCode, buttonApplyPromo;
@@ -107,7 +104,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "Back");
                 performBackPressed();
             }
         });
@@ -143,9 +139,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
                 startActivity(intent);
                 overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.WANT_FREE_RIDES, bundle);
-                FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "B_WantFreeRides");
                 GAUtils.event(SIDE_MENU, PROMOTIONS, GET_FREE_JUGNOO_CASH+CLICKED);
             }
         });
@@ -165,8 +158,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
 
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.APPLY, bundle);
                 String promoCode = editTextPromoCode.getText().toString().trim();
                 if (promoCode.length() > 0) {
                     applyPromoCodeAPI(PromotionActivity.this, promoCode);
@@ -267,8 +258,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     }
 
     public void performBackPressed(){
-        Bundle bundle = new Bundle();
-        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.BACK, bundle);
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }

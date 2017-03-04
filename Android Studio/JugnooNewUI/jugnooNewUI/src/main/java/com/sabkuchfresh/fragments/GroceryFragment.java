@@ -17,8 +17,6 @@ import android.widget.LinearLayout;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
@@ -172,9 +170,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
             public void onPageSelected(int position) {
                 if(tabClickFlag) {
                     tabClickFlag = false;
-                } else {
-                    Log.d(TAG, "onPageSelected = "+position);
-                    FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
                 }
 
                 try {
@@ -516,7 +511,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     public void onTabClicked(int position) {
         Log.d(TAG, "onTabClicked = "+position);
         tabClickFlag = true;
-        FlurryEventLogger.eventGA(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.CATEGORY_CHANGE, activity.getProductsResponse().getCategories().get(position).getCategoryName());
     }
 
     @Override

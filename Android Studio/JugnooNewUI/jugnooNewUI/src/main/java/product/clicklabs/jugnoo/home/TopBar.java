@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -15,21 +14,17 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 
-import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 4/8/16.
  */
-public class TopBar implements FirebaseEvents, GACategory, GAAction {
+public class TopBar implements  GACategory, GAAction {
 
 
     Activity activity;
@@ -112,13 +107,7 @@ public class TopBar implements FirebaseEvents, GACategory, GAAction {
 
                     try {
                         if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
-                            FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "menu");
                         } else {
-                            Bundle bundle = new Bundle();
-                            MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+MENU, bundle);
-
-                            FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION,
-                                    "Home Screen", "menu");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -135,11 +124,7 @@ public class TopBar implements FirebaseEvents, GACategory, GAAction {
                             if(PassengerScreenMode.P_REQUEST_FINAL == HomeActivity.passengerScreenMode){
                                 GAUtils.event(RIDES, DRIVER_ENROUTE, HELP+GAAction.BUTTON+CLICKED);
                             } else if (PassengerScreenMode.P_DRIVER_ARRIVED == ((HomeActivity) activity).passengerScreenMode) {
-                                //FlurryEventLogger.eventGA(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
                             } else if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
-                                Bundle bundle = new Bundle();
-                                MyApplication.getInstance().firebaseLogEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+Constants.HELP, bundle);
-                                FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "help");
                                 GAUtils.event(RIDES, RIDE+IN_PROGRESS, HELP+GAAction.BUTTON+CLICKED);
                             } else if (PassengerScreenMode.P_RIDE_END == HomeActivity.passengerScreenMode){
                                 GAUtils.event(RIDES, FEEDBACK, HELP+GAAction.BUTTON+CLICKED);
@@ -187,14 +172,11 @@ public class TopBar implements FirebaseEvents, GACategory, GAAction {
         }
         imageViewBack.setVisibility(View.GONE);
         textViewTitle.setText(activity.getResources().getString(R.string.rides));
-//        textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
-
         if (!defaultState) {
             imageViewMenu.setVisibility(View.GONE);
             imageViewHelp.setVisibility(View.GONE);
             imageViewBack.setVisibility(View.VISIBLE);
             textViewTitle.setText(title);
-//            textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
         }
     }
 

@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.widget.Toast;
 
@@ -25,7 +24,6 @@ import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.otto.Bus;
 import com.tsengvn.typekit.Typekit;
@@ -70,8 +68,6 @@ public class MyApplication extends Application {
     public String ACTIVITY_NAME_ABOUT = "ABOUT";
     public String ACTIVITY_NAME_JUGNOO_STAR = "JUGNOO STAR";
     public String ACTIVITY_NAME_NOTIFICATION_SETTING = "SET PREFERENCES";
-
-    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     private Bus mBus;
@@ -127,8 +123,6 @@ public class MyApplication extends Application {
             mBus = new Bus();
             mBus.register(this);
 
-            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
             AnalyticsTrackers.initialize(this);
             AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
         } catch (Exception e) {
@@ -141,25 +135,6 @@ public class MyApplication extends Application {
         return mBus;
     }
 
-    public FirebaseAnalytics getFirebaseAnalytics() {
-        if (mFirebaseAnalytics == null) {
-            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        }
-        return mFirebaseAnalytics;
-    }
-
-
-    public void firebaseLogEvent(String content, Bundle bundle) {
-        if (content.length() > 31) {
-            content = content.substring(0, 31);
-        }
-        if (bundle != null) {
-            getFirebaseAnalytics().logEvent(content, bundle);
-        } else {
-            Bundle bundle1 = new Bundle();
-            getFirebaseAnalytics().logEvent(content, bundle1);
-        }
-    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -238,10 +213,6 @@ public class MyApplication extends Application {
         Tracker t = getGoogleAnalyticsTracker();
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
-        if (category.equalsIgnoreCase(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION)) {
-            Bundle bundle = new Bundle();
-            firebaseLogEvent("Transaction_" + action + "_" + label, bundle);
-        }
     }
 
 
@@ -263,11 +234,6 @@ public class MyApplication extends Application {
         Tracker t = getGoogleAnalyticsTracker();
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
-        if (category.equalsIgnoreCase(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION)) {
-            Bundle bundle = new Bundle();
-            bundle.putLong("value", value);
-            firebaseLogEvent("Transaction_" + action + "_" + label, bundle);
-        }
     }
 
 

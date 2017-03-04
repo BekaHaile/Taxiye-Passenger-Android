@@ -36,4 +36,9 @@ public class GAUtils {
 	public static void transactionCompleteEvent(List<Product> product, ProductAction productAction){
 		try {MyApplication.getInstance().transactionEvent(product, productAction);} catch(Exception e) {}
 	}
+
+	public static void setGAUserId(String mUserId) {
+		try{ MyApplication.getInstance().setGAUserId(mUserId);} catch (Exception e){}
+	}
+
 }

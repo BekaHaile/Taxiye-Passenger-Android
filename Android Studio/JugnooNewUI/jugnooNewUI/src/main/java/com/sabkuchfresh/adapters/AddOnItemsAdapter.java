@@ -12,20 +12,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.retrofit.model.SubItem;
-import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -152,17 +146,6 @@ public class AddOnItemsAdapter extends BaseAdapter {
                         callback.onPlusClicked(pos, subItems.get(pos));
                     } else {
                         Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) + "");
-                    }
-
-                    if(subItems.get(pos).getSubItemQuantitySelected() == 1){
-                        int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
-                        if (appType == AppConstant.ApplicationType.FRESH) {
-                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_ADD, null);
-                        } else if (appType == AppConstant.ApplicationType.GROCERY) {
-                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_ADD, null);
-                        } else if (appType == AppConstant.ApplicationType.MENUS) {
-                            MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_ADD, null);
-                        }
                     }
 
                     notifyDataSetChanged();

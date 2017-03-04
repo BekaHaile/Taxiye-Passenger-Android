@@ -36,8 +36,6 @@ import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -132,7 +130,6 @@ public class ShareActivity extends BaseFragmentActivity {
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Back");
 				performBackPressed();
 			}
 		});
@@ -188,9 +185,6 @@ public class ShareActivity extends BaseFragmentActivity {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
-        Bundle bundle = new Bundle();
-        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.REFERRAL+"_"+FirebaseEvents.BACK, bundle);
-
 	}
 	
 	@Override

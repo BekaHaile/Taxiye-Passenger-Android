@@ -45,8 +45,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -56,7 +54,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class PromotionsFragment extends Fragment implements FlurryEventNames, Constants {
+public class PromotionsFragment extends Fragment implements  Constants {
 
 	private final String TAG = PromotionsFragment.class.getSimpleName();
 	private LinearLayout linearLayoutRoot;
@@ -101,7 +99,6 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 		try {
 			if(linearLayoutRoot != null) {
 				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "Offers");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -142,7 +141,6 @@ public class OrderCompleteReferralDialog implements GAAction, GACategory {
 							OrderCompleteReferralDialog.this.orderId,
 							OrderCompleteReferralDialog.this.productType,
 							OrderCompleteReferralDialog.this.referralPopupContent.getButtonId());
-					FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Popup - Send Free Rides", OrderCompleteReferralDialog.this.referralPopupContent.getButtonText());
 					if(context instanceof FreshActivity) {
 						GAUtils.event(((FreshActivity)context).getGaCategory(), ORDER_PLACED+REFERRAL_POPUP, REFER+BUTTON+CLICKED+OrderCompleteReferralDialog.this.referralPopupContent.getButtonText());
 					} else if(context instanceof HomeActivity){
@@ -156,7 +154,6 @@ public class OrderCompleteReferralDialog implements GAAction, GACategory {
 				public void onClick(View v) {
 					dialog.dismiss();
 					callback.onDialogDismiss();
-					FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Popup - Send Free Rides", "Later");
 					if(context instanceof FreshActivity) {
 						GAUtils.event(((FreshActivity)context).getGaCategory(), ORDER_PLACED+REFERRAL_POPUP, LATER+CLICKED);
 					} else if(context instanceof HomeActivity){
@@ -166,7 +163,6 @@ public class OrderCompleteReferralDialog implements GAAction, GACategory {
 			});
 
 			dialog.show();
-			FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Popup - Send Free Rides", "Send Free Rides");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

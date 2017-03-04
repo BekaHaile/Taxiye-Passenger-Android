@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.sabkuchfresh.adapters.AddOnItemsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
@@ -24,11 +23,9 @@ import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 
@@ -104,7 +101,6 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
             @Override
             public void onClick(View v) {
                 activity.getTransactionUtils().openCheckoutMergedFragment(activity, activity.getRelativeLayoutContainer());
-                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.SKIP_BOTTOM);
                 GAUtils.event(activity.getGaCategory(), ADD_ONS, SKIP_AND_PROCEED);
             }
         });
@@ -123,7 +119,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
         listViewCharges = (NonScrollListView) rootView.findViewById(R.id.listViewCharges);
         listViewCharges.setVisibility(View.GONE);
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, FlurryEventNames.REVIEW_CART, false,
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, "Review Cart", false,
                 new FreshCartItemsAdapter.Callback() {
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {

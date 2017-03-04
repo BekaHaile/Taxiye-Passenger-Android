@@ -48,9 +48,6 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -62,7 +59,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, Constants{
+public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 	private final String TAG = "OTP screen";
 
@@ -209,7 +206,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.eventGA(ACQUISITION, TAG, "Back");
 				performBackPressed();
 			}
 		});
@@ -250,9 +246,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 					} else {
 						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
 					}
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.VERIFY_ME, bundle);
-					FlurryEventLogger.eventGA(ACQUISITION, TAG, "Verify me");
 				} else {
 					editTextOTP.requestFocus();
 					editTextOTP.setError("OTP can't be empty");
@@ -342,9 +335,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 										Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
 												.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 										backFromMissedCall = true;
-                                        Bundle bundle = new Bundle();
-                                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.GIVE_A_MISS_CALL, bundle);
-										FlurryEventLogger.eventGA(ACQUISITION, TAG, "Give a miss call");
 									}
 								},
 								new View.OnClickListener() {
@@ -367,10 +357,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
             @Override
             public void onClick(View v) {
 				editTextOTP.setError(null);
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.EDIT_PHONE_NUMBER, bundle);
-
-                FlurryEventLogger.eventGA(ACQUISITION, TAG, "Edit phone number");
 				Intent intent = new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class);
 				intent.putExtra(LINKED_WALLET, linkedWallet);
 				startActivity(intent);
@@ -1099,8 +1085,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 
 	public void performBackPressed(){
-        Bundle bundle = new Bundle();
-        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.BACK, bundle);
 		if(intentFromRegister){
 			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
 			intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());
@@ -1294,13 +1278,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 	}
 
 	private void firebaseEventWalletAtSignup(){
-		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
-			MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.PAYTM, new Bundle());
-		} else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-			MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.MOBIKWIK, new Bundle());
-		} else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
-			MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.FREECHARGE, new Bundle());
-		}
 	}
 
 	/**
@@ -1377,7 +1354,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 								}*/
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL,
 											new LatLng(Data.loginLatitude, Data.loginLongitude));
@@ -1485,7 +1461,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 								showErrorOnMissedCallBack();
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.FACEBOOK,
 											new LatLng(Data.loginLatitude, Data.loginLongitude));
@@ -1596,7 +1571,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.GOOGLE,
 											new LatLng(Data.loginLatitude, Data.loginLongitude));
-									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 
 									MyApplication.getInstance().getDatabase().insertEmail(Data.googleSignInAccount.getEmail());

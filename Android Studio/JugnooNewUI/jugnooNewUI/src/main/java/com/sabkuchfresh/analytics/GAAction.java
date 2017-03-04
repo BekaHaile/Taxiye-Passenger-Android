@@ -180,4 +180,22 @@ public interface GAAction {
 	String TAG = "Tag ";
 	String MINIMIZE = "Minimize ";
 	String POPULARITY = "Popularity ";
+
+
+	String FRESH_SCREEN = "Fresh Screen";
+	String MEALS_SCREEN = "Meals Screen";
+	String MENUS_SCREEN = "Menus Screen";
+	String PRODUCT_NAME = "Product Name";
+	String PRODUCT_ID = "Product ID";
+	String QUANTITY = "Quantity";
+	String TOTAL_AMOUNT = "Total Amount";
+	String DISCOUNT_AMOUNT = "Discount Amount";
+	String END_TIME = "End Time";
+	String START_TIME = "Start Time";
+	String CITY = "City";
+	String SEARCH_SCREEN = "Search Screen";
+	String TYPE = "Type";
+	String COUPONS_USED = "Coupons Used";
+	String REGISTRATION = "Registration";
+	String FB_EVENT_RIDE_STARTED = "Ride started";
 }

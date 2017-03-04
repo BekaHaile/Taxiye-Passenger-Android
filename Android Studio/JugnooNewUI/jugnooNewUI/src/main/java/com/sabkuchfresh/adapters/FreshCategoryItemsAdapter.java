@@ -15,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.dialogs.BannerDetailDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
@@ -29,11 +27,9 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -43,7 +39,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by Shankar on 7/17/15.
  */
-public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements FlurryEventNames {
+public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     private Context context;
     private List<SubItem> subItems;
@@ -281,12 +277,6 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             callback.onMinusClicked(pos, subItems.get(pos));
 
                             notifyDataSetChanged();
-                            int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
-                            if(appType == AppConstant.ApplicationType.FRESH){
-                                FlurryEventLogger.eventGA(FRESH_FRAGMENT, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
-                            } else if(appType == AppConstant.ApplicationType.GROCERY){
-                                FlurryEventLogger.eventGA(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
-                            }
                         } else{
                             callback.minusNotDone(pos, subItems.get(pos));
                         }
@@ -311,19 +301,6 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
 
-                            if(subItems.get(pos).getSubItemQuantitySelected() == 1) {
-                                FlurryEventLogger.eventGA(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-                                int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
-                                if (appType == AppConstant.ApplicationType.FRESH) {
-                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.F_ADD, null);
-                                } else if (appType == AppConstant.ApplicationType.GROCERY) {
-                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.G_ADD, null);
-                                } else if (appType == AppConstant.ApplicationType.MENUS) {
-                                    MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.MENUS_ADD, null);
-                                }
-                            } else {
-                                FlurryEventLogger.eventGA(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

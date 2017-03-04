@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,8 +35,6 @@ import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -160,10 +157,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         /*notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
                         notifyItemUnchecked(position);*/
                         openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl());
-                        Bundle bundle = new Bundle();
-                        bundle.putString("message", ""+msg);
-                        MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.DEEP_INDEX+notificationList.get(position).getDeepIndex(), bundle);
-                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Inbox", "Deep Index", notificationList.get(position).getNotificationId());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -215,8 +208,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 Utils.openUrl(activity, url);
             }
             else if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == deepInt){
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.INVITE_FRIENDS, bundle);
                 intent.setClass(activity, ShareActivity.class);
                 activity.startActivity(intent);
             }
@@ -290,9 +281,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             else if(AppLinkIndex.SUBSCRIPTION_PLAN_OPTION_SCREEN.getOrdinal() == deepInt){
                 activity.startActivity(new Intent(activity, JugnooStarActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.JUGNOO_STAR, bundle);
-                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Notification screen", "Jugnoo star");
             }
             else if(AppLinkIndex.WALLET_TRANSACTIONS.getOrdinal() == deepInt){
                 intent.setClass(activity, PaymentActivity.class);

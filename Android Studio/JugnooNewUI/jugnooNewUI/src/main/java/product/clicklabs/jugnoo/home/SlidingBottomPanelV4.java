@@ -13,7 +13,6 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.adapters.SlidingBottomFragmentAdapter;
@@ -21,7 +20,6 @@ import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
@@ -242,8 +240,6 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
                 } else {
                     viewPager.setCurrentItem(0, true);
                 }
-                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
-                        +FirebaseEvents.B_PAYMENT_MODE, bundle);
                 GAUtils.event(RIDES, HOME, WALLET+CLICKED);
                 break;
 
@@ -253,8 +249,6 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
                 } else {
                     viewPager.setCurrentItem(1, true);
                 }
-                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
-                        +FirebaseEvents.FARE_POPUP, bundle);
                 GAUtils.event(RIDES, HOME, FARE_DETAILS+CLICKED);
                 break;
 
@@ -264,8 +258,6 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
                 } else {
                     viewPager.setCurrentItem(2, true);
                 }
-                MyApplication.getInstance().firebaseLogEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
-                        +FirebaseEvents.B_OFFER, bundle);
                 GAUtils.event(RIDES, HOME, OFFER+CLICKED);
                 break;
         }

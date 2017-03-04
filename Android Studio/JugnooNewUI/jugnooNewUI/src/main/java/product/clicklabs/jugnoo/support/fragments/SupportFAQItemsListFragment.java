@@ -24,12 +24,10 @@ import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 
 @SuppressLint("ValidFragment")
-public class SupportFAQItemsListFragment extends Fragment implements FlurryEventNames, Constants {
+public class SupportFAQItemsListFragment extends Fragment implements  Constants {
 
 	private LinearLayout root;
 
@@ -127,7 +125,6 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 									engagementId, rideDate, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber,
 									orderId, orderDate, supportNumber, productType);
 						}
-						FlurryEventLogger.eventGA(Constants.ISSUES, SupportFAQItemsListFragment.this.item.getText(), item.getText());
 					}
 				});
 		recyclerViewItems.setAdapter(supportFAQItemsAdapter);

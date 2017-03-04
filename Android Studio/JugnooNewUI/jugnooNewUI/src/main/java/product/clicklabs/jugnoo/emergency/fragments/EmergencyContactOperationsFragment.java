@@ -42,7 +42,6 @@ import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -265,16 +264,13 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
 
 					case R.id.imageViewBack:
 						if(ContactsListAdapter.ListMode.SEND_RIDE_STATUS == listMode) {
-							FlurryEventLogger.eventGA(Constants.HELP, "send ride status screen", "close");
 						}else{
-							FlurryEventLogger.eventGA(Constants.HELP, "call your contacts", "close");
 						}
 						performBackPressed();
 						break;
 
 					case R.id.textViewSend:
 						if(ContactsListAdapter.ListMode.SEND_RIDE_STATUS == listMode) {
-							FlurryEventLogger.eventGA(Constants.HELP, "send ride status screen", "send");
 							clickOnSend();
 							GAUtils.event(RIDES, SEND_RIDE_STATUS, SEND+CLICKED);
 						}

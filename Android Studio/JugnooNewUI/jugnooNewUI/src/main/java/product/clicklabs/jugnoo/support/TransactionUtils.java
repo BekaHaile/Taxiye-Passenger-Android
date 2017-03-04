@@ -20,7 +20,6 @@ import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 
 /**
  * Created by shankar on 1/27/16.
@@ -43,7 +42,6 @@ public class TransactionUtils {
 						.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 								.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commitAllowingStateLoss();
-				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", item.getText());
 			}
 		}
 		else if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()

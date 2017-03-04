@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusItemCustomizeAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -25,7 +24,6 @@ import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
