@@ -322,7 +322,6 @@ public class RestaurantAddReviewFragment extends Fragment  {
             if(activity.getCurrentReview().getRating()!=null && activity.getCurrentReview().getRating()>=1)
             {
                 customRatingBar.setScore(activity.getCurrentReview().getRating().floatValue());
-                ibAccessStar.performClick();//shows the rating bar
             }
 
         }
