@@ -724,9 +724,9 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				@Override
 				public void onClick(View v) {
 
-					startFbAccountKit();
+					//startFbAccountKit();
 
-					/*Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 					String phoneNumber = editTextEmail.getText().toString().trim();
 					if ("".equalsIgnoreCase(phoneNumber)) {
 						editTextEmail.requestFocus();
@@ -743,7 +743,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber);
 							}
 						}
-					}*/
+					}
 
 
 					/*Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
@@ -1218,7 +1218,6 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				loginType,
 				AccountKitActivity.ResponseType.TOKEN);
 		final AccountKitConfiguration configuration = configurationBuilder.build();
-		configurationBuilder.setTheme(R.style.AppLoginTheme_Yellow);
 		intent.putExtra(
 				AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
 				configuration);

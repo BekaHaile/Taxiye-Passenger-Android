@@ -304,6 +304,11 @@ public interface ApiService {
                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST(("/change_contact_number_using_fb"))
+    void changeContactNumberUsingFB(@FieldMap Map<String, String> params,
+                                    Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
     @POST("/reload_my_profile")
     void reloadMyProfile(@FieldMap Map<String, String> params,
                            Callback<SettleUserDebt> callback);

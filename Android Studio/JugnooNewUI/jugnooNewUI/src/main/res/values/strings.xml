@@ -1556,5 +1556,6 @@
     </string>
     <string name="permissions_receive_sms_title">Read SMS Code</string>
     <string name="na">NA</string>
+    <string name="login_signup_with">Login / Signup with</string>
 
 </resources>
