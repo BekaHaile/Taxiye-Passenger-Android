@@ -2528,11 +2528,27 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         } else {
             promoCoupon = noSelectionCoupon;
         }
-        if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, activity.getPaymentOption().getOrdinal(), promoCoupon)) {
-            activity.setSelectedPromoCoupon(promoCoupon);
+        if(promoCoupon.getIsValid() == 0){
+            String message = activity.getString(R.string.please_coupon_tnc);
+            if(activity.getUserCheckoutResponse() != null
+                    && !TextUtils.isEmpty(activity.getUserCheckoutResponse().getInvalidOfferMessage())){
+                message = activity.getUserCheckoutResponse().getInvalidOfferMessage();
+            }
+            DialogPopup.alertPopupWithListener(activity, "", message,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+        } else {
+            if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, activity.getPaymentOption().getOrdinal(), promoCoupon)) {
+                activity.setSelectedPromoCoupon(promoCoupon);
+            }
+            setPromoAmount();
+            updateCartUI();
         }
-        setPromoAmount();
-        updateCartUI();
+
     }
 
 

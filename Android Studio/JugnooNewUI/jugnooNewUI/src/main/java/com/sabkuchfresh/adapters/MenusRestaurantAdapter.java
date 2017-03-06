@@ -73,6 +73,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private FreshActivity activity;
     private ArrayList<MenusResponse.Vendor> vendorsComplete, vendorsFiltered, vendorsToShow;
+    private HashMap<Integer, MenusResponse.Vendor> restIdMappedVendors;
     private Callback callback;
     private String searchText;
     private boolean searchApiHitOnce = false;
@@ -89,6 +90,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.vendorsComplete = vendors;
         this.vendorsFiltered = new ArrayList<>();
         this.vendorsFiltered.addAll(vendors);
+        this.restIdMappedVendors = new HashMap<>();
+        setRestIdMappedVendors();
         this.vendorsToShow = new ArrayList<>();
         this.vendorsToShow.addAll(vendors);
         this.callback = callback;
@@ -123,13 +126,16 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         if(TextUtils.isEmpty(text)){
             vendorsToShow.addAll(vendorsFiltered);
         } else {
-            for(MenusResponse.Vendor vendor : vendorsFiltered) {
-                if(searchedRestaurantIds == null) {
+            if(searchedRestaurantIds == null) {
+                for (MenusResponse.Vendor vendor : vendorsFiltered) {
                     if (vendor.getName().toLowerCase().contains(text) || vendor.getCuisines().toString().toLowerCase().contains(text)) {
                         vendorsToShow.add(vendor);
                     }
-                } else {
-                    if(searchedRestaurantIds.contains(vendor.getRestaurantId())){
+                }
+            } else {
+                for(Integer restId : searchedRestaurantIds){
+                    MenusResponse.Vendor vendor = restIdMappedVendors.get(restId);
+                    if(vendor != null){
                         vendorsToShow.add(vendor);
                     }
                 }
@@ -143,9 +149,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.vendorsComplete = vendors;
         this.vendorsFiltered.clear();
         this.vendorsFiltered.addAll(vendors);
+        setRestIdMappedVendors();
         this.vendorsToShow.clear();
         this.vendorsToShow.addAll(vendors);
         applyFilter();
+    }
+
+    private void setRestIdMappedVendors(){
+        restIdMappedVendors.clear();
+        for(MenusResponse.Vendor vendor : vendorsFiltered){
+            restIdMappedVendors.put(vendor.getRestaurantId(), vendor);
+        }
     }
 
     public void applyFilter(){
@@ -217,6 +231,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 return point;
             }
         });
+        setRestIdMappedVendors();
 
         searchRestaurant(searchText);
     }
@@ -771,6 +786,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         RestClient.getMenusApiService().fetchRestaurantViaSearch(params, new retrofit.Callback<RestaurantSearchResponse>() {
                             @Override
                             public void success(RestaurantSearchResponse productsResponse, Response response) {
+//                                String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                                 activity.getTopBar().setPBSearchVisibility(View.GONE);
                                 try {
                                     if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {

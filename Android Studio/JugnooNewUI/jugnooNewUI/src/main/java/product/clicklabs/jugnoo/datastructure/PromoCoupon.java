@@ -8,6 +8,7 @@ public abstract class PromoCoupon {
 	public abstract Integer getMasterCoupon();
 	public abstract boolean equals(Object o);
 	public abstract Integer getIsSelected();
+	public abstract Integer getIsValid();
 
 	public boolean matchPromoCoupon(PromoCoupon pc2) {
 		try {
