@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlLoginSignupNew"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
 
     <ImageView
@@ -41,6 +41,41 @@
             android:layout_centerInParent="true"
             android:orientation="vertical">
 
+            <RelativeLayout
+                android:layout_width="720px"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/imageViewJugnooLogo"
+                    android:layout_width="@dimen/px_387"
+                    android:layout_height="@dimen/px_97"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_splash_ls_logo"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:tag="mwar"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/imageViewDebug1"
+                    android:layout_width="180px"
+                    android:layout_height="120px"/>
+
+                <ImageView
+                    android:id="@+id/imageViewDebug2"
+                    android:layout_width="180px"
+                    android:layout_height="120px"
+                    android:layout_alignParentRight="true"/>
+
+                <ImageView
+                    android:id="@+id/imageViewDebug3"
+                    android:layout_width="120px"
+                    android:layout_height="120px"
+                    android:layout_centerHorizontal="true"/>
+
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/tvWelcomToJugnoo"
                 android:layout_width="wrap_content"
@@ -48,6 +83,7 @@
                 android:text="@string/login_signup_with"
                 android:textSize="@dimen/text_size_32"
                 android:textColor="@color/text_color"
+                android:layout_marginTop="@dimen/px_100"
                 android:layout_gravity="center_horizontal"
                 app:font="maven"/>
 
@@ -57,17 +93,18 @@
                 android:layout_height="@dimen/splash_button_height"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/px_60"
+                android:layout_marginTop="@dimen/px_50"
                 android:background="@drawable/capsule_theme_login_selector">
 
                 <ImageView
                     android:id="@+id/ivMobileNumber"
-                    android:layout_width="@dimen/px_40"
-                    android:layout_height="@dimen/px_40"
-                    android:background="@drawable/ic_f"
+                    android:layout_width="@dimen/px_32"
+                    android:layout_height="@dimen/px_45"
+                    android:background="@drawable/ic_login_mobile"
                     android:clickable="false"
                     android:duplicateParentState="true"
                     android:textAllCaps="true"
+                    android:tag="mwar"
                     android:layout_centerVertical="true"
                     android:textColor="@drawable/text_color_white_alpha_selector"
                     android:textSize="@dimen/text_size_34" />
@@ -107,6 +144,7 @@
                     android:text="@string/or"
                     android:textAllCaps="true"
                     android:gravity="center"
+                    android:tag="mwar"
                     android:textColor="@color/text_color"
                     android:background="@drawable/circle_white_stroke_grey"
                     android:textSize="@dimen/text_size_28" />
@@ -126,7 +164,7 @@
                 android:orientation="horizontal">
 
                 <RelativeLayout
-                    android:id="@+id/buttonFacebookLogin"
+                    android:id="@+id/rlLSFacebook"
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
                     android:gravity="center_horizontal"
@@ -140,6 +178,7 @@
                         android:clickable="false"
                         android:duplicateParentState="true"
                         android:textAllCaps="true"
+                        android:tag="mwar"
                         android:layout_centerVertical="true"
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/text_size_34" />
@@ -159,7 +198,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/buttonGoogleLogin"
+                    android:id="@+id/rlLSGoogle"
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
                     android:layout_marginLeft="@dimen/px_20"
@@ -175,6 +214,7 @@
                         android:duplicateParentState="true"
                         android:layout_centerVertical="true"
                         android:textAllCaps="true"
+                        android:tag="mwar"
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/text_size_34" />
 
@@ -195,7 +235,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textViewSTerms"
+                android:id="@+id/tvSTerms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

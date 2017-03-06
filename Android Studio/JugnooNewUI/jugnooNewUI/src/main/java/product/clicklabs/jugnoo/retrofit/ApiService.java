@@ -121,6 +121,11 @@ public interface ApiService {
                             Callback<LoginResponse> callback);
 
     @FormUrlEncoded
+    @POST("/v3/customer/login_using_fb_account_kit")
+    void loginUsingFbAccountKit(@FieldMap Map<String, String> params,
+                          Callback<LoginResponse> callback);
+
+    @FormUrlEncoded
     @POST("/register_using_email")
     void registerUsingEmail(@FieldMap Map<String, String> params,
                           Callback<SettleUserDebt> callback);
