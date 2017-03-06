@@ -144,7 +144,7 @@ public class RestaurantImageFragment extends Fragment {
                 if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
                     tvCollapRestaurantRating.setVisibility(View.VISIBLE);
                     activity.setRatingAndGetColor(tvCollapRestaurantRating, activity.getVendorOpened().getRating(),
-                            activity.getVendorOpened().getColorCode());
+                            activity.getVendorOpened().getColorCode(), true);
                 } else {
                     tvCollapRestaurantRating.setVisibility(View.GONE);
                 }

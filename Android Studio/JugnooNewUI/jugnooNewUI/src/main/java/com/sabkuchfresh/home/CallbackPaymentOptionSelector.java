@@ -9,4 +9,5 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 public interface CallbackPaymentOptionSelector{
     void onPaymentOptionSelected(PaymentOption paymentOption);
     void onWalletAdd(PaymentOption paymentOption);
+    String getAmountToPrefill();
 }

@@ -13,19 +13,19 @@ public enum VehicleIconSet {
 			R.drawable.ic_auto_marker,
 			R.drawable.ic_auto_request_normal,
 			R.drawable.ic_auto_request_pressed,
-			R.drawable.ic_history_auto),
+			R.drawable.ic_auto_grey),
 
 	YELLOW_AUTO("YELLOW AUTO", R.drawable.ic_auto_tab_normal, R.drawable.ic_auto_tab_selected,
 			R.drawable.ic_auto_marker,
 			R.drawable.ic_auto_request_normal,
 			R.drawable.ic_auto_request_pressed,
-			R.drawable.ic_history_auto),
+			R.drawable.ic_auto_grey),
 
 	RED_AUTO("RED AUTO", R.drawable.ic_auto_tab_normal, R.drawable.ic_auto_tab_selected,
 			R.drawable.ic_auto_marker,
 			R.drawable.ic_auto_request_normal,
 			R.drawable.ic_auto_request_pressed,
-			R.drawable.ic_history_auto),
+			R.drawable.ic_auto_grey),
 
 
 

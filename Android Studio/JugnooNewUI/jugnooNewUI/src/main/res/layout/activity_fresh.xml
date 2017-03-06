@@ -95,6 +95,9 @@
 
         <include layout="@layout/layout_home_activity_fab_test" />
 
+
+
+
     </android.support.design.widget.CoordinatorLayout>
 
     <!-- menu layout -->

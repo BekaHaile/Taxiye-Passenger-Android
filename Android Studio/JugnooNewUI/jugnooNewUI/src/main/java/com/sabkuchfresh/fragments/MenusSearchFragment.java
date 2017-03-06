@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -84,7 +83,7 @@ public class MenusSearchFragment extends Fragment {
 		textViewPlaceholder = (TextView) rootView.findViewById(R.id.textViewPlaceholder); textViewPlaceholder.setTypeface(Fonts.mavenRegular(activity));
 		textViewPlaceholder.setVisibility(View.GONE);
 
-        new Handler().postDelayed(new Runnable() {
+        activity.getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
 				try {
@@ -297,7 +296,7 @@ public class MenusSearchFragment extends Fragment {
 			e.printStackTrace();
 		}
 		if(!hidden){
-            new Handler().postDelayed(new Runnable() {
+            activity.getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     try {

@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/sliding_bottom_bg_color"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -14,7 +14,9 @@
         android:layout_height="match_parent"
         android:fadeScrollbars="true"
         android:scrollbars="vertical"
-        android:splitMotionEvents="false">
+        android:splitMotionEvents="false"
+        android:background="@color/sliding_bottom_bg_color"
+        >
     </android.support.v7.widget.RecyclerView>
 
     <RelativeLayout

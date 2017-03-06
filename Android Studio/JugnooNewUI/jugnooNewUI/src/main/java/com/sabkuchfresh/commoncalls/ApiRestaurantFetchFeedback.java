@@ -6,7 +6,6 @@ import android.view.View;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 
 import java.util.HashMap;
-import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -51,13 +50,14 @@ public class ApiRestaurantFetchFeedback {
 				RestClient.getMenusApiService().restaurantFetchFeedbacks(params, new retrofit.Callback<FetchFeedbackResponse>() {
 					@Override
 					public void success(FetchFeedbackResponse feedbackResponse, Response response) {
+//						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						DialogPopup.dismissLoadingDialog();
 						try {
 							String message = feedbackResponse.getMessage();
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
 									feedbackResponse.getError(), feedbackResponse.getMessage())) {
 								if(feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-									callback.onSuccess(feedbackResponse.getReviews());
+									callback.onSuccess(feedbackResponse);
 								} else {
 									DialogPopup.alertPopup(activity, "", message);
 								}
@@ -108,7 +108,7 @@ public class ApiRestaurantFetchFeedback {
 
 
 	public interface Callback{
-		void onSuccess(List<FetchFeedbackResponse.Review> reviews);
+		void onSuccess(FetchFeedbackResponse fetchFeedbackResponse);
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);

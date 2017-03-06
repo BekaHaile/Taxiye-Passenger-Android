@@ -7,8 +7,12 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.activities.MainActivity;
@@ -21,6 +25,7 @@ import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -46,6 +51,10 @@ public class FABViewTest {
     private final String GENIE_OPEN = "Genie Open";
     //public View fabExtra;
 
+    private RelativeLayout rlGenieHelp;
+    private TextView tvGenieHelp;
+    private ImageView ivJeanieHelp;
+
     public FABViewTest(Activity activity, View view) {
         this.activity = activity;
         this.view = view;
@@ -58,6 +67,8 @@ public class FABViewTest {
 
     private void initComponent(){
         try {
+
+
 //            relativeLayoutFABTest = (RelativeLayout) view.findViewById(R.id.relativeLayoutFABTest);
             relativeLayoutFABTest = (RelativeLayout) view;
             menuLabelsRightTest = (FloatingActionMenu) view.findViewById(R.id.menu_labels_right_Test);
@@ -93,11 +104,16 @@ public class FABViewTest {
             //menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
 
 
+            rlGenieHelp = (RelativeLayout) view.findViewById(R.id.rlGenieHelp);
+            tvGenieHelp = (TextView) view.findViewById(R.id.tvGenieHelp);
+            ivJeanieHelp = (ImageView) view.findViewById(R.id.ivJeanieHelp);
+
+            setRlGenieHelpBottomMargin(170f);
         } catch (Exception e) {
             e.printStackTrace();
         }
         //setFABButtons();
-
+        isOpened = false;
         menuLabelsRightTest.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
@@ -106,17 +122,20 @@ public class FABViewTest {
                         setButtonsVisibilityOnOpen();
                         isOpened = true;
                         if(activity instanceof HomeActivity){
-                            ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
+//                            ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
                         }
+                        Prefs.with(activity).save(Constants.SP_SHOW_GEANIE_HELP, 1);
+                        setRlGenieHelpVisibility();
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
                         FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Opened");
                     } else {
                         isOpened = false;
                         if(activity instanceof HomeActivity){
-                            ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.GONE);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
+//                            ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
                         }
+                        ivJeanieHelp.setVisibility(View.GONE);
                         FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Closed");
                     }
                 } catch (Exception e) {
@@ -126,6 +145,13 @@ public class FABViewTest {
         });
 
 
+
+        rlGenieHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menuLabelsRightTest.open(true);
+            }
+        });
 
         createCustomAnimation();
 
@@ -152,6 +178,13 @@ public class FABViewTest {
             public void onAnimationStart(Animator animation) {
                 menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
                         ? R.drawable.ic_fab_jeanie : R.drawable.ic_fab_cross);
+                if(activity instanceof HomeActivity) {
+                    if (menuLabelsRightTest.isOpened()) {
+                        ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
+                    } else {
+                        ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
+                    }
+                }
             }
         });
 
@@ -163,7 +196,7 @@ public class FABViewTest {
     }
 
 
-    public void setFABButtons(){
+    public void setFABButtons(boolean toShowJeanieHelp){
         try {
             if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
                     && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
@@ -212,18 +245,28 @@ public class FABViewTest {
                     }
                 }
 
-//                if (Data.userData.getDeliveryEnabled() != 1) {
-//                    fabDeliveryTest.setVisibility(View.GONE);
-//                } else {
-//                    if(isOpened) {
-//                        fabDeliveryTest.setVisibility(View.VISIBLE);
-//                    }
-//                }
+                /*if(activity instanceof HomeActivity) {
+                    if (Prefs.with(activity).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
+                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.VISIBLE);
+                    } else {
+                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.GONE);
+                    }
+                } else if(activity instanceof HomeActivity){
+                    if (Prefs.with(activity).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
+                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.VISIBLE);
+                    } else {
+                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.GONE);
+                    }
+                }*/
+
+                setRlGenieHelpVisibility();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private Handler handler = new Handler();
 
     private void setButtonsVisibilityOnOpen(){
         try {
@@ -359,6 +402,76 @@ public class FABViewTest {
             menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void setRlGenieHelpVisibility(){
+        if(Data.userData.getShowJeanieHelpText() == 1
+                && Prefs.with(activity).getInt(Constants.SP_SHOW_GEANIE_HELP, 0) == 0
+                && !Data.isJeanieShownInSession()){
+            handler.postDelayed(runnableJeanieHelpShow, 2000);
+        } else {
+            rlGenieHelp.setVisibility(View.GONE);
+            handler.removeCallbacks(runnableJeanieHelpShow);
+        }
+    }
+
+    private Runnable runnableJeanieHelpShow = new Runnable() {
+        @Override
+        public void run() {
+            rlGenieHelp.setVisibility(View.VISIBLE);
+            Data.setJeanieShownInSession(true);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    rlGenieHelp.setVisibility(View.GONE);
+                }
+            }, 4000);
+        }
+    };
+
+    public void setRelativeLayoutFABTestVisibility(int visibility){
+        relativeLayoutFABTest.setVisibility(visibility);
+        if(visibility != View.VISIBLE){
+//            hideJeanieHelpInSession();
+        }
+    }
+
+    public void hideJeanieHelpInSession(){
+        Data.setJeanieShownInSession(true);
+        setRlGenieHelpVisibility();
+    }
+
+    public void setRlGenieHelpBottomMargin(float bottomMargin){
+        setRlGenieHelpBottomMargin((int) (ASSL.Yscale() * bottomMargin));
+    }
+
+    public void setRlGenieHelpBottomMargin(int bottomMargin){
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rlGenieHelp.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, bottomMargin);
+        rlGenieHelp.setLayoutParams(params);
+    }
+
+    public void setMenuLabelsRightTestPadding(float paddingBottom){
+        float scale = activity.getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (paddingBottom * scale + 0.5f);
+        setMenuLabelsRightTestPadding(dpAsPixels);
+    }
+
+    public void setMenuLabelsRightTestPadding(int paddingBottom){
+        menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, paddingBottom);
+        setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
+    }
+
+    public void showTutorial(){
+        if(Data.userData != null && Data.userData.getShowTutorial() == 1) {
+            menuLabelsRightTest.open(true);
+            Animation animation = new AlphaAnimation(0f, 1f);
+            animation.setDuration(1000);
+            animation.setFillAfter(false);
+            ivJeanieHelp.setVisibility(View.VISIBLE);
+            ivJeanieHelp.startAnimation(animation);
+            Data.userData.setShowTutorial(0);
         }
     }
 

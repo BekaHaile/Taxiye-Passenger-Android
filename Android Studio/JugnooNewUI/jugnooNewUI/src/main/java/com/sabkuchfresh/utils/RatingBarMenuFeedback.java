@@ -36,6 +36,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
     private static final int LOW_RATING_RED = Color.parseColor("#FB9758");
     private static final int MEDIUM_RATING_YELLOW = Color.parseColor("#FFD365");
     private static final int GOOD_RATING_GREEN = Color.parseColor("#8DCF61");
+    private static final int NO_RATING_COLOR = Color.GRAY;
 
     public IRatingBarCallbacks getOnScoreChanged() {
         return onScoreChanged;
@@ -201,7 +202,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
                     mStarsViews[i - 1].setCompoundDrawablesWithIntrinsicBounds(0, mStarOffResource, 0, 0);
 
 
-                mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+                mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(NO_RATING_COLOR, PorterDuff.Mode.SRC_ATOP);
             }
 
             if (i == mCurrentScore) {

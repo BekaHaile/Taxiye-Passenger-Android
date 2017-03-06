@@ -594,6 +594,14 @@ public class Utils {
 		return decimalFormatMoney;
 	}
 
+	private static DecimalFormat decimalFormat2Decimal;
+	public static DecimalFormat getDecimalFormat2Decimal(){
+		if(decimalFormat2Decimal == null){
+			decimalFormat2Decimal = new DecimalFormat("#.00");
+		}
+		return decimalFormat2Decimal;
+	}
+
     private static DecimalFormat decimalFormatMoneyWithoutFloat;
     public static DecimalFormat getMoneyDecimalFormatWithoutFloat(){
         if(decimalFormatMoneyWithoutFloat == null){

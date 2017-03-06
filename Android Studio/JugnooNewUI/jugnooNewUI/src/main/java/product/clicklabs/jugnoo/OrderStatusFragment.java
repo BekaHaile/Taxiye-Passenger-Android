@@ -674,7 +674,6 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
             }
 
 
-            tvOrderTimeVal.setText(datum.getOrderTime());
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getOrderTime())));
 
             if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){

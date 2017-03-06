@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="product.clicklabs.jugnoo"
-    android:versionCode="282"
-    android:versionName="2.8.2">
-
-    <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="19" />
+    package="product.clicklabs.jugnoo">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -29,6 +23,8 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
 
     <permission
         android:name="product.clicklabs.jugnoo.permission.MAPS_RECEIVE"
@@ -40,6 +36,8 @@
 
     <uses-permission android:name="product.clicklabs.jugnoo.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+
 
     <application
         android:name=".MyApplication"
@@ -107,6 +105,7 @@
                     android:host="app"
                     android:scheme="jugnooautos" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".home.HomeActivity"
@@ -316,8 +315,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -467,6 +465,25 @@
             android:windowSoftInputMode="stateAlwaysHidden">
 
         </activity>
+
+        <activity android:name="com.picker.image.ui.PickerActivity"  android:theme="@style/AppThemePicker.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <service
+            android:name="com.picker.image.util.OfflineSpiceService"
+            android:exported="false" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.jugnoo.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
+
 
 </manifest>

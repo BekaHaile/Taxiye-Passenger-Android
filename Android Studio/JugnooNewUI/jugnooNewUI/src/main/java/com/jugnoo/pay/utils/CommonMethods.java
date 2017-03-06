@@ -464,7 +464,6 @@ public class CommonMethods {
             dt = sdf.parse(time);
             System.out.println("Time Display: " + sdfs.format(dt)); // <-- I got result here
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -514,7 +513,6 @@ public class CommonMethods {
             dt = sdf.parse(time);
             System.out.println("Time Display: " + sdfs.format(dt)); // <-- I got result here
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -538,7 +536,6 @@ public class CommonMethods {
             dt = sdf.parse(time);
             System.out.println("Time Display: " + sdfs.format(dt)); // <-- I got result here
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -574,7 +571,6 @@ public class CommonMethods {
            Log.e("nowwwww","==="+dt);
             return date+"T"+sdfs.format(dt);
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return "";

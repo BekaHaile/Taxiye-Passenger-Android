@@ -611,6 +611,23 @@ public interface Constants {
     String KEY_EMPTY_CART = "empty_cart";
     String FEEDBACK_TITLE = "feedback_title";
     String KEY_REVIEW_DESC = "review_desc";
-    
+    String KEY_FEEDBACK_ID = "feedback_id";
+    String KEY_ACTION = "action";
+    String KEY_POSITION = "position";
 
+
+
+    String KEY_REVIEW_IMAGES="review_images";
+    String KEY_IMAGES = "images";
+    String KEY_REVIEW = "review";
+    String SP_RESTAURANT_ID_TO_DEEP_LINK = "sp_restaurant_id_to_deep_link";
+    String SP_SHOW_GEANIE_HELP = "geanie_help";
+    String KEY_SHOW_JEANIE_HELP_TEXT = "show_jeanie_help_text";
+    String KEY_SHOW_OFFER_DIALOG = "show_offer_dialog";
+    String KEY_SHOW_TUTORIAL = "show_tutorial";
+
+    int OPEN_DEEP_INDEX = 122112;
+
+    String KEY_LIKE_IS_ENABLED = "like_is_enabled";
+    String KEY_SHARE_IS_ENABLED = "share_is_enabled";
 }

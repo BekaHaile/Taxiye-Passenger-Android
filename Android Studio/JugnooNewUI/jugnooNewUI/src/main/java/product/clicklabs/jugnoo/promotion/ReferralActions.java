@@ -1,25 +1,37 @@
 package product.clicklabs.jugnoo.promotion;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 
 import com.facebook.CallbackManager;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.promotion.adapters.ShareIntentListAdapter;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -35,7 +47,7 @@ public class ReferralActions implements FirebaseEvents {
             if(Data.userData != null){
                 String channel = isMessenger ? BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK_MESSENGER : BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK;
                 String channelLinkSP = isMessenger ? SPLabels.BRANCH_FACEBOOK_MESSENGER_LINK : SPLabels.BRANCH_FACEBOOK_LINK;
-                new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+                BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                     @Override
                     public void onBranchLinkCreated(final String link) {
                         if(Data.userData != null) {
@@ -76,7 +88,7 @@ public class ReferralActions implements FirebaseEvents {
                     public void onBranchError(String error) {
                         Utils.showToast(activity, error);
                     }
-                }).getBranchLinkForChannel(channel,
+                }, channel,
                         channelLinkSP,
                         Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                         Data.userData.getReferralMessages().getTitle(),
@@ -115,7 +127,7 @@ public class ReferralActions implements FirebaseEvents {
     public static void shareToWhatsapp(final Activity activity) {
 
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+            BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
 //                    PackageManager pm = activity.getPackageManager();
@@ -155,7 +167,7 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchError(String error) {
                     Utils.showToast(activity, error);
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP,
+            }, BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP,
                     SPLabels.BRANCH_WHATSAPP_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                     Data.userData.getReferralMessages().getTitle(),
@@ -171,7 +183,7 @@ public class ReferralActions implements FirebaseEvents {
 
     public static void sendSMSIntent(final Activity activity){
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+            BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     Uri sms_uri = Uri.parse("smsto:");
@@ -185,7 +197,7 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchError(String error) {
                     Utils.showToast(activity, error);
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_SMS,
+            }, BranchMetricsUtils.BRANCH_CHANNEL_SMS,
                     SPLabels.BRANCH_SMS_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                     Data.userData.getReferralMessages().getTitle(),
@@ -202,7 +214,7 @@ public class ReferralActions implements FirebaseEvents {
     public static void openMailIntent(final Activity activity){
         try {
 
-            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+            BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     Intent email = new Intent(Intent.ACTION_SEND);
@@ -218,7 +230,7 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchError(String error) {
                     Utils.showToast(activity, error);
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_EMAIL,
+            }, BranchMetricsUtils.BRANCH_CHANNEL_EMAIL,
                     SPLabels.BRANCH_EMAIL_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                     Data.userData.getReferralMessages().getTitle(),
@@ -233,7 +245,7 @@ public class ReferralActions implements FirebaseEvents {
 
     public static void openGenericShareIntent(final Activity activity, final CallbackManager callbackManager){
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+            BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     genericShareDialog(activity, callbackManager,
@@ -246,7 +258,7 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchError(String error) {
                     Utils.showToast(activity, error);
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_GENERIC,
+            }, BranchMetricsUtils.BRANCH_CHANNEL_GENERIC,
                     SPLabels.BRANCH_GENERIC_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                     Data.userData.getReferralMessages().getTitle(),
@@ -260,83 +272,120 @@ public class ReferralActions implements FirebaseEvents {
     }
 
     public static void genericShareDialog(final Activity activity, final CallbackManager callbackManager,
-                                          final String subject, final String body, final String link) {
-        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_TEXT, body);
-        activity.startActivity(Intent.createChooser(intent, activity.getResources().getText(R.string.send_via)));
+                                          final String subject, final String body, final String link){
+        genericShareDialog(activity, callbackManager, subject, body, link, "", false, null, false);
+    }
 
-//        Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);
-//        sendIntent.setType("text/plain");
-//        List<ResolveInfo> activities = activity.getPackageManager().queryIntentActivities(sendIntent, 0);
-//        sortAppsInGenericShareDialog(activities);
-//        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
-//        builder.setTitle("Share with...");
-//        final ShareIntentListAdapter adapter = new ShareIntentListAdapter(activity,
-//                R.layout.list_item_share_intent, activities.toArray());
-//        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                ResolveInfo info = (ResolveInfo) adapter.getItem(which);
-//                if (info.activityInfo.packageName.contains("com.facebook.katana")) {
-//                    shareToFacebookBasic(activity, callbackManager, link);
-//					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_FACEBOOK);
-//                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Facebook");
-//                    Bundle bundle  = new Bundle();
-//                    MyApplication.getInstance().logEvent(REFERRAL+"_"+DIALOG_FB_APP, bundle);
-//                }
-//				else if(info.activityInfo.packageName.contains("com.google.android.gm")
-//						|| info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
-//						|| info.activityInfo.packageName.contains("com.microsoft.office.outlook")
-//						|| info.activityInfo.packageName.contains("com.google.android.apps.inbox")){
-//					Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-//					intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-//					intent.setType("text/plain");
-//					intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-//					intent.putExtra(Intent.EXTRA_TEXT, body);
-//					activity.startActivity(intent);
-//					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_EMAIL);
-//                    Bundle bundle  = new Bundle();
-//                    MyApplication.getInstance().logEvent(REFERRAL+"_"+DIALOG_GMAIL, bundle);
-//                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Gmail");
-//				}
-//				else if(info.activityInfo.packageName.contains("com.whatsapp")){
-//					Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-//					intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-//					intent.setType("text/plain");
-//					intent.putExtra(Intent.EXTRA_TEXT, body);
-//					activity.startActivity(intent);
-//					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_WHATSAPP);
-//                    Bundle bundle  = new Bundle();
-//                    MyApplication.getInstance().logEvent(REFERRAL+"_"+DIALOG_WHATSUPP, bundle);
-//                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "WhatsApp");
-//				}
-//				else {
-//                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-//                    intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-//                    intent.setType("text/plain");
-//                    intent.putExtra(Intent.EXTRA_TEXT, body);
-//                    activity.startActivity(intent);
-//                    if(info.activityInfo.packageName.contains("com.twitter.android")){
-//                        FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_TWITTER);
-//                        Bundle bundle  = new Bundle();
-//                        MyApplication.getInstance().logEvent(REFERRAL+"_"+FirebaseEvents.DIALOG_TWITTER, bundle);
-//                    } else if(info.activityInfo.packageName.contains("com.android.mms")){
-//                        FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_SMS);
-//                        Bundle bundle  = new Bundle();
-//                        MyApplication.getInstance().logEvent(REFERRAL+"_"+FirebaseEvents.DIALOG_MOBILE_SMS, bundle);
-//                        FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "SMS");
-//                    } else{
-//                        FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_OTHERS);
-//                        Bundle bundle  = new Bundle();
-//                        MyApplication.getInstance().logEvent(REFERRAL+"_"+DIALOG_OTHERS, bundle);
-//                        FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Other");
-//                    }
-//                }
-//            }
-//        });
-//        builder.create().show();
+    public static void genericShareDialog(final Activity activity, final CallbackManager callbackManager,
+                                          final String subject, final String body, final String link, final String imageUrl,
+                                          final boolean showCustomDialog,
+                                          final ShareDialogCallback callback,
+                                          final boolean hitAnalyticEvents) {
+        if(!showCustomDialog) {
+            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            intent.putExtra(Intent.EXTRA_TEXT, body);
+            activity.startActivity(Intent.createChooser(intent, activity.getResources().getText(R.string.send_via)));
+        }
+        else {
+            Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            List<ResolveInfo> activities = activity.getPackageManager().queryIntentActivities(sendIntent, 0);
+            sortAppsInGenericShareDialog(activities);
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
+            builder.setTitle("Share with...");
+            final ShareIntentListAdapter adapter = new ShareIntentListAdapter(activity,
+                    R.layout.list_item_share_intent, activities.toArray());
+            builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    try {
+                        ResolveInfo info = (ResolveInfo) adapter.getItem(which);
+                        if(info != null) {
+                            if ((info.activityInfo.packageName.equalsIgnoreCase("com.facebook.katana")
+                                    || info.activityInfo.packageName.equalsIgnoreCase("com.facebook.work"))
+                                    && ShareDialog.canShow(ShareLinkContent.class)) {
+                                ShareDialog shareDialog = new ShareDialog(activity);
+                                ShareLinkContent.Builder builder1 = new ShareLinkContent.Builder();
+                                if (!TextUtils.isEmpty(subject)) {
+                                    builder1.setContentTitle(subject);
+                                } else {
+                                    builder1.setContentTitle("Jugnoo");
+                                }
+                                builder1.setContentDescription(body);
+                                if (!TextUtils.isEmpty(link)) {
+                                    builder1.setContentUrl(Uri.parse(link));
+                                }
+                                if (!TextUtils.isEmpty(imageUrl)) {
+                                    builder1.setImageUrl(Uri.parse(imageUrl));
+                                }
+                                ShareLinkContent linkContent = builder1.build();
+                                shareDialog.show(linkContent);
+                            } else {
+                                Intent intent = new Intent(Intent.ACTION_SEND);
+                                intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+                                intent.setType("text/plain");
+                                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                                intent.putExtra(Intent.EXTRA_TEXT, body);
+                                activity.startActivity(intent);
+                            }
+
+                            try {
+                                if(callback != null){
+									callback.onShareClicked(info.activityInfo.applicationInfo.loadLabel(activity.getPackageManager()).toString());
+								}
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            if(hitAnalyticEvents) {
+								if (info.activityInfo.packageName.contains("com.facebook.katana")) {
+									FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_FACEBOOK);
+									FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Facebook");
+									Bundle bundle = new Bundle();
+									MyApplication.getInstance().logEvent(REFERRAL + "_" + DIALOG_FB_APP, bundle);
+								} else if (info.activityInfo.packageName.contains("com.google.android.gm")
+										|| info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
+										|| info.activityInfo.packageName.contains("com.microsoft.office.outlook")
+										|| info.activityInfo.packageName.contains("com.google.android.apps.inbox")) {
+									FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_EMAIL);
+									Bundle bundle = new Bundle();
+									MyApplication.getInstance().logEvent(REFERRAL + "_" + DIALOG_GMAIL, bundle);
+									FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Gmail");
+								} else if (info.activityInfo.packageName.contains("com.whatsapp")) {
+									FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_WHATSAPP);
+									Bundle bundle = new Bundle();
+									MyApplication.getInstance().logEvent(REFERRAL + "_" + DIALOG_WHATSUPP, bundle);
+									FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "WhatsApp");
+								} else {
+									if (info.activityInfo.packageName.contains("com.twitter.android")) {
+										FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_TWITTER);
+										Bundle bundle = new Bundle();
+										MyApplication.getInstance().logEvent(REFERRAL + "_" + FirebaseEvents.DIALOG_TWITTER, bundle);
+									} else if (info.activityInfo.packageName.contains("com.android.mms")) {
+										FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_SMS);
+										Bundle bundle = new Bundle();
+										MyApplication.getInstance().logEvent(REFERRAL + "_" + FirebaseEvents.DIALOG_MOBILE_SMS, bundle);
+										FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "SMS");
+									} else {
+										FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_OTHERS);
+										Bundle bundle = new Bundle();
+										MyApplication.getInstance().logEvent(REFERRAL + "_" + DIALOG_OTHERS, bundle);
+										FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Other");
+									}
+								}
+							}
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            });
+            builder.create().show();
+        }
     }
 
 
@@ -431,6 +480,10 @@ public class ReferralActions implements FirebaseEvents {
     public static void updateOpenDate(Context context){
         long dateMillis = System.currentTimeMillis();
         Prefs.with(context).save(SPLabels.REFERRAL_OPEN_DATE_MILLIS, dateMillis);
+    }
+
+    public static interface ShareDialogCallback{
+        void onShareClicked(String appName);
     }
 
 }

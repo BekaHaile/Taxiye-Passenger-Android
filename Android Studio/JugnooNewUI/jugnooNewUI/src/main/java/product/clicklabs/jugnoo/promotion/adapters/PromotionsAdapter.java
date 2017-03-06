@@ -72,7 +72,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
                     DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description, true, true, false, true);
                     FlurryEventLogger.event(activity, FlurryEventNames.TNC_VIEWS);
                 } else if (promoCoupon instanceof PromotionInfo) {
-                    DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, false, true, true, true);
+                    DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, true, true, true, true);
                     FlurryEventLogger.event(activity, FlurryEventNames.TNC_VIEWS_PROMO);
                 }
             }

@@ -19,12 +19,18 @@ public class SubscriptionData {
     @SerializedName("subscriptions")
     @Expose
     private List<Subscription> subscriptions = null;
+    @SerializedName("subscription_benefits")
+    @Expose
+    private List<SubscriptionBenefits> subscriptionBenefits = null;
     @SerializedName("sub_text_autos")
     @Expose
     private String subTextAutos;
     @SerializedName("subscription_title")
     @Expose
     private String subscriptionTitle;
+    @SerializedName("subscription_title_new")
+    @Expose
+    private String subscriptionTitleNew;
     @SerializedName("sub_text_meals")
     @Expose
     private String subTextMeals;
@@ -37,6 +43,9 @@ public class SubscriptionData {
     @SerializedName("sub_text_grocery")
     @Expose
     private String subTextGrocery;
+    @SerializedName("subscribed_user")
+    @Expose
+    private Integer subscribedUser;
 
     public List<UserSubscription> getUserSubscriptions() {
         return userSubscriptions;
@@ -55,7 +64,7 @@ public class SubscriptionData {
     }
 
     public String getSubTextAutos() {
-        if(subTextAutos == null)
+        if (subTextAutos == null)
             subTextAutos = "";
         return subTextAutos;
     }
@@ -72,8 +81,19 @@ public class SubscriptionData {
         this.subscriptionTitle = subscriptionTitle;
     }
 
+    public String getSubscriptionTitleNew() {
+        if (subscriptionTitleNew == null)
+            return subscriptionTitleNew = "";
+        else
+            return subscriptionTitleNew;
+    }
+
+    public void setSubscriptionTitleNew(String subscriptionTitleNew) {
+        this.subscriptionTitleNew = subscriptionTitleNew;
+    }
+
     public String getSubTextMeals() {
-        if(subTextMeals == null)
+        if (subTextMeals == null)
             subTextMeals = "";
         return subTextMeals;
     }
@@ -83,7 +103,7 @@ public class SubscriptionData {
     }
 
     public String getSubTextFresh() {
-        if(subTextFresh == null)
+        if (subTextFresh == null)
             subTextFresh = "";
         return subTextFresh;
     }
@@ -93,7 +113,7 @@ public class SubscriptionData {
     }
 
     public String getSubTextMenus() {
-        if(subTextMenus == null)
+        if (subTextMenus == null)
             subTextMenus = "";
         return subTextMenus;
     }
@@ -103,13 +123,32 @@ public class SubscriptionData {
     }
 
     public String getSubTextGrocery() {
-        if(subTextGrocery == null)
+        if (subTextGrocery == null)
             subTextGrocery = "";
         return subTextGrocery;
     }
 
     public void setSubTextGrocery(String subTextGrocery) {
         this.subTextGrocery = subTextGrocery;
+    }
+
+    public List<SubscriptionBenefits> getSubscriptionBenefits() {
+        return subscriptionBenefits;
+    }
+
+    public void setSubscriptionBenefits(List<SubscriptionBenefits> subscriptionBenefits) {
+        this.subscriptionBenefits = subscriptionBenefits;
+    }
+
+    public Integer getSubscribedUser() {
+        if(subscribedUser == null){
+            subscribedUser = 0;
+        }
+        return subscribedUser;
+    }
+
+    public void setSubscribedUser(Integer subscribedUser) {
+        this.subscribedUser = subscribedUser;
     }
 
     public class UserSubscription {
@@ -143,7 +182,7 @@ public class SubscriptionData {
         private String planString;
 
         public Integer getBenefitIdAutos() {
-            if(benefitIdAutos == null)
+            if (benefitIdAutos == null)
                 benefitIdAutos = 0;
             return benefitIdAutos;
         }
@@ -226,6 +265,9 @@ public class SubscriptionData {
         @SerializedName("plan_string")
         @Expose
         private String planString;
+        @SerializedName("plan_string_new")
+        @Expose
+        private String planStringNew;
         @SerializedName("description")
         @Expose
         private String description;
@@ -241,6 +283,15 @@ public class SubscriptionData {
         @SerializedName("sub_id")
         @Expose
         private Integer subId;
+        @SerializedName("initial_amount_text")
+        @Expose
+        private String initialAmountText;
+        @SerializedName("final_amount_text")
+        @Expose
+        private String finalAmountText;
+        @SerializedName("cross_text")
+        @Expose
+        private String crossText;
 
         public Integer getPlanDuration() {
             return planDuration;
@@ -298,6 +349,83 @@ public class SubscriptionData {
             this.subId = subId;
         }
 
+        public String getFinalAmountText() {
+            if (finalAmountText == null)
+                return finalAmountText = "";
+            else
+                return finalAmountText;
+        }
+
+        public void setFinalAmountText(String finalAmountText) {
+            this.finalAmountText = finalAmountText;
+        }
+
+        public String getInitialAmountText() {
+            if (initialAmountText == null)
+                return initialAmountText = "";
+            else
+                return initialAmountText;
+        }
+
+        public void setInitialAmountText(String initialAmountText) {
+            this.initialAmountText = initialAmountText;
+        }
+
+        public String getPlanStringNew() {
+            if (planStringNew == null)
+                return planStringNew = "";
+            else
+                return planStringNew;
+        }
+
+        public void setPlanStringNew(String planStringNew) {
+            this.planStringNew = planStringNew;
+        }
+
+        public String getCrossText() {
+            return crossText;
+        }
+
+        public void setCrossText(String crossText) {
+            this.crossText = crossText;
+        }
+    }
+
+    public class SubscriptionBenefits {
+
+        @SerializedName("title")
+        @Expose
+        private String title;
+        @SerializedName("description")
+        @Expose
+        private String description;
+        @SerializedName("product_type")
+        @Expose
+        private Integer productType;
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public Integer getProductType() {
+            return productType;
+        }
+
+        public void setProductType(Integer productType) {
+            this.productType = productType;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
     }
 
 }

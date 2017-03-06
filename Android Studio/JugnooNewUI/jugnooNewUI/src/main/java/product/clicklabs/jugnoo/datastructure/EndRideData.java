@@ -18,7 +18,7 @@ public class EndRideData {
 	public double paidUsingPaytm, paidUsingMobikwik, paidUsingFreeCharge;
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
-	private String rideDate, phoneNumber, tripTotal, engagementDate;
+	private String rideDate, phoneNumber, tripTotal, engagementDate, invoiceAdditionalTextCabs;
 	private int vehicleType, isPooled;
 	private VehicleIconSet vehicleIconSet;
 	private int totalRide;
@@ -32,7 +32,7 @@ public class EndRideData {
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
 					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
 					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge,
-					   int totalRide, int status, String supportNumber){
+					   int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -89,6 +89,7 @@ public class EndRideData {
 		this.status = status;
 
 		this.supportNumber = supportNumber;
+		this.invoiceAdditionalTextCabs = invoiceAdditionalTextCabs;
 	}
 
 
@@ -175,5 +176,13 @@ public class EndRideData {
 
 	public void setSupportNumber(String supportNumber) {
 		this.supportNumber = supportNumber;
+	}
+
+	public String getInvoiceAdditionalTextCabs() {
+		return invoiceAdditionalTextCabs;
+	}
+
+	public void setInvoiceAdditionalTextCabs(String invoiceAdditionalTextCabs) {
+		this.invoiceAdditionalTextCabs = invoiceAdditionalTextCabs;
 	}
 }

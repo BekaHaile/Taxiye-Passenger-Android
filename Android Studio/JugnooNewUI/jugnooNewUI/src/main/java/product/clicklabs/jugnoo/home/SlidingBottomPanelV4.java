@@ -87,6 +87,7 @@ public class SlidingBottomPanelV4 {
                 if(slideOffset > 0.2f){
                     activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
                     activity.setFabMarginInitial(true);
+                    activity.getFabViewTest().hideJeanieHelpInSession();
                 }
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
                 if (activity.relativeLayoutSearchContainer.getVisibility() == View.GONE

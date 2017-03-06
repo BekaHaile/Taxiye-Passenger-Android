@@ -211,8 +211,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_star_selector);
-                    if(Data.userData.isSubscriptionActive()){
-//                        hideLayout(holder.relative);
+                    if(!Data.userData.isSubscriptionActive() && Data.userData.getSubscriptionData().getSubscribedUser() == 0){
+                        holder.textViewNew.setVisibility(View.VISIBLE);
+                    } else{
                         holder.textViewNew.setVisibility(View.GONE);
                     }
                 } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(menuInfo.getTag())){
@@ -320,7 +321,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         //holder.linearLayoutCategories.startAnimation(animation);
                     }
 
-                        //notifyItemChanged(0);
+                        //notifyItemUnchecked(0);
 //                    }
 //                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
@@ -366,14 +367,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
 
-            holder.linearLayoutSubDelivery.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
-                    holder.imageViewArrow.setRotation(270);
-                }
-            });
 
             holder.linearLayoutSubGrocery.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -633,7 +626,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.ABOUT, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "About");
             } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(tag)){
-                if(Data.userData.isSubscriptionActive()){
+                if((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
+                        || Data.userData.isSubscriptionActive()){
                     activity.startActivity(new Intent(activity, JugnooStarSubscribedActivity.class));
                 } else {
                     activity.startActivity(new Intent(activity, JugnooStarActivity.class));
@@ -697,12 +691,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         holder.linearLayoutSubMeals.setVisibility(View.GONE);
                     }
 
-                    if (Data.userData.getDeliveryEnabled() == 1) {
-                        holder.linearLayoutSubDelivery.setVisibility(View.VISIBLE);
-                    } else {
-                        holder.linearLayoutSubDelivery.setVisibility(View.GONE);
-                    }
-
                     if(Data.userData.getGroceryEnabled() == 1){
                         holder.linearLayoutSubGrocery.setVisibility(View.VISIBLE);
                     } else {
@@ -747,9 +735,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class ViewHeaderHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
         public ImageView imageViewProfile, imageViewArrow;
-        public TextView textViewUserName, textViewViewPhone, textViewCategories, textViewAutos, textViewFresh, textViewMeals, textViewDelivery,
+        public TextView textViewUserName, textViewViewPhone, textViewCategories, textViewAutos, textViewFresh, textViewMeals,
                 textViewGrocery, textViewMenus, textViewPay, tvJugnooStar;
-        public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubDelivery, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos,
+        public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos,
             linearLayoutSubGrocery, linearLayoutSubMenus, linearLayoutSubPay;
         public View viewStarIcon;
         public ViewHeaderHolder(View convertView, Activity context) {
@@ -762,7 +750,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             textViewAutos = (TextView) convertView.findViewById(R.id.textViewAutos); textViewAutos.setTypeface(Fonts.mavenRegular(context));
             textViewFresh = (TextView) convertView.findViewById(R.id.textViewFresh); textViewFresh.setTypeface(Fonts.mavenRegular(context));
             textViewMeals = (TextView) convertView.findViewById(R.id.textViewMeals); textViewMeals.setTypeface(Fonts.mavenRegular(context));
-            textViewDelivery = (TextView) convertView.findViewById(R.id.textViewDelivery); textViewDelivery.setTypeface(Fonts.mavenRegular(context));
             textViewGrocery = (TextView) convertView.findViewById(R.id.textViewGrocery); textViewGrocery.setTypeface(Fonts.mavenRegular(context));
             textViewMenus = (TextView) convertView.findViewById(R.id.textViewMenus); textViewMenus.setTypeface(Fonts.mavenRegular(context));
             textViewPay = (TextView) convertView.findViewById(R.id.textViewPay); textViewPay.setTypeface(Fonts.mavenRegular(context));
@@ -772,7 +759,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             linearLayoutSubAutos = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubAutos);
             linearLayoutSubFresh = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubFresh);
             linearLayoutSubMeals = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubMeals);
-            linearLayoutSubDelivery = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubDelivery);
             linearLayoutSubGrocery = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubGrocery);
             linearLayoutSubMenus = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubMenus);
             linearLayoutSubPay = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubPay);

@@ -125,7 +125,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 					if (promoCoupon instanceof CouponInfo) {
 						DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description, true, true, false);
 					} else if (promoCoupon instanceof PromotionInfo) {
-						DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, false, true, true);
+						DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, true, true, true);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

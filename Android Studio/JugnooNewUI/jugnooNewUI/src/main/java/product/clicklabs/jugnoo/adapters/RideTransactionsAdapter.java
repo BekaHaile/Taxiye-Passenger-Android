@@ -95,7 +95,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
                             Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
                 }
-                holder.imageViewProductType.setImageResource(R.drawable.ic_history_auto);
+                holder.imageViewProductType.setImageResource(R.drawable.ic_auto_grey);
 
                 try {
                     int vehicleType = orderHistory.getVehicleType();
@@ -168,15 +168,15 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
                 if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_history_fresh);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_fresh_grey);
                 } else if(orderHistory.getProductType() == ProductType.MEALS.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_history_meals);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_meals_grey);
                 } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_history_grocery);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_fresh_grey);
                 } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_history_menus);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_menus_grey);
                 } else if(orderHistory.getProductType() == ProductType.PAY.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_history_pay);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_pay_grey);
                 }
                 holder.relativeLayoutTo.setVisibility(View.GONE);
             }
@@ -291,7 +291,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             if(rideType == RideTypeValue.POOL.getOrdinal()) {
                 return R.drawable.ic_history_pool;
             } else {
-                return R.drawable.ic_history_auto;
+                return R.drawable.ic_auto_grey;
             }
         }
         else if (vehicleType == VehicleTypeValue.BIKES.getOrdinal()) {
@@ -312,7 +312,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             return R.drawable.ic_helicopter_invoice;
         }
         else {
-            return R.drawable.ic_history_auto;
+            return R.drawable.ic_auto_grey;
         }
     }
 

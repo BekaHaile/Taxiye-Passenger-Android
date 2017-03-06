@@ -2,11 +2,11 @@ package com.sabkuchfresh.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.retrofit.model.menus.Charges;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 
@@ -21,6 +21,9 @@ public class UserCheckoutResponse{
 	@SerializedName("message")
 	@Expose
 	private String message;
+	@SerializedName("error")
+	@Expose
+	private String error;
 	@SerializedName("checkout_data")
 	@Expose
 	private CheckoutData checkoutData;
@@ -55,6 +58,12 @@ public class UserCheckoutResponse{
 	@SerializedName("star_subscription_text")
 	@Expose
 	private String starSubscriptionText;
+	@SerializedName("charges")
+	@Expose
+	private List<Charges> charges = null;
+	@SerializedName("restaurant_info")
+	@Expose
+	private RestaurantInfo restaurantInfo;
 
 	/**
 	 *
@@ -194,6 +203,30 @@ public class UserCheckoutResponse{
 
 	public void setStarSubscriptionTitle(String starSubscriptionTitle) {
 		this.starSubscriptionTitle = starSubscriptionTitle;
+	}
+
+	public List<Charges> getCharges() {
+		return charges;
+	}
+
+	public void setCharges(List<Charges> charges) {
+		this.charges = charges;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
+	}
+
+	public RestaurantInfo getRestaurantInfo() {
+		return restaurantInfo;
+	}
+
+	public void setRestaurantInfo(RestaurantInfo restaurantInfo) {
+		this.restaurantInfo = restaurantInfo;
 	}
 
 	public class Subscription {
@@ -548,6 +581,20 @@ public class UserCheckoutResponse{
 
 		public void setPrice(Integer price) {
 			this.price = price;
+		}
+	}
+
+	public class RestaurantInfo{
+		@SerializedName("address")
+		@Expose
+		private String address;
+
+		public String getAddress() {
+			return address;
+		}
+
+		public void setAddress(String address) {
+			this.address = address;
 		}
 	}
 }

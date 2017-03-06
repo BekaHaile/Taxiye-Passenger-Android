@@ -8,34 +8,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.adapters.AddOnItemsAdapter;
-
-import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
 public class StarMembershipAdapter extends BaseAdapter {
 
-	private ArrayList<String> benefits;
-	private ArrayList<String> benefitsOfferings;
+	private List<SubscriptionData.SubscriptionBenefits> benefits;
 	private Context context;
 	private static final int TYPE_FOOTER = 2;
 	private static final int TYPE_ITEM = 1;
 	private Callback callback;
 	private LayoutInflater mInflater;
 
-	public StarMembershipAdapter(Context context, ArrayList<String> benefits, ArrayList<String> benefitsOfferings, Callback callback) {
+	public StarMembershipAdapter(Context context, List<SubscriptionData.SubscriptionBenefits> benefits, Callback callback) {
 		this.benefits = benefits;
-		this.benefitsOfferings = benefitsOfferings;
 		this.context = context;
 		this.callback = callback;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -44,37 +40,34 @@ public class StarMembershipAdapter extends BaseAdapter {
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		if (holder instanceof ViewHolder && benefits != null) {
 			final ViewHolder viewHolder = ((ViewHolder)holder);
-			String offerring = benefitsOfferings.get(position);
-			viewHolder.tvOfferingBenefits.setText(benefits.get(position).replace(";;;", "\n"));
-			if(offerring.equalsIgnoreCase(Config.getAutosClientId())){
-				viewHolder.tvOfferingName.setText(context.getString(R.string.rides));
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_autos);
+
+			viewHolder.tvOfferingBenefits.setText(benefits.get(position).getDescription().replaceAll(";;;", "\n"));
+			viewHolder.tvOfferingName.setText(benefits.get(position).getTitle());
+
+			if(benefits.get(position).getProductType() == ProductType.AUTO.getOrdinal()){
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_auto_grey);
 			}
-			else if(offerring.equalsIgnoreCase(Config.getFreshClientId())){
-				viewHolder.tvOfferingName.setText(context.getString(R.string.fresh));
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_fresh);
+			else if(benefits.get(position).getProductType() == ProductType.FRESH.getOrdinal()){
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fresh_grey);
 			}
-			else if(offerring.equalsIgnoreCase(Config.getMealsClientId())){
-				viewHolder.tvOfferingName.setText(context.getString(R.string.meals));
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_meals);
+			else if(benefits.get(position).getProductType() == ProductType.MEALS.getOrdinal()){
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_meals_grey);
 			}
-			else if(offerring.equalsIgnoreCase(Config.getGroceryClientId())){
-				viewHolder.tvOfferingName.setText(context.getString(R.string.grocery));
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_grocery);
+			else if(benefits.get(position).getProductType() == ProductType.GROCERY.getOrdinal()){
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fresh_grey);
 			}
-			else if(offerring.equalsIgnoreCase(Config.getMenusClientId())){
-				viewHolder.tvOfferingName.setText(context.getString(R.string.menus));
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_menus);
+			else if(benefits.get(position).getProductType() == ProductType.MENUS.getOrdinal()){
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_menus_grey);
 			}
 
-			viewHolder.ivSep.setVisibility((position < getCount()-1) ? View.VISIBLE : View.GONE);
+			//viewHolder.ivSep.setVisibility((position < getCount()-1) ? View.VISIBLE : View.GONE);
 
 		}
 	}
 
 	@Override
 	public int getCount() {
-		return benefitsOfferings == null ? 0 : benefitsOfferings.size();
+		return benefits == null ? 0 : benefits.size();
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
-import com.sabkuchfresh.home.FreshActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -138,7 +137,6 @@ public class WalletCore {
 		}
 		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
 		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
-            //TOdo: NudgeClient tracker event here
         }
 	}
 
@@ -587,7 +585,6 @@ public class WalletCore {
 		}
 	}
 
-    //Todo: change logic or ask shankar
 	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas(UserData userData) {
 
 //		for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
@@ -952,6 +949,7 @@ public class WalletCore {
 								try {
 									Intent intent = new Intent(activity, PaymentActivity.class);
 									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+									intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE, callbackPaymentOptionSelector.getAmountToPrefill());
 									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 									activity.startActivity(intent);
 									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -1005,6 +1003,7 @@ public class WalletCore {
 								try {
 									Intent intent = new Intent(activity, PaymentActivity.class);
 									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+									intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE, callbackPaymentOptionSelector.getAmountToPrefill());
 									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
 									activity.startActivity(intent);
 									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -1058,6 +1057,7 @@ public class WalletCore {
 								try {
 									Intent intent = new Intent(activity, PaymentActivity.class);
 									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+									intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE, callbackPaymentOptionSelector.getAmountToPrefill());
 									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.FREECHARGE.getOrdinal());
 									activity.startActivity(intent);
 									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);

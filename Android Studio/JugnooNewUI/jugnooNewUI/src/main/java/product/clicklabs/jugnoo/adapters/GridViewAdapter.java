@@ -92,32 +92,32 @@ public class GridViewAdapter extends BaseAdapter
 
                     holder.linearLayoutGridViewScreen.setVisibility(View.VISIBLE);
                     holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_auto_selector);
-                    holder.imageViewGridScreen.setImageResource(R.drawable.home_switcher_auto);
+                    holder.imageViewGridScreen.setImageResource(R.drawable.ic_auto_grey);
                     holder.textViewGridScreen.setText(R.string.rides);
 
                     if (gridList.get(position).equalsIgnoreCase(Config.getMealsClientId())) {
                         holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_meals_selector);
-                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_meals);
+                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_meals_grey);
                         holder.textViewGridScreen.setText(R.string.meals);
                     }
                     if (gridList.get(position).equalsIgnoreCase(Config.getFreshClientId())) {
                         holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_fresh_selector);
-                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_fresh);
+                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fresh_grey);
                         holder.textViewGridScreen.setText(R.string.fresh);
                     }
                     if (gridList.get(position).equalsIgnoreCase(Config.getGroceryClientId())) {
                         holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_grocery_selector);
-                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_grocery);
+                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fresh_grey);
                         holder.textViewGridScreen.setText(R.string.grocery);
                     }
                     if (gridList.get(position).equalsIgnoreCase(Config.getMenusClientId())) {
                         holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_menus_selector);
-                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_menus);
+                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_menus_grey);
                         holder.textViewGridScreen.setText(R.string.menus);
                     }
                     if (gridList.get(position).equalsIgnoreCase(Config.getPayClientId())) {
                         holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_pay_selector);
-                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_pay);
+                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_pay_grey);
                         holder.textViewGridScreen.setText(R.string.pay);
                     }
 
