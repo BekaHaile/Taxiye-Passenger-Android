@@ -1884,9 +1884,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
         }
         if(promoCoupons != null) {
+            setPromoAmount();
             if(promoCoupons.size() > 0){
                 linearLayoutOffers.setVisibility(View.VISIBLE);
-                setPromoAmount();
             } else {
                 linearLayoutOffers.setVisibility(View.GONE);
             }
@@ -2447,6 +2447,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         cartChangedRefreshCheckout = true;
         updateCartDataView();
         FlurryEventLogger.eventGA(Events.MENUS, Events.CART_ITEM_EDIT, Events.MENU_CART_EDIT);
+        rehitCheckoutApi();
     }
 
     @Override
@@ -2458,7 +2459,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         if(itemTotalQuantity == 0){
             itemsInCart.remove(position);
             checkIfEmpty();
+        }
+        rehitCheckoutApi();
+    }
 
+    private void rehitCheckoutApi(){
+        if(activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getHitCheckoutApi() == 1){
+            getCheckoutDataAPI(selectedSubscription);
         }
     }
 
@@ -2529,7 +2537,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             promoCoupon = noSelectionCoupon;
         }
         if(promoCoupon.getIsValid() == 0){
-            String message = activity.getString(R.string.please_coupon_tnc);
+            String message = activity.getString(R.string.please_check_tnc);
             if(activity.getUserCheckoutResponse() != null
                     && !TextUtils.isEmpty(activity.getUserCheckoutResponse().getInvalidOfferMessage())){
                 message = activity.getUserCheckoutResponse().getInvalidOfferMessage();

@@ -1525,6 +1525,6 @@
     <string name="maven_r">maven_regular</string>
     <string name="view_more">View more</string>
     <string name="view_less">View less</string>
-    <string name="please_coupon_tnc">Please check offer terms</string>
+    <string name="please_check_tnc">Offer conditions not met. Please review detailed Terms and Conditions for more information</string>
 
 </resources>

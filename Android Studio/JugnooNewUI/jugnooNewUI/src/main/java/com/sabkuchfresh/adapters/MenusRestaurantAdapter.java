@@ -134,7 +134,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
             } else {
                 for(Integer restId : searchedRestaurantIds){
-//                    MenusResponse.Vendor vendor = restIdMappedVendors.get(restId);
                     if(restIdMappedVendors.containsKey(restId)){
                         vendorsToShow.add(restIdMappedVendors.get(restId));
                     }
