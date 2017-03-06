@@ -1930,12 +1930,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 						toastMessage = "Unknown response type";
 					}
 				}
-
-				Toast.makeText(
-						this,
-						toastMessage,
-						Toast.LENGTH_LONG)
-						.show();
+				//Toast.makeText(this,toastMessage,Toast.LENGTH_LONG).show();
 			}
 			else{
 				callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -2319,7 +2314,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 //						ActivityCompat.finishAffinity(SplashNewActivity.this);
 //						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					}
-					else if(SplashNewActivity.this.hasWindowFocus() && emailRegister){
+					/*else if(SplashNewActivity.this.hasWindowFocus() && emailRegister){
 						emailRegister = false;
 						sendIntentToRegisterScreen(RegisterationType.EMAIL);
 					}
@@ -2331,7 +2326,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 						sendIntentToRegisterScreen(RegisterationType.GOOGLE);
 					} else if (SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen) {
 						sendIntentToOtpScreen(userVerfied);
-					}
+					}*/
 				}
 			}
 		}, 500);
@@ -2727,12 +2722,23 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	public void apiLoginUsingFbAccountKit(final Activity activity, final String accountCode) {
 		if(MyApplication.getInstance().isOnline()) {
 
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			final ProgressDialog missedCallDialog = DialogPopup.showLoadingDialogNewInstance(SplashNewActivity.this, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
 
 			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
 			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+
+			if(googleRegister){
+				params.put("google_access_token", Data.googleSignInAccount.getIdToken());
+			}
+			if(facebookRegister){
+				params.put("user_fb_id", Data.facebookUserData.fbId);
+				params.put("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+				params.put("fb_access_token", Data.facebookUserData.accessToken);
+				params.put("fb_mail", Data.facebookUserData.userEmail);
+				params.put("username", Data.facebookUserData.userName);
+			}
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
 			params.put("device_name", MyApplication.getInstance().deviceName());
@@ -2794,33 +2800,31 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									DialogPopup.showLoadingDialog(activity, "Loading...");
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									MyApplication.getInstance().getDatabase().insertEmail(emailId);
-									DialogPopup.dismissLoadingDialog();
+									missedCallDialog.dismiss();
 								}
-								DialogPopup.showLoadingDialog(activity, "Loading...");
 							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
-							DialogPopup.dismissLoadingDialog();
+							missedCallDialog.dismiss();
 						} else {
-							DialogPopup.dismissLoadingDialog();
+							missedCallDialog.dismiss();
 						}
 
 					} catch (Exception exception) {
 						exception.printStackTrace();
 						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-						DialogPopup.dismissLoadingDialog();
+						missedCallDialog.dismiss();
 					}
 				}
 
 				@Override
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "change phone number with fb error=" + error.toString());
-					DialogPopup.dismissLoadingDialog();
+					missedCallDialog.dismiss();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
 			});
@@ -2958,6 +2962,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 	public void sendFacebookLoginValues(final Activity activity) {
 		if (MyApplication.getInstance().isOnline()) {
 			resetFlags();
+
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
@@ -3015,8 +3020,9 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								facebookRegister = true;
-								notRegisteredMsg = error;
+								//notRegisteredMsg = error;
 								fbVerifiedNumber = jObj.optString("fb_verified_number");
+								startFbAccountKit();
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
@@ -3032,7 +3038,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
-								sendToOtpScreen = true;
+								//sendToOtpScreen = true;
+								startFbAccountKit();
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
@@ -3130,7 +3137,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 							if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
 								String error = jObj.getString("error");
 								googleRegister = true;
-								notRegisteredMsg = error;
+								//notRegisteredMsg = error;
+								startFbAccountKit();
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
 								String error = jObj.getString("error");
@@ -3148,7 +3156,9 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
-								sendToOtpScreen = true;
+								//sendToOtpScreen = true;
+								googleRegister = true;
+								startFbAccountKit();
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
