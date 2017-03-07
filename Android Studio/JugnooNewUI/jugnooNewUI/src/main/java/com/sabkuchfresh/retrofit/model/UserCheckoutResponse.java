@@ -236,6 +236,9 @@ public class UserCheckoutResponse{
 	}
 
 	public Integer getHitCheckoutApi() {
+		if(hitCheckoutApi == null){
+			hitCheckoutApi = 0;
+		}
 		return hitCheckoutApi;
 	}
 

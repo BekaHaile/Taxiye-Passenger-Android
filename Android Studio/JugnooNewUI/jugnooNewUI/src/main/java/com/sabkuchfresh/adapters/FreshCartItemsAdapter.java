@@ -125,7 +125,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 				e.printStackTrace();
 			}
 			mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
-
+			mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
 			if(position == getCount()-1){
 				mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.transparent));
 			} else {
