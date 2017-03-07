@@ -632,4 +632,5 @@ public interface Constants {
     String KEY_SHARE_IS_ENABLED = "share_is_enabled";
     String KEY_FB_TOKEN = "fb_token";
     String KEY_ACCOUNT_KIT_VERSION = "account_kit_version";
+    String KEY_RIDE_ACCEPTED = "ride_accepted";
 }

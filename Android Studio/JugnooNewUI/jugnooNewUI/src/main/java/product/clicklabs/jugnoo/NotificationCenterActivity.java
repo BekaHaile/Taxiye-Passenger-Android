@@ -10,6 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,8 +29,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -104,7 +106,6 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
 
         getNotificationInboxApi(true);
 
-        FlurryEventLogger.event(this, FlurryEventNames.WHO_VISITED_THE_NOTIFICATION_SCREEN);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -296,6 +297,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
                                 NotificationSettingFragment.class.getName())
                         .addToBackStack(NotificationSettingFragment.class.getName())
                         .commitAllowingStateLoss();
+                GAUtils.event(GACategory.SIDE_MENU, GAAction.INBOX, GAAction.SETTINGS+GAAction.CLICKED);
                 break;
         }
     }

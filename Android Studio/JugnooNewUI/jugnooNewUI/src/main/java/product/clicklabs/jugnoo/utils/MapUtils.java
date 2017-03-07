@@ -289,7 +289,6 @@ public class MapUtils {
 			e.printStackTrace();
 		}
 		if("Unnamed".equalsIgnoreCase(fullAddress.formattedAddress)){
-			FlurryEventLogger.event(FlurryEventNames.GOOGLE_API_GEOCODE_FAILURE);
 		}
 
 		return fullAddress;

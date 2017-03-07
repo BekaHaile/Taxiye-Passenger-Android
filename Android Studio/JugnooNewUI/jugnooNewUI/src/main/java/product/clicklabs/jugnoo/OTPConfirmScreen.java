@@ -22,10 +22,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -50,9 +48,6 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -62,10 +57,11 @@ import product.clicklabs.jugnoo.widgets.PinEntryEditText;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.http.HEAD;
 import retrofit.mime.TypedByteArray;
 
 
-public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, Constants{
+public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 	private final String TAG = "OTP screen";
 
@@ -251,7 +247,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.eventGA(ACQUISITION, TAG, "Back");
 				performBackPressed();
 			}
 		});
@@ -309,10 +304,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 						//verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
 						apiLoginUsingOtp(OTPConfirmScreen.this, otpCode, email);
 					}
-					FlurryEventLogger.event(OTP_VERIFIED_WITH_SMS);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.VERIFY_ME, bundle);
-					FlurryEventLogger.eventGA(ACQUISITION, TAG, "Verify me");
 				} else {
 //					editTextOTP.requestFocus();
 //					editTextOTP.setError("OTP can't be empty");
@@ -413,10 +404,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 										Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
 												.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 										backFromMissedCall = true;
-										FlurryEventLogger.event(GIVE_MISSED_CALL);
-                                        Bundle bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.GIVE_A_MISS_CALL, bundle);
-										FlurryEventLogger.eventGA(ACQUISITION, TAG, "Give a miss call");
 									}
 								},
 								new View.OnClickListener() {
@@ -457,11 +444,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
             @Override
             public void onClick(View v) {
 				editTextOTP.setError(null);
-                FlurryEventLogger.event(CHANGE_PHONE_OTP_NOT_RECEIVED);
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.EDIT_PHONE_NUMBER, bundle);
-
-                FlurryEventLogger.eventGA(ACQUISITION, TAG, "Edit phone number");
 				Intent intent = new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class);
 				intent.putExtra(LINKED_WALLET, linkedWallet);
 				startActivity(intent);
@@ -1463,8 +1445,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 
 
 	public void performBackPressed(){
-        Bundle bundle = new Bundle();
-        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.BACK, bundle);
 		if(llLoginNew.getVisibility() == View.VISIBLE){
 			Animation animation4 = AnimationUtils.loadAnimation(this, R.anim.left_out);
 			animation4.setFillAfter(false);
@@ -1668,13 +1648,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 	}
 
 	private void firebaseEventWalletAtSignup(){
-		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
-			MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.PAYTM, new Bundle());
-		} else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-			MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.MOBIKWIK, new Bundle());
-		} else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
-			MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.FREECHARGE, new Bundle());
-		}
 	}
 
 	/**
@@ -1755,7 +1728,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 								}*/
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL,
 											new LatLng(Data.loginLatitude, Data.loginLongitude));
@@ -1863,7 +1835,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 								showErrorOnMissedCallBack();
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.FACEBOOK,
 											new LatLng(Data.loginLatitude, Data.loginLongitude));
@@ -1974,7 +1945,6 @@ public class OTPConfirmScreen extends BaseActivity implements FlurryEventNames, 
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.GOOGLE,
 											new LatLng(Data.loginLatitude, Data.loginLongitude));
-									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 
 									MyApplication.getInstance().getDatabase().insertEmail(Data.googleSignInAccount.getEmail());

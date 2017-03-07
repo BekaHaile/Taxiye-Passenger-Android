@@ -14,11 +14,7 @@ import okhttp3.Protocol;
 import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.retrofit.model.ChatApiService;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
-import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 
 /**
  * Rest client
@@ -77,21 +73,6 @@ public class RestClient {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setErrorHandler(new ErrorHandler() {
-                        @Override
-                        public Throwable handleError(RetrofitError cause) {
-                            if (cause != null) {
-                                if (cause.getKind() == RetrofitError.Kind.NETWORK) {
-                                    FlurryEventLogger.event(FlurryEventNames.ERROR_CONNECTION_TIMEOUT);
-                                } else if (cause.getKind() == RetrofitError.Kind.HTTP) {
-                                    FlurryEventLogger.event(FlurryEventNames.ERROR_SOCKET_TIMEOUT);
-                                } else if (cause.getKind() == RetrofitError.Kind.UNEXPECTED) {
-                                    FlurryEventLogger.event(FlurryEventNames.ERROR_NO_INTERNET);
-                                }
-                            }
-                            return cause;
-                        }
-                    })
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 

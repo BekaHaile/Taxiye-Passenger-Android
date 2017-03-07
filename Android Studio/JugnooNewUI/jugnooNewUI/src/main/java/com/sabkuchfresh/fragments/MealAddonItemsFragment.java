@@ -15,25 +15,24 @@ import android.widget.TextView;
 import com.sabkuchfresh.adapters.AddOnItemsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
-import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 
 /**
  * Created by shankar on 10/10/16.
  */
-public class MealAddonItemsFragment extends Fragment implements FlurryEventNames, MealAdapter.Callback {
+public class MealAddonItemsFragment extends Fragment implements GAAction, MealAdapter.Callback {
     private final String TAG = "Meals Addon Screen";
 
     private RelativeLayout linearLayoutRoot;
@@ -102,7 +101,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
             @Override
             public void onClick(View v) {
                 activity.getTransactionUtils().openCheckoutMergedFragment(activity, activity.getRelativeLayoutContainer());
-                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.SKIP_BOTTOM);
+                GAUtils.event(activity.getGaCategory(), ADD_ONS, SKIP_AND_PROCEED);
             }
         });
 
@@ -120,7 +119,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         listViewCharges = (NonScrollListView) rootView.findViewById(R.id.listViewCharges);
         listViewCharges.setVisibility(View.GONE);
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, FlurryEventNames.REVIEW_CART, false,
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, "Review Cart", false,
                 new FreshCartItemsAdapter.Callback() {
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {
@@ -128,6 +127,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                         activity.updateCartFromSP();
                         updateCartDataView();
                         updateAddonsListCount();
+                        GAUtils.event(activity.getGaCategory(), ADD_ONS, CART+EXISTING+ITEM+INCREASED);
                     }
 
                     @Override
@@ -140,6 +140,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                         updateCartDataView();
                         updateAddonsListCount();
                         checkIfEmpty();
+                        GAUtils.event(activity.getGaCategory(), ADD_ONS, CART+EXISTING+ITEM+DECREASED);
                     }
 
                     @Override
@@ -186,6 +187,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                     linearLayoutCartExpansion.setVisibility(View.VISIBLE);
                     imageViewDeleteCart.setVisibility(View.VISIBLE);
                     imageViewCartArrow.setRotation(0f);
+                    GAUtils.event(activity.getGaCategory(), ADD_ONS, CART+VIEW_EXPANDED);
                 }
             }
         });
@@ -194,6 +196,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
             @Override
             public void onClick(View v) {
                 activity.deleteCart();
+                GAUtils.event(activity.getGaCategory(), ADD_ONS, CART+EMPTIED);
             }
         });
 
@@ -253,6 +256,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         addOnSelectedCount++;
         updateBottomBar();
         updateCartItemsList();
+        GAUtils.event(activity.getGaCategory(), ADD_ONS, ITEM+ADDED_TO_CART);
     }
 
     @Override
@@ -291,7 +295,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
     private void checkIfEmpty(){
         if(subItemsInCart.size() == 0){
-            activity.performBackPressed();
+            activity.performBackPressed(false);
         }
     }
 

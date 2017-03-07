@@ -26,8 +26,6 @@ import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -143,20 +141,15 @@ public class EmergencyModeEnabledFragment extends Fragment {
 				switch(v.getId()){
 
 					case R.id.imageViewBack:
-						FlurryEventLogger.eventGA(Constants.HELP, "emergency mode screen", "close");
 						performBackPressed();
 						break;
 
 					case R.id.buttonCallPolice:
-						FlurryEventLogger.eventGA(Constants.HELP, "emergency mode screen", "call police");
 						Utils.openCallIntent(activity, "100");
 						break;
 
 					case R.id.buttonCallEmergencyContact:
 						if(activity instanceof EmergencyActivity) {
-                            Bundle bundle = new Bundle();
-                            MyApplication.getInstance().logEvent(Constants.HELP+"_"+ FirebaseEvents.CALL_YOUR_CONTACTS, bundle);
-							FlurryEventLogger.eventGA(Constants.HELP, "emergency mode screen", "cal emergency contact");
 							new FragTransUtils().openEmergencyContactsOperationsFragment(activity,
 									((EmergencyActivity)activity).getContainer(), engagementId,
 									ContactsListAdapter.ListMode.CALL_CONTACTS);
@@ -164,7 +157,6 @@ public class EmergencyModeEnabledFragment extends Fragment {
 						break;
 
 					case R.id.buttonDisableEmergencyMode:
-						FlurryEventLogger.eventGA(Constants.HELP, "emergency mode screen", "disable emergency mode");
 						disableEmergencyMode();
 						break;
 

@@ -64,6 +64,12 @@ public class UserCheckoutResponse{
 	@SerializedName("restaurant_info")
 	@Expose
 	private RestaurantInfo restaurantInfo;
+	@SerializedName("hit_checkout_api")
+	@Expose
+	private Integer hitCheckoutApi;
+	@SerializedName("invalid_offer_message")
+	@Expose
+	private String invalidOfferMessage;
 
 	/**
 	 *
@@ -227,6 +233,25 @@ public class UserCheckoutResponse{
 
 	public void setRestaurantInfo(RestaurantInfo restaurantInfo) {
 		this.restaurantInfo = restaurantInfo;
+	}
+
+	public Integer getHitCheckoutApi() {
+		if(hitCheckoutApi == null){
+			hitCheckoutApi = 0;
+		}
+		return hitCheckoutApi;
+	}
+
+	public void setHitCheckoutApi(Integer hitCheckoutApi) {
+		this.hitCheckoutApi = hitCheckoutApi;
+	}
+
+	public String getInvalidOfferMessage() {
+		return invalidOfferMessage;
+	}
+
+	public void setInvalidOfferMessage(String invalidOfferMessage) {
+		this.invalidOfferMessage = invalidOfferMessage;
 	}
 
 	public class Subscription {

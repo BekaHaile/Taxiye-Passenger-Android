@@ -16,6 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.RestaurantReviewsAdapter;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiRestaurantFetchFeedback;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
@@ -95,7 +98,7 @@ public class RestaurantReviewsListFragment extends Fragment{
 
             @Override
             public void onLike(FetchFeedbackResponse.Review review) {
-
+                GAUtils.event(GACategory.MENUS, GAAction.FEED , GAAction.FEED + GAAction.LIKED);
             }
 
             @Override

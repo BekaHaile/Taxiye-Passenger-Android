@@ -21,6 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -34,8 +38,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -46,7 +48,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class RideCancellationActivity extends BaseActivity implements ActivityCloser, FlurryEventNames {
+public class RideCancellationActivity extends BaseActivity implements ActivityCloser, GAAction, GACategory {
 
 	private final String TAG = RideCancellationActivity.class.getSimpleName();
 	
@@ -478,7 +480,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 											performBackPressed();
 										}
 									});
-									FlurryEventLogger.event(RIDE_CANCELLED_COMPLETE);
+									GAUtils.event(RIDES, WAITING_FOR_DRIVER, RIDE+CANCELLED);
 								} else {
 									DialogPopup.alertPopup(activity, "", serverMessage);
 								}

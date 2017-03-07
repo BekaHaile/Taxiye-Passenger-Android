@@ -22,12 +22,10 @@ import product.clicklabs.jugnoo.promotion.adapters.LeaderboardItemsAdapter;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.Ranklist;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
-public class ReferralLeaderboardFragment extends Fragment implements FlurryEventNames, Constants {
+public class ReferralLeaderboardFragment extends Fragment implements  Constants {
 
 	private LinearLayout linearLayoutRoot;
 
@@ -69,7 +67,6 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 		try {
 			if(linearLayoutRoot != null) {
 				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "Leaderboard");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -100,7 +97,6 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 		textViewDaily.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "LeaderBoard", "Daily");
 				updateList(lbLocationType, LBTimeType.DAILY);
 			}
 		});
@@ -108,7 +104,6 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 		textViewWeekly.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "LeaderBoard", "Weekly");
 				updateList(lbLocationType, LBTimeType.WEEKLY);
 			}
 		});

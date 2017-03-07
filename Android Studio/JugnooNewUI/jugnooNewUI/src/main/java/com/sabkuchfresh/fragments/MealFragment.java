@@ -19,8 +19,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MealAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshSortingDialog;
@@ -43,7 +44,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -66,7 +66,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by gurmail on 15/07/16.
  */
-public class MealFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener, MealAdapter.Callback {
+public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, MealAdapter.Callback, GAAction, GACategory {
     private final String TAG = MealFragment.class.getSimpleName();
 
     private LinearLayout llRoot;
@@ -166,7 +166,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             e.printStackTrace();
         }
 
-        FlurryEventLogger.trackScreenView(Events.MEALS_SCREEN);
+        GAUtils.trackScreenView(MEALS_SCREEN);
 
         return rootView;
     }
@@ -473,7 +473,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         switch (postion) {
             case 0:
                 Collections.sort(mealsData, new SubItemCompareAtoZ());
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.A_Z);
                 mealAdapter = null;
                 mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
                 recyclerViewCategoryItems.setAdapter(mealAdapter);
@@ -486,22 +485,18 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                     }
 
                 });
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
                 mealAdapter = null;
                 mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
                 recyclerViewCategoryItems.setAdapter(mealAdapter);
                 break;
             case 2:
                 Collections.sort(mealsData, new SubItemComparePriceLowToHigh());
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-                //mealAdapter.notifyDataSetChanged();
                 mealAdapter = null;
                 mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
                 recyclerViewCategoryItems.setAdapter(mealAdapter);
                 break;
             case 3:
                 Collections.sort(mealsData, new SubItemComparePriceHighToLow());
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
                 mealAdapter = null;
                 mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
                 recyclerViewCategoryItems.setAdapter(mealAdapter);

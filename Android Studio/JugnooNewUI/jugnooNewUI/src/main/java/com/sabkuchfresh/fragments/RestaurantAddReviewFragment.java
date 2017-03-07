@@ -29,6 +29,9 @@ import com.google.gson.Gson;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.EditReviewImagesAdapter;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
@@ -43,7 +46,6 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -52,7 +54,6 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -600,21 +601,33 @@ public class RestaurantAddReviewFragment extends Fragment  {
 
                                 if(activity.getCurrentReview()==null){
                                     if (!TextUtils.isEmpty(reviewDesc)) {
-                                        FlurryEventLogger.eventGA(Events.MENUS, Events.ADD_TEXT, Events.JUGNOO_ADD_TEXT);
+                                        GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED , GAAction.TEXT + GAAction.ADDED);
+                                    }
+
+                                    if(objectList!=null && objectList.size()>0){
+                                        GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED , GAAction.PHOTO + GAAction.ADDED);
+                                    }
+
+                                    int score = Math.round(customRatingBar.getScore());
+                                    if(score>=1)
+                                    {
+                                        GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED  + GAAction.RATING_ADDED, String.valueOf(score));
 
                                     }
 
-                                    if(objectList!=null && objectList.size()>0)
-                                        FlurryEventLogger.eventGA(Events.MENUS, Events.ADDS_IMAGES, Events.JUGNOO_ADD_IMAGES);
 
+                                        GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED , GAAction.FEED + GAAction.ADDED);
 
-                                    FlurryEventLogger.eventGA(Events.MENUS, Events.SUBMIT_FEED, Events.SUBMITTED);
                                 } else{
-                                    FlurryEventLogger.eventGA(Events.MENUS, Events.EDIT_FEED, Events.FEED_EDITED);
+                                    GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED , GAAction.FEED + GAAction.EDITED);
 
                                 }
 
-                                activity.performBackPressed();
+
+
+
+
+                                activity.performBackPressed(false);
                                 Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
                                 RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
                                 if (frag != null) {

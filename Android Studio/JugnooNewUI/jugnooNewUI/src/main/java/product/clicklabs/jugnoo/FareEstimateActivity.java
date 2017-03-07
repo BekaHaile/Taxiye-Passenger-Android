@@ -26,6 +26,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.List;
 
@@ -39,17 +42,14 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames,
+public class FareEstimateActivity extends BaseFragmentActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        SearchListAdapter.SearchListActionsHandler, Constants {
+        SearchListAdapter.SearchListActionsHandler, Constants, GAAction, GACategory {
 
     private final String TAG = FareEstimateActivity.class.getSimpleName();
 
@@ -196,17 +196,14 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             public void onClick(View v) {
                 try {
 
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
-                            +FirebaseEvents.GET_FARE_ESTIMATE+"_"+FirebaseEvents.GET_RIDE, bundle);
                     Intent intent = new Intent();
                     if (searchResultGlobal != null) {
                         String str = (new Gson()).toJson(searchResultGlobal);
                         intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
                     }
                     setResult(RESULT_OK, intent);
+                    GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET+RIDE+CLICKED);
                     performBackPressed();
-                    FlurryEventLogger.event(FARE_RECEIPT_CHECKED);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -388,10 +385,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
 
     public void performBackPressed() {
-        Bundle bundle = new Bundle();
-        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
-                +FirebaseEvents.GET_FARE_ESTIMATE+"_"+FirebaseEvents.BACK, bundle);
-
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
@@ -452,7 +445,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             Data.autoData.setDropLatLng(searchResult.getLatLng());
             Data.autoData.setDropAddress(searchResult.getAddress());
             getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), searchResult.getLatLng());
-            FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
             searchResultGlobal = searchResult;
         } catch (Exception e) {
             e.printStackTrace();

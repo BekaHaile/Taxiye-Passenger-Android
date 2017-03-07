@@ -19,6 +19,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import org.json.JSONObject;
 
@@ -32,6 +35,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -42,9 +46,6 @@ import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
@@ -55,7 +56,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 @SuppressLint("ValidFragment")
-public class SupportFAQItemFragment extends Fragment implements FlurryEventNames, Constants {
+public class SupportFAQItemFragment extends Fragment implements Constants, GAAction {
 
 	private final String TAG = SupportFAQItemFragment.class.getSimpleName();
 
@@ -176,10 +177,6 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 					} else {
 						textViewRSOtherError.setVisibility(View.GONE);
 						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId(), rideDate, orderId, orderDate);
-                        Bundle bundle = new Bundle();
-                        String str = parentName.replaceAll("\\W", "_");
-						String btnStr = buttonSubmit.getText().toString().replaceAll("\\W", "_");
-                        MyApplication.getInstance().logEvent(ISSUES+"_"+btnStr+"_"+str, bundle);
 					}
 				}
 			}
@@ -190,10 +187,6 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			public void onClick(View v) {
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, phoneNumber);
-					FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_CALL_DRIVER);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(ISSUES+"_"+FirebaseEvents.FORGOT_AN_ITEM+"_"+FirebaseEvents.CALL_DRIVER, bundle);
-					FlurryEventLogger.eventGA(Constants.ISSUES, item.getText(), "Call Driver");
 				}
 			}
 		});
@@ -203,10 +196,6 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			public void onClick(View v) {
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, supportNumber);
-					FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_CALL_JUGNOO);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(ISSUES+"_"+FirebaseEvents.FORGOT_AN_ITEM+"_"+FirebaseEvents.CALL_JUGNOO, bundle);
-					FlurryEventLogger.eventGA(Constants.ISSUES, item.getText(), "Call Jugnoo");
 				}
 			}
 		});
@@ -308,7 +297,15 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				params.put(Constants.KEY_ORDER_ID, ""+orderId);
 				params.put(Constants.KEY_ORDER_DATE, orderDate);
 				params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType));
+				String category = GACategory.FRESH;
+				if(productType == ProductType.MEALS.getOrdinal()) {
+					category = GACategory.MEALS;
+				} else if(productType == ProductType.MENUS.getOrdinal()) {
+					category = GACategory.MENUS;
+				}
+				GAUtils.event(category, SUPPORT, TICKET_RAISED);
 			}
+
 
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().generateSupportTicket(params, new Callback<SettleUserDebt>() {
@@ -338,7 +335,6 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 
 								}
 							});
-							FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_FEEDBACK_SUBMITTED);
 						} else {
 							DialogPopup.alertPopup(activity, "", message);
 						}

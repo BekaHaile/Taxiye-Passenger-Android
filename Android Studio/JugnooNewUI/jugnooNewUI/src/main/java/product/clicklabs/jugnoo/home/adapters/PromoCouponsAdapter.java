@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.home.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +14,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
@@ -116,10 +111,6 @@ public class PromoCouponsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				try {
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
-                            +FirebaseEvents.OFFER_T_N_C, bundle);
-                    FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "t&c");
 					int position = (int) v.getTag();
 					PromoCoupon promoCoupon = offerList.get(position);
 					if (promoCoupon instanceof CouponInfo) {
@@ -145,8 +136,6 @@ public class PromoCouponsAdapter extends BaseAdapter {
 						callback.setSelectedCoupon(position);
 						callback.onCouponSelected();
 					}
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.PROMOTIONS+"_"+FirebaseEvents.COUPON_PROMOTION, bundle);
 					notifyDataSetChanged();
 				} catch (Exception e) {
 					e.printStackTrace();

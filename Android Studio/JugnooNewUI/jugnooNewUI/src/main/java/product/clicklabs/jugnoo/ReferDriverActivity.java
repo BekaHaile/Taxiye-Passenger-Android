@@ -23,9 +23,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
@@ -36,7 +33,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class ReferDriverActivity extends BaseActivity implements FlurryEventNames {
+public class ReferDriverActivity extends BaseActivity  {
 
     RelativeLayout relative;
 
@@ -87,9 +84,6 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
             public void onClick(View v) {
                 if((!editTextName.getText().toString().isEmpty()) && (!editTextPhone.getText().toString().isEmpty())){
                     if((editTextPhone.getText().toString().length() == 10)){
-                        Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.REFER_A_DRIVER+"_"+FirebaseEvents.REFER, bundle);
-                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Refer a driver", "refer");
                         referDriver();
                     }else {
                         editTextPhone.requestFocus();
@@ -142,10 +136,6 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
     public void performBackPressed() {
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
-        Bundle bundle = new Bundle();
-        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.REFER_A_DRIVER+"_"+FirebaseEvents.BACK, bundle);
-
-        FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Refer a driver", "back");
     }
 
     @Override
