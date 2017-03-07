@@ -426,7 +426,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                         editTextUserName.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextEmail.setEnabled(true);
                         editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
-                        editTextPhone.setEnabled(true);
+                        //editTextPhone.setEnabled(true);
+                        editTextPhone.setEnabled(false);
                         linearLayoutPhone.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         //buttonEditProfile.setText(getResources().getString(R.string.save_changes));
                         imageViewEditProfile.setVisibility(View.GONE);

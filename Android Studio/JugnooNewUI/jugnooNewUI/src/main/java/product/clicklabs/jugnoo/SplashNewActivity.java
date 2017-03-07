@@ -60,6 +60,7 @@ import com.facebook.CallbackManager;
 import com.facebook.accountkit.AccessToken;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
+import com.facebook.accountkit.PhoneNumber;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
@@ -731,7 +732,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 			rlMobileNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					startFbAccountKit();
+					startFbAccountKit(null);
 				}
 			});
 
@@ -922,7 +923,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				@Override
 				public void facebookLoginDone(FacebookUserData facebookUserData) {
 					Data.facebookUserData = facebookUserData;
-					if(State.LOGIN == state || State.SIGNUP == state) {
+					if(State.SPLASH_LS_NEW == state || State.LOGIN == state || State.SIGNUP == state) {
 						sendFacebookLoginValues(SplashNewActivity.this);
 						FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
 					}
@@ -1241,11 +1242,11 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 
 	}
 
-	private void startFbAccountKit(){
+	private void startFbAccountKit(PhoneNumber phoneNumber){
 		if (AccountKit.getCurrentAccessToken() != null) {
 			startActivity(new Intent(this, TokenActivity.class));
 		} else{
-			onLogin(LoginType.PHONE);
+			onLogin(LoginType.PHONE, phoneNumber);
 		}
 	}
 
@@ -1253,13 +1254,16 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 		void onComplete();
 	}
 
-	private void onLogin(final LoginType loginType) {
+	private void onLogin(final LoginType loginType, PhoneNumber phoneNumber) {
 		final Intent intent = new Intent(this, AccountKitActivity.class);
 		final AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder
 				= new AccountKitConfiguration.AccountKitConfigurationBuilder(
 				loginType,
 				AccountKitActivity.ResponseType.CODE);
 		configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
+		if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
+			configurationBuilder.setInitialPhoneNumber(phoneNumber);
+		}
 		final AccountKitConfiguration configuration = configurationBuilder.build();
 		intent.putExtra(
 				AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
@@ -3022,7 +3026,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								facebookRegister = true;
 								//notRegisteredMsg = error;
 								fbVerifiedNumber = jObj.optString("fb_verified_number");
-								startFbAccountKit();
+								startFbAccountKit(null);
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
@@ -3030,7 +3034,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								linkedWallet = jObj.optInt("reg_wallet_type");
 								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
 								accessToken = jObj.getString("access_token");
-								SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
+								SplashNewActivity.this.phoneNo = jObj.optString("phone_no", "");
 								SplashNewActivity.this.accessToken = jObj.getString("access_token");
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
@@ -3039,7 +3043,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 								//sendToOtpScreen = true;
-								startFbAccountKit();
+								PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), null);
+								startFbAccountKit(phoneNumber);
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
@@ -3138,7 +3143,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								String error = jObj.getString("error");
 								googleRegister = true;
 								//notRegisteredMsg = error;
-								startFbAccountKit();
+								startFbAccountKit(null);
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
 								String error = jObj.getString("error");
@@ -3146,9 +3151,9 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 							}
 							else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 								linkedWallet = jObj.optInt("reg_wallet_type");
-								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+								phoneNoOfUnverifiedAccount = jObj.optString("phone_no", "");
 								accessToken = jObj.getString("access_token");
-								SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
+								SplashNewActivity.this.phoneNo = jObj.optString("phone_no", "");
 								SplashNewActivity.this.accessToken = jObj.getString("access_token");
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
@@ -3158,7 +3163,8 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
 								//sendToOtpScreen = true;
 								googleRegister = true;
-								startFbAccountKit();
+								PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), null);
+								startFbAccountKit(phoneNumber);
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
