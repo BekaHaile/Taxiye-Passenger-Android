@@ -79,7 +79,7 @@ public interface Events {
     String POPUP_ORDER = "Popup Order";
     String FEEDBACK = "Feedback";
     String COMMENT_ADDED = "Comment Added";
-    java.lang.String RATING = "Rating";
+    String RATING = "Rating";
     String REVIEW = "Review";
     String PLUS_BUTTON = "Plus Button";
     String SUBMITTED = "MenuFeedSubmitted";

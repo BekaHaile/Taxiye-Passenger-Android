@@ -20,8 +20,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
@@ -65,7 +66,7 @@ import retrofit.mime.TypedByteArray;
 
 
 public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener, PushDialog.Callback,
-        SwipeRefreshLayout.OnRefreshListener{
+        SwipeRefreshLayout.OnRefreshListener, GAAction, GACategory{
 
 	private final String TAG = FreshFragment.class.getSimpleName();
 	private LinearLayout llRoot;
@@ -85,7 +86,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     protected Bus mBus;
     PushDialog pushDialog;
 
-	SuperCategoriesData.SuperCategory superCategory;
+	private SuperCategoriesData.SuperCategory superCategory;
 
 	public static FreshFragment newInstance(SuperCategoriesData.SuperCategory superCategory){
 		Gson gson = new Gson();
@@ -191,9 +192,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
             public void onPageSelected(int position) {
                 if(tabClickFlag) {
                     tabClickFlag = false;
-                } else {
-                    FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
                 }
+				GAUtils.event(FRESH, superCategory.getSuperCategoryName(), TABS_SWIPPED);
             }
 
             @Override
@@ -339,7 +339,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     mainLayout.setVisibility(View.GONE);
-									activity.performBackPressed();
+									activity.performBackPressed(false);
 									activity.getFreshHomeFragment().oSnapNotAvailableCase(message);
                                 }
                                 else {
@@ -507,7 +507,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     public void onTabClicked(int position) {
         Log.d(TAG, "onTabClicked = "+activity.getProductsResponse().getCategories().get(position).getCategoryName());
         tabClickFlag = true;
-        FlurryEventLogger.event(FlurryEventNames.FRESH_FRAGMENT, FlurryEventNames.CATEGORY_CHANGE, activity.getProductsResponse().getCategories().get(position).getCategoryName());
     }
 
     @Override

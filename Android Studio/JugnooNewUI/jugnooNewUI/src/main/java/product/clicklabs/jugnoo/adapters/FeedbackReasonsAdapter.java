@@ -115,7 +115,7 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
                     }
                     notifyDataSetChanged();
 
-                    feedbackReasonsListEventHandler.onLastItemSelected(isLastSelected());
+                    feedbackReasonsListEventHandler.onLastItemSelected(isLastSelected(), currentList.get(holder.id).name);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -171,7 +171,7 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
     }
 
     public interface FeedbackReasonsListEventHandler {
-        void onLastItemSelected(boolean selected);
+        void onLastItemSelected(boolean selected, String name);
     }
 
     public void resetData(boolean showPositiveReasons) {

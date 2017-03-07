@@ -31,12 +31,11 @@ import product.clicklabs.jugnoo.t20.models.T20DataType;
 import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 @SuppressLint("ValidFragment")
-public class T20ScheduleFragment extends Fragment implements FlurryEventNames, Constants {
+public class T20ScheduleFragment extends Fragment implements Constants {
 
 	private final String TAG = T20ScheduleFragment.class.getSimpleName();
 

@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
-import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -32,7 +34,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 
 
 @SuppressLint("ValidFragment")
-public class FreshCategoryItemsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class FreshCategoryItemsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GACategory, GAAction {
 
 	private LinearLayout llRoot;
 
@@ -120,11 +122,21 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 							@Override
 							public void onPlusClicked(int position, SubItem subItem) {
 								activity.updateCartValuesGetTotalPrice();
+								if(activity.getFreshFragment() != null) {
+									if (subItem.getSubItemQuantitySelected() == 1) {
+										GAUtils.event(FRESH, activity.getFreshFragment().getSuperCategory().getSuperCategoryName(), ITEM + ADDED);
+									} else {
+										GAUtils.event(FRESH, activity.getFreshFragment().getSuperCategory().getSuperCategoryName(), ITEM + INCREASED);
+									}
+								}
 							}
 
 							@Override
 							public void onMinusClicked(int position, SubItem subItem) {
 								activity.updateCartValuesGetTotalPrice();
+								if(activity.getFreshFragment() != null) {
+									GAUtils.event(FRESH, activity.getFreshFragment().getSuperCategory().getSuperCategoryName(), ITEM + DECREASED);
+								}
 							}
 
 							@Override
@@ -144,7 +156,7 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 							public boolean checkForAdd(int position, SubItem subItem) {
 								return activity.checkForAdd();
 							}
-						} ,AppConstant.ListType.HOME, FlurryEventNames.HOME_SCREEN, 1);
+						} ,AppConstant.ListType.HOME, HOME, 1);
 				recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 			}
 		} catch (Exception e) {

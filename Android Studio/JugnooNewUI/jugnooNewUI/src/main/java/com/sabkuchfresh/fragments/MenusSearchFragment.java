@@ -110,7 +110,7 @@ public class MenusSearchFragment extends Fragment {
 					}
 
 					@Override
-					public void onPlusClicked(int position, Item item) {
+					public void onPlusClicked(int position, Item item, boolean isNewItemAdded) {
 						activity.updateCartValuesGetTotalPrice();
 					}
 

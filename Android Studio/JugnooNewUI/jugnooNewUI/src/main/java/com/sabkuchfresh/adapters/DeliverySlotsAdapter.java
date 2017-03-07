@@ -11,20 +11,14 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Slot;
-import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.Prefs;
 
 
 /**
@@ -91,17 +85,6 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
                         if(slots.get(pos).getIsActiveSlot() == 1) {
                             callback.onSlotSelected(pos, slots.get(pos));
                             notifyDataSetChanged();
-
-                            int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                            if (appType == AppConstant.ApplicationType.MEALS) {
-                                MyApplication.getInstance().logEvent(FirebaseEvents.M_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
-                            } else if (appType == AppConstant.ApplicationType.GROCERY) {
-                                MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
-                            } else if (appType == AppConstant.ApplicationType.MENUS) {
-                                MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
-                            } else {
-                                MyApplication.getInstance().logEvent(FirebaseEvents.F_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
-                            }
                         } else {
                             Utils.showToast(activity, activity.getString(R.string.slot_is_disabled));
                         }

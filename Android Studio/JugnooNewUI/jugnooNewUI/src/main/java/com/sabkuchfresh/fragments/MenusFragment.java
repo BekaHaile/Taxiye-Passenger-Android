@@ -21,8 +21,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -39,7 +40,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -63,7 +63,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener {
+public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction {
     private final String TAG = MenusFragment.class.getSimpleName();
 
     private LinearLayout llRoot;
@@ -139,6 +139,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
+
+
+
                 getVendorMenu(vendor);
                 Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
             }
@@ -217,7 +220,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
-        FlurryEventLogger.trackScreenView(Events.MENUS_SCREEN);
+        GAUtils.trackScreenView(MENUS_SCREEN);
 
         return rootView;
     }
@@ -443,7 +446,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                         activity.clearMenusCart();
                                     }
 
-                                    FlurryEventLogger.eventGA(Events.MENUS, Events.SELECT_RESTAURANT, Events.MENU_SELECT_RESTAURANT);
+//                                    FlurryEventLogger.eventGA(Events.MENUS, Events.SELECT_RESTAURANT, Events.MENU_SELECT_RESTAURANT);
+
+                                    GAUtils.event(GACategory.MENUS, GAAction.HOME + GAAction.RESTAURANT_CLICKED,vendor.getName());
                                     activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
                                     activity.getFabViewTest().hideJeanieHelpInSession();
                                 } else {

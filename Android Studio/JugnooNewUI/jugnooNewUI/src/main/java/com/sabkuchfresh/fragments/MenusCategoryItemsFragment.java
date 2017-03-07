@@ -2,7 +2,6 @@ package com.sabkuchfresh.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Item;
@@ -25,7 +26,6 @@ import com.squareup.otto.Subscribe;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -119,15 +119,25 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                             }
 
                             @Override
-                            public void onPlusClicked(int position, Item item) {
+                            public void onPlusClicked(int position, Item item, boolean isNewItemAdded) {
+                                //This method is only called when item is not customisable
                                 activity.updateCartValuesGetTotalPrice();
-                                if (activity.getAppType() == AppConstant.ApplicationType.MENUS)
-                                   FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_ADD_BUTTON_ITEM, Events.MENU_ADD_ITEM);
+                                if (activity.getAppType() == AppConstant.ApplicationType.MENUS){
+                                    if(isNewItemAdded)
+                                       GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.ADDED);
+                                    else
+                                        GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.INCREASED);
+                                }
+
                             }
 
                             @Override
                             public void onMinusClicked(int position, Item item) {
                                 activity.updateCartValuesGetTotalPrice();
+                                if (activity.getAppType() == AppConstant.ApplicationType.MENUS){
+
+                                    GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.DECREASED);
+                                }
                             }
 
                             @Override

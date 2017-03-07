@@ -33,6 +33,7 @@ import com.clevertap.android.sdk.NotificationInfo;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -54,15 +55,13 @@ import product.clicklabs.jugnoo.home.LocationUpdateService;
 import product.clicklabs.jugnoo.home.SyncIntentService;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 
-public class GCMIntentService extends FirebaseMessagingService implements Constants {
+public class GCMIntentService extends FirebaseMessagingService implements Constants, GAAction {
 
 	private final String TAG = GCMIntentService.class.getSimpleName();
 
@@ -261,19 +260,23 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-			Intent notificationIntent;
+			Intent notificationIntent = new Intent();
 			Log.d("clientID", "clientID = "+clientID);
+			if(Constants.KEY_RIDE_ACCEPTED.equalsIgnoreCase(clientID)){
+				notificationIntent.putExtra(Constants.KEY_EVENT, Constants.KEY_RIDE_ACCEPTED);
+				clientID = "";
+			}
 			if(TextUtils.isEmpty(clientID)) {
 				if (HomeActivity.appInterruptHandler != null) {
-					notificationIntent = new Intent(context, HomeActivity.class);
+					notificationIntent.setClass(context, HomeActivity.class);
 				} else {
-					notificationIntent = new Intent(context, SplashNewActivity.class);
+					notificationIntent.setClass(context, SplashNewActivity.class);
 				}
 			} else {
 //				if(!TextUtils.isEmpty(Data.currentActivity)) {
 //					notificationIntent = new Intent(context, FreshActivity.class);
 //				} else {
-					notificationIntent = new Intent(context, SplashNewActivity.class);
+					notificationIntent.setClass(context, SplashNewActivity.class);
 //				}
 				notificationIntent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientID);
 			}
@@ -485,7 +488,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
-							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, "");
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, Constants.KEY_RIDE_ACCEPTED);
 						} else{
 							notificationManager(this, title, message1, playSound);
 						}
@@ -536,7 +539,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 						notificationManager(this, title, message1, playSound);
 
-						FbEvents.logEvent(this, FlurryEventNames.FB_EVENT_RIDE_STARTED);
+						FbEvents.logEvent(this, FB_EVENT_RIDE_STARTED);
 
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
@@ -641,9 +644,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 
 						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
-							FlurryEventLogger.eventWithSessionOpenAndCloseMap(this, FlurryEventNames.INVITE_PUSH_RECEIVED);
 						}
-						FlurryEventLogger.eventWithSessionOpenAndCloseMap(this, FlurryEventNames.TO_WHOM_A_PUSH_WAS_DELIVERED);
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						double balance = jObj.getDouble("balance");
 						if (HomeActivity.appInterruptHandler != null) {
@@ -848,7 +849,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			if(tryToSave) {
 				int notificationId = jObj.optInt(KEY_NOTIFICATION_ID, flag);
 				if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag && notificationId != flag){
-					FlurryEventLogger.event(this, FlurryEventNames.CAMPAIGN_+notificationId);
 				}
 
 				Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));

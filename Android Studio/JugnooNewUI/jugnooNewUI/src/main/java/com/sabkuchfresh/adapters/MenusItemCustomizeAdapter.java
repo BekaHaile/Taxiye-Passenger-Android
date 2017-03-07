@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItem;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
@@ -36,7 +35,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by Shankar on 7/17/15.
  */
-public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements FlurryEventNames {
+public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     private Context context;
     private Item item;
@@ -196,9 +195,11 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                             itemSelected.setQuantity(itemSelected.getQuantity() + 1);
                             notifyDataSetChanged();
                             callback.updateItemTotalPrice(itemSelected);
+                            callback.onItemPlusClick();
                         } else {
                             Utils.showToast(context, context.getString(R.string.cannot_add_more_than_50));
                         }
+
                     } catch (Exception e){}
                 }
             };
@@ -212,8 +213,9 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                             itemSelected.setQuantity(itemSelected.getQuantity() - 1);
                             notifyDataSetChanged();
                             callback.updateItemTotalPrice(itemSelected);
+                            callback.onItemMinusClick(false);
                         } else {
-                            callback.onItemMinusClick();
+                            callback.onItemMinusClick(true);
                         }
                     } catch (Exception e){}
                 }
@@ -403,7 +405,8 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
     public interface Callback{
         void updateItemTotalPrice(ItemSelected itemSelected);
-        void onItemMinusClick();
+        void onItemMinusClick(boolean allItemsFinished);
+        void onItemPlusClick();
     }
 
 }

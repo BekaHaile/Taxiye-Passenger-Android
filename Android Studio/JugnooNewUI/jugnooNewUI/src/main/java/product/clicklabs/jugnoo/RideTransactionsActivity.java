@@ -12,13 +12,11 @@ import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class RideTransactionsActivity extends BaseFragmentActivity implements FlurryEventNames {
+public class RideTransactionsActivity extends BaseFragmentActivity  {
 
     private final String TAG = RideTransactionsActivity.class.getSimpleName();
 
@@ -59,7 +57,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Fl
 		imageViewBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", "Back");
 				performBackPressed();
 			}
 		});
@@ -93,7 +90,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Fl
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
-			FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Back");
 		} else {
 			super.onBackPressed();
 		}
