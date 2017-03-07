@@ -321,7 +321,7 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textViewRSWhatImprove"
@@ -338,8 +338,8 @@
                     android:id="@+id/gridViewRSFeedbackReasons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginRight="40px"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginRight="30px"
                     android:layout_marginTop="40px"
                     android:divider="@color/transparent"
                     android:dividerHeight="0px"
@@ -354,8 +354,8 @@
                     android:id="@+id/editTextRSFeedback"
                     android:layout_width="match_parent"
                     android:layout_height="200px"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginRight="40px"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginRight="30px"
                     android:layout_marginTop="20px"
                     android:background="@drawable/background_white_rounded_bordered"
                     android:gravity="left"

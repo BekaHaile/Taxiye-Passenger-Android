@@ -133,7 +133,7 @@
 
                 <ImageView
                     android:layout_width="@dimen/px_220"
-                    android:layout_height="2px"
+                    android:layout_height="1dp"
                     android:src="@color/grey_light" />
 
                 <TextView
@@ -146,12 +146,12 @@
                     android:gravity="center"
                     android:tag="mwar"
                     android:textColor="@color/text_color"
-                    android:background="@drawable/circle_white_stroke_grey"
+                    android:background="@drawable/circle_white_stroke_grey_light"
                     android:textSize="@dimen/text_size_28" />
 
                 <ImageView
                     android:layout_width="@dimen/px_220"
-                    android:layout_height="2px"
+                    android:layout_height="1dp"
                     android:src="@color/grey_light" />
 
             </LinearLayout>

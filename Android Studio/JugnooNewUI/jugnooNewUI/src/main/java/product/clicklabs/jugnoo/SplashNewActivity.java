@@ -1261,6 +1261,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 				loginType,
 				AccountKitActivity.ResponseType.CODE);
 		configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
+		configurationBuilder.setTitleType(AccountKitActivity.TitleType.LOGIN);
 		if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
 			configurationBuilder.setInitialPhoneNumber(phoneNumber);
 		}
