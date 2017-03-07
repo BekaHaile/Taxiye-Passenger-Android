@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relativeLayoutSignup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone">
+    android:background="@color/white"
+    android:visibility="visible">
 
     <ImageView
         android:layout_width="match_parent"
@@ -469,10 +471,10 @@
                 android:layout_height="@dimen/splash_button_height"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40px"
-                android:background="@drawable/button_capsule_theme_selector"
+                android:background="@drawable/capsule_login_button_selector"
                 android:text="@string/sign_up"
                 android:textAllCaps="true"
-                android:textColor="@color/text_color_theme_alpha_selector"
+                android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/text_size_34" />
 
             <LinearLayout
@@ -483,7 +485,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="200px"
+                    android:layout_width="@dimen/px_50"
                     android:layout_height="2px"
                     android:layout_marginRight="25px"
                     android:src="@color/grey_light" />
@@ -493,12 +495,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/or"
-                    android:textColor="@color/grey_light"
+                    android:text="@string/or_signup_with"
+                    android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_26" />
 
                 <ImageView
-                    android:layout_width="200px"
+                    android:layout_width="@dimen/px_50"
                     android:layout_height="2px"
                     android:layout_marginLeft="20px"
                     android:src="@color/grey_light" />
@@ -513,15 +515,16 @@
 
                 <RelativeLayout
                     android:id="@+id/buttonFacebookSignup"
-                    android:layout_width="222px"
+                    android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/capsule_white_blue_border_selector">
+                    android:gravity="center_horizontal"
+                    android:background="@drawable/capsule_login_button_selector">
 
                     <Button
-                        android:layout_width="22px"
-                        android:layout_height="42px"
-                        android:layout_centerInParent="true"
+                        android:id="@+id/bFacebook"
+                        android:layout_width="@dimen/px_40"
+                        android:layout_height="@dimen/px_40"
+                        android:layout_centerVertical="true"
                         android:background="@drawable/ic_f"
                         android:clickable="false"
                         android:duplicateParentState="true"
@@ -529,26 +532,49 @@
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/text_size_34" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nl_login_facebook"
+                        android:textColor="#3b5998"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/px_20"
+                        android:textSize="@dimen/text_size_32"
+                        android:layout_toRightOf="@+id/bFacebook"
+                        app:font="maven"/>
+
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/buttonGoogleSignup"
-                    android:layout_width="222px"
+                    android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
-                    android:layout_marginLeft="@dimen/px_40"
-                    android:background="@drawable/capsule_white_red_border_selector">
+                    android:layout_marginLeft="@dimen/px_20"
+                    android:gravity="center_horizontal"
+                    android:background="@drawable/capsule_login_button_selector">
 
                     <Button
+                        android:id="@+id/bGoogle"
                         android:layout_width="42px"
                         android:layout_height="41px"
-                        android:layout_centerInParent="true"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_centerVertical="true"
                         android:background="@drawable/ic_g"
                         android:clickable="false"
                         android:duplicateParentState="true"
                         android:textAllCaps="true"
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/text_size_34" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nl_login_google"
+                        android:textColor="@color/text_color"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/px_20"
+                        android:textSize="@dimen/text_size_32"
+                        android:layout_toRightOf="@+id/bGoogle"
+                        app:font="maven"/>
 
                 </RelativeLayout>
 

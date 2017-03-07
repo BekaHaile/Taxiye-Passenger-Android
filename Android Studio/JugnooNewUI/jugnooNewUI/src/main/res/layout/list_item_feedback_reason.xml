@@ -9,14 +9,14 @@
 
     <TextView
         android:id="@+id/textViewFeedbackReason"
-        android:layout_width="300px"
-        android:layout_height="90px"
+        android:layout_width="@dimen/px_200"
+        android:layout_height="@dimen/px_56"
         android:gravity="center"
-        android:padding="14px"
+        android:padding="5px"
         android:text="Reason"
         android:background="@drawable/capsule_white_stroke"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/text_size_32" />
+        android:textSize="@dimen/text_size_28" />
 
 
 </LinearLayout>

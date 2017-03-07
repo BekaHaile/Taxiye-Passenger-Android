@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:soundEffectsEnabled="false"
     android:splitMotionEvents="false">
 
     <!-- Main View -->
@@ -31,13 +32,14 @@
             <!-- splash buttons -->
             <include layout="@layout/layout_splash_ls" />
 
-
             <!-- login buttons -->
             <include layout="@layout/layout_splash_login" />
 
-
             <!-- Signup layout-->
             <include layout="@layout/layout_splash_signup" />
+
+            <!-- Login And Signup New-->
+            <include layout="@layout/layout_splash_login_signup_new"/>
 
         </LinearLayout>
 

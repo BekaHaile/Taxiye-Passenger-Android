@@ -69,7 +69,7 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.list_item_feedback_reason, null);
 
             holder.textViewFeedbackReason = (TextView) convertView.findViewById(R.id.textViewFeedbackReason);
-            holder.textViewFeedbackReason.setTypeface(Fonts.avenirNext(context));
+            holder.textViewFeedbackReason.setTypeface(Fonts.mavenMedium(context));
 
             holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
 
@@ -92,7 +92,7 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         if (feedbackReason.checked) {
             //holder.relative.setBackgroundColor(Color.WHITE);
             //holder.imageViewFeedbackReasonCheck.setImageResource(R.drawable.check_box_checked);
-            holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_text_color);
+            holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_cart_color);
             holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.white));
         } else {
             //holder.relative.setBackgroundColor(Color.TRANSPARENT);

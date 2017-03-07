@@ -1,9 +1,15 @@
 package product.clicklabs.jugnoo;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
@@ -18,7 +24,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
+import com.facebook.accountkit.AccessToken;
+import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.AccountKitLoginResult;
+import com.facebook.accountkit.ui.AccountKitActivity;
+import com.facebook.accountkit.ui.AccountKitConfiguration;
+import com.facebook.accountkit.ui.LoginType;
 import com.google.gson.Gson;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -26,6 +39,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.config.Config;
@@ -33,6 +47,8 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.fbaccountkit.ErrorActivity;
+import product.clicklabs.jugnoo.fbaccountkit.TokenActivity;
 import product.clicklabs.jugnoo.fragments.AddressBookFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -96,6 +112,10 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
     RelativeLayout relativeLayoutAddNewAddress;
     View viewStarIcon;
     SavedPlacesAdapter savedPlacesAdapter;
+    private static final int FRAMEWORK_REQUEST_CODE = 1;
+
+    private int nextPermissionsRequestCode = 4000;
+    private final Map<Integer, AccountActivity.OnCompleteListener> permissionsListeners = new HashMap<>();
 
     private boolean setJeanieState;
     Bundle bundle = new Bundle();
@@ -345,6 +365,14 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             }
         });
 
+        editTextPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("phone click", "phone click");
+                startFbAccountKit();
+            }
+        });
+
         imageViewEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -398,7 +426,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                         editTextUserName.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextEmail.setEnabled(true);
                         editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
-                        editTextPhone.setEnabled(true);
+                        //editTextPhone.setEnabled(true);
+                        editTextPhone.setEnabled(false);
                         linearLayoutPhone.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         //buttonEditProfile.setText(getResources().getString(R.string.save_changes));
                         imageViewEditProfile.setVisibility(View.GONE);
@@ -438,6 +467,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                 return true;
             }
         });
+
+
 
         imageViewChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1106,6 +1137,38 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             setSavePlaces();
+            if (requestCode == FRAMEWORK_REQUEST_CODE){
+                final String toastMessage;
+                final AccountKitLoginResult loginResult = AccountKit.loginResultWithIntent(data);
+                if (loginResult == null || loginResult.wasCancelled()) {
+                    toastMessage = "Login Cancelled";
+                } else if (loginResult.getError() != null) {
+                    toastMessage = loginResult.getError().getErrorType().getMessage();
+                    final Intent intent = new Intent(this, ErrorActivity.class);
+                    intent.putExtra(ErrorActivity.HELLO_TOKEN_ACTIVITY_ERROR_EXTRA, loginResult.getError());
+
+                    startActivity(intent);
+                } else {
+                    String authorizationCode = loginResult.getAuthorizationCode();
+                    final long tokenRefreshIntervalInSeconds =
+                            loginResult.getTokenRefreshIntervalInSeconds();
+                    if (authorizationCode != null) {
+                        toastMessage = "Success:" + authorizationCode;
+                        //startActivity(new Intent(this, TokenActivity.class));
+
+                        apiChangeContactNumberUsingFB(AccountActivity.this, loginResult.getAuthorizationCode());
+
+                    } else {
+                        toastMessage = "Unknown response type";
+                    }
+                }
+
+                Toast.makeText(
+                        this,
+                        toastMessage,
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
         } else if (resultCode == RESULT_CANCELED) {
             setSavePlaces();
         }
@@ -1206,6 +1269,210 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
     public TextView getTextViewTitle(){
         return textViewTitle;
+    }
+
+    private void startFbAccountKit(){
+        if (AccountKit.getCurrentAccessToken() != null) {
+            startActivity(new Intent(this, TokenActivity.class));
+        } else{
+            onLogin(LoginType.PHONE);
+        }
+    }
+
+    private interface OnCompleteListener {
+        void onComplete();
+    }
+
+    private void onLogin(final LoginType loginType) {
+        final Intent intent = new Intent(this, AccountKitActivity.class);
+        final AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder
+                = new AccountKitConfiguration.AccountKitConfigurationBuilder(
+                loginType,
+                AccountKitActivity.ResponseType.CODE);
+        final AccountKitConfiguration configuration = configurationBuilder.build();
+        intent.putExtra(
+                AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
+                configuration);
+        AccountActivity.OnCompleteListener completeListener = new AccountActivity.OnCompleteListener() {
+            @Override
+            public void onComplete() {
+                startActivityForResult(intent, FRAMEWORK_REQUEST_CODE);
+            }
+        };
+        switch (loginType) {
+            case EMAIL:
+                final AccountActivity.OnCompleteListener getAccountsCompleteListener = completeListener;
+                completeListener = new AccountActivity.OnCompleteListener() {
+                    @Override
+                    public void onComplete() {
+                        requestPermissions(
+                                android.Manifest.permission.GET_ACCOUNTS,
+                                R.string.permissions_get_accounts_title,
+                                R.string.permissions_get_accounts_message,
+                                getAccountsCompleteListener);
+                    }
+                };
+                break;
+            case PHONE:
+                if (configuration.isReceiveSMSEnabled()) {
+                    final AccountActivity.OnCompleteListener receiveSMSCompleteListener = completeListener;
+                    completeListener = new AccountActivity.OnCompleteListener() {
+                        @Override
+                        public void onComplete() {
+                            requestPermissions(
+                                    android.Manifest.permission.RECEIVE_SMS,
+                                    R.string.permissions_receive_sms_title,
+                                    R.string.permissions_receive_sms_message,
+                                    receiveSMSCompleteListener);
+                        }
+                    };
+                }
+                if (configuration.isReadPhoneStateEnabled()) {
+                    final AccountActivity.OnCompleteListener readPhoneStateCompleteListener = completeListener;
+                    completeListener = new AccountActivity.OnCompleteListener() {
+                        @Override
+                        public void onComplete() {
+                            requestPermissions(
+                                    android.Manifest.permission.READ_PHONE_STATE,
+                                    R.string.permissions_read_phone_state_title,
+                                    R.string.permissions_read_phone_state_message,
+                                    readPhoneStateCompleteListener);
+                        }
+                    };
+                }
+                break;
+        }
+        completeListener.onComplete();
+    }
+
+    private void requestPermissions(
+            final String permission,
+            final int rationaleTitleResourceId,
+            final int rationaleMessageResourceId,
+            final AccountActivity.OnCompleteListener listener) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            if (listener != null) {
+                listener.onComplete();
+            }
+            return;
+        }
+
+        checkRequestPermissions(
+                permission,
+                rationaleTitleResourceId,
+                rationaleMessageResourceId,
+                listener);
+    }
+
+    @TargetApi(23)
+    private void checkRequestPermissions(
+            final String permission,
+            final int rationaleTitleResourceId,
+            final int rationaleMessageResourceId,
+            final AccountActivity.OnCompleteListener listener) {
+        if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+            if (listener != null) {
+                listener.onComplete();
+            }
+            return;
+        }
+
+        final int requestCode = nextPermissionsRequestCode++;
+        permissionsListeners.put(requestCode, listener);
+
+        if (shouldShowRequestPermissionRationale(permission)) {
+            new AlertDialog.Builder(this)
+                    .setTitle(rationaleTitleResourceId)
+                    .setMessage(rationaleMessageResourceId)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(final DialogInterface dialog, final int which) {
+                            requestPermissions(new String[] { permission }, requestCode);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(final DialogInterface dialog, final int which) {
+                            // ignore and clean up the listener
+                            permissionsListeners.remove(requestCode);
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        } else {
+            requestPermissions(new String[]{ permission }, requestCode);
+        }
+    }
+
+    @TargetApi(23)
+    @SuppressWarnings("unused")
+    @Override
+    public void onRequestPermissionsResult(final int requestCode,
+                                           final @NonNull String permissions[],
+                                           final @NonNull int[] grantResults) {
+        final AccountActivity.OnCompleteListener permissionsListener = permissionsListeners.remove(requestCode);
+        if (permissionsListener != null
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            permissionsListener.onComplete();
+        }
+    }
+
+    public void apiChangeContactNumberUsingFB(final Activity activity, final String fbAccessToken) {
+        if(MyApplication.getInstance().isOnline()) {
+
+            DialogPopup.showLoadingDialog(activity, "Updating...");
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+            params.put(Constants.KEY_FB_TOKEN, fbAccessToken);
+            params.put(Constants.KEY_ACCOUNT_KIT_VERSION, "4.19.0");
+
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().changeContactNumberUsingFB(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i(TAG, "change phone number with fb response = " + responseStr);
+                    DialogPopup.dismissLoadingDialog();
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            int flag = jObj.getInt("flag");
+                            if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+                                String error = jObj.getString("error");
+                                DialogPopup.alertPopup(activity, "", error);
+                            } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                /*linearLayoutPasswordSave.setVisibility(View.GONE);
+                                imageViewChangePassword.setVisibility(View.VISIBLE);
+                                relativeLayoutChangePassword.performClick();
+                                String message = jObj.getString(Constants.KEY_MESSAGE);
+                                new HomeUtil().logoutFunc(activity, null);*/
+                            } else {
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
+                        }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "change phone number with fb error=" + error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                }
+            });
+        }
+        else {
+            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+        }
+
     }
 
 }
