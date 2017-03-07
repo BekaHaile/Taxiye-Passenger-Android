@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.*;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -53,11 +52,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
-import com.facebook.accountkit.AccessToken;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
@@ -1108,9 +1105,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				@Override
 				public void onClick(View v) {
 					try {
-						FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Terms of use");
-						Bundle bundle = new Bundle();
-						MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+SIGN_UP_PAGE+"_"+TERMS_OF_USE, bundle);
 						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
 						startActivity(browserIntent);
 					} catch (Exception e) {
@@ -2638,9 +2632,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									DialogPopup.showLoadingDialog(activity, "Loading...");
-									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
-//									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-//											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									signUpBy = "email";
 									Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER, jObj.optString("knowlarity_missed_call_number", ""));
 									Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
@@ -2762,7 +2753,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									MyApplication.getInstance().getDatabase().insertEmail(emailId);
@@ -3327,9 +3317,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 			String mPhoneNumber = tMgr.getLine1Number();
 			editTextSPhone.setText(mPhoneNumber);
-			if(!TextUtils.isEmpty(mPhoneNumber)){
-				FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.PHONE_AUTOFILLED);
-			}
 			SplashNewActivity.registerationType = registerationType;
 			if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 				editTextSName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
@@ -3384,8 +3371,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						editTextSEmail.setText(emailNeedRegister);
 					}
 				}
-				TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-				String mPhoneNumber = tMgr.getLine1Number();
 				editTextSPhone.setText(mPhoneNumber);
 				if(!TextUtils.isEmpty(mPhoneNumber)){
 				}

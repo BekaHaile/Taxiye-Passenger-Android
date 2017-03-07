@@ -57,7 +57,6 @@ import product.clicklabs.jugnoo.widgets.PinEntryEditText;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.http.HEAD;
 import retrofit.mime.TypedByteArray;
 
 
@@ -460,10 +459,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				startActivity(new Intent(OTPConfirmScreen.this, ForgotPasswordScreen.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				finish();
-				FlurryEventLogger.event(FORGOT_PASSWORD);
-				Bundle bundle = new Bundle();
-				MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.LOGIN_PAGE+"_"+FirebaseEvents.FORGET_PASSWORD, bundle);
-				FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Forget password");
 			}
 		});
 
@@ -501,9 +496,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 									etPhoneNew.setError("Please enter valid email");
 								}
 							}
-                            Bundle bundle = new Bundle();
-                            MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.LOGIN_PAGE+"_"+FirebaseEvents.LOGIN, bundle);
-							FlurryEventLogger.event(LOGIN_VIA_EMAIL);
 						}
 					}
 			}
