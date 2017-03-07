@@ -198,4 +198,9 @@ public interface GAAction {
 	String COUPONS_USED = "Coupons Used";
 	String REGISTRATION = "Registration";
 	String FB_EVENT_RIDE_STARTED = "Ride started";
+
+	String LOGIN_SIGNUP = "Login/Signup ";
+	String MOBILE = "Mobile ";
+	String FACEBOOK = "Facebook ";
+	String GOOGLE = "Google ";
 }

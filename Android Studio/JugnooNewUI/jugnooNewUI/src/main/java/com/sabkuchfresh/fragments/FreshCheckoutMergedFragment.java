@@ -1373,7 +1373,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());
-                GAUtils.event(activity.getGaCategory(), CHECKOUT+DELIVERY_SLOT+SELECTED, activity.getSlotSelected().getDayName()+" "+activity.getSlotSelected().getTimeSlotDisplay());
+                if(activity.getSlotSelected() != null) {
+                    GAUtils.event(activity.getGaCategory(), CHECKOUT + DELIVERY_SLOT + SELECTED, activity.getSlotSelected().getDayName() + " " + activity.getSlotSelected().getTimeSlotDisplay());
+                }
                 GAUtils.event(activity.getGaCategory(), CHECKOUT+WALLET+SELECTED, String.valueOf(activity.getPaymentOption()));
                 if(!TextUtils.isEmpty(activity.getSpecialInst())){
                     GAUtils.event(activity.getGaCategory(), CHECKOUT, NOTES+ADDED);

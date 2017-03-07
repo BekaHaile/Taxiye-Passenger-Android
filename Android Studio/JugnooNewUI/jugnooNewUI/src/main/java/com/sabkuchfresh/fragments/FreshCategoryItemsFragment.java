@@ -122,7 +122,7 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 							@Override
 							public void onPlusClicked(int position, SubItem subItem) {
 								activity.updateCartValuesGetTotalPrice();
-								if(activity.getFreshFragment() != null) {
+								if(activity.getFreshFragment() != null && activity.getFreshFragment().getSuperCategory() != null) {
 									if (subItem.getSubItemQuantitySelected() == 1) {
 										GAUtils.event(FRESH, activity.getFreshFragment().getSuperCategory().getSuperCategoryName(), ITEM + ADDED);
 									} else {
@@ -134,7 +134,7 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 							@Override
 							public void onMinusClicked(int position, SubItem subItem) {
 								activity.updateCartValuesGetTotalPrice();
-								if(activity.getFreshFragment() != null) {
+								if(activity.getFreshFragment() != null && activity.getFreshFragment().getSuperCategory() != null) {
 									GAUtils.event(FRESH, activity.getFreshFragment().getSuperCategory().getSuperCategoryName(), ITEM + DECREASED);
 								}
 							}

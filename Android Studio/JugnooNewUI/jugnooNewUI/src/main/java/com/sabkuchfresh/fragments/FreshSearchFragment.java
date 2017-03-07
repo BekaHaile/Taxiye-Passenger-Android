@@ -333,7 +333,9 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 		try {
 			if(!searchedOnce){
 				if(activity.getFreshFragment() != null){
-					GAUtils.event(FRESH, activity.getFreshFragment().getSuperCategory().getSuperCategoryName()+" "+SEARCH, DATA + ENTERED);
+					if(activity.getFreshFragment().getSuperCategory() != null) {
+						GAUtils.event(FRESH, activity.getFreshFragment().getSuperCategory().getSuperCategoryName() + " " + SEARCH, DATA + ENTERED);
+					}
 				} else {
 					GAUtils.event(FRESH, HOME + SEARCH, DATA + ENTERED);
 				}

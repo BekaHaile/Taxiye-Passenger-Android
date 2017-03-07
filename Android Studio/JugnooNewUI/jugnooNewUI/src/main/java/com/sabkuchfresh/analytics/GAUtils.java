@@ -14,10 +14,28 @@ import product.clicklabs.jugnoo.MyApplication;
 public class GAUtils {
 
 	public static void event(String category, String action, String label){
+		if(category != null){
+			category = category.trim();
+		}
+		if(action != null){
+			action = action.trim();
+		}
+		if(label != null){
+			label = label.trim();
+		}
 		try{ MyApplication.getInstance().trackEvent(category, action, label);} catch(Exception e){}
 	}
 
 	public static void event(String category, String action, String label, long value){
+		if(category != null){
+			category = category.trim();
+		}
+		if(action != null){
+			action = action.trim();
+		}
+		if(label != null){
+			label = label.trim();
+		}
 		try{ MyApplication.getInstance().trackEvent(category, action, label, value);} catch(Exception e){}
 	}
 

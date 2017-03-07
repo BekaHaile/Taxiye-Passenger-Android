@@ -108,7 +108,11 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
                 activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
                 activity.getFabViewTest().hideJeanieHelpInSession();
-                GAUtils.event(FRESH, HOME+SUPER+CATEGORY+CLICKED, superCategory.getSuperCategoryName());
+                try {
+                    GAUtils.event(FRESH, HOME+SUPER+CATEGORY+CLICKED, superCategory.getSuperCategoryName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 

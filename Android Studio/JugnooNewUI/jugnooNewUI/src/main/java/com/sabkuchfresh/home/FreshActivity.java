@@ -363,7 +363,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         if(getTopFragment()!=null && getTopFragment() instanceof VendorMenuFragment) {
                             GAUtils.event(getGaCategory(), RESTAURANT_HOME, CART+CLICKED);
                         } else if(getTopFragment() instanceof FreshFragment){
-                            GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), CART+CLICKED);
+                            if(getFreshFragment().getSuperCategory() != null) {
+                                GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), CART + CLICKED);
+                            }
                         } else {
                             GAUtils.event(getGaCategory(), HOME, CART+CLICKED);
 
@@ -394,7 +396,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         if(getAppType()== AppConstant.ApplicationType.MENUS && getTopFragment() instanceof VendorMenuFragment) {
                             GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME, GAAction.SORT_BUTTON + GAAction.CLICKED);
                         } else if(getAppType() == AppConstant.ApplicationType.FRESH && getFreshFragment() != null){
-                            GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), SORT_BUTTON+CLICKED);
+                            if(getFreshFragment().getSuperCategory() != null)
+                                GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), SORT_BUTTON+CLICKED);
                         }
 
                         viewSortFake.setVisibility(View.VISIBLE);
@@ -1357,7 +1360,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 if (getFreshFragment() != null) {
                     getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer, getFreshFragment().getSuperCategory().getSuperCategoryId(),
                             getSuperCategoriesData().getDeliveryInfo().getCityId());
-                    GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), SEARCH_BUTTON+CLICKED);
+                    if(getFreshFragment().getSuperCategory() != null) {
+                        GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), SEARCH_BUTTON + CLICKED);
+                    }
                 } else {
                     getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer, -1, getSuperCategoriesData().getDeliveryInfo().getCityId());
                     GAUtils.event(FRESH, HOME, SEARCH_BUTTON+CLICKED);
@@ -1565,7 +1570,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 GAUtils.event(getGaCategory(), GAAction.FILTERS + GAAction.MINIMIZE, "");
             } else if (getTopFragment() instanceof FreshSearchFragment) {
                 if (getFreshFragment() != null) {
-                    GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName() + " " + SEARCH, BACK + BUTTON + CLICKED);
+                    if(getFreshFragment().getSuperCategory() != null)
+                        GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName() + " " + SEARCH, BACK + BUTTON + CLICKED);
                 } else {
                     GAUtils.event(FRESH, HOME + SEARCH, BACK + BUTTON + CLICKED);
                 }

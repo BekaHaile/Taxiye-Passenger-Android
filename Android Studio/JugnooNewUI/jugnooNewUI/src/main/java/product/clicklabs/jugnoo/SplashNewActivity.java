@@ -721,6 +721,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				@Override
 				public void onClick(View v) {
 					startFbAccountKit(null);
+					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});
 
@@ -728,6 +729,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				@Override
 				public void onClick(View v) {
 					buttonFacebookLogin.performClick();
+					GAUtils.event(JUGNOO, LOGIN_SIGNUP, FACEBOOK+CLICKED);
 				}
 			});
 
@@ -735,6 +737,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				@Override
 				public void onClick(View v) {
 					buttonGoogleLogin.performClick();
+					GAUtils.event(JUGNOO, LOGIN_SIGNUP, GOOGLE+CLICKED);
 				}
 			});
 

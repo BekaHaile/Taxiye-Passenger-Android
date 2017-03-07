@@ -193,8 +193,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 if(tabClickFlag) {
                     tabClickFlag = false;
                 }
-				GAUtils.event(FRESH, superCategory.getSuperCategoryName(), TABS_SWIPPED);
-            }
+				try {
+					GAUtils.event(FRESH, superCategory.getSuperCategoryName(), TABS_SWIPPED);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
             @Override
             public void onPageScrollStateChanged(int state) {
