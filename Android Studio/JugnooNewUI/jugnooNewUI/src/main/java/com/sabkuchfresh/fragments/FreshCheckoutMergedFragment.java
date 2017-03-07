@@ -763,10 +763,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         chargesList.clear();
         chargesList.add(taxSubTotal);
 
-        if (getTotalPromoAmount() > 0) {
-            chargesList.add(new Tax(activity.getString(R.string.discount), getTotalPromoAmount()));
-        }
-
         if(isMenusOpen()){
             totalTaxAmount = 0d;
             for(Charges charges1 : activity.getMenuProductsResponse().getCharges()){
@@ -782,6 +778,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         if (totalAmount() > 0 && jcUsed() > 0) {
             chargesList.add(new Tax(activity.getString(R.string.jugnoo_cash), jcUsed()));
+        }
+
+        if (getTotalPromoAmount() > 0) {
+            chargesList.add(new Tax(activity.getString(R.string.discount), getTotalPromoAmount()));
         }
 
         taxTotal.setValue((double)Math.round(payableAmount()));

@@ -597,7 +597,7 @@ public class Utils {
 	private static DecimalFormat decimalFormat2Decimal;
 	public static DecimalFormat getDecimalFormat2Decimal(){
 		if(decimalFormat2Decimal == null){
-			decimalFormat2Decimal = new DecimalFormat("#.00");
+			decimalFormat2Decimal = new DecimalFormat("0.00");
 		}
 		return decimalFormat2Decimal;
 	}
