@@ -1850,20 +1850,19 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             e.printStackTrace();
         }
         if(promoCoupons != null) {
-            setPromoAmount();
             if(promoCoupons.size() > 0){
                 linearLayoutOffers.setVisibility(View.VISIBLE);
             } else {
                 linearLayoutOffers.setVisibility(View.GONE);
             }
+            activity.setSelectedPromoCoupon(noSelectionCoupon);
             for(PromoCoupon promoCoupon : promoCoupons){
                 if(promoCoupon.getIsSelected() == 1){
                     activity.setSelectedPromoCoupon(promoCoupon);
-                    setPromoAmount();
-                    updateCartUI();
                     break;
                 }
             }
+            setPromoAmount();
             promoCouponsAdapter.setList(promoCoupons);
         }
     }
@@ -2014,7 +2013,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
 
                                         setActivityLastAddressFromResponse(userCheckoutResponse);
-                                        updateCartDataView();
                                         updateDeliverySlot(userCheckoutResponse.getDeliveryInfo());
                                         setDeliverySlotsDataUI();
 
@@ -2073,6 +2071,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             }
                                         }
                                         updateCouponsDataView();
+                                        updateCartDataView();
 
                                         try {
                                             if (cartChangedRefreshCheckout) {
