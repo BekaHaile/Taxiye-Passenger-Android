@@ -387,6 +387,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     public void onPlaceSearchPre() {
                         //progressBarSearch.setVisibility(View.VISIBLE);
 //                        searchListActionsHandler.onPlaceSearchPre();
+                        DialogPopup.showLoadingDialog(activity, "");
                     }
 
                     @Override
@@ -399,6 +400,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        DialogPopup.dismissLoadingDialog();
                     }
 
                     @Override
@@ -406,6 +408,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         //progressBarSearch.setVisibility(View.GONE);
 //                        searchListActionsHandler.onPlaceSearchError();
                         Utils.showToast(activity, getString(R.string.could_not_find_address));
+                        DialogPopup.dismissLoadingDialog();
                     }
 
                     @Override

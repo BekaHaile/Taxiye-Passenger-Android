@@ -850,6 +850,16 @@ public class Utils {
 		return shader;
 	}
 
+	public static String getDoubleTwoDigits(Double amount){
+		String finalVal;
+		if(amount % 1 == 0)
+			finalVal = String.valueOf(amount.intValue());
+		else
+			finalVal = Utils.getDecimalFormat2Decimal().format(amount);
+
+		return finalVal;
+	}
+
 }
 
 

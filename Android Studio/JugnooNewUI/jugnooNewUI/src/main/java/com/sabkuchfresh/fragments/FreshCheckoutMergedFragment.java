@@ -2433,7 +2433,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             itemsInCart.remove(position);
             checkIfEmpty();
         }
-        rehitCheckoutApi();
+        if(itemsInCart.size() > 0) {
+            rehitCheckoutApi();
+        }
     }
 
     private void rehitCheckoutApi(){
