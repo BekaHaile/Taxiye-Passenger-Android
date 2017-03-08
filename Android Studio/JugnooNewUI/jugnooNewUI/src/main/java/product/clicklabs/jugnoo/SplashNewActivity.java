@@ -282,6 +282,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						if ("".equalsIgnoreCase(pair.first)
 								&& !"".equalsIgnoreCase(MyApplication.getInstance().getDeviceToken())) {
 							sendToRegisterThroughSms(true);
+						} else{
+							Log.e("token no empty", "token not empty");
 						}
 
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
@@ -1398,6 +1400,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		llContainer.setVisibility(View.GONE);
 		rlSplashLogo.setVisibility(View.GONE);
 		rlLoginSignupNew.setVisibility(View.GONE);
+		rlLoginSignupNew.setVisibility(View.GONE);
 		int duration = 500;
 		switch (state) {
 			case SPLASH_INIT:
@@ -1418,6 +1421,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 			case CLAIM_GIFT:
 				// claim gift api call
+				Log.e("enter in claim gift", "enter in claim gift");
 				if(!TextUtils.isEmpty(refreeUserId)) {
 					apiClaimGift();
 				}
@@ -1425,7 +1429,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				relativeLayoutJugnooLogo.setVisibility(View.GONE);
 				linearLayoutLogin.setVisibility(View.GONE);
 
-				//if(this.state == State.SPLASH_LS) {
+				//if(this.state == State.SPLASH_INIT) {
 					Animation claimAnimation = AnimationUtils.loadAnimation(this, R.anim.right_in);
 				claimAnimation.setFillAfter(true);
 				claimAnimation.setDuration(duration);
@@ -1484,6 +1488,19 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					animation9.setDuration(duration);
 					rlSplashLogo.startAnimation(animation9);
 					rlSplashLogo.setVisibility(View.GONE);
+				}
+
+				if(this.state == State.CLAIM_GIFT) {
+					Animation animation8 = AnimationUtils.loadAnimation(this, R.anim.right_in);
+					animation8.setFillAfter(true);
+					animation8.setDuration(duration);
+					rlLoginSignupNew.startAnimation(animation8);
+
+					Animation animation9 = AnimationUtils.loadAnimation(this, R.anim.right_out);
+					animation9.setFillAfter(false);
+					animation9.setDuration(duration);
+					rlClaimGift.startAnimation(animation9);
+					rlClaimGift.setVisibility(View.GONE);
 				}
 
 				break;
@@ -1699,21 +1716,28 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 
 	private void sendToRegisterThroughSms(boolean openLS) {
-		if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
-			Data.deepLinkIndex = -1;
-			SplashNewActivity.registerationType = RegisterationType.EMAIL;
-			setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, referralCode));
-			//if(!TextUtils.isEmpty(refreeUserId)) {
-				if (rlClaimGift.getVisibility() != View.VISIBLE) {
-					rlPromo.setVisibility(View.GONE);
-					changeUIState(State.CLAIM_GIFT);
-				}
-//			} else{
-//				rlPromo.setVisibility(View.VISIBLE);
-//				changeUIState(State.SIGNUP);
-//			}
-		} else if(openLS){
-			changeUIState(State.SPLASH_LS_NEW);
+		try {
+			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+				Log.e("Data.deepLinkReferralCode value in sendToRegisterThroughSms", "--->"+Data.deepLinkReferralCode);
+                Data.deepLinkIndex = -1;
+                SplashNewActivity.registerationType = RegisterationType.EMAIL;
+                setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, referralCode));
+                //if(!TextUtils.isEmpty(refreeUserId)) {
+				Log.v("rlClaimGift.getVisibility()", "-->"+rlClaimGift.getVisibility());
+                    if (rlClaimGift.getVisibility() != View.VISIBLE) {
+                        Log.v("In sendToRegisterThroughSms", "start");
+                        rlPromo.setVisibility(View.GONE);
+                        changeUIState(State.CLAIM_GIFT);
+                    }
+    //			} else{
+    //				rlPromo.setVisibility(View.VISIBLE);
+    //				changeUIState(State.SIGNUP);
+    //			}
+            } else if(openLS){
+                changeUIState(State.SPLASH_LS_NEW);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -2706,6 +2730,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 			params.put("fb_account_code", accountCode);
 			params.put(Constants.KEY_ACCOUNT_KIT_VERSION, "4.19.0");
+			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");

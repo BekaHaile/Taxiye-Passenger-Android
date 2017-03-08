@@ -258,7 +258,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     holder.tvJugnooStar.setVisibility(View.GONE);
                     holder.viewStarIcon.setVisibility(View.GONE);
                 }
-                holder.textViewUserName.setText(Data.userData.userName);
+                if(Data.userData.userName != null && !Data.userData.userName.equalsIgnoreCase("")) {
+                    holder.textViewUserName.setVisibility(View.VISIBLE);
+                    holder.textViewUserName.setText(Data.userData.userName);
+                } else{
+                    holder.textViewUserName.setVisibility(View.GONE);
+                }
                 holder.textViewViewPhone.setText(Data.userData.phoneNo);
                 float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                 if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
