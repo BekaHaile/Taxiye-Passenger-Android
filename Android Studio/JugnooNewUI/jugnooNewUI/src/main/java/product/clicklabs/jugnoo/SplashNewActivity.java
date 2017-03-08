@@ -1203,11 +1203,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	}
 
 	private void startFbAccountKit(PhoneNumber phoneNumber){
-		if (AccountKit.getCurrentAccessToken() != null) {
-			startActivity(new Intent(this, TokenActivity.class));
-		} else{
+//		if (AccountKit.getCurrentAccessToken() != null) {
+//			startActivity(new Intent(this, TokenActivity.class));
+//		} else{
 			onLogin(LoginType.PHONE, phoneNumber);
-		}
+		//}
 	}
 
 	private interface OnCompleteListener {
@@ -1879,50 +1879,62 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		try {
-			super.onActivityResult(requestCode, resultCode, data);
-			if (LocationInit.LOCATION_REQUEST_CODE == requestCode) {
-				if (0 == resultCode) {
-					Data.locationSettingsNoPressed = true;
-					Data.locationAddressSettingsNoPressed = true;
-				}
-			} else if (requestCode == GOOGLE_SIGNIN_REQ_CODE_LOGIN) {
-				if (RESULT_OK == resultCode) {
-					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
-					sendGoogleLoginValues(this);
-				}
-			} else if (requestCode == FRAMEWORK_REQUEST_CODE){
-				final String toastMessage;
-				final AccountKitLoginResult loginResult = AccountKit.loginResultWithIntent(data);
-				if (loginResult == null || loginResult.wasCancelled()) {
-					toastMessage = "Login Cancelled";
-				} else if (loginResult.getError() != null) {
-					toastMessage = loginResult.getError().getErrorType().getMessage();
-					final Intent intent = new Intent(this, ErrorActivity.class);
-					intent.putExtra(ErrorActivity.HELLO_TOKEN_ACTIVITY_ERROR_EXTRA, loginResult.getError());
 
-					startActivity(intent);
-				} else {
-					String authorizationCode = loginResult.getAuthorizationCode();
-					final long tokenRefreshIntervalInSeconds =
-							loginResult.getTokenRefreshIntervalInSeconds();
-					if (authorizationCode != null) {
-						toastMessage = "Success:" + authorizationCode;
-						apiLoginUsingFbAccountKit(SplashNewActivity.this, loginResult.getAuthorizationCode());
-
-					} else {
-						toastMessage = "Unknown response type";
-					}
+			Utils.hideKeyboard(SplashNewActivity.this);
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					afterDataReceived(requestCode, resultCode, data);
 				}
-				//Toast.makeText(this,toastMessage,Toast.LENGTH_LONG).show();
-			}
-			else{
-				callbackManager.onActivityResult(requestCode, resultCode, data);
-			}
+			},300);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void afterDataReceived(int requestCode, int resultCode, Intent data) {
+		if (LocationInit.LOCATION_REQUEST_CODE == requestCode) {
+            if (0 == resultCode) {
+                Data.locationSettingsNoPressed = true;
+                Data.locationAddressSettingsNoPressed = true;
+            }
+        } else if (requestCode == GOOGLE_SIGNIN_REQ_CODE_LOGIN) {
+            if (RESULT_OK == resultCode) {
+                Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
+                sendGoogleLoginValues(this);
+            }
+        } else if (requestCode == FRAMEWORK_REQUEST_CODE){
+            final String toastMessage;
+            final AccountKitLoginResult loginResult = AccountKit.loginResultWithIntent(data);
+            if (loginResult == null || loginResult.wasCancelled()) {
+                toastMessage = "Login Cancelled";
+            } else if (loginResult.getError() != null) {
+                toastMessage = loginResult.getError().getErrorType().getMessage();
+                final Intent intent = new Intent(this, ErrorActivity.class);
+                intent.putExtra(ErrorActivity.HELLO_TOKEN_ACTIVITY_ERROR_EXTRA, loginResult.getError());
+
+                startActivity(intent);
+            } else {
+                String authorizationCode = loginResult.getAuthorizationCode();
+                final long tokenRefreshIntervalInSeconds =
+                        loginResult.getTokenRefreshIntervalInSeconds();
+                if (authorizationCode != null) {
+                    toastMessage = "Success:" + authorizationCode;
+                    apiLoginUsingFbAccountKit(SplashNewActivity.this, loginResult.getAuthorizationCode());
+
+                } else {
+                    toastMessage = "Unknown response type";
+                }
+            }
+            //Toast.makeText(this,toastMessage,Toast.LENGTH_LONG).show();
+        }
+        else{
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
 	}
 
 
@@ -2701,7 +2713,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 	public void apiLoginUsingFbAccountKit(final Activity activity, final String accountCode) {
 		if(MyApplication.getInstance().isOnline()) {
-
 			final ProgressDialog missedCallDialog = DialogPopup.showLoadingDialogNewInstance(SplashNewActivity.this, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
