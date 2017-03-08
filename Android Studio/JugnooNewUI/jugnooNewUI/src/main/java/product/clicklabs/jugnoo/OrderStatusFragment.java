@@ -609,18 +609,18 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
             tvDelCharges.setText(fieldText);
             if(showNegative) {
-                tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
                 tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
             } else {
                 if(fieldTextVal != null && fieldTextVal > 0){
-                    tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                    tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
                     tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 } else {
                     if (showFree) {
                         tvDelChargesVal.setText(activity.getResources().getString(R.string.free));
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
                     } else {
-                        tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                        tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                     }
                 }

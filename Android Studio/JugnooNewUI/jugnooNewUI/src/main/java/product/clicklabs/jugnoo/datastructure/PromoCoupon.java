@@ -16,6 +16,7 @@ public abstract class PromoCoupon {
 	public abstract Integer getGrocery();
 	public abstract Integer getMenus();
 	public abstract Integer getPay();
+	public abstract String getInvalidMessage();
 
 	public boolean matchPromoCoupon(PromoCoupon c2) {
 		try {
