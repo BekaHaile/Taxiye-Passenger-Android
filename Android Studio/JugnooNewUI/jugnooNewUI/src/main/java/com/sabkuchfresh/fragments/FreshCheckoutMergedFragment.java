@@ -2511,9 +2511,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
         if(promoCoupon.getIsValid() == 0){
             String message = activity.getString(R.string.please_check_tnc);
-            if(activity.getUserCheckoutResponse() != null
-                    && !TextUtils.isEmpty(activity.getUserCheckoutResponse().getInvalidOfferMessage())){
-                message = activity.getUserCheckoutResponse().getInvalidOfferMessage();
+            if(!TextUtils.isEmpty(promoCoupon.getInvalidMessage())){
+                message = promoCoupon.getInvalidMessage();
             }
             DialogPopup.alertPopupWithListener(activity, "", message,
                     new View.OnClickListener() {

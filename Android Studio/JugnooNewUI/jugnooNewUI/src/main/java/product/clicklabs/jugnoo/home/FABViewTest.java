@@ -42,7 +42,6 @@ public class FABViewTest implements GACategory, GAAction {
     public FloatingActionButton fabMealsTest;
     public FloatingActionButton fabFreshTest;
     public FloatingActionButton fabAutosTest;
-    public FloatingActionButton fabGroceryTest;
     public FloatingActionButton fabMenusTest;
     public FloatingActionButton fabPayTest;
     public View view;
@@ -70,18 +69,15 @@ public class FABViewTest implements GACategory, GAAction {
             fabMealsTest = (FloatingActionButton) view.findViewById(R.id.fabMealsTest);
             fabFreshTest = (FloatingActionButton) view.findViewById(R.id.fabFreshTest);
             fabAutosTest = (FloatingActionButton) view.findViewById(R.id.fabAutosTest);
-            fabGroceryTest = (FloatingActionButton) view.findViewById(R.id.fabGroceryTest);
             fabMenusTest = (FloatingActionButton) view.findViewById(R.id.fabMenusTest);
             fabPayTest = (FloatingActionButton) view.findViewById(R.id.fabPayTest);
             menuLabelsRightTest.setIconAnimated(true);
             menuLabelsRightTest.setClosedOnTouchOutside(true);
             fabMealsTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabFreshTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
-            fabGroceryTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabMenusTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabAutosTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabPayTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
-            fabGroceryTest.setOnClickListener(clickListener);
             fabMenusTest.setOnClickListener(clickListener);
             fabPayTest.setOnClickListener(clickListener);
             fabMealsTest.setOnClickListener(clickListener);
@@ -209,14 +205,6 @@ public class FABViewTest implements GACategory, GAAction {
                     }
                 }
 
-                if(Data.userData.getGroceryEnabled() != 1){
-                    fabGroceryTest.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabGroceryTest.setVisibility(View.VISIBLE);
-                    }
-                }
-
                 if(Data.userData.getMenusEnabled() != 1){
                     fabMenusTest.setVisibility(View.GONE);
                 } else {
@@ -233,19 +221,6 @@ public class FABViewTest implements GACategory, GAAction {
                     }
                 }
 
-                /*if(activity instanceof HomeActivity) {
-                    if (Prefs.with(activity).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
-                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.VISIBLE);
-                    } else {
-                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.GONE);
-                    }
-                } else if(activity instanceof HomeActivity){
-                    if (Prefs.with(activity).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
-                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.VISIBLE);
-                    } else {
-                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.GONE);
-                    }
-                }*/
 
                 setRlGenieHelpVisibility();
             }
@@ -264,10 +239,6 @@ public class FABViewTest implements GACategory, GAAction {
 
             if (Data.userData.getMealsEnabled() == 1) {
                 fabMealsTest.setVisibility(View.VISIBLE);
-            }
-
-            if (Data.userData.getGroceryEnabled() == 1) {
-                fabGroceryTest.setVisibility(View.VISIBLE);
             }
 
             if (Data.userData.getMenusEnabled() == 1) {
@@ -334,15 +305,6 @@ public class FABViewTest implements GACategory, GAAction {
                         }
                     }, 300);
                     selectedOffering = RIDES;
-                    break;
-                case R.id.fabGroceryTest:
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getGroceryClientId(), finalLatLng, false);
-                        }
-                    }, 300);
-                    selectedOffering = FRESH;
                     break;
                 case R.id.fabMenusTest:
                     new Handler().postDelayed(new Runnable() {
