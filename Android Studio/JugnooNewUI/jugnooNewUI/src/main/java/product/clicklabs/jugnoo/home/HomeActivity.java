@@ -26,6 +26,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -92,6 +93,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
+import com.sabkuchfresh.home.TransactionUtils;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
@@ -191,6 +193,7 @@ import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
+import product.clicklabs.jugnoo.tutorials.SignUpTutorial;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -482,6 +485,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private boolean setPickupAddressZoomedOnce = false;
     private GoogleApiClient mGoogleApiClient;
     private float previousZoomLevel = -1.0f;
+    private TransactionUtils transactionUtils;
+    private RelativeLayout relativeLayoutContainer;
+    private FrameLayout coordinatorLayout;
 
 
     @SuppressLint("NewApi")
@@ -563,12 +569,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         rideNowClicked = false;
 
 
-
+        coordinatorLayout = (FrameLayout) findViewById(R.id.coordinatorLayout);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 
-        assl = new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
+        assl = new ASSL(HomeActivity.this, coordinatorLayout, 1134, 720, false);
 
 
         //Swipe menu
@@ -753,6 +759,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonCallDriver.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
+        relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
 
 		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenMedium(this));
@@ -1633,6 +1640,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //        if(Data.userData.getShowHomeScreen() == 1){
 //            fabViewTest.getMenuLabelsRightTest().performClick();
 //        }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getTransactionUtils().openSignUpTutorialFragment(HomeActivity.this, relativeLayoutContainer, 2);
+            }
+        }, 2000);
+    }
+
+    public TransactionUtils getTransactionUtils() {
+        if (transactionUtils == null) {
+            transactionUtils = new TransactionUtils();
+        }
+        return transactionUtils;
     }
 
     @Override

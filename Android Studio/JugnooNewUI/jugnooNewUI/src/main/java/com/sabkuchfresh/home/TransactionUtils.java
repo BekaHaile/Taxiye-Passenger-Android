@@ -26,6 +26,7 @@ import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.tutorials.SignUpTutorial;
 
 /**
  * Created by shankar on 1/27/16.
@@ -315,6 +316,17 @@ public class TransactionUtils {
                     .addToBackStack(RestaurantAddReviewFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openSignUpTutorialFragment(FragmentActivity activity, View container, int numOfPages) {
+        if (!checkIfFragmentAdded(activity, SignUpTutorial.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, 0)
+                    .add(container.getId(), SignUpTutorial.newInstance(numOfPages),
+                            SignUpTutorial.class.getName())
+                    .addToBackStack(SignUpTutorial.class.getName())
                     .commitAllowingStateLoss();
         }
     }

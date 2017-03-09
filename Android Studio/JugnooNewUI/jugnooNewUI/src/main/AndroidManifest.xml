@@ -493,9 +493,13 @@
             android:name="com.jugnoo.pay.activities.PayTutorial"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".tutorials.SignUpTutorial"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogFragmentTrans"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
 
-        </activity>
 
         <activity android:name="com.picker.image.ui.PickerActivity"  android:theme="@style/AppThemePicker.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize"
