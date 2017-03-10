@@ -70,6 +70,7 @@ import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
+import com.sabkuchfresh.fragments.FeedHomeFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
@@ -429,6 +430,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             try {
                 float marginBottom = 60f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+                lastClientId=Config.getFeedClientId();
+
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                     addMealFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
@@ -445,12 +448,19 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
                     lastClientId = Config.getMenusClientId();
 
+                } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
+                    addFeedFragment();
+//                   Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
+//                    lastClientId = Config.getMenusClientId();
+
                 } else {
                     openCart();
                     addFreshHomeFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
                     lastClientId = Config.getFreshClientId();
                 }
+
+
                 int dpAsPixels = (int) (marginBottom * scale + 0.5f);
                 fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
                 fabViewTest.setRlGenieHelpBottomMargin(200f);
@@ -1531,6 +1541,14 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 .add(relativeLayoutContainer.getId(), new MenusFragment(),
                         MenusFragment.class.getName())
                 .addToBackStack(MenusFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
+    private void addFeedFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new FeedHomeFragment(),
+                        FeedHomeFragment.class.getName())
+                .addToBackStack(FeedHomeFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 

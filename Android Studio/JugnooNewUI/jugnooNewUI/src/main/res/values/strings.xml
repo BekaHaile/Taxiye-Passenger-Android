@@ -9,7 +9,8 @@
     <string name="no_more_than">Can\'t order more than %d units</string>
     <string name="no_more_than_star">Can\'t add more than %d unit</string>
 
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live
+    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>
+    Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
     <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
 
@@ -268,7 +269,7 @@
 
     <!-- Jugnoo Jeanie Strings-->
     <string name="jugnoo_jeanie">Jugnoo Jeanie</string>
-	<string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
+    <string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
 		We believe you should always get the best deal for your daily commute and thus we are allowing you to compare other available options with Jugnoo ETA and prices.
 		Get the best deal always!\n
 		And don’t worry about the standard privacy notification on the next screen, we will never store any of your actions from Jugnoo Jeanie.
@@ -704,7 +705,7 @@
 
     <string name="tnc_apply">T&amp;C Apply</string>
     <string name="tnc">T&amp;C</string>
-	<string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
+    <string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
 		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
@@ -1558,5 +1559,6 @@
     <string name="na">NA</string>
     <string name="login_signup_with">Login / Signup with</string>
     <string name="please_check_tnc">Offer conditions not met. Please review detailed Terms and Conditions for more information</string>
+    <string name="dummy_text"><b>Matthew Young</b> reviewed <b>Pizza Hut</b> ewqewqe wqdadfsdfssdfsdf</string>
 
 </resources>
