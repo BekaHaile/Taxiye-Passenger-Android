@@ -26,6 +26,9 @@ import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.tutorials.NewUserCompleteProfileFragment;
+import product.clicklabs.jugnoo.tutorials.NewUserReferralFragment;
+import product.clicklabs.jugnoo.tutorials.NewUserWalletFragment;
 import product.clicklabs.jugnoo.tutorials.SignUpTutorial;
 
 /**
@@ -327,6 +330,36 @@ public class TransactionUtils {
                     .add(container.getId(), SignUpTutorial.newInstance(numOfPages),
                             SignUpTutorial.class.getName())
                     .addToBackStack(SignUpTutorial.class.getName())
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openNewUserReferralFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, NewUserReferralFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, 0)
+                    .replace(container.getId(), NewUserReferralFragment.newInstance(),
+                            NewUserReferralFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openNewUserCompleteProfileFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, NewUserCompleteProfileFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, 0)
+                    .replace(container.getId(), NewUserCompleteProfileFragment.newInstance(),
+                            NewUserCompleteProfileFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openNewUserWalletFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, NewUserWalletFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, 0)
+                    .replace(container.getId(), NewUserWalletFragment.newInstance(),
+                            NewUserWalletFragment.class.getName())
                     .commitAllowingStateLoss();
         }
     }

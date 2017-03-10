@@ -1656,6 +1656,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return transactionUtils;
     }
 
+    public RelativeLayout getRelativeLayoutContainer() {
+        return relativeLayoutContainer;
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // map object initialized

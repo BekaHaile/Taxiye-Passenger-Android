@@ -1,15 +1,19 @@
 package product.clicklabs.jugnoo.tutorials;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,6 +39,7 @@ public class SignUpTutorial extends Fragment {
     private TextView tvSkip;
     private int numOfPages;
     private View rootView;
+    private Button bNext;
 
     public static SignUpTutorial newInstance(int pages) {
         Bundle bundle = new Bundle();
@@ -58,6 +63,7 @@ public class SignUpTutorial extends Fragment {
 
         viewPager = (ViewPager) rootView.findViewById(R.id.vpPayTutorial);
         tvSkip = (TextView) rootView.findViewById(R.id.tvSkip);
+        bNext = (Button) rootView.findViewById(R.id.bNext);
 
         layouts = new int[]{
                 R.layout.fragment_signup_jeanie_tutorial,
@@ -70,12 +76,34 @@ public class SignUpTutorial extends Fragment {
         tvSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack(SignUpTutorial.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                ((HomeActivity)getActivity()).getRelativeLayoutContainer().setVisibility(View.GONE);
+            }
+        });
 
+        bNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(viewPager.getCurrentItem() == 0){
+                    viewPager.setCurrentItem(1, true);
+                } else if(viewPager.getCurrentItem() == 1){
+                    startActivity(new Intent(getActivity(), NewUserChutiyapaa.class));
+                    getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+            }
+        });
+
+        viewPager.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event){
+                return true;
             }
         });
 
         return rootView;
     }
+
+
 
 
     //  viewpager change listener

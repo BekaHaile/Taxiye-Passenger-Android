@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/llWalletContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15px"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/connect_your_wallet_to_grab"
+            android:textSize="@dimen/text_size_34"
+            android:textColor="@color/text_color"
+            android:layout_gravity="center_horizontal"
+            app:font="maven"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/free_coupons"
+            android:textAllCaps="true"
+            android:layout_marginTop="@dimen/px_10"
+            android:textSize="@dimen/text_size_34"
+            android:textColor="@color/text_color"
+            android:layout_gravity="center_horizontal"
+            android:textStyle="bold"
+            app:font="maven"/>
+
+        <RelativeLayout
+            android:id="@+id/rlPaytm"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_130"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:layout_marginTop="30px"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/ivPaytm"
+                android:layout_width="@dimen/px_84"
+                android:layout_height="@dimen/px_27"
+                android:layout_marginLeft="@dimen/px_40"
+                android:src="@drawable/ic_paytm_no_padding" />
+
+            <TextView
+                android:id="@+id/tvPaytmOffer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivPaytm"
+                android:layout_marginLeft="@dimen/px_40"
+                android:layout_marginTop="@dimen/px_10"
+                android:text="50% Cashback"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_26"
+                app:font="maven"/>
+
+
+            <ImageView
+                android:id="@+id/ivAddPaytm"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="17dp"
+                android:background="@drawable/bg_white_round_layer_shadow"
+                android:padding="14dp"
+                android:tag="@string/dont_touch_me"
+                android:src="@drawable/ic_plus_dark"/>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rLMobikwik"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_130"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:layout_marginTop="15px"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/ivMobikwik"
+                android:layout_width="@dimen/px_120"
+                android:layout_height="@dimen/px_36"
+                android:layout_marginLeft="@dimen/px_40"
+                android:src="@drawable/ic_mobikwik_no_padding" />
+
+            <TextView
+                android:id="@+id/tvMobikwikOffer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px_40"
+                android:layout_marginTop="@dimen/px_10"
+                android:layout_below="@+id/ivMobikwik"
+                android:text="@string/mobikwik_wallet"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_26"
+                app:font="maven"/>
+
+
+            <ImageView
+                android:id="@+id/ivAddMobikwik"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="17dp"
+                android:background="@drawable/bg_white_round_layer_shadow"
+                android:padding="14dp"
+                android:tag="@string/dont_touch_me"
+                android:src="@drawable/ic_plus_dark"/>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlFreeCharge"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_130"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:layout_marginTop="15px"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/ivFreecharge"
+                android:layout_width="123px"
+                android:layout_height="@dimen/px_28"
+                android:layout_marginLeft="@dimen/px_40"
+                android:src="@drawable/ic_freecharge_no_padding"
+                />
+
+            <TextView
+                android:id="@+id/tvFreeChargeOffer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivFreecharge"
+                android:layout_marginLeft="@dimen/px_40"
+                android:layout_marginTop="@dimen/px_10"
+                android:text="@string/freecharge_wallet"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_32"
+                app:font="maven"/>
+
+
+            <ImageView
+                android:id="@+id/ivAddFreecharge"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="17dp"
+                android:background="@drawable/bg_white_round_layer_shadow"
+                android:padding="14dp"
+                android:tag="@string/dont_touch_me"
+                android:src="@drawable/ic_plus_dark"/>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bFinish"
+        style="@style/ButtonThemeCapsule"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100px"
+        android:imeOptions="actionDone"
+        android:text="@string/finish"
+        android:layout_below="@+id/llWalletContainer"
+        android:layout_centerHorizontal="true"
+        app:font="maven"/>
+
+
+</RelativeLayout>

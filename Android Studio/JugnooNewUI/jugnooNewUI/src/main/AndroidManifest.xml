@@ -495,9 +495,8 @@
             android:theme="@style/TransparentTheme"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".tutorials.SignUpTutorial"
+            android:name=".tutorials.NewUserChutiyapaa"
             android:screenOrientation="portrait"
-            android:theme="@style/DialogFragmentTrans"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
 

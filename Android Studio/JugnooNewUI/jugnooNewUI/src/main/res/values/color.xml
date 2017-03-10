@@ -84,6 +84,7 @@
 
     <color name="grey_btn">#8E8E8E</color>
     <color name="grey_btn_pressed">#7E7E7E</color>
+    <color name="grey_e7">#e7e7e7</color>
 
 
     <color name="blue_dark_btn">#3B5999</color>
@@ -211,6 +212,7 @@
     <color name="menu_item_selector_color_F7">#F7F7F7</color>
     <color name="ride_history_item_text_color">#0EB2CE</color>
     <color name="google_path_polyline_color">#0889da</color>
+    <color name="bar_color">#EBEBEB</color>
 
     <color name="text_green_color">#22BD21</color>
 
