@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -57,14 +58,14 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
     }
 
     @Override
-    public void onClickItem(TextView tvComment, View view) {
+    public void onClickItem(View tvComment, View view) {
 
         int position  = recyclerView.getChildLayoutPosition(view);
         switch (view.getId()){
-            case R.id.tv_action_like:
+            case R.id.view_action_like:
                 Log.i("TAG", "onClickItem: " + position);
                 break;
-            case R.id.tv_action_comment:
+            case R.id.view_action_comment:
                 break;
             default:
                 break;
@@ -104,20 +105,24 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         TextView tvComment;
         @Bind(R.id.tv_action_like)
         TextView tvLike;
+        @Bind(R.id.view_action_like)
+        LinearLayout viewActionLike;
+        @Bind(R.id.view_action_comment)
+         LinearLayout viewActionComment;
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
             ButterKnife.bind(this, view);
-            tvComment.setOnClickListener(new View.OnClickListener() {
+            viewActionLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickView.onClickItem(tvComment,view);
+                    onClickView.onClickItem(viewActionLike,view);
                 }
             });
-            tvLike.setOnClickListener(new View.OnClickListener() {
+            viewActionComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickView.onClickItem(tvLike,view);
+                    onClickView.onClickItem(viewActionComment,view);
                 }
             });
 

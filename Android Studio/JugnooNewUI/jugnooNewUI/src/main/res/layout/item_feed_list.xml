@@ -10,14 +10,15 @@
 
         <RelativeLayout
             android:id="@+id/layout_heading"
+            android:layout_marginBottom="@dimen/spacing_tiny"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
                 <ImageView
                     android:id="@+id/iv_profile_pic"
                     android:src="@drawable/whatsapp"
                     android:layout_width="50dp"
                     android:layout_marginRight="@dimen/spacing_small"
-                    android:layout_marginBottom="@dimen/spacing_tiny"
                     android:layout_marginLeft="@dimen/spacing_large"
                     android:layout_height="50dp" />
 
@@ -63,7 +64,8 @@
             android:layout_marginRight="@dimen/spacing_large"
             android:layout_marginBottom="@dimen/spacing_small"
             android:layout_below="@id/tv_feed_description"
-            android:background="@drawable/ic_restaurant"
+            android:scaleType="centerCrop"
+            android:background="@drawable/ride_end_image_1"
             android:layout_width="match_parent"
             android:layout_height="@dimen/image_height_feed" />
 
@@ -92,28 +94,49 @@
             android:background="@color/stroke_light_grey"
             android:layout_height="40dp"/>
 
+
+        <LinearLayout
+            android:id="@+id/view_action_comment"
+            android:gravity="center"
+            android:layout_toRightOf="@id/line_divider_like_comment"
+            android:layout_below="@id/line_below_like_status"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" >
         <TextView
             android:id="@+id/tv_action_comment"
             android:text="Comment"
             android:gravity="center"
             app:font="maven"
+            android:drawablePadding="@dimen/spacing_tiny"
+            android:drawableLeft="@drawable/ic_comment"
+            android:textColor="@color/feed_grey_text"
             android:textSize="@dimen/font_small"
-            android:layout_toRightOf="@id/line_divider_like_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+          />
+
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_toLeftOf="@id/line_divider_like_comment"
             android:layout_below="@id/line_below_like_status"
+            android:id="@+id/view_action_like"
             android:layout_width="match_parent"
-            android:layout_height="40dp" />
+            android:layout_height="40dp">
+
 
         <TextView
             android:id="@+id/tv_action_like"
             android:text="Like"
+            android:textColor="@color/feed_grey_text"
             android:gravity="center"
             android:textSize="@dimen/font_small"
             app:font="maven"
-            android:layout_toLeftOf="@id/line_divider_like_comment"
-            android:layout_below="@id/line_below_like_status"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" />
-
+            android:drawableLeft="@drawable/ic_like"
+            android:drawablePadding="@dimen/spacing_tiny"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
         <View
             android:id="@+id/line_bottom"
             style="@style/Feed_Line_Horizontal"

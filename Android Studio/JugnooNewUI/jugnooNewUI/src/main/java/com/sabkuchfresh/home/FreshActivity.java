@@ -464,6 +464,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 int dpAsPixels = (int) (marginBottom * scale + 0.5f);
                 fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
                 fabViewTest.setRlGenieHelpBottomMargin(200f);
+                lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
                 Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             } catch (Exception e) {
                 e.printStackTrace();
