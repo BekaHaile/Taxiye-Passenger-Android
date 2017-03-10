@@ -754,97 +754,60 @@ public class UserData {
 
 	public ArrayList<PromoCoupon> getCoupons(ProductType productType) {
 		ArrayList<PromoCoupon> coupons = new ArrayList<>();
-		if(productType == ProductType.AUTO) {
-			for(int i = 0;i<promoCoupons.size();i++) {
-				PromoCoupon promoCoupon = promoCoupons.get(i);
-				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getAutos().equals(1)) ||
-                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getAutos().equals(1))) {
-                        coupons.add(promoCoupon);
-                    }
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			if(Data.autoData != null) {
+
+		if (productType == ProductType.AUTO) {
+			if (Data.autoData != null) {
 				coupons.addAll(Data.autoData.getPromoCoupons());
 			}
-		} else if(productType == ProductType.FRESH) {
-			for(int i = 0;i<promoCoupons.size();i++) {
-				PromoCoupon promoCoupon = promoCoupons.get(i);
-				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getFresh().equals(1)) ||
-                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getFresh().equals(1))) {
-                        coupons.add(promoCoupon);
-                    }
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			if(Data.getFreshData() != null) {
+		} else if (productType == ProductType.FRESH) {
+			if (Data.getFreshData() != null) {
 				coupons.addAll(Data.getFreshData().getPromoCoupons());
 			}
-		} else if(productType == ProductType.MEALS) {
-			for(int i = 0;i<promoCoupons.size();i++) {
-				PromoCoupon promoCoupon = promoCoupons.get(i);
-				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getMeals().equals(1)) ||
-                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getMeals().equals(1))) {
-                        coupons.add(promoCoupon);
-                    }
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			if(Data.getMealsData() != null) {
+		} else if (productType == ProductType.MEALS) {
+			if (Data.getMealsData() != null) {
 				coupons.addAll(Data.getMealsData().getPromoCoupons());
 			}
-		} else if(productType == ProductType.GROCERY) {
-			for(int i = 0;i<promoCoupons.size();i++) {
-				PromoCoupon promoCoupon = promoCoupons.get(i);
-				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getGrocery().equals(1)) ||
-							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getGrocery().equals(1))) {
-						coupons.add(promoCoupon);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			if(Data.getGroceryData() != null) {
+		} else if (productType == ProductType.GROCERY) {
+			if (Data.getGroceryData() != null) {
 				coupons.addAll(Data.getGroceryData().getPromoCoupons());
 			}
-		} else if(productType == ProductType.MENUS) {
-			for(int i = 0;i<promoCoupons.size();i++) {
-				PromoCoupon promoCoupon = promoCoupons.get(i);
-				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getMenus().equals(1)) ||
-							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getMenus().equals(1))) {
-						coupons.add(promoCoupon);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			if(Data.getMenusData() != null) {
+		} else if (productType == ProductType.MENUS) {
+			if (Data.getMenusData() != null) {
 				coupons.addAll(Data.getMenusData().getPromoCoupons());
 			}
-		}else if(productType == ProductType.PAY) {
-			for(int i = 0;i<promoCoupons.size();i++) {
-				PromoCoupon promoCoupon = promoCoupons.get(i);
-				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getPay().equals(1)) ||
-							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getPay().equals(1))) {
-						coupons.add(promoCoupon);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			if(Data.getPayData() != null) {
+		} else if (productType == ProductType.PAY) {
+			if (Data.getPayData() != null) {
 				coupons.addAll(Data.getPayData().getPromoCoupons());
 			}
 		}
+
+		ArrayList<PromoCoupon> validPC = new ArrayList<>();
+		ArrayList<PromoCoupon> invalidPC = new ArrayList<>();
+		for(PromoCoupon pc : coupons){
+			if(pc.getIsValid() == 1){
+				validPC.add(pc);
+			} else {
+				invalidPC.add(pc);
+			}
+		}
+		coupons.clear();
+		coupons.addAll(validPC);
+		for (int i = 0; i < promoCoupons.size(); i++) {
+			PromoCoupon promoCoupon = promoCoupons.get(i);
+			try {
+				if ((productType == ProductType.AUTO && promoCoupon.getAutos().equals(1))
+						|| (productType == ProductType.FRESH && promoCoupon.getFresh().equals(1))
+						|| (productType == ProductType.MEALS && promoCoupon.getMeals().equals(1))
+						|| (productType == ProductType.GROCERY && promoCoupon.getGrocery().equals(1))
+						|| (productType == ProductType.MENUS && promoCoupon.getMenus().equals(1))
+						|| (productType == ProductType.PAY && promoCoupon.getPay().equals(1))) {
+					coupons.add(promoCoupon);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		coupons.addAll(invalidPC);
 
 		return coupons;
 	}

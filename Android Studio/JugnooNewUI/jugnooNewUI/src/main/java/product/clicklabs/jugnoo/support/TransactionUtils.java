@@ -20,8 +20,6 @@ import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 
 /**
  * Created by shankar on 1/27/16.
@@ -44,8 +42,6 @@ public class TransactionUtils {
 						.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 								.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commitAllowingStateLoss();
-				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_HISTORY);
-				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", item.getText());
 			}
 		}
 		else if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()
@@ -66,7 +62,6 @@ public class TransactionUtils {
 							.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 									.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 							.commitAllowingStateLoss();
-					FlurryEventLogger.event(FlurryEventNames.SUPPORT_NEXT_LEVEL_OPENED);
 				}
 			} else if(item.getItems() != null && item.getItems().size() == 1){
 				singleItemToOpen = item.getItems().get(0);
@@ -89,7 +84,6 @@ public class TransactionUtils {
 						.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 								.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commitAllowingStateLoss();
-				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT_ISSUES);
 			}
 		} else if(singleItemToOpen != null && singleItemParentName != null && singleItemToOpen.getActionType() == ActionType.NEXT_LEVEL.getOrdinal()){
 			if(singleItemToOpen.getItems() != null && singleItemToOpen.getItems().size() == 1){
@@ -120,7 +114,6 @@ public class TransactionUtils {
 						.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName()));
 			}
 			fragmentTransaction.commitAllowingStateLoss();
-			FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_WITH_RECENT_RIDE);
 		}
 	}
 

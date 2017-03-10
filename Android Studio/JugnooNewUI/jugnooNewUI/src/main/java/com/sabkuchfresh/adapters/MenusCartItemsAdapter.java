@@ -210,6 +210,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
 				Utils.getMoneyDecimalFormat().format(mcv.getPrice())));
 		mHolder.textViewQuantity.setText(String.valueOf(mcv.getQuantity()));
+		mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
 		LinearLayout.LayoutParams paramsName = (LinearLayout.LayoutParams) mHolder.textViewItemName.getLayoutParams();
 		if(TextUtils.isEmpty(mcv.getCustomizeText())){
 			mHolder.textViewItemCustomizeText.setVisibility(View.GONE);

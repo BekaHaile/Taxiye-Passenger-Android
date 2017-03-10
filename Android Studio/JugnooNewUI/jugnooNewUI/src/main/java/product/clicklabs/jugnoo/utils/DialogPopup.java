@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -354,20 +355,23 @@ public class DialogPopup {
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
-			if(leftOriented) {
-				textMessage.setGravity(Gravity.LEFT);
-			}
+
 			if(applyMinDimens){
 				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutInner.getLayoutParams();
 				int margin = (int) (30.0f * Math.min(ASSL.Xscale(), ASSL.Yscale()));
 				params.setMargins(margin, margin, margin, margin);
 				relativeLayoutInner.setLayoutParams(params);
 			}
-			
+			if(leftOriented) {
+				textMessage.setGravity(Gravity.LEFT);
+				LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) textMessage.getLayoutParams();
+				layoutParams1.gravity=Gravity.LEFT;
+				textMessage.setLayoutParams(layoutParams1);
+			}
 			textHead.setText(title);
 			if(inHtml){
 				try {
-					textMessage.setText(Html.fromHtml(message));
+					textMessage.setText(trim(Html.fromHtml(message)));
 				} catch (Exception e) {
 					e.printStackTrace();
 					textMessage.setText(message);
@@ -411,8 +415,25 @@ public class DialogPopup {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
+	public static CharSequence trim(CharSequence s) {
+		if(s.length()==0)
+			return "";
+
+		int start = 0;
+		int end = s.length();
+		while (start < end && Character.isWhitespace(s.charAt(start))) {
+			start++;
+		}
+
+		while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
+			end--;
+		}
+
+		return s.subSequence(start, end);
+	}
+
 	public static void dismissAlertPopup(){
 		try{
 			if(dialog != null && dialog.isShowing()){

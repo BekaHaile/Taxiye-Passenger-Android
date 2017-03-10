@@ -17,17 +17,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.DisplayOffersAdapter;
 import com.sabkuchfresh.adapters.MenusCategoryFragmentsAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
@@ -134,7 +132,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     tabClickFlag = false;
                 } else {
                     Log.d(TAG, "onPageSelected = " + position);
-                    FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
+                    GAUtils.event(GAAction.MENUS, GAAction.RESTAURANT_HOME , GAAction.TABS + GAAction.SLIDED);
+//                    FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
                 }
             }
 
@@ -166,7 +165,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     }
                     //                    recyclerViewOffers.startAnimation(starCloseAnim);*/
                     recyclerViewOffers.setVisibility(View.GONE);
-
                     ibArrow.animate().rotationBy(-180).translationYBy(-10).setDuration(0).start();
 
 
@@ -193,6 +191,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                             viewPromoTitle.findViewById(R.id.ib_arrow).setEnabled(true);
                         }
                     };
+
+                  GAUtils.event(GAAction.MENUS, GAAction.RESTAURANT_HOME , GAAction.OFFER + GAAction.EXPANDED);
+
                 }
 
 
@@ -316,7 +317,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     public void onTabClicked(int position) {
         Log.d(TAG, "onTabClicked = " + position);
         tabClickFlag = true;
-        FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.TAP);
     }
 
 

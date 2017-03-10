@@ -2,9 +2,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,12 +13,14 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -30,14 +30,12 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by shankar on 5/2/16.
  */
-public class PromoCouponsDialog {
+public class PromoCouponsDialog implements GACategory, GAAction{
 
 	private final String TAG = PromoCouponsDialog.class.getSimpleName();
 	private Activity activity;
@@ -74,9 +72,6 @@ public class PromoCouponsDialog {
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			listViewPromoCoupons = (ListView) dialog.findViewById(R.id.listViewPromoCoupons);
-			if(productType == ProductType.AUTO) {
-				FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "b_offer");
-			}
 
 			promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_promo_coupon, promoCoupons, new PromoCouponsAdapter.Callback() {
 				@Override
@@ -117,6 +112,7 @@ public class PromoCouponsDialog {
 							}
 						}, 100);
 						callback.onCouponApplied();
+						GAUtils.event(RIDES, TNC+CLICKED, promoCoupon.getTitle());
 					}
 				}
 			});
@@ -179,10 +175,6 @@ public class PromoCouponsDialog {
 				@Override
 				public void onClick(View v) {
 					if(activity instanceof HomeActivity) {
-						Bundle bundle = new Bundle();
-						MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.B_OFFER + "_"
-								+ FirebaseEvents.SKIP, bundle);
-						FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "skip");
 						((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 						dialog.dismiss();
 						callback.onSkipped();
@@ -204,10 +196,6 @@ public class PromoCouponsDialog {
 			buttonContinue.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
-                            +FirebaseEvents.CONTINUE, bundle);
-					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "continue");
 					dialog.dismiss();
 					callback.onCouponApplied();
 				}
@@ -216,10 +204,6 @@ public class PromoCouponsDialog {
 			buttonInviteFriends.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
-                            +FirebaseEvents.INVITE_FRIENDS, bundle);
-					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "invite friends");
 					dialog.dismiss();
 					callback.onInviteFriends();
 				}

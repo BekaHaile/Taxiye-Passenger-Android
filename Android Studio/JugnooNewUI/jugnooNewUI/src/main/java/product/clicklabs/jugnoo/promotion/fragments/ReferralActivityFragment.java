@@ -14,12 +14,10 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
-public class ReferralActivityFragment extends Fragment implements FlurryEventNames, Constants {
+public class ReferralActivityFragment extends Fragment implements  Constants {
 
 	private LinearLayout linearLayoutRoot;
 
@@ -75,11 +73,6 @@ public class ReferralActivityFragment extends Fragment implements FlurryEventNam
 
 
 
-		try {
-			FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Activity");
-		} catch(Exception e){
-			e.printStackTrace();
-		}
 
 		update();
 

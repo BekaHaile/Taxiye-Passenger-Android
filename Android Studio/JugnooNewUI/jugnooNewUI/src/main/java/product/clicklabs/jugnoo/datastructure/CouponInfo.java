@@ -49,6 +49,12 @@ public class CouponInfo extends PromoCoupon{
 	@SerializedName("is_selected")
 	@Expose
 	private Integer isSelected;
+	@SerializedName("is_valid")
+	@Expose
+	private Integer isValid;
+	@SerializedName("invalid_message")
+	@Expose
+	private String invalidMessage;
 
 	public CouponInfo(int id, String title, String subtitle, String description, String expiryDate){
 		this.id = id;
@@ -188,5 +194,24 @@ public class CouponInfo extends PromoCoupon{
 
 	public void setIsSelected(Integer isSelected) {
 		this.isSelected = isSelected;
+	}
+
+	public Integer getIsValid() {
+		if(isValid == null){
+			isValid = 1;
+		}
+		return isValid;
+	}
+
+	public void setIsValid(Integer isValid) {
+		this.isValid = isValid;
+	}
+
+	public String getInvalidMessage() {
+		return invalidMessage;
+	}
+
+	public void setInvalidMessage(String invalidMessage) {
+		this.invalidMessage = invalidMessage;
 	}
 }

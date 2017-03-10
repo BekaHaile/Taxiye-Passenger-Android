@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -20,7 +24,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 /**
  * Created by shankar on 5/2/16.
  */
-public class SavedAddressPickupDialog {
+public class SavedAddressPickupDialog implements GACategory, GAAction {
 
 	private final String TAG = SavedAddressPickupDialog.class.getSimpleName();
 	private HomeActivity activity;
@@ -74,6 +78,7 @@ public class SavedAddressPickupDialog {
 				viewSep.setVisibility(View.GONE);
 				rlAdressItem.setVisibility(View.GONE);
 				textHead.setText(R.string.close_to_point_of_interest);
+				GAUtils.event(RIDES, PICKUP_LOCATION_DIFFERENT_FROM_CURRENT_LOCATION+POPUP, REQUEST_LOCATION_CLOSE_TO_POI);
 			}
 
 			if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_HOME)){

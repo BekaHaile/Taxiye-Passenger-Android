@@ -16,16 +16,12 @@ import com.google.gson.Gson;
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -148,9 +144,6 @@ public class AddressBookFragment extends Fragment {
 				intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(activity).getString(SPLabels.ADD_HOME, ""));
 				startActivityForResult(intent, Constants.REQUEST_CODE_ADD_HOME);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.event(activity, FlurryEventNames.HOW_MANY_USERS_ADDED_ADD_HOME);
-				MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.VIEW_ACCOUNT+"_"+ FirebaseEvents.ADD_HOME, new Bundle());
-				FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Add Home");
 			}
 		};
 		relativeLayoutHome.setOnClickListener(homeClickListener);
@@ -164,9 +157,6 @@ public class AddressBookFragment extends Fragment {
 				intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(activity).getString(SPLabels.ADD_WORK, ""));
 				startActivityForResult(intent, Constants.REQUEST_CODE_ADD_WORK);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.event(activity, FlurryEventNames.HOW_MANY_USERS_ADDED_ADD_WORK);
-				MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_WORK, new Bundle());
-				FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Add Work");
 			}
 		};
 		relativeLayoutWork.setOnClickListener(workClickListener);

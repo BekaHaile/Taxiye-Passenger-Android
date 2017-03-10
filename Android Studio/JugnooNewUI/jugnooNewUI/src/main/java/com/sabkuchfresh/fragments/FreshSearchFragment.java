@@ -16,7 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
-import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
@@ -47,7 +49,7 @@ import retrofit.mime.TypedByteArray;
 
 
 @SuppressLint("ValidFragment")
-public class FreshSearchFragment extends Fragment {
+public class FreshSearchFragment extends Fragment implements GAAction, GACategory{
 
 	private RelativeLayout rlRoot;
 
@@ -79,7 +81,7 @@ public class FreshSearchFragment extends Fragment {
 		freshSearchFragment.setArguments(bundle);
 		return freshSearchFragment;
 	}
-	
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -161,7 +163,7 @@ public class FreshSearchFragment extends Fragment {
 					public boolean checkForAdd(int position, SubItem subItem) {
 						return activity.checkForAdd();
 					}
-				}, AppConstant.ListType.HOME, FlurryEventNames.SEARCH_SCREEN, currentGroupId);
+				}, AppConstant.ListType.HOME, SEARCH_SCREEN, currentGroupId);
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
@@ -325,9 +327,20 @@ public class FreshSearchFragment extends Fragment {
 
 
 
+	private boolean searchedOnce;
 
 	public void searchFreshItems(String s){
 		try {
+			if(!searchedOnce){
+				if(activity.getFreshFragment() != null){
+					if(activity.getFreshFragment().getSuperCategory() != null) {
+						GAUtils.event(FRESH, activity.getFreshFragment().getSuperCategory().getSuperCategoryName() + " " + SEARCH, DATA + ENTERED);
+					}
+				} else {
+					GAUtils.event(FRESH, HOME + SEARCH, DATA + ENTERED);
+				}
+			}
+			searchedOnce = true;
 			if (s.length() > 0 && activity.getFreshFragment() != null) {
 				new SubItemsSearchAsync().execute(s.toString());
 			} else {

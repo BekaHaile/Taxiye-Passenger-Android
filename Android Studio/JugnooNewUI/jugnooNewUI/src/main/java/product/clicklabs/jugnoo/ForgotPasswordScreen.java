@@ -27,8 +27,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -38,7 +36,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNames {
+public class ForgotPasswordScreen extends BaseActivity  {
 
     TextView textViewTitle;
     ImageView imageViewBack;
@@ -145,7 +143,6 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
                         }
                     }
 
-                    FlurryEventLogger.event(PASSWORD_RETRIEVED);
                 }
 
             }

@@ -2,13 +2,16 @@ package product.clicklabs.jugnoo.promotion.adapters;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
 
@@ -19,15 +22,13 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
 /**
  * Created by Shankar on 5/14/16.
  */
-public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.ViewHolder> {
+public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.ViewHolder> implements GAAction, GACategory {
 
     private Activity activity;
     private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
@@ -70,11 +71,10 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
                 PromoCoupon promoCoupon = promoCoupons.get(pos);
                 if (promoCoupon instanceof CouponInfo) {
                     DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description, true, true, false, true);
-                    FlurryEventLogger.event(activity, FlurryEventNames.TNC_VIEWS);
                 } else if (promoCoupon instanceof PromotionInfo) {
                     DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, false, true, true, true);
-                    FlurryEventLogger.event(activity, FlurryEventNames.TNC_VIEWS_PROMO);
                 }
+                GAUtils.event(SIDE_MENU, PROMOTIONS+OFFER+TNC+CLICKED, promoCoupon.getTitle());
             }
         });
 

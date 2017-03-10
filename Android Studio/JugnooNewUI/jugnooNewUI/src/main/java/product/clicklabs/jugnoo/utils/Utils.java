@@ -42,6 +42,9 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -74,16 +77,10 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 
-import static product.clicklabs.jugnoo.Constants.ACTIVATION;
-import static product.clicklabs.jugnoo.Constants.RETENTION;
-import static product.clicklabs.jugnoo.Constants.REVENUE;
-import static product.clicklabs.jugnoo.Constants.SLASH;
 import static product.clicklabs.jugnoo.home.HomeActivity.passengerScreenMode;
-import static product.clicklabs.jugnoo.utils.FlurryEventNames.CALL_TO_DRIVER_MADE_WHEN_ARRIVED;
-import static product.clicklabs.jugnoo.utils.FlurryEventNames.CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED;
 
 
-public class Utils {
+public class Utils implements GAAction, GACategory{
 	
 	/**
 	 * Compares two double values with epsilon precision
@@ -212,7 +209,13 @@ public class Utils {
 		}
 	}
 
-	
+	public static void hideKeyboard(Activity activity){
+		View view = activity.getCurrentFocus();
+		if (view != null) {
+			InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		}
+	}
 	
 	
 	
@@ -824,12 +827,8 @@ public class Utils {
 	public static void callDriverDuringRide(Activity activity){
 		try {
 			Utils.openCallIntent(activity, Data.autoData.getAssignedDriverInfo().phoneNumber);
-			if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
-				FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED);
-				FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "Call Driver");
-			}
-			else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
-				FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
+			if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+				GAUtils.event(RIDES, RIDE+IN_PROGRESS, CALL+BUTTON+CLICKED);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -862,6 +861,24 @@ public class Utils {
 			}
 		}
 		return p;
+	}
+
+	private static DecimalFormat decimalFormat2Decimal;
+	public static DecimalFormat getDecimalFormat2Decimal(){
+		if(decimalFormat2Decimal == null){
+			decimalFormat2Decimal = new DecimalFormat("0.00");
+		}
+		return decimalFormat2Decimal;
+	}
+
+	public static String getDoubleTwoDigits(Double amount){
+		String finalVal;
+		if(amount % 1 == 0)
+			finalVal = String.valueOf(amount.intValue());
+		else
+			finalVal = Utils.getDecimalFormat2Decimal().format(amount);
+
+		return finalVal;
 	}
 
 }

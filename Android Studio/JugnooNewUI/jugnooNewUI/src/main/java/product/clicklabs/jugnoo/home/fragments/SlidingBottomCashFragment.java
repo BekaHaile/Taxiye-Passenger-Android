@@ -11,6 +11,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
@@ -19,14 +23,13 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 /**
  * Created by Ankit on 1/8/16.
  */
-public class SlidingBottomCashFragment extends Fragment implements View.OnClickListener{
+public class SlidingBottomCashFragment extends Fragment implements View.OnClickListener, GAAction, GACategory{
 
     private View rootView;
     private ScrollView linearLayoutRoot;
@@ -93,28 +96,22 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         try {
             switch (v.getId()){
                 case R.id.relativeLayoutPaytm:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
-                            +FirebaseEvents.PAYTM, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.PAYTM);
                     break;
 
                 case R.id.relativeLayoutMobikwik:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
-                            +FirebaseEvents.MOBIKWIK, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MOBIKWIK);
                     break;
 
                 case R.id.linearLayoutCash:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
-                            +FirebaseEvents.CASH, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
                     break;
                 case R.id.relativeLayoutFreeCharge:
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
-                            +FirebaseEvents.FREECHARGE_SHORT, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
                     break;
             }
+            try {GAUtils.event(RIDES, HOME+WALLET+SELECTED, MyApplication.getInstance().getWalletCore()
+                        .getPaymentOptionName(Data.autoData.getPickupPaymentOption()));} catch (Exception e) {}
         } catch (Exception e) {
             e.printStackTrace();
         }

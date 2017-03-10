@@ -162,10 +162,12 @@ public class RatingBarMenuFeedback extends LinearLayout {
     private float getScoreForPosition(float x) {
         if (mHalfStars)
             return (float) Math.round(((x / ((float) getWidth() / (mMaxStars * 3f))) / 3f) * 2f) / 2;
-        float value = (float) Math.round((x / ((float) getWidth() / (mMaxStars))));
+       /* float value = (float) Math.round((x / ((float) getWidth() / (mMaxStars))));
         value = value <= 0 ? 1 : value;
-        value = value > mMaxStars ? mMaxStars : value;
-        return value;
+        value = value > mMaxStars ? mMaxStars : value;*/
+        Float dividend =   (x / ((float) getWidth() / (mMaxStars)));
+        int finalValue = dividend.intValue()+1;
+        return finalValue>mMaxStars?mMaxStars:finalValue<0?0:finalValue;
 
     }
 
@@ -236,7 +238,8 @@ public class RatingBarMenuFeedback extends LinearLayout {
         v.setCompoundDrawablePadding((int) (ASSL.Yscale() * 20.0f));
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
-        params.rightMargin = (int) (ASSL.Xscale() * 10.0f);
+        params.leftMargin = (int) (ASSL.Xscale() * 5.0f);
+        params.rightMargin = (int) (ASSL.Xscale() * 5.0f);
         params.bottomMargin = (int) (ASSL.Yscale() * 25.0f);
         params.topMargin = (int) (ASSL.Yscale() * 25.0f);
         v.setGravity(Gravity.CENTER);

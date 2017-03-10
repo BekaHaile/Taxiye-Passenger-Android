@@ -55,8 +55,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.Log;
@@ -68,7 +66,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class TrackingLogActivity extends BaseFragmentActivity implements FlurryEventNames, FirebaseEvents {
+public class TrackingLogActivity extends BaseFragmentActivity {
 
     private final String TAG = TrackingLogActivity.class.getSimpleName();
     LinearLayout relative;

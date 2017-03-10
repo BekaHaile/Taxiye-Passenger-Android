@@ -21,8 +21,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
@@ -36,7 +37,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -56,7 +56,6 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
@@ -70,7 +69,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by gurmail on 24/05/16.
  */
-public class FeedbackFragment extends Fragment implements View.OnClickListener, FlurryEventNames {
+public class FeedbackFragment extends Fragment implements GAAction, View.OnClickListener {
 
 
     private View rootView;
@@ -342,11 +341,13 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             feedbackReasonsAdapter = new FeedbackReasonsAdapter(activity, negativeReasons, positiveReasons,
                     new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
                         @Override
-                        public void onLastItemSelected(boolean selected) {
+                        public void onLastItemSelected(boolean selected, String name) {
                             if (!selected) {
                                 if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
                                     textViewRSOtherError.setText("");
                                 }
+                            } else {
+                                GAUtils.event(activity.getGaCategory(), FEEDBACK, ISSUE+SELECTED+name);
                             }
                         }
                     });
@@ -369,7 +370,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                         if (productType != ProductType.MENUS) {
                             comments = comments + ", " + reviewDescription;
                         }
-
+                        GAUtils.event(activity.getGaCategory(), FEEDBACK, COMMENT+ADDED);
                     }
                 }
 
@@ -432,18 +433,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                         sendQuery(0, "");
                     }
 
+                    GAUtils.event(activity.getGaCategory(), FEEDBACK, THUMB_DOWN+CLICKED);
 
-                    //openSupportFragment();
-
-                    if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_DOWNVOTE, new Bundle());
-                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_DOWNVOTE, new Bundle());
-                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_DOWNVOTE, new Bundle());
-                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_DOWNVOTE, new Bundle());
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -457,20 +448,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down);
                 afterGoodRating();
                 sendQuery(1, "");
-                try {
-                    if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_UPVOTE, new Bundle());
-                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_UPVOTE, new Bundle());
-                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_UPVOTE, new Bundle());
-                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_UPVOTE, new Bundle());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                GAUtils.event(activity.getGaCategory(), FEEDBACK, THUMB_UP+CLICKED);
             }
         });
         activity.fragmentUISetup(this);
@@ -839,10 +817,10 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                         if (isSuccess) {
 
 
-                            FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_SUBMIT,Events.MENU_FEEDBACK_SUBMIT);
-                            if(!TextUtils.isEmpty(comments)) FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_COMMENTS,Events.MENU_FEEDBACK_COMMENTS);
-                            if(!TextUtils.isEmpty(reviewDesc))FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_TAGS,Events.MENU_FEEDBACK_TAGS + reviewDesc);
-                            if(score>0)FlurryEventLogger.eventGA(Events.MENUS,Events.FEEDBACK_STAR,Events.STAR_ICON,score);
+                            GAUtils.event(GACategory.MENUS, GAAction.FEEDBACK , GAAction.SUBMIT_BUTTON + GAAction.CLICKED);
+                            if(!TextUtils.isEmpty(comments))  GAUtils.event(GACategory.MENUS, GAAction.FEEDBACK , GAAction.COMMENT + GAAction.ADDED );
+                            if(!TextUtils.isEmpty(reviewDesc)) GAUtils.event(GACategory.MENUS, GAAction.FEEDBACK , GAAction.TAG + GAAction.ADDED );
+                            if(score>0) GAUtils.event(GACategory.MENUS, GAAction.FEEDBACK , GAAction.RATING+ GAAction.ADDED );;
 
                             if (rating > 2) {
                                 // for Good rating

@@ -200,7 +200,7 @@ public class RestaurantImageFragment extends Fragment {
 
                     switch (getSlope(e1.getX(), e1.getY(), e2.getX(), e2.getY())) {
                         case 1:
-                            activity.performBackPressed();
+                            activity.performBackPressed(true);
                             return true;
                         case 2:
 

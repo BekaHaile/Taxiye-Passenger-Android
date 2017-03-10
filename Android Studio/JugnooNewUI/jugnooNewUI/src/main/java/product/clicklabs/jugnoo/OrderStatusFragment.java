@@ -30,6 +30,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -70,7 +73,7 @@ import retrofit.mime.TypedByteArray;
  * Created by ankit on 27/10/16.
  */
 
-public class OrderStatusFragment extends Fragment implements View.OnClickListener{
+public class OrderStatusFragment extends Fragment implements GAAction, View.OnClickListener{
 
     private RelativeLayout relative, rlOrderStatus;
     private TextView tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,
@@ -606,18 +609,18 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
             TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
             tvDelCharges.setText(fieldText);
             if(showNegative) {
-                tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
                 tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
             } else {
                 if(fieldTextVal != null && fieldTextVal > 0){
-                    tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                    tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
                     tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 } else {
                     if (showFree) {
                         tvDelChargesVal.setText(activity.getResources().getString(R.string.free));
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
                     } else {
-                        tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                        tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                     }
                 }
@@ -871,6 +874,9 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
                                 @Override
                                 public void onClick(View v) {
                                     cancelOrderApiCall(orderHistory.getOrderId());
+                                    if(activity instanceof FreshActivity) {
+                                        GAUtils.event(((FreshActivity)activity).getGaCategory(), ORDER_STATUS, ORDER+CANCELLED);
+                                    }
                                 }
                             }, new View.OnClickListener() {
                                 @Override
@@ -898,6 +904,11 @@ public class OrderStatusFragment extends Fragment implements View.OnClickListene
                 new TransactionUtils().openRideIssuesFragment(activity,
                         ((RideTransactionsActivity) activity).getContainer(),
                         -1, -1, null, null, 0, false, 0, orderHistory);
+                if(activity instanceof FreshActivity) {
+                    GAUtils.event(((FreshActivity)activity).getGaCategory(), ORDER_STATUS, NEED_HELP);
+                } else {
+                    GAUtils.event(GACategory.SIDE_MENU, ORDER+DETAILS, NEED_HELP+CLICKED);
+                }
                 break;
         }
     }

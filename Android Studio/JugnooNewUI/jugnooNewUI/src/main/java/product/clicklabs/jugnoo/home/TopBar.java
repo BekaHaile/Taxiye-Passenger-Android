@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -11,23 +10,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 4/8/16.
  */
-public class TopBar implements FirebaseEvents {
+public class TopBar implements  GACategory, GAAction {
 
 
     Activity activity;
@@ -77,7 +74,6 @@ public class TopBar implements FirebaseEvents {
             @Override
             public boolean onLongClick(View v) {
                 Utils.showToast(activity, Config.getServerUrlName());
-                FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
                 return false;
             }
         });
@@ -108,17 +104,10 @@ public class TopBar implements FirebaseEvents {
                 case R.id.imageViewMenu:
                     //activity.startActivity(new Intent(activity, FreshActivity.class));
                     drawerLayout.openDrawer(GravityCompat.START);
-                    FlurryEventLogger.event(FlurryEventNames.MENU_LOOKUP);
 
                     try {
                         if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
-                            FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "menu");
                         } else {
-                            Bundle bundle = new Bundle();
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+MENU, bundle);
-
-                            FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION,
-                                    "Home Screen", "menu");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -132,12 +121,13 @@ public class TopBar implements FirebaseEvents {
                     if (activity instanceof HomeActivity) {
                         ((HomeActivity) activity).sosDialog(activity);
                         try {
-                            if (PassengerScreenMode.P_DRIVER_ARRIVED == ((HomeActivity) activity).passengerScreenMode) {
-                                //FlurryEventLogger.eventGA(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
+                            if(PassengerScreenMode.P_REQUEST_FINAL == HomeActivity.passengerScreenMode){
+                                GAUtils.event(RIDES, DRIVER_ENROUTE, HELP+GAAction.BUTTON+CLICKED);
+                            } else if (PassengerScreenMode.P_DRIVER_ARRIVED == ((HomeActivity) activity).passengerScreenMode) {
                             } else if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
-                                Bundle bundle = new Bundle();
-                                MyApplication.getInstance().logEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+Constants.HELP, bundle);
-                                FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "help");
+                                GAUtils.event(RIDES, RIDE+IN_PROGRESS, HELP+GAAction.BUTTON+CLICKED);
+                            } else if (PassengerScreenMode.P_RIDE_END == HomeActivity.passengerScreenMode){
+                                GAUtils.event(RIDES, FEEDBACK, HELP+GAAction.BUTTON+CLICKED);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -182,14 +172,11 @@ public class TopBar implements FirebaseEvents {
         }
         imageViewBack.setVisibility(View.GONE);
         textViewTitle.setText(activity.getResources().getString(R.string.rides));
-//        textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
-
         if (!defaultState) {
             imageViewMenu.setVisibility(View.GONE);
             imageViewHelp.setVisibility(View.GONE);
             imageViewBack.setVisibility(View.VISIBLE);
             textViewTitle.setText(title);
-//            textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
         }
     }
 

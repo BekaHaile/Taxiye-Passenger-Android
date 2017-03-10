@@ -7,10 +7,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.adapters.SlidingBottomFragmentAdapter;
@@ -18,16 +20,13 @@ import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
 /**
  * Created by Ankit on 1/7/16.
  */
-public class SlidingBottomPanelV4 {
+public class SlidingBottomPanelV4 implements GAAction, GACategory{
 
     private HomeActivity activity;
     private SlidingUpPanelLayout slidingUpPanelLayout;
@@ -241,9 +240,7 @@ public class SlidingBottomPanelV4 {
                 } else {
                     viewPager.setCurrentItem(0, true);
                 }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
-                        +FirebaseEvents.B_PAYMENT_MODE, bundle);
+                GAUtils.event(RIDES, HOME, WALLET+CLICKED);
                 break;
 
             case R.id.linearLayoutFare:
@@ -252,9 +249,7 @@ public class SlidingBottomPanelV4 {
                 } else {
                     viewPager.setCurrentItem(1, true);
                 }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
-                        +FirebaseEvents.FARE_POPUP, bundle);
+                GAUtils.event(RIDES, HOME, FARE_DETAILS+CLICKED);
                 break;
 
             case R.id.linearLayoutOffers:
@@ -263,9 +258,7 @@ public class SlidingBottomPanelV4 {
                 } else {
                     viewPager.setCurrentItem(2, true);
                 }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
-                        +FirebaseEvents.B_OFFER, bundle);
+                GAUtils.event(RIDES, HOME, OFFER+CLICKED);
                 break;
         }
     }

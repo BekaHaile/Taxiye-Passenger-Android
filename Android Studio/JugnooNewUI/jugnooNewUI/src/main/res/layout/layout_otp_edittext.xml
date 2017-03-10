@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/px_100"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/etOtp1"
+        android:layout_width="@dimen/px_100"
+        android:layout_height="match_parent"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/px_60"
+        android:gravity="center"
+        android:enabled="false"
+        android:inputType="number"
+        android:background="@color/transparent"/>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="@dimen/px_2"
+        android:layout_height="match_parent"
+        android:background="@color/stroke_light_grey"
+        android:layout_marginTop="@dimen/px_20"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/px_20"/>
+
+    <EditText
+        android:id="@+id/etOtp2"
+        android:layout_width="@dimen/px_100"
+        android:layout_height="match_parent"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/px_60"
+        android:gravity="center"
+        android:inputType="number"
+        android:enabled="false"
+        android:background="@color/transparent"/>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="@dimen/px_2"
+        android:layout_height="match_parent"
+        android:background="@color/stroke_light_grey"
+        android:layout_marginTop="@dimen/px_20"
+        android:layout_marginBottom="@dimen/px_20"/>
+
+    <EditText
+        android:id="@+id/etOtp3"
+        android:layout_width="@dimen/px_100"
+        android:layout_height="match_parent"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/px_60"
+        android:gravity="center"
+        android:inputType="number"
+        android:enabled="false"
+        android:background="@color/transparent"/>
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="@dimen/px_2"
+        android:layout_height="match_parent"
+        android:background="@color/stroke_light_grey"
+        android:layout_marginTop="@dimen/px_20"
+        android:layout_marginBottom="@dimen/px_20"/>
+
+    <EditText
+        android:id="@+id/etOtp4"
+        android:layout_width="@dimen/px_100"
+        android:layout_height="match_parent"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/px_60"
+        android:gravity="center"
+        android:inputType="number"
+        android:enabled="false"
+        android:background="@color/transparent"/>
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="@dimen/px_2"
+        android:layout_height="match_parent"
+        android:background="@color/stroke_light_grey"
+        android:layout_marginTop="@dimen/px_20"
+        android:layout_marginBottom="@dimen/px_20"/>
+
+    <EditText
+        android:id="@+id/etOtp5"
+        android:layout_width="@dimen/px_100"
+        android:layout_height="match_parent"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/px_60"
+        android:gravity="center"
+        android:inputType="number"
+        android:enabled="false"
+        android:background="@color/transparent"/>
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="@dimen/px_2"
+        android:layout_height="match_parent"
+        android:background="@color/stroke_light_grey"
+        android:layout_marginTop="@dimen/px_20"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/px_20"/>
+
+    <EditText
+        android:id="@+id/etOtp6"
+        android:layout_width="@dimen/px_100"
+        android:layout_height="match_parent"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/px_60"
+        android:gravity="center"
+        android:inputType="number"
+        android:enabled="false"
+        android:background="@color/transparent"/>
+
+
+</LinearLayout>
