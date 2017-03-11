@@ -98,6 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/image_height_feed" />
         <TextView
+            android:id="@+id/tv_restaurant_feed_address"
             android:layout_below="@id/tv_feed_description"
             android:layout_marginRight="@dimen/spacing_extra_huge"
             android:layout_alignParentRight="true"

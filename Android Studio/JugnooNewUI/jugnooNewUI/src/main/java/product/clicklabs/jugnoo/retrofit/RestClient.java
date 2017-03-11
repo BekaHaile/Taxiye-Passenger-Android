@@ -213,6 +213,11 @@ public class RestClient {
     }
 
 
+    public static FeedApiService getFeedApiService() {
+        return FEED_API_SERVICE;
+    }
+
+
 
 
     public static void setupPayApiRestClient() {
