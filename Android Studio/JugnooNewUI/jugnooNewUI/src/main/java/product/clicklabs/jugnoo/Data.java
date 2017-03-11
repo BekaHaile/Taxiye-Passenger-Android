@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.DeliveryData;
+import product.clicklabs.jugnoo.datastructure.FeedData;
 import product.clicklabs.jugnoo.datastructure.FreshData;
 import product.clicklabs.jugnoo.datastructure.GroceryData;
 import product.clicklabs.jugnoo.datastructure.MealsData;
@@ -100,6 +101,7 @@ public class Data {
 	private static DeliveryData DeliveryData;
 	private static MenusData menusData;
 	private static PayData payData;
+	private static FeedData feedData;
 
 	
 
@@ -143,6 +145,7 @@ public class Data {
 			autoData = null;
 			freshData = null;
 			mealsData = null;
+			feedData = null;
 			DeliveryData = null;
 
 			facebookUserData = null;
@@ -517,5 +520,13 @@ public class Data {
 	}
 	public static boolean isJeanieShownInSession(){
 		return jeanieShownInSession;
+	}
+
+	public static FeedData getFeedData() {
+		return feedData;
+	}
+
+	public static void setFeedData(FeedData feedData) {
+		Data.feedData = feedData;
 	}
 }

@@ -412,6 +412,9 @@ public class ApiFindADriver {
 			if(findADriverResponse.getTopupCardEnabled() != null){
 				Data.userData.setTopupCardEnabled(findADriverResponse.getTopupCardEnabled());
 			}
+			if(findADriverResponse.getFeedEnabled() != null) {
+				Data.userData.setFeedEnabled(findADriverResponse.getFeedEnabled());
+			}
 
 		} catch (Exception exception) {
 			exception.printStackTrace();

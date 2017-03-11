@@ -450,8 +450,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
                     addFeedFragment();
-//                   Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
-//                    lastClientId = Config.getMenusClientId();
+                    Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
+                    lastClientId = Config.getFeedClientId();
 
                 } else {
                     openCart();

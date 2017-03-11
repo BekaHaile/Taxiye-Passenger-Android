@@ -21,6 +21,7 @@ public enum MenuInfoTags {
     GROCERY("grocery"),
     MENUS("menus"),
     PAY("pay"),
+    FEED("feed"),
     DELIVERY("delivery"),
     JUGNOO_STAR("jugnoo_star");
 

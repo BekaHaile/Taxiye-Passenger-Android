@@ -339,6 +339,33 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/linearLayoutSubFeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="53px"
+                android:layout_height="53px"
+                android:layout_marginLeft="110px"
+                android:src="@drawable/ic_menu_category_feed_selector"
+                android:tag="mwar"/>
+
+            <TextView
+                android:id="@+id/textViewFeed"
+                android:layout_width="match_parent"
+                android:layout_height="81px"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:text="@string/feed"
+                android:textColor="@color/text_color_white_theme_selector"
+                android:textSize="@dimen/text_size_38"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>
