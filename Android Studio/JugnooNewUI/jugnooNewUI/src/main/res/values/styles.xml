@@ -354,7 +354,7 @@
     <style name="Feed_Line_Horizontal">
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:background">@color/stroke_light_grey</item>
+        <item name="android:background">@color/stroke_light_grey_alpha</item>
     </style>
 
 </resources>

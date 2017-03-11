@@ -1559,7 +1559,8 @@
     <string name="na">NA</string>
     <string name="login_signup_with">Login / Signup with</string>
     <string name="please_check_tnc">Offer conditions not met. Please review detailed Terms and Conditions for more information</string>
-    <string name="dummy_text"><b>Matthew Young</b> reviewed <b>Pizza Hut</b> ewqewqe wqdadfsdfssdfsdf</string>
+    <string name="dummy_text"><b>Matthew Young</b> reviewed <b>Pizza Hut</b></string>
+    <string name="dummy_text_2">Matthew Young reviewed Pizza Hut</string>
     <string name="feed">Feed</string>
 
 </resources>

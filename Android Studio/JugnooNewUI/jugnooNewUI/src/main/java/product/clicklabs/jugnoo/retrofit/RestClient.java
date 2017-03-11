@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.retrofit;
 
 import com.jakewharton.retrofit.Ok3Client;
 import com.jugnoo.pay.retrofit.PayApiService;
+import com.sabkuchfresh.apis.FeedApiService;
 import com.sabkuchfresh.apis.FreshApiService;
 import com.sabkuchfresh.apis.MenusApiService;
 
@@ -26,6 +27,7 @@ public class RestClient {
     private static ChatApiService CHAT_API_SERVICE = null;
     private static MenusApiService MENUS_API_SERVICE = null;
     private static PayApiService PAY_API_SERVICE = null;
+    private static FeedApiService FEED_API_SERVICE = null;
 
     static {
         setupRestClient();
@@ -34,6 +36,20 @@ public class RestClient {
         setupChatApiRestClient();
         setupMenusApiRestClient();
         setupPayApiRestClient();
+        setupFeedApiRestClient();
+    }
+
+    private static void setupFeedApiRestClient() {
+        if(FEED_API_SERVICE == null) {
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getFeedServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+            setLogger(builder);
+
+            RestAdapter restAdapter = builder.build();
+            FEED_API_SERVICE = restAdapter.create(FeedApiService.class);
+        }
     }
 
     private static OkHttpClient getOkHttpClient(){

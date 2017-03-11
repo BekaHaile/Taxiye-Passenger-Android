@@ -54,6 +54,7 @@ public class FeedHomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        fetchFeedsApi(3123.321,31231.3123);
         FeedOfferingListAdapter feedOfferingListAdapter = new FeedOfferingListAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.Callback() {
             @Override
             public void onLikeClick(Object object) {
@@ -67,6 +68,13 @@ public class FeedHomeFragment extends Fragment {
         });
         recyclerView.setAdapter(feedOfferingListAdapter);
         return rootView;
+    }
+
+    private void fetchFeedsApi(double lat, double lng) {
+
+
+
+
     }
 
 }
