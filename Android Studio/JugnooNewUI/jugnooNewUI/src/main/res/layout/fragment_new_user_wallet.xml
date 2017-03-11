@@ -103,7 +103,7 @@
                 android:layout_marginLeft="@dimen/px_40"
                 android:layout_marginTop="@dimen/px_10"
                 android:layout_below="@+id/ivMobikwik"
-                android:text="@string/mobikwik_wallet"
+                android:text="50% Cashback"
                 android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/text_size_26"
                 app:font="maven"/>
@@ -149,9 +149,9 @@
                 android:layout_below="@+id/ivFreecharge"
                 android:layout_marginLeft="@dimen/px_40"
                 android:layout_marginTop="@dimen/px_10"
-                android:text="@string/freecharge_wallet"
+                android:text="50% Cashback"
                 android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_32"
+                android:textSize="@dimen/text_size_26"
                 app:font="maven"/>
 
 

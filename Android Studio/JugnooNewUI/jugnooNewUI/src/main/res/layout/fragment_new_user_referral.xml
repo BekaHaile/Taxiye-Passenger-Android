@@ -14,7 +14,7 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/editTextPromoCode"
+            android:id="@+id/etPromoCode"
             android:layout_width="wrap_content"
             android:layout_height="80px"
             android:layout_marginTop="36px"

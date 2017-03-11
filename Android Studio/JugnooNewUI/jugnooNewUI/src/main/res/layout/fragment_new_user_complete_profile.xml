@@ -39,7 +39,7 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:id="@+id/rlLSFacebook"
+            android:id="@+id/rlFacebook"
             android:layout_width="268px"
             android:layout_height="@dimen/splash_button_height"
             android:gravity="center_horizontal"
@@ -73,7 +73,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rlLSGoogle"
+            android:id="@+id/rlGoogle"
             android:layout_width="268px"
             android:layout_height="@dimen/splash_button_height"
             android:layout_marginLeft="@dimen/px_20"
@@ -185,7 +185,7 @@
             android:tag="mhar" />
 
         <EditText
-            android:id="@+id/editTextSName"
+            android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="88px"
             android:layout_centerVertical="true"
@@ -229,7 +229,7 @@
             android:tag="mhar" />
 
         <EditText
-            android:id="@+id/editTextSEmail"
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="88px"
             android:layout_centerVertical="true"

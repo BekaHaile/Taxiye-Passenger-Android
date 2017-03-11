@@ -54,6 +54,8 @@ public class NewUserWalletFragment extends Fragment {
             }
         });
 
+        activity.getTvTitle().setText(activity.getResources().getString(R.string.connect_wallet));
+        activity.setTickLineView();
         return root;
     }
 }

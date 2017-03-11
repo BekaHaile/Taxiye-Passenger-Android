@@ -15,7 +15,7 @@
         android:background="@color/white" >
 
         <TextView
-            android:id="@+id/textViewTitle"
+            android:id="@+id/tvTitle"
             android:text="FATAFAT"
             style="@style/title"
             app:font="maven"/>
@@ -25,6 +25,7 @@
             style="@style/back_image"/>
 
         <TextView
+            android:id="@+id/tvSkip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/skip"
@@ -43,45 +44,52 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@+id/topBar"
-        android:layout_marginTop="@dimen/px_50"
+        android:layout_marginTop="25dp"
         android:gravity="center_vertical"
-        android:layout_marginLeft="106px"
-        android:layout_marginRight="106px"
+        android:layout_marginLeft="53dp"
+        android:layout_marginRight="53dp"
+        android:tag="@string/dont_touch_me"
         android:layout_centerHorizontal="true">
         
         <ImageView
-            android:layout_width="@dimen/px_70"
-            android:layout_height="@dimen/px_70"
+            android:id="@+id/ivTickReferral"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:background="@drawable/circle_border_menus"
-            android:src="@drawable/ic_bar_check"
-            android:padding="@dimen/px_7"/>
+            android:padding="4dp"
+            android:tag="@string/dont_touch_me"/>
 
         <ImageView
+            android:id="@+id/ivLineReferral"
             android:layout_width="0dp"
-            android:layout_height="@dimen/px_15"
+            android:layout_height="8dp"
             android:layout_weight="1"
-            android:src="@color/bar_color"/>
+            android:background="@color/bar_color"
+            android:tag="@string/dont_touch_me"/>
 
         <ImageView
-            android:layout_width="@dimen/px_70"
-            android:layout_height="@dimen/px_70"
+            android:id="@+id/ivTickProfile"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:background="@drawable/circle_border_menus"
-            android:src="@drawable/ic_bar_check"
-            android:padding="@dimen/px_7"/>
+            android:padding="4dp"
+            android:tag="@string/dont_touch_me"/>
 
         <ImageView
+            android:id="@+id/ivLineProfile"
             android:layout_width="0dp"
-            android:layout_height="@dimen/px_15"
+            android:layout_height="8dp"
             android:layout_weight="1"
-            android:src="@color/bar_color"/>
+            android:background="@color/bar_color"
+            android:tag="@string/dont_touch_me"/>
 
         <ImageView
-            android:layout_width="@dimen/px_70"
-            android:layout_height="@dimen/px_70"
+            android:id="@+id/ivTickWallet"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:background="@drawable/circle_border_menus"
-            android:src="@drawable/ic_bar_check"
-            android:padding="@dimen/px_7"/>
-
+            android:padding="4dp"
+            android:tag="@string/dont_touch_me"/>
 
     </LinearLayout>
 
