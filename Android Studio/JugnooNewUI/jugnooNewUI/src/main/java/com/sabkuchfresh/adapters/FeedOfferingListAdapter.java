@@ -7,6 +7,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
+import com.squareup.picasso.CircleTransform;
+import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersGlideTransform;
+import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -34,11 +40,12 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
     private FreshActivity activity;
     private Callback callback;
-    private ArrayList<FeedDetail> feedDetailArrayList;
+    private List<FeedDetail> feedDetailArrayList;
     private RecyclerView recyclerView;
     private static final StyleSpan BOLD_SPAN = new StyleSpan(android.graphics.Typeface.BOLD);
+    private static final StyleSpan BOLD_SPAN_2 = new StyleSpan(android.graphics.Typeface.BOLD);//since we cant reuse same style span again in spannable
 
-    public FeedOfferingListAdapter(Activity activity, ArrayList<FeedDetail> reviewImages, RecyclerView recyclerView, Callback callback) {
+    public FeedOfferingListAdapter(Activity activity, List<FeedDetail> reviewImages, RecyclerView recyclerView, Callback callback) {
         this.activity = (FreshActivity) activity;
         this.feedDetailArrayList = reviewImages;
         this.callback = callback;
@@ -46,7 +53,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
     }
 
 
-    public void setList(ArrayList<FeedDetail> reviewImages) {
+    public void setList(List<FeedDetail> reviewImages) {
         this.feedDetailArrayList = reviewImages;
         notifyDataSetChanged();
     }
@@ -62,22 +69,21 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
         FeedDetail feedDetail = feedDetailArrayList.get(position);
-        String imageUrl = null;
+        String imageUrl = null,restaurantAddress = null, userImage = null;
         Spannable title = null;
-        String restaurantAddress = null, userImage = null;
         Double rating = null;
         if (feedDetail != null && feedDetail.getFeedType() != null) {
 
 
             switch (feedDetail.getFeedType()) {
-                case COMMENT_ON_POST:
+             /*   case COMMENT_ON_POST:
                     break;
                 case LIKE_ON_POST:
                     break;
                 case COMMENT_ON_REVIEW:
                     break;
                 case LIKE_ON_REVIEW:
-                    break;
+                    break;*/
                 case REVIEW:
                     //Choose which picture to display
                     if (!TextUtils.isEmpty(feedDetail.getImageUrl())) {
@@ -89,22 +95,23 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                     }
 
                     //Form Title
-                    if (feedDetail.getStarCount() != null && feedDetail.getStarCount() > 0)
-                        rating = feedDetail.getStarCount();
+                    if (feedDetail.getStarCount() != null && feedDetail.getStarCount() > 0) rating = feedDetail.getStarCount();
+
+
                     String actualTitle = feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getRestaurantName();
                     title = new SpannableString(actualTitle);
-                    title.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    title.setSpan(BOLD_SPAN, actualTitle.length() - feedDetail.getRestaurantName().length(), actualTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    title.setSpan(BOLD_SPAN, actualTitle.length() - feedDetail.getRestaurantName().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    title.setSpan(BOLD_SPAN_2, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
                     //Chooser UsersImage
-                    if (feedDetail.getUserImage() != null && !TextUtils.isEmpty(feedDetail.getImageUrl()))
+                    if (!TextUtils.isEmpty(feedDetail.getUserImage()))
                         userImage = feedDetail.getUserImage();
 
                     break;
                 case POST:
                 default:
                     //Choose which picture to display
-                    if (feedDetail.getImageUrl() != null && !TextUtils.isEmpty(feedDetail.getImageUrl()))
+                    if (!TextUtils.isEmpty(feedDetail.getImageUrl()))
                         imageUrl = feedDetail.getImageUrl();
 
                     //Form Title
@@ -112,7 +119,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
                     //Chooser UsersImage
-                    if (feedDetail.getUserImage() != null && !TextUtils.isEmpty(feedDetail.getImageUrl()))
+                    if (!TextUtils.isEmpty(feedDetail.getUserImage()))
                         userImage = feedDetail.getUserImage();
 
                     break;
@@ -131,12 +138,12 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         //SetImageUrl
         holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.VISIBLE);
         if (imageUrl != null)
-            Glide.with(activity).load(imageUrl).bitmapTransform(new RoundedCornersGlideTransform(activity, 3, 0)).into(holder.ivPlaceImage);
+            Picasso.with(activity).load(imageUrl).resize(Utils.convertDpToPx(activity,310), Utils.convertDpToPx(activity,110)).centerCrop().transform(new RoundedCornersTransformation(Utils.convertDpToPx(activity,6),0)).into(holder.ivPlaceImage);
 
 
         //Set Profile Pic
         if (userImage != null)
-            Glide.with(activity).load(userImage).bitmapTransform(new RoundedCornersGlideTransform(activity, 25, 0)).into(holder.ivPlaceImage);
+            Picasso.with(activity).load(userImage).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(holder.ivProfilePic);
 
         //set Heading
         holder.tvFeedHeading.setText(title);
@@ -157,12 +164,14 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
     private String formLikesComment(int likeCount, int commentCount) {
 
-        return likeCount + " likes " + activity.getString(R.string.bullet) + commentCount + " comments";
+        String likeSuffix = likeCount>1?" likes ":" like ";
+        String commentSuffix = commentCount>1?" comments ":" comment ";
+        return likeCount + likeSuffix + activity.getString(R.string.bullet) + " " + commentCount + commentSuffix;
     }
 
     @Override
     public int getItemCount() {
-        return feedDetailArrayList == null ? 25 : feedDetailArrayList.size();
+        return feedDetailArrayList == null ? 0 : feedDetailArrayList.size();
     }
 
     @Override

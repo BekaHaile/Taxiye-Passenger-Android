@@ -190,12 +190,12 @@ public class FeedDetail {
         this.restaurantAddress = restaurantAddress;
     }
     public enum FeedType{
-        POST(" Posted "),
-        REVIEW(" Reviewed "),
-        LIKE_ON_POST("Liked a post"),
-        LIKE_ON_REVIEW (" Liked a review "),
-        COMMENT_ON_POST(" Commented on Post "),
-        COMMENT_ON_REVIEW(" Commented on Review ");
+        POST(" posted "),
+        REVIEW(" reviewed "),
+        LIKE_ON_POST(" liked a post"),
+        LIKE_ON_REVIEW (" liked a review "),
+        COMMENT_ON_POST(" commented on Post "),
+        COMMENT_ON_REVIEW(" commented on Review ");
 
         private String value;
         FeedType(String value) {

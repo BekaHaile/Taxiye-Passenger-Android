@@ -1,6 +1,7 @@
 package com.sabkuchfresh.apis;
 
 import com.jugnoo.pay.models.CommonResponse;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 
 import java.util.Map;
@@ -22,6 +23,6 @@ public interface FeedApiService {
 
     @FormUrlEncoded
     @POST("/v1/generate_feed")
-    void getAllFeeds(@FieldMap Map<String, String> params, Callback<FetchFeedbackResponse> callback);
+    void getAllFeeds(@FieldMap Map<String, String> params, Callback<FeedListResponse> callback);
 
 }
