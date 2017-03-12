@@ -162,7 +162,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
     @Override
     public int getItemCount() {
-        return feedDetailArrayList == null ? 25 : feedDetailArrayList.size();
+        return feedDetailArrayList == null ? 0 : feedDetailArrayList.size();
     }
 
     @Override

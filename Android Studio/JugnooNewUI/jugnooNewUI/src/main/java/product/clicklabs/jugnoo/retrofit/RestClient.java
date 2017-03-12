@@ -39,19 +39,6 @@ public class RestClient {
         setupFeedApiRestClient();
     }
 
-    private static void setupFeedApiRestClient() {
-        if(FEED_API_SERVICE == null) {
-            RestAdapter.Builder builder = new RestAdapter.Builder()
-                    .setEndpoint(Config.getFeedServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLogLevel(RestAdapter.LogLevel.FULL);
-            setLogger(builder);
-
-            RestAdapter restAdapter = builder.build();
-            FEED_API_SERVICE = restAdapter.create(FeedApiService.class);
-        }
-    }
-
     private static OkHttpClient getOkHttpClient(){
 
         ArrayList<Protocol> protocolList = new ArrayList<>();
@@ -213,10 +200,6 @@ public class RestClient {
     }
 
 
-    public static FeedApiService getFeedApiService() {
-        return FEED_API_SERVICE;
-    }
-
 
 
 
@@ -237,4 +220,21 @@ public class RestClient {
         return PAY_API_SERVICE;
     }
 
+
+    private static void setupFeedApiRestClient() {
+        if(FEED_API_SERVICE == null) {
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getFeedServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+            setLogger(builder);
+
+            RestAdapter restAdapter = builder.build();
+            FEED_API_SERVICE = restAdapter.create(FeedApiService.class);
+        }
+    }
+
+    public static FeedApiService getFeedApiService() {
+        return FEED_API_SERVICE;
+    }
 }

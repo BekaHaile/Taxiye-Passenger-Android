@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jugnoo.pay.models.CommonResponse;
 import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
@@ -18,7 +17,6 @@ import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -80,6 +78,9 @@ public class FeedHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
+
+        activity = (FreshActivity) getActivity();
+
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         fetchFeedsApi();
@@ -95,6 +96,15 @@ public class FeedHomeFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(feedOfferingListAdapter);
+
+        activity.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                activity.getTransactionUtils().openFeedAddPostFragment(activity, activity.getRelativeLayoutContainer());
+            }
+        }, 1000);
+
+
         return rootView;
     }
 
@@ -144,9 +154,6 @@ public class FeedHomeFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
     }
     private void retryDialog(DialogErrorType dialogErrorType){
         DialogPopup.dialogNoInternet(activity,

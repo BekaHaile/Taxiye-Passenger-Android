@@ -70,6 +70,7 @@ import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
+import com.sabkuchfresh.fragments.FeedAddPostFragment;
 import com.sabkuchfresh.fragments.FeedHomeFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
@@ -954,10 +955,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             topBar.ivAddReview.setVisibility(View.GONE);
             topBar.tvNameCap.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
+            int padding = (int) (20f * ASSL.minRatio());
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
-                llSearchCartContainerVis = View.VISIBLE;
                 llCartContainerVis = View.VISIBLE;
                 ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -976,7 +977,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
 
             } else if (fragment instanceof FreshFragment) {
-                llSearchCartContainerVis = View.VISIBLE;
                 llCartContainerVis = View.VISIBLE;
                 ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -991,7 +991,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
 
             } else if (fragment instanceof MealFragment) {
-                llSearchCartContainerVis = View.VISIBLE;
                 llCartContainerVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -1008,7 +1007,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.title.setText(getResources().getString(R.string.meals));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             } else if (fragment instanceof GroceryFragment) {
-                llSearchCartContainerVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
 
@@ -1023,7 +1021,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
 
             } else if (fragment instanceof MenusFragment) {
-                llSearchCartContainerVis = View.VISIBLE;
                 ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -1094,7 +1091,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             } else if (fragment instanceof FreshCheckoutMergedFragment || fragment instanceof MenusCheckoutMergedFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                llSearchCartContainerVis = View.VISIBLE;
                 llSearchCartVis = View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
@@ -1132,7 +1128,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.GONE);
-                llSearchCartContainerVis = View.VISIBLE;
                 topBar.llSearchContainer.setVisibility(View.VISIBLE);
                 topBar.animateSearchBar(true);
 
@@ -1193,6 +1188,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             	topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setImageResource(R.drawable.ic_cross_grey_selector);
+                padding = (int) (25f * ASSL.minRatio());
+
                 topBar.title.setVisibility(View.GONE);
                 topBar.tvNameCap.setVisibility(View.VISIBLE);
                 try {
@@ -1201,7 +1198,17 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     e.printStackTrace();
                 }
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof FeedAddPostFragment){
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.title.setText(R.string.add_post);
+                topBar.imageViewBack.setImageResource(R.drawable.ic_cross_grey_selector);
+                padding = (int) (25f * ASSL.minRatio());
+                llSearchCartVis = View.GONE;
+
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
+            topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
 
             topBar.getLlSearchCartContainer().setVisibility(llSearchCartContainerVis);

@@ -1562,5 +1562,11 @@
     <string name="dummy_text"><b>Matthew Young</b> reviewed <b>Pizza Hut</b></string>
     <string name="dummy_text_2">Matthew Young reviewed Pizza Hut</string>
     <string name="feed">Feed</string>
+    <string name="review">Review</string>
+    <string name="ask">Ask</string>
+    <string name="review_at">Review @</string>
+    <string name="share_your_experience">Share your experience…</string>
+    <string name="enter_restaurant_name">Enter restaurant name</string>
+    <string name="add_post">Add Post</string>
 
 </resources>

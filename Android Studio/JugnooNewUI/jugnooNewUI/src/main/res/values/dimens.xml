@@ -476,5 +476,8 @@
     <dimen name="font_tiny">10sp</dimen>
 
     <dimen name="image_height_feed">110dp</dimen>
+    <dimen name="height_tabs_add_post">45dp</dimen>
+
+    <dimen name="dp_20">20dp</dimen>
 
 </resources>
