@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -114,25 +113,25 @@ public class FeedHomeFragment extends Fragment {
                 fetchFeedsApi(false);
             }
         });
-
         feedOfferingListAdapter = new FeedOfferingListAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.Callback() {
             @Override
-            public void onLikeClick(FeedDetail feedDetail) {
+            public void onLikeClick(FeedDetail feedDetail, final int position) {
                 if (likeFeed == null)
-                    likeFeed = new LikeFeed(new LikeFeed.LikeCallbackResponse() {
+                        likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
                         @Override
-                        public void onSuccess() {
-
+                        public void onSuccess(boolean isLiked) {
+                            feedOfferingListAdapter.notifyOnLike(position,isLiked);
                         }
                     });
-                likeFeed.likeFeed(feedDetail.getPostId(), getActivity());
+
+                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked());
 
             }
 
             @Override
-            public void onCommentClick(final FeedDetail feedDetail) {
+            public void onCommentClick(final FeedDetail feedDetail,int positionInOriginalList) {
 
-                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail);
+                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail,positionInOriginalList);
 
             }
 
@@ -204,7 +203,6 @@ public class FeedHomeFragment extends Fragment {
                         swipeRefreshLayout.setRefreshing(false);
                         try {
                             String message = feedbackResponse.getMessage();
-                            // TODO: 13/03/17 third argument should be getError()
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
                                     feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
@@ -273,4 +271,8 @@ public class FeedHomeFragment extends Fragment {
     };
 
 
+    public void notifyOnLikeFromCommentsFragment(int positionItemLikedUnlikedInCommentsFragment) {
+        if(feedOfferingListAdapter!=null)
+            feedOfferingListAdapter.notifyItemChanged(positionItemLikedUnlikedInCommentsFragment);
+    }
 }

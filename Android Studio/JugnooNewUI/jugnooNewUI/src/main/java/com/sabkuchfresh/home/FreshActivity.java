@@ -73,7 +73,7 @@ import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.FeedAddPostFragment;
-import com.sabkuchfresh.fragments.FeedCommentsFragment;
+import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedHomeFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
@@ -1239,7 +1239,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             }
-            else if(fragment instanceof FeedCommentsFragment){
+            else if(fragment instanceof FeedOfferingCommentsFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);

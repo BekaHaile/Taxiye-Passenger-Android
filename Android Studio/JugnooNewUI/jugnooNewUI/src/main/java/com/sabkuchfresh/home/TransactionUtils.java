@@ -9,7 +9,7 @@ import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.FeedAddPostFragment;
-import com.sabkuchfresh.fragments.FeedCommentsFragment;
+import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
@@ -336,13 +336,13 @@ public class TransactionUtils {
     }
 
 
-    public void openFeedCommentsFragment(FragmentActivity activity, View container,FeedDetail feedDetail) {
-        if (!checkIfFragmentAdded(activity, FeedCommentsFragment.class.getName())) {
+    public void openFeedCommentsFragment(FragmentActivity activity, View container, FeedDetail feedDetail, int positionInOriginalList) {
+        if (!checkIfFragmentAdded(activity, FeedOfferingCommentsFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, 0)
-                    .add(container.getId(), FeedCommentsFragment.newInstance(feedDetail),
-                            FeedCommentsFragment.class.getName())
-                    .addToBackStack(FeedCommentsFragment.class.getName())
+                    .add(container.getId(), FeedOfferingCommentsFragment.newInstance(feedDetail,positionInOriginalList),
+                            FeedOfferingCommentsFragment.class.getName())
+                    .addToBackStack(FeedOfferingCommentsFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

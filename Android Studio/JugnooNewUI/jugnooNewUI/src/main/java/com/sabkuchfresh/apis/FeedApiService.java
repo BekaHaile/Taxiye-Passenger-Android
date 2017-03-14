@@ -4,6 +4,7 @@ import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -38,11 +39,16 @@ public interface FeedApiService {
     @POST("/feeds/v1/like")
     void likeFeed(@FieldMap Map<String, String> params, Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/feeds/v1/unlike")
+    void unlikeFeed(@FieldMap Map<String, String> params, Callback<SettleUserDebt> callback);
+
     @GET("/suggest/{query}")
     void suggestRestaurant(@Path("query") String query, Callback<SuggestRestaurantQueryResp> callback);
 
     @FormUrlEncoded
     @POST("/feeds/v1/sync_contacts")
     Response syncContacts(@FieldMap Map<String, String> params);
+
 
 }

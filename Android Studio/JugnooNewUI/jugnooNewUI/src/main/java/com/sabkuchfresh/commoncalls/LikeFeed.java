@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -26,19 +27,18 @@ import retrofit.client.Response;
 
 public class LikeFeed {
 
-
     private LikeFeed(){
 
     }
 
-    public LikeCallbackResponse likeCallbackResponse;
-    public LikeFeed(LikeCallbackResponse callbackResponse){
-        likeCallbackResponse = callbackResponse;
+    public LikeUnLikeCallbackResponse likeUnLikeCallbackResponse;
+    public LikeFeed(LikeUnLikeCallbackResponse callbackResponse){
+        likeUnLikeCallbackResponse = callbackResponse;
 
     }
 
 
-    public  void likeFeed(final long  postId, final Activity activity) {
+    public  void likeFeed(final long postId, final Activity activity, final boolean isLikeAPI) {
         try {
             if(MyApplication.getInstance().isOnline()) {
 
@@ -47,9 +47,9 @@ public class LikeFeed {
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, "bc1ff5a34edab8d37c56a977023b8f4d473d22e83facfd534f26341579c94b54");
                 params.put(Constants.KEY_POST_ID, String.valueOf(postId));
-
                 new HomeUtil().putDefaultParams(params);
-                RestClient.getFeedApiService().likeFeed(params, new retrofit.Callback<SettleUserDebt>() {
+
+                Callback<SettleUserDebt>  callBack = new retrofit.Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt feedbackResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
@@ -58,7 +58,7 @@ public class LikeFeed {
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if(feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
                                     Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show();
-                                    likeCallbackResponse.onSuccess();
+                                    likeUnLikeCallbackResponse.onSuccess(isLikeAPI);
 
 
                                 } else {
@@ -67,34 +67,43 @@ public class LikeFeed {
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            retryDialogLikeFeed(DialogErrorType.SERVER_ERROR,activity,postId);
+                            retryDialogLikeFeed(DialogErrorType.SERVER_ERROR,activity,postId,isLikeAPI);
                         }
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                        retryDialogLikeFeed(DialogErrorType.CONNECTION_LOST,activity,postId);
+                        retryDialogLikeFeed(DialogErrorType.CONNECTION_LOST,activity,postId,isLikeAPI);
 
                     }
-                });
+                };
+
+
+                 if(isLikeAPI) {
+                     RestClient.getFeedApiService().likeFeed(params, callBack);
+                 }
+                else {
+                     RestClient.getFeedApiService().unlikeFeed(params, callBack);
+                 }
             }
             else {
-                retryDialogLikeFeed(DialogErrorType.NO_NET,activity,postId);
+
+                retryDialogLikeFeed(DialogErrorType.NO_NET,activity,postId,isLikeAPI);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+ }
 
 
 
-    }
-    private  void retryDialogLikeFeed(DialogErrorType dialogErrorType, final Activity activity, final long postId){
+    private  void retryDialogLikeFeed(DialogErrorType dialogErrorType, final Activity activity, final long postId,final boolean isLikeAPI){
         DialogPopup.dialogNoInternet(activity, dialogErrorType,
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        likeFeed(postId,activity);
+                        likeFeed(postId,activity, isLikeAPI);
                     }
 
                     @Override
@@ -109,7 +118,7 @@ public class LikeFeed {
                 });
     }
 
-    public  interface  LikeCallbackResponse{
-        void onSuccess();
+    public  interface LikeUnLikeCallbackResponse {
+        void onSuccess(boolean isLiked);
     }
 }

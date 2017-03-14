@@ -86,6 +86,8 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
             switch (feedDetail.getFeedType()) {
+                case COMMENT_ON_REVIEW:
+                case LIKE_ON_REVIEW:
                 case REVIEW:
                     if(feedDetail.getFeedType()!= FeedDetail.FeedType.REVIEW) {
                         showUserActivity = true;
@@ -245,13 +247,16 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
     }
 
 
+    public void notifyOnLike(int position,boolean isLiked){
 
-
-    public static Calendar getCalendar(Date date) {
-        Calendar cal = Calendar.getInstance(Locale.getDefault());
-        cal.setTime(date);
-        return cal;
+        if(feedDetailArrayList!=null && position<feedDetailArrayList.size())
+        {
+            feedDetailArrayList.get(position).setLiked(isLiked);
+            notifyItemChanged(position);
+        }
     }
+
+
 
     private static Calendar feedPostedCal = Calendar.getInstance();
     private static Calendar currentDateCal = Calendar.getInstance();
@@ -350,16 +355,11 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
         switch (viewClicked.getId()) {
             case R.id.view_action_like:
-                //To be performed on Success
-                feedDetailArrayList.get(position).setLiked(!feedDetailArrayList.get(position).isLiked());
-                Drawable drawableToSet = feedDetailArrayList.get(position).isLiked()?ContextCompat.getDrawable(activity,R.drawable.ic_like_active):ContextCompat.getDrawable(activity,R.drawable.ic_like);
-                ((TextView)((LinearLayout)viewClicked).getChildAt(0)).setCompoundDrawablesWithIntrinsicBounds(drawableToSet,null,null,null);
-
-                callback.onLikeClick(feedDetailArrayList.get(position));
+                callback.onLikeClick(feedDetailArrayList.get(position),position);
                 break;
             case R.id.view_action_comment:
             case R.id.root_layout_item:
-                callback.onCommentClick(feedDetailArrayList.get(position));
+                callback.onCommentClick(feedDetailArrayList.get(position),position);
                 break;
 
             case R.id.tv_feed_owner_title:
@@ -373,8 +373,8 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
     public interface Callback {
-        void onLikeClick(FeedDetail object);
-        void onCommentClick(FeedDetail postId);
+        void onLikeClick(FeedDetail object, int position);
+        void onCommentClick(FeedDetail postId, int position);
         void onRestaurantClick(int restaurantId);
     }
 

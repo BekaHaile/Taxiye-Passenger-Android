@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sabkuchfresh.adapters.FeedOfferingCommentsAdapter;
 import com.sabkuchfresh.commoncalls.LikeFeed;
@@ -33,17 +32,16 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class FeedCommentsFragment extends Fragment {
+public class FeedOfferingCommentsFragment extends Fragment {
 
     private static final String FEED_DETAIL = "feed_detail";
-    private static final String FEED_POST = "feedpost";
+    private static final String POSITION_IN_ORIGINAL_LIST = "positionInOriginalList";
     private FeedDetail  feedDetail;
     private FeedOfferingCommentsAdapter feedOfferingCommentsAdapter;
     private FreshActivity activity;
@@ -52,17 +50,19 @@ public class FeedCommentsFragment extends Fragment {
     private Button btnSubmit;
     public String commentAdded;
     private LikeFeed likeFeed;
+    private int positionInOriginalList;
 
 
-    public FeedCommentsFragment() {
+    public FeedOfferingCommentsFragment() {
         // Required empty public constructor
     }
 
 
-    public static FeedCommentsFragment newInstance(FeedDetail feedDetail) {
-        FeedCommentsFragment fragment = new FeedCommentsFragment();
+    public static FeedOfferingCommentsFragment newInstance(FeedDetail feedDetail, int positionInOriginalList) {
+        FeedOfferingCommentsFragment fragment = new FeedOfferingCommentsFragment();
         Bundle args = new Bundle();
         args.putSerializable(FEED_DETAIL, feedDetail);
+        args.putSerializable(POSITION_IN_ORIGINAL_LIST, positionInOriginalList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,6 +73,7 @@ public class FeedCommentsFragment extends Fragment {
 
         if (getArguments() != null) {
             feedDetail = (FeedDetail) getArguments().getSerializable(FEED_DETAIL);
+            positionInOriginalList = getArguments().getInt(POSITION_IN_ORIGINAL_LIST);
         }
     }
 
@@ -99,16 +100,22 @@ public class FeedCommentsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         feedOfferingCommentsAdapter = new FeedOfferingCommentsAdapter(getActivity(), null, recyclerView, new FeedOfferingCommentsAdapter.Callback() {
             @Override
-            public void onLikeClick(Object object) {
+            public void onLikeClick(final int position) {
                 if(likeFeed ==null)
-                    likeFeed = new LikeFeed(new LikeFeed.LikeCallbackResponse() {
+                    likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
                         @Override
-                        public void onSuccess() {
-
+                        public void onSuccess(boolean isLikeAPI) {
+                            feedOfferingCommentsAdapter.notifyOnLike(position,isLikeAPI);
+                            if(activity.getFeedHomeFragment()!=null) {
+                                //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
+                                activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
+                            }
                         }
 
                     });
-                likeFeed.likeFeed(feedDetail.getPostId(),getActivity());
+                likeFeed.likeFeed(feedDetail.getPostId(),getActivity(), !feedDetail.isLiked());
+             ;
+
             }
 
             @Override

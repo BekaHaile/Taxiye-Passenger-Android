@@ -64,6 +64,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         notifyDataSetChanged();
     }
 
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
@@ -159,7 +160,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
 
         switch (viewClicked.getId()) {
             case R.id.view_action_like:
-                    callback.onLikeClick(feedDetailData.get(position));
+                    callback.onLikeClick(position);
                 break;
             case R.id.view_action_comment:
                 break;
@@ -168,9 +169,17 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    public void notifyOnLike(int position,boolean isLikeAPI) {
+        if(feedDetailData!=null && position<feedDetailData.size() && feedDetailData.get(position) instanceof FeedDetail)
+        {
+            ((FeedDetail) feedDetailData.get(position)).setLiked(isLikeAPI);
+            notifyItemChanged(position);
+        }
+    }
+
 
     public interface Callback {
-        void onLikeClick(Object object);
+        void onLikeClick(int positionOfLayout);
 
         void onCommentClick(Object object);
 
