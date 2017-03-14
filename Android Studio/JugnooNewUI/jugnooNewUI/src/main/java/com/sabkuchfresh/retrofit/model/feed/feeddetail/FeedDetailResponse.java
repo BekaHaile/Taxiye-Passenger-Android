@@ -14,6 +14,14 @@ public class FeedDetailResponse {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("error")
+    @Expose
+    private String error;
+
+    public String getError() {
+        return error;
+    }
+
     @SerializedName("post_details")
     @Expose
     private FeedDetail postDetails;

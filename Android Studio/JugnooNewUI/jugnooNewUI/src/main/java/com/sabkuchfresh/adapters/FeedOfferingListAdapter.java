@@ -319,10 +319,10 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
         switch (viewClicked.getId()) {
             case R.id.view_action_like:
-                callback.onLikeClick(feedDetailArrayList.get(position).getPostId());
+                callback.onLikeClick(feedDetailArrayList.get(position));
                 break;
             case R.id.view_action_comment:
-                callback.onCommentClick(feedDetailArrayList.get(position).getPostId());
+                callback.onCommentClick(feedDetailArrayList.get(position));
                 break;
             default:
                 break;
@@ -331,9 +331,9 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
     public interface Callback {
-        void onLikeClick(long object);
+        void onLikeClick(FeedDetail object);
 
-        void onCommentClick(long postId);
+        void onCommentClick(FeedDetail postId);
     }
 
 
@@ -372,6 +372,8 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
          TextView tvUserActivityTitle;
         @Bind(R.id.tv_owner_feed_time)
         TextView tvOwnerTime;
+        @Bind(R.id.vShadowDown)
+        View shadow;
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
             ButterKnife.bind(this, view);

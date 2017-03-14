@@ -1,13 +1,12 @@
 package com.sabkuchfresh.apis;
 
-import com.jugnoo.pay.models.CommonResponse;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
-import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 
 import java.util.Map;
 
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.FieldMap;
@@ -30,6 +29,14 @@ public interface FeedApiService {
     @FormUrlEncoded
     @POST("/feeds/v1/fetch_feed_details")
     void fetchFeedDetails(@FieldMap Map<String, String> params, Callback<FeedDetailResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/feeds/v1/comment")
+    void commentOnFeed(@FieldMap Map<String, String> params, Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/feeds/v1/like")
+    void likeFeed(@FieldMap Map<String, String> params, Callback<SettleUserDebt> callback);
 
     @GET("/suggest/{query}")
     void suggestRestaurant(@Path("query") String query, Callback<SuggestRestaurantQueryResp> callback);

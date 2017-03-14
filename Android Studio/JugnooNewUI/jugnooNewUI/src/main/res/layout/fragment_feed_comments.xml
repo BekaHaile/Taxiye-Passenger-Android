@@ -8,10 +8,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_feed_detail"
+        android:background="@color/feed_grey_background_light"
         android:layout_above="@id/rlSubmit"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
     </android.support.v7.widget.RecyclerView>
 
@@ -28,6 +28,7 @@
             android:layout_height="38.5dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
+            android:visibility="gone"
             android:background="@android:color/transparent"
             android:padding="10dp"
             android:src="@drawable/ic_add_review_camera"/>

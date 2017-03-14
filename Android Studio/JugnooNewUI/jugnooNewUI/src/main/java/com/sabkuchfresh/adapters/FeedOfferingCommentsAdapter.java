@@ -2,23 +2,34 @@ package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
 import android.graphics.Typeface;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
+import com.squareup.picasso.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+
+import product.clicklabs.jugnoo.utils.Utils;
+
 
 
 /**
@@ -33,17 +44,21 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     public static final int TYPE_POST_LAYOUT = 1;
     public static final int TYPE_USERS_COMMENTS = 2;
     public static final int TYPE_MY_COMMENT = 3;
+    private TextWatcher textWatcherMyComment;
 
 
     private static final StyleSpan BOLD_SPAN = new StyleSpan(Typeface.BOLD);
     private static final StyleSpan BOLD_SPAN_2 = new StyleSpan(Typeface.BOLD);//since we cant reuse same style span again in a spannable
 
-    public FeedOfferingCommentsAdapter(Activity activity, List<Object> reviewImages, RecyclerView recyclerView, Callback callback) {
+    public FeedOfferingCommentsAdapter(Activity activity, List<Object> reviewImages, RecyclerView recyclerView, Callback callback, TextWatcher textWatcherMyComment) {
         this.activity = (FreshActivity) activity;
         this.feedDetailData = reviewImages;
         this.callback = callback;
         this.recyclerView = recyclerView;
+        this.textWatcherMyComment = textWatcherMyComment;
     }
+
+
 
 
     public void setList(List<Object> reviewImages) {
@@ -79,16 +94,36 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         {
 
             FeedOfferingListAdapter.setData((FeedOfferingListAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity);
+            ((FeedOfferingListAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
 
         }
         else if(holder instanceof MyCommentViewHolder){
-            ((MyCommentViewHolder) holder).tvMyUserName.setText("Parminder Singh");
+            if (Data.userData!=null) {
+                ((MyCommentViewHolder) holder).tvMyUserName.setText(Data.userData.userName);
+                if (!TextUtils.isEmpty(Data.userData.userImage))
+                    Picasso.with(activity).load(Data.userData.userImage).resize(Utils.convertDpToPx(activity,25), Utils.convertDpToPx(activity,25)).centerCrop().transform(new CircleTransform()).into(((MyCommentViewHolder) holder).ivMyProfilePic);
+            }
+
+
         }
         else if(holder instanceof UserCommentViewHolder){
             FeedComment feedComment = (FeedComment) feedDetailData.get(position);
-            ((UserCommentViewHolder) holder).tvUserCommentName.setText(feedComment.getUserName());
-            ((UserCommentViewHolder) holder).tvUserCommentDescription.setText(feedComment.getCommentContent());
+            UserCommentViewHolder userCommentViewHolder =     ((UserCommentViewHolder) holder);
+            userCommentViewHolder.tvUserCommentName.setText(feedComment.getUserName());
+            userCommentViewHolder.tvUserCommentDescription.setText(feedComment.getCommentContent());
+            if(position==feedDetailData.size()-1)
+                userCommentViewHolder.lineBottom.setVisibility(View.INVISIBLE);
+            else
+                userCommentViewHolder.lineBottom.setVisibility(View.VISIBLE);
+
+            if(((FeedComment) feedDetailData.get(position)).getTimeCreated()==null)
+                userCommentViewHolder.tvUserTimePosted.setVisibility(View.GONE);
+            else
+                userCommentViewHolder.tvUserTimePosted.setVisibility(View.VISIBLE);
+
             // TODO: 13/03/17  Pic missing
+        //    if (ownerImage != null)
+        //        Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(userCommentViewHolder.ivUserCommentPic);
 
         }
 
@@ -148,81 +183,30 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         TextView tvUserCommentDescription;
         @Bind(R.id.tv_time_posted)
         TextView tvUserTimePosted;
-        @Bind(R.id.line_top)
-        View lineTop;
+         @Bind(R.id.line_bottom)
+         View lineBottom;
 
-        UserCommentViewHolder(View view) {
+         UserCommentViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+             tvUserCommentName.setTypeface(tvUserCommentName.getTypeface(), Typeface.BOLD);
         }
     }
-/*
-     static class ViewHolderReviewImage extends RecyclerView.ViewHolder {
-        @Bind(R.id.iv_owner_profile_pic)
-        ImageView ivFeedOwnerPic;
-        @Bind(R.id.tv_feed_owner_title)
-        TextView tvFeedOwnerTitle;
-        @Bind(R.id.tv_feed_description)
-        TextView tvFeedDescription;
-        @Bind(R.id.iv_place_image)
-        ImageView ivPlaceImage;
-        @Bind(R.id.tv_like_comment_status)
-        TextView tvLikeCommentStatus;
-        @Bind(R.id.tv_action_comment)
-        TextView tvComment;
-        @Bind(R.id.tv_action_like)
-        TextView tvLike;
-        @Bind(R.id.view_action_like)
-        LinearLayout viewActionLike;
-        @Bind(R.id.view_action_comment)
-        LinearLayout viewActionComment;
-        @Bind(R.id.tv_feed_rating)
-        TextView tvFeedRating;
-        @Bind(R.id.tv_restaurant_feed_address)
-        TextView tvFeedAddress;
-        @Bind(R.id.layout_user_activity_heading)
-        RelativeLayout layoutUserActivity;
-        @Bind(R.id.divider_user_activity)
-        View dividerUserActivity;
-        @Bind(R.id.iv_user_profile_pic)
-        ImageView ivUserProfilePic;
-        @Bind(R.id.tv_user_activity_time)
-        TextView tvUserActivityTime;
-        @Bind(R.id.tv_user_activity_title)
-        TextView tvUserActivityTitle;
-        @Bind(R.id.tv_owner_feed_time)
-        TextView tvOwnerTime;
 
-        ViewHolderReviewImage(final View view, final ItemListener onClickView) {
-            super(view);
-            ButterKnife.bind(this, view);
-            viewActionLike.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickView.onClickItem(viewActionLike, view);
-                }
-            });
-            viewActionComment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickView.onClickItem(viewActionComment, view);
-                }
-            });
+    public class MyCommentViewHolder extends RecyclerView.ViewHolder {
 
-
-        }
-    }*/
-
-
-    static class MyCommentViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.iv_profile_pic)
         ImageView ivMyProfilePic;
         @Bind(R.id.tv_user_name)
         TextView tvMyUserName;
+        @Bind(R.id.edt_comment)
+        EditText edtComment;
+
 
         MyCommentViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+            edtComment.addTextChangedListener(textWatcherMyComment);
         }
     }
 }

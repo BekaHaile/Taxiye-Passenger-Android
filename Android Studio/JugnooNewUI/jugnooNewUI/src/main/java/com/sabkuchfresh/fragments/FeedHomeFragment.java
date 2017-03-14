@@ -1,7 +1,11 @@
 package com.sabkuchfresh.fragments;
 
 
+
 import android.content.BroadcastReceiver;
+
+import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,13 +16,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
 import com.sabkuchfresh.home.FeedContactsUploadService;
+
+import android.widget.Toast;
+
+import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
+import com.sabkuchfresh.commoncalls.LikeFeed;
+
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
+
 import com.sabkuchfresh.utils.AppConstant;
+
 
 import java.util.HashMap;
 
@@ -31,6 +45,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -48,6 +63,8 @@ public class FeedHomeFragment extends Fragment {
     private String mParam2;
     private FeedOfferingListAdapter feedOfferingListAdapter;
     private TextView tvAddPost;
+    private LikeFeed likeFeed;
+
 
 
     public FeedHomeFragment() {
@@ -95,29 +112,32 @@ public class FeedHomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        activity.fragmentUISetup(this);
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        fetchFeedsApi();
+
         feedOfferingListAdapter = new FeedOfferingListAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.Callback() {
             @Override
-            public void onLikeClick(long postId) {
+            public void onLikeClick(FeedDetail feedDetail) {
+                if(likeFeed==null)
+                    likeFeed = new LikeFeed(new LikeFeed.LikeCallbackResponse() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+                    });
+                likeFeed.likeFeed(feedDetail.getPostId(),getActivity());
 
             }
 
             @Override
-            public void onCommentClick(final long postId) {
-                activity.getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(),postId);
-                    }
-                }, 1000);
+            public void onCommentClick(final FeedDetail feedDetail) {
+                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(),feedDetail);
 
             }
         });
         recyclerView.setAdapter(feedOfferingListAdapter);
-        activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
         if(activity.getDeliveryAddressView() != null){
@@ -175,7 +195,7 @@ public class FeedHomeFragment extends Fragment {
                             String message = feedbackResponse.getMessage();
                             // TODO: 13/03/17 third argument should be getError()
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
-                                    feedbackResponse.getMessage(), feedbackResponse.getMessage())) {
+                                    feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if(feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
                                     feedOfferingListAdapter.setList(feedbackResponse.getFeeds());
                                 } else {
@@ -203,9 +223,8 @@ public class FeedHomeFragment extends Fragment {
             e.printStackTrace();
         }
     }
-    private void retryDialog(DialogErrorType dialogErrorType){
-        DialogPopup.dialogNoInternet(activity,
-                dialogErrorType,
+    private  void retryDialog(DialogErrorType dialogErrorType){
+        DialogPopup.dialogNoInternet(activity, dialogErrorType,
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
@@ -219,10 +238,11 @@ public class FeedHomeFragment extends Fragment {
 
                     @Override
                     public void negativeClick(View view) {
-                        fetchFeedsApi();;
+
                     }
                 });
     }
+
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -231,5 +251,6 @@ public class FeedHomeFragment extends Fragment {
             Log.i("FeedHomeFrag onReceive", "uploaded="+uploaded);
         }
     };
+
 
 }

@@ -17,6 +17,14 @@ public class FeedComment {
         return commentContent;
     }
 
+    @SerializedName("time_created")
+    @Expose
+    private String timeCreated;
+
+    public String getTimeCreated() {
+        return timeCreated;
+    }
+
     public void setCommentContent(String commentContent) {
         this.commentContent = commentContent;
     }

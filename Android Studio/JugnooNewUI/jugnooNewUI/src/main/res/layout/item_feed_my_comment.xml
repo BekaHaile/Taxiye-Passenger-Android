@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/feed_grey_background_light"
     android:paddingLeft="@dimen/spacing_normal"
     android:paddingRight="@dimen/spacing_normal"
-    android:layout_marginBottom="@dimen/spacing_normal"
+    android:paddingBottom="@dimen/spacing_normal"
     android:layout_height="wrap_content">
 
 
@@ -11,7 +14,7 @@
         android:id="@+id/iv_profile_pic"
         android:src="@drawable/whatsapp"
         android:layout_width="25dp"
-        android:layout_marginRight="@dimen/spacing_small"
+        android:layout_marginRight="@dimen/spacing_tiny"
         android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginTop="@dimen/spacing_normal"
         android:layout_height="25dp" />
@@ -21,6 +24,7 @@
         android:id="@+id/tv_user_name"
         android:text="Jesse Cennedy"
         android:gravity="center_horizontal"
+        app:font="@string/maven_r"
         android:textColor="@color/feed_color_orange"
         android:textSize="@dimen/font_normal"
         android:layout_toRightOf="@id/iv_profile_pic"
@@ -37,11 +41,19 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/edt_comment"
             android:layout_below="@id/tv_user_name"
             android:paddingLeft="@dimen/spacing_normal"
             android:paddingRight="@dimen/spacing_normal"
-            android:hint="Add Comment"
+            app:font="maven"
+            android:paddingTop="@dimen/spacing_normal"
+            android:textSize="@dimen/font_normal"
+            android:maxLength="500"
+            android:hint="Tap to add comment"
+            android:textColorHint="@color/feed_grey_hint_color"
+            android:textColor="@color/feed_grey_text"
             android:inputType="text"
+            android:background="@android:color/white"
             android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="100dp" />

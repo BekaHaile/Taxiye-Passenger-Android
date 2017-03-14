@@ -13,6 +13,9 @@ public class FeedListResponse {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("error")
+    @Expose
+    private String error;
     @SerializedName("feeds")
     @Expose
     private List<FeedDetail> feeds = null;
@@ -41,4 +44,8 @@ public class FeedListResponse {
         this.feeds = feeds;
     }
 
+
+    public String getError() {
+        return error;
+    }
 }

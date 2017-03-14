@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/feed_grey_background_light"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:paddingLeft="@dimen/spacing_large"
-    android:paddingRight="@dimen/spacing_large"
+    android:paddingLeft="@dimen/spacing_normal"
+    android:paddingRight="@dimen/spacing_normal"
     android:layout_height="wrap_content">
 
 
@@ -17,16 +18,16 @@
         android:layout_width="40dp"
         android:layout_marginRight="@dimen/spacing_small"
         android:layout_marginBottom="@dimen/spacing_tiny"
-        android:layout_marginLeft="@dimen/spacing_tiny"
         android:layout_marginTop="@dimen/spacing_normal"
         android:layout_height="40dp" />
 
         <TextView
+            app:font="maven"
             android:layout_marginTop="@dimen/spacing_normal"
             android:id="@+id/tv_user_name"
             android:text="Jesse Cennedy"
             android:textColor="@color/feed_color_orange"
-            android:textSize="@dimen/font_large"
+            android:textSize="@dimen/font_normal"
             android:layout_toRightOf="@id/iv_profile_pic"
             android:layout_marginBottom="@dimen/spacing_tiny"
             android:layout_width="wrap_content"
@@ -47,16 +48,17 @@
     <TextView
             android:id="@+id/tv_time_posted"
            android:layout_below="@id/tv_comment_description"
-            android:textColor="@color/feed_grey_text"
+            android:textColor="@color/feed_grey_text_secondary"
             android:textSize="@dimen/font_extra_small"
             android:layout_toRightOf="@id/iv_profile_pic"
             app:font="maven"
+            android:drawableLeft="@drawable/ic_clock"
             android:text="12m"
-            android:layout_marginBottom="@dimen/spacing_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     <View
-        android:id="@+id/line_top"
+        android:id="@+id/line_bottom"
+        android:layout_marginTop="@dimen/spacing_small"
         android:layout_below="@id/tv_time_posted"
         android:background="@color/feed_grey_background"
         android:layout_width="match_parent"

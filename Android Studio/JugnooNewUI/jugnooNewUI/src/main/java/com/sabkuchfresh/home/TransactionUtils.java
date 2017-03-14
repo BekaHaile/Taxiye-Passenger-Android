@@ -26,6 +26,7 @@ import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
 import product.clicklabs.jugnoo.R;
 
@@ -335,11 +336,11 @@ public class TransactionUtils {
     }
 
 
-    public void openFeedCommentsFragment(FragmentActivity activity, View container,long postId) {
+    public void openFeedCommentsFragment(FragmentActivity activity, View container,FeedDetail feedDetail) {
         if (!checkIfFragmentAdded(activity, FeedCommentsFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, 0)
-                    .add(container.getId(), FeedCommentsFragment.newInstance(postId),
+                    .add(container.getId(), FeedCommentsFragment.newInstance(feedDetail),
                             FeedCommentsFragment.class.getName())
                     .addToBackStack(FeedCommentsFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

@@ -4,7 +4,9 @@ package com.sabkuchfresh.retrofit.model.feed.generatefeed;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class FeedDetail {
+import java.io.Serializable;
+
+public class FeedDetail implements Serializable {
 
     @SerializedName("post_id")
     @Expose
