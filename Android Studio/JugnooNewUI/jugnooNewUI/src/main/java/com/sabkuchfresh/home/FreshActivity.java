@@ -146,7 +146,6 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
-import product.clicklabs.jugnoo.home.ContactsUploadService;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -741,6 +740,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         return (MenusFragment) getSupportFragmentManager().findFragmentByTag(MenusFragment.class.getName());
     }
 
+    public FeedHomeFragment getFeedHomeFragment(){
+        return (FeedHomeFragment) getSupportFragmentManager().findFragmentByTag(FeedHomeFragment.class.getName());
+    }
+
     public VendorMenuFragment getVendorMenuFragment() {
         return (VendorMenuFragment) getSupportFragmentManager().findFragmentByTag(VendorMenuFragment.class.getName());
     }
@@ -1202,12 +1205,20 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             } else if (fragment instanceof FeedAddPostFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.add_post);
                 topBar.imageViewBack.setImageResource(R.drawable.ic_cross_grey_selector);
                 padding = (int) (25f * ASSL.minRatio());
                 llSearchCartVis = View.GONE;
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof FeedHomeFragment) {
+                topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                topBar.imageViewBack.setVisibility(View.GONE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(R.string.feed);
+
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             }
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
@@ -2881,6 +2892,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     getGroceryFragment().getAllProducts(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.MENUS && getMenusFragment() != null) {
                     getMenusFragment().getAllMenus(true, getSelectedLatLng());
+                } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
+                    getFeedHomeFragment().fetchFeedsApi();
                 }
             }
         } catch (Exception e) {
@@ -3207,6 +3220,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public void setDeliveryAddressView(View view) {
         deliveryAddressView = new DeliveryAddressView(this, view);
         setLlLocalityClick();
+    }
+
+    public DeliveryAddressView getDeliveryAddressView(){
+        return deliveryAddressView;
     }
 
     private void setLocationAddress(String address) {

@@ -335,6 +335,17 @@ public class LoginResponse {
 	}
 
 	public class Feed{
+		@SerializedName("contacts_synced")
+		@Expose
+		private Integer contactsSynced;
+
+		public Integer getContactsSynced() {
+			return contactsSynced;
+		}
+
+		public void setContactsSynced(Integer contactsSynced) {
+			this.contactsSynced = contactsSynced;
+		}
 	}
 
 	public class Pay{

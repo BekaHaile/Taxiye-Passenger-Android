@@ -33,7 +33,6 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
-import product.clicklabs.jugnoo.datastructure.FeedData;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.FreshData;
 import product.clicklabs.jugnoo.datastructure.GroceryData;
@@ -645,7 +644,7 @@ public class JSONParser implements Constants {
     public void parseFeedData(Context context, JSONObject jFeedData, LoginResponse.Feed feedData){
         try{
             if(feedData != null) {
-                Data.setFeedData(new FeedData());
+                Data.setFeedData(feedData);
             }
         } catch (Exception e){
             e.printStackTrace();

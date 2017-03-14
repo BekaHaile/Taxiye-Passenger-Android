@@ -1,9 +1,49 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.sabkuchfresh.fragments.FeedHomeFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              tools:context="com.sabkuchfresh.fragments.FeedHomeFragment"
+            android:orientation="vertical"
+    >
 
+    <include layout="@layout/layout_delivery_address_bar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_8"
+            android:background="@drawable/shadow_feed_sep"
+            />
+
+        <TextView
+            android:id="@+id/tvAddPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_18"
+            android:paddingBottom="@dimen/dp_18"
+            android:paddingLeft="@dimen/dp_36"
+            android:paddingRight="@dimen/dp_36"
+            app:font="@string/maven_r"
+            android:text="@string/whats_on_your_mind"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/text_color_light"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:background="?attr/selectableItemBackground"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_8"
+            android:background="@drawable/shadow_feed_sep"
+            />
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_feed"
@@ -11,4 +51,4 @@
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
 
-</FrameLayout>
+</LinearLayout>

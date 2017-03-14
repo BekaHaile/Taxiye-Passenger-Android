@@ -12,11 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.HashMap;
 
@@ -45,6 +47,7 @@ public class FeedHomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private FeedOfferingListAdapter feedOfferingListAdapter;
+    private TextView tvAddPost;
 
 
     public FeedHomeFragment() {
@@ -95,7 +98,7 @@ public class FeedHomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        fetchFeedsApi();
+//        fetchFeedsApi();
         feedOfferingListAdapter = new FeedOfferingListAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.Callback() {
             @Override
             public void onLikeClick(long postId) {
@@ -114,19 +117,28 @@ public class FeedHomeFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(feedOfferingListAdapter);
-
-        activity.getHandler().postDelayed(new Runnable() {
+        activity.fragmentUISetup(this);
+        activity.setDeliveryAddressView(rootView);
+        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
+        if(activity.getDeliveryAddressView() != null){
+            activity.getDeliveryAddressView().scaleView();
+        }
+        tvAddPost = (TextView) rootView.findViewById(R.id.tvAddPost);
+        tvAddPost.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
+            public void onClick(View v) {
                 activity.getTransactionUtils().openFeedAddPostFragment(activity, activity.getRelativeLayoutContainer());
             }
-        }, 1000);
+        });
+
 
         try {
-            //TODO remove this
-            Intent syncContactsIntent = new Intent(activity, FeedContactsUploadService.class);
-            syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-            activity.startService(syncContactsIntent);
+            if (Data.getFeedData() != null
+                    && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
+                Intent syncContactsIntent = new Intent(activity, FeedContactsUploadService.class);
+                syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                activity.startService(syncContactsIntent);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -135,7 +147,15 @@ public class FeedHomeFragment extends Fragment {
         return rootView;
     }
 
-    private void fetchFeedsApi() {
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            activity.fragmentUISetup(this);
+        }
+    }
+
+    public void fetchFeedsApi() {
         try {
             if(MyApplication.getInstance().isOnline()) {
 
