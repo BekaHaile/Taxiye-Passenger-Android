@@ -50,7 +50,7 @@ public class FeedCommentsFragment extends Fragment {
     private ArrayList<Object> dataList;
     private TextView textViewCharCount;
     private Button btnSubmit;
-    private String commentAdded;
+    public String commentAdded;
     private LikeFeed likeFeed;
 
 
@@ -70,6 +70,7 @@ public class FeedCommentsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             feedDetail = (FeedDetail) getArguments().getSerializable(FEED_DETAIL);
         }
@@ -89,8 +90,10 @@ public class FeedCommentsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        activity.fragmentUISetup(this);
         View rootView = inflater.inflate(R.layout.fragment_feed_comments, container, false);
         btnSubmit= (Button) rootView.findViewById(R.id.btnSubmit);
+        btnSubmit.setEnabled(false);
         textViewCharCount= (TextView) rootView.findViewById(R.id.tvCharCount);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -103,6 +106,7 @@ public class FeedCommentsFragment extends Fragment {
                         public void onSuccess() {
 
                         }
+
                     });
                 likeFeed.likeFeed(feedDetail.getPostId(),getActivity());
             }
@@ -110,6 +114,11 @@ public class FeedCommentsFragment extends Fragment {
             @Override
             public void onCommentClick(Object object) {
 
+            }
+
+            @Override
+            public String getEditTextString() {
+                return commentAdded;
             }
         },submitTextWatcher);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +134,14 @@ public class FeedCommentsFragment extends Fragment {
     }
 
 
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            activity.fragmentUISetup(this);
+        }
+    }
 
     private void fetchFeedDetail() {
         try {
@@ -146,18 +163,7 @@ public class FeedCommentsFragment extends Fragment {
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
                                     feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if(feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-                                        if(dataList==null) {
-                                            dataList = new ArrayList<>();
-                                        }
-
-                                    dataList.clear();
-                                    dataList.add(feedDetail);
-                                    dataList.add(FeedOfferingCommentsAdapter.TYPE_MY_COMMENT);
-
-                                    if(feedbackResponse.getFeedComments()!=null)
-                                      dataList.addAll(feedbackResponse.getFeedComments());
-
-                                    feedOfferingCommentsAdapter.setList(dataList);
+                                    prepareListAndNotifyAdapter(feedbackResponse);
 //                                    feedOfferingCommentsAdapter.setList(feedbackResponse.getFeeds());
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -188,6 +194,21 @@ public class FeedCommentsFragment extends Fragment {
 
     }
 
+    private void prepareListAndNotifyAdapter(FeedDetailResponse feedbackResponse) {
+        if(dataList==null) {
+            dataList = new ArrayList<>();
+        }
+
+        dataList.clear();
+        dataList.add(feedDetail);
+        dataList.add(FeedOfferingCommentsAdapter.TYPE_MY_COMMENT);
+
+        if(feedbackResponse.getFeedComments()!=null)
+          dataList.addAll(feedbackResponse.getFeedComments());
+
+        feedOfferingCommentsAdapter.setList(dataList);
+    }
+
     private void commentOnFeed(final String comments) {
         try {
             if(MyApplication.getInstance().isOnline()) {
@@ -200,16 +221,17 @@ public class FeedCommentsFragment extends Fragment {
                 params.put(Constants.KEY_COMMENT_CONTENT, String.valueOf(comments));
 
                 new HomeUtil().putDefaultParams(params);
-                RestClient.getFeedApiService().commentOnFeed(params, new retrofit.Callback<SettleUserDebt>() {
+                RestClient.getFeedApiService().commentOnFeed(params, new retrofit.Callback<FeedDetailResponse>() {
                     @Override
-                    public void success(SettleUserDebt feedbackResponse, Response response) {
+                    public void success(FeedDetailResponse feedbackResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
                         try {
                             String message = feedbackResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if(feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-                                    Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show();
-                                    Utils.hideKeyboard(activity);
+                                    Utils.hideKeyboard(getActivity());
+                                    commentAdded=null;
+                                    prepareListAndNotifyAdapter(feedbackResponse);
 
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);

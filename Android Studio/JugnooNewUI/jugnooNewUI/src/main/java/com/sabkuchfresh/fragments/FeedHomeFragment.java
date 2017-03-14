@@ -1,38 +1,27 @@
 package com.sabkuchfresh.fragments;
 
 
-
 import android.content.BroadcastReceiver;
-
-import android.app.Activity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
-import com.sabkuchfresh.home.FeedContactsUploadService;
-
-import android.widget.Toast;
-
-import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
 import com.sabkuchfresh.commoncalls.LikeFeed;
-
+import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
-
 import com.sabkuchfresh.utils.AppConstant;
-
 
 import java.util.HashMap;
 
@@ -45,7 +34,6 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -64,7 +52,6 @@ public class FeedHomeFragment extends Fragment {
     private FeedOfferingListAdapter feedOfferingListAdapter;
     private TextView tvAddPost;
     private LikeFeed likeFeed;
-
 
 
     public FeedHomeFragment() {
@@ -93,7 +80,7 @@ public class FeedHomeFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof FreshActivity) {
+        if (context instanceof FreshActivity) {
             activity = (FreshActivity) context;
             activity.registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_CONTACTS_UPLOADED));
         }
@@ -102,7 +89,7 @@ public class FeedHomeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(activity != null) {
+        if (activity != null) {
             activity.unregisterReceiver(broadcastReceiver);
         }
     }
@@ -120,27 +107,27 @@ public class FeedHomeFragment extends Fragment {
         feedOfferingListAdapter = new FeedOfferingListAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.Callback() {
             @Override
             public void onLikeClick(FeedDetail feedDetail) {
-                if(likeFeed==null)
+                if (likeFeed == null)
                     likeFeed = new LikeFeed(new LikeFeed.LikeCallbackResponse() {
                         @Override
                         public void onSuccess() {
 
                         }
                     });
-                likeFeed.likeFeed(feedDetail.getPostId(),getActivity());
+                likeFeed.likeFeed(feedDetail.getPostId(), getActivity());
 
             }
 
             @Override
             public void onCommentClick(final FeedDetail feedDetail) {
-                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(),feedDetail);
+                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail);
 
             }
         });
         recyclerView.setAdapter(feedOfferingListAdapter);
         activity.setDeliveryAddressView(rootView);
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
-        if(activity.getDeliveryAddressView() != null){
+        if (activity.getDeliveryAddressView() != null) {
             activity.getDeliveryAddressView().scaleView();
         }
         tvAddPost = (TextView) rootView.findViewById(R.id.tvAddPost);
@@ -170,14 +157,14 @@ public class FeedHomeFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden){
+        if (!hidden) {
             activity.fragmentUISetup(this);
         }
     }
 
     public void fetchFeedsApi() {
         try {
-            if(MyApplication.getInstance().isOnline()) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
 
@@ -196,7 +183,7 @@ public class FeedHomeFragment extends Fragment {
                             // TODO: 13/03/17 third argument should be getError()
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
                                     feedbackResponse.getError(), feedbackResponse.getMessage())) {
-                                if(feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                                if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     feedOfferingListAdapter.setList(feedbackResponse.getFeeds());
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -215,15 +202,15 @@ public class FeedHomeFragment extends Fragment {
 
                     }
                 });
-            }
-            else {
+            } else {
                 retryDialog(DialogErrorType.NO_NET);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private  void retryDialog(DialogErrorType dialogErrorType){
+
+    private void retryDialog(DialogErrorType dialogErrorType) {
         DialogPopup.dialogNoInternet(activity, dialogErrorType,
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
@@ -248,7 +235,7 @@ public class FeedHomeFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean uploaded = intent.getBooleanExtra(Constants.KEY_UPLOADED, false);
-            Log.i("FeedHomeFrag onReceive", "uploaded="+uploaded);
+            Log.i("FeedHomeFrag onReceive", "uploaded=" + uploaded);
         }
     };
 

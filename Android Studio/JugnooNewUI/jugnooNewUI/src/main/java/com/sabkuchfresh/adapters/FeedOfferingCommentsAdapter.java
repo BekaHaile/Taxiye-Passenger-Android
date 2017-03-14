@@ -2,9 +2,7 @@ package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
 import android.graphics.Typeface;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
@@ -104,6 +102,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
                     Picasso.with(activity).load(Data.userData.userImage).resize(Utils.convertDpToPx(activity,25), Utils.convertDpToPx(activity,25)).centerCrop().transform(new CircleTransform()).into(((MyCommentViewHolder) holder).ivMyProfilePic);
             }
 
+            ((MyCommentViewHolder) holder).edtComment.setText(callback.getEditTextString());
 
         }
         else if(holder instanceof UserCommentViewHolder){
@@ -118,8 +117,10 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
 
             if(((FeedComment) feedDetailData.get(position)).getTimeCreated()==null)
                 userCommentViewHolder.tvUserTimePosted.setVisibility(View.GONE);
-            else
+            else {
                 userCommentViewHolder.tvUserTimePosted.setVisibility(View.VISIBLE);
+                userCommentViewHolder.tvUserTimePosted.setText(FeedOfferingListAdapter.getTimeToDisplay(((FeedComment) feedDetailData.get(position)).getTimeCreated(), activity.isTimeAutomatic));
+            }
 
             // TODO: 13/03/17  Pic missing
         //    if (ownerImage != null)
@@ -156,7 +157,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
 
         switch (viewClicked.getId()) {
             case R.id.view_action_like:
-
+                    callback.onLikeClick(feedDetailData.get(position));
                 break;
             case R.id.view_action_comment:
                 break;
@@ -170,6 +171,8 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         void onLikeClick(Object object);
 
         void onCommentClick(Object object);
+
+        String getEditTextString();
     }
 
 

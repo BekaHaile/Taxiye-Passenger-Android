@@ -16,6 +16,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -71,6 +72,7 @@ import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.FeedAddPostFragment;
+import com.sabkuchfresh.fragments.FeedCommentsFragment;
 import com.sabkuchfresh.fragments.FeedHomeFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
@@ -238,7 +240,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     private static final float COLLAPSE_TOOLBAR_HEIGHT = 270f;
 
     public CallbackManager callbackManager;
-
+    public boolean isTimeAutomatic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -670,6 +672,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         super.onResume();
         try {
 
+            isTimeAutomatic();
+
             if (Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getAutosClientId())) {
                 HomeActivity.homeSwitcher = true;
                 MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getAutosClientId(), null,
@@ -718,6 +722,19 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         menuBar.setUserData();
 
         fetchWalletBalance(this);
+    }
+
+
+    public void isTimeAutomatic(){
+        try {
+            int a= android.provider.Settings.System.getInt(getContentResolver(), android.provider.Settings.System.AUTO_TIME);
+            android.util.Log.i("TAG", "isTimeAutomatic: "+a);
+            isTimeAutomatic=a==1;
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            android.util.Log.i("TAG", "isTimeAutomatic: "+false);
+        }
+
     }
 
     public FreshHomeFragment getFreshHomeFragment() {
@@ -1219,6 +1236,14 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.title.setText(R.string.feed);
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+            }
+            else if(fragment instanceof FeedCommentsFragment){
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(R.string.feed);
+
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 

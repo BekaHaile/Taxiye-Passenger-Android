@@ -61,6 +61,13 @@ public class FeedDetail implements Serializable {
     @SerializedName("restaurant_address")
     @Expose
     private String restaurantAddress;
+    @SerializedName("activity_done_on")
+    @Expose
+    private String activityDoneOn;
+
+    public String getActivityDoneOn() {
+        return activityDoneOn;
+    }
 
     public long getPostId() {
         return postId;

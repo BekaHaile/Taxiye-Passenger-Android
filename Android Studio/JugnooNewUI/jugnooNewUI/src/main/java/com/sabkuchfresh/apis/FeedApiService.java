@@ -32,7 +32,7 @@ public interface FeedApiService {
 
     @FormUrlEncoded
     @POST("/feeds/v1/comment")
-    void commentOnFeed(@FieldMap Map<String, String> params, Callback<SettleUserDebt> callback);
+    void commentOnFeed(@FieldMap Map<String, String> params, Callback<FeedDetailResponse> callback);
 
     @FormUrlEncoded
     @POST("/feeds/v1/like")

@@ -17,7 +17,7 @@ public class FeedComment {
         return commentContent;
     }
 
-    @SerializedName("time_created")
+    @SerializedName("commented_on")
     @Expose
     private String timeCreated;
 
