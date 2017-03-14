@@ -59,7 +59,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
     private View rootView;
     private FreshActivity activity;
-    private AddPostType addPostType = AddPostType.REVIEW;
+    private AddPostType addPostType = AddPostType.ASK;
     private ArrayList<SuggestRestaurantQueryResp.Suggestion> suggestions;
     private SuggestRestaurantQueryResp.Suggestion suggestionSelected;
 
@@ -114,7 +114,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         rlAsk.setOnClickListener(this);
         tvRestaurantLocation.setOnClickListener(this);
         suggestions = new ArrayList<>();
-        suggestions.addAll(getList());
         suggestionsAdapter = new RestaurantQuerySuggestionsAdapter(suggestions, new RestaurantQuerySuggestionsAdapter.Callback() {
             @Override
             public void onSuggestionClick(int position, SuggestRestaurantQueryResp.Suggestion suggestion) {
@@ -140,12 +139,28 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.toString().trim().length() > 0){
-                    suggestRestaurantApi(s.toString());
+                    suggestRestaurantApi(s.toString().trim());
                 } else {
                     suggestions.clear();
                     suggestionsAdapter.notifyDataSetChanged();
                 }
-                tvCharCount.setText(String.valueOf(s.toString().trim().length()));
+            }
+        });
+
+        etContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                tvCharCount.setText(String.valueOf((400 - s.toString().trim().length())));
             }
         });
 
@@ -153,21 +168,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         return rootView;
-    }
-
-    private ArrayList<SuggestRestaurantQueryResp.Suggestion> getList(){
-        ArrayList<SuggestRestaurantQueryResp.Suggestion> arrayList = new ArrayList<>();
-        SuggestRestaurantQueryResp.Suggestion suggestion = new SuggestRestaurantQueryResp.Suggestion();
-        suggestion.setName("Pizza Hut");
-        suggestion.setAddress("CDCL, Madhya Marg, Sector 28, Chandigarh");
-        suggestion.setId(1);
-        arrayList.add(suggestion);
-        suggestion = new SuggestRestaurantQueryResp.Suggestion();
-        suggestion.setName("Dominos");
-        suggestion.setAddress("CDCL, Madhya Marg, Sector 28, Chandigarh");
-        suggestion.setId(1);
-        arrayList.add(suggestion);
-        return arrayList;
     }
 
     @Override
@@ -267,7 +267,10 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                                     suggestionsAdapter.notifyDataSetChanged();
                                 } else {
                                     suggestions.clear();
-                                    suggestions.addAll(getList());
+                                    SuggestRestaurantQueryResp.Suggestion suggestion = new SuggestRestaurantQueryResp.Suggestion();
+                                    suggestion.setId(-1);
+                                    suggestion.setName("No results found");
+                                    suggestions.add(suggestion);
                                     suggestionsAdapter.notifyDataSetChanged();
                                 }
                             }

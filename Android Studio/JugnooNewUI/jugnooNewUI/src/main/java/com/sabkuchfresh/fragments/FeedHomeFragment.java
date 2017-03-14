@@ -1,8 +1,10 @@
 package com.sabkuchfresh.fragments;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +17,6 @@ import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
-import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 
 import java.util.HashMap;
 
@@ -29,6 +30,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -71,11 +73,19 @@ public class FeedHomeFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof FreshActivity)
-            activity= (FreshActivity) context;
-
+        if(context instanceof FreshActivity) {
+            activity = (FreshActivity) context;
+            activity.registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_CONTACTS_UPLOADED));
+        }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(activity != null) {
+            activity.unregisterReceiver(broadcastReceiver);
+        }
+    }
 
     private FreshActivity activity;
 
@@ -193,4 +203,13 @@ public class FeedHomeFragment extends Fragment {
                     }
                 });
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean uploaded = intent.getBooleanExtra(Constants.KEY_UPLOADED, false);
+            Log.i("FeedHomeFrag onReceive", "uploaded="+uploaded);
+        }
+    };
+
 }

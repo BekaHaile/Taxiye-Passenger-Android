@@ -58,9 +58,9 @@ public class SuggestRestaurantQueryResp {
 
 	public static class Suggestion {
 
-		@SerializedName("id")
+		@SerializedName("restaurant_id")
 		@Expose
-		private Integer id;
+		private Integer restaurantId;
 		@SerializedName("name")
 		@Expose
 		private String name;
@@ -96,11 +96,14 @@ public class SuggestRestaurantQueryResp {
 		}
 
 		public Integer getId() {
-			return id;
+			if(restaurantId == null){
+				restaurantId = 0;
+			}
+			return restaurantId;
 		}
 
 		public void setId(Integer id) {
-			this.id = id;
+			this.restaurantId = id;
 		}
 	}
 

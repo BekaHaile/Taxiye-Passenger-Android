@@ -61,7 +61,9 @@ public class RestaurantQuerySuggestionsAdapter extends RecyclerView.Adapter<Rest
                 public void onClick(View v) {
                     try {
                         int pos = (int) v.getTag();
-                        callback.onSuggestionClick(pos, suggestions.get(pos));
+                        if(suggestions.get(pos).getId() > 0) {
+                            callback.onSuggestionClick(pos, suggestions.get(pos));
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
