@@ -100,6 +100,8 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
                 ((MyCommentViewHolder) holder).tvMyUserName.setText(Data.userData.userName);
                 if (!TextUtils.isEmpty(Data.userData.userImage))
                     Picasso.with(activity).load(Data.userData.userImage).resize(Utils.convertDpToPx(activity,25), Utils.convertDpToPx(activity,25)).centerCrop().transform(new CircleTransform()).into(((MyCommentViewHolder) holder).ivMyProfilePic);
+                else
+                    ((MyCommentViewHolder) holder).ivMyProfilePic.setImageResource(R.drawable.placeholder_img);
             }
 
             ((MyCommentViewHolder) holder).edtComment.setText(callback.getEditTextString());
@@ -123,8 +125,8 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
             }
 
             // TODO: 13/03/17  Pic missing
-        //    if (ownerImage != null)
-        //        Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(userCommentViewHolder.ivUserCommentPic);
+            if (!TextUtils.isEmpty(feedComment.getUserImage()))
+                Picasso.with(activity).load(feedComment.getUserImage()).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(userCommentViewHolder.ivUserCommentPic);
 
         }
 

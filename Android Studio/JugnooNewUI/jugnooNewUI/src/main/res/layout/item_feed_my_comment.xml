@@ -12,6 +12,7 @@
 
     <ImageView
         android:id="@+id/iv_profile_pic"
+        android:scaleType="centerCrop"
         android:src="@drawable/whatsapp"
         android:layout_width="25dp"
         android:layout_marginRight="@dimen/spacing_tiny"

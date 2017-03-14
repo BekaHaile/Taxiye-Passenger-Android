@@ -1,6 +1,8 @@
 package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -169,11 +171,15 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.VISIBLE);
         if (imageUrl != null)
             Picasso.with(activity).load(imageUrl).resize(Utils.convertDpToPx(activity,310), Utils.convertDpToPx(activity,110)).centerCrop().transform(new RoundedCornersTransformation(Utils.convertDpToPx(activity,6),0)).into(holder.ivPlaceImage);
+        else
+            holder.ivPlaceImage.setImageResource(R.drawable.placeholder_img);
 
 
         //Set Profile Pic
         if (ownerImage != null)
             Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
+        else
+            holder.ivFeedOwnerPic.setImageResource(R.drawable.placeholder_img);
 
         //set Heading
         holder.tvFeedOwnerTitle.setText(title);
@@ -205,6 +211,9 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         }
 
         holder.tvOwnerTime.setText(getTimeToDisplay(feedDetail.getCreatedAt(), activity.isTimeAutomatic));
+
+        Drawable drawableToSet = feedDetail.isLiked()?ContextCompat.getDrawable(activity,R.drawable.ic_like_active):ContextCompat.getDrawable(activity,R.drawable.ic_like);
+        holder.tvLike.setCompoundDrawablesWithIntrinsicBounds(drawableToSet,null,null,null);
     }
 
     private static String formLikesComment(int likeCount, int commentCount,FreshActivity activity) {
@@ -319,7 +328,9 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
             if(diff>0)return diff+"h";
             diff = currentDateCal.get(Calendar.MINUTE) - feedPostedCal.get(Calendar.MINUTE);
             if(diff>0)return diff+"m";
-            return currentDateCal.get(Calendar.SECOND)- feedPostedCal.get(Calendar.SECOND)+"s";
+            diff=currentDateCal.get(Calendar.SECOND)- feedPostedCal.get(Calendar.SECOND);
+            return diff<0?0+"s":diff+"s";
+
         }
         else{
             return " " + DateParser.getLocalDateString(createdAtTime);
@@ -339,9 +350,15 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
         switch (viewClicked.getId()) {
             case R.id.view_action_like:
+                //To be performed on Success
+                feedDetailArrayList.get(position).setLiked(!feedDetailArrayList.get(position).isLiked());
+                Drawable drawableToSet = feedDetailArrayList.get(position).isLiked()?ContextCompat.getDrawable(activity,R.drawable.ic_like_active):ContextCompat.getDrawable(activity,R.drawable.ic_like);
+                ((TextView)((LinearLayout)viewClicked).getChildAt(0)).setCompoundDrawablesWithIntrinsicBounds(drawableToSet,null,null,null);
+
                 callback.onLikeClick(feedDetailArrayList.get(position));
                 break;
             case R.id.view_action_comment:
+            case R.id.root_layout_item:
                 callback.onCommentClick(feedDetailArrayList.get(position));
                 break;
 
@@ -394,11 +411,14 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         @Bind(R.id.tv_user_activity_time)
         TextView tvUserActivityTime;
         @Bind(R.id.tv_user_activity_title)
-         TextView tvUserActivityTitle;
+        TextView tvUserActivityTitle;
         @Bind(R.id.tv_owner_feed_time)
         TextView tvOwnerTime;
         @Bind(R.id.vShadowDown)
         View shadow;
+        @Bind(R.id.root_layout_item)
+        RelativeLayout layoutItem;
+
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
             ButterKnife.bind(this, view);
@@ -414,19 +434,27 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                     onClickView.onClickItem(viewActionComment, view);
                 }
             });
+
             tvFeedOwnerTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickView.onClickItem(tvFeedOwnerTitle,view);
+                    onClickView.onClickItem(tvFeedOwnerTitle, view);
+                }
+
+            });
+            layoutItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickView.onClickItem(layoutItem, view);
+
                 }
             });
-
 
         }
     }
 
 
-    public static int getPositionOfChild(final View child, final int childParentId, final RecyclerView recyclerView) {
+    public  int getPositionOfChild(final View child, final int childParentId, final RecyclerView recyclerView) {
 
         if (child.getId() == childParentId) {
             return recyclerView.getChildAdapterPosition(child);

@@ -6,14 +6,27 @@
 
 
 
+
+    <ImageView
+        android:id="@+id/imageViewShadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/spacing_extra_tiny"
+
+        android:background="@drawable/shadow_down" />
+
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_feed_detail"
+        android:layout_below="@id/imageViewShadow"
         android:background="@color/feed_grey_background_light"
         android:layout_above="@id/rlSubmit"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
+
+
 
     <RelativeLayout
         android:layout_alignParentBottom="true"

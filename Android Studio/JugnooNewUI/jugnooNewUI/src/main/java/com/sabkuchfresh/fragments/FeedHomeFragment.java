@@ -160,12 +160,12 @@ public class FeedHomeFragment extends Fragment {
 
 
         try {
-//            if (Data.getFeedData() != null
-//                    && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
+            if (Data.getFeedData() != null
+                    && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
                 Intent syncContactsIntent = new Intent(activity, FeedContactsUploadService.class);
                 syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 activity.startService(syncContactsIntent);
-//            }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

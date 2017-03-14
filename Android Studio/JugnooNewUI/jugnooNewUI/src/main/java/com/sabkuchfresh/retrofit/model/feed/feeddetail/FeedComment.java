@@ -12,6 +12,9 @@ public class FeedComment {
     @SerializedName("user_name")
     @Expose
     private String userName;
+    @SerializedName("user_image")
+    @Expose
+    private String userImage;
 
     public String getCommentContent() {
         return commentContent;
@@ -37,4 +40,7 @@ public class FeedComment {
         this.userName = userName;
     }
 
+    public String getUserImage() {
+        return userImage;
+    }
 }
