@@ -12,10 +12,12 @@ public class PaymentModeConfigData {
 	private int enabled;
 	private int paymentOption;
 	private int priority;
+	private String offerText;
 
-	public PaymentModeConfigData(String name, int enabled){
+	public PaymentModeConfigData(String name, int enabled, String offerText){
 		this.name = name;
 		this.enabled = enabled;
+		this.offerText = offerText;
 		if(Constants.KEY_PAYTM.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.PAYTM.getOrdinal();
 		}
@@ -68,5 +70,13 @@ public class PaymentModeConfigData {
 
 	public void incrementPriority(){
 		this.priority = this.priority + 1;
+	}
+
+	public String getOfferText() {
+		return offerText;
+	}
+
+	public void setOfferText(String offerText) {
+		this.offerText = offerText;
 	}
 }

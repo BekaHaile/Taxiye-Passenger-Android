@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.tutorials;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import com.sabkuchfresh.home.TransactionUtils;
 
 import product.clicklabs.jugnoo.BaseActivity;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -26,7 +28,8 @@ import product.clicklabs.jugnoo.utils.ASSL;
 
 public class NewUserChutiyapaa extends BaseFragmentActivity {
 
-    private ImageView ivBack, ivTickReferral, ivLineReferral, ivTickProfile, ivLineProfile, ivTickWallet;
+    private ImageView ivBack, ivTickReferral, ivLineReferral, ivTickProfile, ivLineProfile, ivTickWallet,
+            ivLineReferralFill, ivLineProfileFill;
     private TransactionUtils transactionUtils;
     private TextView tvTitle, tvSkip;
     private RelativeLayout rlContainer, rlRoot;
@@ -54,6 +57,8 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
         ivTickProfile = (ImageView) findViewById(R.id.ivTickProfile);
         ivLineProfile = (ImageView) findViewById(R.id.ivLineProfile);
         ivTickWallet = (ImageView) findViewById(R.id.ivTickWallet);
+        ivLineReferralFill = (ImageView) findViewById(R.id.ivLineReferralFill); ivLineReferralFill.setVisibility(View.GONE);
+        ivLineProfileFill = (ImageView) findViewById(R.id.ivLineProfileFill); ivLineProfileFill.setVisibility(View.GONE);
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +80,22 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
             }
         });
         callbackManager = CallbackManager.Factory.create();
-        getTransactionUtils().openNewUserReferralFragment(NewUserChutiyapaa.this, rlContainer);
+
+        setTickViewInit();
+
+        if(Data.userData.getSignupTutorial() != null){
+            if(Data.userData.getSignupTutorial().getDs1() != null
+                    && Data.userData.getSignupTutorial().getDs1() == 1){
+                getTransactionUtils().openNewUserReferralFragment(NewUserChutiyapaa.this, rlContainer);
+            } else if(Data.userData.getSignupTutorial().getDs2() != null
+                    && Data.userData.getSignupTutorial().getDs2() == 1){
+                getTransactionUtils().openNewUserCompleteProfileFragment(NewUserChutiyapaa.this, rlContainer);
+            } else if(Data.userData.getSignupTutorial().getDs3() != null
+                    && Data.userData.getSignupTutorial().getDs3() == 1){
+                getTransactionUtils().openNewUserWalletFragment(NewUserChutiyapaa.this, rlContainer);
+            }
+        }
+
     }
 
     public TransactionUtils getTransactionUtils() {
@@ -93,21 +113,50 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
         return callbackManager;
     }
 
+    private void setTickViewInit(){
+        ivTickReferral.setVisibility(View.GONE);
+        ivLineReferral.setVisibility(View.GONE);
+        ivTickProfile.setVisibility(View.GONE);
+        ivLineProfile.setVisibility(View.GONE);
+        ivTickWallet.setVisibility(View.GONE);
+        if(Data.userData.getSignupTutorial() != null){
+            if(Data.userData.getSignupTutorial().getDs1() != null
+                    && Data.userData.getSignupTutorial().getDs1() == 1){
+                ivTickReferral.setVisibility(View.VISIBLE);
+                ivLineReferral.setVisibility(View.VISIBLE);
+                ivLineReferralFill.setVisibility(View.VISIBLE);
+            }
+            if(Data.userData.getSignupTutorial().getDs2() != null
+                    && Data.userData.getSignupTutorial().getDs2() == 1){
+                ivTickProfile.setVisibility(View.VISIBLE);
+                ivLineProfile.setVisibility(View.VISIBLE);
+                ivLineProfileFill.setVisibility(View.VISIBLE);
+            }
+            if(Data.userData.getSignupTutorial().getDs3() != null
+                    && Data.userData.getSignupTutorial().getDs3() == 1){
+                ivTickWallet.setVisibility(View.VISIBLE);
+            } else{
+                ivLineProfile.setVisibility(View.GONE);
+                ivLineProfileFill.setVisibility(View.GONE);
+            }
+        }
+    }
+
     public void setTickLineView() {
         try {
             if(getCurrentFragment() != null) {
                 if (getCurrentFragment() instanceof NewUserReferralFragment) {
-                    ivTickReferral.setImageResource(R.drawable.circle_red);
+                    ivTickReferral.setImageResource(R.drawable.circle_yellow);
                 } else if (getCurrentFragment() instanceof NewUserCompleteProfileFragment) {
                     ivTickReferral.setImageResource(R.drawable.ic_bar_check);
-                    ivTickProfile.setImageResource(R.drawable.circle_red);
-                    ivLineReferral.setBackgroundColor(ContextCompat.getColor(NewUserChutiyapaa.this, R.color.green));
+                    ivTickProfile.setImageResource(R.drawable.circle_yellow);
+                    ivLineReferralFill.setImageResource(R.drawable.bg_green);
                 } else if (getCurrentFragment() instanceof NewUserWalletFragment) {
                     ivTickReferral.setImageResource(R.drawable.ic_bar_check);
                     ivTickProfile.setImageResource(R.drawable.ic_bar_check);
-                    ivTickWallet.setImageResource(R.drawable.circle_red);
-                    ivLineReferral.setBackgroundColor(ContextCompat.getColor(NewUserChutiyapaa.this, R.color.green));
-                    ivLineProfile.setBackgroundColor(ContextCompat.getColor(NewUserChutiyapaa.this, R.color.green));
+                    ivTickWallet.setImageResource(R.drawable.circle_yellow);
+                    ivLineReferralFill.setImageResource(R.drawable.bg_green);
+                    ivLineProfileFill.setImageResource(R.drawable.bg_green);
                 }
             }
         } catch (Exception e) {

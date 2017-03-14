@@ -19,9 +19,12 @@ import android.widget.TextView;
 
 import com.jugnoo.pay.activities.PayTutorial;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.BaseActivity;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -35,7 +38,8 @@ public class SignUpTutorial extends Fragment {
 
     private ViewPager viewPager;
     private PagerAdapter vpPayTutorialAdapter;
-    private int[] layouts;
+    //private int[] layouts = new int[]{};
+    private ArrayList<Integer> layouts = new ArrayList<>();
     private TextView tvSkip;
     private int numOfPages;
     private View rootView;
@@ -65,9 +69,17 @@ public class SignUpTutorial extends Fragment {
         tvSkip = (TextView) rootView.findViewById(R.id.tvSkip);
         bNext = (Button) rootView.findViewById(R.id.bNext);
 
-        layouts = new int[]{
+        if(Data.userData.getSignupTutorial() != null) {
+            if (Data.userData.getSignupTutorial().getTs1() == 1) {
+                layouts.add(R.layout.fragment_signup_jeanie_tutorial);
+            }
+            if (Data.userData.getSignupTutorial().getTs2() == 1) {
+                layouts.add(R.layout.fragment_signup_left_menu_tutorial);
+            }
+        }
+        /*layouts = new int[]{
                 R.layout.fragment_signup_jeanie_tutorial,
-                R.layout.fragment_signup_left_menu_tutorial};
+                R.layout.fragment_signup_left_menu_tutorial};*/
 
         vpPayTutorialAdapter = new PayTutorialViewPagerAdapter();
         viewPager.setAdapter(vpPayTutorialAdapter);
@@ -84,12 +96,18 @@ public class SignUpTutorial extends Fragment {
         bNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewPager.getCurrentItem() == 0){
+                if(viewPager.getCurrentItem() == 0
+                        && Data.userData.getSignupTutorial().getTs1() == 1
+                        && Data.userData.getSignupTutorial().getTs2() == 1){
                     viewPager.setCurrentItem(1, true);
-                } else if(viewPager.getCurrentItem() == 1){
+                } else if(viewPager.getCurrentItem() == 0
+                        && Data.userData.getSignupTutorial().getTs2() == 0) {
+                    tvSkip.performClick();
+                } else{
                     startActivity(new Intent(getActivity(), NewUserChutiyapaa.class));
                     getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 }
+                tvSkip.performClick();
             }
         });
 
@@ -111,7 +129,7 @@ public class SignUpTutorial extends Fragment {
         @Override
         public void onPageSelected(int position) {
             // changing the next button text 'NEXT' / 'GOT IT'
-            if (position == layouts.length - 1) {
+            if (position == layouts.size() - 1) {
                 // last page. make button text to GOT IT
                 // btnNext.setText(getString(R.string.start));
                 ((HomeActivity)getActivity()).drawerLayout.openDrawer(GravityCompat.START);
@@ -145,22 +163,13 @@ public class SignUpTutorial extends Fragment {
         public Object instantiateItem(ViewGroup container, int position) {
             layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View view = layoutInflater.inflate(layouts[position], container, false);
+            View view = layoutInflater.inflate(layouts.get(position), container, false);
 
-            /*TextView tv1, tv2, tv3, tv4;
-            if (position == 0)
-            {
-                tv1 = (TextView) view.findViewById(R.id.tv1);
-                tv2 = (TextView) view.findViewById(R.id.tv2);
-                tv3 = (TextView) view.findViewById(R.id.tv3);
-                tv4 = (TextView) view.findViewById(R.id.tv4);
+            if(layouts.get(position) == R.layout.fragment_signup_left_menu_tutorial){
+                ((HomeActivity)getActivity()).drawerLayout.openDrawer(GravityCompat.START);
+            } else{
+                ((HomeActivity)getActivity()).drawerLayout.closeDrawer(GravityCompat.START);
             }
-            else if(position == 1)
-            {
-                tv1 = (TextView) view.findViewById(R.id.tv1);
-                tv2 = (TextView) view.findViewById(R.id.tv2);
-
-            }*/
 
             view.setLayoutParams(new LinearLayout.LayoutParams(ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.MATCH_PARENT));
             ASSL.DoMagic(view);
@@ -171,7 +180,7 @@ public class SignUpTutorial extends Fragment {
 
         @Override
         public int getCount() {
-            return layouts.length;
+            return layouts.size();
         }
 
         @Override

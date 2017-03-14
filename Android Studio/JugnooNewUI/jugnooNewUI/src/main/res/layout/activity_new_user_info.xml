@@ -38,60 +38,101 @@
             app:font="maven"/>
     </RelativeLayout>
     
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/llBar"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/px_504"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@+id/topBar"
-        android:layout_marginTop="25dp"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="53dp"
-        android:layout_marginRight="53dp"
-        android:tag="@string/dont_touch_me"
+        android:layout_marginTop="@dimen/px_50"
+        android:gravity="center"
         android:layout_centerHorizontal="true">
         
         <ImageView
             android:id="@+id/ivTickReferral"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/circle_border_menus"
-            android:padding="4dp"
-            android:tag="@string/dont_touch_me"/>
+            android:layout_width="@dimen/px_70"
+            android:layout_height="@dimen/px_70"
+            android:background="@drawable/ic_signup_tut_tick_bg"
+            android:paddingTop="8px"
+            android:paddingLeft="8px"
+            android:paddingRight="10px"
+            android:paddingBottom="10px"
+            android:visibility="visible"
+            android:tag="mwar"/>
 
         <ImageView
             android:id="@+id/ivLineReferral"
-            android:layout_width="0dp"
-            android:layout_height="8dp"
-            android:layout_weight="1"
-            android:background="@color/bar_color"
-            android:tag="@string/dont_touch_me"/>
+            android:layout_width="@dimen/px_147"
+            android:layout_height="@dimen/px_20"
+            android:paddingTop="@dimen/px_4"
+            android:paddingBottom="@dimen/px_8"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ivTickReferral"
+            android:visibility="visible"
+            android:layout_marginLeft="-2px"
+            android:background="@drawable/ic_signup_tut_line_bg"
+            android:tag="mwar"/>
 
         <ImageView
             android:id="@+id/ivTickProfile"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/circle_border_menus"
-            android:padding="4dp"
-            android:tag="@string/dont_touch_me"/>
+            android:layout_width="@dimen/px_70"
+            android:layout_height="@dimen/px_70"
+            android:background="@drawable/ic_signup_tut_tick_bg"
+            android:src="@drawable/ic_bar_check"
+            android:layout_toRightOf="@+id/ivLineReferral"
+            android:visibility="visible"
+            android:paddingTop="8px"
+            android:paddingLeft="8px"
+            android:paddingRight="10px"
+            android:paddingBottom="10px"
+            android:tag="mwar"/>
 
         <ImageView
             android:id="@+id/ivLineProfile"
-            android:layout_width="0dp"
-            android:layout_height="8dp"
-            android:layout_weight="1"
-            android:background="@color/bar_color"
-            android:tag="@string/dont_touch_me"/>
+            android:layout_width="@dimen/px_147"
+            android:layout_height="@dimen/px_20"
+            android:layout_toRightOf="@+id/ivTickProfile"
+            android:layout_centerVertical="true"
+            android:paddingTop="@dimen/px_4"
+            android:paddingBottom="@dimen/px_8"
+            android:visibility="visible"
+            android:layout_marginLeft="-2px"
+            android:background="@drawable/ic_signup_tut_line_bg"
+            android:tag="mwar"/>
+
+
 
         <ImageView
             android:id="@+id/ivTickWallet"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/circle_border_menus"
-            android:padding="4dp"
-            android:tag="@string/dont_touch_me"/>
+            android:layout_width="@dimen/px_70"
+            android:layout_height="@dimen/px_70"
+            android:layout_toRightOf="@+id/ivLineProfile"
+            android:background="@drawable/ic_signup_tut_tick_bg"
+            android:paddingTop="8px"
+            android:paddingLeft="8px"
+            android:paddingRight="10px"
+            android:paddingBottom="10px"
+            android:tag="mwar"/>
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/ivLineReferralFill"
+            android:layout_width="177px"
+            android:layout_height="@dimen/px_7"
+            android:layout_toRightOf="@+id/ivTickReferral"
+            android:layout_marginLeft="-20px"
+            android:layout_marginTop="29px"
+            android:tag="mwar"/>
+
+        <ImageView
+            android:id="@+id/ivLineProfileFill"
+            android:layout_width="177px"
+            android:layout_height="@dimen/px_7"
+            android:layout_toRightOf="@+id/ivTickProfile"
+            android:layout_marginLeft="-20px"
+            android:layout_marginTop="29px"
+            android:tag="mwar"/>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rlContainer"

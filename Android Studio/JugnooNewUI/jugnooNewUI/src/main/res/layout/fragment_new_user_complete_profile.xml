@@ -160,7 +160,7 @@
             android:gravity="center"
             android:tag="mwar"
             android:textColor="@color/text_color"
-            android:background="@drawable/capsule_white_stroke"
+            android:background="@drawable/capsule_f7_stroke"
             android:textSize="@dimen/text_size_28" />
 
         <ImageView

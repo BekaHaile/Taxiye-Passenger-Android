@@ -248,6 +248,12 @@ public class NewUserCompleteProfileFragment extends Fragment{
     }
 
     private void openWalletFragment(){
-        activity.getTransactionUtils().openNewUserWalletFragment(activity, activity.getRlContainer());
+        if(Data.userData.getSignupTutorial().getDs3() != null
+                && Data.userData.getSignupTutorial().getDs3() == 1){
+            activity.getTransactionUtils().openNewUserWalletFragment(activity, activity.getRlContainer());
+        } else{
+            activity.performBackPressed();
+        }
+
     }
 }

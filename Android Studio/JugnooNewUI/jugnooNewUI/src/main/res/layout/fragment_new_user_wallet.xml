@@ -6,7 +6,6 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/llWalletContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15px"
@@ -33,209 +32,218 @@
             android:textStyle="bold"
             app:font="maven" />
 
-        <RelativeLayout
-            android:id="@+id/rlPaytm"
+        <LinearLayout
+            android:id="@+id/llWalletContainer"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px_130"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
+            android:layout_height="wrap_content"
             android:layout_marginTop="30px"
-            android:background="@drawable/background_white_rounded_bordered"
-            android:visibility="visible">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:orientation="vertical">
+            <RelativeLayout
+                android:id="@+id/rlPaytm"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px_130"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:background="@drawable/background_white_rounded_bordered"
+                android:visibility="visible">
 
-                <ImageView
-                    android:id="@+id/ivPaytm"
-                    android:layout_width="@dimen/px_84"
-                    android:layout_height="@dimen/px_27"
-                    android:layout_marginLeft="@dimen/px_40"
-                    android:src="@drawable/ic_paytm_no_padding" />
-
-                <TextView
-                    android:id="@+id/tvPaytmOffer"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/ivPaytm"
-                    android:layout_marginLeft="@dimen/px_40"
-                    android:layout_marginTop="@dimen/px_10"
-                    android:text="50% Cashback"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_26"
-                    app:font="maven" />
-            </LinearLayout>
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/ivAddPaytm"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="17dp"
-                android:background="@drawable/bg_white_round_layer_shadow"
-                android:padding="14dp"
-                android:src="@drawable/ic_plus_dark"
-                android:tag="@string/dont_touch_me" />
+                    <ImageView
+                        android:id="@+id/ivPaytm"
+                        android:layout_width="@dimen/px_84"
+                        android:layout_height="@dimen/px_27"
+                        android:layout_marginLeft="@dimen/px_40"
+                        android:src="@drawable/ic_paytm_no_padding" />
 
-            <TextView
-                android:id="@+id/tvPaytmBalanceValue"
-                android:layout_width="250px"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="34px"
-                android:gravity="right"
-                android:visibility="gone"
-                android:text="@string/rupee_0"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_38" />
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rLMobikwik"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px_130"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
-            android:layout_marginTop="15px"
-            android:background="@drawable/background_white_rounded_bordered"
-            android:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvPaytmOffer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ivPaytm"
+                        android:layout_marginLeft="@dimen/px_40"
+                        android:layout_marginTop="@dimen/px_10"
+                        android:text="10% Cashback"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="@dimen/text_size_26"
+                        android:visibility="visible"
+                        app:font="maven" />
+                </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/ivMobikwik"
-                    android:layout_width="@dimen/px_120"
-                    android:layout_height="@dimen/px_36"
-                    android:layout_marginLeft="@dimen/px_40"
-                    android:src="@drawable/ic_mobikwik_no_padding" />
+                    android:id="@+id/ivAddPaytm"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="17dp"
+                    android:background="@drawable/bg_white_round_layer_shadow"
+                    android:padding="14dp"
+                    android:src="@drawable/ic_plus_dark"
+                    android:tag="@string/dont_touch_me" />
 
                 <TextView
-                    android:id="@+id/tvMobikwikOffer"
+                    android:id="@+id/tvPaytmBalanceValue"
+                    android:layout_width="250px"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="34px"
+                    android:gravity="right"
+                    android:text="@string/rupee_0"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_38"
+                    android:visibility="gone" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlMobikwik"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px_130"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:layout_marginTop="15px"
+                android:background="@drawable/background_white_rounded_bordered"
+                android:visibility="visible">
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/ivMobikwik"
-                    android:layout_marginLeft="@dimen/px_40"
-                    android:layout_marginTop="@dimen/px_10"
-                    android:text="50% Cashback"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_26"
-                    app:font="maven" />
-            </LinearLayout>
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/ivAddMobikwik"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="17dp"
-                android:background="@drawable/bg_white_round_layer_shadow"
-                android:padding="14dp"
-                android:src="@drawable/ic_plus_dark"
-                android:tag="@string/dont_touch_me" />
+                    <ImageView
+                        android:id="@+id/ivMobikwik"
+                        android:layout_width="@dimen/px_120"
+                        android:layout_height="@dimen/px_36"
+                        android:layout_marginLeft="@dimen/px_40"
+                        android:src="@drawable/ic_mobikwik_no_padding" />
 
-            <TextView
-                android:id="@+id/tvMobikwikBalanceValue"
-                android:layout_width="250px"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="34px"
-                android:gravity="right"
-                android:visibility="gone"
-                android:text="@string/rupee_0"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_38" />
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rlFreeCharge"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px_130"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
-            android:layout_marginTop="15px"
-            android:background="@drawable/background_white_rounded_bordered"
-            android:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvMobikwikOffer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ivMobikwik"
+                        android:layout_marginLeft="@dimen/px_40"
+                        android:layout_marginTop="@dimen/px_10"
+                        android:text="10% Cashback"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="@dimen/text_size_26"
+                        app:font="maven" />
+                </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/ivFreecharge"
-                    android:layout_width="123px"
-                    android:layout_height="@dimen/px_28"
-                    android:layout_marginLeft="@dimen/px_40"
-                    android:src="@drawable/ic_freecharge_no_padding" />
+                    android:id="@+id/ivAddMobikwik"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="17dp"
+                    android:background="@drawable/bg_white_round_layer_shadow"
+                    android:padding="14dp"
+                    android:src="@drawable/ic_plus_dark"
+                    android:tag="@string/dont_touch_me" />
 
                 <TextView
-                    android:id="@+id/tvFreeChargeOffer"
+                    android:id="@+id/tvMobikwikBalanceValue"
+                    android:layout_width="250px"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="34px"
+                    android:gravity="right"
+                    android:text="@string/rupee_0"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_38"
+                    android:visibility="gone" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlFreeCharge"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px_130"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:layout_marginTop="15px"
+                android:background="@drawable/background_white_rounded_bordered"
+                android:visibility="visible">
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/ivFreecharge"
-                    android:layout_marginLeft="@dimen/px_40"
-                    android:layout_marginTop="@dimen/px_10"
-                    android:text="50% Cashback"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_26"
-                    app:font="maven" />
-            </LinearLayout>
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/ivAddFreecharge"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="17dp"
-                android:background="@drawable/bg_white_round_layer_shadow"
-                android:padding="14dp"
-                android:src="@drawable/ic_plus_dark"
-                android:tag="@string/dont_touch_me" />
+                    <ImageView
+                        android:id="@+id/ivFreecharge"
+                        android:layout_width="123px"
+                        android:layout_height="@dimen/px_28"
+                        android:layout_marginLeft="@dimen/px_40"
+                        android:src="@drawable/ic_freecharge_no_padding" />
 
-            <TextView
-                android:id="@+id/tvFreeChargeBalanceValue"
-                android:layout_width="250px"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="34px"
-                android:gravity="right"
-                android:visibility="gone"
-                android:text="@string/rupee_0"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_38" />
+                    <TextView
+                        android:id="@+id/tvFreeChargeOffer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ivFreecharge"
+                        android:layout_marginLeft="@dimen/px_40"
+                        android:layout_marginTop="@dimen/px_10"
+                        android:text="10% Cashback"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="@dimen/text_size_26"
+                        app:font="maven" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivAddFreecharge"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="17dp"
+                    android:background="@drawable/bg_white_round_layer_shadow"
+                    android:padding="14dp"
+                    android:src="@drawable/ic_plus_dark"
+                    android:tag="@string/dont_touch_me" />
+
+                <TextView
+                    android:id="@+id/tvFreeChargeBalanceValue"
+                    android:layout_width="250px"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="34px"
+                    android:gravity="right"
+                    android:text="@string/rupee_0"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_38"
+                    android:visibility="gone" />
 
 
-        </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bFinish"
+            style="@style/ButtonThemeCapsule"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="100px"
+            android:imeOptions="actionDone"
+            android:text="@string/finish"
+            app:font="maven" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/bFinish"
-        style="@style/ButtonThemeCapsule"
-        android:layout_below="@+id/llWalletContainer"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="100px"
-        android:imeOptions="actionDone"
-        android:text="@string/finish"
-        app:font="maven" />
+
 
 
 </RelativeLayout>

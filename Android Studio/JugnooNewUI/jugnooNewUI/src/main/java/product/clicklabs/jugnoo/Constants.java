@@ -182,6 +182,7 @@ public interface Constants {
     String KEY_EMERGENCY_CONTACTS = "emergency_contacts";
     String KEY_NAME = "name";
     String KEY_TRIP_TOTAL = "trip_total";
+    String KEY_OFFER_TEXT = "offer_text";
 
 
     String KEY_T20_WC_ENABLE = "t20_wc_enable";

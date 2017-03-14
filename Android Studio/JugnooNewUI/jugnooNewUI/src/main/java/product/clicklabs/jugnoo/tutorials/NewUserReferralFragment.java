@@ -98,7 +98,13 @@ public class NewUserReferralFragment extends Fragment {
     }
 
     private void openCompleteProfile(){
-        activity.getTransactionUtils().openNewUserCompleteProfileFragment(activity, activity.getRlContainer());
+        if(Data.userData.getSignupTutorial().getDs2() != null
+                && Data.userData.getSignupTutorial().getDs2() == 1){
+            activity.getTransactionUtils().openNewUserCompleteProfileFragment(activity, activity.getRlContainer());
+        } else{
+            activity.performBackPressed();
+        }
+
     }
 
     /**

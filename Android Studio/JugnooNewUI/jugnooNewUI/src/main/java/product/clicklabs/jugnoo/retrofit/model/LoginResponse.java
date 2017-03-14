@@ -13,6 +13,7 @@ import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.datastructure.SignupTutorial;
 
 /**
  * Created by shankar on 1/5/16.
@@ -717,6 +718,9 @@ public class LoginResponse {
 		@SerializedName("subscription_data")
 		@Expose
 		private SubscriptionData subscriptionData;
+		@SerializedName("signup_tutorial")
+		@Expose
+		private SignupTutorial signupTutorial;
 
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
@@ -876,6 +880,14 @@ public class LoginResponse {
 
 		public void setSubscriptionData(SubscriptionData subscriptionData) {
 			this.subscriptionData = subscriptionData;
+		}
+
+		public SignupTutorial getSignUpTutorial() {
+			return signupTutorial;
+		}
+
+		public void setSignUpTutorial(SignupTutorial signUpTutorial) {
+			this.signupTutorial = signUpTutorial;
 		}
 	}
 

@@ -28,6 +28,8 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
+import static product.clicklabs.jugnoo.Constants.KEY_OFFER_TEXT;
+
 /**
  * Created by shankar on 7/4/16.
  */
@@ -491,7 +493,7 @@ public class WalletCore {
 			for(int i=0; i<jsonArray.length(); i++){
 				JSONObject ji = jsonArray.getJSONObject(i);
 				PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
-						ji.getInt(Constants.KEY_ENABLED));
+						ji.getInt(Constants.KEY_ENABLED), ji.optString(KEY_OFFER_TEXT, null));
 				paymentModeConfigDatas.add(paymentModeConfigData);
 			}
 		} catch (Exception e){

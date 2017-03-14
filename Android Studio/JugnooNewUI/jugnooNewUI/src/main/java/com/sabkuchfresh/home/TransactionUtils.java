@@ -327,7 +327,7 @@ public class TransactionUtils {
         if (!checkIfFragmentAdded(activity, SignUpTutorial.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, 0)
-                    .add(container.getId(), SignUpTutorial.newInstance(numOfPages),
+                    .replace(container.getId(), SignUpTutorial.newInstance(numOfPages),
                             SignUpTutorial.class.getName())
                     .addToBackStack(SignUpTutorial.class.getName())
                     .commitAllowingStateLoss();

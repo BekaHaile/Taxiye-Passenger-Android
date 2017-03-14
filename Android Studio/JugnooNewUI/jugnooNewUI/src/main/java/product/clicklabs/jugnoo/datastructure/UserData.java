@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
+import product.clicklabs.jugnoo.tutorials.SignUpTutorial;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -84,6 +85,7 @@ public class UserData {
 	private int showJeanieHelpText;
 	private int showOfferDialog;
 	private int showTutorial;
+	private SignupTutorial signupTutorial;
 
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
@@ -950,6 +952,14 @@ public class UserData {
 
 	public void setShowTutorial(int showTutorial) {
 		this.showTutorial = showTutorial;
+	}
+
+	public SignupTutorial getSignupTutorial() {
+		return signupTutorial;
+	}
+
+	public void setSignupTutorial(SignupTutorial signupTutorial) {
+		this.signupTutorial = signupTutorial;
 	}
 
 	//	"meals_enabled": 1,
