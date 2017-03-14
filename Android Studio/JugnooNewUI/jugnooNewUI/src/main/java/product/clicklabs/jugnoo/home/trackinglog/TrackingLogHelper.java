@@ -144,7 +144,7 @@ public class TrackingLogHelper {
 						}
 						Thread.sleep(2000);
 					}
-				} catch (Exception e) {
+				} catch (Exception|OutOfMemoryError e) {
 					e.printStackTrace();
 				}
 			}
@@ -160,7 +160,7 @@ public class TrackingLogHelper {
 				Thread.sleep(2000);
 				checkAndUploadRemainingFiles(accessToken);
 			}
-		} catch (Exception e){
+		} catch (Exception|OutOfMemoryError e){
 			e.printStackTrace();
 		}
 	}

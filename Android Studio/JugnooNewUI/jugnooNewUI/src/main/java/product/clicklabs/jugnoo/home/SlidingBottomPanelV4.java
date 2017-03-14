@@ -82,35 +82,47 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
-                //Log.v("slideOffset", "---> "+slideOffset);
-                if(slideOffset > 0.2f){
-                    activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
-                    activity.setFabMarginInitial(true);
-                    activity.getFabViewTest().hideJeanieHelpInSession();
+                try {
+                    //Log.v("slideOffset", "---> "+slideOffset);
+                    if(slideOffset > 0.2f){
+						activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
+						activity.setFabMarginInitial(true);
+						activity.getFabViewTest().hideJeanieHelpInSession();
+					}
+                    imageViewExtraForSliding.setVisibility(View.VISIBLE);
+                    if (activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
+							&& slideOffset < 1f) {
+						activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+					}
+                    requestRideOptionsFragment.setSurgeImageVisibility();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                imageViewExtraForSliding.setVisibility(View.VISIBLE);
-                if (activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
-                        && slideOffset < 1f) {
-                    activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
-                }
-                requestRideOptionsFragment.setSurgeImageVisibility();
             }
 
             @Override
             public void onPanelExpanded(View panel) {
-                imageViewExtraForSliding.setVisibility(View.VISIBLE);
-                activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
-                requestRideOptionsFragment.setSurgeImageVisibility();
-                activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
-                activity.setFabMarginInitial(true);
+                try {
+                    imageViewExtraForSliding.setVisibility(View.VISIBLE);
+                    activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
+                    requestRideOptionsFragment.setSurgeImageVisibility();
+                    activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
+                    activity.setFabMarginInitial(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onPanelCollapsed(View panel) {
-                imageViewExtraForSliding.setVisibility(View.GONE);
-                activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
-                requestRideOptionsFragment.setSurgeImageVisibility();
-                activity.showPoolInforBar();
+                try {
+                    imageViewExtraForSliding.setVisibility(View.GONE);
+                    activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+                    requestRideOptionsFragment.setSurgeImageVisibility();
+                    activity.showPoolInforBar();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
