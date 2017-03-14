@@ -897,14 +897,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     @Override
     public void onResume() {
         super.onResume();
-        orderPaymentModes();
-        setPaymentOptionUI();
-        if(Data.userData.isSubscriptionActive()) {
-            cvBecomeStar.setVisibility(View.GONE);
-        }
+        try {
+            orderPaymentModes();
+            setPaymentOptionUI();
+            if(Data.userData != null) {
+				if (Data.userData.isSubscriptionActive()) {
+					cvBecomeStar.setVisibility(View.GONE);
+				}
+			}
 
-        if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
-            getCheckoutDataAPI(selectedSubscription);
+            if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
+				getCheckoutDataAPI(selectedSubscription);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +33,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -92,8 +92,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
         rlReview = (RelativeLayout) rootView.findViewById(R.id.rlReview);
         rlAsk = (RelativeLayout) rootView.findViewById(R.id.rlAsk);
-        tvReview = (TextView) rootView.findViewById(R.id.tvReview);
-        tvAsk = (TextView) rootView.findViewById(R.id.tvAsk);
+        tvReview = (TextView) rootView.findViewById(R.id.tvReview); tvReview.setTypeface(tvReview.getTypeface(), Typeface.BOLD);
+        tvAsk = (TextView) rootView.findViewById(R.id.tvAsk); tvAsk.setTypeface(tvAsk.getTypeface(), Typeface.BOLD);
         vReviewSelected = rootView.findViewById(R.id.vReviewSelected);
         vAskSelected = rootView.findViewById(R.id.vAskSelected);
         llReviewLocation = (LinearLayout) rootView.findViewById(R.id.llReviewLocation);
@@ -199,21 +199,21 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         this.addPostType = addPostType;
         switch(addPostType){
             case REVIEW:
-                tvReview.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-                tvAsk.setTypeface(Fonts.mavenMedium(activity), Typeface.NORMAL);
+                tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+                tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
                 vReviewSelected.setVisibility(View.VISIBLE);
                 vAskSelected.setVisibility(View.GONE);
                 llReviewLocation.setVisibility(View.VISIBLE);
-
+                etContent.setHint(R.string.share_your_experience);
                 break;
 
             case ASK:
-                tvReview.setTypeface(Fonts.mavenMedium(activity), Typeface.NORMAL);
-                tvAsk.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+                tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+                tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 vReviewSelected.setVisibility(View.GONE);
                 vAskSelected.setVisibility(View.VISIBLE);
                 llReviewLocation.setVisibility(View.GONE);
-
+                etContent.setHint(R.string.looking_for_something);
                 break;
         }
         openSuggestionView(false);

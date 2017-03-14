@@ -2,6 +2,7 @@ package com.sabkuchfresh.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
+import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
@@ -18,6 +20,7 @@ import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -108,6 +111,15 @@ public class FeedHomeFragment extends Fragment {
                 activity.getTransactionUtils().openFeedAddPostFragment(activity, activity.getRelativeLayoutContainer());
             }
         }, 1000);
+
+        try {
+            //TODO remove this
+            Intent syncContactsIntent = new Intent(activity, FeedContactsUploadService.class);
+            syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            activity.startService(syncContactsIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         return rootView;

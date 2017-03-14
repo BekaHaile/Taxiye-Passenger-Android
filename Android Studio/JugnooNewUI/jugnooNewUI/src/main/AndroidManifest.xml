@@ -502,6 +502,10 @@
             android:screenOrientation="portrait"/>
 
         <service
+            android:name="com.sabkuchfresh.home.FeedContactsUploadService"
+            android:enabled="true" />
+
+        <service
             android:name="com.picker.image.util.OfflineSpiceService"
             android:exported="false" />
 

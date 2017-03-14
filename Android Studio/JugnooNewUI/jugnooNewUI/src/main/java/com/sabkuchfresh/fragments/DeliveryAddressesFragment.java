@@ -188,33 +188,37 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         }
 
         if(activity instanceof FreshActivity) {
-            cardViewSavedPlaces.setVisibility(View.VISIBLE);
-            cardViewRecentAddresses.setVisibility(View.VISIBLE);
-            savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
-                @Override
-                public void onItemClick(SearchResult searchResult) {
-                    if(searchResult.getIsConfirmed() == 1){
-                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                            GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES+SELECTED);
-                    } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
-                    }
-                }
+            try {
+                cardViewSavedPlaces.setVisibility(View.VISIBLE);
+                cardViewRecentAddresses.setVisibility(View.VISIBLE);
+                savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
+					@Override
+					public void onItemClick(SearchResult searchResult) {
+						if(searchResult.getIsConfirmed() == 1){
+							onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+									searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+								GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES+SELECTED);
+						} else {
+							goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
+						}
+					}
 
-                @Override
-                public void onEditClick(SearchResult searchResult) {
-                    if(activity instanceof FreshActivity) {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false);
-                    }
-                }
-            }, false, true);
+					@Override
+					public void onEditClick(SearchResult searchResult) {
+						if(activity instanceof FreshActivity) {
+							goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false);
+						}
+					}
+				}, false, true);
 
-            listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+                listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 
-            setSavedPlaces();
+                setSavedPlaces();
 
-            getApiFetchUserAddress().hit(true);
+                getApiFetchUserAddress().hit(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         else if(activity instanceof AddPlaceActivity){
             cardViewRecentAddresses.setVisibility(View.GONE);

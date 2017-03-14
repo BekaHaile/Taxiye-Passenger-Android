@@ -9,6 +9,7 @@ import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import java.util.Map;
 
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -32,5 +33,9 @@ public interface FeedApiService {
 
     @GET("/suggest/{query}")
     void suggestRestaurant(@Path("query") String query, Callback<SuggestRestaurantQueryResp> callback);
+
+    @FormUrlEncoded
+    @POST("/feeds/v1/sync_contacts")
+    Response syncContacts(@FieldMap Map<String, String> params);
 
 }

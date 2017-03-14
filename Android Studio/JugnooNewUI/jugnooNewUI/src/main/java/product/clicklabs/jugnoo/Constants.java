@@ -636,4 +636,6 @@ public interface Constants {
     String KEY_ACCOUNT_KIT_VERSION = "account_kit_version";
     String KEY_RIDE_ACCEPTED = "ride_accepted";
     String KEY_POST_ID = "post_id";
+
+    String ACTION_CONTACTS_UPLOADED = "product.clicklabs.jugnoo.ACTION_CONTACTS_UPLOADED";
 }
