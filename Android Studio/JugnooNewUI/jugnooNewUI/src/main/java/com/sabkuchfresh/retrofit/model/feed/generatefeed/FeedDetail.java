@@ -52,6 +52,9 @@ public class FeedDetail implements Serializable {
     @SerializedName("owner_image")
     @Expose
     private String ownerImage;
+    @SerializedName("restaurant_id")
+    @Expose
+    private Integer restaurantId;
     @SerializedName("restaurant_name")
     @Expose
     private String restaurantName;
@@ -198,6 +201,18 @@ public class FeedDetail implements Serializable {
     public void setRestaurantAddress(String restaurantAddress) {
         this.restaurantAddress = restaurantAddress;
     }
+
+    public Integer getRestaurantId() {
+        if(restaurantId == null){
+            restaurantId = 0;
+        }
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Integer restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
     public enum FeedType{
         POST(" posted "),
         REVIEW(" reviewed "),

@@ -23,7 +23,7 @@ public interface FeedApiService {
 
     @FormUrlEncoded
     @POST("/feeds/v1/generate_feed")
-    void getAllFeeds(@FieldMap Map<String, String> params, Callback<FeedListResponse> callback);
+    void generateFeed(@FieldMap Map<String, String> params, Callback<FeedListResponse> callback);
 
 
     @FormUrlEncoded
