@@ -26,7 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -324,6 +323,11 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
             case R.id.view_action_comment:
                 callback.onCommentClick(feedDetailArrayList.get(position));
                 break;
+
+            case R.id.tv_feed_owner_title:
+                callback.onRestaurantClick(feedDetailArrayList.get(position).getRestaurantId());
+                break;
+
             default:
                 break;
         }
@@ -332,8 +336,8 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
     public interface Callback {
         void onLikeClick(FeedDetail object);
-
         void onCommentClick(FeedDetail postId);
+        void onRestaurantClick(int restaurantId);
     }
 
 
@@ -387,6 +391,12 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                 @Override
                 public void onClick(View v) {
                     onClickView.onClickItem(viewActionComment, view);
+                }
+            });
+            tvFeedOwnerTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickView.onClickItem(tvFeedOwnerTitle,view);
                 }
             });
 

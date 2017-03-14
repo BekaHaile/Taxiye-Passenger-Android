@@ -51,6 +51,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class FeedHomeFragment extends Fragment {
@@ -134,7 +135,13 @@ public class FeedHomeFragment extends Fragment {
             @Override
             public void onCommentClick(final FeedDetail feedDetail) {
                 activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(),feedDetail);
+            }
 
+            @Override
+            public void onRestaurantClick(int restaurantId) {
+                if(restaurantId > 0){
+                    activity.fetchRestaurantMenuAPI(restaurantId, 1, null);
+                }
             }
         });
         recyclerView.setAdapter(feedOfferingListAdapter);
@@ -187,9 +194,10 @@ public class FeedHomeFragment extends Fragment {
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
 
                 new HomeUtil().putDefaultParams(params);
-                RestClient.getFeedApiService().getAllFeeds(params, new retrofit.Callback<FeedListResponse>() {
+                RestClient.getFeedApiService().generateFeed(params, new retrofit.Callback<FeedListResponse>() {
                     @Override
                     public void success(FeedListResponse feedbackResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         DialogPopup.dismissLoadingDialog();
                         try {
                             String message = feedbackResponse.getMessage();

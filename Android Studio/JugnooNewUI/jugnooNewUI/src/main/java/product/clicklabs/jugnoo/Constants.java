@@ -639,4 +639,5 @@ public interface Constants {
     String ACTION_CONTACTS_UPLOADED = "product.clicklabs.jugnoo.ACTION_CONTACTS_UPLOADED";
     String KEY_UPLOADED = "uploaded";
     String KEY_COMMENT_CONTENT = "comment_content";
+    String KEY_RESTAURANT_INFO = "restaurant_info";
 }

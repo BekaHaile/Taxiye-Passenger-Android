@@ -65,6 +65,7 @@ import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
+import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
@@ -700,7 +701,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     if ((getFreshHomeFragment() != null && !getFreshHomeFragment().isHidden()) ||
                             (getMealFragment() != null && !getMealFragment().isHidden()) ||
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
-                            || (getMenusFragment() != null && !getMenusFragment().isHidden())) {
+                            || (getMenusFragment() != null && !getMenusFragment().isHidden())
+                            || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
                     }
@@ -3708,6 +3710,37 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             }
         }
         return gaCategory;
+    }
+
+
+
+    private ApiFetchRestaurantMenu apiFetchRestaurantMenu;
+    public void fetchRestaurantMenuAPI(final int restaurantId, final int restaurantInfo, final MenusResponse.Vendor vendor){
+        if(apiFetchRestaurantMenu == null){
+            apiFetchRestaurantMenu = new ApiFetchRestaurantMenu(this, new ApiFetchRestaurantMenu.Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onRetry(View view) {
+                    fetchRestaurantMenuAPI(restaurantId, restaurantInfo, vendor);
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            });
+        }
+        apiFetchRestaurantMenu.getVendorMenu(restaurantId, getSelectedLatLng().latitude,
+                getSelectedLatLng().longitude, restaurantInfo, vendor);
     }
 
 }
