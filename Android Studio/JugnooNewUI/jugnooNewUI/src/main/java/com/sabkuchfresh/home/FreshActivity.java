@@ -2920,7 +2920,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 } else if (appType == AppConstant.ApplicationType.MENUS && getMenusFragment() != null) {
                     getMenusFragment().getAllMenus(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
-                    getFeedHomeFragment().fetchFeedsApi();
+                    getFeedHomeFragment().fetchFeedsApi(true);
                 }
             }
         } catch (Exception e) {

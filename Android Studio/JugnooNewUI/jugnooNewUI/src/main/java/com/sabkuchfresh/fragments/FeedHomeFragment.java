@@ -8,8 +8,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +55,7 @@ public class FeedHomeFragment extends Fragment {
     private FeedOfferingListAdapter feedOfferingListAdapter;
     private TextView tvAddPost;
     private LikeFeed likeFeed;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     public FeedHomeFragment() {
@@ -104,6 +107,13 @@ public class FeedHomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchFeedsApi(false);
+            }
+        });
 
         feedOfferingListAdapter = new FeedOfferingListAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.Callback() {
             @Override
@@ -150,12 +160,12 @@ public class FeedHomeFragment extends Fragment {
 
 
         try {
-            if (Data.getFeedData() != null
-                    && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
+//            if (Data.getFeedData() != null
+//                    && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
                 Intent syncContactsIntent = new Intent(activity, FeedContactsUploadService.class);
                 syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 activity.startService(syncContactsIntent);
-            }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,11 +182,13 @@ public class FeedHomeFragment extends Fragment {
         }
     }
 
-    public void fetchFeedsApi() {
+    public void fetchFeedsApi(boolean loader) {
         try {
             if (MyApplication.getInstance().isOnline()) {
 
-                DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
+                if(loader) {
+                    DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
+                }
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, "bc1ff5a34edab8d37c56a977023b8f4d473d22e83facfd534f26341579c94b54");
@@ -189,6 +201,7 @@ public class FeedHomeFragment extends Fragment {
                     public void success(FeedListResponse feedbackResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         DialogPopup.dismissLoadingDialog();
+                        swipeRefreshLayout.setRefreshing(false);
                         try {
                             String message = feedbackResponse.getMessage();
                             // TODO: 13/03/17 third argument should be getError()
@@ -196,6 +209,9 @@ public class FeedHomeFragment extends Fragment {
                                     feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     feedOfferingListAdapter.setList(feedbackResponse.getFeeds());
+                                    if(!TextUtils.isEmpty(feedbackResponse.getAddPostText())){
+                                        tvAddPost.setText(feedbackResponse.getAddPostText());
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -210,14 +226,16 @@ public class FeedHomeFragment extends Fragment {
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
                         retryDialog(DialogErrorType.CONNECTION_LOST);
-
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
             } else {
                 retryDialog(DialogErrorType.NO_NET);
+                swipeRefreshLayout.setRefreshing(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -226,7 +244,7 @@ public class FeedHomeFragment extends Fragment {
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        fetchFeedsApi();
+                        fetchFeedsApi(true);
                     }
 
                     @Override
@@ -246,7 +264,11 @@ public class FeedHomeFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean uploaded = intent.getBooleanExtra(Constants.KEY_UPLOADED, false);
-            Log.i("FeedHomeFrag onReceive", "uploaded=" + uploaded);
+            Log.i("FeedHomeFrag onReceive", "uploaded="+uploaded);
+            if(uploaded){
+                Utils.showToast(activity, activity.getString(R.string.contacts_synced_successfully));
+                fetchFeedsApi(false);
+            }
         }
     };
 

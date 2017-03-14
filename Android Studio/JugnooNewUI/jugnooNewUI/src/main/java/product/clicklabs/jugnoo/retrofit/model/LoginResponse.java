@@ -338,6 +338,9 @@ public class LoginResponse {
 		@SerializedName("contacts_synced")
 		@Expose
 		private Integer contactsSynced;
+		@SerializedName("feature_feed_offering")
+		@Expose
+		private Integer featureFeedOffering;
 
 		public Integer getContactsSynced() {
 			return contactsSynced;
@@ -345,6 +348,14 @@ public class LoginResponse {
 
 		public void setContactsSynced(Integer contactsSynced) {
 			this.contactsSynced = contactsSynced;
+		}
+
+		public Integer getFeatureFeedOffering() {
+			return featureFeedOffering;
+		}
+
+		public void setFeatureFeedOffering(Integer featureFeedOffering) {
+			this.featureFeedOffering = featureFeedOffering;
 		}
 	}
 

@@ -1,9 +1,10 @@
 
 package com.sabkuchfresh.retrofit.model.feed.generatefeed;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class FeedListResponse {
 
@@ -19,6 +20,9 @@ public class FeedListResponse {
     @SerializedName("feeds")
     @Expose
     private List<FeedDetail> feeds = null;
+    @SerializedName("add_post_text")
+    @Expose
+    private String addPostText;
 
     public int getFlag() {
         return flag;
@@ -47,5 +51,13 @@ public class FeedListResponse {
 
     public String getError() {
         return error;
+    }
+
+    public String getAddPostText() {
+        return addPostText;
+    }
+
+    public void setAddPostText(String addPostText) {
+        this.addPostText = addPostText;
     }
 }

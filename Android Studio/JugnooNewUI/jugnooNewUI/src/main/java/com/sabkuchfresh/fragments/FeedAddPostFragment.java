@@ -46,6 +46,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     private RelativeLayout rlReview, rlAsk;
     private TextView tvReview, tvAsk;
     private View vReviewSelected, vAskSelected;
+    private ImageView ivReview, ivAsk;
     private LinearLayout llReviewLocation;
     private TextView tvRestaurantLocation;
     private EditText etRestaurantLocation;
@@ -96,6 +97,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         tvAsk = (TextView) rootView.findViewById(R.id.tvAsk); tvAsk.setTypeface(tvAsk.getTypeface(), Typeface.BOLD);
         vReviewSelected = rootView.findViewById(R.id.vReviewSelected);
         vAskSelected = rootView.findViewById(R.id.vAskSelected);
+        ivReview = (ImageView) rootView.findViewById(R.id.ivReview);
+        ivAsk = (ImageView) rootView.findViewById(R.id.ivAsk);
         llReviewLocation = (LinearLayout) rootView.findViewById(R.id.llReviewLocation);
         tvRestaurantLocation = (TextView) rootView.findViewById(R.id.tvRestaurantLocation);
         etRestaurantLocation = (EditText) rootView.findViewById(R.id.etRestaurantLocation);
@@ -203,6 +206,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
                 vReviewSelected.setVisibility(View.VISIBLE);
                 vAskSelected.setVisibility(View.GONE);
+                ivReview.setImageResource(R.drawable.ic_feed_star);
+                ivAsk.setImageResource(R.drawable.ic_feed_ask_disabled);
                 llReviewLocation.setVisibility(View.VISIBLE);
                 etContent.setHint(R.string.share_your_experience);
                 break;
@@ -212,6 +217,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 vReviewSelected.setVisibility(View.GONE);
                 vAskSelected.setVisibility(View.VISIBLE);
+                ivReview.setImageResource(R.drawable.ic_feed_star_disable);
+                ivAsk.setImageResource(R.drawable.ic_feed_ask);
                 llReviewLocation.setVisibility(View.GONE);
                 etContent.setHint(R.string.looking_for_something);
                 break;

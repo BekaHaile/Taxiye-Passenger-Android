@@ -39,8 +39,10 @@
                 >
 
                 <ImageView
-                    android:layout_width="20dp"
+                    android:id="@+id/ivAsk"
+                    android:layout_width="21dp"
                     android:layout_height="24dp"
+                    android:src="@drawable/ic_feed_ask"
                     />
 
                 <TextView
@@ -95,6 +97,7 @@
                     android:id="@+id/ivReview"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
+                    android:src="@drawable/ic_feed_star"
                     />
 
                 <TextView
