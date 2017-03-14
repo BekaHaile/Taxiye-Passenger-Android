@@ -43,6 +43,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -1498,7 +1499,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 setLocalityAddressFirstTime(Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType));
             }
         }, 1000);
-
+        clearEtFocus();
     }
 
     private void addFreshHomeFragment() {
@@ -3664,6 +3665,17 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             }
         }
         return gaCategory;
+    }
+
+    public void clearEtFocus(){
+        try {
+            if(getTopBar() != null && getTopBar().etSearch != null) {
+                getTopBar().etSearch.clearFocus();
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

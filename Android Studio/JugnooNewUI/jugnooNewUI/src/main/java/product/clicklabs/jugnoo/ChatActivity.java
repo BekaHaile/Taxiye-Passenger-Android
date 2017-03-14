@@ -1,6 +1,10 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -149,6 +153,8 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			e.printStackTrace();
 		}
 
+		registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_FINISH_ACTIVITY));
+
 		//myHandler.postAtTime(loadDiscussion, 5000);
     }
 
@@ -212,6 +218,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 
 	@Override
 	protected void onDestroy() {
+		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 		Data.context = null;
 		try {
@@ -394,4 +401,18 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
             //DialogPopup.dismissLoadingDialog();
         }
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			try {
+				if(intent.hasExtra(Constants.KEY_FINISH_ACTIVITY)){
+					performBackPressed();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
+
 }

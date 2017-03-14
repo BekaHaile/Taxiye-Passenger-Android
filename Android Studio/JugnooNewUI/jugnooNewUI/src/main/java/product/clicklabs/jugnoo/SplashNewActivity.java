@@ -93,8 +93,6 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
-import product.clicklabs.jugnoo.fbaccountkit.ErrorActivity;
-import product.clicklabs.jugnoo.fbaccountkit.TokenActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -1914,10 +1912,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 toastMessage = "Login Cancelled";
             } else if (loginResult.getError() != null) {
                 toastMessage = loginResult.getError().getErrorType().getMessage();
-                final Intent intent = new Intent(this, ErrorActivity.class);
-                intent.putExtra(ErrorActivity.HELLO_TOKEN_ACTIVITY_ERROR_EXTRA, loginResult.getError());
-
-                startActivity(intent);
             } else {
                 String authorizationCode = loginResult.getAuthorizationCode();
                 final long tokenRefreshIntervalInSeconds =

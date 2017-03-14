@@ -317,8 +317,19 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 		}
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		try {
+			if(activity != null) {
+				activity.clearEtFocus();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    @Override
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
         ASSL.closeActivity(rlRoot);

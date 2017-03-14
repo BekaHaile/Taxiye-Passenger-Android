@@ -633,4 +633,6 @@ public interface Constants {
     String KEY_FB_TOKEN = "fb_token";
     String KEY_ACCOUNT_KIT_VERSION = "account_kit_version";
     String KEY_RIDE_ACCEPTED = "ride_accepted";
+    String KEY_FINISH_ACTIVITY = "finish_activity";
+    String ACTION_FINISH_ACTIVITY = "product.clicklabs.jugnoo.finish_activity";
 }

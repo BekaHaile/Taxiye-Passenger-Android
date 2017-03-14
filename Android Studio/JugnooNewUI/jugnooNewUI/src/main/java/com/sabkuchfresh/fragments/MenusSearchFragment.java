@@ -151,6 +151,18 @@ public class MenusSearchFragment extends Fragment {
 		return rootView;
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		try {
+			if(activity != null) {
+				activity.clearEtFocus();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void clearArrays(){
 		itemsInSearch.clear();
 		tokenSearched = "";

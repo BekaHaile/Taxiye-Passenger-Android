@@ -103,6 +103,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity  {
 	
 	@Override
 	protected void onDestroy() {
+		Data.isOrderCancelled = false;
         ASSL.closeActivity(relative);
         System.gc();
 		super.onDestroy();

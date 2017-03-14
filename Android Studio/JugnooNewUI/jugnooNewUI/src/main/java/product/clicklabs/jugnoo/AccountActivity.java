@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.facebook.accountkit.AccessToken;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.ui.AccountKitActivity;
@@ -50,8 +49,6 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
-import product.clicklabs.jugnoo.fbaccountkit.ErrorActivity;
-import product.clicklabs.jugnoo.fbaccountkit.TokenActivity;
 import product.clicklabs.jugnoo.fragments.AddressBookFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -1131,10 +1128,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     toastMessage = "Login Cancelled";
                 } else if (loginResult.getError() != null) {
                     toastMessage = loginResult.getError().getErrorType().getMessage();
-                    final Intent intent = new Intent(this, ErrorActivity.class);
-                    intent.putExtra(ErrorActivity.HELLO_TOKEN_ACTIVITY_ERROR_EXTRA, loginResult.getError());
-
-                    startActivity(intent);
                 } else {
                     String authorizationCode = loginResult.getAuthorizationCode();
                     final long tokenRefreshIntervalInSeconds =
@@ -1259,11 +1252,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     }
 
     private void startFbAccountKit(){
-        if (AccountKit.getCurrentAccessToken() != null) {
-            startActivity(new Intent(this, TokenActivity.class));
-        } else{
             onLogin(LoginType.PHONE);
-        }
     }
 
     private interface OnCompleteListener {
