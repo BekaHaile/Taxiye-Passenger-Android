@@ -10,11 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
+import com.sabkuchfresh.adapters.FeedOfferingCommentsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
-import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
+import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -31,27 +31,26 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class FeedHomeFragment extends Fragment {
+public class FeedCommentsFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String POST_ID = "postId";
+    private static final String FEED_POST = "feedpost";
+    private long  postId;
+    private FeedOfferingCommentsAdapter feedOfferingCommentsAdapter;
+    private FreshActivity activity;
+    private ArrayList<Object> dataList;
 
 
-    private String mParam1;
-    private String mParam2;
-    private FeedOfferingListAdapter feedOfferingListAdapter;
-
-
-    public FeedHomeFragment() {
+    @SuppressWarnings("Unused")
+    private FeedCommentsFragment() {
         // Required empty public constructor
     }
 
 
-    public static FeedHomeFragment newInstance(String param1, String param2) {
-        FeedHomeFragment fragment = new FeedHomeFragment();
+    public static FeedCommentsFragment newInstance(long param1) {
+        FeedCommentsFragment fragment = new FeedCommentsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putLong(POST_ID, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,8 +59,7 @@ public class FeedHomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            postId = getArguments().getLong(POST_ID);
         }
     }
 
@@ -74,46 +72,33 @@ public class FeedHomeFragment extends Fragment {
     }
 
 
-    private FreshActivity activity;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
+        View rootView = inflater.inflate(R.layout.fragment_feed_comments, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        fetchFeedsApi();
-        feedOfferingListAdapter = new FeedOfferingListAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.Callback() {
+        feedOfferingCommentsAdapter = new FeedOfferingCommentsAdapter(getActivity(), null, recyclerView, new FeedOfferingCommentsAdapter.Callback() {
             @Override
-            public void onLikeClick(long postId) {
+            public void onLikeClick(Object object) {
 
             }
 
             @Override
-            public void onCommentClick(final long postId) {
-                activity.getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(),postId);
-                    }
-                }, 1000);
+            public void onCommentClick(Object object) {
 
             }
         });
-        recyclerView.setAdapter(feedOfferingListAdapter);
-
-        activity.getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                activity.getTransactionUtils().openFeedAddPostFragment(activity, activity.getRelativeLayoutContainer());
-            }
-        }, 1000);
-
-
+        recyclerView.setAdapter(feedOfferingCommentsAdapter);
+        fetchFeedDetail();
         return rootView;
     }
 
-    private void fetchFeedsApi() {
+
+
+    private void fetchFeedDetail() {
         try {
             if(MyApplication.getInstance().isOnline()) {
 
@@ -121,21 +106,31 @@ public class FeedHomeFragment extends Fragment {
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, "bc1ff5a34edab8d37c56a977023b8f4d473d22e83facfd534f26341579c94b54");
-                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+                params.put(Constants.KEY_POST_ID, String.valueOf(postId));
 
                 new HomeUtil().putDefaultParams(params);
-                RestClient.getFeedApiService().getAllFeeds(params, new retrofit.Callback<FeedListResponse>() {
+                RestClient.getFeedApiService().fetchFeedDetails(params, new retrofit.Callback<FeedDetailResponse>() {
                     @Override
-                    public void success(FeedListResponse feedbackResponse, Response response) {
+                    public void success(FeedDetailResponse feedbackResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
                         try {
                             String message = feedbackResponse.getMessage();
-                            // TODO: 13/03/17 third argument should be getError()
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
                                     feedbackResponse.getMessage(), feedbackResponse.getMessage())) {
                                 if(feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-                                    feedOfferingListAdapter.setList(feedbackResponse.getFeeds());
+                                        if(dataList==null) {
+                                            dataList = new ArrayList<>();
+                                        }
+
+                                    dataList.clear();
+                                    if(feedbackResponse.getPostDetails()!=null) {
+                                        dataList.add(feedbackResponse.getPostDetails());
+                                    }
+                                    dataList.add("MY_COMMENT");
+                                    dataList.addAll(feedbackResponse.getFeedComments());
+
+                                    feedOfferingCommentsAdapter.setList(dataList);
+//                                    feedOfferingCommentsAdapter.setList(feedbackResponse.getFeeds());
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -160,6 +155,9 @@ public class FeedHomeFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
     }
     private void retryDialog(DialogErrorType dialogErrorType){
         DialogPopup.dialogNoInternet(activity,
@@ -167,7 +165,7 @@ public class FeedHomeFragment extends Fragment {
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        fetchFeedsApi();
+                        fetchFeedDetail();
                     }
 
                     @Override
@@ -177,7 +175,7 @@ public class FeedHomeFragment extends Fragment {
 
                     @Override
                     public void negativeClick(View view) {
-                        fetchFeedsApi();;
+                        fetchFeedDetail();;
                     }
                 });
     }

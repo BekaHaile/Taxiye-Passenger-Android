@@ -7,24 +7,26 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
+import com.sabkuchfresh.utils.DateParser;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RoundedCornersGlideTransform;
 import com.squareup.picasso.RoundedCornersTransformation;
 
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,7 +45,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
     private List<FeedDetail> feedDetailArrayList;
     private RecyclerView recyclerView;
     private static final StyleSpan BOLD_SPAN = new StyleSpan(android.graphics.Typeface.BOLD);
-    private static final StyleSpan BOLD_SPAN_2 = new StyleSpan(android.graphics.Typeface.BOLD);//since we cant reuse same style span again in spannable
+    private static final StyleSpan BOLD_SPAN_2 = new StyleSpan(android.graphics.Typeface.BOLD);//since we cant reuse same style span again in a spannable
 
     public FeedOfferingListAdapter(Activity activity, List<FeedDetail> reviewImages, RecyclerView recyclerView, Callback callback) {
         this.activity = (FreshActivity) activity;
@@ -66,24 +68,23 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
     @Override
     public void onBindViewHolder(ViewHolderReviewImage holder, int position) {
-
+        // TODO: 12/03/17 If imageUrl isnt available  then set placeholder instead EVERYTIME
 
         FeedDetail feedDetail = feedDetailArrayList.get(position);
-        String imageUrl = null,restaurantAddress = null, userImage = null;
-        Spannable title = null;
+        setData(holder, feedDetail,activity);
+
+
+    }
+
+    public static void setData(ViewHolderReviewImage holder, FeedDetail feedDetail,FreshActivity activity) {
+        String imageUrl = null,restaurantAddress = null, ownerImage = null,userImage=null;
+        Spannable title = null,userActivityTitle=null;
         Double rating = null;
+        boolean showUserActivity=false;
         if (feedDetail != null && feedDetail.getFeedType() != null) {
 
 
             switch (feedDetail.getFeedType()) {
-             /*   case COMMENT_ON_POST:
-                    break;
-                case LIKE_ON_POST:
-                    break;
-                case COMMENT_ON_REVIEW:
-                    break;
-                case LIKE_ON_REVIEW:
-                    break;*/
                 case REVIEW:
                     //Choose which picture to display
                     if (!TextUtils.isEmpty(feedDetail.getImageUrl())) {
@@ -105,23 +106,39 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
                     //Chooser UsersImage
                     if (!TextUtils.isEmpty(feedDetail.getUserImage()))
-                        userImage = feedDetail.getUserImage();
+                        ownerImage = feedDetail.getUserImage();
 
                     break;
                 case POST:
-                default:
+                case COMMENT_ON_POST:
+                case LIKE_ON_POST:
+                    String ownerName;
+                    if(feedDetail.getFeedType()!= FeedDetail.FeedType.POST) {
+                        showUserActivity = true;
+                        userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s post");
+                        userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        userActivityTitle.setSpan(BOLD_SPAN_2, feedDetail.getUserName().length() + feedDetail.getFeedType().getValue().length(), userActivityTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        if (!TextUtils.isEmpty(feedDetail.getUserImage()))
+                            userImage = feedDetail.getUserImage();
+
+                    }
+
                     //Choose which picture to display
                     if (!TextUtils.isEmpty(feedDetail.getImageUrl()))
                         imageUrl = feedDetail.getImageUrl();
 
                     //Form Title
-                    title = new SpannableString(feedDetail.getUserName());
-
+                    if(!TextUtils.isEmpty(feedDetail.getUserName())) {
+                        title = new SpannableString(feedDetail.getUserName());
+                        title.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    }
 
                     //Chooser UsersImage
                     if (!TextUtils.isEmpty(feedDetail.getUserImage()))
-                        userImage = feedDetail.getUserImage();
+                        ownerImage = feedDetail.getUserImage();
 
+                    break;
+                default:
                     break;
 
 
@@ -132,8 +149,8 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
         //SetAddress
-        holder.tvAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
-        holder.tvAddress.setText(restaurantAddress);
+        holder.tvFeedAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
+        holder.tvFeedAddress.setText(restaurantAddress);
 
         //SetImageUrl
         holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.VISIBLE);
@@ -142,11 +159,11 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
         //Set Profile Pic
-        if (userImage != null)
-            Picasso.with(activity).load(userImage).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(holder.ivProfilePic);
+        if (ownerImage != null)
+            Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
 
         //set Heading
-        holder.tvFeedHeading.setText(title);
+        holder.tvFeedOwnerTitle.setText(title);
 
         //Set Rating
         holder.tvFeedRating.setVisibility(rating == null ? View.GONE : View.VISIBLE);
@@ -154,21 +171,142 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
             activity.setRatingAndGetColor(holder.tvFeedRating, rating, "#8dd061", true);
 
         //Set Likes and Comments
-        holder.tvLikeCommentStatus.setText(formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount()));
+        holder.tvLikeCommentStatus.setText(formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount(),activity));
 
         //Set Content
         holder.tvFeedDescription.setText(feedDetail.getContent());
 
+        //Show User Acitivty Layout such as Person A commented on Person B's post
+        if(showUserActivity){
+            holder.layoutUserActivity.setVisibility(View.VISIBLE);
+            holder.dividerUserActivity.setVisibility(View.VISIBLE);
+            holder.tvUserActivityTitle.setText(userActivityTitle);
+            if (userImage != null)
+                Picasso.with(activity).load(userImage).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(holder.ivUserProfilePic);
 
+        }
+        else{
+            holder.layoutUserActivity.setVisibility(View.GONE);
+            holder.dividerUserActivity.setVisibility(View.GONE);
+
+        }
+
+        holder.tvOwnerTime.setText(getDifference(feedDetail.getCreatedAt()));
     }
 
-    private String formLikesComment(int likeCount, int commentCount) {
+    private static String formLikesComment(int likeCount, int commentCount,FreshActivity activity) {
 
         String likeSuffix = likeCount>1?" likes ":" like ";
         String commentSuffix = commentCount>1?" comments ":" comment ";
         return likeCount + likeSuffix + activity.getString(R.string.bullet) + " " + commentCount + commentSuffix;
     }
 
+    private String calculateTimePosted(String createdOnDate){
+        String timeValue;
+        long time= DateParser.getUtcDateWithTimeZone(createdOnDate).getTime();
+        long timeSince= System.currentTimeMillis()-time;
+        timeSince=timeSince/1000 ;
+        if(timeSince/60<1)
+            timeValue=timeSince+"s";
+        else if(timeSince/3600<1)
+            timeValue=timeSince/60+"m";
+        else if(timeSince/86400<1)
+            timeValue=timeSince/3600+"h";
+        else if(timeSince/604800<1)
+            timeValue=timeSince/86400+"d";
+        else if(timeSince/2419200<1)
+            timeValue=timeSince/604800+"w";
+        else timeValue="must be years";
+        return timeValue;
+
+
+    }
+
+
+
+
+    public static Calendar getCalendar(Date date) {
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTime(date);
+        return cal;
+    }
+
+    private static Calendar feedPostedCal = Calendar.getInstance();
+    private static Calendar currentDateCal = Calendar.getInstance();
+    private static String getDifference(String createdAtTime){
+        feedPostedCal.setTime(DateParser.getUtcDate(createdAtTime));
+        currentDateCal.setTimeInMillis(System.currentTimeMillis());
+        int yearPosted,yearCurrent,currentMonth,postedMonth,currentDate,postedDate;
+        yearPosted= feedPostedCal.get(Calendar.YEAR);
+        yearCurrent=currentDateCal.get(Calendar.YEAR);
+        currentMonth=currentDateCal.get(Calendar.MONTH);
+        postedMonth= feedPostedCal.get(Calendar.MONTH);
+        currentDate=currentDateCal.get(Calendar.DATE);
+        postedDate=feedPostedCal.get(Calendar.DATE);
+
+
+        int diff = yearCurrent - yearPosted;
+        if (postedMonth >currentMonth || (postedMonth == currentMonth && postedDate > currentDate)) {
+             diff--;
+        }
+
+        if(diff>0) return diff+"y";
+
+        if(yearPosted!=yearCurrent)
+        {
+            diff= currentMonth+ (11-postedMonth);
+            if(postedDate>currentDate) diff++;
+        }
+        else{
+            diff=currentMonth-postedMonth;
+            if(currentMonth!=postedMonth && postedDate>currentDate)
+                diff++;
+
+        }
+
+        if(diff>0)return diff+"M";
+
+
+        int noOfDaysInPostedMonth=feedPostedCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        if(postedMonth!=currentMonth){
+            if((noOfDaysInPostedMonth-postedDate)+currentDate>=7)
+                diff=(noOfDaysInPostedMonth-postedDate)/7;
+            else
+                diff=-1;
+
+
+        }
+
+
+        else{
+            if(currentDate-postedDate>=7)
+                diff=(currentDate-postedDate)/7;
+            else
+                diff=-1;
+        }
+        if(diff>0) return diff+"w";
+/*        diff= currentDateCal.get(Calendar.WEEK_OF_MONTH)- feedPostedCal.get(Calendar.WEEK_OF_MONTH);
+        if(diff>0) return diff+"w";*/
+
+
+        if(postedMonth!=currentMonth) {
+            diff =  currentDate + (noOfDaysInPostedMonth- postedDate);
+        }
+        else{
+            diff=currentDate-postedDate;
+
+        }
+        if(currentDateCal.get(Calendar.HOUR_OF_DAY)<feedPostedCal.get(Calendar.HOUR_OF_DAY))
+            diff--;
+        if(diff>0)return diff+"d";
+        diff = currentDateCal.get(Calendar.HOUR_OF_DAY) - feedPostedCal.get(Calendar.HOUR_OF_DAY);
+        if(diff>0)return diff+"h";
+        diff = currentDateCal.get(Calendar.MINUTE) - feedPostedCal.get(Calendar.MINUTE);
+        if(diff>0)return diff+"m";
+        return currentDateCal.get(Calendar.SECOND)- feedPostedCal.get(Calendar.SECOND)+"s";
+
+
+    }
     @Override
     public int getItemCount() {
         return feedDetailArrayList == null ? 0 : feedDetailArrayList.size();
@@ -181,9 +319,10 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
         switch (viewClicked.getId()) {
             case R.id.view_action_like:
-
+                callback.onLikeClick(feedDetailArrayList.get(position).getPostId());
                 break;
             case R.id.view_action_comment:
+                callback.onCommentClick(feedDetailArrayList.get(position).getPostId());
                 break;
             default:
                 break;
@@ -192,29 +331,23 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
     public interface Callback {
-        void onLikeClick(Object object);
+        void onLikeClick(long object);
 
-        void onCommentClick(Object object);
+        void onCommentClick(long postId);
     }
 
 
     static class ViewHolderReviewImage extends RecyclerView.ViewHolder {
-        @Bind(R.id.iv_profile_pic)
-        ImageView ivProfilePic;
-        @Bind(R.id.tv_feed_heading)
-        TextView tvFeedHeading;
+        @Bind(R.id.iv_owner_profile_pic)
+        ImageView ivFeedOwnerPic;
+        @Bind(R.id.tv_feed_owner_title)
+        TextView tvFeedOwnerTitle;
         @Bind(R.id.tv_feed_description)
         TextView tvFeedDescription;
         @Bind(R.id.iv_place_image)
         ImageView ivPlaceImage;
         @Bind(R.id.tv_like_comment_status)
         TextView tvLikeCommentStatus;
-        @Bind(R.id.line_below_like_status)
-        View lineBelowLikeStatus;
-        @Bind(R.id.line_divider_like_comment)
-        View lineDividerLikeComment;
-        @Bind(R.id.line_bottom)
-        View lineBottom;
         @Bind(R.id.tv_action_comment)
         TextView tvComment;
         @Bind(R.id.tv_action_like)
@@ -226,8 +359,19 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         @Bind(R.id.tv_feed_rating)
         TextView tvFeedRating;
         @Bind(R.id.tv_restaurant_feed_address)
-        TextView tvAddress;
-
+        TextView tvFeedAddress;
+        @Bind(R.id.layout_user_activity_heading)
+        RelativeLayout layoutUserActivity;
+        @Bind(R.id.divider_user_activity)
+        View dividerUserActivity;
+        @Bind(R.id.iv_user_profile_pic)
+        ImageView ivUserProfilePic;
+        @Bind(R.id.tv_user_activity_time)
+        TextView tvUserActivityTime;
+        @Bind(R.id.tv_user_activity_title)
+         TextView tvUserActivityTitle;
+        @Bind(R.id.tv_owner_feed_time)
+        TextView tvOwnerTime;
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
             ButterKnife.bind(this, view);

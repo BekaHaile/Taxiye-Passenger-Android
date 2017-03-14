@@ -8,7 +8,7 @@ public class FeedDetail {
 
     @SerializedName("post_id")
     @Expose
-    private int postId;
+    private long postId;
     @SerializedName("city")
     @Expose
     private int city;
@@ -60,7 +60,7 @@ public class FeedDetail {
     @Expose
     private String restaurantAddress;
 
-    public int getPostId() {
+    public long getPostId() {
         return postId;
     }
 
@@ -192,10 +192,10 @@ public class FeedDetail {
     public enum FeedType{
         POST(" posted "),
         REVIEW(" reviewed "),
-        LIKE_ON_POST(" liked a post"),
+        LIKE_ON_POST(" liked "),
         LIKE_ON_REVIEW (" liked a review "),
-        COMMENT_ON_POST(" commented on Post "),
-        COMMENT_ON_REVIEW(" commented on Review ");
+        COMMENT_ON_POST(" commented on "),
+        COMMENT_ON_REVIEW(" commented on  ");
 
         private String value;
         FeedType(String value) {

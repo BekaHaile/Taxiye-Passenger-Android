@@ -8,15 +8,10 @@
     android:layout_height="wrap_content">
 
 
-    <View
-        android:id="@+id/line_top"
-        android:background="@color/feed_grey_background"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+
 
 
     <ImageView
-        android:layout_below="@id/line_top"
         android:id="@+id/iv_profile_pic"
         android:src="@drawable/whatsapp"
         android:layout_width="40dp"
@@ -27,7 +22,6 @@
         android:layout_height="40dp" />
 
         <TextView
-            android:layout_below="@id/line_top"
             android:layout_marginTop="@dimen/spacing_normal"
             android:id="@+id/tv_user_name"
             android:text="Jesse Cennedy"
@@ -58,10 +52,15 @@
             android:layout_toRightOf="@id/iv_profile_pic"
             app:font="maven"
             android:text="12m"
-            android:layout_marginBottom="@dimen/spacing_tiny"
+            android:layout_marginBottom="@dimen/spacing_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
+    <View
+        android:id="@+id/line_top"
+        android:layout_below="@id/tv_time_posted"
+        android:background="@color/feed_grey_background"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
 
 
