@@ -16,17 +16,17 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.activities.MainActivity;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
@@ -35,21 +35,18 @@ import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 /**
  * Created by ankit on 8/22/16.
  */
-public class FABViewTest {
+public class FABViewTest implements GACategory, GAAction {
     Activity activity;
     public RelativeLayout relativeLayoutFABTest;
     public FloatingActionMenu menuLabelsRightTest;
-//    public FloatingActionButton fabDeliveryTest;
     public FloatingActionButton fabMealsTest;
     public FloatingActionButton fabFreshTest;
     public FloatingActionButton fabAutosTest;
-    public FloatingActionButton fabGroceryTest;
     public FloatingActionButton fabMenusTest;
     public FloatingActionButton fabPayTest;
     public View view;
     private boolean isOpened;
     private final String GENIE_OPEN = "Genie Open";
-    //public View fabExtra;
 
     private RelativeLayout rlGenieHelp;
     private TextView tvGenieHelp;
@@ -67,31 +64,20 @@ public class FABViewTest {
 
     private void initComponent(){
         try {
-
-
-//            relativeLayoutFABTest = (RelativeLayout) view.findViewById(R.id.relativeLayoutFABTest);
             relativeLayoutFABTest = (RelativeLayout) view;
             menuLabelsRightTest = (FloatingActionMenu) view.findViewById(R.id.menu_labels_right_Test);
-//            fabDeliveryTest = (FloatingActionButton) view.findViewById(R.id.fabDeliveryTest);
             fabMealsTest = (FloatingActionButton) view.findViewById(R.id.fabMealsTest);
             fabFreshTest = (FloatingActionButton) view.findViewById(R.id.fabFreshTest);
             fabAutosTest = (FloatingActionButton) view.findViewById(R.id.fabAutosTest);
-            fabGroceryTest = (FloatingActionButton) view.findViewById(R.id.fabGroceryTest);
             fabMenusTest = (FloatingActionButton) view.findViewById(R.id.fabMenusTest);
             fabPayTest = (FloatingActionButton) view.findViewById(R.id.fabPayTest);
-            //fabExtra = (View) activity.findViewById(R.id.fabExtra);
-            //fabExtra.setVisibility(View.GONE);
             menuLabelsRightTest.setIconAnimated(true);
             menuLabelsRightTest.setClosedOnTouchOutside(true);
-//            fabDeliveryTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabMealsTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabFreshTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
-            fabGroceryTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabMenusTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabAutosTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabPayTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
-//            fabDeliveryTest.setOnClickListener(clickListener);
-            fabGroceryTest.setOnClickListener(clickListener);
             fabMenusTest.setOnClickListener(clickListener);
             fabPayTest.setOnClickListener(clickListener);
             fabMealsTest.setOnClickListener(clickListener);
@@ -101,7 +87,6 @@ public class FABViewTest {
             menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
             menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
             menuLabelsRightTest.setMenuButtonColorRipple(activity.getResources().getColor(R.color.grey_light_alpha));
-            //menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
 
 
             rlGenieHelp = (RelativeLayout) view.findViewById(R.id.rlGenieHelp);
@@ -112,7 +97,6 @@ public class FABViewTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //setFABButtons();
         isOpened = false;
         menuLabelsRightTest.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
@@ -128,7 +112,7 @@ public class FABViewTest {
                         Prefs.with(activity).save(Constants.SP_SHOW_GEANIE_HELP, 1);
                         setRlGenieHelpVisibility();
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
-                        FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Opened");
+                        GAUtils.event(JUGNOO, getOffering()+HOME, GENIE+OPENED);
                     } else {
                         isOpened = false;
                         if(activity instanceof HomeActivity){
@@ -136,7 +120,7 @@ public class FABViewTest {
 //                            ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
                         }
                         ivJeanieHelp.setVisibility(View.GONE);
-                        FlurryEventLogger.event(Constants.INFORMATIVE, Events.GENIE, "Closed");
+                        GAUtils.event(JUGNOO, getOffering()+HOME, GENIE+CLOSED);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -196,7 +180,7 @@ public class FABViewTest {
     }
 
 
-    public void setFABButtons(boolean toShowJeanieHelp){
+    public void setFABButtons(){
         try {
             if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
                     && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
@@ -221,14 +205,6 @@ public class FABViewTest {
                     }
                 }
 
-                if(Data.userData.getGroceryEnabled() != 1){
-                    fabGroceryTest.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabGroceryTest.setVisibility(View.VISIBLE);
-                    }
-                }
-
                 if(Data.userData.getMenusEnabled() != 1){
                     fabMenusTest.setVisibility(View.GONE);
                 } else {
@@ -245,19 +221,6 @@ public class FABViewTest {
                     }
                 }
 
-                /*if(activity instanceof HomeActivity) {
-                    if (Prefs.with(activity).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
-                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.VISIBLE);
-                    } else {
-                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.GONE);
-                    }
-                } else if(activity instanceof HomeActivity){
-                    if (Prefs.with(activity).getInt(Constants.SHOW_GEANIE_HELP, 0) == 0) {
-                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.VISIBLE);
-                    } else {
-                        ((HomeActivity) activity).getRlGenieHelp().setVisibility(View.GONE);
-                    }
-                }*/
 
                 setRlGenieHelpVisibility();
             }
@@ -278,10 +241,6 @@ public class FABViewTest {
                 fabMealsTest.setVisibility(View.VISIBLE);
             }
 
-            if (Data.userData.getGroceryEnabled() == 1) {
-                fabGroceryTest.setVisibility(View.VISIBLE);
-            }
-
             if (Data.userData.getMenusEnabled() == 1) {
                 fabMenusTest.setVisibility(View.VISIBLE);
             }
@@ -290,9 +249,6 @@ public class FABViewTest {
                 fabPayTest.setVisibility(View.VISIBLE);
             }
 
-//            if (Data.userData.getDeliveryEnabled() == 1) {
-//                fabDeliveryTest.setVisibility(View.VISIBLE);
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -321,78 +277,57 @@ public class FABViewTest {
             }
             final LatLng finalLatLng = latLng;
             menuLabelsRightTest.close(true);
+            String selectedOffering = RIDES;
             switch (v.getId()) {
-//                case R.id.fabDeliveryTest:
-                    //Toast.makeText(HomeActivity.this, "Delivery", Toast.LENGTH_SHORT).show();
-//                    break;
                 case R.id.fabMealsTest:
-                    //Toast.makeText(HomeActivity.this, "Meals", Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.MEALS, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.MEALS);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), finalLatLng, false);
                         }
                     }, 300);
+                    selectedOffering = MEALS;
                     break;
                 case R.id.fabFreshTest:
-                    //Toast.makeText(HomeActivity.this, "Fresh", Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.FRESH, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.FRESH);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), finalLatLng, false);
                         }
                     }, 300);
+                    selectedOffering = FRESH;
                     break;
                 case R.id.fabAutosTest:
-                    //Toast.makeText(activity, "Autos", Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.AUTO, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.AUTO);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), finalLatLng, false);
                         }
                     }, 300);
-                    break;
-                case R.id.fabGroceryTest:
-                    //Toast.makeText(HomeActivity.this, "Autos", Toast.LENGTH_SHORT).show();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.GROCERY, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.GROCERY);
-                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getGroceryClientId(), finalLatLng, false);
-                        }
-                    }, 300);
+                    selectedOffering = RIDES;
                     break;
                 case R.id.fabMenusTest:
-                    //Toast.makeText(HomeActivity.this, "Autos", Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.MENUS, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.MENUS);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), finalLatLng, false);
                         }
                     }, 300);
+                    selectedOffering = GAAction.MENUS;
                     break;
                 case R.id.fabPayTest:
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.PAY, null);
-                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.PAY);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getPayClientId(), finalLatLng, false);
                         }
                     }, 300);
+                    selectedOffering = PAY;
                     break;
 
             }
-            //fabExtra.performClick();
+            GAUtils.event(JUGNOO, GENIE+OPEN, selectedOffering+SELECTED);
+
         }
     };
 
@@ -472,6 +407,24 @@ public class FABViewTest {
             ivJeanieHelp.setVisibility(View.VISIBLE);
             ivJeanieHelp.startAnimation(animation);
             Data.userData.setShowTutorial(0);
+        }
+    }
+
+    private String clientId;
+    private String getOffering() {
+        if (clientId == null) {
+            clientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+        }
+        if (clientId.equalsIgnoreCase(Config.getFreshClientId())) {
+            return FRESH;
+        } else if (clientId.equalsIgnoreCase(Config.getMealsClientId())) {
+            return MEALS;
+        } else if (clientId.equalsIgnoreCase(Config.getMenusClientId())) {
+            return GACategory.MENUS;
+        } else if (clientId.equalsIgnoreCase(Config.getPayClientId())) {
+            return PAY;
+        } else {
+            return RIDES;
         }
     }
 

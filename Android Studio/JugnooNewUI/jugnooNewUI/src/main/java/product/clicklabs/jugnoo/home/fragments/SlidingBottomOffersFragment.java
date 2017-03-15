@@ -13,9 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -25,14 +28,13 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 
 /**
  * Created by Ankit on 1/8/16.
  */
-public class SlidingBottomOffersFragment extends Fragment {
+public class SlidingBottomOffersFragment extends Fragment implements GACategory, GAAction{
 
     private View rootView;
     private LinearLayout linearLayoutRoot;
@@ -160,7 +162,7 @@ public class SlidingBottomOffersFragment extends Fragment {
 						} else if (promoCoupon instanceof PromotionInfo) {
 							DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo)promoCoupon).terms, false, true, true);
 						}
-                        FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "offer t&c");
+                        GAUtils.event(RIDES, TNC+CLICKED, promoCoupon.getTitle());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

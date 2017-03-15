@@ -45,8 +45,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -56,7 +54,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class PromotionsFragment extends Fragment implements FlurryEventNames, Constants {
+public class PromotionsFragment extends Fragment implements  Constants {
 
 	private final String TAG = PromotionsFragment.class.getSimpleName();
 	private LinearLayout linearLayoutRoot;
@@ -101,7 +99,6 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 		try {
 			if(linearLayoutRoot != null) {
 				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "Offers");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,11 +141,9 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(activity, ENTERED_PROMO_CODE);
 				String promoCode = editTextPromoCode.getText().toString().trim();
 				if (promoCode.length() > 0) {
 					applyPromoCodeAPI(activity, promoCode);
-					FlurryEventLogger.event(activity, CLICKS_ON_APPLY);
 				} else {
 					editTextPromoCode.requestFocus();
 					editTextPromoCode.setError("Code can't be empty");
@@ -399,7 +394,6 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 									String message = jObj.getString("message");
 									DialogPopup.dialogBanner(activity, message);
 									getCouponsAndPromotions(activity);
-									FlurryEventLogger.event(PROMO_CODE_APPLIED);
 
 									new ApiFetchWalletBalance(activity, new ApiFetchWalletBalance.Callback() {
 										@Override

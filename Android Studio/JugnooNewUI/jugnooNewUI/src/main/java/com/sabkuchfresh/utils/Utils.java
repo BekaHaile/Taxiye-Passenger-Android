@@ -597,7 +597,7 @@ public class Utils {
 	private static DecimalFormat decimalFormat2Decimal;
 	public static DecimalFormat getDecimalFormat2Decimal(){
 		if(decimalFormat2Decimal == null){
-			decimalFormat2Decimal = new DecimalFormat("#.00");
+			decimalFormat2Decimal = new DecimalFormat("0.00");
 		}
 		return decimalFormat2Decimal;
 	}
@@ -848,6 +848,16 @@ public class Utils {
 		shader = lin_grad;
 
 		return shader;
+	}
+
+	public static String getDoubleTwoDigits(Double amount){
+		String finalVal;
+		if(amount % 1 == 0)
+			finalVal = String.valueOf(amount.intValue());
+		else
+			finalVal = Utils.getDecimalFormat2Decimal().format(amount);
+
+		return finalVal;
 	}
 
 }

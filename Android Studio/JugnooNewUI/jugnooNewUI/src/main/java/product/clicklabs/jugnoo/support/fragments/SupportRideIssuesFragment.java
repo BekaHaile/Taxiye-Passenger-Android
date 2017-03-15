@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +39,11 @@ import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 @SuppressLint("ValidFragment")
-public class SupportRideIssuesFragment extends Fragment implements FlurryEventNames, Constants, FirebaseEvents {
+public class SupportRideIssuesFragment extends Fragment implements  Constants, GAAction, GACategory {
 
 	private LinearLayout root;
 
@@ -189,10 +189,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 												.utcToLocalTZ(datum.getOrderTime())), datum.getSupportNumber(), datum.getProductType());
 							}
 						}
-						Bundle bundle = new Bundle();
-						String label = item.getText().replaceAll("\\W", "_");
-						MyApplication.getInstance().logEvent(FirebaseEvents.ISSUES + "_" + FirebaseEvents.ISSUE_WITH_RECENT_RIDE + "_" + label, bundle);
-						FlurryEventLogger.eventGA(Constants.ISSUES, "Select An Issue", item.getText());
+						GAUtils.event(SIDE_MENU, GAAction.SELECT_AN_ISSUE, item.getText());
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);

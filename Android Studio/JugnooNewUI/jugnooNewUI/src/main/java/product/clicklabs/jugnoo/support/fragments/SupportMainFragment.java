@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,9 +37,6 @@ import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.support.models.SupportCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -46,7 +47,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 @SuppressLint("ValidFragment")
-public class SupportMainFragment extends Fragment implements FlurryEventNames, Constants {
+public class SupportMainFragment extends Fragment implements  Constants, GAAction, GACategory {
 
 	private final String TAG = SupportMainFragment.class.getSimpleName();
 
@@ -115,9 +116,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 						new TransactionUtils().openItemInFragment(activity, activity.getContainer(),
 								-1, "", activity.getResources().getString(R.string.support_main_title), item, "", -1, "", "", ProductType.NOT_SURE.getOrdinal());
 
-                        Bundle bundle = new Bundle();
-                        String eventName = item.getText().replaceAll("\\W", "_");
-                        MyApplication.getInstance().logEvent(FirebaseEvents.SUPPORT+"_"+eventName, bundle);
+						GAUtils.event(SIDE_MENU, SUPPORT, item.getText());
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
@@ -125,9 +124,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		cardViewRideShortInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.ISSUES+"_"+FirebaseEvents.ISSUE_WITH_RECENT_RIDE, bundle);
-
 				activity.openSupportRideIssuesFragment(EngagementStatus.ENDED.getOrdinal());
 			}
 		});
@@ -137,7 +133,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		showPanel();
 		activity.getRideSummaryAPI(activity, ProductType.NOT_SURE, EngagementStatus.ENDED.getOrdinal());
 
-		FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT);
 
 
 		return rootView;

@@ -1,6 +1,10 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,6 +17,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import org.json.JSONObject;
 
@@ -43,7 +51,7 @@ import retrofit.mime.TypedByteArray;
  * Created by ankit on 10/11/16.
  */
 
-public class ChatActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class ChatActivity extends BaseFragmentActivity implements View.OnClickListener, GAAction, GACategory{
 
     private RelativeLayout relative;
     private TextView textViewTitle;
@@ -145,6 +153,8 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			e.printStackTrace();
 		}
 
+		registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_FINISH_ACTIVITY));
+
 		//myHandler.postAtTime(loadDiscussion, 5000);
     }
 
@@ -194,6 +204,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 				break;
 			case R.id.ivCallDriver:
 				Utils.callDriverDuringRide(ChatActivity.this);
+				GAUtils.event(RIDES, CHAT, CALL+BUTTON+CLICKED);
 				break;
         }
     }
@@ -207,6 +218,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 
 	@Override
 	protected void onDestroy() {
+		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 		Data.context = null;
 		try {
@@ -389,4 +401,18 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
             //DialogPopup.dismissLoadingDialog();
         }
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			try {
+				if(intent.hasExtra(Constants.KEY_FINISH_ACTIVITY)){
+					performBackPressed();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
+
 }

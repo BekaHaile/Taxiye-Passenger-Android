@@ -12,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,7 +45,7 @@ import retrofit.client.Response;
 /**
  * Created by gurmail on 10/08/16.
  */
-public class NotificationSettingFragment extends Fragment implements NotificationSettingAdapter.Callback {
+public class NotificationSettingFragment extends Fragment implements NotificationSettingAdapter.Callback, GAAction, GACategory{
 
     private NotificationCenterActivity activity;
     private LinearLayout root;
@@ -201,6 +205,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                                 HashMap<String, Object> profileUpdate = new HashMap<>();
                                 updateClevertapMap(settingAdapter.getNotificationPrefDatas().get(position), profileUpdate);
                                 MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+                                GAUtils.event(SIDE_MENU, INBOX+SET_PREFERENCES, name+" "+TOGGLED);
                             } else if(!TextUtils.isEmpty(notificationInboxResponse.getMessage())) {
                                 DialogPopup.alertPopup(activity, "", notificationInboxResponse.getMessage());
                             }

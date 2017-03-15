@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.home.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -17,12 +16,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -63,9 +58,6 @@ public class PushDialog {
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 				dialog.setContentView(R.layout.dialog_push);
 
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+FirebaseEvents.PROMOTIONAL_POP_UP+"_"+String.valueOf(HomeActivity.passengerScreenMode+"_"+title), bundle);
-				FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", String.valueOf(HomeActivity.passengerScreenMode));
 
 				RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
 				new ASSL(activity, relative, 1134, 720, false);
@@ -107,9 +99,6 @@ public class PushDialog {
 								Constants.EMPTY_JSON_OBJECT);
 						callback.onButtonClicked(deepindex, url);
 						dialog.dismiss();
-                        Bundle bundle1 = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+button.getText().toString(), bundle1);
-						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", button.getText().toString());
 					}
 				});
 
@@ -119,9 +108,6 @@ public class PushDialog {
 						Prefs.with(activity).save(Constants.SP_PUSH_DIALOG_CONTENT,
 								Constants.EMPTY_JSON_OBJECT);
 						dialog.dismiss();
-						Bundle bundle = new Bundle();
-						MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+FirebaseEvents.CANCEL+"_"+title, bundle);
-						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", "Cancel");
 					}
 				};
 

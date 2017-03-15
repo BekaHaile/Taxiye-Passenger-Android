@@ -71,6 +71,16 @@ public interface ApiService {
                         Callback<LoginResponse> callback);
 
     @FormUrlEncoded
+    @POST("/v3/customer/login_using_otp")
+    void loginUsingOtp(@FieldMap Map<String, String> params,
+                   Callback<LoginResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/v3/customer/generate_login_otp")
+    void generateLoginOtp(@FieldMap Map<String, String> params,
+                   Callback<LoginResponse> callback);
+
+    @FormUrlEncoded
     @POST("/fetch_referee_user_details")
     void claimGift(@FieldMap Map<String, String> params,
                    Callback<ReferralClaimGift> callback);
@@ -109,6 +119,11 @@ public interface ApiService {
     @POST("/v3/customer/login_using_google")
     void loginUsingGoogle(@FieldMap Map<String, String> params,
                             Callback<LoginResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/v3/customer/login_using_fb_account_kit")
+    void loginUsingFbAccountKit(@FieldMap Map<String, String> params,
+                          Callback<LoginResponse> callback);
 
     @FormUrlEncoded
     @POST("/register_using_email")
@@ -292,6 +307,11 @@ public interface ApiService {
     @POST("/update_user_profile")
     void updateUserProfile(@FieldMap Map<String, String> params,
                                Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST(("/change_contact_number_using_fb"))
+    void changeContactNumberUsingFB(@FieldMap Map<String, String> params,
+                                    Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST("/reload_my_profile")

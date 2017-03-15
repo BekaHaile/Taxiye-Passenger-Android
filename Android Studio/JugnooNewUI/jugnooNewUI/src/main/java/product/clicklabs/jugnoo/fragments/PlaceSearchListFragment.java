@@ -35,8 +35,6 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -44,7 +42,7 @@ import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class PlaceSearchListFragment extends Fragment implements FlurryEventNames, Constants {
+public class PlaceSearchListFragment extends Fragment implements  Constants {
 	
 	private LinearLayout linearLayoutRoot;
 
@@ -198,7 +196,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 						scrollViewSearch.setVisibility(View.GONE);
 						progressBarSearch.setVisibility(View.GONE);
 						if(searchListActionsHandler != null){searchListActionsHandler.onPlaceSearchPost(searchResult);}
-						FlurryEventLogger.eventGA(Constants.INFORMATIVE, Constants.AUTOS_SELECT_ADDRESS, Constants.SEARCHED);
 					}
 
 					@Override
@@ -447,7 +444,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				@Override
 				public void onItemClick(SearchResult searchResult) {
 					clickOnSavedItem(searchResult);
-					FlurryEventLogger.eventGA(Constants.INFORMATIVE, Constants.AUTOS_SELECT_ADDRESS, Constants.SAVED);
 				}
 
 				@Override
@@ -466,7 +462,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				@Override
 				public void onItemClick(SearchResult searchResult) {
 					clickOnSavedItem(searchResult);
-					FlurryEventLogger.eventGA(Constants.INFORMATIVE, Constants.AUTOS_SELECT_ADDRESS, Constants.RECENT);
 				}
 
 				@Override

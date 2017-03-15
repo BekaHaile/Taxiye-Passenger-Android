@@ -110,7 +110,7 @@ public class MenusSearchFragment extends Fragment {
 					}
 
 					@Override
-					public void onPlusClicked(int position, Item item) {
+					public void onPlusClicked(int position, Item item, boolean isNewItemAdded) {
 						activity.updateCartValuesGetTotalPrice();
 					}
 
@@ -149,6 +149,18 @@ public class MenusSearchFragment extends Fragment {
 
 
 		return rootView;
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		try {
+			if(activity != null) {
+				activity.clearEtFocus();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void clearArrays(){

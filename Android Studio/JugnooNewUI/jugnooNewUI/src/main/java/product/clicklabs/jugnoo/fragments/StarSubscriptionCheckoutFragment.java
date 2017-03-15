@@ -15,7 +15,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
@@ -34,7 +36,6 @@ import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -49,7 +50,6 @@ import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -62,18 +62,12 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-import static com.sabkuchfresh.analytics.FlurryEventNames.CASH;
-import static com.sabkuchfresh.analytics.FlurryEventNames.PAYMENT_METHOD;
-import static com.sabkuchfresh.analytics.FlurryEventNames.PAYMENT_SCREEN;
-import static com.sabkuchfresh.analytics.FlurryEventNames.PAYTM;
-import static com.sabkuchfresh.analytics.FlurryEventNames.PAY_VIA_CASH;
-import static com.sabkuchfresh.analytics.FlurryEventNames.RECHARGE;
 
 /**
  * Created by ankit on 30/12/16.
  */
 
-public class StarSubscriptionCheckoutFragment extends Fragment implements PromoCouponsAdapter.Callback {
+public class StarSubscriptionCheckoutFragment extends Fragment implements PromoCouponsAdapter.Callback, GAAction, GACategory {
 
     private View rootView;
     private Activity activity;
@@ -196,48 +190,40 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         @Override
         public void onClick(View v) {
             try {
-                String offeringPrefix = Config.getMealsClientId()
-                        .equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))?
-                        FirebaseEvents.MEALS_PAYMENT_MODE : FirebaseEvents.FRESH_PAYMENT_MODE;
-
-                Bundle bundle = new Bundle();
                 switch (v.getId()){
                     case R.id.bPlaceOrder:
                         if(paymentOption.getOrdinal() != 0 && paymentOption.getOrdinal() != 1) {
-                            product.clicklabs.jugnoo.utils.FlurryEventLogger.eventGA("Star Checkout", "Wallet", String.valueOf(getPaymentOption()));
                             placeOrder();
+                            GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT, PAY_NOW+CLICKED);
                         } else{
                             Utils.showToast(activity, "Please select payment option");
                         }
                         break;
                     case R.id.relativeLayoutPaytm:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix +"_"
-                                +FirebaseEvents.PAYTM, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.PAYTM,
                                 callbackPaymentOptionSelector);
+                        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+WALLET+SELECTED, PAYTM);
                         break;
 
                     case R.id.relativeLayoutMobikwik:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix +"_"
-                                +FirebaseEvents.MOBIKWIK, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.MOBIKWIK,
                                 callbackPaymentOptionSelector);
+                        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+WALLET+SELECTED, MOBIKWIK);
                         break;
 
                     case R.id.relativeLayoutFreeCharge:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
-                                +FirebaseEvents.FREECHARGE, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.FREECHARGE,
                                 callbackPaymentOptionSelector);
+                        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+WALLET+SELECTED, FREECHARGE);
                         break;
 
                     case R.id.relativeLayoutCash:
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
-                                +FirebaseEvents.CASH, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH,
                                 callbackPaymentOptionSelector);
+                        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+WALLET+SELECTED, CASH);
                         break;
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -310,11 +296,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 //                            }
 //                        }, false, false);
 
-                if (getPaymentOption().getOrdinal() == 1) {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
-                } else {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
-                }
 
                 if(purchaseType == StarPurchaseType.RENEW.getOrdinal()) {
                     apiRenewSubscription();
@@ -335,13 +316,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             FreshWalletBalanceLowDialog.Callback callback = new FreshWalletBalanceLowDialog.Callback() {
                 @Override
                 public void onRechargeNowClicked() {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_SCREEN, RECHARGE);
                     intentToWallet(paymentOption);
                 }
 
                 @Override
                 public void onPayByCashClicked() {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_SCREEN, PAY_VIA_CASH);
                 }
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
@@ -587,6 +566,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, getPaymentOption().getOrdinal(), promoCoupon)) {
             setSelectedPromoCoupon(promoCoupon);
         }
+        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+OFFER+SELECTED, promoCoupon.getTitle());
     }
 
     private void apiPurchaseSubscription() {
@@ -605,7 +585,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(getSelectedPromoCoupon().getId()));
                 }
                 params.put(Constants.KEY_MASTER_COUPON, String.valueOf(getSelectedPromoCoupon().getMasterCoupon()));
-                product.clicklabs.jugnoo.utils.FlurryEventLogger.eventGA("Star Checkout", "Offers", getSelectedPromoCoupon().getTitle());
             }
 
             new HomeUtil().putDefaultParams(params);
@@ -697,7 +676,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(getSelectedPromoCoupon().getId()));
                 }
                 params.put(Constants.KEY_MASTER_COUPON, String.valueOf(getSelectedPromoCoupon().getMasterCoupon()));
-                product.clicklabs.jugnoo.utils.FlurryEventLogger.eventGA("Star Checkout", "Offers", getSelectedPromoCoupon().getTitle());
             }
 
             new HomeUtil().putDefaultParams(params);
@@ -763,7 +741,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(getSelectedPromoCoupon().getId()));
                 }
                 params.put(Constants.KEY_MASTER_COUPON, String.valueOf(getSelectedPromoCoupon().getMasterCoupon()));
-                product.clicklabs.jugnoo.utils.FlurryEventLogger.eventGA("Star Checkout", "Offers", getSelectedPromoCoupon().getTitle());
             }
 
             new HomeUtil().putDefaultParams(params);

@@ -11,26 +11,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshSortingAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
-import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by shankar on 3/4/16.
  */
-public class FreshSortingDialog implements FlurryEventNames {
+public class FreshSortingDialog {
 
 	private final String TAG = FreshSortingDialog.class.getSimpleName();
 	private FreshActivity activity;
@@ -108,7 +100,6 @@ public class FreshSortingDialog implements FlurryEventNames {
                             sortList.get(i).setCheck(false);
                         }
                     }
-                    FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.CANCEL);
                     dialog.dismiss();
                 }
             });
@@ -116,22 +107,10 @@ public class FreshSortingDialog implements FlurryEventNames {
             sortingAdapter = new FreshSortingAdapter(activity, sortList, new FreshSortingAdapter.Callback() {
                 @Override
                 public void onSlotSelected(int position, SortResponseModel slot) {
-//                    activity.setSlotToSelect(slot);
                     pos = slot.id;
                     activity.setSlotSelected(activity.getSlotSelected());
                     sortDialogCallback.onOkClicked(pos);
                     dialog.dismiss();
-
-                    int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                    if(type == AppConstant.ApplicationType.MEALS){
-                        MyApplication.getInstance().logEvent(FirebaseEvents.M_SORT+"_"+slot.name, null);
-                    } else if(type == AppConstant.ApplicationType.GROCERY){
-						MyApplication.getInstance().logEvent(FirebaseEvents.G_SORT+"_"+slot.name, null);
-					} else if(type == AppConstant.ApplicationType.MENUS){
-						MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_SORT+"_"+slot.name, null);
-					} else{
-                        MyApplication.getInstance().logEvent(FirebaseEvents.F_SORT+"_"+slot.name, null);
-                    }
                 }
             });
 

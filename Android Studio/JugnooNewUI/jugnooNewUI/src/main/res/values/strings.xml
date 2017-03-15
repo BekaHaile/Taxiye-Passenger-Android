@@ -26,6 +26,8 @@
 
     <!-- <string name="fb_app_id">782131025144439</string> -->
     <string name="fb_app_id">782131025144439</string>
+    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
+    <string name="ak_login_protocol_scheme">ak782131025144439</string>
 
     <string name="clevertap_account_id">8R5-WZ7-R74Z</string>
     <string name="clevertap_account_token">a10-52b</string>
@@ -372,6 +374,7 @@
     <string name="nl_login_facebook">Facebook</string>
     <string name="nl_login_google">Google</string>
     <string name="nl_login_email_empty_error">Please enter email or phone number</string>
+    <string name="nl_login_phone_empty_error">Please enter phone number</string>
     <string name="nl_login_empty_password_error">Please enter password</string>
     <string name="invalid_phone_error">Please enter valid phone number</string>
     <string name="invalid_email_error">Please enter valid email</string>
@@ -680,7 +683,7 @@
     <string name="verify">Verify</string>
     <string name="apply">Apply</string>
     <string name="request_otp">Request Otp</string>
-    <string name="resend_otp">Resend Otp</string>
+    <string name="resend_otp">Resend OTP</string>
     <string name="add_paytm_cash">Add Paytm Cash</string>
     <string name="pay_via_jugnoo_cash">Pay Via Jugnoo Cash</string>
     <string name="jugnoo_line">Jugnoo Line</string>
@@ -1525,5 +1528,35 @@
     <string name="maven_r">maven_regular</string>
     <string name="view_more">View more</string>
     <string name="view_less">View less</string>
+    <string name="or_login_with">Or login with</string>
+    <string name="welcome_to_jugnoo">Welcome to Jugnoo</string>
+    <string name="or_signup_with">Or signup with</string>
+    <string name="enter_otp_recieved_on">Enter OTP received on:</string>
+    <string name="did_not_receive_otp">Didn\'t receive OTP?</string>
+    <string name="try_one_of_the_following">Try one of the following:</string>
+    <string name="autodetecting_otp_sent_to">Autodetecting OTP sent to</string>
+    <string name="use_password_to_login">Use Password to Login</string>
+
+    <string name="log_out_button">Log Out</string>
+    <string name="error_label">Error</string>
+    <string name="loading_placeholder">Loading&#8230;</string>
+    <string name="user_id_label">Account ID</string>
+    <string name="phone_number_label">Phone Number</string>
+    <string name="email_label">Email</string>
+    <string name="permissions_get_accounts_message">
+        Grant permission to read your email address from your device to pre-fill.
+    </string>
+    <string name="permissions_get_accounts_title">Read Email Address</string>
+    <string name="permissions_read_phone_state_message">
+        Grant permission to read your phone number from your device to pre-fill.
+    </string>
+    <string name="permissions_read_phone_state_title">Read Phone Number</string>
+    <string name="permissions_receive_sms_message">
+        Grant permission to read your SMS code from your device to pre-fill.
+    </string>
+    <string name="permissions_receive_sms_title">Read SMS Code</string>
+    <string name="na">NA</string>
+    <string name="login_signup_with">Login / Signup with</string>
+    <string name="please_check_tnc">Offer conditions not met. Please review detailed Terms and Conditions for more information</string>
 
 </resources>

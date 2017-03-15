@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.PopupData;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Store;
@@ -67,8 +69,6 @@ import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FbEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
@@ -196,7 +196,6 @@ public class JSONParser implements Constants {
             long diffSeconds = diff / 1000;
             HashMap<String, String> map = new HashMap<>();
             map.put(KEY_TIME_DIFF_SEC, String.valueOf(diffSeconds));
-            FlurryEventLogger.event(context, FlurryEventNames.LOGIN_SINCE_FIRST_APP_OPEN_DIFF, map);
             Prefs.with(context).save(SP_FIRST_LOGIN_COMPLETE, 1);
         }
 
@@ -1044,7 +1043,6 @@ public class JSONParser implements Constants {
             new HomeUtil().putDefaultParams(nameValuePairs);
             Response response = RestClient.getApiService().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-            FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_CURRENT_USER_STATUS, startTime);
             Log.i(TAG, "getCurrentUserStatus response="+responseStr);
             if (response == null || responseStr == null) {
                 return Constants.SERVER_TIMEOUT;
@@ -1583,14 +1581,13 @@ public class JSONParser implements Constants {
     public void loginAnalyticEvents(Context context, LoginVia loginVia){
         loginClevertap(context);
         try {
-            FlurryEventLogger.setGAUserId(Data.userData.getUserId());
+            GAUtils.setGAUserId(Data.userData.getUserId());
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
                 String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
                 Prefs.with(context).save(SP_REFERRAL_CODE, "");
-                BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
-                FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
+                BranchMetricsUtils.logEvent(context, GAAction.REGISTRATION, false);
                 FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
 
                 String walletSelected = Prefs.with(context).getString(SP_WALLET_AT_SIGNUP, "NA");

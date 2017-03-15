@@ -28,11 +28,12 @@ public class GoogleSigninActivity extends FragmentActivity implements GoogleApiC
 	private static final int RC_SIGN_IN = 9001;
 
 	private GoogleApiClient mGoogleApiClient;
+	boolean signInDialogShown = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		signInDialogShown = false;
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 				.requestEmail()
 				.requestId()
@@ -99,9 +100,12 @@ public class GoogleSigninActivity extends FragmentActivity implements GoogleApiC
 	}
 
 	private void signIn() {
-		Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-		startActivityForResult(signInIntent, RC_SIGN_IN);
-		DialogPopup.showLoadingDialog(this, getResources().getString(R.string.loading));
+		if(!signInDialogShown) {
+			Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+			startActivityForResult(signInIntent, RC_SIGN_IN);
+			DialogPopup.showLoadingDialog(this, getResources().getString(R.string.loading));
+			signInDialogShown = true;
+		}
 	}
 
 	private void signOut() {

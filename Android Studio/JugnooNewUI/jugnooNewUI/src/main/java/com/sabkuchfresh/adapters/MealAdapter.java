@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -22,21 +24,18 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by gurmail on 15/07/16.
  */
-public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements GAAction{
 
     private String TAG = "Meals Screen";
     private FreshActivity activity;
@@ -147,7 +146,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
                                 activity.startActivity(intent);
                                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.ORDER_STATUS);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -264,6 +262,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 callback.onMinusClicked(pos, subItems.get(pos));
 
                                 notifyDataSetChanged();
+                                GAUtils.event(activity.getGaCategory(), HOME, ITEM+DECREASED);
                             } else{
                                 callback.minusNotDone(pos, subItems.get(pos));
                             }
@@ -286,7 +285,9 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
                             if(subItems.get(pos).getSubItemQuantitySelected() == 1){
-                                MyApplication.getInstance().logEvent(FirebaseEvents.M_ADD, null);
+                                GAUtils.event(activity.getGaCategory(), HOME, ITEM+ADDED);
+                            } else {
+                                GAUtils.event(activity.getGaCategory(), HOME, ITEM+INCREASED);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -66,7 +66,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
@@ -89,6 +88,9 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -190,16 +192,11 @@ import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
-import product.clicklabs.jugnoo.utils.FbEvents;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -224,9 +221,10 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, FlurryEventNames,
+public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, FirebaseEvents, View.OnClickListener {
+        SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
+        GACategory, GAAction{
 
 
     private final String TAG = "Home Screen";
@@ -491,7 +489,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MyApplication.getInstance().trackScreenView(TAG);
+        GAUtils.trackScreenView(TAG);
         Data.currentActivity = HomeActivity.class.getName();
 
        /* if((Data.userData.getShowHomeScreen() == 1)
@@ -855,6 +853,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                 selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText()+", ";
                 textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
+                GAUtils.event(RIDES, HOME, SPECIAL_PICKUP_CHOOSED);
             }
 
             @Override
@@ -879,7 +878,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.autoData.getFeedbackReasons(),
 					new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
 						@Override
-						public void onLastItemSelected(boolean selected) {
+						public void onLastItemSelected(boolean selected, String name) {
 							if(!selected){
 								if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
 									textViewRSOtherError.setText("");
@@ -951,7 +950,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onDrawerOpened(View drawerView) {
                 Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
-                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Side Menu");
             }
 
             @Override
@@ -977,7 +975,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
 							slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
 									Data.userData.getCoupons(ProductType.AUTO));
-							FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.TAP_ON_OFFER_STRIP);
 						}
 					} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
 						Data.deepLinkIndex = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex();
@@ -1008,31 +1005,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 //startActivity(intent);
                 startActivityForResult(intent, FARE_ESTIMATE);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
-                FlurryEventLogger.event(HomeActivity.this, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION,
-                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName(), "get fare estimate");
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(TRANSACTION+"_"+FirebaseEvents.HOME_SCREEN+"_"
-                        +GET_FARE_ESTIMATE, bundle);
 
 
-//                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(HomeActivity.this);
-//
-////            firebaseAnalytics.setUserProperty("Android");
-//
-//                Bundle bundle = new Bundle();
-//                bundle.putString("Home Screen", slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName()+ " get fare estimate");
-//                firebaseAnalytics.logEvent(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, bundle);
-//
-//                //Sets whether analytics collection is enabled for this app on this device.
-//                firebaseAnalytics.setAnalyticsCollectionEnabled(true);
-//
-//                //Sets the minimum engagement time required before starting a session. The default value is 10000 (10 seconds). Let's make it 20 seconds just for the fun
-//                firebaseAnalytics.setMinimumSessionDuration(20000);
-//
-//                //Sets the duration of inactivity that terminates the current session. The default value is 1800000 (30 minutes).
-//                firebaseAnalytics.setSessionTimeoutDuration(500);
             }
         });
 
@@ -1049,7 +1023,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 slidingBottomPanel.getRequestRideOptionsFragment().getPaymentOptionDialog().show();
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "b_payment_mode");
             }
         });
 
@@ -1074,14 +1047,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						if (!rideNowClicked) {
 							Data.autoData.setPickupLatLng(map.getCameraPosition().target);
 							if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-								Bundle bundle = new Bundle();
-								MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
-										+ FirebaseEvents.REQUEST_RIDE_L1_AUTO, bundle);
 								findDriversETACall(true, false, false);
 							} else {
-								Bundle bundle = new Bundle();
-								MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
-										+ FirebaseEvents.REQUEST_RIDE_L1_AUTO_POOL, bundle);
 								imageViewRideNowPoolCheck();
 							}
                             getFabViewTest().hideJeanieHelpInSession();
@@ -1112,8 +1079,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else {
                         requestRideClick();
                     }
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+Constants.HOME_SCREEN+"_"+REQUEST_RIDE_L2_AUTO_POOL, bundle);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1129,10 +1094,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonEndRideSkip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
-                        +FirebaseEvents.SKIP_RIDE_IMAGE_END, bundle);
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "end_ride_image_skip");
                 relativeLayoutRideEndWithImage.setVisibility(View.GONE);
                 submitFeedbackToInitial(5);
             }
@@ -1141,10 +1102,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonEndRideInviteFriends.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
-                        +FirebaseEvents.INVITE_FRIENDS, bundle);
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "invite friends");
                 intentToShareActivity(false);
                 submitFeedbackToInitial(5);
             }
@@ -1301,16 +1258,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                     }
                 } else {
-                    FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
-                    Bundle bundle = new Bundle();
-                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.REQUEST_RIDE + "_"
-                                + FirebaseEvents.AUTO_CANCEL_RIDE, bundle);
-                    } else {
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.REQUEST_RIDE + "_"
-                                + FirebaseEvents.POOL_CANCEL_RIDE, bundle);
-                    }
-                    FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "request ride", "cancel ride");
                     cancelCustomerRequestAsync(HomeActivity.this);
                 }
             }
@@ -1339,14 +1286,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 Data.deepLinkIndex = Data.autoData.getRideStartInviteTextDeepIndexV2();
                 deepLinkAction.openDeepLink(menuBar);
-                //intentToShareActivity(false);
-                Bundle bundle = new Bundle();
-                if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-                    MyApplication.getInstance().logEvent(TRANSACTION + "_" + RIDE_START + "_" + SEND_INVITES+"_"+AUTO, bundle);
-                } else {
-                    MyApplication.getInstance().logEvent(TRANSACTION + "_" + RIDE_START + "_" + SEND_INVITES+"_"+POOL, bundle);
-                }
-                FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "send invites");
+                GAUtils.event(RIDES, RIDE+IN_PROGRESS, Constants.REFERRAL+CLICKED);
             }
         });
 
@@ -1368,14 +1308,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             public void onYes() {
                                 startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
                                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                FlurryEventLogger.event(RIDE_CANCELLED_NOT_COMPLETE);
-                                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "cancel ride");
-                                Bundle bundle = new Bundle();
-                                if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-                                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+CANCEL_RIDE+"_"+AUTO, bundle);
-                                } else {
-                                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+CANCEL_RIDE+"_"+POOL, bundle);
-                                }
                             }
 
                             @Override
@@ -1386,27 +1318,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else {
                         startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                        FlurryEventLogger.event(RIDE_CANCELLED_NOT_COMPLETE);
-                        Bundle bundle = new Bundle();
-                        if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+CANCEL_RIDE+"_"+AUTO, bundle);
-                        } else {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+CANCEL_RIDE+"_"+POOL, bundle);
-                        }
-                        FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "cancel ride");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.event(RIDE_CANCELLED_NOT_COMPLETE);
-                    Bundle bundle = new Bundle();
-                    if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+CANCEL_RIDE+"_"+AUTO, bundle);
-                    } else {
-                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+CANCEL_RIDE+"_"+POOL, bundle);
-                    }
-                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "cancel ride");
                 }
             }
         });
@@ -1418,15 +1334,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     MyApplication.getInstance().getWalletCore().addMoneyToWalletIntent(HomeActivity.this,
                             Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode());
-                    if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-                        FlurryEventLogger.event(FlurryEventNames.JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
-                        FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION
-                                + Constants.SLASH + Constants.RETENTION, "accept ride", "add money to wallet");
-                    } else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                        FlurryEventLogger.event(FlurryEventNames.JUGNOO_CASH_ADDED_WHEN_RIDE_IN_PROGRESS);
-                        FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION
-                                + Constants.SLASH + Constants.RETENTION, "ride start", "add money to  wallet");
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1447,24 +1354,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() != 1) {
 						initDropLocationSearchUI(true);
-						Bundle bundle = new Bundle();
-						if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-							if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-								MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+ENTER_DESTINATION+"_"+AUTO, bundle);
-							} else {
-								MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+ENTER_DESTINATION+"_"+POOL, bundle);
-							}
-							FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "enter destination");
-						} else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-							FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Ride Start", "enter destination");
-
-							if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-								MyApplication.getInstance().logEvent(TRANSACTION+"_"+RIDE_START+"_"+ENTER_DESTINATION+"_"+AUTO, bundle);
-							} else {
-								MyApplication.getInstance().logEvent(TRANSACTION+"_"+RIDE_START+"_"+ENTER_DESTINATION+"_"+POOL, bundle);
-							}
-						}
-
 					}
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1573,7 +1462,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     if (0 == rating) {
                         DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.we_take_your_feedback_seriously));
-                        FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
                     } else {
                         if (Data.autoData.getFeedbackReasons().size() > 0 && rating <= 3) {
                             if (feedbackReasons.length() > 0) {
@@ -1593,14 +1481,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         } else {
                             submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                                     rating, feedbackStr, feedbackReasons);
-                            FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
-                            FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "submit feedback");
                             flurryEventGAForTransaction();
-                            FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "rating " + rating);
-                            if (feedbackStr.length() > 0) {
-                                FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
-                                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "leave comments " + feedbackStr);
-                            }
                         }
                     }
                 } catch (Exception e) {
@@ -1613,8 +1494,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 skipFeedbackForCustomerAsync(HomeActivity.this, Data.autoData.getcEngagementId());
-                FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_NO);
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "skip");
                 flurryEventGAForTransaction();
             }
         });
@@ -1625,9 +1504,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(Data.autoData.getEndRideData() != null) {
                     linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.INVOICE);
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
-                            +FirebaseEvents.VIEW_INVOICE, bundle);
-                    FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "ride completed", "view invoice");
+                    GAUtils.event(RIDES, FEEDBACK, VIEW_INVOICE+CLICKED);
                 }
             }
         });
@@ -1644,9 +1521,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     //setZeroRatingView();
                     if (MyApplication.getInstance().isOnline()) {
-						Bundle bundle = new Bundle();
-						MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
-								+FirebaseEvents.RATING_5, bundle);
 						thumbsUpGifStartTime = System.currentTimeMillis();
 						rating = 5;
 						submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
@@ -1667,6 +1541,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             updateTopBar();
                             topBar.imageViewHelp.setVisibility(View.GONE);
 						}
+                        GAUtils.event(RIDES, RIDE+FINISHED, THUMB_UP+CLICKED);
 					}
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1680,9 +1555,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     rating = 1;
                     //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
-							+FirebaseEvents.RATING_1, bundle);
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
 							rating, "", "");
                     Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
@@ -1691,6 +1563,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     intent.putExtra(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    GAUtils.event(RIDES, RIDE+FINISHED, THUMB_DOWN+CLICKED);
                     //imageViewThumbsUp.clearAnimation();
                     //imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
                     //textViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
@@ -2159,7 +2032,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 .setId("2")
                 .setName("Cash")
                 .setPrice(Data.autoData.getEndRideData().toPay);
-//                                                                .setPosition(4);
         productList.add(product);
         productList.add(product1);
         productList.add(product2);
@@ -2170,7 +2042,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 .setTransactionAffiliation("Auto")
                 .setTransactionRevenue(Data.autoData.getEndRideData().finalFare);
 
-        FlurryEventLogger.orderedProduct(productList, productAction);
+        GAUtils.transactionCompleteEvent(productList, productAction);
     }
 
     private void setEnteredDestination(){
@@ -2376,7 +2248,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
         HomeActivity.this.passengerScreenMode = PassengerScreenMode.P_INITIAL;
         switchPassengerScreen(HomeActivity.this.passengerScreenMode);
-        FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
     }
 
 
@@ -2463,9 +2334,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             @Override
                             public void onConfirmed(boolean confirmClicked) {
                                 if (confirmClicked) {
-                                    bundle = new Bundle();
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+PRIORITY_TIP_POP_UP+"_"+OK, bundle);
-                                    FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "priority tip pop up", "ok");
                                 }
                                 finalRequestRideTimerStart();
                             }
@@ -2473,11 +2341,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             @Override
                             public void onCancelled() {
                                 Log.v("Request of Ride", "Aborted");
-                                bundle = new Bundle();
-                                MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+PRIORITY_TIP_POP_UP+"_"+CANCEL, bundle);
-                                FlurryEventLogger.eventGA(CAMPAIGNS, "priority tip pop up", "cancel");
-                                FlurryEventLogger.event(HomeActivity.this, SURGE_NOT_ACCEPTED);
-
                                 specialPickupScreenOpened = false;
                                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
@@ -2508,7 +2371,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
             }
             if (Data.TRANSFER_FROM_JEANIE == 1) {
-                FlurryEventLogger.event(JUGNOO_STICKY_RIDE_CONFIRMATION);
                 Data.TRANSFER_FROM_JEANIE = 0;
             }
 
@@ -2555,8 +2417,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             try {
                 if(map != null) {
                     if (MyApplication.getInstance().isOnline()) {
-                        FlurryEventLogger.event(HomeActivity.this, AUTO_RIDE_ICON);
-                        FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_GET_A_RIDE);
 
                         boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedWalletCoupon();
                         if(proceed) {
@@ -2575,19 +2435,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         if(MapUtils.distance(Data.autoData.getPickupLatLng(), searchResult.getLatLng())
                                                 <= Data.autoData.getUseRecentLocAutoSnapMinDistance()){
                                             snapPickupLocToNearbyAddress(searchResult);
-                                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup automatically snapped");
                                         } else {
                                             new SavedAddressPickupDialog(HomeActivity.this, searchResult, new SavedAddressPickupDialog.Callback() {
                                                 @Override
                                                 public void onDialogDismiss() {
                                                     requestRideDriverCheck();
-                                                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup ignored");
+                                                    GAUtils.event(RIDES, PICKUP_LOCATION_DIFFERENT_FROM_CURRENT_LOCATION+POPUP, GAAction.CANCEL+CLICKED);
                                                 }
 
                                                 @Override
                                                 public void yesClicked(SearchResult searchResult) {
                                                     snapPickupLocToNearbyAddress(searchResult);
-                                                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup choosed");
+                                                    GAUtils.event(RIDES, PICKUP_LOCATION_DIFFERENT_FROM_CURRENT_LOCATION+POPUP, GAAction.OK+CLICKED);
                                                 }
                                             }).show();
                                         }
@@ -2599,23 +2458,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
                                 //callAnAutoPopup(HomeActivity.this);
 
-
                                 Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
                                 Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
-
-                                FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
-                                if (promoCouponSelectedForRide.getId() > 0) {
-                                    FlurryEventLogger.event(COUPONS_SELECTED);
-                                    FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "offer selected");
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString(Constants.HOME_SCREEN, "offer selected");
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, bundle);
-
-                                } else {
-                                    FlurryEventLogger.event(COUPON_NOT_SELECTED);
-                                }
                             }
-
                             Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
                         }
 
@@ -2674,8 +2519,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 Prefs.with(HomeActivity.this).save(SPLabels.LAST_PICK_UP, tempPickup);
             }
 
-            FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION,
-                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName(), "request ride l2");
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -2745,7 +2588,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 reconnectLocationFetchers();
             }
         }
-        FlurryEventLogger.event(NAVIGATION_TO_CURRENT_LOC);
     }
 
 
@@ -4128,10 +3970,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 @Override
                                 public void onClick(View view) {
                                     if (MyApplication.getInstance().isOnline()) {
-                                        FlurryEventLogger.eventGA(CAMPAIGNS, "CBCR pop up", "yes");
-                                        bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCR_POP_UP+"_"+YES, bundle);
-                                        //DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                         Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
                                         syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
@@ -4165,9 +4003,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 @Override
                                 public void onClick(View view) {
                                     if (MyApplication.getInstance().isOnline()) {
-                                        FlurryEventLogger.eventGA(CAMPAIGNS, "CBCR pop up", "no thanks");
-                                        bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCR_POP_UP+"_"+NO_THANKS, bundle);
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
                                         uploadContactsApi(false);
                                         dismissReferAllDialog();
@@ -4212,10 +4047,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 public void onClick(View view) {
                                     if(MyApplication.getInstance().isOnline()) {
 
-                                        FlurryEventLogger.eventGA(CAMPAIGNS, "CBCD pop up", "yes");
-                                        bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCD_POP_UP+"_"+YES, bundle);
-                                        //DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                         Data.autoData.setReferAllStatus(1);
                                         Data.autoData.setReferAllStatusLogin(1);
                                         Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
@@ -4250,9 +4081,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 @Override
                                 public void onClick(View view) {
                                     if(MyApplication.getInstance().isOnline()) {
-                                        FlurryEventLogger.eventGA(CAMPAIGNS, "CBCD pop up", "no thanks");
-                                        bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCD_POP_UP+"_"+NO_THANKS, bundle);
                                         Data.autoData.setReferAllStatus(0);
                                         Data.autoData.setReferAllStatusLogin(-1);
                                         uploadContactsApi(true);
@@ -4297,6 +4125,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if(intent.hasExtra(Constants.KEY_EVENT)
+                && intent.getStringExtra(Constants.KEY_EVENT).equalsIgnoreCase(Constants.KEY_RIDE_ACCEPTED)){
+            GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH+CLICKED);
+        }
     }
 
     @Override
@@ -4495,6 +4327,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         tvChatCount.setVisibility(View.GONE);
         startActivity(new Intent(HomeActivity.this, ChatActivity.class));
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        GAUtils.event(RIDES, DRIVER_ENROUTE, CHAT+GAAction.BUTTON+CLICKED);
     }
 
 
@@ -4697,7 +4530,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     switchPassengerScreen(passengerScreenMode);
                 }
             }, 300);
-            FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4717,14 +4549,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
             else if(dropLocationSearched && PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
                 stopDropLocationSearchUI(false);
-                FlurryEventLogger.event(DROP_LOCATION_OPENED_NOT_USED_FINDING_DRIVER);
             }
             else if(dropLocationSearched &&
                     (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode ||
                             PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode ||
                             PassengerScreenMode.P_IN_RIDE == passengerScreenMode)){
                 stopDropLocationSearchUI(true);
-                FlurryEventLogger.event(DROP_LOCATION_OPENED_BUT_NOT_USED_RIDE_ACCEPTED);
             }
             else if(PassengerScreenMode.P_RIDE_END == passengerScreenMode
                     && linearLayoutRideSummaryContainer.getVisibility() == View.VISIBLE){
@@ -4799,9 +4629,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         try {
             if(fromDeepLink){
-                FlurryEventLogger.event(this, INVITE_SCREEN_THROUGH_PUSH);
             } else{
-                FlurryEventLogger.event(INVITE_EARN_MENU);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -4990,7 +4818,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             || ((passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
                             || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                        fabViewTest.setFABButtons(passengerScreenMode == PassengerScreenMode.P_INITIAL);
+                        fabViewTest.setFABButtons();
                     }
                 }
             } else {
@@ -5474,6 +5302,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     callAndHandleStateRestoreAPI(true);
                 }
             });
+            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
+                GAUtils.event(RIDES, HOME,
+                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUEST + CANCELLED);
+            }
         } else {
             //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
             DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
@@ -5726,7 +5558,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     setDropLocationEngagedUI();
 
                                     getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), zoomAfterDropSet);
-                                    FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "ride start", "enter destination");
                                 }
 
                             } else {
@@ -5787,7 +5618,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             new HomeUtil().putDefaultParams(nameValuePairs);
                             Response response = RestClient.getApiService().getDriverCurrentLocation(nameValuePairs);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
-                            FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_DRIVER_CURRENT_LOCATION, startTime);
 
 //                            HttpRequester simpleJSONParser = new HttpRequester();
 //                            String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/get_driver_current_location", nameValuePairs);
@@ -5950,7 +5780,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         new HomeUtil().putDefaultParams(nameValuePairs);
                         Response response = RestClient.getApiService().getOngoingRidePath(nameValuePairs);
                         String result = new String(((TypedByteArray)response.getBody()).getBytes());
-                        FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_ONGOING_RIDE_PATH, startTime);
 
                         Log.e(TAG, "getOngoingRidePath result=" + result);
 
@@ -6166,7 +5995,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     });
                                 } else{
                                     try {
-                                        FlurryEventLogger.event(FlurryEventNames.GOOGLE_API_DIRECTIONS_FAILURE);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -6239,9 +6067,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             btnCancel.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+FirebaseEvents.HOME_SCREEN+"_"
-                            +DIFFERENT_PICKUP_LOCATION_POPUP+"_can", bundle);
                     dialog.dismiss();
                     specialPickupScreenOpened = false;
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -6301,9 +6126,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else {
                         double distance = MapUtils.distance(Data.autoData.getPickupLatLng(), new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
                         if (distance > MAP_PAN_DISTANCE_CHECK) {
-                            Bundle bundle = new Bundle();
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+FirebaseEvents.HOME_SCREEN+"_"+DIFFERENT_PICKUP_LOCATION_POPUP, bundle);
-                            FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "different pickup location popup");
                             textMessage.setText("The pickup location you have set is different from your current location. Are you sure this is your pickup location?");
                             dialog.show();
                         } else {
@@ -6321,9 +6143,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private boolean requestRideDriverCheck(){
         if(MyApplication.getInstance().isOnline()) {
-            Bundle bundle = new Bundle();
-            MyApplication.getInstance().logEvent(TRANSACTION+"_"+FirebaseEvents.HOME_SCREEN+"_"
-                    +DIFFERENT_PICKUP_LOCATION_POPUP+"_"+OK, bundle);
             if (getFilteredDrivers() == 0) {
                 noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
                 specialPickupScreenOpened = false;
@@ -6331,7 +6150,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 switchPassengerScreen(passengerScreenMode);
             } else {
                 initiateRequestRide(true);
-                FlurryEventLogger.event(FINAL_CALL_RIDE);
                 return true;
             }
         } else{
@@ -7105,7 +6923,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 new HomeUtil().putDefaultParams(nameValuePairs);
                                 Response responseRetro = RestClient.getApiService().requestRide(nameValuePairs);
                                 String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
-                                FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_REQUEST_RIDE, apiStartTime);
 
                                 try {
                                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -7167,8 +6984,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     executionTime = serverRequestStartTime + elapsedTime;
                                                 }
                                                 if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-                                                    BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_REQUEST_RIDE, true);
-                                                    FbEvents.logEvent(HomeActivity.this, FB_EVENT_REQUEST_RIDE);
                                                     // Ride Requested
                                                     // Google Android in-app conversion tracking snippet
                                                     // Add this code to the event you'd like to track in your app.
@@ -7205,6 +7020,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                                     if(Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
                                                         Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.autoData.getPickupPaymentOption());
+                                                    }
+
+                                                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null){
+                                                        GAUtils.event(RIDES, HOME, slidingBottomPanel
+                                                                .getRequestRideOptionsFragment().getRegionSelected().getRegionName()+" "+REQUESTED);
                                                     }
                                                 }
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
@@ -7428,8 +7248,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
 
-            BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
-            FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED);
             try {
                 AppEventsLogger.newLogger(this).logPurchase(BigDecimal.valueOf(Data.autoData.getEndRideData().toPay), Currency.getInstance("INR"));
             } catch (Exception e) {
@@ -7569,10 +7387,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     intent.putExtra(Constants.KEY_DRIVER_ID, Data.autoData.getAssignedDriverInfo().userId);
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.event(EMERGENCY_MODE_ENABLED);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(HELP+"_"+HELP_POP_UP, bundle);
-                    FlurryEventLogger.eventGA(HELP, "help pop up", "enable emergency mode");
+                    GAUtils.event(RIDES, GAAction.HELP+POPUP, ENABLE_EMERGENCY_MODE+CLICKED);
                 }
 
                 @Override
@@ -7582,13 +7397,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onSendRideStatusClick(View view) {
-                    FlurryEventLogger.eventGA(HELP, "help pop up", "send ride status");
                     Intent intent = new Intent(HomeActivity.this, EmergencyActivity.class);
                     intent.putExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
                             EmergencyActivity.EmergencyActivityMode.SEND_RIDE_STATUS.getOrdinal());
                     intent.putExtra(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    GAUtils.event(RIDES, GAAction.HELP+POPUP, SEND_RIDE_STATUS+CLICKED);
                 }
 
                 @Override
@@ -7598,14 +7413,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.event(SUPPORT_OPTIONS_THROUGH_EMERGENCY);
-                    FlurryEventLogger.eventGA(HELP, "help pop up", "in app customer supoort");
+                    GAUtils.event(RIDES, GAAction.HELP+POPUP, IN_APP_SUPPORT+CLICKED);
                 }
 
                 @Override
                 public void onDialogClosed(View view) {
-                    FlurryEventLogger.event(SOS_ALERT_CANCELLED);
-                    FlurryEventLogger.eventGA(HELP, "help pop up", "close");
                 }
 
                 @Override
@@ -7614,13 +7426,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }).show(Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0));
         }
-        FlurryEventLogger.event(SOS_ALERT_USED);
     }
 
     public static int localModeEnabled = -1;
     private void updateTopBar(){
         try{
-            float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
             if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                     || PassengerScreenMode.P_IN_RIDE == passengerScreenMode
@@ -8379,7 +8189,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             zoomAfterFindADriver = false;
             if(!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-                    FlurryEventLogger.event(PICKUP_LOCATION_SET);
                     textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText());
                     zoomedForSearch = true;
                     lastSearchLatLng = null;
@@ -8469,6 +8278,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							e.printStackTrace();
 						}
 						setSearchResultToPickupCase(searchResult);
+                        GAUtils.event(RIDES, HOME, PICKUP+LOCATION+ENTERED);
 					}
 				} else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
 
@@ -8493,13 +8303,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							shakeAnim > 0 && !updateSpecialPickupScreen()){
 						imageViewRideNow.performClick();
 					}
+                    GAUtils.event(RIDES, HOME, DESTINATION+LOCATION+ENTERED);
 				}
 			}
 			else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
 				saveLastDestinations(searchResult);
 				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
 						getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress());
-				FlurryEventLogger.event(DROP_LOCATION_USED_FINIDING_DRIVER);
 			}
 			else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
 					|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
@@ -8509,7 +8319,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
 						getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
-				FlurryEventLogger.event(DROP_LOCATION_USED_RIDE_ACCEPTED);
+                if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                    GAUtils.event(RIDES, RIDE+IN_PROGRESS, DESTINATION+UPDATED);
+                }
 			}
 
             Log.e("onPlaceSearchPost", "=" + searchResult);
@@ -9170,8 +8982,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         rlSpecialPickup.setVisibility(View.GONE);
                         updateTopBar();
                         openConfirmRequestView();
-                        FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 " +
-                                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
                     }
                 } else {
                     destinationRequiredShake();
@@ -9187,7 +8997,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         specialPickupScreenOpened = true;
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
-                        //map.moveCamera(CameraUpdateFactory.zoomOut());
                         showSpecialPickupMarker(specialPickups);
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
                         spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
@@ -9195,10 +9004,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else {
                         removeSpecialPickupMarkers();
                         requestRideClick();
-                        //openConfirmRequestView();
                         slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                        FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 " +
-                                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
                     }
                 }
             }
