@@ -25,9 +25,10 @@
         android:id="@+id/tv_user_name"
         android:text="Jesse Cennedy"
         android:gravity="center_horizontal"
-        app:font="@string/maven_r"
+        app:font="maven"
         android:textColor="@color/feed_color_orange"
         android:textSize="@dimen/font_normal"
+        android:maxLines="1"
         android:layout_toRightOf="@id/iv_profile_pic"
         android:layout_marginBottom="@dimen/spacing_tiny"
         android:layout_width="wrap_content"
@@ -36,14 +37,11 @@
 
 
 
-    <android.support.v7.widget.CardView
-        android:layout_below="@id/iv_profile_pic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
 
         <EditText
             android:id="@+id/edt_comment"
-            android:layout_below="@id/tv_user_name"
+            android:layout_below="@id/iv_profile_pic"
             android:paddingLeft="@dimen/spacing_normal"
             android:paddingRight="@dimen/spacing_normal"
             app:font="maven"
@@ -55,12 +53,11 @@
             android:textColorHint="@color/feed_grey_hint_color"
             android:textColor="@color/feed_grey_text"
             android:inputType="textMultiLine"
-            android:background="@android:color/white"
+            android:background="@drawable/bg_white_layer_shadow"
             android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="100dp" />
 
-    </android.support.v7.widget.CardView>
 
 
 

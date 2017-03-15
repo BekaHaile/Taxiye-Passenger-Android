@@ -5,15 +5,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
@@ -45,16 +50,15 @@ import retrofit.mime.TypedByteArray;
 
 public class FeedHomeFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-
-    private String mParam1;
-    private String mParam2;
     private FeedOfferingListAdapter feedOfferingListAdapter;
     private TextView tvAddPost;
     private LikeFeed likeFeed;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private RelativeLayout relativeLayoutNotAvailable;
+    private TextView textViewNothingFound;
+    private RelativeLayout rlNoReviews;
+    private TextView tvFeedEmpty;
 
 
     public FeedHomeFragment() {
@@ -62,22 +66,10 @@ public class FeedHomeFragment extends Fragment {
     }
 
 
-    public static FeedHomeFragment newInstance(String param1, String param2) {
-        FeedHomeFragment fragment = new FeedHomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -148,6 +140,7 @@ public class FeedHomeFragment extends Fragment {
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
         if (activity.getDeliveryAddressView() != null) {
             activity.getDeliveryAddressView().scaleView();
+            activity.getDeliveryAddressView().tvDeliveryAddress.setText(R.string.label_location_feed);
         }
         tvAddPost = (TextView) rootView.findViewById(R.id.tvAddPost);
         tvAddPost.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +161,18 @@ public class FeedHomeFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        relativeLayoutNotAvailable = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
+        textViewNothingFound = (TextView) rootView.findViewById(R.id.textViewNothingFound);
+        relativeLayoutNotAvailable.setVisibility(View.GONE);
+        rlNoReviews = (RelativeLayout) rootView.findViewById(R.id.rlNoReviews);
+        rlNoReviews.setVisibility(View.GONE);
+        tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);
+        tvFeedEmpty.setText(activity.getString(R.string.feed_is_empty));
+        SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add));
+        ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvFeedEmpty.append("\n");
+        tvFeedEmpty.append(ssb);
 
 
         return rootView;
@@ -205,11 +210,18 @@ public class FeedHomeFragment extends Fragment {
                             String message = feedbackResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
                                     feedbackResponse.getError(), feedbackResponse.getMessage())) {
-                                if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                relativeLayoutNotAvailable.setVisibility(View.GONE);
+                                if(feedbackResponse.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
+                                    relativeLayoutNotAvailable.setVisibility(View.VISIBLE);
+                                    textViewNothingFound.setText(!TextUtils.isEmpty(feedbackResponse.getMessage()) ?
+                                            feedbackResponse.getMessage() :
+                                            activity.getString(R.string.nothing_found_near_you));
+                                } else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     feedOfferingListAdapter.setList(feedbackResponse.getFeeds());
                                     if(!TextUtils.isEmpty(feedbackResponse.getAddPostText())){
                                         tvAddPost.setText(feedbackResponse.getAddPostText());
                                     }
+                                    rlNoReviews.setVisibility(feedOfferingListAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }

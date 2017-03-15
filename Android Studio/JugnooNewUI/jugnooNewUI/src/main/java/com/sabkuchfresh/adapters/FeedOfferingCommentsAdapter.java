@@ -97,6 +97,8 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
 
         }
         else if(holder instanceof MyCommentViewHolder){
+
+
             if (Data.userData!=null) {
                 ((MyCommentViewHolder) holder).tvMyUserName.setText(Data.userData.userName);
                 if (!TextUtils.isEmpty(Data.userData.userImage))
@@ -182,6 +184,15 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    public void notifyOnComment(){
+        if(feedDetailData!=null && feedDetailData.size()!=0 && feedDetailData.get(0) instanceof FeedDetail)
+        {
+            FeedDetail feedDetail = (FeedDetail) feedDetailData.get(0);
+            feedDetail.setCommentCount(feedDetail.getCommentCount()+1);
+            notifyItemChanged(1);
+        }
+    }
+
 
     public interface Callback {
         void onLikeClick(int positionOfLayout);
@@ -226,6 +237,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
             super(view);
             ButterKnife.bind(this, view);
             edtComment.addTextChangedListener(textWatcherMyComment);
+            tvMyUserName.setTypeface(tvMyUserName.getTypeface(), Typeface.BOLD);
         }
     }
 }

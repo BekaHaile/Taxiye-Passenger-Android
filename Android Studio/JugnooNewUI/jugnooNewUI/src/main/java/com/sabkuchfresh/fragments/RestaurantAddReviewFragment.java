@@ -224,10 +224,11 @@ public class RestaurantAddReviewFragment extends Fragment  {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length()==0||s.length()==1)
-                updateSubmitButtonStatus();
+                if(s.length()>0)
+                    bSubmit.setEnabled(true);
+                else
+                    updateSubmitButtonStatus();
 
-//                bSubmit.setEnabled(s.length() > 0);
                 updateTextCount();
             }
         });

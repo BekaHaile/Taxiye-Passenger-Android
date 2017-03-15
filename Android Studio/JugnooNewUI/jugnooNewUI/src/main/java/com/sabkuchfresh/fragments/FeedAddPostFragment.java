@@ -196,7 +196,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                tvCharCount.setText(String.valueOf((400 - s.toString().trim().length())));
+                tvCharCount.setText(String.valueOf((500 - s.toString().trim().length())));
+
             }
         });
 
@@ -252,19 +253,29 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 String postText = etContent.getText().toString().trim();
-                if(TextUtils.isEmpty(postText)){
-                    Toast.makeText(activity, R.string.please_enter_something, Toast.LENGTH_SHORT).show();
-                } else {
+
                     if(addPostType == AddPostType.REVIEW){
+
                         if(suggestionSelected == null){
                             Toast.makeText(activity, "You need to select a restaurant to review", Toast.LENGTH_SHORT).show();
-                        } else {
-                            postFeedAPI(postText, suggestionSelected.getId());
+                            return;
                         }
+
+                        if(TextUtils.isEmpty(postText)){
+                            Toast.makeText(activity, R.string.please_enter_something, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        postFeedAPI(postText, suggestionSelected.getId());
+
                     } else {
+                        if(TextUtils.isEmpty(postText)){
+                            Toast.makeText(activity, R.string.please_enter_something, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         postFeedAPI(postText, -1);
                     }
-                }
+
             }
         });
 
