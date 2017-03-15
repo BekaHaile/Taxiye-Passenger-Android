@@ -18,7 +18,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -201,9 +200,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             }
         });
 
-        switchAddFeed(addPostType);
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
         ivAccessCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -280,7 +276,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         });
 
 
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        switchAddFeed(addPostType);
 
         return rootView;
     }
@@ -375,7 +372,13 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         etContent.setLayoutParams(paramsETContent);
 
         etContent.requestFocus();
-        Utils.showSoftKeyboard(activity, etContent);
+
+        etContent.setText("");
+        suggestionSelected = null;
+        tvRestaurantLocation.setText("");
+        etRestaurantLocation.setText("");
+        btnRemoveImage.performClick();
+
     }
 
     private void openSuggestionView(boolean open){
@@ -389,7 +392,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             llReviewLocation.setLayoutParams(params);
             rvRestaurantSuggestions.setVisibility(View.GONE);
             etRestaurantLocation.requestFocus();
-            Utils.showSoftKeyboard(activity, etRestaurantLocation);
         } else {
             tvRestaurantLocation.setVisibility(View.VISIBLE);
             etRestaurantLocation.setVisibility(View.GONE);
