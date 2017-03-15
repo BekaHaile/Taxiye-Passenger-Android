@@ -9,9 +9,14 @@ import java.util.Map;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
 import retrofit.client.Response;
+import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
+
+import retrofit.http.Path;
+import retrofit.mime.MultipartTypedOutput;
+
 
 /**
  * Created by Parminder Singh on 3/11/17.
@@ -27,6 +32,10 @@ public interface FeedApiService {
     @FormUrlEncoded
     @POST("/feeds/v1/fetch_feed_details")
     void fetchFeedDetails(@FieldMap Map<String, String> params, Callback<FeedDetailResponse> callback);
+
+
+    @POST("feeds/v1/post")
+    void postFeed(@Body MultipartTypedOutput multipartTypedOutput, Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST("/feeds/v1/comment")

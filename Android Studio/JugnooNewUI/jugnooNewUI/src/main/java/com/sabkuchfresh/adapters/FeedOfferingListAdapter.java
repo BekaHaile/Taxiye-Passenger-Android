@@ -216,6 +216,11 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
         Drawable drawableToSet = feedDetail.isLiked()?ContextCompat.getDrawable(activity,R.drawable.ic_like_active):ContextCompat.getDrawable(activity,R.drawable.ic_like);
         holder.tvLike.setCompoundDrawablesWithIntrinsicBounds(drawableToSet,null,null,null);
+        if(feedDetail.isLiked())
+            holder.tvLike.setTextColor(ContextCompat.getColor(activity,R.color.feed_color_orange));
+        else
+            holder.tvLike.setTextColor(ContextCompat.getColor(activity,R.color.feed_grey_text));
+
     }
 
     private static String formLikesComment(int likeCount, int commentCount,FreshActivity activity) {

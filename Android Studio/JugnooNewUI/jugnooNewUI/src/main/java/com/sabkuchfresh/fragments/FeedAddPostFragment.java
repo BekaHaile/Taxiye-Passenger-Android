@@ -13,6 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,8 @@ import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.RestaurantQuerySuggestionsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
+import com.sabkuchfresh.utils.ImageCompression;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.picasso.Picasso;
@@ -40,14 +43,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+
+import product.clicklabs.jugnoo.Data;
+
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import retrofit.mime.MultipartTypedOutput;
+import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
+
 
 import static android.app.Activity.RESULT_OK;
 
@@ -82,6 +98,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     private Picker picker;
     private static  final int REQUEST_CODE_SELECT_IMAGE=106;
     private ImageView btnRemoveImage;
+    private ImageCompression imageCompressionTask;
 
     public FeedAddPostFragment() {
     }
@@ -419,6 +436,124 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         public int getOrdinal() {
             return ordinal;
         }
+    }
+    public void postFeedAPI() {
+        try {
+            if (MyApplication.getInstance().isOnline()) {
+                final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
+                DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
+
+                if(imageSelected!=null){
+                    //upload feedback with new Images
+                    imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
+                        @Override
+                        public void processFinish(File[] output) {
+
+                            if(output!=null){
+                                for(File file:output)
+                                {
+                                    if(file!=null){
+                                        multipartTypedOutput.addPart(Constants.KEY_REVIEW_IMAGES,new TypedFile("image/*",file));
+                                    }
+                                }
+
+                            }
+                            //upload feedback with new Images
+                            uploadParamsAndPost(multipartTypedOutput);
+                        }
+
+                        @Override
+                        public  void onError(){
+                            DialogPopup.dismissLoadingDialog();
+
+                        }
+                    },activity);
+                    String[] fileArray = new String[]{imageSelected.path};
+                    imageCompressionTask.execute(fileArray);
+                }
+                else{
+                    uploadParamsAndPost(multipartTypedOutput);
+                }
+
+
+
+            } else {
+                retryDialog(DialogErrorType.NO_NET);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    private void uploadParamsAndPost(MultipartTypedOutput multipartTypedOutput) {
+
+        multipartTypedOutput.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString("bc1ff5a34edab8d37c56a977023b8f4d473d22e83facfd534f26341579c94b54"));
+        multipartTypedOutput.addPart(Constants.KEY_LATITUDE, new TypedString(String.valueOf(activity.getSelectedLatLng().latitude)));
+        multipartTypedOutput.addPart(Constants.KEY_LONGITUDE, new TypedString(String.valueOf(activity.getSelectedLatLng().longitude)));
+        multipartTypedOutput.addPart(Constants.KEY_POST_TEXT, new TypedString(""));
+
+
+        if(addPostType==AddPostType.REVIEW) {
+            multipartTypedOutput.addPart(Constants.KEY_RESTAURANT_ID, new TypedString(""));
+            multipartTypedOutput.addPart(Constants.KEY_STAR_COUNT,new TypedString(String.valueOf(Math.round(ratingBar.getScore()))));
+        }
+
+        multipartTypedOutput.addPart(Constants.KEY_APP_VERSION, new TypedString(String.valueOf(MyApplication.getInstance().appVersion())));
+        multipartTypedOutput.addPart(Constants.KEY_DEVICE_TYPE, new TypedString(Data.DEVICE_TYPE));
+
+        RestClient.getFeedApiService().postFeed(multipartTypedOutput, new retrofit.Callback<SettleUserDebt>() {
+            @Override
+            public void success(SettleUserDebt feedbackResponse, Response response) {
+                String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                DialogPopup.dismissLoadingDialog();
+
+                try {
+                    String message = feedbackResponse.getMessage();
+                    if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
+                            feedbackResponse.getError(), feedbackResponse.getMessage())) {
+                        if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+
+
+                            // TODO: 3/15/17 Perform action
+                        } else {
+                            DialogPopup.alertPopup(activity, "", message);
+                        }
+                    }
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                    retryDialog(DialogErrorType.SERVER_ERROR);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                DialogPopup.dismissLoadingDialog();
+                retryDialog(DialogErrorType.CONNECTION_LOST);
+
+            }
+        });
+    }
+
+    private void retryDialog(DialogErrorType dialogErrorType) {
+        DialogPopup.dialogNoInternet(activity, dialogErrorType,
+                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        postFeedAPI();
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+
+                    }
+                });
     }
 
 }
