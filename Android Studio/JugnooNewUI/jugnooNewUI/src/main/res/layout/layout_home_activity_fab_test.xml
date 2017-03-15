@@ -33,14 +33,14 @@
             android:id="@+id/fabFeedTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_fab_meals"
+            android:src="@drawable/ic_fab_feed"
             fab:fab_size="mini"
             fab:fab_shadowXOffset="1dp"
             fab:fab_shadowYOffset="2dp"
             fab:fab_shadowColor="@color/black_50"
-            fab:fab_colorNormal="@color/pink_meals_fab"
-            fab:fab_colorPressed="@color/pink_meals_fab_pressed"
-            fab:fab_colorRipple="@color/pink_meals_fab_pressed"
+            fab:fab_colorNormal="@color/grey_feed_fab"
+            fab:fab_colorPressed="@color/grey_feed_fab_pressed"
+            fab:fab_colorRipple="@color/grey_feed_fab_pressed"
             android:tag="DontTouchMe"
             fab:fab_label="Feed"/>
 

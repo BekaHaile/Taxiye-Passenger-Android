@@ -316,6 +316,8 @@
     <color name="purple_menus_fab_pressed">#9f5495</color>
     <color name="yellow_pay_fab">#faaf40</color>
     <color name="yellow_pay_fab_pressed">#e69b2c</color>
+    <color name="grey_feed_fab">#5e657e</color>
+    <color name="grey_feed_fab_pressed">#545b74</color>
 
 
     <color name="feed_grey_text">#595968</color>

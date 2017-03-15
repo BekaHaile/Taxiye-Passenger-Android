@@ -126,12 +126,17 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dull_line"
+        />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/menu_item_selector_color_F7"
         android:orientation="vertical"
-        android:minHeight="1dp"
         >
 
         <LinearLayout
@@ -226,10 +231,11 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvRestaurantSuggestions"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:fadeScrollbars="true"
                 android:scrollbarSize="2dp"
                 android:scrollbars="vertical"
+                android:visibility="gone"
                 />
 
         </LinearLayout>

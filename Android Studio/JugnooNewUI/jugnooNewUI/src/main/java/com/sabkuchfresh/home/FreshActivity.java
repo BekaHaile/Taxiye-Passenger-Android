@@ -1237,6 +1237,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.feed);
 
+                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                }
+
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             }
             else if(fragment instanceof FeedOfferingCommentsFragment){

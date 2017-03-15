@@ -37,7 +37,9 @@ import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -46,7 +48,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -160,11 +161,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().trim().length() > 0){
+                if(s.toString().trim().length() > 2){
                     suggestRestaurantApi(s.toString().trim());
-                } else {
+                } else if(s.toString().trim().length() == 0) {
                     suggestions.clear();
                     suggestionsAdapter.notifyDataSetChanged();
+                    rvRestaurantSuggestions.setVisibility(suggestionsAdapter.getItemCount() == 0? View.GONE : View.VISIBLE);
                 }
             }
         });
@@ -336,10 +338,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         if(open){
             tvRestaurantLocation.setVisibility(View.GONE);
             etRestaurantLocation.setVisibility(View.VISIBLE);
+            etRestaurantLocation.setText(tvRestaurantLocation.getText());
+            etRestaurantLocation.setSelection(etRestaurantLocation.getText().length());
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) llReviewLocation.getLayoutParams();
-            params.height = LinearLayout.LayoutParams.MATCH_PARENT;
+            params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             llReviewLocation.setLayoutParams(params);
-            rvRestaurantSuggestions.setVisibility(View.VISIBLE);
+            rvRestaurantSuggestions.setVisibility(View.GONE);
             etRestaurantLocation.requestFocus();
             Utils.showSoftKeyboard(activity, etRestaurantLocation);
         } else {
@@ -358,11 +362,16 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             if(MyApplication.getInstance().isOnline()) {
                 pwRestLocQuery.setVisibility(View.VISIBLE);
 
-                RestClient.getFeedApiService().suggestRestaurant(query, new retrofit.Callback<SuggestRestaurantQueryResp>() {
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_INPUT, query);
+                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+
+                RestClient.getFeedApiService().suggestRestaurant(params, new retrofit.Callback<SuggestRestaurantQueryResp>() {
                     @Override
                     public void success(SuggestRestaurantQueryResp queryResp, Response response) {
                         try {
-                            String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+//                            String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                             String message = queryResp.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, queryResp.getFlag(),
                                     queryResp.getError(), queryResp.getMessage())) {
@@ -370,6 +379,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                                     suggestions.clear();
                                     suggestions.addAll(queryResp.getSuggestions());
                                     suggestionsAdapter.notifyDataSetChanged();
+                                    rvRestaurantSuggestions.setVisibility(suggestionsAdapter.getItemCount() == 0? View.GONE : View.VISIBLE);
                                 } else {
                                     suggestions.clear();
                                     SuggestRestaurantQueryResp.Suggestion suggestion = new SuggestRestaurantQueryResp.Suggestion();
@@ -377,6 +387,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                                     suggestion.setName("No results found");
                                     suggestions.add(suggestion);
                                     suggestionsAdapter.notifyDataSetChanged();
+                                    rvRestaurantSuggestions.setVisibility(suggestionsAdapter.getItemCount() == 0? View.GONE : View.VISIBLE);
                                 }
                             }
                         } catch (Exception exception) {
