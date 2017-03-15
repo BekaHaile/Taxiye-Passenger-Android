@@ -275,13 +275,17 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         if (isTimeAutomatic) {
             feedPostedCal.setTime(DateParser.getUtcDateWithTimeZone(createdAtTime));
             currentDateCal.setTimeInMillis(System.currentTimeMillis());
-            int yearPosted,yearCurrent,currentMonth,postedMonth,currentDate,postedDate;
+            int yearPosted,yearCurrent,currentMonth,postedMonth,currentDate,postedDate,postedHour,currentHour,postedMin,currentMin;
             yearPosted= feedPostedCal.get(Calendar.YEAR);
             yearCurrent=currentDateCal.get(Calendar.YEAR);
             currentMonth=currentDateCal.get(Calendar.MONTH);
             postedMonth= feedPostedCal.get(Calendar.MONTH);
             currentDate=currentDateCal.get(Calendar.DATE);
             postedDate=feedPostedCal.get(Calendar.DATE);
+        /*    postedHour=feedPostedCal.get(Calendar.HOUR_OF_DAY);
+            currentHour=currentDateCal.get(Calendar.HOUR_OF_DAY);
+            postedMin=feedPostedCal.get(Calendar.MINUTE);
+            currentMin=currentDateCal.get(Calendar.MINUTE);*/
 
 
             int diff = yearCurrent - yearPosted;
@@ -306,6 +310,8 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
             if(diff>0)return diff+"M";
 
 
+
+
             int noOfDaysInPostedMonth=feedPostedCal.getActualMaximum(Calendar.DAY_OF_MONTH);
             if(postedMonth!=currentMonth){
                 if((noOfDaysInPostedMonth-postedDate)+currentDate>=7)
@@ -324,8 +330,32 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                     diff=-1;
             }
             if(diff>0) return diff+"w";
-/*        diff= currentDateCal.get(Calendar.WEEK_OF_MONTH)- feedPostedCal.get(Calendar.WEEK_OF_MONTH);
-        if(diff>0) return diff+"w";*/
+
+
+
+
+
+            long diffT=currentDateCal.getTimeInMillis() -feedPostedCal.getTimeInMillis();
+            long diffC = diffT / (24 * 60 * 60 * 1000);
+            if(diffC>=1)return diffC+"d";
+             diffC = diffT / (60 * 60 * 1000) % 24;
+            if(diffC>=1)return diffC+"h";
+             diffC = diffT / (60 * 1000) % 60;
+            if(diffC>=1)return diffC+"m";
+              diffC = diffT / 1000 % 60;
+            if(diffC>=0)
+              return diffC+"s";
+            else
+                return 0+"s";
+
+
+
+
+
+
+/*
+*//*        diff= currentDateCal.get(Calendar.WEEK_OF_MONTH)- feedPostedCal.get(Calendar.WEEK_OF_MONTH);
+        if(diff>0) return diff+"w";*//*
 
 
             if(postedMonth!=currentMonth) {
@@ -338,14 +368,36 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
             if(currentDateCal.get(Calendar.HOUR_OF_DAY)<feedPostedCal.get(Calendar.HOUR_OF_DAY))
                 diff--;
             if(diff>0)return diff+"d";
-            diff = currentDateCal.get(Calendar.HOUR_OF_DAY) - feedPostedCal.get(Calendar.HOUR_OF_DAY);
+
+            if(postedDate!=currentDate){
+                diff = (24- postedHour) + currentHour;
+            }
+            else{
+                diff=currentHour-postedHour;
+            }
+
             if(currentDateCal.get(Calendar.MINUTE)<feedPostedCal.get(Calendar.MINUTE))
                 diff--;
             if(diff>0)return diff+"h";
-            diff = currentDateCal.get(Calendar.MINUTE) - feedPostedCal.get(Calendar.MINUTE);
+
+            if(postedHour!=currentHour){
+                diff= (60-feedPostedCal.get(Calendar.MINUTE))+currentDateCal.get(Calendar.MINUTE);
+            }
+            else{
+                diff = currentDateCal.get(Calendar.MINUTE) - feedPostedCal.get(Calendar.MINUTE);
+            }
+
+            if(currentDateCal.get(Calendar.SECOND)<feedPostedCal.get(Calendar.SECOND))
+                diff--;
+
+
             if(diff>0)return diff+"m";
-            diff=currentDateCal.get(Calendar.SECOND)- feedPostedCal.get(Calendar.SECOND);
-            return diff<0?0+"s":diff+"s";
+
+            if(postedMin!=currentMin)
+                diff= (60-feedPostedCal.get(Calendar.SECOND))+currentDateCal.get(Calendar.SECOND);
+            else
+                diff=currentDateCal.get(Calendar.SECOND)- feedPostedCal.get(Calendar.SECOND);
+            return diff<0?0+"s":diff+"s";*/
 
         }
         else{
