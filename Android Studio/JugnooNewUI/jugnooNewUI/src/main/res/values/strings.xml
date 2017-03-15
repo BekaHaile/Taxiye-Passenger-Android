@@ -1558,7 +1558,7 @@
     <string name="na">NA</string>
     <string name="login_signup_with">Login / Signup with</string>
     <string name="please_check_tnc">Offer conditions not met. Please review detailed Terms and Conditions for more information</string>
-    <string name="offer_removed_alert">Your offer is removed, You need to reapply before placing order.</string>
+    <string name="offer_removed_alert">Your Offer has been removed. You need to apply again</string>
     <string name="offer_applied">Offer Applied</string>
 
 </resources>

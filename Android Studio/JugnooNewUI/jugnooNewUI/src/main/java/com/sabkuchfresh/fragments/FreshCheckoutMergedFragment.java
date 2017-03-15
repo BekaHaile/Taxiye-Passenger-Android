@@ -1876,7 +1876,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     Utils.showToast(activity, activity.getString(R.string.offer_applied)+": "+activity.getSelectedPromoCoupon().getTitle());
                 } else if(!pcOld.matchPromoCoupon(noSelectionCoupon)
                         && activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)){   // coupon just removed
-                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.offer_removed_alert));
+                    Utils.showToast(activity, activity.getString(R.string.offer_removed_alert));
                 } else if(!pcOld.matchPromoCoupon(noSelectionCoupon)
                         && !activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)){   // coupon changed
                     Utils.showToast(activity, activity.getString(R.string.offer_applied)+": "+activity.getSelectedPromoCoupon().getTitle());
@@ -2529,7 +2529,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         setPromoAmount();
         updateCartUI();
         promoCouponsAdapter.notifyDataSetChanged();
-        DialogPopup.alertPopup(activity, "", activity.getString(R.string.offer_removed_alert));
+        Utils.showToast(activity, activity.getString(R.string.offer_removed_alert));
     }
 
     @Override
