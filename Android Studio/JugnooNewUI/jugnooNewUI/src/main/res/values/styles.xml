@@ -318,6 +318,8 @@
         <attr name="starPadding" format="dimension" />
         <attr name="onlyForDisplay" format="boolean" />
         <attr name="halfStars" format="boolean" />
+        <attr name="animate" format="boolean" />
+        <attr name="displayText" format="boolean" />
     </declare-styleable>
 
 
@@ -350,5 +352,11 @@
     </style>
 
     <style name="DialogFragmentTrans" parent="@android:style/Theme.Translucent.NoTitleBar" />
+
+    <style name="Feed_Line_Horizontal">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/stroke_light_grey_alpha</item>
+    </style>
 
 </resources>

@@ -900,8 +900,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         try {
             orderPaymentModes();
             setPaymentOptionUI();
-            if(Data.userData.isSubscriptionActive()) {
-				cvBecomeStar.setVisibility(View.GONE);
+            if(Data.userData != null) {
+				if (Data.userData.isSubscriptionActive()) {
+					cvBecomeStar.setVisibility(View.GONE);
+				}
 			}
 
             if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {

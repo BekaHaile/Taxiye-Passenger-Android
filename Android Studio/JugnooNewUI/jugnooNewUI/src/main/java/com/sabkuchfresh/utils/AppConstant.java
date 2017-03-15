@@ -21,6 +21,7 @@ public class AppConstant {
         public static final int GROCERY = 3;
         int MENUS = 4;
         int PAY = 5;
+        int FEED =  6;
     }
 
     public static interface EventTracker {

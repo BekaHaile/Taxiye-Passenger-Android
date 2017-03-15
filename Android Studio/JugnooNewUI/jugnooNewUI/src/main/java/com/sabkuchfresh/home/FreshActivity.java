@@ -16,6 +16,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -66,11 +67,15 @@ import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
+import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
+import com.sabkuchfresh.fragments.FeedAddPostFragment;
+import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
+import com.sabkuchfresh.fragments.FeedHomeFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
@@ -237,7 +242,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     private static final float COLLAPSE_TOOLBAR_HEIGHT = 270f;
 
     public CallbackManager callbackManager;
-
+    public boolean isTimeAutomatic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -430,6 +435,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             try {
                 float marginBottom = 60f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                     addMealFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
@@ -446,15 +452,23 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
                     lastClientId = Config.getMenusClientId();
 
+                } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
+                    addFeedFragment();
+                    Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
+                    lastClientId = Config.getFeedClientId();
+
                 } else {
                     openCart();
                     addFreshHomeFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
                     lastClientId = Config.getFreshClientId();
                 }
+
+
                 int dpAsPixels = (int) (marginBottom * scale + 0.5f);
                 fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
                 fabViewTest.setRlGenieHelpBottomMargin(200f);
+                lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
                 Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -659,6 +673,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         super.onResume();
         try {
 
+            isTimeAutomatic();
+
             if (Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getAutosClientId())) {
                 HomeActivity.homeSwitcher = true;
                 MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getAutosClientId(), null,
@@ -689,7 +705,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     if ((getFreshHomeFragment() != null && !getFreshHomeFragment().isHidden()) ||
                             (getMealFragment() != null && !getMealFragment().isHidden()) ||
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
-                            || (getMenusFragment() != null && !getMenusFragment().isHidden())) {
+                            || (getMenusFragment() != null && !getMenusFragment().isHidden())
+                            || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
                     }
@@ -707,6 +724,19 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         menuBar.setUserData();
 
         fetchWalletBalance(this);
+    }
+
+
+    public void isTimeAutomatic(){
+        try {
+            int a= android.provider.Settings.System.getInt(getContentResolver(), android.provider.Settings.System.AUTO_TIME);
+            android.util.Log.i("TAG", "isTimeAutomatic: "+a);
+            isTimeAutomatic=a==1;
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            android.util.Log.i("TAG", "isTimeAutomatic: "+false);
+        }
+
     }
 
     public FreshHomeFragment getFreshHomeFragment() {
@@ -727,6 +757,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public MenusFragment getMenusFragment() {
         return (MenusFragment) getSupportFragmentManager().findFragmentByTag(MenusFragment.class.getName());
+    }
+
+    public FeedHomeFragment getFeedHomeFragment(){
+        return (FeedHomeFragment) getSupportFragmentManager().findFragmentByTag(FeedHomeFragment.class.getName());
     }
 
     public VendorMenuFragment getVendorMenuFragment() {
@@ -944,10 +978,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             topBar.ivAddReview.setVisibility(View.GONE);
             topBar.tvNameCap.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
+            int padding = (int) (20f * ASSL.minRatio());
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
-                llSearchCartContainerVis = View.VISIBLE;
                 llCartContainerVis = View.VISIBLE;
                 ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -966,7 +1000,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
 
             } else if (fragment instanceof FreshFragment) {
-                llSearchCartContainerVis = View.VISIBLE;
                 llCartContainerVis = View.VISIBLE;
                 ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -981,7 +1014,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
 
             } else if (fragment instanceof MealFragment) {
-                llSearchCartContainerVis = View.VISIBLE;
                 llCartContainerVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -998,7 +1030,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.title.setText(getResources().getString(R.string.meals));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             } else if (fragment instanceof GroceryFragment) {
-                llSearchCartContainerVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
 
@@ -1013,7 +1044,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
 
             } else if (fragment instanceof MenusFragment) {
-                llSearchCartContainerVis = View.VISIBLE;
                 ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -1084,7 +1114,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             } else if (fragment instanceof FreshCheckoutMergedFragment || fragment instanceof MenusCheckoutMergedFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                llSearchCartContainerVis = View.VISIBLE;
                 llSearchCartVis = View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
@@ -1122,7 +1151,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.GONE);
-                llSearchCartContainerVis = View.VISIBLE;
                 topBar.llSearchContainer.setVisibility(View.VISIBLE);
                 topBar.animateSearchBar(true);
 
@@ -1183,6 +1211,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             	topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setImageResource(R.drawable.ic_cross_grey_selector);
+                padding = (int) (25f * ASSL.minRatio());
+
                 topBar.title.setVisibility(View.GONE);
                 topBar.tvNameCap.setVisibility(View.VISIBLE);
                 try {
@@ -1191,7 +1221,37 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     e.printStackTrace();
                 }
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof FeedAddPostFragment){
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(R.string.add_post);
+                topBar.imageViewBack.setImageResource(R.drawable.ic_cross_grey_selector);
+                padding = (int) (25f * ASSL.minRatio());
+                llSearchCartVis = View.GONE;
+
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof FeedHomeFragment) {
+                topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                topBar.imageViewBack.setVisibility(View.GONE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(R.string.feed);
+
+                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                }
+
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             }
+            else if(fragment instanceof FeedOfferingCommentsFragment){
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(R.string.feed);
+
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            }
+            topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
 
             topBar.getLlSearchCartContainer().setVisibility(llSearchCartContainerVis);
@@ -1532,6 +1592,14 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 .add(relativeLayoutContainer.getId(), new MenusFragment(),
                         MenusFragment.class.getName())
                 .addToBackStack(MenusFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
+    private void addFeedFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new FeedHomeFragment(),
+                        FeedHomeFragment.class.getName())
+                .addToBackStack(FeedHomeFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 
@@ -2855,6 +2923,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     getGroceryFragment().getAllProducts(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.MENUS && getMenusFragment() != null) {
                     getMenusFragment().getAllMenus(true, getSelectedLatLng());
+                } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
+                    getFeedHomeFragment().fetchFeedsApi(true);
                 }
             }
         } catch (Exception e) {
@@ -3181,6 +3251,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public void setDeliveryAddressView(View view) {
         deliveryAddressView = new DeliveryAddressView(this, view);
         setLlLocalityClick();
+    }
+
+    public DeliveryAddressView getDeliveryAddressView(){
+        return deliveryAddressView;
     }
 
     private void setLocationAddress(String address) {
@@ -3667,15 +3741,45 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         return gaCategory;
     }
 
-    public void clearEtFocus(){
+    public void clearEtFocus() {
         try {
-            if(getTopBar() != null && getTopBar().etSearch != null) {
+            if (getTopBar() != null && getTopBar().etSearch != null) {
                 getTopBar().etSearch.clearFocus();
                 getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private ApiFetchRestaurantMenu apiFetchRestaurantMenu;
+    public void fetchRestaurantMenuAPI(final int restaurantId, final int restaurantInfo, final MenusResponse.Vendor vendor){
+        if(apiFetchRestaurantMenu == null){
+            apiFetchRestaurantMenu = new ApiFetchRestaurantMenu(this, new ApiFetchRestaurantMenu.Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onRetry(View view) {
+                    fetchRestaurantMenuAPI(restaurantId, restaurantInfo, vendor);
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            });
+        }
+        apiFetchRestaurantMenu.getVendorMenu(restaurantId, getSelectedLatLng().latitude,
+                getSelectedLatLng().longitude, restaurantInfo, vendor);
     }
 
 }

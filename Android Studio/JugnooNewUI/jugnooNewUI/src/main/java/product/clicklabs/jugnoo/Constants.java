@@ -439,6 +439,7 @@ public interface Constants {
     String KEY_GROCERY = "grocery";
     String KEY_MENUS = "menus";
     String KEY_PAY = "pay";
+    String KEY_FEED = "feed";
 
     String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
     String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
@@ -458,6 +459,7 @@ public interface Constants {
     String KEY_GROCERY_ENABLED = "grocery_enabled";
     String KEY_MENUS_ENABLED = "menus_enabled";
     String KEY_PAY_ENABLED = "pay_enabled";
+    String KEY_FEED_ENABLED = "feed_enabled";
     String KEY_DELIVERY_ENABLED = "delivery_enabled";
     String KEY_ORDER_HISTORY = "order_history";
     String INTENT_KEY_FROM_BAD = "FromBad";
@@ -635,4 +637,15 @@ public interface Constants {
     String KEY_RIDE_ACCEPTED = "ride_accepted";
     String KEY_FINISH_ACTIVITY = "finish_activity";
     String ACTION_FINISH_ACTIVITY = "product.clicklabs.jugnoo.finish_activity";
+    String KEY_POST_ID = "post_id";
+    String ACTION_CONTACTS_UPLOADED = "product.clicklabs.jugnoo.ACTION_CONTACTS_UPLOADED";
+    String KEY_UPLOADED = "uploaded";
+    String KEY_COMMENT_CONTENT = "comment_content";
+    String KEY_RESTAURANT_INFO = "restaurant_info";
+
+    String KEY_INPUT = "input";
+
+    String KEY_POST_TEXT = "post_text";
+    String KEY_STAR_COUNT = "star_count";
+
 }

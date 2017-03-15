@@ -26,6 +26,14 @@ public class LoginResponse {
 		this.pay = pay;
 	}
 
+	public Feed getFeed() {
+		return feed;
+	}
+
+	public void setFeed(Feed feed) {
+		this.feed = feed;
+	}
+
 	public class Cancellation {
 
 		@SerializedName("message")
@@ -109,6 +117,9 @@ public class LoginResponse {
 	@SerializedName("pay")
 	@Expose
 	private Pay pay;
+	@SerializedName("feed")
+	@Expose
+	private Feed feed;
 	@SerializedName("delivery")
 	@Expose
 	private Delivery delivery;
@@ -320,6 +331,31 @@ public class LoginResponse {
 
 		public void setCoupons(List<CouponInfo> coupons) {
 			this.coupons = coupons;
+		}
+	}
+
+	public class Feed{
+		@SerializedName("contacts_synced")
+		@Expose
+		private Integer contactsSynced;
+		@SerializedName("feature_feed_offering")
+		@Expose
+		private Integer featureFeedOffering;
+
+		public Integer getContactsSynced() {
+			return contactsSynced;
+		}
+
+		public void setContactsSynced(Integer contactsSynced) {
+			this.contactsSynced = contactsSynced;
+		}
+
+		public Integer getFeatureFeedOffering() {
+			return featureFeedOffering;
+		}
+
+		public void setFeatureFeedOffering(Integer featureFeedOffering) {
+			this.featureFeedOffering = featureFeedOffering;
 		}
 	}
 

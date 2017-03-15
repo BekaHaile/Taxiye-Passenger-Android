@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.retrofit;
 
 import com.jakewharton.retrofit.Ok3Client;
 import com.jugnoo.pay.retrofit.PayApiService;
+import com.sabkuchfresh.apis.FeedApiService;
 import com.sabkuchfresh.apis.FreshApiService;
 import com.sabkuchfresh.apis.MenusApiService;
 
@@ -26,6 +27,7 @@ public class RestClient {
     private static ChatApiService CHAT_API_SERVICE = null;
     private static MenusApiService MENUS_API_SERVICE = null;
     private static PayApiService PAY_API_SERVICE = null;
+    private static FeedApiService FEED_API_SERVICE = null;
 
     static {
         setupRestClient();
@@ -34,6 +36,7 @@ public class RestClient {
         setupChatApiRestClient();
         setupMenusApiRestClient();
         setupPayApiRestClient();
+        setupFeedApiRestClient();
     }
 
     private static OkHttpClient getOkHttpClient(){
@@ -91,6 +94,7 @@ public class RestClient {
         CHAT_API_SERVICE = null;
         MENUS_API_SERVICE = null;
         PAY_API_SERVICE = null;
+        FEED_API_SERVICE = null;
     }
 
     public static void setupAllClients(){
@@ -99,6 +103,7 @@ public class RestClient {
         setupChatApiRestClient();
         setupMenusApiRestClient();
         setupPayApiRestClient();
+        setupFeedApiRestClient();
     }
 
 
@@ -199,6 +204,7 @@ public class RestClient {
 
 
 
+
     public static void setupPayApiRestClient() {
         if(PAY_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
@@ -216,4 +222,21 @@ public class RestClient {
         return PAY_API_SERVICE;
     }
 
+
+    private static void setupFeedApiRestClient() {
+        if(FEED_API_SERVICE == null) {
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getFeedServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+            setLogger(builder);
+
+            RestAdapter restAdapter = builder.build();
+            FEED_API_SERVICE = restAdapter.create(FeedApiService.class);
+        }
+    }
+
+    public static FeedApiService getFeedApiService() {
+        return FEED_API_SERVICE;
+    }
 }

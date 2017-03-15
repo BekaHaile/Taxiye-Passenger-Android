@@ -83,7 +83,6 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 try {
-                    //Log.v("slideOffset", "---> "+slideOffset);
                     if(slideOffset > 0.2f){
 						activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
 						activity.setFabMarginInitial(true);
