@@ -1861,6 +1861,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             } else {
                 linearLayoutOffers.setVisibility(View.GONE);
             }
+            PromoCoupon pcOld = activity.getSelectedPromoCoupon();
             activity.setSelectedPromoCoupon(noSelectionCoupon);
             for(PromoCoupon promoCoupon : promoCoupons){
                 if(promoCoupon.getIsSelected() == 1){
@@ -1870,6 +1871,21 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
             setPromoAmount();
             promoCouponsAdapter.setList(promoCoupons);
+
+            //checks only different coupons
+            if(pcOld != null && activity.getSelectedPromoCoupon() != null
+                    && !pcOld.matchPromoCoupon(activity.getSelectedPromoCoupon())){
+                if(pcOld.matchPromoCoupon(noSelectionCoupon)
+                        && !activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)){  // coupon just applied
+                    Utils.showToast(activity, activity.getString(R.string.offer_applied)+": "+activity.getSelectedPromoCoupon().getTitle());
+                } else if(!pcOld.matchPromoCoupon(noSelectionCoupon)
+                        && activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)){   // coupon just removed
+                    Utils.showToast(activity, activity.getString(R.string.offer_removed_alert));
+                } else if(!pcOld.matchPromoCoupon(noSelectionCoupon)
+                        && !activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)){   // coupon changed
+                    Utils.showToast(activity, activity.getString(R.string.offer_applied)+": "+activity.getSelectedPromoCoupon().getTitle());
+                }
+            }
         }
     }
 
@@ -2372,6 +2388,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if(type == AppConstant.ApplicationType.MEALS
                 && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             getCheckoutDataAPI(selectedSubscription);
+        } else {
+            if(!rehitCheckoutApi()){
+                removeCoupon();
+            }
         }
         updateCartDataView();
         GAUtils.event(activity.getGaCategory(), CHECKOUT, CART+ITEM+INCREASED);
@@ -2396,6 +2416,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 && type == AppConstant.ApplicationType.MEALS
                 && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             getCheckoutDataAPI(selectedSubscription);
+        } else if(subItemsInCart.size() > 0) {
+            if(!rehitCheckoutApi()){
+               removeCoupon();
+            }
         }
         GAUtils.event(activity.getGaCategory(), CHECKOUT, CART+ITEM+DECREASED);
     }
@@ -2404,8 +2428,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     public void deleteStarSubscription() {
         selectedSubscription = null;
         getCheckoutDataAPI(selectedSubscription);
-        //cvBecomeStar.setVisibility(View.VISIBLE);
-        //freshCartItemsAdapter.setResults(subItemsInCart, null);
     }
 
 
@@ -2425,7 +2447,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
         updateCartDataView();
-        rehitCheckoutApi();
+        if(!rehitCheckoutApi()){
+            removeCoupon();
+        }
     }
 
     @Override
@@ -2438,15 +2462,19 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             checkIfEmpty();
         }
         if(itemsInCart.size() > 0) {
-            rehitCheckoutApi();
+            if(!rehitCheckoutApi()){
+                removeCoupon();
+            }
         }
     }
 
-    private void rehitCheckoutApi(){
+    private boolean rehitCheckoutApi(){
         if(activity.getUserCheckoutResponse() != null
-                && activity.getUserCheckoutResponse().getHitCheckoutApi() == 1){
+                && activity.getUserCheckoutResponse().getRefreshOnCartChange() == 1){
             getCheckoutDataAPI(selectedSubscription);
+            return true;
         }
+        return false;
     }
 
 
@@ -2505,6 +2533,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         setPromoAmount();
         updateCartUI();
         promoCouponsAdapter.notifyDataSetChanged();
+        Utils.showToast(activity, activity.getString(R.string.offer_removed_alert));
     }
 
     @Override
