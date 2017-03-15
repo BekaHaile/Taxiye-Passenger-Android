@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.activities.PayTutorial;
@@ -44,6 +45,7 @@ public class SignUpTutorial extends Fragment {
     private int numOfPages;
     private View rootView;
     private Button bNext;
+    private RelativeLayout rlFreeCoupons, rlRoot;
 
     public static SignUpTutorial newInstance(int pages) {
         Bundle bundle = new Bundle();
@@ -62,12 +64,20 @@ public class SignUpTutorial extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_signup_tutorial, container, false);
-
+        rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
+        try {
+            if(rlRoot != null) {
+                new ASSL(getActivity(), rlRoot, 1134, 720, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         fetchArguments();
 
         viewPager = (ViewPager) rootView.findViewById(R.id.vpPayTutorial);
         tvSkip = (TextView) rootView.findViewById(R.id.tvSkip);
         bNext = (Button) rootView.findViewById(R.id.bNext);
+
 
         if(Data.userData.getSignupTutorial() != null) {
             if (Data.userData.getSignupTutorial().getTs1() == 1) {
@@ -85,11 +95,14 @@ public class SignUpTutorial extends Fragment {
         viewPager.setAdapter(vpPayTutorialAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
+
+
         tvSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().popBackStack(SignUpTutorial.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 ((HomeActivity)getActivity()).getRelativeLayoutContainer().setVisibility(View.GONE);
+                ((HomeActivity)getActivity()).drawerLayout.closeDrawer(GravityCompat.START);
             }
         });
 
@@ -106,8 +119,8 @@ public class SignUpTutorial extends Fragment {
                 } else{
                     startActivity(new Intent(getActivity(), NewUserChutiyapaa.class));
                     getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    tvSkip.performClick();
                 }
-                tvSkip.performClick();
             }
         });
 
@@ -166,7 +179,19 @@ public class SignUpTutorial extends Fragment {
             View view = layoutInflater.inflate(layouts.get(position), container, false);
 
             if(layouts.get(position) == R.layout.fragment_signup_left_menu_tutorial){
-                ((HomeActivity)getActivity()).drawerLayout.openDrawer(GravityCompat.START);
+                if(layouts.size() == 1) {
+                    ((HomeActivity) getActivity()).drawerLayout.openDrawer(GravityCompat.START);
+                }
+                rlFreeCoupons = (RelativeLayout) view.findViewById(R.id.rlFreeCoupons);
+
+                rlFreeCoupons.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(getActivity(), NewUserChutiyapaa.class));
+                        getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        tvSkip.performClick();
+                    }
+                });
             } else{
                 ((HomeActivity)getActivity()).drawerLayout.closeDrawer(GravityCompat.START);
             }
@@ -174,6 +199,8 @@ public class SignUpTutorial extends Fragment {
             view.setLayoutParams(new LinearLayout.LayoutParams(ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.MATCH_PARENT));
             ASSL.DoMagic(view);
             container.addView(view);
+
+
 
             return view;
         }

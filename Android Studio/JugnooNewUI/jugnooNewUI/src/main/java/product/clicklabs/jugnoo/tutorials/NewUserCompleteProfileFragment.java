@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -37,6 +39,7 @@ import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -90,6 +93,13 @@ public class NewUserCompleteProfileFragment extends Fragment{
         bClaimCoupon = (Button) root.findViewById(R.id.bClaimCoupon);
         etName = (EditText) root.findViewById(R.id.etName);
         etEmail = (EditText) root.findViewById(R.id.etEmail);
+
+        if(!TextUtils.isEmpty(Data.userData.userName)){
+            etName.setText(Data.userData.userName);
+        }
+        if(!TextUtils.isEmpty(Data.userData.userEmail)){
+            etEmail.setText(Data.userData.userEmail);
+        }
 
         rlFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +160,18 @@ public class NewUserCompleteProfileFragment extends Fragment{
         bClaimCoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                apiUpdateUserProfile(activity, etName.getText().toString(), etEmail.getText().toString());
+                if(TextUtils.isEmpty(etName.getText().toString())){
+                    etName.requestFocus();
+                    etName.setError(activity.getResources().getString(R.string.username_empty_error));
+                } else if(TextUtils.isEmpty(etEmail.getText().toString())){
+                    etEmail.requestFocus();
+                    etEmail.setError(activity.getResources().getString(R.string.email_empty_error));
+                } else if (!Utils.isEmailValid(etEmail.getText().toString())) {
+                    etEmail.requestFocus();
+                    etEmail.setError("Please enter valid email");
+                } else {
+                    apiUpdateUserProfile(activity, etName.getText().toString(), etEmail.getText().toString());
+                }
             }
         });
 
@@ -221,6 +242,7 @@ public class NewUserCompleteProfileFragment extends Fragment{
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
+                                Prefs.with(activity).save(SPLabels.USERNAME_UPDATED, 1);
                                 Utils.showToast(activity, jObj.optString("message"));
                                 openWalletFragment();
                             } else {
@@ -248,7 +270,8 @@ public class NewUserCompleteProfileFragment extends Fragment{
     }
 
     private void openWalletFragment(){
-        if(Data.userData.getSignupTutorial().getDs3() != null
+        if(!activity.isFromMenu()
+                &&Data.userData.getSignupTutorial().getDs3() != null
                 && Data.userData.getSignupTutorial().getDs3() == 1){
             activity.getTransactionUtils().openNewUserWalletFragment(activity, activity.getRlContainer());
         } else{

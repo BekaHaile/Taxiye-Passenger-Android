@@ -69,6 +69,7 @@ public class SPLabels {
 
     public static final String LOGIN_UNVERIFIED_DATA_TYPE = "login_unverified_data_type";
     public static final String LOGIN_UNVERIFIED_DATA = "login_unverified_data";
+    public static final String USERNAME_UPDATED = "username_updated";
 
 
 }

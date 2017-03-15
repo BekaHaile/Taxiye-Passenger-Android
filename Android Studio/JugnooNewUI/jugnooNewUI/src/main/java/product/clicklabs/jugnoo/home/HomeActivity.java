@@ -1644,7 +1644,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getTransactionUtils().openSignUpTutorialFragment(HomeActivity.this, relativeLayoutContainer, 2);
+                if(Data.userData.getSignupTutorial() != null) {
+                    if (Data.userData.getSignupTutorial().getTs1() == 1
+                            || Data.userData.getSignupTutorial().getTs2() == 1) {
+                        getTransactionUtils().openSignUpTutorialFragment(HomeActivity.this, relativeLayoutContainer, 2);
+                    }
+                }
             }
         }, 2000);
     }

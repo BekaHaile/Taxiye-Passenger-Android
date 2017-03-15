@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rlRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/transparent">
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/complete_your_profile_and_earn_cashback"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_30"
-        android:gravity="center"
-        app:font="@string/maven_r"/>
+        app:font="@string/maven_r" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="@color/grey_light"
-        android:layout_margin="@dimen/px_52"/>
+        android:layout_margin="@dimen/px_52"
+        android:background="@color/grey_light" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:text="@string/link_social_account"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_34"
-        android:layout_gravity="center_horizontal"
-        app:font="maven"/>
+        app:font="maven" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,19 +43,19 @@
             android:id="@+id/rlFacebook"
             android:layout_width="268px"
             android:layout_height="@dimen/splash_button_height"
-            android:gravity="center_horizontal"
-            android:background="@drawable/capsule_login_button_selector">
+            android:background="@drawable/capsule_login_button_selector"
+            android:gravity="center_horizontal">
 
             <Button
                 android:id="@+id/bFacebook"
                 android:layout_width="@dimen/px_40"
                 android:layout_height="@dimen/px_40"
+                android:layout_centerVertical="true"
                 android:background="@drawable/ic_f"
                 android:clickable="false"
                 android:duplicateParentState="true"
-                android:textAllCaps="true"
                 android:tag="mwar"
-                android:layout_centerVertical="true"
+                android:textAllCaps="true"
                 android:textColor="@drawable/text_color_white_alpha_selector"
                 android:textSize="@dimen/text_size_34" />
 
@@ -62,13 +63,13 @@
                 android:id="@+id/tvFacebook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/nl_login_facebook"
-                android:textColor="#3b5998"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/px_20"
-                android:textSize="@dimen/text_size_32"
                 android:layout_toRightOf="@+id/bFacebook"
-                app:font="maven"/>
+                android:text="@string/nl_login_facebook"
+                android:textColor="#3b5998"
+                android:textSize="@dimen/text_size_32"
+                app:font="maven" />
 
         </RelativeLayout>
 
@@ -77,19 +78,19 @@
             android:layout_width="268px"
             android:layout_height="@dimen/splash_button_height"
             android:layout_marginLeft="@dimen/px_20"
-            android:gravity="center_horizontal"
-            android:background="@drawable/capsule_login_button_selector">
+            android:background="@drawable/capsule_login_button_selector"
+            android:gravity="center_horizontal">
 
             <Button
                 android:id="@+id/bGoogle"
                 android:layout_width="@dimen/px_40"
                 android:layout_height="@dimen/px_40"
+                android:layout_centerVertical="true"
                 android:background="@drawable/ic_g"
                 android:clickable="false"
                 android:duplicateParentState="true"
-                android:layout_centerVertical="true"
-                android:textAllCaps="true"
                 android:tag="mwar"
+                android:textAllCaps="true"
                 android:textColor="@drawable/text_color_white_alpha_selector"
                 android:textSize="@dimen/text_size_34" />
 
@@ -97,46 +98,46 @@
                 android:id="@+id/tvGoogle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/nl_login_google"
-                android:textColor="@color/text_color"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/px_20"
-                android:textSize="@dimen/text_size_32"
                 android:layout_toRightOf="@+id/bGoogle"
-                app:font="maven"/>
+                android:text="@string/nl_login_google"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32"
+                app:font="maven" />
 
         </RelativeLayout>
 
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="@dimen/px_20"
-        android:gravity="center">
-        
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <TextView
             android:layout_width="114px"
             android:layout_height="@dimen/px_36"
             android:background="@drawable/capsule_grey_bg"
+            android:gravity="center"
             android:text="@string/pro_tip"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_22"
-            android:gravity="center"
-            app:font="maven"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            app:font="maven" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px_10"
             android:text="@string/this_will_enable_one_touch_login"
+            android:textAllCaps="true"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_22"
-            android:textAllCaps="true"
-            android:layout_marginLeft="@dimen/px_10"
-            app:font="maven"/>
+            app:font="maven" />
     </LinearLayout>
 
     <LinearLayout
@@ -156,11 +157,11 @@
             android:layout_width="@dimen/px_200"
             android:layout_height="@dimen/px_50"
             android:layout_gravity="center_horizontal"
-            android:text="@string/or_enter"
+            android:background="@drawable/capsule_f7_stroke"
             android:gravity="center"
             android:tag="mwar"
+            android:text="@string/or_enter"
             android:textColor="@color/text_color"
-            android:background="@drawable/capsule_f7_stroke"
             android:textSize="@dimen/text_size_28" />
 
         <ImageView
@@ -173,8 +174,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/px_50"
-        android:layout_marginLeft="@dimen/px_50">
+        android:layout_marginLeft="@dimen/px_50"
+        android:layout_marginTop="@dimen/px_50">
 
         <ImageView
             android:layout_width="54px"
@@ -257,6 +258,5 @@
         android:layout_marginTop="@dimen/px_50"
         android:imeOptions="actionDone"
         android:text="@string/claim_coupon"
-        app:font="maven"/>
-
+        app:font="maven" />
 </LinearLayout>

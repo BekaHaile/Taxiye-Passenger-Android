@@ -109,7 +109,7 @@ public class NewUserWalletFragment extends Fragment {
         });
 
 
-        activity.getTvTitle().setText(activity.getResources().getString(R.string.connect_wallet));
+        activity.getTvTitle().setText(activity.getResources().getString(R.string.connect_wallets));
         activity.setTickLineView();
         return root;
     }
@@ -144,46 +144,51 @@ public class NewUserWalletFragment extends Fragment {
             e.printStackTrace();
         }
         if(Data.userData.getPaytmEnabled() == 1){
+            activity.getIvTickWallet().setImageResource(R.drawable.ic_bar_check);
             ivAddPaytm.setVisibility(View.GONE);
             tvPaytmBalanceValue.setVisibility(View.VISIBLE);
             tvPaytmBalanceValue.setText(getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance())));
-            if(paytmOfferText != null && !paytmOfferText.equalsIgnoreCase("")){
-                tvPaytmOffer.setVisibility(View.VISIBLE);
-                tvPaytmOffer.setText(paytmOfferText);
-            } else{
-                tvPaytmOffer.setVisibility(View.GONE);
-            }
         } else{
             ivAddPaytm.setVisibility(View.VISIBLE);
             tvPaytmBalanceValue.setVisibility(View.GONE);
         }
+        if(paytmOfferText != null && !paytmOfferText.equalsIgnoreCase("")){
+            tvPaytmOffer.setVisibility(View.VISIBLE);
+            tvPaytmOffer.setText(paytmOfferText);
+        } else{
+            tvPaytmOffer.setVisibility(View.GONE);
+        }
+
         if(Data.userData.getMobikwikEnabled() == 1){
+            activity.getIvTickWallet().setImageResource(R.drawable.ic_bar_check);
             ivAddMobikwik.setVisibility(View.GONE);
             tvMobikwikBalanceValue.setVisibility(View.VISIBLE);
             tvMobikwikBalanceValue.setText(getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(Data.userData.getMobikwikBalance())));
-            if(mobikwikOfferText != null && !mobikwikOfferText.equalsIgnoreCase("")){
-                tvMobikwikOffer.setVisibility(View.VISIBLE);
-                tvMobikwikOffer.setText(mobikwikOfferText);
-            } else{
-                tvMobikwikOffer.setVisibility(View.GONE);
-            }
         } else{
             ivAddMobikwik.setVisibility(View.VISIBLE);
             tvMobikwikBalanceValue.setVisibility(View.GONE);
         }
+        if(mobikwikOfferText != null && !mobikwikOfferText.equalsIgnoreCase("")){
+            tvMobikwikOffer.setVisibility(View.VISIBLE);
+            tvMobikwikOffer.setText(mobikwikOfferText);
+        } else{
+            tvMobikwikOffer.setVisibility(View.GONE);
+        }
+
         if(Data.userData.getFreeChargeEnabled() == 1){
+            activity.getIvTickWallet().setImageResource(R.drawable.ic_bar_check);
             ivAddFreecharge.setVisibility(View.GONE);
             tvFreeChargeBalanceValue.setVisibility(View.VISIBLE);
             tvFreeChargeBalanceValue.setText(getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(Data.userData.getFreeChargeBalance())));
-            if(freechargeOfferText != null && !freechargeOfferText.equalsIgnoreCase("")){
-                tvFreeChargeOffer.setVisibility(View.VISIBLE);
-                tvFreeChargeOffer.setText(freechargeOfferText);
-            } else{
-                tvFreeChargeOffer.setVisibility(View.GONE);
-            }
         } else{
             ivAddFreecharge.setVisibility(View.VISIBLE);
             tvFreeChargeBalanceValue.setVisibility(View.GONE);
+        }
+        if(freechargeOfferText != null && !freechargeOfferText.equalsIgnoreCase("")){
+            tvFreeChargeOffer.setVisibility(View.VISIBLE);
+            tvFreeChargeOffer.setText(freechargeOfferText);
+        } else{
+            tvFreeChargeOffer.setVisibility(View.GONE);
         }
     }
 }

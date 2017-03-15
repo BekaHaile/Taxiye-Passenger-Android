@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.sabkuchfresh.home.TransactionUtils;
 
 import product.clicklabs.jugnoo.BaseActivity;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -32,8 +34,9 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
             ivLineReferralFill, ivLineProfileFill;
     private TransactionUtils transactionUtils;
     private TextView tvTitle, tvSkip;
-    private RelativeLayout rlContainer, rlRoot;
+    private RelativeLayout rlContainer, rlRoot, rlBar;
     public CallbackManager callbackManager;
+    private boolean fromMenu;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         ivBack = (ImageView) findViewById(R.id.ivBack);
         tvSkip = (TextView) findViewById(R.id.tvSkip);
+        rlBar = (RelativeLayout) findViewById(R.id.rlBar);
         rlContainer = (RelativeLayout) findViewById(R.id.rlContainer);
         ivTickReferral = (ImageView) findViewById(R.id.ivTickReferral);
         ivLineReferral = (ImageView) findViewById(R.id.ivLineReferral);
@@ -73,7 +77,11 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
                 if (getCurrentFragment() instanceof NewUserReferralFragment) {
                     getTransactionUtils().openNewUserCompleteProfileFragment(NewUserChutiyapaa.this, getRlContainer());
                 } else if (getCurrentFragment() instanceof NewUserCompleteProfileFragment) {
-                    getTransactionUtils().openNewUserWalletFragment(NewUserChutiyapaa.this, getRlContainer());
+                    if(fromMenu){
+                        performBackPressed();
+                    } else {
+                        getTransactionUtils().openNewUserWalletFragment(NewUserChutiyapaa.this, getRlContainer());
+                    }
                 } else if (getCurrentFragment() instanceof NewUserWalletFragment) {
                     performBackPressed();
                 }
@@ -81,18 +89,27 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
         });
         callbackManager = CallbackManager.Factory.create();
 
-        setTickViewInit();
 
-        if(Data.userData.getSignupTutorial() != null){
-            if(Data.userData.getSignupTutorial().getDs1() != null
-                    && Data.userData.getSignupTutorial().getDs1() == 1){
-                getTransactionUtils().openNewUserReferralFragment(NewUserChutiyapaa.this, rlContainer);
-            } else if(Data.userData.getSignupTutorial().getDs2() != null
-                    && Data.userData.getSignupTutorial().getDs2() == 1){
+
+        if(getIntent().hasExtra(Constants.KEY_MENU_SIGNUP_TUTORIAL)){
+            fromMenu = getIntent().getExtras().getBoolean(Constants.KEY_MENU_SIGNUP_TUTORIAL, false);
+            if(fromMenu){
+                rlBar.setVisibility(View.GONE);
                 getTransactionUtils().openNewUserCompleteProfileFragment(NewUserChutiyapaa.this, rlContainer);
-            } else if(Data.userData.getSignupTutorial().getDs3() != null
-                    && Data.userData.getSignupTutorial().getDs3() == 1){
-                getTransactionUtils().openNewUserWalletFragment(NewUserChutiyapaa.this, rlContainer);
+            }
+        } else {
+            setTickViewInit();
+            if (Data.userData.getSignupTutorial() != null) {
+                if (Data.userData.getSignupTutorial().getDs1() != null
+                        && Data.userData.getSignupTutorial().getDs1() == 1) {
+                    getTransactionUtils().openNewUserReferralFragment(NewUserChutiyapaa.this, rlContainer);
+                } else if (Data.userData.getSignupTutorial().getDs2() != null
+                        && Data.userData.getSignupTutorial().getDs2() == 1) {
+                    getTransactionUtils().openNewUserCompleteProfileFragment(NewUserChutiyapaa.this, rlContainer);
+                } else if (Data.userData.getSignupTutorial().getDs3() != null
+                        && Data.userData.getSignupTutorial().getDs3() == 1) {
+                    getTransactionUtils().openNewUserWalletFragment(NewUserChutiyapaa.this, rlContainer);
+                }
             }
         }
 
@@ -105,8 +122,16 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
         return transactionUtils;
     }
 
+    public boolean isFromMenu() {
+        return fromMenu;
+    }
+
     public TextView getTvTitle() {
         return tvTitle;
+    }
+
+    public ImageView getIvTickWallet() {
+        return ivTickWallet;
     }
 
     public CallbackManager getCallbackManager() {
@@ -114,6 +139,7 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
     }
 
     private void setTickViewInit(){
+        rlBar.setVisibility(View.VISIBLE);
         ivTickReferral.setVisibility(View.GONE);
         ivLineReferral.setVisibility(View.GONE);
         ivTickProfile.setVisibility(View.GONE);

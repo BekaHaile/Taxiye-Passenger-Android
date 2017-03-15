@@ -36,7 +36,6 @@
             android:id="@+id/llWalletContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30px"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -45,6 +44,7 @@
                 android:layout_height="@dimen/px_130"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
+                android:layout_marginTop="30px"
                 android:background="@drawable/background_white_rounded_bordered"
                 android:visibility="visible">
 
@@ -68,7 +68,7 @@
                         android:layout_below="@+id/ivPaytm"
                         android:layout_marginLeft="@dimen/px_40"
                         android:layout_marginTop="@dimen/px_10"
-                        android:text="10% Cashback"
+                        android:text=""
                         android:textColor="@color/text_color_light_selector"
                         android:textSize="@dimen/text_size_26"
                         android:visibility="visible"
@@ -84,20 +84,21 @@
                     android:layout_marginRight="17dp"
                     android:background="@drawable/bg_white_round_layer_shadow"
                     android:padding="14dp"
-                    android:src="@drawable/ic_plus_dark"
+                    android:src="@drawable/ic_plus_dark_selector"
                     android:tag="@string/dont_touch_me" />
 
                 <TextView
                     android:id="@+id/tvPaytmBalanceValue"
-                    android:layout_width="250px"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="34px"
+                    android:layout_marginRight="20dp"
                     android:gravity="right"
                     android:text="@string/rupee_0"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_38"
+                    android:textSize="19sp"
+                    android:tag="@string/dont_touch_me"
                     android:visibility="gone" />
 
 
@@ -133,7 +134,7 @@
                         android:layout_below="@+id/ivMobikwik"
                         android:layout_marginLeft="@dimen/px_40"
                         android:layout_marginTop="@dimen/px_10"
-                        android:text="10% Cashback"
+                        android:text=""
                         android:textColor="@color/text_color_light_selector"
                         android:textSize="@dimen/text_size_26"
                         app:font="maven" />
@@ -148,20 +149,21 @@
                     android:layout_marginRight="17dp"
                     android:background="@drawable/bg_white_round_layer_shadow"
                     android:padding="14dp"
-                    android:src="@drawable/ic_plus_dark"
+                    android:src="@drawable/ic_plus_dark_selector"
                     android:tag="@string/dont_touch_me" />
 
                 <TextView
                     android:id="@+id/tvMobikwikBalanceValue"
-                    android:layout_width="250px"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="34px"
+                    android:layout_marginRight="20dp"
                     android:gravity="right"
                     android:text="@string/rupee_0"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_38"
+                    android:textSize="19sp"
+                    android:tag="@string/dont_touch_me"
                     android:visibility="gone" />
 
 
@@ -197,7 +199,7 @@
                         android:layout_below="@+id/ivFreecharge"
                         android:layout_marginLeft="@dimen/px_40"
                         android:layout_marginTop="@dimen/px_10"
-                        android:text="10% Cashback"
+                        android:text=""
                         android:textColor="@color/text_color_light_selector"
                         android:textSize="@dimen/text_size_26"
                         app:font="maven" />
@@ -212,20 +214,21 @@
                     android:layout_marginRight="17dp"
                     android:background="@drawable/bg_white_round_layer_shadow"
                     android:padding="14dp"
-                    android:src="@drawable/ic_plus_dark"
+                    android:src="@drawable/ic_plus_dark_selector"
                     android:tag="@string/dont_touch_me" />
 
                 <TextView
                     android:id="@+id/tvFreeChargeBalanceValue"
-                    android:layout_width="250px"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="34px"
+                    android:layout_marginRight="20dp"
                     android:gravity="right"
                     android:text="@string/rupee_0"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_38"
+                    android:textSize="19sp"
+                    android:tag="@string/dont_touch_me"
                     android:visibility="gone" />
 
 

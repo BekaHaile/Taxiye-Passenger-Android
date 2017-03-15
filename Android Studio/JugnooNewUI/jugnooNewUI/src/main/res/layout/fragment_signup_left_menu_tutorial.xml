@@ -9,7 +9,7 @@
         android:layout_width="@dimen/px_585"
         android:layout_height="@dimen/px_135"
         android:layout_marginTop="@dimen/px_300"
-        android:background="@color/white">
+        android:background="@drawable/background_white_grey_light_selector">
 
         <TextView
             android:layout_width="@dimen/px_400"
