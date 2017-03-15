@@ -146,8 +146,8 @@
         android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginLeft="@dimen/spacing_large"
         android:layout_marginRight="@dimen/spacing_large"
-        android:src="@drawable/ic_fresh_new_placeholder"
-        android:scaleType="fitXY" />
+        android:background="@drawable/ic_fresh_new_placeholder"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/tv_restaurant_feed_address"

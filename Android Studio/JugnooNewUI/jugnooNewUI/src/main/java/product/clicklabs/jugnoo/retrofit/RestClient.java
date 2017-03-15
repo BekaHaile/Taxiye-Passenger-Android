@@ -94,6 +94,7 @@ public class RestClient {
         CHAT_API_SERVICE = null;
         MENUS_API_SERVICE = null;
         PAY_API_SERVICE = null;
+        FEED_API_SERVICE = null;
     }
 
     public static void setupAllClients(){
@@ -102,6 +103,7 @@ public class RestClient {
         setupChatApiRestClient();
         setupMenusApiRestClient();
         setupPayApiRestClient();
+        setupFeedApiRestClient();
     }
 
 
