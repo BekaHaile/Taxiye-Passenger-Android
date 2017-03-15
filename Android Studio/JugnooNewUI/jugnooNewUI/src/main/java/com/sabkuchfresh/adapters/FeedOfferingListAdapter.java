@@ -32,6 +32,8 @@ import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
+import static com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail.FeedType.REVIEW;
+
 
 /**
  * Created by Shankar on 7/17/15.
@@ -85,7 +87,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                 case COMMENT_ON_REVIEW:
                 case LIKE_ON_REVIEW:
                 case REVIEW:
-                    if(feedDetail.getFeedType()!= FeedDetail.FeedType.REVIEW) {
+                    if(feedDetail.getFeedType()!= REVIEW) {
                         showUserActivity = true;
                         userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s review.");
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -112,7 +114,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
                     if (!TextUtils.isEmpty(feedDetail.getOwnerName())) {
-                        String actualTitle = feedDetail.getOwnerName() + feedDetail.getFeedType().getValue() + feedDetail.getRestaurantName() + ".";
+                        String actualTitle = feedDetail.getOwnerName() + REVIEW.getValue() + feedDetail.getRestaurantName() + ".";
                         title = new SpannableString(actualTitle);
                         title.setSpan(BOLD_SPAN, actualTitle.length() - feedDetail.getRestaurantName().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
