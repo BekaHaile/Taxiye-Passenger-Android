@@ -26,6 +26,10 @@ import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.tutorials.NewUserCompleteProfileFragment;
+import product.clicklabs.jugnoo.tutorials.NewUserReferralFragment;
+import product.clicklabs.jugnoo.tutorials.NewUserWalletFragment;
+import product.clicklabs.jugnoo.tutorials.SignUpTutorial;
 
 /**
  * Created by shankar on 1/27/16.
@@ -315,6 +319,47 @@ public class TransactionUtils {
                     .addToBackStack(RestaurantAddReviewFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openSignUpTutorialFragment(FragmentActivity activity, View container, int numOfPages) {
+        if (!checkIfFragmentAdded(activity, SignUpTutorial.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, 0)
+                    .replace(container.getId(), SignUpTutorial.newInstance(numOfPages),
+                            SignUpTutorial.class.getName())
+                    .addToBackStack(SignUpTutorial.class.getName())
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openNewUserReferralFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, NewUserReferralFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, 0)
+                    .replace(container.getId(), NewUserReferralFragment.newInstance(),
+                            NewUserReferralFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openNewUserCompleteProfileFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, NewUserCompleteProfileFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, 0)
+                    .replace(container.getId(), NewUserCompleteProfileFragment.newInstance(),
+                            NewUserCompleteProfileFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openNewUserWalletFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, NewUserWalletFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, 0)
+                    .replace(container.getId(), NewUserWalletFragment.newInstance(),
+                            NewUserWalletFragment.class.getName())
                     .commitAllowingStateLoss();
         }
     }

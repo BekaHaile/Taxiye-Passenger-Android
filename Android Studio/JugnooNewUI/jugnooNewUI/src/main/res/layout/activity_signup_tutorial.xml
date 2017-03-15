@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_70">
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/vpPayTutorial"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/layoutDots"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_60"
+        android:layout_above="@+id/bNext"
+        android:layout_marginBottom="@dimen/px_40"
+        android:gravity="center"
+        android:orientation="horizontal"></LinearLayout>
+
+    <TextView
+        android:id="@+id/tvSkip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/skip"
+        android:textColor="@color/white"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_20"
+        app:font="maven"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/px_40"
+        android:layout_marginRight="@dimen/px_32"/>
+
+    <Button
+        android:id="@+id/bNext"
+        android:layout_width="@dimen/px_300"
+        android:layout_height="@dimen/px_96"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/capsule_cart_color"
+        android:layout_marginBottom="@dimen/px_40"
+        android:text="@string/next"
+        android:textSize="@dimen/text_size_32"
+        android:textColor="@android:color/white" />
+
+</RelativeLayout>

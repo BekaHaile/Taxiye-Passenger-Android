@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/checkout_our_different_services_from_here"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_40"
+        android:layout_marginLeft="@dimen/px_60"
+        android:layout_marginRight="@dimen/px_60"
+        android:layout_above="@+id/ivArrow"
+        android:layout_marginBottom="@dimen/px_20"
+        android:gravity="center"
+        app:font="maven"/>
+
+
+    <ImageView
+        android:id="@+id/ivArrow"
+        android:layout_width="91px"
+        android:layout_height="328px"
+        android:layout_above="@+id/ivJeanie"
+        android:layout_marginLeft="100px"
+        android:src="@drawable/ic_arrow_signup_tutorial"/>
+
+
+    <ImageView
+        android:id="@+id/ivJeanie"
+        android:layout_width="@dimen/px_112"
+        android:layout_height="@dimen/px_112"
+        android:src="@drawable/ic_jeanie_signup_tutorial"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/px_45"
+        android:layout_marginBottom="@dimen/px_235"/>
+
+
+
+</RelativeLayout>

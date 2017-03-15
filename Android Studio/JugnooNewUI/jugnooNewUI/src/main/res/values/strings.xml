@@ -1558,5 +1558,21 @@
     <string name="na">NA</string>
     <string name="login_signup_with">Login / Signup with</string>
     <string name="please_check_tnc">Offer conditions not met. Please review detailed Terms and Conditions for more information</string>
+    <string name="checkout_our_different_services_from_here">Checkout our Different Services from Here</string>
+    <string name="get_free_discount_coupons">Get Free Discount\nCoupons</string>
+    <string name="complete_your_profile_and_get_free_coupons">Complete your profile and get free coupons!</string>
+    <string name="claim_coupon">Claim Coupon</string>
+    <string name="enter_referral_code">Enter Referral Code</string>
+    <string name="complete_your_profile_and_earn_cashback">Complete your profile and earn a 10% Cashback coupon on your next transaction.</string>
+    <string name="link_social_account">Link Social Account</string>
+    <string name="pro_tip">Pro Tip</string>
+    <string name="this_will_enable_one_touch_login">This will enable one touch login</string>
+    <string name="or_enter">Or Enter</string>
+    <string name="finish">Finish</string>
+    <string name="connect_your_wallet_to_grab">Connect your wallets to grab</string>
+    <string name="free_coupons">Free Coupons</string>
+    <string name="add_referral_code">Add Referral Code</string>
+    <string name="connect_wallets">Connect Wallest</string>
+    <string name="complete_profile">Complete Profile</string>
 
 </resources>

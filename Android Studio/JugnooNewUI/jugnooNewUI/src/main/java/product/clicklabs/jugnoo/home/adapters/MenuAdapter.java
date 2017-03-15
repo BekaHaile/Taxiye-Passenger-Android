@@ -50,6 +50,7 @@ import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
+import product.clicklabs.jugnoo.tutorials.NewUserChutiyapaa;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -205,7 +206,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     }
                 } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
-
+                } else if(MenuInfoTags.SIGNUP_TUTORIAL.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    if(Prefs.with(activity).getInt(SPLabels.USERNAME_UPDATED, 0) == 1){
+                        hideLayout(holder.relative);
+                    } else {
+                        holder.imageViewMenuIcon.setImageResource(R.drawable.ic_free_discount_selector);
+                    }
                 } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_star_selector);
                     if(!Data.userData.isSubscriptionActive() && Data.userData.getSubscriptionData().getSubscribedUser() == 0){
@@ -567,7 +573,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 GAUtils.event(SIDE_MENU, HISTORY+CLICKED, "");
 
-            } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
+            } else if(MenuInfoTags.SIGNUP_TUTORIAL.getTag().equalsIgnoreCase(tag)){
+                Intent intent = new Intent(activity, NewUserChutiyapaa.class);
+                intent.putExtra(Constants.KEY_MENU_SIGNUP_TUTORIAL, true);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+            else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
                 activity.startActivity(new Intent(activity, SupportActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 GAUtils.event(SIDE_MENU, SUPPORT+CLICKED, "");
