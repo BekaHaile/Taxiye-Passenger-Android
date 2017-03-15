@@ -2385,7 +2385,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             getCheckoutDataAPI(selectedSubscription);
         } else {
-            rehitCheckoutApi();
+            if(!rehitCheckoutApi()){
+                removeCoupon();
+            }
         }
         updateCartDataView();
         GAUtils.event(activity.getGaCategory(), CHECKOUT, CART+ITEM+INCREASED);
@@ -2411,7 +2413,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             getCheckoutDataAPI(selectedSubscription);
         } else if(subItemsInCart.size() > 0) {
-            rehitCheckoutApi();
+            if(!rehitCheckoutApi()){
+               removeCoupon();
+            }
         }
         GAUtils.event(activity.getGaCategory(), CHECKOUT, CART+ITEM+DECREASED);
     }
@@ -2439,7 +2443,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
         updateCartDataView();
-        rehitCheckoutApi();
+        if(!rehitCheckoutApi()){
+            removeCoupon();
+        }
     }
 
     @Override
@@ -2452,15 +2458,19 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             checkIfEmpty();
         }
         if(itemsInCart.size() > 0) {
-            rehitCheckoutApi();
+            if(!rehitCheckoutApi()){
+                removeCoupon();
+            }
         }
     }
 
-    private void rehitCheckoutApi(){
+    private boolean rehitCheckoutApi(){
         if(activity.getUserCheckoutResponse() != null
-                && activity.getUserCheckoutResponse().getHitCheckoutApi() == 1){
+                && activity.getUserCheckoutResponse().getRefreshOnCartChange() == 1){
             getCheckoutDataAPI(selectedSubscription);
+            return true;
         }
+        return false;
     }
 
 
@@ -2519,6 +2529,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         setPromoAmount();
         updateCartUI();
         promoCouponsAdapter.notifyDataSetChanged();
+        DialogPopup.alertPopup(activity, "", activity.getString(R.string.offer_removed_alert));
     }
 
     @Override
