@@ -178,6 +178,19 @@ public class FeedOfferingCommentsFragment extends Fragment {
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
+
+                                if(feedbackResponse.getPostDetails()!=null) {
+                                    feedDetail.setLikeCount(feedbackResponse.getPostDetails().getLikeCount());
+                                    feedDetail.setCommentCount(feedbackResponse.getPostDetails().getCommentCount());
+                                    if(activity.getFeedHomeFragment()!=null) {
+
+
+                                        //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
+                                        activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
+                                    }
+                                }
+
+
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();

@@ -87,7 +87,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                 case REVIEW:
                     if(feedDetail.getFeedType()!= FeedDetail.FeedType.REVIEW) {
                         showUserActivity = true;
-                        userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s review");
+                        userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s review.");
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         userActivityTitle.setSpan(BOLD_SPAN_2, feedDetail.getUserName().length() + feedDetail.getFeedType().getValue().length(), userActivityTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         if (!TextUtils.isEmpty(feedDetail.getUserImage()))
@@ -112,7 +112,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
                     if (!TextUtils.isEmpty(feedDetail.getOwnerName())) {
-                        String actualTitle = feedDetail.getOwnerName() + feedDetail.getFeedType().getValue() + feedDetail.getRestaurantName();
+                        String actualTitle = feedDetail.getOwnerName() + feedDetail.getFeedType().getValue() + feedDetail.getRestaurantName() + ".";
                         title = new SpannableString(actualTitle);
                         title.setSpan(BOLD_SPAN, actualTitle.length() - feedDetail.getRestaurantName().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -128,7 +128,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                 case LIKE_ON_POST:
                     if(feedDetail.getFeedType()!= FeedDetail.FeedType.POST) {
                         showUserActivity = true;
-                        userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s post");
+                        userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s post.");
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         userActivityTitle.setSpan(BOLD_SPAN_2, feedDetail.getUserName().length() + feedDetail.getFeedType().getValue().length(), userActivityTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         if (!TextUtils.isEmpty(feedDetail.getUserImage()))
