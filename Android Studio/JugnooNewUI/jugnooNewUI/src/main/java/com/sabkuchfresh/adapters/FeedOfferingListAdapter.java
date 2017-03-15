@@ -25,9 +25,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,8 +67,6 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
     @Override
     public void onBindViewHolder(ViewHolderReviewImage holder, int position) {
-        // TODO: 12/03/17 If imageUrl isnt available  then set placeholder instead EVERYTIME
-
         FeedDetail feedDetail = feedDetailArrayList.get(position);
         setData(holder, feedDetail,activity);
 

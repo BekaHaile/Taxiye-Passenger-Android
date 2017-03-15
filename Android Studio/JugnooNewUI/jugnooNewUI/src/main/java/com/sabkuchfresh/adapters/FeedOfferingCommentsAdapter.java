@@ -125,7 +125,6 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
                 userCommentViewHolder.tvUserTimePosted.setText(FeedOfferingListAdapter.getTimeToDisplay(((FeedComment) feedDetailData.get(position)).getTimeCreated(), activity.isTimeAutomatic));
             }
 
-            // TODO: 13/03/17  Pic missing
             if (!TextUtils.isEmpty(feedComment.getUserImage()))
                 Picasso.with(activity).load(feedComment.getUserImage()).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(userCommentViewHolder.ivUserCommentPic);
 
