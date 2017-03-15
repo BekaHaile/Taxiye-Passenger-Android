@@ -1,10 +1,14 @@
 package com.sabkuchfresh.fragments;
 
+import android.Manifest;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,11 +25,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.picker.image.model.ImageEntry;
+import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.RestaurantQuerySuggestionsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
+import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RoundedCornersTransformation;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.MyApplication;
@@ -37,6 +47,8 @@ import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Shankar on 15/11/16.
@@ -63,6 +75,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     private AddPostType addPostType = AddPostType.ASK;
     private ArrayList<SuggestRestaurantQueryResp.Suggestion> suggestions;
     private SuggestRestaurantQueryResp.Suggestion suggestionSelected;
+    private ImageView ivImageUploaded;
+    private RatingBarMenuFeedback ratingBar;
+    private String[] permissionsRequest;
+    private Picker picker;
+    private static  final int REQUEST_CODE_SELECT_IMAGE=106;
+    private ImageView btnRemoveImage;
 
     public FeedAddPostFragment() {
     }
@@ -111,11 +129,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         ivAccessCamera = (ImageView) rootView.findViewById(R.id.ivAccessCamera);
         btnSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
         tvCharCount = (TextView) rootView.findViewById(R.id.tvCharCount);
-
-
+        ivImageUploaded =(ImageView)rootView.findViewById(R.id.ivImageUploaded);
+        ratingBar =(RatingBarMenuFeedback)rootView.findViewById(R.id.rating_bar_add_post);
         rlReview.setOnClickListener(this);
         rlAsk.setOnClickListener(this);
         tvRestaurantLocation.setOnClickListener(this);
+        btnRemoveImage = (ImageView)rootView.findViewById(R.id.btn_remove);
         suggestions = new ArrayList<>();
         suggestionsAdapter = new RestaurantQuerySuggestionsAdapter(suggestions, new RestaurantQuerySuggestionsAdapter.Callback() {
             @Override
@@ -170,15 +189,92 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         switchAddFeed(addPostType);
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
+        ivAccessCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
+                        PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED)
+                {
+                    if (permissionsRequest ==null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            permissionsRequest = new String[2];
+                            permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                            permissionsRequest[1]=Manifest.permission.READ_EXTERNAL_STORAGE;
+                        }
+                        {
+                            permissionsRequest = new String[1];
+                            permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                        }
+                    }
+
+
+                    (FeedAddPostFragment.this).requestPermissions(permissionsRequest, 20);
+                    return;
+                }
+
+
+                if(picker ==null){
+                    picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
+                }
+
+
+                picker.setLimit(1);
+                picker.startActivity(FeedAddPostFragment.this,activity, REQUEST_CODE_SELECT_IMAGE);
+
+            }
+        });
+        btnRemoveImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageSelected =null;
+                ivImageUploaded.setVisibility(View.INVISIBLE);
+                btnRemoveImage.setVisibility(View.INVISIBLE);
+                ivAccessCamera.setEnabled(true);
+            }
+        });
+
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         return rootView;
     }
 
+    private ImageEntry imageSelected;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        product.clicklabs.jugnoo.utils.Utils.hideKeyboard(getActivity());
+        if(requestCode== REQUEST_CODE_SELECT_IMAGE && resultCode==RESULT_OK){
+            if(data!=null && data.getSerializableExtra("imagesList")!=null)
+            {
+
+                ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
+                if (images != null && images.size() != 0) {
+                    imageSelected =images.get(0);
+                    Picasso.with(getActivity()).load(new File(images.get(0).path)).resize((int) Utils.convertDpToPixel(75.0f,getActivity()),(int) Utils.convertDpToPixel(75.0f,getActivity())).
+                            centerCrop().transform(new RoundedCornersTransformation(8, 0)).into(ivImageUploaded);
+
+                    ivImageUploaded.setVisibility(View.VISIBLE);
+                    btnRemoveImage.setVisibility(View.VISIBLE);
+                    ivAccessCamera.setEnabled(false);
+                }
+            }
+        }
+
+    }
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(!hidden){
             activity.fragmentUISetup(this);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
     }
 
     @Override
@@ -210,6 +306,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 ivAsk.setImageResource(R.drawable.ic_feed_ask_disabled);
                 llReviewLocation.setVisibility(View.VISIBLE);
                 etContent.setHint(R.string.share_your_experience);
+                ratingBar.setVisibility(View.VISIBLE);
                 break;
 
             case ASK:
@@ -220,6 +317,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 ivReview.setImageResource(R.drawable.ic_feed_star_disable);
                 ivAsk.setImageResource(R.drawable.ic_feed_ask);
                 llReviewLocation.setVisibility(View.GONE);
+                ratingBar.setVisibility(View.GONE);
                 etContent.setHint(R.string.looking_for_something);
                 break;
         }

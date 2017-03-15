@@ -251,7 +251,13 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
         if(feedDetailArrayList!=null && position<feedDetailArrayList.size())
         {
-            feedDetailArrayList.get(position).setLiked(isLiked);
+
+            FeedDetail feedDetail = feedDetailArrayList.get(position);
+            if(isLiked)
+                feedDetail.setLikeCount(feedDetail.getLikeCount()+1);
+            else if(feedDetail.getLikeCount()>0)
+                feedDetail.setLikeCount(feedDetail.getLikeCount()-1);
+            feedDetail.setLiked(isLiked);
             notifyItemChanged(position);
         }
     }

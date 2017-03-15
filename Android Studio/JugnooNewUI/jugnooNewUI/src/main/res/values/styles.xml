@@ -318,6 +318,8 @@
         <attr name="starPadding" format="dimension" />
         <attr name="onlyForDisplay" format="boolean" />
         <attr name="halfStars" format="boolean" />
+        <attr name="animate" format="boolean" />
+        <attr name="displayText" format="boolean" />
     </declare-styleable>
 
 

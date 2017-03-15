@@ -119,12 +119,12 @@ public class FeedHomeFragment extends Fragment {
                 if (likeFeed == null)
                         likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
                         @Override
-                        public void onSuccess(boolean isLiked) {
+                        public void onSuccess(boolean isLiked,int position) {
                             feedOfferingListAdapter.notifyOnLike(position,isLiked);
                         }
                     });
 
-                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked());
+                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(),position);
 
             }
 

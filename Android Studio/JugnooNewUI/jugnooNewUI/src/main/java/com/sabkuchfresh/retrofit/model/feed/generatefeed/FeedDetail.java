@@ -67,15 +67,15 @@ public class FeedDetail implements Serializable {
     @SerializedName("activity_done_on")
     @Expose
     private String activityDoneOn;
-    @SerializedName("is_liked")
-    private boolean isLiked;
+    @SerializedName("is_liked_by_user")
+    private int isLiked;
 
     public boolean isLiked() {
-        return isLiked;
+        return isLiked==1;
     }
 
     public void setLiked(boolean liked) {
-        isLiked = liked;
+            this.isLiked=liked?1:0;
     }
 
     public String getActivityDoneOn() {

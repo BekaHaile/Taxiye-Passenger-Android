@@ -104,7 +104,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
                 if(likeFeed ==null)
                     likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
                         @Override
-                        public void onSuccess(boolean isLikeAPI) {
+                        public void onSuccess(boolean isLikeAPI,int position) {
                             feedOfferingCommentsAdapter.notifyOnLike(position,isLikeAPI);
                             if(activity.getFeedHomeFragment()!=null) {
                                 //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
@@ -113,8 +113,8 @@ public class FeedOfferingCommentsFragment extends Fragment {
                         }
 
                     });
-                likeFeed.likeFeed(feedDetail.getPostId(),getActivity(), !feedDetail.isLiked());
-             ;
+                likeFeed.likeFeed(feedDetail.getPostId(),getActivity(), !feedDetail.isLiked(), position);
+
 
             }
 
@@ -327,8 +327,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
         public void afterTextChanged(Editable s) {
             commentAdded=s.toString();
             textViewCharCount.setText(String.valueOf(500-s.length()));
-            if(s.length()==0||s.length()==1)
-                btnSubmit.setEnabled(s.length()>0);
+            btnSubmit.setEnabled(s.length()>0);
 
 
         }

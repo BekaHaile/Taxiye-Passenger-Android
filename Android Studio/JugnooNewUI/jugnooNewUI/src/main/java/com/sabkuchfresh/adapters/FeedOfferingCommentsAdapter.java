@@ -172,6 +172,12 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     public void notifyOnLike(int position,boolean isLikeAPI) {
         if(feedDetailData!=null && position<feedDetailData.size() && feedDetailData.get(position) instanceof FeedDetail)
         {
+            FeedDetail feedDetail = (FeedDetail) feedDetailData.get(position);
+            if(isLikeAPI)
+                feedDetail.setLikeCount(feedDetail.getLikeCount()+1);
+            else if(feedDetail.getLikeCount()!=0)
+                feedDetail.setLikeCount(feedDetail.getLikeCount()-1);
+
             ((FeedDetail) feedDetailData.get(position)).setLiked(isLikeAPI);
             notifyItemChanged(position);
         }

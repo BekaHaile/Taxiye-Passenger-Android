@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:focusableInTouchMode="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -242,6 +243,9 @@
         android:background="@color/dull_line"
         />
 
+
+
+
     <EditText
         android:id="@+id/etContent"
         android:layout_width="match_parent"
@@ -256,8 +260,47 @@
         android:textSize="@dimen/sp_14"
         android:textCursorDrawable="@drawable/cursor_black"
         app:font="maven"
-        android:maxLength="400"
-        />
+        android:maxLength="400" />
+
+
+    <RelativeLayout
+      android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:paddingRight="@dimen/spacing_small"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivImageUploaded"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:visibility="invisible"
+            android:layout_alignParentRight="true" />
+
+        <ImageView
+            android:id="@+id/btn_remove"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            android:rotation="45"
+            android:visibility="gone"
+            android:src="@drawable/ic_add_grey_bg_selector" />
+
+        <com.sabkuchfresh.utils.RatingBarMenuFeedback
+            android:id="@+id/rating_bar_add_post"
+            android:layout_alignBottom="@id/ivImageUploaded"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_large"
+            app:animate="false"
+            app:displayText="false"
+            app:halfStars="false"
+            app:maxStars="5"
+            app:onlyForDisplay="false"
+            app:starOff="@drawable/star_small_rating"
+            app:starOn="@drawable/ic_rating_review" />
+    </RelativeLayout>
+
 
     <View
         android:layout_width="match_parent"
@@ -266,10 +309,10 @@
         />
 
     <RelativeLayout
+        android:layout_gravity="bottom"
         android:id="@+id/rlSubmit"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        >
+        android:layout_height="45dp">
 
 
         <ImageView

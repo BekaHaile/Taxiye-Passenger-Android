@@ -38,7 +38,7 @@ public class LikeFeed {
     }
 
 
-    public  void likeFeed(final long postId, final Activity activity, final boolean isLikeAPI) {
+    public  void likeFeed(final long postId, final Activity activity, final boolean isLikeAPI, final int position) {
         try {
             if(MyApplication.getInstance().isOnline()) {
 
@@ -57,8 +57,8 @@ public class LikeFeed {
                             String message = feedbackResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if(feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-                                    Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show();
-                                    likeUnLikeCallbackResponse.onSuccess(isLikeAPI);
+//                                    Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show();
+                                    likeUnLikeCallbackResponse.onSuccess(isLikeAPI,position);
 
 
                                 } else {
@@ -67,14 +67,14 @@ public class LikeFeed {
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            retryDialogLikeFeed(DialogErrorType.SERVER_ERROR,activity,postId,isLikeAPI);
+                            retryDialogLikeFeed(DialogErrorType.SERVER_ERROR,activity,postId,isLikeAPI,position);
                         }
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                        retryDialogLikeFeed(DialogErrorType.CONNECTION_LOST,activity,postId,isLikeAPI);
+                        retryDialogLikeFeed(DialogErrorType.CONNECTION_LOST,activity,postId,isLikeAPI,position);
 
                     }
                 };
@@ -89,7 +89,7 @@ public class LikeFeed {
             }
             else {
 
-                retryDialogLikeFeed(DialogErrorType.NO_NET,activity,postId,isLikeAPI);
+                retryDialogLikeFeed(DialogErrorType.NO_NET,activity,postId,isLikeAPI,position);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,12 +98,12 @@ public class LikeFeed {
 
 
 
-    private  void retryDialogLikeFeed(DialogErrorType dialogErrorType, final Activity activity, final long postId,final boolean isLikeAPI){
+    private  void retryDialogLikeFeed(DialogErrorType dialogErrorType, final Activity activity, final long postId,final boolean isLikeAPI,final int position){
         DialogPopup.dialogNoInternet(activity, dialogErrorType,
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        likeFeed(postId,activity, isLikeAPI);
+                        likeFeed(postId,activity, isLikeAPI, position);
                     }
 
                     @Override
@@ -119,6 +119,6 @@ public class LikeFeed {
     }
 
     public  interface LikeUnLikeCallbackResponse {
-        void onSuccess(boolean isLiked);
+        void onSuccess(boolean isLiked,int posInOriginalList);
     }
 }
