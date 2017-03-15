@@ -2,11 +2,11 @@ package com.sabkuchfresh.commoncalls;
 
 import android.app.Activity;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -45,7 +45,7 @@ public class LikeFeed {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
-                params.put(Constants.KEY_ACCESS_TOKEN, "bc1ff5a34edab8d37c56a977023b8f4d473d22e83facfd534f26341579c94b54");
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_POST_ID, String.valueOf(postId));
                 new HomeUtil().putDefaultParams(params);
 

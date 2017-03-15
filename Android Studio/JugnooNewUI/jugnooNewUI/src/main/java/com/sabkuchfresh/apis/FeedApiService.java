@@ -13,8 +13,6 @@ import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
-
-import retrofit.http.Path;
 import retrofit.mime.MultipartTypedOutput;
 
 
@@ -34,7 +32,7 @@ public interface FeedApiService {
     void fetchFeedDetails(@FieldMap Map<String, String> params, Callback<FeedDetailResponse> callback);
 
 
-    @POST("feeds/v1/post")
+    @POST("/feeds/v1/post")
     void postFeed(@Body MultipartTypedOutput multipartTypedOutput, Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded

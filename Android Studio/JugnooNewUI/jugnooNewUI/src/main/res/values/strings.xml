@@ -1571,5 +1571,6 @@
     <string name="looking_for_something">Looking for something?</string>
     <string name="whats_on_your_mind">What\'s on your mind?</string>
     <string name="contacts_synced_successfully">Contacts synced successfully</string>
+    <string name="please_enter_something">Please enter something</string>
 
 </resources>

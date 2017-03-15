@@ -434,7 +434,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             try {
                 float marginBottom = 60f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
-                lastClientId=Config.getFeedClientId();
 
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                     addMealFragment();

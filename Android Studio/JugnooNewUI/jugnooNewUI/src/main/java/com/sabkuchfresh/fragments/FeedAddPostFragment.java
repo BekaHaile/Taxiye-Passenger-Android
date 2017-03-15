@@ -25,13 +25,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.RestaurantQuerySuggestionsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
-import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
 import com.sabkuchfresh.utils.ImageCompression;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
@@ -43,27 +43,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
-
 import product.clicklabs.jugnoo.Data;
-
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
-
 
 import static android.app.Activity.RESULT_OK;
 
@@ -253,6 +248,27 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             }
         });
 
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String postText = etContent.getText().toString().trim();
+                if(TextUtils.isEmpty(postText)){
+                    Toast.makeText(activity, R.string.please_enter_something, Toast.LENGTH_SHORT).show();
+                } else {
+                    if(addPostType == AddPostType.REVIEW){
+                        if(suggestionSelected == null){
+                            Toast.makeText(activity, "You need to select a restaurant to review", Toast.LENGTH_SHORT).show();
+                        } else {
+                            postFeedAPI(postText, suggestionSelected.getId());
+                        }
+                    } else {
+                        postFeedAPI(postText, -1);
+                    }
+                }
+            }
+        });
+
+
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         return rootView;
@@ -437,7 +453,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             return ordinal;
         }
     }
-    public void postFeedAPI() {
+    public void postFeedAPI(final String postText, final int restId) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
@@ -459,7 +475,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
                             }
                             //upload feedback with new Images
-                            uploadParamsAndPost(multipartTypedOutput);
+                            uploadParamsAndPost(multipartTypedOutput, postText, restId);
                         }
 
                         @Override
@@ -472,13 +488,10 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                     imageCompressionTask.execute(fileArray);
                 }
                 else{
-                    uploadParamsAndPost(multipartTypedOutput);
+                    uploadParamsAndPost(multipartTypedOutput, postText, restId);
                 }
-
-
-
             } else {
-                retryDialog(DialogErrorType.NO_NET);
+                retryDialog(DialogErrorType.NO_NET, postText, restId);
 
             }
         } catch (Exception e) {
@@ -487,16 +500,15 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void uploadParamsAndPost(MultipartTypedOutput multipartTypedOutput) {
+    private void uploadParamsAndPost(MultipartTypedOutput multipartTypedOutput, final String postText, final int restId) {
 
-        multipartTypedOutput.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString("bc1ff5a34edab8d37c56a977023b8f4d473d22e83facfd534f26341579c94b54"));
+        multipartTypedOutput.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
         multipartTypedOutput.addPart(Constants.KEY_LATITUDE, new TypedString(String.valueOf(activity.getSelectedLatLng().latitude)));
         multipartTypedOutput.addPart(Constants.KEY_LONGITUDE, new TypedString(String.valueOf(activity.getSelectedLatLng().longitude)));
-        multipartTypedOutput.addPart(Constants.KEY_POST_TEXT, new TypedString(""));
+        multipartTypedOutput.addPart(Constants.KEY_POST_TEXT, new TypedString(postText));
 
-
-        if(addPostType==AddPostType.REVIEW) {
-            multipartTypedOutput.addPart(Constants.KEY_RESTAURANT_ID, new TypedString(""));
+        if(addPostType == AddPostType.REVIEW) {
+            multipartTypedOutput.addPart(Constants.KEY_RESTAURANT_ID, new TypedString(String.valueOf(restId)));
             multipartTypedOutput.addPart(Constants.KEY_STAR_COUNT,new TypedString(String.valueOf(Math.round(ratingBar.getScore()))));
         }
 
@@ -514,34 +526,33 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                     if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
                             feedbackResponse.getError(), feedbackResponse.getMessage())) {
                         if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-
-
-                            // TODO: 3/15/17 Perform action
+                            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+                            activity.performBackPressed(false);
                         } else {
                             DialogPopup.alertPopup(activity, "", message);
                         }
                     }
                 } catch (Exception exception) {
                     exception.printStackTrace();
-                    retryDialog(DialogErrorType.SERVER_ERROR);
+                    retryDialog(DialogErrorType.SERVER_ERROR, postText, restId);
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 DialogPopup.dismissLoadingDialog();
-                retryDialog(DialogErrorType.CONNECTION_LOST);
+                retryDialog(DialogErrorType.CONNECTION_LOST, postText, restId);
 
             }
         });
     }
 
-    private void retryDialog(DialogErrorType dialogErrorType) {
+    private void retryDialog(DialogErrorType dialogErrorType, final String postText, final int restId) {
         DialogPopup.dialogNoInternet(activity, dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        postFeedAPI();
+                        postFeedAPI(postText, restId);
                     }
 
                     @Override
