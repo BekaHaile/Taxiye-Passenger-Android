@@ -2734,6 +2734,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			params.put("longitude", "" + Data.loginLongitude);
 			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 			params.put("fb_account_code", accountCode);
+			params.put("login_type", "0");
 			params.put(Constants.KEY_ACCOUNT_KIT_VERSION, "4.19.0");
 			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
