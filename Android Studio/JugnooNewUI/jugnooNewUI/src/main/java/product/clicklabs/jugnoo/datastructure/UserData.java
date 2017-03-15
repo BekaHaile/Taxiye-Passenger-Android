@@ -58,7 +58,7 @@ public class UserData {
 	private double freeChargeBalance = -1;
 
 	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled,
-			inviteFriendButton, payEnabled;
+			inviteFriendButton, payEnabled, feedEnabled;
 
 	private ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
 	private int currentCity = 1;
@@ -102,7 +102,7 @@ public class UserData {
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
-					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
+					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled, int feedEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
 					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial){
@@ -170,6 +170,7 @@ public class UserData {
 		this.menusEnabled = menusEnabled;
 		this.payEnabled = payEnabled;
 		this.deliveryEnabled = deliveryEnabled;
+		this.feedEnabled = feedEnabled;
 
 		this.inviteFriendButton = inviteFriendButton;
 
@@ -960,6 +961,13 @@ public class UserData {
 
 	public void setSignupTutorial(SignupTutorial signupTutorial) {
 		this.signupTutorial = signupTutorial;
+	}
+	public int getFeedEnabled() {
+		return feedEnabled;
+	}
+
+	public void setFeedEnabled(int feedEnabled) {
+		this.feedEnabled = feedEnabled;
 	}
 
 	//	"meals_enabled": 1,

@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -44,6 +45,7 @@ public class FABViewTest implements GACategory, GAAction {
     public FloatingActionButton fabAutosTest;
     public FloatingActionButton fabMenusTest;
     public FloatingActionButton fabPayTest;
+    public FloatingActionButton fabFeedTest;
     public View view;
     private boolean isOpened;
     private final String GENIE_OPEN = "Genie Open";
@@ -71,18 +73,21 @@ public class FABViewTest implements GACategory, GAAction {
             fabAutosTest = (FloatingActionButton) view.findViewById(R.id.fabAutosTest);
             fabMenusTest = (FloatingActionButton) view.findViewById(R.id.fabMenusTest);
             fabPayTest = (FloatingActionButton) view.findViewById(R.id.fabPayTest);
+            fabFeedTest = (FloatingActionButton) view.findViewById(R.id.fabFeedTest);
             menuLabelsRightTest.setIconAnimated(true);
             menuLabelsRightTest.setClosedOnTouchOutside(true);
-            fabMealsTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
-            fabFreshTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
-            fabMenusTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
-            fabAutosTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
-            fabPayTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
+            fabMealsTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
+            fabFreshTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
+            fabMenusTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
+            fabAutosTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
+            fabPayTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
+            fabFeedTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabMenusTest.setOnClickListener(clickListener);
             fabPayTest.setOnClickListener(clickListener);
             fabMealsTest.setOnClickListener(clickListener);
             fabFreshTest.setOnClickListener(clickListener);
             fabAutosTest.setOnClickListener(clickListener);
+            fabFeedTest.setOnClickListener(clickListener);
             relativeLayoutFABTest.setVisibility(View.GONE);
             menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
             menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
@@ -185,6 +190,7 @@ public class FABViewTest implements GACategory, GAAction {
             if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
                     && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
                     && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
+                    && (Data.userData.getFeedEnabled() == 0)
                     && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 relativeLayoutFABTest.setVisibility(View.GONE);
             } else {
@@ -221,6 +227,13 @@ public class FABViewTest implements GACategory, GAAction {
                     }
                 }
 
+                if (Data.userData.getFeedEnabled() != 1) {
+                    fabFeedTest.setVisibility(View.GONE);
+                } else {
+                    if(isOpened) {
+                        fabFeedTest.setVisibility(View.VISIBLE);
+                    }
+                }
 
                 setRlGenieHelpVisibility();
             }
@@ -247,6 +260,10 @@ public class FABViewTest implements GACategory, GAAction {
 
             if (Data.userData.getPayEnabled() == 1) {
                 fabPayTest.setVisibility(View.VISIBLE);
+            }
+
+            if (Data.userData.getFeedEnabled() == 1) {
+                fabFeedTest.setVisibility(View.VISIBLE);
             }
 
         } catch (Exception e) {
@@ -323,6 +340,15 @@ public class FABViewTest implements GACategory, GAAction {
                         }
                     }, 300);
                     selectedOffering = PAY;
+                    break;
+                case R.id.fabFeedTest:
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFeedClientId(), finalLatLng, false);
+                        }
+                    }, 300);
+                    selectedOffering = FEED;
                     break;
 
             }
@@ -423,6 +449,8 @@ public class FABViewTest implements GACategory, GAAction {
             return GACategory.MENUS;
         } else if (clientId.equalsIgnoreCase(Config.getPayClientId())) {
             return PAY;
+        } else if (clientId.equalsIgnoreCase(Config.getFeedClientId())) {
+            return FEED;
         } else {
             return RIDES;
         }

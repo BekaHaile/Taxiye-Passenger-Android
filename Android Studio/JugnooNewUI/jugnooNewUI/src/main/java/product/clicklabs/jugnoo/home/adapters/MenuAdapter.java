@@ -383,6 +383,17 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, PAY);
                 }
             });
+
+            holder.linearLayoutSubFeed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickAction(MenuInfoTags.FEED.getTag());
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                    holder.imageViewArrow.setRotation(270);
+                    GAUtils.event(JUGNOO, FEED+HOME, LEFT_MENU_ICON+CLICKED);
+                    GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, FEED);
+                }
+            });
         }
 
     }
@@ -617,6 +628,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 drawerLayout.closeDrawer(GravityCompat.START);
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getPayClientId(), getLatLng(), false);
             }
+            else if(MenuInfoTags.FEED.getTag().equalsIgnoreCase(tag)){
+                drawerLayout.closeDrawer(GravityCompat.START);
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFeedClientId(), getLatLng(), false);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -632,7 +647,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             if(Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
                         && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
-                        && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)) {
+                        && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
+                        && (Data.userData.getFeedEnabled() == 0)) {
                     holder.linearLayoutCategories.setVisibility(View.GONE);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 } else {
@@ -667,6 +683,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     } else {
                         holder.linearLayoutSubPay.setVisibility(View.GONE);
                     }
+
+                    if (Data.userData.getFeedEnabled() == 1) {
+                        holder.linearLayoutSubFeed.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.linearLayoutSubFeed.setVisibility(View.GONE);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -695,9 +717,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public RelativeLayout relative;
         public ImageView imageViewProfile, imageViewArrow;
         public TextView textViewUserName, textViewViewPhone, textViewCategories, textViewAutos, textViewFresh, textViewMeals,
-                textViewGrocery, textViewMenus, textViewPay, tvJugnooStar;
+                textViewGrocery, textViewMenus, textViewPay, tvJugnooStar, textViewFeed;
         public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos,
-            linearLayoutSubGrocery, linearLayoutSubMenus, linearLayoutSubPay;
+            linearLayoutSubGrocery, linearLayoutSubMenus, linearLayoutSubPay, linearLayoutSubFeed;
         public View viewStarIcon;
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
@@ -712,6 +734,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             textViewGrocery = (TextView) convertView.findViewById(R.id.textViewGrocery); textViewGrocery.setTypeface(Fonts.mavenRegular(context));
             textViewMenus = (TextView) convertView.findViewById(R.id.textViewMenus); textViewMenus.setTypeface(Fonts.mavenRegular(context));
             textViewPay = (TextView) convertView.findViewById(R.id.textViewPay); textViewPay.setTypeface(Fonts.mavenRegular(context));
+            textViewFeed = (TextView) convertView.findViewById(R.id.textViewFeed); textViewFeed.setTypeface(Fonts.mavenRegular(context));
             linearLayoutCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutCategories);
             linearLayoutSubCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubCategories);
             imageViewArrow = (ImageView) convertView.findViewById(R.id.imageViewArrow);
@@ -721,6 +744,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             linearLayoutSubGrocery = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubGrocery);
             linearLayoutSubMenus = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubMenus);
             linearLayoutSubPay = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubPay);
+            linearLayoutSubFeed = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubFeed);
             tvJugnooStar = (TextView) convertView.findViewById(R.id.tvJugnooStar); tvJugnooStar.setTypeface(Fonts.mavenRegular(context));
             viewStarIcon = (View) convertView.findViewById(R.id.viewStarIcon);
         }

@@ -8,6 +8,8 @@ import android.view.View;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
+import com.sabkuchfresh.fragments.FeedAddPostFragment;
+import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
@@ -24,6 +26,7 @@ import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.tutorials.NewUserCompleteProfileFragment;
@@ -334,6 +337,19 @@ public class TransactionUtils {
         }
     }
 
+    public void openFeedAddPostFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, FeedAddPostFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, 0)
+                    .add(container.getId(), FeedAddPostFragment.newInstance(),
+                            FeedAddPostFragment.class.getName())
+                    .addToBackStack(FeedAddPostFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
     public void openNewUserReferralFragment(FragmentActivity activity, View container) {
         if (!checkIfFragmentAdded(activity, NewUserReferralFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
@@ -360,6 +376,19 @@ public class TransactionUtils {
                     .setCustomAnimations(android.R.anim.fade_in, 0)
                     .replace(container.getId(), NewUserWalletFragment.newInstance(),
                             NewUserWalletFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openFeedCommentsFragment(FragmentActivity activity, View container, FeedDetail feedDetail, int positionInOriginalList) {
+        if (!checkIfFragmentAdded(activity, FeedOfferingCommentsFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, 0)
+                    .add(container.getId(), FeedOfferingCommentsFragment.newInstance(feedDetail,positionInOriginalList),
+                            FeedOfferingCommentsFragment.class.getName())
+                    .addToBackStack(FeedOfferingCommentsFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();
         }
     }

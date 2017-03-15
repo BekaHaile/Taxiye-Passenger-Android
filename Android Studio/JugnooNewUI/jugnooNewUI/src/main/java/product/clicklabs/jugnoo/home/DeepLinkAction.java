@@ -98,6 +98,11 @@ public class DeepLinkAction {
 				menuBar.getActivity().startActivity(intent);
 				menuBar.getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
+			else if(AppLinkIndex.FEED_PAGE.getOrdinal() == Data.deepLinkIndex){
+				if(Data.userData.getFeedEnabled() == 1) {
+					menuBar.menuAdapter.onClickAction(MenuInfoTags.FEED.getTag());
+				}
+			}
 
 		} catch(Exception e){
 			e.printStackTrace();

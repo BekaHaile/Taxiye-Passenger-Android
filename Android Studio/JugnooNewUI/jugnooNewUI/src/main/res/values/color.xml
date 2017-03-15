@@ -318,7 +318,17 @@
     <color name="purple_menus_fab_pressed">#9f5495</color>
     <color name="yellow_pay_fab">#faaf40</color>
     <color name="yellow_pay_fab_pressed">#e69b2c</color>
+    <color name="grey_feed_fab">#5e657e</color>
+    <color name="grey_feed_fab_pressed">#545b74</color>
 
+
+    <color name="feed_grey_text">#595968</color>
+  <color name="feed_grey_text_heading">#474655</color>
+    <color name="feed_grey_hint_color">#a4a4a4</color>
+  <color name="feed_grey_text_secondary">#9b9b9b</color>
+  <color name="feed_grey_background">#eaeaea</color>
+  <color name="feed_grey_background_light">#f7f7f7</color>
+  <color name="feed_color_orange">#ff834e</color>
 
 
 

@@ -60,6 +60,7 @@ public interface Events {
     String IS_PUSH_GROCERY_ENABLED = "is_push_grocery_enabled";
     String IS_PUSH_MENUS_ENABLED = "is_push_menus_enabled";
     String IS_PUSH_PAY_ENABLED = "is_push_pay_enabled";
+    String IS_PUSH_FEED_ENABLED = "is_push_feed_enabled";
 
     String TRAIN_TIME = "train_time";
 

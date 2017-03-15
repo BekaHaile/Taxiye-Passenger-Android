@@ -32,7 +32,6 @@ import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
-import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 
 import java.util.Arrays;
@@ -104,7 +103,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     public String current_city = "";
     public String current_pincode = "";
 
-    private String selectAddressTag = "";
 
     public DeliveryAddressesFragment() {
 
@@ -125,16 +123,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             editTextDeliveryAddress = ((AddPlaceActivity)activity).getEditTextDeliveryAddress();
         }
 
-        int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-        if(appType == AppConstant.ApplicationType.FRESH) {
-            selectAddressTag = Constants.FRESH_SELECT_ADDRESS;
-        } else if(appType == AppConstant.ApplicationType.MEALS){
-            selectAddressTag = Constants.MEALS_SELECT_ADDRESS;
-        } else if(appType == AppConstant.ApplicationType.GROCERY){
-            selectAddressTag = Constants.GROCERY_SELECT_ADDRESS;
-        } else if(appType == AppConstant.ApplicationType.MENUS){
-            selectAddressTag = Constants.MENUS_SELECT_ADDRESS;
-        }
 
 
         linearLayoutMain = (RelativeLayout) rootView.findViewById(R.id.linearLayoutMain);

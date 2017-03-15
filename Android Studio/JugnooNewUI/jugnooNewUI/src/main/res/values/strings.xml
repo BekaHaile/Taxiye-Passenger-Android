@@ -9,7 +9,8 @@
     <string name="no_more_than">Can\'t order more than %d units</string>
     <string name="no_more_than_star">Can\'t add more than %d unit</string>
 
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live
+    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>
+    Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
     <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
 
@@ -268,7 +269,7 @@
 
     <!-- Jugnoo Jeanie Strings-->
     <string name="jugnoo_jeanie">Jugnoo Jeanie</string>
-	<string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
+    <string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
 		We believe you should always get the best deal for your daily commute and thus we are allowing you to compare other available options with Jugnoo ETA and prices.
 		Get the best deal always!\n
 		And don’t worry about the standard privacy notification on the next screen, we will never store any of your actions from Jugnoo Jeanie.
@@ -704,7 +705,7 @@
 
     <string name="tnc_apply">T&amp;C Apply</string>
     <string name="tnc">T&amp;C</string>
-	<string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
+    <string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
 		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
@@ -1574,5 +1575,21 @@
     <string name="add_referral_code">Add Referral Code</string>
     <string name="connect_wallets">Connect Wallest</string>
     <string name="complete_profile">Complete Profile</string>
+    <string name="offer_removed_alert">Your Offer has been removed. You need to apply again</string>
+    <string name="offer_applied">Offer Applied</string>
+    <string name="dummy_text"><b>Matthew Young</b> reviewed <b>Pizza Hut</b></string>
+    <string name="dummy_text_2">Matthew Young reviewed Pizza Hut</string>
+    <string name="feed">Feed</string>
+    <string name="review">Review</string>
+    <string name="ask">Ask</string>
+    <string name="review_at">Review @</string>
+    <string name="share_your_experience">Share your experience…</string>
+    <string name="enter_restaurant_name">Enter restaurant name</string>
+    <string name="add_post">Add Post</string>
+    <string name="looking_for_something">Looking for something?</string>
+    <string name="whats_on_your_mind">What\'s on your mind?</string>
+    <string name="contacts_synced_successfully">Contacts synced successfully</string>
+    <string name="please_enter_something">Please enter text</string>
+    <string name="label_location_feed">Location</string>
 
 </resources>

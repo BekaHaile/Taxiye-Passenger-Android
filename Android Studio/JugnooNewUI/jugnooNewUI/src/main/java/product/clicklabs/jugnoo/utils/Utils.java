@@ -677,6 +677,11 @@ public class Utils implements GAAction, GACategory{
 		return px;
 	}
 
+	public static int convertDpToPx(Context context, int dp) {
+		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+		return Math.round(dp * (displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+	}
+
 	public static int pxToDp(Context context, int px) {
 		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
 		int dp = Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
@@ -880,6 +885,9 @@ public class Utils implements GAAction, GACategory{
 
 		return finalVal;
 	}
+
+
+
 
 }
 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:background="?attr/selectableItemBackground"
+                android:splitMotionEvents="false"
+    >
+
+    <TextView
+        android:id="@+id/tvRestName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textColor="@color/text_color_light_selector"
+        android:textSize="@dimen/sp_11"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        app:font="maven"
+        />
+
+    <TextView
+        android:id="@+id/tvRestAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="Name"
+        android:textColor="@color/text_color_light"
+        android:textSize="@dimen/sp_11"
+        android:layout_below="@+id/tvRestName"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        app:font="maven"
+        />
+
+
+    <View
+        android:id="@+id/vSep"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/stroke_light_grey_alpha" />
+
+</RelativeLayout>

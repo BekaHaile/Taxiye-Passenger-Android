@@ -7,12 +7,13 @@ public enum ProductType {
 	GROCERY(4),
 	MENUS(5),
 	PAY(6),
+	FEED(7),
 	NOT_SURE(-1)
 	;
 
 	private int ordinal;
 
-	private ProductType(int ordinal) {
+	ProductType(int ordinal) {
 		this.ordinal = ordinal;
 	}
 

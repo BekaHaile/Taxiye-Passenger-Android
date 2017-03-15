@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:focusableInTouchMode="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dull_line"
+        />
+
+    <LinearLayout
+        android:id="@+id/llTabs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_tabs_add_post"
+        android:orientation="horizontal"
+        >
+
+        <RelativeLayout
+            android:id="@+id/rlAsk"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_horizontal"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:id="@+id/ivAsk"
+                    android:layout_width="21dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_feed_ask"
+                    />
+
+                <TextView
+                    android:id="@+id/tvAsk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/ask"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/sp_13"
+                    app:font="maven"
+                    />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/vAskSelected"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/theme_color"
+                />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/dull_line"
+            />
+
+
+        <RelativeLayout
+            android:id="@+id/rlReview"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_horizontal"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:id="@+id/ivReview"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:src="@drawable/ic_feed_star"
+                    />
+
+                <TextView
+                    android:id="@+id/tvReview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/review"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/sp_13"
+                    app:font="maven"
+                    />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/vReviewSelected"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/theme_color"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dull_line"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/menu_item_selector_color_F7"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:id="@+id/llReviewLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal"
+            android:background="@drawable/bg_white_layer_shadow"
+            android:orientation="vertical"
+            android:visibility="visible"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/review_at"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/sp_13"
+                    app:font="maven"
+                    />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/dull_line"
+                    />
+
+                <TextView
+                    android:id="@+id/tvRestaurantLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/enter_restaurant_name"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textSize="@dimen/sp_13"
+                    android:visibility="visible"
+                    app:font="maven"
+
+                    />
+
+                <EditText
+                    android:id="@+id/etRestaurantLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/enter_restaurant_name"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@drawable/cursor_black"
+                    android:textSize="@dimen/sp_13"
+                    app:font="maven"
+                    />
+
+
+                <product.clicklabs.jugnoo.utils.ProgressWheel
+                    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/pwRestLocQuery"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:tag="mwar"
+                    wheel:matProg_barColor="@color/theme_color"
+                    wheel:matProg_barWidth="3dp"
+                    wheel:matProg_fillRadius="true"
+                    wheel:matProg_progressIndeterminate="true"
+                    wheel:matProg_barSpinCycleTime="2500"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvRestaurantSuggestions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fadeScrollbars="true"
+                android:scrollbarSize="2dp"
+                android:scrollbars="vertical"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dull_line"
+        />
+
+
+
+
+    <EditText
+        android:id="@+id/etContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:gravity="left"
+        android:hint="@string/share_your_experience"
+        android:padding="20dp"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/text_color_hint"
+        android:textSize="@dimen/sp_14"
+        android:textCursorDrawable="@drawable/cursor_black"
+        app:font="maven"
+        android:maxLength="500" />
+
+
+    <RelativeLayout
+      android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:paddingRight="@dimen/spacing_small"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivImageUploaded"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:visibility="invisible"
+            android:layout_alignParentRight="true" />
+
+        <ImageView
+            android:id="@+id/btn_remove"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            android:rotation="45"
+            android:visibility="gone"
+            android:src="@drawable/ic_add_grey_bg_selector" />
+
+        <com.sabkuchfresh.utils.RatingBarMenuFeedback
+            android:id="@+id/rating_bar_add_post"
+            android:layout_alignBottom="@id/ivImageUploaded"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_large"
+            app:animate="false"
+            app:displayText="false"
+            app:halfStars="false"
+            app:maxStars="5"
+            app:onlyForDisplay="false"
+            app:starOff="@drawable/star_small_rating"
+            app:starOn="@drawable/ic_rating_review" />
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dull_line"
+        />
+
+    <RelativeLayout
+        android:layout_gravity="bottom"
+        android:id="@+id/rlSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+
+        <ImageView
+            android:id="@+id/ivAccessCamera"
+            android:layout_width="42.5dp"
+            android:layout_height="38.5dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/transparent"
+            android:padding="10dp"
+            android:src="@drawable/ic_add_review_camera"/>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="end"
+            android:background="@null"
+            android:text="Submit"
+            android:textAllCaps="false"
+            android:textColor="@color/text_color_theme_alpha_selector"
+            android:textSize="@dimen/sp_15"
+            app:font="maven"/>
+
+        <View
+            android:id="@+id/submitDivider"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@id/btnSubmit"
+            android:background="@color/dull_line"
+            />
+
+
+        <TextView
+            android:id="@+id/tvCharCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/submitDivider"
+            android:gravity="right"
+            android:maxLines="1"
+            android:text="500"
+            android:textColor="@color/text_color_light"
+            android:textSize="@dimen/sp_13"
+            app:font="maven"/>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>
