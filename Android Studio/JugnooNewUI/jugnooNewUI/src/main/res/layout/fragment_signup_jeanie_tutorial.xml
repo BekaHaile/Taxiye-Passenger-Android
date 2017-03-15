@@ -26,17 +26,19 @@
         android:layout_height="328px"
         android:layout_above="@+id/ivJeanie"
         android:layout_marginLeft="100px"
-        android:src="@drawable/ic_arrow_signup_tutorial"/>
+        android:src="@drawable/ic_arrow_signup_tutorial"
+        android:tag="mwar"/>
 
 
     <ImageView
         android:id="@+id/ivJeanie"
-        android:layout_width="@dimen/px_112"
-        android:layout_height="@dimen/px_112"
+        android:layout_width="@dimen/px_120"
+        android:layout_height="@dimen/px_120"
         android:src="@drawable/ic_jeanie_signup_tutorial"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/px_45"
-        android:layout_marginBottom="@dimen/px_235"/>
+        android:layout_marginBottom="@dimen/px_235"
+        android:tag="mwar"/>
 
 
 

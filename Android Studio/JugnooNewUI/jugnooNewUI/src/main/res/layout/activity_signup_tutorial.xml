@@ -28,11 +28,12 @@
         android:text="@string/skip"
         android:textColor="@color/white"
         android:textAllCaps="true"
-        android:textSize="@dimen/text_size_20"
+        android:textSize="@dimen/text_size_28"
+        android:padding="@dimen/px_10"
         app:font="maven"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/px_40"
-        android:layout_marginRight="@dimen/px_32"/>
+        android:layout_marginTop="@dimen/px_30"
+        android:layout_marginRight="@dimen/px_22"/>
 
     <Button
         android:id="@+id/bNext"
@@ -40,6 +41,7 @@
         android:layout_height="@dimen/px_96"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:textAllCaps="true"
         android:background="@drawable/capsule_cart_color"
         android:layout_marginBottom="@dimen/px_40"
         android:text="@string/next"
