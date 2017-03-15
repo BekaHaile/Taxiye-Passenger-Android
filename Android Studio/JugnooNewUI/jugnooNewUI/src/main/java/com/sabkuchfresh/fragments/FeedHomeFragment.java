@@ -45,12 +45,7 @@ import retrofit.mime.TypedByteArray;
 
 public class FeedHomeFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-
-    private String mParam1;
-    private String mParam2;
     private FeedOfferingListAdapter feedOfferingListAdapter;
     private TextView tvAddPost;
     private LikeFeed likeFeed;
@@ -62,22 +57,11 @@ public class FeedHomeFragment extends Fragment {
     }
 
 
-    public static FeedHomeFragment newInstance(String param1, String param2) {
-        FeedHomeFragment fragment = new FeedHomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -148,6 +132,7 @@ public class FeedHomeFragment extends Fragment {
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
         if (activity.getDeliveryAddressView() != null) {
             activity.getDeliveryAddressView().scaleView();
+            activity.getDeliveryAddressView().tvDeliveryAddress.setText(R.string.label_location_feed);
         }
         tvAddPost = (TextView) rootView.findViewById(R.id.tvAddPost);
         tvAddPost.setOnClickListener(new View.OnClickListener() {

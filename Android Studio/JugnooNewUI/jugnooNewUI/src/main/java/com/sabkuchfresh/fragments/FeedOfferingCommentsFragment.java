@@ -2,6 +2,7 @@ package com.sabkuchfresh.fragments;
 
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -95,6 +96,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
         activity.fragmentUISetup(this);
         View rootView = inflater.inflate(R.layout.fragment_feed_comments, container, false);
         btnSubmit= (Button) rootView.findViewById(R.id.btnSubmit);
+        btnSubmit.setTypeface(btnSubmit.getTypeface(), Typeface.BOLD);
         btnSubmit.setEnabled(false);
         textViewCharCount= (TextView) rootView.findViewById(R.id.tvCharCount);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed_detail);
@@ -239,7 +241,12 @@ public class FeedOfferingCommentsFragment extends Fragment {
                                 if(feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
                                     Utils.hideKeyboard(getActivity());
                                     commentAdded=null;
+                                    feedDetail.setCommentCount(feedDetail.getCommentCount()+1);
                                     prepareListAndNotifyAdapter(feedbackResponse);
+                                    if(activity.getFeedHomeFragment()!=null) {
+                                        //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
+                                        activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
+                                    }
 
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -327,7 +334,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
         @Override
         public void afterTextChanged(Editable s) {
             commentAdded=s.toString();
-            textViewCharCount.setText(String.valueOf(500-s.length()));
+            textViewCharCount.setText(String.valueOf(500-s.toString().trim().length()));
             btnSubmit.setEnabled(s.length()>0);
 
 

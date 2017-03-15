@@ -7,24 +7,24 @@
 
 
 
-    <ImageView
-        android:id="@+id/imageViewShadow"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/spacing_extra_tiny"
 
-        android:background="@drawable/shadow_down" />
 
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_feed_detail"
-        android:layout_below="@id/imageViewShadow"
         android:background="@color/feed_grey_background_light"
         android:layout_above="@id/rlSubmit"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/imageViewShadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/spacing_extra_tiny"
+        android:background="@drawable/shadow_down_new" />
 
 
 
@@ -56,7 +56,7 @@
             android:background="@null"
             android:text="Submit"
             android:textAllCaps="false"
-            android:textColor="@color/text_color_theme_alpha_selector"
+            android:textColor="@color/text_color_selector"
             android:textSize="@dimen/sp_15"
             app:font="maven"/>
 
@@ -80,7 +80,7 @@
             android:layout_toLeftOf="@id/submitDivider"
             android:gravity="right"
             android:maxLines="1"
-            android:text="400"
+            android:text="500"
             android:textColor="@color/text_color_light"
             android:textSize="@dimen/sp_13"
             app:font="maven"/>

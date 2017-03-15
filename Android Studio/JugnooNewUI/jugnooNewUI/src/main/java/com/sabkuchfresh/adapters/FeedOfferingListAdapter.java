@@ -221,8 +221,8 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
     private static String formLikesComment(int likeCount, int commentCount,FreshActivity activity) {
 
-        String likeSuffix = likeCount>1?" likes ":" like ";
-        String commentSuffix = commentCount>1?" comments ":" comment ";
+        String likeSuffix = likeCount>1?" Likes ":" Like ";
+        String commentSuffix = commentCount>1?" Comments ":" Comment ";
         return likeCount + likeSuffix + activity.getString(R.string.bullet) + " " + commentCount + commentSuffix;
     }
 
