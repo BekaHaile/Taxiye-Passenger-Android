@@ -241,7 +241,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 imageSelected =null;
                 ivImageUploaded.setVisibility(View.INVISIBLE);
                 btnRemoveImage.setVisibility(View.INVISIBLE);
-                ivAccessCamera.setEnabled(true);
+                ivAccessCamera.setVisibility(View.VISIBLE);
             }
         });
 
@@ -300,7 +300,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
                     ivImageUploaded.setVisibility(View.VISIBLE);
                     btnRemoveImage.setVisibility(View.VISIBLE);
-                    ivAccessCamera.setEnabled(false);
+                    ivAccessCamera.setVisibility(View.GONE);
                 }
             }
         }
@@ -350,6 +350,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 llReviewLocation.setVisibility(View.VISIBLE);
                 etContent.setHint(R.string.share_your_experience);
                 ratingBar.setVisibility(View.VISIBLE);
+                product.clicklabs.jugnoo.utils.Utils.hideKeyboard(getActivity());
+                if(ratingBar!=null)
+                    ratingBar.setScore(0);
                 break;
 
             case ASK:
@@ -362,6 +365,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 llReviewLocation.setVisibility(View.GONE);
                 ratingBar.setVisibility(View.GONE);
                 etContent.setHint(R.string.looking_for_something);
+                product.clicklabs.jugnoo.utils.Utils.hideKeyboard(getActivity());
                 break;
         }
         openSuggestionView(false);

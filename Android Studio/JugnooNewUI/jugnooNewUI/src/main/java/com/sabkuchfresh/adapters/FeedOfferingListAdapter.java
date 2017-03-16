@@ -291,7 +291,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                  diff--;
             }
 
-            if(diff>0) return diff+"y";
+            if(diff>0) return diff+" years ago";
 
             if(yearPosted!=yearCurrent)
             {
@@ -305,12 +305,27 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
             }
 
-            if(diff>0)return diff+"M";
+            if(diff>0)return diff+" months ago";
 
 
 
+            long diffT=currentDateCal.getTimeInMillis() -feedPostedCal.getTimeInMillis();
+            long diffC = diffT / (24 * 60 * 60 * 1000 * 7);
+            if(diffC>=1)return diffC+"w";
+            diffC=diffT / (24 * 60 * 60 * 1000);
+            if(diffC>=1)return diffC+"d";
+            diffC = diffT / (60 * 60 * 1000) % 24;
+            if(diffC>=1)return diffC+"h";
+            diffC = diffT / (60 * 1000) % 60;
+            if(diffC>=1)return diffC+"m";
+            diffC = diffT / 1000 % 60;
+            if(diffC>=0)
+                return diffC+"s";
+            else
+                return 0+"s";
 
-            int noOfDaysInPostedMonth=feedPostedCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+     /*       int noOfDaysInPostedMonth=feedPostedCal.getActualMaximum(Calendar.DAY_OF_MONTH);
             if(postedMonth!=currentMonth){
                 if((noOfDaysInPostedMonth-postedDate)+currentDate>=7)
                     diff=(noOfDaysInPostedMonth-postedDate)/7;
@@ -328,23 +343,11 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                     diff=-1;
             }
             if(diff>0) return diff+"w";
+*/
 
 
 
 
-
-            long diffT=currentDateCal.getTimeInMillis() -feedPostedCal.getTimeInMillis();
-            long diffC = diffT / (24 * 60 * 60 * 1000);
-            if(diffC>=1)return diffC+"d";
-             diffC = diffT / (60 * 60 * 1000) % 24;
-            if(diffC>=1)return diffC+"h";
-             diffC = diffT / (60 * 1000) % 60;
-            if(diffC>=1)return diffC+"m";
-              diffC = diffT / 1000 % 60;
-            if(diffC>=0)
-              return diffC+"s";
-            else
-                return 0+"s";
 
 
 
