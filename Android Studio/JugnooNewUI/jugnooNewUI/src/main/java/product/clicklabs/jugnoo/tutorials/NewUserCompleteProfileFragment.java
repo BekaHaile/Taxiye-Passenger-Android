@@ -224,6 +224,16 @@ public class NewUserCompleteProfileFragment extends Fragment{
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
             params.put(Constants.KEY_UPDATED_USER_NAME, updatedName);
             params.put(Constants.KEY_UPDATED_USER_EMAIL, updatedEmail);
+            params.put("signup_tutorial", "1");
+
+            if(Data.googleSignInAccount != null
+                    &&!TextUtils.isEmpty(Data.googleSignInAccount.getIdToken())){
+                params.put("google_access_token", Data.googleSignInAccount.getIdToken());
+            }
+            if(Data.facebookUserData != null
+                    && !TextUtils.isEmpty(Data.facebookUserData.accessToken)){
+                params.put("fb_access_token", Data.facebookUserData.accessToken);
+            }
 
             new HomeUtil().putDefaultParams(params);
             RestClient.getApiService().updateUserProfile(params, new Callback<SettleUserDebt>() {
