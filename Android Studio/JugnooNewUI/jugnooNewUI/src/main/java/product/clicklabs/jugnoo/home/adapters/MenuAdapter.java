@@ -50,7 +50,7 @@ import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
-import product.clicklabs.jugnoo.tutorials.NewUserChutiyapaa;
+import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -585,7 +585,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 GAUtils.event(SIDE_MENU, HISTORY+CLICKED, "");
 
             } else if(MenuInfoTags.SIGNUP_TUTORIAL.getTag().equalsIgnoreCase(tag)){
-                Intent intent = new Intent(activity, NewUserChutiyapaa.class);
+                Intent intent = new Intent(activity, NewUserFlow.class);
                 intent.putExtra(Constants.KEY_MENU_SIGNUP_TUTORIAL, true);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);

@@ -18,18 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jugnoo.pay.activities.PayTutorial;
-
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.BaseActivity;
-import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by ankit on 09/03/17.
@@ -117,7 +112,7 @@ public class SignUpTutorial extends Fragment {
                         && Data.userData.getSignupTutorial().getTs2() == 0) {
                     tvSkip.performClick();
                 } else{
-                    startActivity(new Intent(getActivity(), NewUserChutiyapaa.class));
+                    startActivity(new Intent(getActivity(), NewUserFlow.class));
                     getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     tvSkip.performClick();
                 }
@@ -187,7 +182,7 @@ public class SignUpTutorial extends Fragment {
                 rlFreeCoupons.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(getActivity(), NewUserChutiyapaa.class));
+                        startActivity(new Intent(getActivity(), NewUserFlow.class));
                         getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
                         tvSkip.performClick();
                     }

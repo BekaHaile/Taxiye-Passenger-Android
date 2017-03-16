@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.facebook.CallbackManager;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -23,7 +21,6 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.PhoneNoOTPConfirmScreen;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
@@ -58,7 +55,7 @@ public class NewUserCompleteProfileFragment extends Fragment{
     private View root;
     private Button bClaimCoupon;
     private LinearLayout rlRoot;
-    private NewUserChutiyapaa activity;
+    private NewUserFlow activity;
     private RelativeLayout rlFacebook, rlGoogle;
     private EditText etName, etEmail;
     FacebookLoginHelper facebookLoginHelper;
@@ -79,7 +76,7 @@ public class NewUserCompleteProfileFragment extends Fragment{
 
         root = inflater.inflate(R.layout.fragment_new_user_complete_profile, container, false);
         rlRoot = (LinearLayout) root.findViewById(R.id.rlRoot);
-        activity = (NewUserChutiyapaa) getActivity();
+        activity = (NewUserFlow) getActivity();
         try {
             if (rlRoot != null) {
                 new ASSL(activity, rlRoot, 1134, 720, false);

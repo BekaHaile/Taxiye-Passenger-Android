@@ -12,8 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.utils.AppConstant;
-
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
@@ -34,7 +32,7 @@ public class NewUserWalletFragment extends Fragment {
     private View root;
     private RelativeLayout rlRoot;
     private Button bFinish;
-    private NewUserChutiyapaa activity;
+    private NewUserFlow activity;
     private ImageView ivAddPaytm, ivAddMobikwik, ivAddFreecharge;
     private TextView tvPaytmBalanceValue, tvMobikwikBalanceValue, tvFreeChargeBalanceValue, tvPaytmOffer, tvMobikwikOffer, tvFreeChargeOffer;
     private WalletCore walletCore;
@@ -55,7 +53,7 @@ public class NewUserWalletFragment extends Fragment {
 
         root = inflater.inflate(R.layout.fragment_new_user_wallet, container, false);
         rlRoot = (RelativeLayout) root.findViewById(R.id.rlRoot);
-        activity = (NewUserChutiyapaa) getActivity();
+        activity = (NewUserFlow) getActivity();
 
         try {
             if (rlRoot != null) {

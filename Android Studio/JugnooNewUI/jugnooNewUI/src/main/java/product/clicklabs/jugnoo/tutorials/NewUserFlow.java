@@ -1,34 +1,28 @@
 package product.clicklabs.jugnoo.tutorials;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.sabkuchfresh.home.TransactionUtils;
 
-import product.clicklabs.jugnoo.BaseActivity;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 
 /**
  * Created by ankit on 10/03/17.
  */
 
-public class NewUserChutiyapaa extends BaseFragmentActivity {
+public class NewUserFlow extends BaseFragmentActivity {
 
     private ImageView ivBack, ivTickReferral, ivLineReferral, ivTickProfile, ivLineProfile, ivTickWallet,
             ivLineReferralFill, ivLineProfileFill;
@@ -45,7 +39,7 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
         rlRoot = (RelativeLayout) findViewById(R.id.rlRoot);
         try {
             if (rlRoot != null) {
-                new ASSL(NewUserChutiyapaa.this, rlRoot, 1134, 720, false);
+                new ASSL(NewUserFlow.this, rlRoot, 1134, 720, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,12 +69,12 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
             @Override
             public void onClick(View v) {
                 if (getCurrentFragment() instanceof NewUserReferralFragment) {
-                    getTransactionUtils().openNewUserCompleteProfileFragment(NewUserChutiyapaa.this, getRlContainer());
+                    getTransactionUtils().openNewUserCompleteProfileFragment(NewUserFlow.this, getRlContainer());
                 } else if (getCurrentFragment() instanceof NewUserCompleteProfileFragment) {
                     if(fromMenu){
                         performBackPressed();
                     } else {
-                        getTransactionUtils().openNewUserWalletFragment(NewUserChutiyapaa.this, getRlContainer());
+                        getTransactionUtils().openNewUserWalletFragment(NewUserFlow.this, getRlContainer());
                     }
                 } else if (getCurrentFragment() instanceof NewUserWalletFragment) {
                     performBackPressed();
@@ -95,20 +89,20 @@ public class NewUserChutiyapaa extends BaseFragmentActivity {
             fromMenu = getIntent().getExtras().getBoolean(Constants.KEY_MENU_SIGNUP_TUTORIAL, false);
             if(fromMenu){
                 rlBar.setVisibility(View.GONE);
-                getTransactionUtils().openNewUserCompleteProfileFragment(NewUserChutiyapaa.this, rlContainer);
+                getTransactionUtils().openNewUserCompleteProfileFragment(NewUserFlow.this, rlContainer);
             }
         } else {
             setTickViewInit();
             if (Data.userData.getSignupTutorial() != null) {
                 if (Data.userData.getSignupTutorial().getDs1() != null
                         && Data.userData.getSignupTutorial().getDs1() == 1) {
-                    getTransactionUtils().openNewUserReferralFragment(NewUserChutiyapaa.this, rlContainer);
+                    getTransactionUtils().openNewUserReferralFragment(NewUserFlow.this, rlContainer);
                 } else if (Data.userData.getSignupTutorial().getDs2() != null
                         && Data.userData.getSignupTutorial().getDs2() == 1) {
-                    getTransactionUtils().openNewUserCompleteProfileFragment(NewUserChutiyapaa.this, rlContainer);
+                    getTransactionUtils().openNewUserCompleteProfileFragment(NewUserFlow.this, rlContainer);
                 } else if (Data.userData.getSignupTutorial().getDs3() != null
                         && Data.userData.getSignupTutorial().getDs3() == 1) {
-                    getTransactionUtils().openNewUserWalletFragment(NewUserChutiyapaa.this, rlContainer);
+                    getTransactionUtils().openNewUserWalletFragment(NewUserFlow.this, rlContainer);
                 }
             }
         }

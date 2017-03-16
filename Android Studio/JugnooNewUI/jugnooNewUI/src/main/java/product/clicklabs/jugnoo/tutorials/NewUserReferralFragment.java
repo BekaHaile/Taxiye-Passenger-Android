@@ -11,23 +11,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.analytics.GAUtils;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -47,7 +41,7 @@ public class NewUserReferralFragment extends Fragment {
 
     private View root;
     private Button buttonApplyPromo;
-    private NewUserChutiyapaa activity;
+    private NewUserFlow activity;
     private RelativeLayout rlRoot;
     private EditText etPromoCode;
     private static final String TAG = NewUserReferralFragment.class.getName();
@@ -65,7 +59,7 @@ public class NewUserReferralFragment extends Fragment {
 
         root = inflater.inflate(R.layout.fragment_new_user_referral, container, false);
         rlRoot = (RelativeLayout) root.findViewById(R.id.rlRoot);
-        activity = (NewUserChutiyapaa)getActivity();
+        activity = (NewUserFlow)getActivity();
         try {
             if (rlRoot != null) {
                 new ASSL(activity, rlRoot, 1134, 720, false);
