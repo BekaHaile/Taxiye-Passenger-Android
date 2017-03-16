@@ -15,8 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sabkuchfresh.adapters.FeedOfferingCommentsAdapter;
+import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
 import com.sabkuchfresh.commoncalls.LikeFeed;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
@@ -101,29 +103,32 @@ public class FeedOfferingCommentsFragment extends Fragment {
         textViewCharCount= (TextView) rootView.findViewById(R.id.tvCharCount);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        feedOfferingCommentsAdapter = new FeedOfferingCommentsAdapter(getActivity(), null, recyclerView, new FeedOfferingCommentsAdapter.Callback() {
+        feedOfferingCommentsAdapter = new FeedOfferingCommentsAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.FeedPostCallback() {
             @Override
-            public void onLikeClick(final int position) {
+            public void onLikeClick(FeedDetail object, int position) {
                 if(likeFeed ==null)
-                    likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
-                        @Override
-                        public void onSuccess(boolean isLikeAPI,int position) {
-                            feedOfferingCommentsAdapter.notifyOnLike(position,isLikeAPI);
-                            if(activity.getFeedHomeFragment()!=null) {
-                                //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
-                                activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
-                            }
+                likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
+                    @Override
+                    public void onSuccess(boolean isLikeAPI,int position) {
+                        feedOfferingCommentsAdapter.notifyOnLike(position,isLikeAPI);
+                        if(activity.getFeedHomeFragment()!=null) {
+                            //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
+                            activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
                         }
+                    }
 
-                    });
+                });
                 likeFeed.likeFeed(feedDetail.getPostId(),getActivity(), !feedDetail.isLiked(), position);
+            }
 
+            @Override
+            public void onCommentClick(FeedDetail postId, int position) {
 
             }
 
             @Override
-            public void onCommentClick(Object object) {
-
+            public void onRestaurantClick(int restaurantId) {
+//                Toast.makeText(activity, "Hey here Comments", Toast.LENGTH_SHORT).show();
             }
 
             @Override

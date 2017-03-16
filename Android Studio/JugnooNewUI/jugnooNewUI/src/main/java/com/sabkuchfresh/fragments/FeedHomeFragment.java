@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
 import com.sabkuchfresh.commoncalls.LikeFeed;
@@ -105,7 +106,7 @@ public class FeedHomeFragment extends Fragment {
                 fetchFeedsApi(false);
             }
         });
-        feedOfferingListAdapter = new FeedOfferingListAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.Callback() {
+        feedOfferingListAdapter = new FeedOfferingListAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.FeedPostCallback() {
             @Override
             public void onLikeClick(FeedDetail feedDetail, final int position) {
                 if (likeFeed == null)
@@ -130,11 +131,19 @@ public class FeedHomeFragment extends Fragment {
 
             @Override
             public void onRestaurantClick(int restaurantId) {
-                //TODO remove this
+
                 restaurantId = 25;
+
+              /*  Toast.makeText(activity, "Hey here Home " + restaurantId, Toast.LENGTH_SHORT).show();
+
                 if(restaurantId > 0){
                     activity.fetchRestaurantMenuAPI(restaurantId, 1, null);
-                }
+                }*/
+            }
+
+            @Override
+            public String getEditTextString() {
+                return null;
             }
         });
         recyclerView.setAdapter(feedOfferingListAdapter);

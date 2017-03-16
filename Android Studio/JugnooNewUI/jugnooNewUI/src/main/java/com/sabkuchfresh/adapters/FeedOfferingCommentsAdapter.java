@@ -36,7 +36,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
     private FreshActivity activity;
-    private Callback callback;
+    private FeedOfferingListAdapter.FeedPostCallback callback;
     private List<Object> feedDetailData;
     private RecyclerView recyclerView;
     public static final int TYPE_POST_LAYOUT = 1;
@@ -48,7 +48,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     private static final StyleSpan BOLD_SPAN = new StyleSpan(Typeface.BOLD);
     private static final StyleSpan BOLD_SPAN_2 = new StyleSpan(Typeface.BOLD);//since we cant reuse same style span again in a spannable
 
-    public FeedOfferingCommentsAdapter(Activity activity, List<Object> reviewImages, RecyclerView recyclerView, Callback callback, TextWatcher textWatcherMyComment) {
+    public FeedOfferingCommentsAdapter(Activity activity, List<Object> reviewImages, RecyclerView recyclerView, FeedOfferingListAdapter.FeedPostCallback callback, TextWatcher textWatcherMyComment) {
         this.activity = (FreshActivity) activity;
         this.feedDetailData = reviewImages;
         this.callback = callback;
@@ -92,7 +92,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         if(holder instanceof FeedOfferingListAdapter.ViewHolderReviewImage)
         {
 
-            FeedOfferingListAdapter.setData((FeedOfferingListAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity);
+            FeedOfferingListAdapter.setData((FeedOfferingListAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback);
             ((FeedOfferingListAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
 
         }
@@ -161,7 +161,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
 
         switch (viewClicked.getId()) {
             case R.id.view_action_like:
-                    callback.onLikeClick(position);
+                    callback.onLikeClick(null,position);
                 break;
             case R.id.view_action_comment:
                 break;
@@ -194,13 +194,13 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
 
-    public interface Callback {
+    /*public interface Callback {
         void onLikeClick(int positionOfLayout);
 
         void onCommentClick(Object object);
 
         String getEditTextString();
-    }
+    }*/
 
 
 
