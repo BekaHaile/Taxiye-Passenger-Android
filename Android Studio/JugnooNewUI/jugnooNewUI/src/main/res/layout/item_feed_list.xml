@@ -166,7 +166,7 @@
         android:paddingLeft="@dimen/spacing_small"
         android:paddingRight="@dimen/spacing_small"
         android:paddingTop="@dimen/spacing_tiny"
-        android:text="Sector 17"
+        android:maxWidth="250dp"
         android:textColor="@color/white"
         android:textSize="@dimen/font_tiny"
         app:font="@string/maven_r" />

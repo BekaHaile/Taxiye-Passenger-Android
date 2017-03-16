@@ -116,7 +116,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                     if (!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         String actualTitle = feedDetail.getOwnerName() + REVIEW.getValue() + feedDetail.getRestaurantName() + ".";
                         title = new SpannableString(actualTitle);
-                        title.setSpan(BOLD_SPAN, actualTitle.length() - feedDetail.getRestaurantName().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        title.setSpan(BOLD_SPAN,  feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     }
 
