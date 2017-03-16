@@ -1095,6 +1095,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.title.setText(getResources().getString(R.string.checkout));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
+                setMinOrderAmountText(fragment);
+
             } else if (fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -3760,5 +3762,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         apiFetchRestaurantMenu.hit(restaurantId, getSelectedLatLng().latitude,
                 getSelectedLatLng().longitude, restaurantInfo, vendor);
     }
+
+    //TODO remove this
+    public static MenusResponse.Vendor vendorStatic;
 
 }

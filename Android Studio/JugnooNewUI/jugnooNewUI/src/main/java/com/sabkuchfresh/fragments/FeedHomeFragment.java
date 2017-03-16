@@ -130,6 +130,8 @@ public class FeedHomeFragment extends Fragment {
 
             @Override
             public void onRestaurantClick(int restaurantId) {
+                //TODO remove this
+                restaurantId = 25;
                 if(restaurantId > 0){
                     activity.fetchRestaurantMenuAPI(restaurantId, 1, null);
                 }
@@ -157,6 +159,7 @@ public class FeedHomeFragment extends Fragment {
                 Intent syncContactsIntent = new Intent(activity, FeedContactsUploadService.class);
                 syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 activity.startService(syncContactsIntent);
+                Data.getFeedData().setContactsSynced(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -276,7 +279,6 @@ public class FeedHomeFragment extends Fragment {
             boolean uploaded = intent.getBooleanExtra(Constants.KEY_UPLOADED, false);
             Log.i("FeedHomeFrag onReceive", "uploaded="+uploaded);
             if(uploaded){
-                Utils.showToast(activity, activity.getString(R.string.contacts_synced_successfully));
                 fetchFeedsApi(false);
             }
         }

@@ -8,6 +8,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
+import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
@@ -25,6 +26,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -73,6 +75,10 @@ public class ApiFetchRestaurantMenu {
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
 									if(vendor == null && restaurantInfo == 1){
 										activity.setVendorOpened(productsResponse.getVendor());
+										// TODO: 16/03/17 remove this
+										Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
+										Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
+										activity.setVendorOpened(FreshActivity.vendorStatic);
 									} else {
 										activity.setVendorOpened(vendor);
 									}

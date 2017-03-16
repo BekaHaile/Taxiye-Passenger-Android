@@ -342,6 +342,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     tabs.setVisibility(View.VISIBLE);
                     ivShadowAboveTab.setVisibility(View.VISIBLE);
                     ivShadowBelowTab.setVisibility(View.VISIBLE);
+                    //TODO remove this
+					FreshActivity.vendorStatic = activity.getVendorOpened();
 
                     activity.updateCartFromSP();
                     activity.updateCartValuesGetTotalPrice();
