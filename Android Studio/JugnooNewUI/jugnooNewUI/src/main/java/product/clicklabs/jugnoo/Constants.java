@@ -649,5 +649,6 @@ public interface Constants {
 
     String KEY_POST_TEXT = "post_text";
     String KEY_STAR_COUNT = "star_count";
+    String KEY_LOGIN_TYPE = "login_type";
 
 }

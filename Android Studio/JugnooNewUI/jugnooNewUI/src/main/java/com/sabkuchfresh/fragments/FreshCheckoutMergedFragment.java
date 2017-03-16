@@ -2392,7 +2392,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             getCheckoutDataAPI(selectedSubscription);
         } else {
             if(!rehitCheckoutApi()){
-                removeCoupon();
+                removeCouponWithCheck();
             }
         }
         updateCartDataView();
@@ -2420,7 +2420,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             getCheckoutDataAPI(selectedSubscription);
         } else if(subItemsInCart.size() > 0) {
             if(!rehitCheckoutApi()){
-               removeCoupon();
+                removeCouponWithCheck();
             }
         }
         GAUtils.event(activity.getGaCategory(), CHECKOUT, CART+ITEM+DECREASED);
@@ -2450,7 +2450,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         cartChangedRefreshCheckout = true;
         updateCartDataView();
         if(!rehitCheckoutApi()){
-            removeCoupon();
+            removeCouponWithCheck();
         }
     }
 
@@ -2465,8 +2465,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
         if(itemsInCart.size() > 0) {
             if(!rehitCheckoutApi()){
-                removeCoupon();
+                removeCouponWithCheck();
             }
+        }
+    }
+
+    private void removeCouponWithCheck(){
+        if(getSelectedCoupon() != null && getSelectedCoupon().getId() > 0){
+            removeCoupon();
         }
     }
 
