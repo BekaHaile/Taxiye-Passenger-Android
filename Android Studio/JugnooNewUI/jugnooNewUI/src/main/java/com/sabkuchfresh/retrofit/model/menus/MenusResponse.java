@@ -168,6 +168,9 @@ public class MenusResponse implements Serializable {
 		@SerializedName("minimum_order_amount")
 		@Expose
 		private Double minimumOrderAmount;
+		@SerializedName("delivery_charges_threshold")
+		@Expose
+		private Double deliveryChargesThreshold;
 		@SerializedName("is_closed")
 		@Expose
 		private Integer isClosed;
@@ -565,6 +568,17 @@ public class MenusResponse implements Serializable {
 
 		public void setBufferTime(Long bufferTime) {
 			this.bufferTime = bufferTime;
+		}
+
+		public Double getDeliveryChargesThreshold() {
+			if(deliveryChargesThreshold == null){
+				deliveryChargesThreshold = 0D;
+			}
+			return deliveryChargesThreshold;
+		}
+
+		public void setDeliveryChargesThreshold(Double deliveryChargesThreshold) {
+			this.deliveryChargesThreshold = deliveryChargesThreshold;
 		}
 	}
 

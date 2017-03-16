@@ -44,8 +44,8 @@ public class ApiFetchRestaurantMenu {
 		this.callback = callback;
 	}
 
-	public void getVendorMenu(final int restaurantId, final double latitude, final double longitude, final int restaurantInfo,
-							  final MenusResponse.Vendor vendor) {
+	public void hit(final int restaurantId, final double latitude, final double longitude, final int restaurantInfo,
+					final MenusResponse.Vendor vendor) {
 		try {
 			if (MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
@@ -58,7 +58,7 @@ public class ApiFetchRestaurantMenu {
 				params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
 				params.put(Constants.INTERATED, "1");
 				params.put(Constants.KEY_RESTAURANT_INFO, String.valueOf(restaurantInfo));
-				Log.i(TAG, "getVendorMenu params=" + params.toString());
+				Log.i(TAG, "restaurantMenu params=" + params.toString());
 
 				new HomeUtil().putDefaultParams(params);
 				RestClient.getMenusApiService().restaurantMenu(params, new retrofit.Callback<VendorMenuResponse>() {

@@ -1446,7 +1446,7 @@
     <string name="did_you_know">Did you know?</string>
     <string name="star_description">You can now avail unlimited FREE delivery, special discounts and much more!</string>
     <string name="click_to_find">Click to find out how…</string>
-    <string name="fresh_min_order_value_format">Just \u20B9%s away from FREE delivery</string>
+    <string name="away_from_free_delivery_value_format">Just \u20B9%s away from FREE delivery</string>
     <string name="jugnoo_star_details">Jugnoo star details</string>
     <string name="membership_plan">Membership plan</string>
     <string name="expires_on">Expires on</string>
