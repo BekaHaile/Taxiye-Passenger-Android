@@ -75,19 +75,6 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <product.clicklabs.jugnoo.utils.ProgressWheel
-                        android:id="@+id/progressWheel"
-                        android:layout_width="60px"
-                        android:layout_height="60px"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerInParent="true"
-                        android:layout_centerVertical="true"
-                        android:tag="mwar"
-                        wheel:matProg_barColor="@color/colorPrimary"
-                        wheel:matProg_barWidth="3dp"
-                        wheel:matProg_fillRadius="true"
-                        wheel:matProg_progressIndeterminate="false" />
-
                     <TextView
                         android:id="@+id/tvSavingsMeterRetry"
                         android:layout_width="wrap_content"

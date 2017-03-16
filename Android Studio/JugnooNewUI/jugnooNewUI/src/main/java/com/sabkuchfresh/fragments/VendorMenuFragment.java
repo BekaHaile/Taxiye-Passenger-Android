@@ -260,12 +260,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
             }
             activity.setRefreshCart(false);
-            activity.getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    activity.setMinOrderAmountText(VendorMenuFragment.this);
-                }
-            }, 300);
+            activity.setMinOrderAmountText(VendorMenuFragment.this);
 
         }
         else{

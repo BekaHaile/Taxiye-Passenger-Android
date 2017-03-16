@@ -651,4 +651,6 @@ public interface Constants {
     String KEY_STAR_COUNT = "star_count";
     String KEY_LOGIN_TYPE = "login_type";
 
+    String KEY_REASONS = "reasons";
+    String KEY_ADDN_REASON = "addn_reason";
 }

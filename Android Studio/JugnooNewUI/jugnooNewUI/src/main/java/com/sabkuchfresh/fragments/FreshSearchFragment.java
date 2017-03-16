@@ -305,12 +305,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 				activity.updateCartValuesGetTotalPrice();
 			}
 			activity.setCartChangedAtCheckout(false);
-			activity.getHandler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					activity.setMinOrderAmountText(FreshSearchFragment.this);
-				}
-			}, 300);
+			activity.setMinOrderAmountText(FreshSearchFragment.this);
 			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
 				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
 			}

@@ -572,7 +572,11 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             if(activity.getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
                     && Data.autoData.getFareFactor() > 1.0
                     && Data.autoData.getRegions().size() == 1){
-                activity.getSlidingBottomPanel().getImageViewSurgeOverSlidingBottom().setVisibility(View.VISIBLE);
+                if(activity.getFabViewTest() != null && !activity.getFabViewTest().getIsOpened()) {
+                    activity.getSlidingBottomPanel().getImageViewSurgeOverSlidingBottom().setVisibility(View.VISIBLE);
+                } else {
+                    activity.getSlidingBottomPanel().getImageViewSurgeOverSlidingBottom().setVisibility(View.GONE);
+                }
             } else{
                 activity.getSlidingBottomPanel().getImageViewSurgeOverSlidingBottom().setVisibility(View.GONE);
             }

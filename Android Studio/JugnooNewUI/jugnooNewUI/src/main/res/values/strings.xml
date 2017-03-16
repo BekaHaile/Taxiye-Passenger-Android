@@ -1591,5 +1591,7 @@
     <string name="contacts_synced_successfully">Contacts synced successfully</string>
     <string name="please_enter_something">Please enter text</string>
     <string name="label_location_feed">Location</string>
+    <string name="i_want_to_cancel_my_order_because">I want to cancel my Order because</string>
+    <string name="please_select_one_reason">Please select one reason</string>
 
 </resources>

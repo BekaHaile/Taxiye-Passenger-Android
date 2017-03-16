@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,7 +7,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.StrikethroughSpan;
 import android.util.TypedValue;
@@ -25,12 +23,10 @@ import com.google.gson.Gson;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import product.clicklabs.jugnoo.adapters.StarMembershipAdapter;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.StarPurchaseType;
@@ -46,8 +42,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
-import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -65,7 +59,6 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
     private TextView tvCurrentPlanValue, tvExpiresOnValue, tvSavingsMeterRetry, tvBenefits, tvExpiredTitle,
             tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2, tvCurrentPlan;
     private LinearLayout llSavingsValue, llUpgradeContainer, llRenew;
-    private ProgressWheel progressWheel;
     private NonScrollListView rvBenefits;
     private StarMembershipAdapter starMembershipAdapter;
     private Button btnUpgradeNow, bConfirm;
@@ -107,7 +100,6 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
 
         ((TextView) findViewById(R.id.tvSavingsMeter)).setTypeface(Fonts.mavenMedium(this));
         llSavingsValue = (LinearLayout) findViewById(R.id.llSavingsValue);
-        progressWheel = (ProgressWheel) findViewById(R.id.progressWheel);
         tvSavingsMeterRetry = (TextView) findViewById(R.id.tvSavingsMeterRetry);
         tvSavingsMeterRetry.setTypeface(Fonts.mavenMedium(this));
 
@@ -371,8 +363,6 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
             if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(JugnooStarSubscribedActivity.this, "Loading...");
                 llSavingsValue.removeAllViews();
-                llSavingsValue.addView(progressWheel);
-                progressWheel.spin();
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
