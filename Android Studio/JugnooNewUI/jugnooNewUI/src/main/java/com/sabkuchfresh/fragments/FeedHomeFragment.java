@@ -131,7 +131,7 @@ public class FeedHomeFragment extends Fragment {
             @Override
             public void onRestaurantClick(int restaurantId) {
                 if(restaurantId > 0){
-                    activity.fetchRestaurantMenuAPI(restaurantId, 1, null);
+                    activity.fetchRestaurantMenuAPI(restaurantId);
                 }
             }
 

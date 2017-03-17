@@ -1354,9 +1354,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         textViewMinOrderVis = View.VISIBLE;
                         textViewMinOrder.setText(getString(R.string.minimum_order) + " "
                                 + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
-                    } else if (totalPrice < getVendorOpened().getDeliveryChargesThreshold()) {
+                    } else if (getVendorOpened().getShowFreeDeliveryText() == 1
+                            && totalPrice < getVendorOpened().getDeliveryAmountThreshold()) {
                         textViewMinOrderVis = View.VISIBLE;
-                        double leftAmount = getVendorOpened().getDeliveryChargesThreshold() - totalPrice;
+                        double leftAmount = getVendorOpened().getDeliveryAmountThreshold() - totalPrice;
                         textViewMinOrder.setText(getString(R.string.away_from_free_delivery_value_format,
                                 Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
                     } else {
@@ -3746,7 +3747,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
 
     private ApiFetchRestaurantMenu apiFetchRestaurantMenu;
-    public void fetchRestaurantMenuAPI(final int restaurantId, final int restaurantInfo, final MenusResponse.Vendor vendor){
+    public void fetchRestaurantMenuAPI(final int restaurantId){
         if(apiFetchRestaurantMenu == null){
             apiFetchRestaurantMenu = new ApiFetchRestaurantMenu(this, new ApiFetchRestaurantMenu.Callback() {
                 @Override
@@ -3761,7 +3762,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
                 @Override
                 public void onRetry(View view) {
-                    fetchRestaurantMenuAPI(restaurantId, restaurantInfo, vendor);
+                    fetchRestaurantMenuAPI(restaurantId);
                 }
 
                 @Override
@@ -3771,7 +3772,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             });
         }
         apiFetchRestaurantMenu.hit(restaurantId, getSelectedLatLng().latitude,
-                getSelectedLatLng().longitude, restaurantInfo, vendor);
+                getSelectedLatLng().longitude);
     }
 
 

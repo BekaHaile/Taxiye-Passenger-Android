@@ -85,7 +85,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private NonScrollListView listViewOrder;
     private OrderItemsAdapter orderItemsAdapter;
     private LinearLayout llFinalAmount, llDeliveryPlace, orderComplete, orderCancel;
-    private ArrayList<HistoryResponse.OrderItem> subItemsOrders = new ArrayList<HistoryResponse.OrderItem>();
+    private ArrayList<HistoryResponse.OrderItem> subItemsOrders = new ArrayList<>();
     private HistoryResponse.Datum orderHistory;
     private FragmentActivity activity;
     private CardView cvOrderStatus;
