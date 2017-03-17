@@ -653,4 +653,6 @@ public interface Constants {
 
     String LIST_IMAGES = "list_images";
     String KEY_HIDE_LIKE_SHARE = "hide_like_share";
+    String KEY_REASONS = "reasons";
+    String KEY_ADDN_REASON = "addn_reason";
 }

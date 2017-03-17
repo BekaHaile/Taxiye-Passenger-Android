@@ -2,6 +2,7 @@ package com.sabkuchfresh.apis;
 
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
 import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
+import com.sabkuchfresh.retrofit.model.OrderCancelReasonsResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
@@ -47,6 +48,11 @@ public interface FreshApiService {
 	@POST("/cancel_order")
 	void cancelOrder(@FieldMap Map<String, String> params,
                      Callback<SettleUserDebt> callback);
+
+	@FormUrlEncoded
+	@POST("/fetch_cancellation_reasons")
+	void fetchCancellationReasons(@FieldMap Map<String, String> params,
+								  Callback<OrderCancelReasonsResponse> callback);
 
 
     @FormUrlEncoded
