@@ -510,6 +510,25 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="@string/razorpay_test_api_key"
+            />
+
+        <activity
+            android:name="com.sabkuchfresh.home.RazorPayActivity"
+            android:label="RazorPay"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"
+                  >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 
