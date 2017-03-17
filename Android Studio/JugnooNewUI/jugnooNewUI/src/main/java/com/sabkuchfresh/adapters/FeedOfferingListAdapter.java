@@ -477,9 +477,10 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                 else if(!TextUtils.isEmpty(feedDetail.getRestaurantImage()))
                 {
 
+                    //Open the restaurant here
                         //THis means only one image is being displayed which is restaurant Image
-                    FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage(feedDetail.getRestaurantImage(),feedDetail.getRestaurantImage());
-                    reviewImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) Collections.singletonList(reviewImage);
+                 /*   FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage(feedDetail.getRestaurantImage(),feedDetail.getRestaurantImage());
+                    reviewImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) Collections.singletonList(reviewImage);*/
                 }
 
 
