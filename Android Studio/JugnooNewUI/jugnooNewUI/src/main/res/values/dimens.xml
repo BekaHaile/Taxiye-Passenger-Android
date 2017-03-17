@@ -531,5 +531,13 @@
         30dp
     </dimen>
     <dimen name="px_238">238px</dimen>
+    <dimen name="px_305">305px</dimen>
+    <dimen name="dp_28">28dp</dimen>
+    <dimen name="dp_16">16dp</dimen>
+    <dimen name="dp_1">1dp</dimen>
+    <dimen name="dp_6">6dp</dimen>
+    <dimen name="dp_12">12dp</dimen>
+    <dimen name="dp_15">15dp</dimen>
+    <dimen name="dp_23">23dp</dimen>
 
 </resources>

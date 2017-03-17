@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_12">
+
+        <LinearLayout
+            android:id="@+id/llContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:paddingLeft="@dimen/dp_28"
+            android:paddingTop="@dimen/dp_20"
+            android:paddingBottom="@dimen/dp_20"
+            android:background="@drawable/bg_white_transparent_layer_shadow">
+
+            <TextView
+                android:id="@+id/tvStoreName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exo Fresh - Madhya Marg"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                app:font="maven"/>
+
+            <TextView
+                android:id="@+id/tvDeliveryCharges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivery Charges 50"
+                android:textColor="@color/green_delivery_stores"
+                android:textSize="@dimen/sp_12"
+                app:font="maven"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/rank_3"
+                android:layout_marginTop="@dimen/dp_8"/>
+
+            <TextView
+                android:id="@+id/tvDeliveryTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Earliest delivery : Today, 4PM - 6PM"
+                android:textSize="@dimen/sp_12"
+                android:textColor="@color/text_color"
+                android:layout_marginTop="@dimen/dp_6"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/dp_2"
+                android:drawableLeft="@drawable/ic_delivery_time"
+                app:font="@string/maven_r"/>
+
+            <TextView
+                android:id="@+id/tvCartItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12 Items in cart"
+                android:textSize="@dimen/sp_12"
+                android:textColor="@color/text_color"
+                android:layout_marginTop="@dimen/dp_4"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/dp_2"
+                android:drawableLeft="@drawable/ic_delivery_store_cart"
+                app:font="@string/maven_r"/>
+
+            <TextView
+                android:id="@+id/tvMinOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Minimum order 350 for free"
+                android:textSize="@dimen/sp_12"
+                android:textColor="@color/text_color"
+                android:layout_marginTop="@dimen/dp_4"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/dp_2"
+                android:drawableLeft="@drawable/ic_scooter"
+                app:font="@string/maven_r"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivRadio"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:src="@drawable/radio_deactive"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_20"/>
+
+        <TextView
+            android:id="@+id/tvRating"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_20"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@drawable/capsule_text_color"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dp_8"
+            android:paddingRight="@dimen/dp_8"
+            android:text="Rating 2.1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_11"
+            android:visibility="visible"
+            app:font="maven"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>
