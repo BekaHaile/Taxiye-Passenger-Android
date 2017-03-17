@@ -346,10 +346,13 @@ public class FetchFeedbackResponse {
 		@Expose
 		private String id;
 
+		public ReviewImage(String url, String thumbnail) {
+			this.url=url;
+			this.thumbnail=thumbnail;
+		}
 
 
-
-		public String getUrl() {
+        public String getUrl() {
 			return url;
 		}
 

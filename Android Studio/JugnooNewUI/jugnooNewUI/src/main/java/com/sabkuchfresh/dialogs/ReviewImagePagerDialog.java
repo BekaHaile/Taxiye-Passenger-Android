@@ -52,7 +52,6 @@ public class ReviewImagePagerDialog extends DialogFragment {
 	public static ReviewImagePagerDialog newInstance(int positionImageClicked, ArrayList<FetchFeedbackResponse.ReviewImage> imageList){
 		ReviewImagePagerDialog dialog = new ReviewImagePagerDialog();
 		Bundle bundle = new Bundle();
-
 		bundle.putInt(Constants.KEY_POSITION, positionImageClicked);
 		bundle.putBoolean(Constants.KEY_HIDE_LIKE_SHARE, true);
 		bundle.putSerializable(Constants.LIST_IMAGES, imageList);

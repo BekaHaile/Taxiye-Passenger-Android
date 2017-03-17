@@ -3,6 +3,7 @@ package com.sabkuchfresh.adapters;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -30,7 +31,9 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -39,6 +42,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
 import static com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail.FeedType.REVIEW;
+import static product.clicklabs.jugnoo.utils.DialogPopup.dialog;
 
 
 /**
@@ -239,11 +243,15 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         if(feedDetail.getReviewImages()!=null && feedDetail.getReviewImages().size()>1)
         {
             holder.recyclerViewUserImages.setVisibility(View.VISIBLE);
-            if(holder.editReviewImagesAdapter==null)
+            if(holder.displayFeedHomeImagesAdapter==null)
             {
-
-
-//                holder.editReviewImagesAdapter = new EditReviewImagesAdapter(activity,feedDetail.getReviewImages(),holder.recyclerViewUserImages);
+                holder.displayFeedHomeImagesAdapter = new DisplayFeedHomeImagesAdapter(activity,feedDetail.getReviewImages(),holder.recyclerViewUserImages);
+                holder.recyclerViewUserImages.setLayoutManager(new LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false));
+                holder.recyclerViewUserImages.setAdapter(holder.displayFeedHomeImagesAdapter);
+            }
+            else
+            {
+                holder.displayFeedHomeImagesAdapter.setList(feedDetail.getReviewImages());
             }
         }
         else{
@@ -460,25 +468,38 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
                 break;
             case R.id.iv_place_image:
+                final FeedDetail feedDetail = feedDetailArrayList.get(position);
+                ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages=null;
 
+                //This means userimages are being displayed
+                if(feedDetail.getReviewImages()!=null && feedDetail.getReviewImages().size()>0)
+                    reviewImages=feedDetail.getReviewImages();
+                else if(!TextUtils.isEmpty(feedDetail.getRestaurantImage()))
+                {
 
-                String imageUrl=null;
-             /*   if(!TextUtils.isEmpty(feedDetailArrayList.get(position).getReviewImages()))
-                        imageUrl=feedDetailArrayList.get(position).getReviewImages();
-                else if(!TextUtils.isEmpty(feedDetailArrayList.get(position).getRestaurantImage()))
-                    imageUrl=feedDetailArrayList.get(position).getRestaurantImage();*/
-
-                if (imageUrl!=null) {
-                    final FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage();
-                    reviewImage.setUrl(imageUrl);
-                    ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0, new ArrayList<FetchFeedbackResponse.ReviewImage>(){{add(reviewImage);}});
-                    dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+                        //THis means only one image is being displayed which is restaurant Image
+                    FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage(feedDetail.getRestaurantImage(),feedDetail.getRestaurantImage());
+                    reviewImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) Collections.singletonList(reviewImage);
                 }
+
+
+                if(reviewImages!=null)//If null means no image is being showed Actually
+                   showZoomedPagerDialog(0, reviewImages,activity);
                 break;
 
             default:
                 break;
         }
+    }
+
+    /**
+     *
+     * @param pos position at which view should open when pager opens
+     * @param reviewImages images List to be shown
+     */
+    public static void showZoomedPagerDialog(int pos, ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages,Activity activity) {
+        ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(pos, reviewImages);
+        dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
     }
 
 
@@ -534,7 +555,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         RelativeLayout layoutItem;
         @Bind(R.id.recycler_user_images)
         RecyclerView recyclerViewUserImages;//feeddetail.getReviewImages field is greater than 1 than we  have to show this recycler view
-        EditReviewImagesAdapter editReviewImagesAdapter;
+        DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
