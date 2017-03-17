@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
 import com.sabkuchfresh.commoncalls.LikeFeed;
@@ -131,14 +130,9 @@ public class FeedHomeFragment extends Fragment {
 
             @Override
             public void onRestaurantClick(int restaurantId) {
-
-                restaurantId = 25;
-
-              /*  Toast.makeText(activity, "Hey here Home " + restaurantId, Toast.LENGTH_SHORT).show();
-
                 if(restaurantId > 0){
                     activity.fetchRestaurantMenuAPI(restaurantId, 1, null);
-                }*/
+                }
             }
 
             @Override

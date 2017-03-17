@@ -75,10 +75,10 @@ public class ApiFetchRestaurantMenu {
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
 									if(vendor == null && restaurantInfo == 1){
 										activity.setVendorOpened(productsResponse.getVendor());
-										// TODO: 16/03/17 remove this
-										Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
-										Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
-										activity.setVendorOpened(FreshActivity.vendorStatic);
+										if(activity.getAppType() == AppConstant.ApplicationType.FEED) {
+											Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
+											Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
+										}
 									} else {
 										activity.setVendorOpened(vendor);
 									}

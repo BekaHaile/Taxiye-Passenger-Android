@@ -1047,6 +1047,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
+                setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof VendorMenuFragment || fragment instanceof RestaurantImageFragment) {
                 llCartContainerVis = View.VISIBLE;
@@ -1201,6 +1202,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                setMinOrderAmountText(fragment);
             }
             else if(fragment instanceof FeedOfferingCommentsFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1519,6 +1521,12 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
 
+    private void checkForBackToFeed(){
+        if (getAppType() == AppConstant.ApplicationType.MENUS && getFeedHomeFragment() != null) {
+            Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
+            Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFeedClientId());
+        }
+    }
 
     public void orderComplete() {
         clearAllCartAtOrderComplete();
@@ -1526,6 +1534,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         slotSelected = null;
         slotToSelect = null;
         paymentOption = null;
+
+        checkForBackToFeed();
 
         FragmentManager fm = getSupportFragmentManager();
         for (int i = 0; i < fm.getBackStackEntryCount() - 1; i++) {
@@ -1628,6 +1638,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             }
         }
 
+        checkForBackToFeed();
 
         if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finish();
@@ -3763,7 +3774,5 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 getSelectedLatLng().longitude, restaurantInfo, vendor);
     }
 
-    //TODO remove this
-    public static MenusResponse.Vendor vendorStatic;
 
 }
