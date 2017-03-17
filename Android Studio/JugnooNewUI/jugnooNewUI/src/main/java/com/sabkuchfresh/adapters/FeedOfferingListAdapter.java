@@ -1,7 +1,6 @@
 package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -20,15 +19,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.DateParser;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -105,8 +106,8 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
                     //Choose which picture to display
-                    if (!TextUtils.isEmpty(feedDetail.getImageUrl())) {
-                        imageUrl = feedDetail.getImageUrl();
+                    if (feedDetail.getReviewImages()!=null && feedDetail.getReviewImages().size()>0 && !TextUtils.isEmpty(feedDetail.getReviewImages().get(0).getUrl())) {
+                        imageUrl = feedDetail.getReviewImages().get(0).getUrl();
                     } else if (!TextUtils.isEmpty(feedDetail.getRestaurantImage())) {
                         imageUrl = feedDetail.getRestaurantImage();
                         if (!TextUtils.isEmpty(feedDetail.getRestaurantAddress()))
@@ -150,8 +151,8 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                     }
 
                     //Choose which picture to display
-                    if (!TextUtils.isEmpty(feedDetail.getImageUrl()))
-                        imageUrl = feedDetail.getImageUrl();
+                    if (feedDetail.getReviewImages()!=null && feedDetail.getReviewImages().size()>0 && !TextUtils.isEmpty(feedDetail.getReviewImages().get(0).getUrl()))
+                        imageUrl = feedDetail.getReviewImages().get(0).getUrl();
 
                     //Form Title
                     if (!TextUtils.isEmpty(feedDetail.getOwnerName())) {
@@ -222,14 +223,33 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
         }
 
+        //show posted Time
         holder.tvOwnerTime.setText(getTimeToDisplay(feedDetail.getCreatedAt(), activity.isTimeAutomatic));
 
+
+        //Set Like Icons and like text color
         Drawable drawableToSet = feedDetail.isLiked() ? ContextCompat.getDrawable(activity, R.drawable.ic_like_active) : ContextCompat.getDrawable(activity, R.drawable.ic_like);
         holder.tvLike.setCompoundDrawablesWithIntrinsicBounds(drawableToSet, null, null, null);
         if (feedDetail.isLiked())
             holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_color_orange));
         else
             holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_grey_text));
+
+        //Show user Images if greater than 1 in a recycler view
+        if(feedDetail.getReviewImages()!=null && feedDetail.getReviewImages().size()>1)
+        {
+            holder.recyclerViewUserImages.setVisibility(View.VISIBLE);
+            if(holder.editReviewImagesAdapter==null)
+            {
+
+
+//                holder.editReviewImagesAdapter = new EditReviewImagesAdapter(activity,feedDetail.getReviewImages(),holder.recyclerViewUserImages);
+            }
+        }
+        else{
+            holder.recyclerViewUserImages.setVisibility(View.GONE);
+        }
+
 
 
 
@@ -439,6 +459,22 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
             case R.id.tv_feed_owner_title:
 
                 break;
+            case R.id.iv_place_image:
+
+
+                String imageUrl=null;
+             /*   if(!TextUtils.isEmpty(feedDetailArrayList.get(position).getReviewImages()))
+                        imageUrl=feedDetailArrayList.get(position).getReviewImages();
+                else if(!TextUtils.isEmpty(feedDetailArrayList.get(position).getRestaurantImage()))
+                    imageUrl=feedDetailArrayList.get(position).getRestaurantImage();*/
+
+                if (imageUrl!=null) {
+                    final FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage();
+                    reviewImage.setUrl(imageUrl);
+                    ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0, new ArrayList<FetchFeedbackResponse.ReviewImage>(){{add(reviewImage);}});
+                    dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+                }
+                break;
 
             default:
                 break;
@@ -496,7 +532,9 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         View shadow;
         @Bind(R.id.root_layout_item)
         RelativeLayout layoutItem;
-        String testVar;
+        @Bind(R.id.recycler_user_images)
+        RecyclerView recyclerViewUserImages;//feeddetail.getReviewImages field is greater than 1 than we  have to show this recycler view
+        EditReviewImagesAdapter editReviewImagesAdapter;
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
@@ -526,6 +564,12 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                 public void onClick(View v) {
                     onClickView.onClickItem(layoutItem, view);
 
+                }
+            });
+            ivPlaceImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickView.onClickItem(ivPlaceImage,view);
                 }
             });
 

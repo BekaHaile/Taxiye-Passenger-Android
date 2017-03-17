@@ -651,4 +651,6 @@ public interface Constants {
     String KEY_STAR_COUNT = "star_count";
     String KEY_LOGIN_TYPE = "login_type";
 
+    String LIST_IMAGES = "list_images";
+    String KEY_HIDE_LIKE_SHARE = "hide_like_share";
 }

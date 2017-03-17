@@ -3,6 +3,7 @@ package com.sabkuchfresh.retrofit.model.menus;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -333,7 +334,7 @@ public class FetchFeedbackResponse {
 	}
 
 
-	public static class ReviewImage{
+	public static class ReviewImage implements Serializable{
 		@SerializedName("url")
 		@Expose
 		private String url;

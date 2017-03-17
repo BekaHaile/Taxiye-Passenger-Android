@@ -52,7 +52,7 @@
             android:textCursorDrawable="@drawable/cursor_black"
             android:textColorHint="@color/feed_grey_hint_color"
             android:textColor="@color/feed_grey_text"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences"
             android:background="@drawable/bg_white_layer_shadow"
             android:gravity="left"
             android:layout_width="match_parent"

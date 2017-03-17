@@ -23,19 +23,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
+import com.sabkuchfresh.adapters.EditReviewImagesAdapter;
 import com.sabkuchfresh.adapters.RestaurantQuerySuggestionsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
 import com.sabkuchfresh.utils.ImageCompression;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
-import com.sabkuchfresh.utils.Utils;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -86,13 +85,17 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     private AddPostType addPostType = AddPostType.ASK;
     private ArrayList<SuggestRestaurantQueryResp.Suggestion> suggestions;
     private SuggestRestaurantQueryResp.Suggestion suggestionSelected;
-    private ImageView ivImageUploaded;
+
     private RatingBarMenuFeedback ratingBar;
     private String[] permissionsRequest;
     private Picker picker;
     private static  final int REQUEST_CODE_SELECT_IMAGE=106;
-    private ImageView btnRemoveImage;
+
     private ImageCompression imageCompressionTask;
+    private EditReviewImagesAdapter editReviewImagesAdapter;
+    private RecyclerView displayImagesRecycler;
+    private ScrollView scrollView;
+    private ArrayList<ImageEntry> imageSelected ;
 
     public FeedAddPostFragment() {
     }
@@ -121,6 +124,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
 
+        displayImagesRecycler= (RecyclerView) rootView.findViewById(R.id.recycler_view_photos);
+        scrollView= (ScrollView) rootView.findViewById(R.id.scroll_view);
         rlReview = (RelativeLayout) rootView.findViewById(R.id.rlReview);
         rlAsk = (RelativeLayout) rootView.findViewById(R.id.rlAsk);
         tvReview = (TextView) rootView.findViewById(R.id.tvReview); tvReview.setTypeface(tvReview.getTypeface(), Typeface.BOLD);
@@ -138,15 +143,15 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         rvRestaurantSuggestions.setItemAnimator(new DefaultItemAnimator());
         rvRestaurantSuggestions.setHasFixedSize(false);
         etContent = (EditText) rootView.findViewById(R.id.etContent);
+
         ivAccessCamera = (ImageView) rootView.findViewById(R.id.ivAccessCamera);
         btnSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
         tvCharCount = (TextView) rootView.findViewById(R.id.tvCharCount);
-        ivImageUploaded =(ImageView)rootView.findViewById(R.id.ivImageUploaded);
         ratingBar =(RatingBarMenuFeedback)rootView.findViewById(R.id.rating_bar_add_post);
         rlReview.setOnClickListener(this);
         rlAsk.setOnClickListener(this);
         tvRestaurantLocation.setOnClickListener(this);
-        btnRemoveImage = (ImageView)rootView.findViewById(R.id.btn_remove);
+
         suggestions = new ArrayList<>();
         suggestionsAdapter = new RestaurantQuerySuggestionsAdapter(suggestions, new RestaurantQuerySuggestionsAdapter.Callback() {
             @Override
@@ -230,20 +235,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 }
 
 
-                picker.setLimit(1);
+                picker.setLimit(imageSelected==null?5:5-imageSelected.size());
                 picker.startActivity(FeedAddPostFragment.this,activity, REQUEST_CODE_SELECT_IMAGE);
 
             }
         });
-        btnRemoveImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageSelected =null;
-                ivImageUploaded.setVisibility(View.INVISIBLE);
-                btnRemoveImage.setVisibility(View.INVISIBLE);
-                ivAccessCamera.setVisibility(View.VISIBLE);
-            }
-        });
+
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,7 +279,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         return rootView;
     }
 
-    private ImageEntry imageSelected;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -294,13 +290,15 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
                 ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
                 if (images != null && images.size() != 0) {
-                    imageSelected =images.get(0);
-                    Picasso.with(getActivity()).load(new File(images.get(0).path)).resize((int) Utils.convertDpToPixel(75.0f,getActivity()),(int) Utils.convertDpToPixel(75.0f,getActivity())).
-                            centerCrop().transform(new RoundedCornersTransformation(8, 0)).into(ivImageUploaded);
 
-                    ivImageUploaded.setVisibility(View.VISIBLE);
-                    btnRemoveImage.setVisibility(View.VISIBLE);
-                    ivAccessCamera.setVisibility(View.GONE);
+
+                    if(imageSelected==null)
+                        imageSelected=new ArrayList<>();
+
+
+                    imageSelected.addAll(images);
+                    setUpAdapter();
+                    scrollView.fullScroll(View.FOCUS_DOWN);
                 }
             }
         }
@@ -381,7 +379,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         suggestionSelected = null;
         tvRestaurantLocation.setText("");
         etRestaurantLocation.setText("");
-        btnRemoveImage.performClick();
+
 
     }
 
@@ -470,13 +468,15 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             return ordinal;
         }
     }
+
+
     public void postFeedAPI(final String postText, final int restId) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
                 DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
 
-                if(imageSelected!=null){
+                if(imageSelected!=null && imageSelected.size()!=0){
                     //upload feedback with new Images
                     imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
                         @Override
@@ -501,8 +501,15 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
                         }
                     },activity);
-                    String[] fileArray = new String[]{imageSelected.path};
-                    imageCompressionTask.execute(fileArray);
+
+
+                    String[] imagesToCompress = new String[imageSelected.size()] ;
+                    for(int i =0;i<imageSelected.size();i++)
+                    {
+
+                        imagesToCompress[i]=imageSelected.get(i).path;
+                    }
+                    imageCompressionTask.execute(imagesToCompress);
                 }
                 else{
                     uploadParamsAndPost(multipartTypedOutput, postText, restId);
@@ -583,5 +590,51 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                     }
                 });
     }
+    private void setUpAdapter() {
 
+
+        if (imageSelected == null || imageSelected.size() == 0) {
+            displayImagesRecycler.setVisibility(View.GONE);
+            return;
+        }
+
+        if (editReviewImagesAdapter == null) {
+            editReviewImagesAdapter = new EditReviewImagesAdapter(activity, imageSelected, new EditReviewImagesAdapter.Callback() {
+                @Override
+                public void onImageClick(Object object) {
+                    //View full Image
+                }
+
+                @Override
+                public void onDelete(Object object) {
+                    if(object instanceof ImageEntry)
+                    {
+                        imageSelected.remove(object);
+                        if(imageSelected.size()==0)
+                            displayImagesRecycler.setVisibility(View.GONE);
+                        ivAccessCamera.setEnabled(imageSelected.size()<5);
+                    }
+
+
+
+                }
+            },displayImagesRecycler );
+            displayImagesRecycler.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
+            displayImagesRecycler.setAdapter(editReviewImagesAdapter);
+        } else {
+            editReviewImagesAdapter.setList(imageSelected);
+        }
+
+        if (displayImagesRecycler.getVisibility() != View.VISIBLE)
+            displayImagesRecycler.setVisibility(View.VISIBLE);
+
+
+        ivAccessCamera.setEnabled(imageSelected.size()<5);
+
+
+        if(imageSelected.size()>0)
+            displayImagesRecycler.smoothScrollToPosition(imageSelected.size());
+
+
+    }
 }

@@ -15,6 +15,7 @@ import com.picker.image.model.ImageEntry;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -23,22 +24,28 @@ import product.clicklabs.jugnoo.utils.ASSL;
 /**
  * Created by Shankar on 7/17/15.
  */
-public class EditReviewImagesAdapter extends RecyclerView.Adapter<EditReviewImagesAdapter.ViewHolderReviewImage>{
+public class EditReviewImagesAdapter extends RecyclerView.Adapter<EditReviewImagesAdapter.ViewHolderReviewImage> implements ItemListener{
 
     private FreshActivity activity;
-    private ArrayList<Object> reviewImages;
+    private ArrayList<?> reviewImages;
     private Callback callback;
+    private RecyclerView recyclerView;
 
-    public EditReviewImagesAdapter(FreshActivity activity, ArrayList<Object> reviewImages, Callback callback) {
+    public EditReviewImagesAdapter(FreshActivity activity, ArrayList<?> reviewImages, Callback callback, RecyclerView recyclerView) {
         this.activity = activity;
         this.reviewImages = reviewImages;
         this.callback = callback;
+        this.recyclerView=recyclerView;
     }
 
-    public void setList(ArrayList<Object> reviewImages){
+
+
+    public void setList(ArrayList<?> reviewImages){
         this.reviewImages = reviewImages;
         notifyDataSetChanged();
     }
+
+
 
     @Override
     public EditReviewImagesAdapter.ViewHolderReviewImage onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,7 +53,7 @@ public class EditReviewImagesAdapter extends RecyclerView.Adapter<EditReviewImag
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
         v.setLayoutParams(layoutParams);
         ASSL.DoMagic(v);
-        return new ViewHolderReviewImage(v);
+        return new ViewHolderReviewImage(v,this);
     }
 
     @Override
@@ -78,6 +85,7 @@ public class EditReviewImagesAdapter extends RecyclerView.Adapter<EditReviewImag
 
 
 
+/*
 
             holder.ivImage.setTag(position);
             holder.btnRemove.setTag(position);
@@ -98,6 +106,9 @@ public class EditReviewImagesAdapter extends RecyclerView.Adapter<EditReviewImag
 
                 }
             });
+*/
+
+
 
 
         } catch (Exception e) {
@@ -110,17 +121,43 @@ public class EditReviewImagesAdapter extends RecyclerView.Adapter<EditReviewImag
         return reviewImages == null ? 0 : reviewImages.size();
     }
 
+    @Override
+    public void onClickItem(View viewClicked, View itemView) {
+        int position = recyclerView.getChildLayoutPosition(itemView);
+        switch (viewClicked.getId()){
+            case R.id.ivImage:
+                callback.onImageClick(reviewImages.get(position));
+                break;
+            case R.id.btn_remove:
+                callback.onDelete(reviewImages.get(position));
+                notifyItemRemoved(position);
+                break;
+            default:
+                break;
+        }
+    }
+
 
     class ViewHolderReviewImage extends RecyclerView.ViewHolder {
         public ImageView ivImage;
         public ImageView btnRemove;
-        public ViewHolderReviewImage(View itemView) {
+        public ViewHolderReviewImage(final View itemView, final ItemListener itemListener) {
             super(itemView);
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
             btnRemove=(ImageView)itemView.findViewById(R.id.btn_remove);
             btnRemove.setVisibility(View.VISIBLE);
-
-
+            ivImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(ivImage,itemView);
+                }
+            });
+            btnRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(btnRemove,itemView);
+                }
+            });
         }
 
     }
