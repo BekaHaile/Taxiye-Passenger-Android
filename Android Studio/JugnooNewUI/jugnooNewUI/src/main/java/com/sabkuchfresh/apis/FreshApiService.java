@@ -50,9 +50,9 @@ public interface FreshApiService {
                      Callback<SettleUserDebt> callback);
 
 	@FormUrlEncoded
-	@POST("/cancel_reasons")
-	void cancelReasons(@FieldMap Map<String, String> params,
-					   Callback<OrderCancelReasonsResponse> callback);
+	@POST("/fetch_cancellation_reasons")
+	void fetchCancellationReasons(@FieldMap Map<String, String> params,
+								  Callback<OrderCancelReasonsResponse> callback);
 
 
     @FormUrlEncoded

@@ -767,7 +767,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             case R.id.buttonCancelOrder:
                 if (orderHistory.getCancellable() == 1) {
                     int storeId = orderHistory.getStoreId() == null ? 0 : orderHistory.getStoreId();
-                    if(orderHistory.getShowCancelReasons() == 1){
+                    if(orderHistory.getShowCancellationReasons() == 1){
                         int containerId = -1;
                         if(activity instanceof FreshActivity) {
                             containerId = ((FreshActivity)activity).getRelativeLayoutContainer().getId();

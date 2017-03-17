@@ -19,7 +19,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -48,6 +47,7 @@ import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class OrderCancelReasonsFragment extends Fragment implements GAAction, GACategory {
@@ -172,7 +172,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 				if (reasonsResponse != null) {
 					String cancelReasonsStr = "";
 
-					if ("".equalsIgnoreCase(reasonsResponse.getAdditionalReason())) {
+					if ("".equalsIgnoreCase(reasonsResponse.getAdditionalReasons())) {
 						otherChecked = false;
 					}
 
@@ -181,7 +181,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 						if ("".equalsIgnoreCase(cancelReasonsStr)) {
 							textViewOtherError.setVisibility(View.VISIBLE);
 						} else {
-							cancelOrderApi(reasonsResponse.getAdditionalReason(), cancelReasonsStr);
+							cancelOrderApi(reasonsResponse.getAdditionalReasons(), cancelReasonsStr);
 						}
 					} else {
 						for (int i = 0; i < cancelOptions.size(); i++) {
@@ -203,7 +203,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 		relativeLayoutOtherCancelOptionInner.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (reasonsResponse != null && !TextUtils.isEmpty(reasonsResponse.getAdditionalReason())) {
+				if (reasonsResponse != null && !TextUtils.isEmpty(reasonsResponse.getAdditionalReasons())) {
 					otherChecked = true;
 					updateCheckBoxes();
 				}
@@ -231,13 +231,13 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 					textViewCancelInfo.setText(reasonsResponse.getCancelInfo());
 				}
 
-				if (TextUtils.isEmpty(reasonsResponse.getAdditionalReason())) {
+				if (TextUtils.isEmpty(reasonsResponse.getAdditionalReasons())) {
 					relativeLayoutOtherCancelOptionInner.setVisibility(View.GONE);
 					editTextOtherCancelOption.setVisibility(View.GONE);
 				} else {
 					relativeLayoutOtherCancelOptionInner.setVisibility(View.VISIBLE);
 					editTextOtherCancelOption.setVisibility(View.VISIBLE);
-					textViewOtherCancelOption.setText(reasonsResponse.getAdditionalReason());
+					textViewOtherCancelOption.setText(reasonsResponse.getAdditionalReasons());
 					editTextOtherCancelOption.setHint(TextUtils.isEmpty(reasonsResponse.getCommentPlaceholder()) ?
 							"" : reasonsResponse.getCommentPlaceholder());
 				}
@@ -270,7 +270,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 	private class ViewHolderCancelOption {
 		TextView textViewCancelOption;
 		ImageView imageViewCancelOptionCheck;
-		LinearLayout relative;
+		RelativeLayout relative;
 		int id;
 	}
 
@@ -308,7 +308,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 				holder.textViewCancelOption = (TextView) convertView.findViewById(R.id.textViewCancelOption);
 				holder.imageViewCancelOptionCheck = (ImageView) convertView.findViewById(R.id.imageViewCancelOptionCheck);
 
-				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
+				holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
 
 				holder.relative.setTag(holder);
 
@@ -366,7 +366,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 				retrofit.Callback<OrderCancelReasonsResponse> callback = new retrofit.Callback<OrderCancelReasonsResponse>() {
 					@Override
 					public void success(OrderCancelReasonsResponse reasonsResponse, Response response) {
-//						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						DialogPopup.dismissLoadingDialog();
 						try {
 							String message = reasonsResponse.getMessage();
@@ -396,9 +396,9 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 
 				new HomeUtil().putDefaultParams(params);
 				if (productType == ProductType.MENUS.getOrdinal()) {
-					RestClient.getMenusApiService().cancelReasons(params, callback);
+					RestClient.getMenusApiService().fetchCancellationReasons(params, callback);
 				} else {
-					RestClient.getFreshApiService().cancelReasons(params, callback);
+					RestClient.getFreshApiService().fetchCancellationReasons(params, callback);
 				}
 
 			} else {

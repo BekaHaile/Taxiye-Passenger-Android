@@ -31,7 +31,7 @@ public class OrderCancelReasonsResponse {
 	private String cancelInfo;
 	@SerializedName("additional_reasons")
 	@Expose
-	private String additionalReason;
+	private String additionalReasons;
 	@SerializedName("comment_placeholder")
 	@Expose
 	private String commentPlaceholder;
@@ -57,12 +57,12 @@ public class OrderCancelReasonsResponse {
 		this.message = message;
 	}
 
-	public String getAdditionalReason() {
-		return additionalReason;
+	public String getAdditionalReasons() {
+		return additionalReasons;
 	}
 
-	public void setAdditionalReason(String additionalReason) {
-		this.additionalReason = additionalReason;
+	public void setAdditionalReasons(String additionalReasons) {
+		this.additionalReasons = additionalReasons;
 	}
 
 	public Integer getFlag() {
