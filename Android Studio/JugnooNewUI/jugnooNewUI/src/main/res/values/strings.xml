@@ -1591,5 +1591,7 @@
     <string name="contacts_synced_successfully">Contacts synced successfully</string>
     <string name="please_enter_something">Please enter text</string>
     <string name="label_location_feed">Location</string>
+    <string name="selected_store">Selected Store</string>
+    <string name="delivery_stores">Delivery Stores</string>
 
 </resources>

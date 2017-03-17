@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,31 +9,80 @@
 
     <include layout="@layout/layout_delivery_address_bar" />
 
-    <RelativeLayout
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nest_scrollview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeContainer"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvFreshSuper"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/px_13"
-                android:paddingRight="@dimen/px_13"
-                android:fadeScrollbars="true" />
+                android:layout_height="wrap_content">
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        <include layout="@layout/layout_offering_not_available" />
+                    <RelativeLayout
+                        android:id="@+id/rlPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="220px">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/shadow_new_height"
-            android:background="@drawable/shadow_down_new" />
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/pager"
+                            android:layout_width="match_parent"
+                            android:layout_height="220px"/>
 
-    </RelativeLayout>
+                        <android.support.design.widget.TabLayout
+                            android:id="@+id/tabDots"
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:layout_marginBottom="7dp"
+                            android:tag="@string/dont_touch_me"
+                            android:layout_alignParentBottom="true"
+                            app:paddingEnd="4dp"
+                            app:paddingStart="4dp"
+                            app:tabBackground="@drawable/tab_selector"
+                            app:tabGravity="center"
+                            app:tabIndicatorHeight="0dp"
+                            app:tabMaxWidth="10dp" />
+
+                    </RelativeLayout>
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rvFreshSuper"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/rlPager"
+                        android:fadeScrollbars="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/shadow_new_height"
+                        android:background="@drawable/shadow_down_new"
+                        android:layout_below="@+id/rlPager"/>
+
+                    <include layout="@layout/layout_offering_not_available" />
+
+
+
+                </RelativeLayout>
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
 </LinearLayout>

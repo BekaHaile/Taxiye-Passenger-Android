@@ -1,17 +1,24 @@
 package com.sabkuchfresh.fragments;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +30,9 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -56,6 +65,10 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     private FreshSuperCategoriesAdapter adapter;
     private TextView textViewNothingFound;
     private SwipeRefreshLayout swipeContainer;
+    private ViewPager mImageViewPager;
+    private CustomPagerAdapter mCustomPagerAdapter;
+    private ArrayList<String> mResources = new ArrayList<>();
+//    private Scr scrollView;
 
     @Nullable
     @Override
@@ -73,6 +86,25 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
 
+        for(int j=0; j<3; j++) {
+            mResources.add("https://visitorinvictoria.ca/wp-content/uploads/2017/03/groceries.jpg");
+        }
+      /*  scrollView = (NestedScrollView) rootView.findViewById (R.id.nest_scrollview);
+        scrollView.setFillViewport (true);*/
+        mImageViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabDots);
+        tabLayout.setupWithViewPager(mImageViewPager, true);
+        mCustomPagerAdapter = new CustomPagerAdapter(activity);
+
+        mImageViewPager.setAdapter(mCustomPagerAdapter);
+
+        for(int i=0; i < tabLayout.getTabCount(); i++) {
+            View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(i);
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+            p.setMargins(20, 0, 0, 0);
+            tab.requestLayout();
+        }
+
         swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(this);
         swipeContainer.setColorSchemeResources(R.color.white);
@@ -87,7 +119,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         relativeLayoutNoMenus.setVisibility(View.GONE);
         rvFreshSuper = (RecyclerView) rootView.findViewById(R.id.rvFreshSuper);
         rvFreshSuper.setItemAnimator(new DefaultItemAnimator());
-        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
 
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
             @Override
@@ -141,7 +173,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         }
 
         GAUtils.trackScreenView(FRESH_SCREEN);
-
         return rootView;
     }
 
@@ -291,5 +322,47 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public void onRefresh() {
         getSuperCategoriesAPI();
+    }
+
+    class CustomPagerAdapter extends PagerAdapter {
+
+        Context mContext;
+        LayoutInflater mLayoutInflater;
+
+        public CustomPagerAdapter(Context context) {
+            mContext = context;
+            mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public int getCount() {
+            return mResources.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == ((LinearLayout) object);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            View itemView = mLayoutInflater.inflate(R.layout.item_pager_promo, container, false);
+
+            ImageView imageView = (ImageView) itemView.findViewById(R.id.ivPromo);
+            Picasso.with(mContext).load(mResources.get(position))
+                    .placeholder(R.drawable.ic_fresh_new_placeholder)
+                    .error(R.drawable.ic_fresh_new_placeholder)
+                    .fit()
+                    .into(imageView);
+
+            container.addView(itemView);
+
+            return itemView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((LinearLayout) object);
+        }
     }
 }

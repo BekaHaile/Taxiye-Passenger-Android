@@ -530,5 +530,6 @@
     <dimen name="dp_30">
         30dp
     </dimen>
+    <dimen name="px_238">238px</dimen>
 
 </resources>

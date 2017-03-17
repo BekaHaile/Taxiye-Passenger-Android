@@ -72,7 +72,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 			llRoot = (LinearLayout) view.findViewById(R.id.llRoot);
 			ivSuperCategoryImage = (ImageView) view.findViewById(R.id.ivSuperCategoryImage);
 			tvSuperCategoryName = (TextView) view.findViewById(R.id.tvSuperCategoryName);
-			tvSuperCategoryName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+			tvSuperCategoryName.setTypeface(Fonts.mavenMedium(context));
 			viewBG = (View) view.findViewById(R.id.viewBG);
 		}
 	}
@@ -88,7 +88,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 			llRoot = (LinearLayout) view.findViewById(R.id.llRoot);
 			ivSuperCategoryImage = (ImageView) view.findViewById(R.id.ivSuperCategoryImage);
 			tvSuperCategoryName = (TextView) view.findViewById(R.id.tvSuperCategoryName);
-			tvSuperCategoryName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+			tvSuperCategoryName.setTypeface(Fonts.mavenMedium(context));
 			tvComingSoon = (TextView) view.findViewById(R.id.tvComingSoon);
 			tvComingSoon.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
 			viewBG = (View) view.findViewById(R.id.viewBG);
@@ -104,7 +104,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 			return new ViewHolderCategorySingle(view, context);
 		} else{
 			View view = LayoutInflater.from(context).inflate(R.layout.list_item_fresh_super_category, parent, false);
-			view.setLayoutParams(new RecyclerView.LayoutParams(360, RecyclerView.LayoutParams.WRAP_CONTENT));
+			view.setLayoutParams(new RecyclerView.LayoutParams(240, 240));
 			ASSL.DoMagic(view);
 			return new ViewHolderCategory(view, context);
 		}

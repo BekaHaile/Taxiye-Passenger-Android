@@ -73,6 +73,7 @@ import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
+import com.sabkuchfresh.fragments.DeliveryStoresFragment;
 import com.sabkuchfresh.fragments.FeedAddPostFragment;
 import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedHomeFragment;
@@ -983,7 +984,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
                 llCartContainerVis = View.VISIBLE;
-                ivSearchVis = View.VISIBLE;
+                ivSearchVis = View.GONE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
 
@@ -1012,6 +1013,15 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 if (setMinOrderAmountText(fragment) == 1) {
                     textViewMinOrderVis = -1;
                 }
+
+            } else if(fragment instanceof DeliveryStoresFragment){
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
+
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getResources().getString(R.string.delivery_stores));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
             } else if (fragment instanceof MealFragment) {
                 llCartContainerVis = View.VISIBLE;

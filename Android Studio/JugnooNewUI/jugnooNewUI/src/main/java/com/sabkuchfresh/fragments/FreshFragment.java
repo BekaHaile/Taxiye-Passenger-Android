@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -85,6 +86,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private boolean loader = true, resumed = false;
     protected Bus mBus;
     PushDialog pushDialog;
+    private RelativeLayout rlSelectedStore;
 
 	private SuperCategoriesData.SuperCategory superCategory;
 
@@ -158,6 +160,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		viewPager.setAdapter(freshCategoryFragmentsAdapter);
 		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
 		ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
+        rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore);
 
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.text_color_dark_1, R.color.text_color);
@@ -237,6 +240,13 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+        rlSelectedStore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.getTransactionUtils().openDeliveryStoresFragment(activity, activity.getRelativeLayoutContainer());
+            }
+        });
 
 		return rootView;
 	}

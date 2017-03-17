@@ -1,49 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/llRoot"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/llRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/white">
 
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <include layout="@layout/layout_delivery_address_bar"/>
+    <include layout="@layout/layout_delivery_address_bar" />
 
     <RelativeLayout
-        android:animateLayoutChanges="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+
+        <RelativeLayout
+            android:id="@+id/rlSelectedStore"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/top_bar_height"
+            android:background="@drawable/bg_white_menu_item_selector_color_selector">
+
+            <ImageView
+                android:id="@+id/ivLoc"
+                android:layout_width="25px"
+                android:layout_height="34px"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/px_42"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_new_fresh_location" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/px_22"
+                android:layout_toRightOf="@+id/ivLoc"
+                android:layout_toLeftOf="@+id/ivEditLoc"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvSelectedStore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/selected_store"
+                    android:textColor="@color/location_text_color"
+                    android:textSize="@dimen/text_size_22"
+                    app:font="maven"/>
+
+                <TextView
+                    android:id="@+id/tvStoreName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px_6"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text="Sabharwal Market"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_28"
+                    app:font="maven"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ivEditStore"
+                android:layout_width="60px"
+                android:layout_height="60px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20px"
+                android:padding="15px"
+                android:src="@drawable/edit_icon_selector"
+                android:tag="mwar"
+                android:visibility="visible" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px_2"
+                android:background="@color/rank_3"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
 
 
         <include
             android:id="@+id/layout_offer_title"
-            android:animateLayoutChanges="true"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             layout="@layout/item_vendor_menu_offer_heading"
-            android:visibility="gone"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:layout_below="@id/rlSelectedStore"
+            android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_offers"
-            android:layout_marginRight="36px"
-            android:layout_marginLeft="36px"
-            android:layout_below="@id/layout_offer_title"
             android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="wrap_content"/>
-
-
-
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_offer_title"
+            android:layout_marginLeft="36px"
+            android:layout_marginRight="36px"
+            android:visibility="gone" />
 
 
         <LinearLayout
             android:id="@+id/mainLayout"
-            android:layout_below="@id/recycler_view_offers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/recycler_view_offers"
             android:orientation="vertical"
             android:visibility="visible">
-
 
 
             <ImageView
@@ -51,11 +115,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/shadow_new_height"
                 android:src="@drawable/shadow_down_new"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.sabkuchfresh.widgets.PagerSlidingTabStrip
-                android:id="@+id/tabs"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="70px"
                 android:background="@color/white"
@@ -64,8 +128,7 @@
                 app:pstsIndicatorHeight="5px"
                 app:pstsShouldExpand="true"
                 app:pstsUnderlineColor="@color/transparent"
-                app:pstsUnderlineHeight="1px"
-                />
+                app:pstsUnderlineHeight="1px" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -74,14 +137,14 @@
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
                 <ImageView
                     android:id="@+id/ivShadowBelowTab"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/shadow_new_height"
                     android:background="@drawable/shadow_down_new"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </RelativeLayout>
 
 
@@ -92,8 +155,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/shadow_new_height"
             android:src="@drawable/shadow_down_new"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_container"
@@ -107,7 +169,7 @@
                 android:layout_height="match_parent"
                 android:fadeScrollbars="true"
                 android:scrollbars="vertical"
-                android:splitMotionEvents="false"/>
+                android:splitMotionEvents="false" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout
@@ -125,7 +187,7 @@
                 android:layout_height="349px"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/ic_no_grocery_items"
-                android:tag="mwar"/>
+                android:tag="mwar" />
 
         </LinearLayout>
 
