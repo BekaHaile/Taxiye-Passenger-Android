@@ -99,6 +99,7 @@ import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.retrofit.model.DeliveryStore;
+import com.sabkuchfresh.retrofit.model.DeliveryStoreCart;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -397,10 +398,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             ivSort.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-
-
                     if (viewSortFake.getVisibility() == View.GONE) {
 
                         if(getAppType()== AppConstant.ApplicationType.MENUS && getTopFragment() instanceof VendorMenuFragment) {
@@ -1932,6 +1929,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
                 }
             }
+
+            // hash Current delivery store cart object for updating subItems list quantity
+            DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
+
             Gson gson = new Gson();
             if (subItemToUpdate == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
@@ -1943,12 +1944,19 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                            // updating deliveryStoreCart subItem hashMap
+                            deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+
                         } else {
                             try {
                                 jCart.remove(String.valueOf(subItem.getSubItemId()));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                            // removing from deliveryStoreCart subItem hashMap
+                            deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
                         }
                     }
                 }
@@ -1959,17 +1967,23 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    // updating deliveryStoreCart subItem hashMap
+                    deliveryStoreCart.getSubItemHashMap().put(subItemToUpdate.getSubItemId(), subItemToUpdate);
                 } else {
                     try {
                         jCart.remove(String.valueOf(subItemToUpdate.getSubItemId()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    // updating deliveryStoreCart subItem hashMap
+                    deliveryStoreCart.getSubItemHashMap().put(subItemToUpdate.getSubItemId(), subItemToUpdate);
                 }
             }
             int type = getAppType();
             if (type == AppConstant.ApplicationType.FRESH) {
-                Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
+//                TODO Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
             } else if (type == AppConstant.ApplicationType.GROCERY) {
                 Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
             } else {
@@ -2051,26 +2065,46 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             } else {
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
             }
+
+            // hash Current delivery store cart object for updating subItems list quantity
+            DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
+
             Gson gson = new Gson();
             if (subItems == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
                 boolean cartUpdated = false;
+
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
-                        subItem.setSubItemQuantitySelected(0);
-                        try {
-                            String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
-                            if (!TextUtils.isEmpty(jItem)) {
-                                SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
-                                if (subItem.getStock() < subItemSaved.getSubItemQuantitySelected()) {
-                                    subItemSaved.setSubItemQuantitySelected(subItem.getStock());
-                                    cartUpdated = true;
-                                }
-                                subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
+//                        subItem.setSubItemQuantitySelected(0);
+
+                        // TODO updates subItem quantity from sp
+//                        try {
+//                            String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
+//                            if (!TextUtils.isEmpty(jItem)) {
+//                                SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
+//                                if (subItem.getStock() < subItemSaved.getSubItemQuantitySelected()) {
+//                                    subItemSaved.setSubItemQuantitySelected(subItem.getStock());
+//                                    cartUpdated = true;
+//                                }
+//                                subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+
+
+
+                        // updating deliveryStoreCart subItem hashMap
+                        if(deliveryStoreCart.getSubItemHashMap().containsKey(subItem.getSubItemId())){
+                            subItem.setSubItemQuantitySelected(deliveryStoreCart.getSubItemHashMap()
+                                    .get(subItem.getSubItemId()).getSubItemQuantitySelected());
+                            if (subItem.getStock() < subItem.getSubItemQuantitySelected()) {
+                                subItem.setSubItemQuantitySelected(subItem.getStock());
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
                         }
+
                     }
                 }
                 if (cartUpdated) {
@@ -2079,19 +2113,31 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             } else if (subItems != null) {
                 boolean cartUpdated = false;
                 for (SubItem subItem : subItems) {
-                    subItem.setSubItemQuantitySelected(0);
-                    try {
-                        String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
-                        if (!TextUtils.isEmpty(jItem)) {
-                            SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
-                            if (subItem.getStock() < subItemSaved.getSubItemQuantitySelected()) {
-                                subItemSaved.setSubItemQuantitySelected(subItem.getStock());
-                                cartUpdated = true;
-                            }
-                            subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
+//                    subItem.setSubItemQuantitySelected(0);
+                    // TODO updates subItem quantity from sp
+//                    try {
+//                        String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
+//                        if (!TextUtils.isEmpty(jItem)) {
+//                            SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
+//                            if (subItem.getStock() < subItemSaved.getSubItemQuantitySelected()) {
+//                                subItemSaved.setSubItemQuantitySelected(subItem.getStock());
+//                                cartUpdated = true;
+//                            }
+//                            subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+
+
+                    // updating deliveryStoreCart subItem hashMap
+                    if(deliveryStoreCart.getSubItemHashMap().containsKey(subItem.getSubItemId())){
+                        subItem.setSubItemQuantitySelected(deliveryStoreCart.getSubItemHashMap()
+                                .get(subItem.getSubItemId()).getSubItemQuantitySelected());
+                        if (subItem.getStock() < subItem.getSubItemQuantitySelected()) {
+                            subItem.setSubItemQuantitySelected(subItem.getStock());
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
                     }
                 }
                 if (cartUpdated) {
@@ -2157,10 +2203,14 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public void clearCart() {
         Prefs.with(this).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
+        Paper.book().delete(DB_FRESH_CART);
+        createAppCart(Config.getFreshClientId());
     }
 
     private void clearMealCart() {
         Prefs.with(this).save(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT);
+        Paper.book().delete(DB_MEALS_CART);
+        createAppCart(Config.getMealsClientId());
     }
 
     private void clearGroceryCart() {
@@ -3138,6 +3188,11 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     }
                 }
             }
+
+            // items fetched from opened store
+            subItemsInCart.clear();
+            subItemsInCart.addAll(getCart().getDeliveryStoreCart(getOpenedDeliveryStore()).getCartItems());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3148,6 +3203,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public void saveCartList(ArrayList<SubItem> subItems) {
         try {
             JSONObject jCart = new JSONObject();
+
+            // hash Current delivery store cart object for updating subItems list quantity
+            DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
+
             Gson gson = new Gson();
             for (SubItem subItem : subItems) {
                 if (subItem.getSubItemQuantitySelected() > 0) {
@@ -3157,11 +3216,14 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         e.printStackTrace();
                     }
                 }
+
+                // updating deliveryStoreCart subItem hashMap
+                deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
             }
             jCart.put(Constants.KEY_CITY_ID, getCartCityId());
             int type = getAppType();
             if (type == AppConstant.ApplicationType.FRESH) {
-                Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
+//                TODO Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
             } else if (type == AppConstant.ApplicationType.GROCERY) {
                 Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
             } else {

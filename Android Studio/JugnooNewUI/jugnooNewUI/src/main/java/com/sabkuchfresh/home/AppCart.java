@@ -29,18 +29,13 @@ public class AppCart {
 	}
 
 	public void saveSubItemToStore(DeliveryStore deliveryStore, SubItem subItem){
-		DeliveryStoreCart deliveryStoreCart;
-		if(deliveryStoreCartHashMap.containsKey(deliveryStore.getStoreId())){
-			deliveryStoreCart = deliveryStoreCartHashMap.get(deliveryStore.getStoreId());
-			deliveryStoreCart.setDeliveryStore(deliveryStore);
-		} else {
-			deliveryStoreCart = new DeliveryStoreCart(deliveryStore);
-			deliveryStoreCartHashMap.put(deliveryStore.getStoreId(), deliveryStoreCart);
-		}
+		DeliveryStoreCart deliveryStoreCart = getDeliveryStoreCart(deliveryStore);
 		if(subItem.getSubItemQuantitySelected() == 0){
 			deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
 		} else {
-			deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+			if(!deliveryStoreCart.getSubItemHashMap().containsKey(subItem.getSubItemId())){
+				deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+			}
 		}
 		Log.i(AppCart.class.getSimpleName(), "save to cart");
 	}
@@ -52,5 +47,17 @@ public class AppCart {
 			total = total + deliveryStoreCart.getCartTotal();
 		}
 		return total;
+	}
+
+	public DeliveryStoreCart getDeliveryStoreCart(DeliveryStore deliveryStore){
+		DeliveryStoreCart deliveryStoreCart;
+		if(deliveryStoreCartHashMap.containsKey(deliveryStore.getStoreId())){
+			deliveryStoreCart = deliveryStoreCartHashMap.get(deliveryStore.getStoreId());
+			deliveryStoreCart.setDeliveryStore(deliveryStore);
+		} else {
+			deliveryStoreCart = new DeliveryStoreCart(deliveryStore);
+			deliveryStoreCartHashMap.put(deliveryStore.getStoreId(), deliveryStoreCart);
+		}
+		return deliveryStoreCart;
 	}
 }

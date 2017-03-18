@@ -1,6 +1,6 @@
 package com.sabkuchfresh.retrofit.model;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -29,9 +29,6 @@ public class DeliveryStoreCart {
 		return subItemHashMap;
 	}
 
-	public void setSubItemHashMap(HashMap<Integer, SubItem> subItemHashMap) {
-		this.subItemHashMap = subItemHashMap;
-	}
 
 	public double getCartTotal(){
 		double total = 0d;
@@ -41,7 +38,7 @@ public class DeliveryStoreCart {
 		return total;
 	}
 
-	public ArrayList<SubItem> getCartItems(){
-		return (ArrayList<SubItem>) subItemHashMap.values();
+	public Collection<SubItem> getCartItems(){
+		return subItemHashMap.values();
 	}
 }
