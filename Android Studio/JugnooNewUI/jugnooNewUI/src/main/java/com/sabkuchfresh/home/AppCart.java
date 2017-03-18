@@ -1,0 +1,56 @@
+package com.sabkuchfresh.home;
+
+import com.sabkuchfresh.retrofit.model.DeliveryStore;
+import com.sabkuchfresh.retrofit.model.DeliveryStoreCart;
+import com.sabkuchfresh.retrofit.model.SubItem;
+
+import java.util.HashMap;
+
+import product.clicklabs.jugnoo.utils.Log;
+
+/**
+ * Created by shankar on 18/03/17.
+ */
+
+public class AppCart {
+
+	private HashMap<Integer, DeliveryStoreCart> deliveryStoreCartHashMap;
+
+	public AppCart(){
+		deliveryStoreCartHashMap = new HashMap<>();
+	}
+
+	public HashMap<Integer, DeliveryStoreCart> getDeliveryStoreCartHashMap() {
+		return deliveryStoreCartHashMap;
+	}
+
+	public void setDeliveryStoreCartHashMap(HashMap<Integer, DeliveryStoreCart> deliveryStoreCartHashMap) {
+		this.deliveryStoreCartHashMap = deliveryStoreCartHashMap;
+	}
+
+	public void saveSubItemToStore(DeliveryStore deliveryStore, SubItem subItem){
+		DeliveryStoreCart deliveryStoreCart;
+		if(deliveryStoreCartHashMap.containsKey(deliveryStore.getStoreId())){
+			deliveryStoreCart = deliveryStoreCartHashMap.get(deliveryStore.getStoreId());
+			deliveryStoreCart.setDeliveryStore(deliveryStore);
+		} else {
+			deliveryStoreCart = new DeliveryStoreCart(deliveryStore);
+			deliveryStoreCartHashMap.put(deliveryStore.getStoreId(), deliveryStoreCart);
+		}
+		if(subItem.getSubItemQuantitySelected() == 0){
+			deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
+		} else {
+			deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+		}
+		Log.i(AppCart.class.getSimpleName(), "save to cart");
+	}
+
+
+	public double getSubTotal(){
+		double total = 0d;
+		for(DeliveryStoreCart deliveryStoreCart : deliveryStoreCartHashMap.values()){
+			total = total + deliveryStoreCart.getCartTotal();
+		}
+		return total;
+	}
+}

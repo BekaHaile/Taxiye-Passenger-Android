@@ -9,14 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.DeliveryStoresAdapter;
-import com.sabkuchfresh.datastructure.Stores;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.Slot;
-import com.sabkuchfresh.retrofit.model.Store;
+import com.sabkuchfresh.retrofit.model.DeliveryStore;
 
 import java.util.ArrayList;
 
@@ -34,7 +31,7 @@ public class DeliveryStoresFragment extends Fragment {
     private RelativeLayout llRoot;
     private RecyclerView rvDeliveryStores;
     private DeliveryStoresAdapter deliveryStoresAdapter;
-    private ArrayList<Stores.DeliveryStore> stores = new ArrayList<>();
+    private ArrayList<DeliveryStore> stores = new ArrayList<>();
 
     public static DeliveryStoresFragment newInstance() {
         Bundle args = new Bundle();
@@ -66,8 +63,9 @@ public class DeliveryStoresFragment extends Fragment {
         rvDeliveryStores.setHasFixedSize(false);
 
         for(int i=0; i<3; i++){
-            Stores.DeliveryStore store = new Stores.DeliveryStore();
+            DeliveryStore store = new DeliveryStore();
             store.setVendorName("Exo Fresh");
+            store.setStoreId(i);
             if(i == 0) {
                 store.setIsSelected(1);
             }
@@ -76,8 +74,8 @@ public class DeliveryStoresFragment extends Fragment {
 
         deliveryStoresAdapter = new DeliveryStoresAdapter(activity, stores, rvDeliveryStores, new DeliveryStoresAdapter.Callback() {
             @Override
-            public void onStoreSelected(int position, Slot slot) {
-
+            public void onStoreSelected(int position, DeliveryStore deliveryStore) {
+                activity.setOpenedDeliveryStore(deliveryStore);
             }
         });
 

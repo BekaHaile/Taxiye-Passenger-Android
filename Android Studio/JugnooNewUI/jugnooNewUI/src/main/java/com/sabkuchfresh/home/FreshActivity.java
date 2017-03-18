@@ -75,8 +75,8 @@ import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
 import com.sabkuchfresh.fragments.FeedAddPostFragment;
-import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedHomeFragment;
+import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
@@ -98,6 +98,7 @@ import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
+import com.sabkuchfresh.retrofit.model.DeliveryStore;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -133,6 +134,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -140,6 +142,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.OrderStatusFragment;
+import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -177,7 +180,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseAppCompatActivity implements GAAction, GACategory {
+public class FreshActivity extends BaseAppCompatActivity implements GAAction, GACategory, PaperDBKeys {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -436,6 +439,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             try {
                 float marginBottom = 60f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+
+                createAppCart(lastClientId);
 
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                     addMealFragment();
@@ -1411,9 +1416,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     topBar.title.invalidate();
                     topBar.animateSearchBar(true);
                       GAUtils.event(GACategory.MENUS, GAAction.HOME ,GAAction.SEARCH_BUTTON + GAAction.CLICKED);
-
-//                    FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_SEARCH_BUTTON_MENUS, Events.MENU_SEARCH);
-
                 }
                 else if (getTopFragment() instanceof VendorMenuFragment || getTopFragment() instanceof RestaurantImageFragment) {
                         if(getTopFragment() instanceof VendorMenuFragment){
@@ -1896,6 +1898,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     @Override
     protected void onPause() {
         super.onPause();
+        saveAppCart();
+
         if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
             updateCartFromSPFMG(null);
         }
@@ -3790,6 +3794,47 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         }
         apiFetchRestaurantMenu.getVendorMenu(restaurantId, getSelectedLatLng().latitude,
                 getSelectedLatLng().longitude, restaurantInfo, vendor);
+    }
+
+
+    private AppCart appCart;
+    public AppCart getCart(){
+        return appCart;
+    }
+    private void createAppCart(String clientId){
+        if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
+            appCart = Paper.book().read(DB_FRESH_CART, new AppCart());
+        }
+        else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
+            appCart = Paper.book().read(DB_MEALS_CART, new AppCart());
+        }
+    }
+    private void saveAppCart(){
+        String clientId = Prefs.with(this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+        if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
+            Paper.book().write(DB_FRESH_CART, appCart);
+        }
+        else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
+            Paper.book().write(DB_MEALS_CART, appCart);
+        }
+    }
+
+
+    private DeliveryStore openedDeliveryStore;
+    public DeliveryStore getOpenedDeliveryStore(){
+        if(openedDeliveryStore == null){
+            openedDeliveryStore = new DeliveryStore();
+            openedDeliveryStore.setStoreId(0);
+        }
+        return openedDeliveryStore;
+    }
+    public void setOpenedDeliveryStore(DeliveryStore deliveryStore){
+        openedDeliveryStore = deliveryStore;
+    }
+
+
+    public void saveSubItemToDeliveryStoreCart(SubItem subItem){
+        getCart().saveSubItemToStore(getOpenedDeliveryStore(), subItem);
     }
 
 }
