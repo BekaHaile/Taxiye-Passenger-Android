@@ -375,7 +375,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                                     if (activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
-                                        activity.updateCartFromSP();
+                                        activity.updateCartFromSP(); // this is necessary
                                         activity.updateCartValuesGetTotalPrice();
                                     }
                                 }
@@ -447,12 +447,14 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
+        activity.saveSubItemToDeliveryStoreCart(subItem);
         activity.updateCartValuesGetTotalPrice();
         activity.getFabViewTest().hideJeanieHelpInSession();
     }
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
+        activity.saveSubItemToDeliveryStoreCart(subItem);
         activity.updateCartValuesGetTotalPrice();
         activity.getFabViewTest().hideJeanieHelpInSession();
     }

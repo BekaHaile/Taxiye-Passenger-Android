@@ -53,7 +53,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
     private View rootView;
     private FreshActivity activity;
 
-    private ArrayList<SubItem> mealsAddonData = new ArrayList<>();
+    private ArrayList<SubItem> mealsAddonSubItems = new ArrayList<>();
     private int addOnSelectedCount = 0;
     public ArrayList<SubItem> subItemsInCart;
 
@@ -94,7 +94,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
         listViewAddonItems.addHeaderView(header, null, false);
         ((TextView)header.findViewById(R.id.textViewCompleteMeal)).setTypeface(Fonts.mavenMedium(activity));
 
-        addOnItemsAdapter = new AddOnItemsAdapter(activity, mealsAddonData, this);
+        addOnItemsAdapter = new AddOnItemsAdapter(activity, mealsAddonSubItems, this);
         listViewAddonItems.setAdapter(addOnItemsAdapter);
 
         relativeLayoutProceed.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +123,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
                 new FreshCartItemsAdapter.Callback() {
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {
-                        activity.saveCartList(subItemsInCart);
+                        activity.saveSubItemToDeliveryStoreCart(subItem);
                         activity.updateCartFromSP();
                         updateCartDataView();
                         updateAddonsListCount();
@@ -132,10 +132,10 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
 
                     @Override
                     public void onMinusClicked(int position, SubItem subItem) {
+                        activity.saveSubItemToDeliveryStoreCart(subItem);
                         if(subItem.getSubItemQuantitySelected() == 0){
                             subItemsInCart.remove(position);
                         }
-                        activity.saveCartList(subItemsInCart);
                         activity.updateCartFromSP();
                         updateCartDataView();
                         updateAddonsListCount();
@@ -252,6 +252,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
+        activity.saveSubItemToDeliveryStoreCart(subItem);
         updateCartTopBarView(activity.updateCartValuesGetTotalPriceFMG(subItem));
         addOnSelectedCount++;
         updateBottomBar();
@@ -261,6 +262,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
+        activity.saveSubItemToDeliveryStoreCart(subItem);
         updateCartTopBarView(activity.updateCartValuesGetTotalPriceFMG(subItem));
         addOnSelectedCount--;
         updateBottomBar();
@@ -310,8 +312,8 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
     public void deleteCart() {
         for(SubItem subItem : subItemsInCart){
             subItem.setSubItemQuantitySelected(0);
+            activity.saveSubItemToDeliveryStoreCart(subItem);
         }
-        activity.saveCartList(subItemsInCart);
         activity.updateCartFromSP();
         updateCartDataView();
         subItemsInCart.clear();
@@ -323,9 +325,9 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
     private void updateAddonsListCount(){
         try {
             addOnSelectedCount = 0;
-            mealsAddonData.clear();
-            mealsAddonData.addAll(activity.getProductsResponse().getCategories().get(1).getSubItems());
-            for(SubItem subItem : mealsAddonData){
+            mealsAddonSubItems.clear();
+            mealsAddonSubItems.addAll(activity.getProductsResponse().getCategories().get(1).getSubItems());
+            for(SubItem subItem : mealsAddonSubItems){
                 addOnSelectedCount = addOnSelectedCount + subItem.getSubItemQuantitySelected();
             }
         } catch (Exception e) {

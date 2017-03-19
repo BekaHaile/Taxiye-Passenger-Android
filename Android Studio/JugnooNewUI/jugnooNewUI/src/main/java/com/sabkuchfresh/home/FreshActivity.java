@@ -848,7 +848,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public Pair<Double, Integer> updateCartValuesGetTotalPrice() {
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
-
             return updateCartValuesGetTotalPriceMenus();
         } else {
             return updateCartValuesGetTotalPriceFMG();
@@ -1920,20 +1919,32 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         try {
             // hash Current delivery store cart object for updating subItems list quantity
             DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
+            // if app opened is meals and not a particular item is needed to be updated, clear the cart
+            if(getAppType() == AppConstant.ApplicationType.MEALS && subItemToUpdate == null){
+                deliveryStoreCart.getSubItemHashMap().clear();
+            }
 
             if (subItemToUpdate == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
+                int i = 0;
                 for (Category category : getProductsResponse().getCategories()) {
+                    int mainItemsCount = 0;
                     for (SubItem subItem : category.getSubItems()) {
                         if (subItem.getSubItemQuantitySelected() > 0) {
                             // updating deliveryStoreCart subItem hashMap
                             deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
-
+                            // if app is meals increase mainItemCount
+                            if(getAppType() == AppConstant.ApplicationType.MEALS && i == 0) mainItemsCount++;
                         } else {
                             // removing from deliveryStoreCart subItem hashMap
                             deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
                         }
                     }
+                    if(getAppType() == AppConstant.ApplicationType.MEALS && i == 0 && mainItemsCount == 0){
+                        deliveryStoreCart.getSubItemHashMap().clear();
+                        break;
+                    }
+                    i++;
                 }
             } else if (subItemToUpdate != null) {
                 if (subItemToUpdate.getSubItemQuantitySelected() > 0) {
@@ -2016,7 +2027,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
             if (subItems == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
-
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
                         // updating deliveryStoreCart subItem hashMap
@@ -2026,7 +2036,11 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                             if (subItem.getStock() < subItem.getSubItemQuantitySelected()) {
                                 subItem.setSubItemQuantitySelected(subItem.getStock());
                             }
-                            deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+                            if (subItem.getSubItemQuantitySelected() > 0) {
+                                deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+                            } else {
+                                deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
+                            }
                         }
                     }
                 }
@@ -2039,7 +2053,11 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         if (subItem.getStock() < subItem.getSubItemQuantitySelected()) {
                             subItem.setSubItemQuantitySelected(subItem.getStock());
                         }
-                        deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+                        if (subItem.getSubItemQuantitySelected() > 0) {
+                            deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+                        } else {
+                            deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
+                        }
                     }
                 }
             }
@@ -3074,8 +3092,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         try {
             // hash Current delivery store cart object for updating subItems list quantity
             DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
-
-            Gson gson = new Gson();
+            deliveryStoreCart.getSubItemHashMap().clear();
             for (SubItem subItem : subItems) {
                 // updating deliveryStoreCart subItem hashMap
                 deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
@@ -3205,8 +3222,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         @Override
                         public void onClick(View v) {
                             setDeliveryAddressModelToSelectedAddress();
-//                            setRefreshCart(true);
-//                            getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
                             callback.onNoClick();
                         }
                     }, false, false);
@@ -3575,7 +3590,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             appBarLayout.setExpanded(false, false);
             topBar.llCartContainer.setVisibility(View.GONE);
             topBar.ivSearch.setVisibility(View.GONE);
-//            FlurryEventLogger.eventGA(Events.MENUS,Events.CLICK_ON_RATING_BUTTON_RESTRO,Events.MENU_RESTRO_RATING_CLICK);
             GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.FEED + GAAction.CLICKED);
             getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
@@ -3591,13 +3605,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
     public boolean canExitVendorMenu() {
-
-
         if (getTopFragment() != null && getTopFragment() instanceof VendorMenuFragment && mCurrentState == State.IDLE && currentVerticalOffSet != -1)
             return false;
         else
             return true;
-
     }
 
     public FetchFeedbackResponse.Review getCurrentReview() {
