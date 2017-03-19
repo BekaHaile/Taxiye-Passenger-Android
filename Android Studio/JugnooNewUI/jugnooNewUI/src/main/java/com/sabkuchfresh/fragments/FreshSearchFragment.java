@@ -299,8 +299,8 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
             }, 700);
 			activity.fragmentUISetup(this);
 			if(activity.getCartChangedAtCheckout()){
-				activity.updateCartFromSP();
-				activity.updateCartFromSPFMG(subItemsInSearch);
+				activity.updateItemListFromSPDB();
+				activity.updateItemListFromDBFMG(subItemsInSearch);
 				freshCategoryItemsAdapter.notifyDataSetChanged();
 				activity.updateCartValuesGetTotalPrice();
 			}
@@ -409,7 +409,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 													}
 												}
 											}
-											activity.updateCartFromSPFMG(subItemsInSearch);
+											activity.updateItemListFromDBFMG(subItemsInSearch);
 											freshCategoryItemsAdapter.notifyDataSetChanged();
 											if(subItemsInSearch.size() > 0){
 												textViewPlaceholder.setVisibility(View.GONE);

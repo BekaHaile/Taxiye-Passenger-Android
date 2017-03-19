@@ -2383,7 +2383,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if(!cartChangedRefreshCheckout){
             GAUtils.event(activity.getGaCategory(), CHECKOUT, CART+ITEM+MODIFIED);
         }
-        activity.saveCartList(subItemsInCart);
+        activity.saveSubItemToDeliveryStoreCart(subItem);
         activity.setCartChangedAtCheckout(true);
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
@@ -2410,7 +2410,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if(subItem.getSubItemQuantitySelected() == 0){
             subItemsInCart.remove(position);
         }
-        activity.saveCartList(subItemsInCart);
+        activity.saveSubItemToDeliveryStoreCart(subItem);
 
         checkIfEmpty();
         updateCartDataView();
@@ -2498,6 +2498,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         } else {
             for (SubItem subItem : subItemsInCart) {
                 subItem.setSubItemQuantitySelected(0);
+                activity.saveSubItemToDeliveryStoreCart(subItem);
             }
             updateCartDataView();
             subItemsInCart.clear();

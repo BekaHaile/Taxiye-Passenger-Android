@@ -337,7 +337,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     ivShadowAboveTab.setVisibility(View.VISIBLE);
                     ivShadowBelowTab.setVisibility(View.VISIBLE);
 
-                    activity.updateCartFromSP();
+                    activity.updateItemListFromSPDB();
                     activity.updateCartValuesGetTotalPrice();
                     menusCategoryFragmentsAdapter.setCategories(activity.getMenuProductsResponse().getCategories());
                     tabs.setViewPager(viewPager);

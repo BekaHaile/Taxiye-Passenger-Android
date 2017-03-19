@@ -299,7 +299,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
             activity.resumeMethod();
             if(activity.getCartChangedAtCheckout()){
-				activity.updateCartFromSP();
+				activity.updateItemListFromSPDB();
 				onUpdateListEvent(new UpdateMainList(true));
 				activity.updateCartValuesGetTotalPrice();
 			}
@@ -379,7 +379,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 											ivShadowBelowTab.setVisibility(View.GONE);
 											ivShadowAboveTab.setVisibility(View.VISIBLE);
 										}
-                                        activity.updateCartFromSP();
+                                        activity.updateItemListFromSPDB();
                                         activity.updateCartValuesGetTotalPrice();
                                         if(loader) {
                                             freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());

@@ -189,7 +189,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
             if(activity.getCartChangedAtCheckout()){
-                activity.updateCartFromSP();
+                activity.updateItemListFromSPDB();
                 mealAdapter.notifyDataSetChanged();
                 activity.updateCartValuesGetTotalPrice();
             }
@@ -375,7 +375,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                                     if (activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
-                                        activity.updateCartFromSP(); // this is necessary
+                                        activity.updateItemListFromSPDB(); // this is necessary
                                         activity.updateCartValuesGetTotalPrice();
                                     }
                                 }

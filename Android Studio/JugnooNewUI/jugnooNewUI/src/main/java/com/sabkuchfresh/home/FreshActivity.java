@@ -366,7 +366,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     Utils.hideSoftKeyboard(FreshActivity.this, topBar.etSearch);
 
                     int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
-                    updateCartFromSP();
+                    updateItemListFromSPDB();
                     if (updateCartValuesGetTotalPrice().second > 0) {
 
 
@@ -544,10 +544,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     public void run() {
                         try {
                             if (getAppType() != AppConstant.ApplicationType.MENUS && productsResponse != null && productsResponse.getCategories() != null) {
-                                updateCartFromSP();
+                                updateItemListFromSPDB();
                                 topBar.getLlCartContainer().performClick();
                             } else if (getAppType() == AppConstant.ApplicationType.MENUS && getMenuProductsResponse() != null && getMenuProductsResponse().getCategories() != null) {
-                                updateCartFromSP();
+                                updateItemListFromSPDB();
                                 topBar.getLlCartContainer().performClick();
                             } else {
                                 updateCart = true;
@@ -586,7 +586,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                                 }
                                 String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
                                 if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
-                                    updateCartFromSP();
+                                    updateItemListFromSPDB();
                                     topBar.getLlCartContainer().performClick();
                                 } else {
                                     Bundle bundle = new Bundle();
@@ -602,7 +602,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                                 }
                                 String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getGroceryClientId());
                                 if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
-                                    updateCartFromSP();
+                                    updateItemListFromSPDB();
                                     topBar.getLlCartContainer().performClick();
                                 } else {
                                     Bundle bundle = new Bundle();
@@ -616,7 +616,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                                 }
                                 String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
                                 if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
-                                    updateCartFromSP();
+                                    updateItemListFromSPDB();
                                     topBar.getLlCartContainer().performClick();
                                 } else {
                                     Bundle bundle = new Bundle();
@@ -878,7 +878,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
     public Pair<Double, Integer> updateCartValuesGetTotalPriceFMG(SubItem subItemToUpdate) {
-        saveCartToSPFMG(subItemToUpdate);
+        saveItemListToDBFMG(subItemToUpdate);
         Pair<Double, Integer> pair = getSubItemInCartTotalPrice();
         try {
             updateTotalAmountPrice(totalPrice);
@@ -936,7 +936,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             e.printStackTrace();
         }
 
-        saveCartToSPMenus();
+        saveItemListToSPMenus();
         if (totalQuantity > 0) {
         }
         pair = new Pair<>(totalPrice, totalQuantity);
@@ -1893,29 +1893,37 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     @Override
     protected void onPause() {
         super.onPause();
-        saveAppCart(getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
 
         if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
-            updateCartFromSPFMG(null);
+            updateItemListFromDBFMG(null);
         }
-        saveCartToSP();
+        saveItemListToSPDB();
+        saveAppCart(getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
             saveFilters();
         }
+
 
         MyApplication.getInstance().getLocationFetcher().destroy();
 
     }
 
-    public void saveCartToSP() {
+    public void saveItemListToSPDB() {
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
-            saveCartToSPMenus();
+            saveItemListToSPMenus();
         } else {
-            saveCartToSPFMG(null);
+            saveItemListToDBFMG(null);
         }
     }
 
-    private void saveCartToSPFMG(SubItem subItemToUpdate) {
+    /**
+     * saves productResponse items list to db hashMap
+     * if subItemToUpdate is null then it should be called only when item list is recreated from server's response
+     *
+     * @param subItemToUpdate item to save in db hashMap, if null whole categories list will be saved
+     */
+    private void saveItemListToDBFMG(SubItem subItemToUpdate) {
         try {
             // hash Current delivery store cart object for updating subItems list quantity
             DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
@@ -1940,6 +1948,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                             deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
                         }
                     }
+                    // if no main meal item selected clear cart and break from loop
                     if(getAppType() == AppConstant.ApplicationType.MEALS && i == 0 && mainItemsCount == 0){
                         deliveryStoreCart.getSubItemHashMap().clear();
                         break;
@@ -1952,7 +1961,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     deliveryStoreCart.getSubItemHashMap().put(subItemToUpdate.getSubItemId(), subItemToUpdate);
                 } else {
                     // updating deliveryStoreCart subItem hashMap
-                    deliveryStoreCart.getSubItemHashMap().put(subItemToUpdate.getSubItemId(), subItemToUpdate);
+                    deliveryStoreCart.getSubItemHashMap().remove(subItemToUpdate.getSubItemId());
                 }
             }
         } catch (Exception e) {
@@ -1960,7 +1969,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         }
     }
 
-    private void saveCartToSPMenus() {
+    private void saveItemListToSPMenus() {
         try {
             Gson gson = new Gson();
             JSONObject jCart = new JSONObject();
@@ -2012,15 +2021,20 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
 
-    public void updateCartFromSP() {
+    public void updateItemListFromSPDB() {
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
-            updateCartFromSPMenus();
+            updateItemListFromSPMenus();
         } else {
-            updateCartFromSPFMG(null);
+            updateItemListFromDBFMG(null);
         }
     }
 
-    public void updateCartFromSPFMG(ArrayList<SubItem> subItems) {
+
+    /**
+     * Updates productResponse item list quantity from db and db items hashMap
+     * @param subItems list to update, if null whole categories will be updated
+     */
+    public void updateItemListFromDBFMG(ArrayList<SubItem> subItems) {
         try {
             // hash Current delivery store cart object for updating subItems list quantity
             DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
@@ -2066,7 +2080,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         }
     }
 
-    private void updateCartFromSPMenus() {
+    private void updateItemListFromSPMenus() {
         try {
             Gson gson = new Gson();
             JSONObject jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
@@ -2477,7 +2491,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public boolean checkForMinus(int position, SubItem subItem) {
         if (isMealAddonItemsAvailable()) {
-            updateCartFromSPFMG(null);
+            updateItemListFromDBFMG(null);
             boolean addOnAdded = false;
             boolean itemIsAddon = false;
             for (SubItem si : getProductsResponse().getCategories().get(1).getSubItems()) {
@@ -2515,6 +2529,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                             for (SubItem subItem : category.getSubItems()) {
                                 if (subItem.getSubItemQuantitySelected() > 0) {
                                     subItem.setSubItemQuantitySelected(0);
+                                    saveSubItemToDeliveryStoreCart(subItem);
                                 }
                             }
                         }
@@ -2523,7 +2538,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
             }
             clearMealCart();
-            updateCartFromSP();
+            updateItemListFromSPDB();
             updateCartValuesGetTotalPrice();
         } catch (Exception e) {
             e.printStackTrace();
@@ -3081,6 +3096,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             // items fetched from opened store
             subItemsInCart.clear();
             subItemsInCart.addAll(getCart().getDeliveryStoreCart(getOpenedDeliveryStore()).getCartItems());
+            Collections.reverse(subItemsInCart);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3088,6 +3104,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
 
+    /**
+     * only called to overwrite db saved cart in the Checkout page api
+     * @param subItems to save in cart
+     */
     public void saveCartList(ArrayList<SubItem> subItems) {
         try {
             // hash Current delivery store cart object for updating subItems list quantity
@@ -3213,7 +3233,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         public void onClick(View v) {
                             clearCart();
                             setCartCityId(cityId);
-                            updateCartFromSP();
+                            updateItemListFromSPDB();
                             updateCartValuesGetTotalPrice();
                             callback.onYesClick();
                         }

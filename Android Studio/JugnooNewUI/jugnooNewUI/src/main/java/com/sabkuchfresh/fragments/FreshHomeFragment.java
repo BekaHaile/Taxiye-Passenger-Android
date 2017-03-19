@@ -8,14 +8,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -183,7 +181,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             adapter.notifyDataSetChanged();
             activity.fragmentUISetup(this);
             if(activity.getCartChangedAtCheckout()){
-                activity.updateCartFromSP();
+                activity.updateItemListFromSPDB();
                 activity.updateCartValuesGetTotalPrice();
             }
             activity.setCartChangedAtCheckout(false);

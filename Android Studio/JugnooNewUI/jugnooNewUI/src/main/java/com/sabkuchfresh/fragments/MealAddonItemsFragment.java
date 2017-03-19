@@ -124,7 +124,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {
                         activity.saveSubItemToDeliveryStoreCart(subItem);
-                        activity.updateCartFromSP();
+                        activity.updateItemListFromSPDB();
                         updateCartDataView();
                         updateAddonsListCount();
                         GAUtils.event(activity.getGaCategory(), ADD_ONS, CART+EXISTING+ITEM+INCREASED);
@@ -136,7 +136,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
                         if(subItem.getSubItemQuantitySelected() == 0){
                             subItemsInCart.remove(position);
                         }
-                        activity.updateCartFromSP();
+                        activity.updateItemListFromSPDB();
                         updateCartDataView();
                         updateAddonsListCount();
                         checkIfEmpty();
@@ -212,7 +212,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
             activity.fragmentUISetup(this);
 
             if(activity.getCartChangedAtCheckout()){
-                activity.updateCartFromSP();
+                activity.updateItemListFromSPDB();
                 freshCartItemsAdapter.notifyDataSetChanged();
                 addOnItemsAdapter.notifyDataSetChanged();
                 activity.updateCartValuesGetTotalPrice();
@@ -314,7 +314,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
             subItem.setSubItemQuantitySelected(0);
             activity.saveSubItemToDeliveryStoreCart(subItem);
         }
-        activity.updateCartFromSP();
+        activity.updateItemListFromSPDB();
         updateCartDataView();
         subItemsInCart.clear();
         activity.setCartChangedAtCheckout(true);
