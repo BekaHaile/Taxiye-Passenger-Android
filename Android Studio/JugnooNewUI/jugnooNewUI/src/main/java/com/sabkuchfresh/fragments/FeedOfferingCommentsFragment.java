@@ -352,7 +352,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
         @Override
         public void afterTextChanged(Editable s) {
             commentAdded=s.toString();
-            textViewCharCount.setText(String.valueOf(500-s.toString().trim().length()));
+//            textViewCharCount.setText(String.valueOf(500-s.toString().trim().length()));
             btnSubmit.setEnabled(s.length()>0);
 
 

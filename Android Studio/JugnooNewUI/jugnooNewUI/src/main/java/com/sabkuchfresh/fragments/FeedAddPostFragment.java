@@ -159,6 +159,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 suggestionSelected = suggestion;
                 tvRestaurantLocation.setText(suggestion.getName());
                 openSuggestionView(false);
+
+
             }
         });
         rvRestaurantSuggestions.setAdapter(suggestionsAdapter);
@@ -187,7 +189,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             }
         });
 
-        etContent.addTextChangedListener(new TextWatcher() {
+        /*etContent.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -203,7 +205,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 tvCharCount.setText(String.valueOf((500 - s.toString().trim().length())));
 
             }
-        });
+        });*/
 
         ivAccessCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -322,10 +324,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.rlReview:
+                product.clicklabs.jugnoo.utils.Utils.hideKeyboard(getActivity());
                 switchAddFeed(AddPostType.REVIEW);
                 break;
 
             case R.id.rlAsk:
+                product.clicklabs.jugnoo.utils.Utils.hideKeyboard(getActivity());
                 switchAddFeed(AddPostType.ASK);
                 break;
 
@@ -348,7 +352,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 llReviewLocation.setVisibility(View.VISIBLE);
                 etContent.setHint(R.string.share_your_experience);
                 ratingBar.setVisibility(View.VISIBLE);
-                product.clicklabs.jugnoo.utils.Utils.hideKeyboard(getActivity());
                 if(ratingBar!=null)
                     ratingBar.setScore(0);
                 break;
@@ -363,11 +366,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 llReviewLocation.setVisibility(View.GONE);
                 ratingBar.setVisibility(View.GONE);
                 etContent.setHint(R.string.looking_for_something);
-                product.clicklabs.jugnoo.utils.Utils.hideKeyboard(getActivity());
                 break;
         }
         openSuggestionView(false);
-
         LinearLayout.LayoutParams paramsETContent = (LinearLayout.LayoutParams) etContent.getLayoutParams();
         paramsETContent.height = 0;
         paramsETContent.weight = 1;

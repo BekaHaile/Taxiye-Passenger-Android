@@ -131,31 +131,42 @@
                 android:background="@color/menu_item_selector_color_F7"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/label_restaurant"
+                    android:layout_marginLeft="@dimen/spacing_huge"
+                    android:layout_width="wrap_content"
+                    android:minHeight="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="@string/review_at"
+                    android:gravity="center"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/sp_13"
+                    app:font="maven" />
+
+
                 <LinearLayout
+                    android:layout_toRightOf="@id/label_restaurant"
                     android:id="@+id/llReviewLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_normal"
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:layout_marginBottom="@dimen/spacing_normal"
+                    android:layout_marginLeft="@dimen/spacing_small"
                     android:background="@drawable/bg_white_layer_shadow"
                     android:orientation="vertical"
                     android:visibility="visible"
-
                     >
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="10dp"
-                            android:text="@string/review_at"
-                            android:textColor="@color/text_color_light"
-                            android:textSize="@dimen/sp_13"
-                            app:font="maven" />
+
 
                         <View
                             android:layout_width="1dp"
@@ -350,6 +361,7 @@
             android:gravity="right"
             android:maxLines="1"
             android:text="500"
+            android:visibility="gone"
             android:textColor="@color/text_color_light"
             android:textSize="@dimen/sp_13"
             app:font="maven" />

@@ -25,15 +25,14 @@ import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
+import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.DateParser;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -42,13 +41,12 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
 import static com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail.FeedType.REVIEW;
-import static product.clicklabs.jugnoo.utils.DialogPopup.dialog;
 
 
 /**
  * Created by Shankar on 7/17/15.
  */
-public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingListAdapter.ViewHolderReviewImage> implements ItemListener {
+public class FeedOfferingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
 
     private FreshActivity activity;
@@ -57,30 +55,73 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
     private RecyclerView recyclerView;
     private static final StyleSpan BOLD_SPAN = new StyleSpan(android.graphics.Typeface.BOLD);
     private static final StyleSpan BOLD_SPAN_2 = new StyleSpan(android.graphics.Typeface.BOLD);//since we cant reuse same style span again in a spannable
+    private boolean showAddPostView;
+    private boolean showChangeLocation = true;
+    private String addPostText;
+    private static final int LAYOUT_CHANGE_LOCATION = 99;
+    private static final int LAYOUT_WHATS_ON_MIND = 100;
+    private static final int LAYOUT_FEED = 101;
+    private int headerViewHolderCount;
 
-    public FeedOfferingListAdapter(Activity activity, List<FeedDetail> reviewImages, RecyclerView recyclerView, FeedPostCallback feedPostCallback) {
+    public FeedOfferingListAdapter(Activity activity, List<FeedDetail> reviewImages, RecyclerView recyclerView, FeedPostCallback feedPostCallback, boolean showAddPostView) {
         this.activity = (FreshActivity) activity;
         this.feedDetailArrayList = reviewImages;
         this.feedPostCallback = feedPostCallback;
         this.recyclerView = recyclerView;
+        this.showAddPostView = showAddPostView;
+
     }
 
-
-    public void setList(List<FeedDetail> reviewImages) {
+    public void setList(List<FeedDetail> reviewImages, String addPostText, boolean showAddPostView) {
         this.feedDetailArrayList = reviewImages;
+        if (!TextUtils.isEmpty(addPostText)) this.addPostText = addPostText;
+        this.showAddPostView = showAddPostView;
         notifyDataSetChanged();
     }
 
     @Override
-    public ViewHolderReviewImage onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed_list, parent, false);
-        return new ViewHolderReviewImage(v, this);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+
+        switch (viewType) {
+            case LAYOUT_CHANGE_LOCATION:
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_delivery_address_bar, parent, false);
+                return new ChangeLocationViewHolder(v);
+            case LAYOUT_WHATS_ON_MIND:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed_list_add_new_post, parent, false);
+                return new AddNewPostViewHolder(v);
+            case LAYOUT_FEED:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed_list, parent, false);
+                return new ViewHolderReviewImage(v, this);
+            default:
+                throw new IllegalArgumentException();
+
+        }
+
+
     }
 
     @Override
-    public void onBindViewHolder(ViewHolderReviewImage holder, int position) {
-        FeedDetail feedDetail = feedDetailArrayList.get(position);
-        setData(holder, feedDetail, activity, feedPostCallback);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+
+        if (holder instanceof ViewHolderReviewImage) {
+
+
+            FeedDetail feedDetail = feedDetailArrayList.get(position - headerViewHolderCount);
+            setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback);
+            if ((position - headerViewHolderCount) == feedDetailArrayList.size()-1) {
+                ((ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
+            } else {
+                ((ViewHolderReviewImage) holder).shadow.setVisibility(View.VISIBLE);
+
+            }
+
+        } else if (holder instanceof AddNewPostViewHolder) {
+
+            if (!TextUtils.isEmpty(addPostText))
+                ((AddNewPostViewHolder) holder).tvAddPost.setText(addPostText);
+        }
 
 
     }
@@ -89,7 +130,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         String imageUrl = null, restaurantAddress = null, ownerImage = null, userImage = null;
         Spannable title = null, userActivityTitle = null;
         Double rating = null;
-        boolean showUserActivity = false,setMovementMethod=false;
+        boolean showUserActivity = false, setMovementMethod = false;
         if (feedDetail != null && feedDetail.getFeedType() != null) {
 
 
@@ -110,7 +151,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
 
                     //Choose which picture to display
-                    if (feedDetail.getReviewImages()!=null && feedDetail.getReviewImages().size()>0 && !TextUtils.isEmpty(feedDetail.getReviewImages().get(0).getUrl())) {
+                    if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 0 && !TextUtils.isEmpty(feedDetail.getReviewImages().get(0).getUrl())) {
                         imageUrl = feedDetail.getReviewImages().get(0).getUrl();
                     } else if (!TextUtils.isEmpty(feedDetail.getRestaurantImage())) {
                         imageUrl = feedDetail.getRestaurantImage();
@@ -126,10 +167,10 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                     if (!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         String actualTitle = feedDetail.getOwnerName() + REVIEW.getValue() + feedDetail.getRestaurantName() + ".";
                         title = new SpannableString(actualTitle);
-                        title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(),feedPostCallback),feedDetail.getOwnerName().length() + REVIEW.getValue().length(),actualTitle.length(),Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                        setMovementMethod=true;
+                        setMovementMethod = true;
 
                     }
 
@@ -155,7 +196,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                     }
 
                     //Choose which picture to display
-                    if (feedDetail.getReviewImages()!=null && feedDetail.getReviewImages().size()>0 && !TextUtils.isEmpty(feedDetail.getReviewImages().get(0).getUrl()))
+                    if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 0 && !TextUtils.isEmpty(feedDetail.getReviewImages().get(0).getUrl()))
                         imageUrl = feedDetail.getReviewImages().get(0).getUrl();
 
                     //Form Title
@@ -198,8 +239,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
         //set Heading
         holder.tvFeedOwnerTitle.setText(title);
-        holder.tvFeedOwnerTitle.setMovementMethod(setMovementMethod? LinkMovementMethod.getInstance():null);
-
+        holder.tvFeedOwnerTitle.setMovementMethod(setMovementMethod ? LinkMovementMethod.getInstance() : null);
 
 
         //Set Rating
@@ -240,25 +280,18 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
             holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_grey_text));
 
         //Show user Images if greater than 1 in a recycler view
-        if(feedDetail.getReviewImages()!=null && feedDetail.getReviewImages().size()>1)
-        {
+        if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 1) {
             holder.recyclerViewUserImages.setVisibility(View.VISIBLE);
-            if(holder.displayFeedHomeImagesAdapter==null)
-            {
-                holder.displayFeedHomeImagesAdapter = new DisplayFeedHomeImagesAdapter(activity,feedDetail.getReviewImages(),holder.recyclerViewUserImages);
-                holder.recyclerViewUserImages.setLayoutManager(new LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false));
+            if (holder.displayFeedHomeImagesAdapter == null) {
+                holder.displayFeedHomeImagesAdapter = new DisplayFeedHomeImagesAdapter(activity, feedDetail.getReviewImages(), holder.recyclerViewUserImages);
+                holder.recyclerViewUserImages.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
                 holder.recyclerViewUserImages.setAdapter(holder.displayFeedHomeImagesAdapter);
-            }
-            else
-            {
+            } else {
                 holder.displayFeedHomeImagesAdapter.setList(feedDetail.getReviewImages());
             }
-        }
-        else{
+        } else {
             holder.recyclerViewUserImages.setVisibility(View.GONE);
         }
-
-
 
 
     }
@@ -268,27 +301,6 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         String likeSuffix = likeCount > 1 ? " Likes " : " Like ";
         String commentSuffix = commentCount > 1 ? " Comments " : " Comment ";
         return likeCount + likeSuffix + activity.getString(R.string.bullet) + " " + commentCount + commentSuffix;
-    }
-
-    private String calculateTimePosted(String createdOnDate) {
-        String timeValue;
-        long time = DateParser.getUtcDateWithTimeZone(createdOnDate).getTime();
-        long timeSince = System.currentTimeMillis() - time;
-        timeSince = timeSince / 1000;
-        if (timeSince / 60 < 1)
-            timeValue = timeSince + "s";
-        else if (timeSince / 3600 < 1)
-            timeValue = timeSince / 60 + "m";
-        else if (timeSince / 86400 < 1)
-            timeValue = timeSince / 3600 + "h";
-        else if (timeSince / 604800 < 1)
-            timeValue = timeSince / 86400 + "d";
-        else if (timeSince / 2419200 < 1)
-            timeValue = timeSince / 604800 + "w";
-        else timeValue = "must be years";
-        return timeValue;
-
-
     }
 
 
@@ -302,7 +314,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
             else if (feedDetail.getLikeCount() > 0)
                 feedDetail.setLikeCount(feedDetail.getLikeCount() - 1);
             feedDetail.setLiked(isLiked);
-            notifyItemChanged(position);
+            notifyFeedListItem(position);
         }
     }
 
@@ -362,82 +374,6 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
             else
                 return 0 + "s";
 
-
-     /*       int noOfDaysInPostedMonth=feedPostedCal.getActualMaximum(Calendar.DAY_OF_MONTH);
-            if(postedMonth!=currentMonth){
-                if((noOfDaysInPostedMonth-postedDate)+currentDate>=7)
-                    diff=(noOfDaysInPostedMonth-postedDate)/7;
-                else
-                    diff=-1;
-
-
-            }
-
-
-            else{
-                if(currentDate-postedDate>=7)
-                    diff=(currentDate-postedDate)/7;
-                else
-                    diff=-1;
-            }
-            if(diff>0) return diff+"w";
-*/
-
-
-
-
-
-
-
-
-
-
-/*
-*//*        diff= currentDateCal.get(Calendar.WEEK_OF_MONTH)- feedPostedCal.get(Calendar.WEEK_OF_MONTH);
-        if(diff>0) return diff+"w";*//*
-
-
-            if(postedMonth!=currentMonth) {
-                diff =  currentDate + (noOfDaysInPostedMonth- postedDate);
-            }
-            else{
-                diff=currentDate-postedDate;
-
-            }
-            if(currentDateCal.get(Calendar.HOUR_OF_DAY)<feedPostedCal.get(Calendar.HOUR_OF_DAY))
-                diff--;
-            if(diff>0)return diff+"d";
-
-            if(postedDate!=currentDate){
-                diff = (24- postedHour) + currentHour;
-            }
-            else{
-                diff=currentHour-postedHour;
-            }
-
-            if(currentDateCal.get(Calendar.MINUTE)<feedPostedCal.get(Calendar.MINUTE))
-                diff--;
-            if(diff>0)return diff+"h";
-
-            if(postedHour!=currentHour){
-                diff= (60-feedPostedCal.get(Calendar.MINUTE))+currentDateCal.get(Calendar.MINUTE);
-            }
-            else{
-                diff = currentDateCal.get(Calendar.MINUTE) - feedPostedCal.get(Calendar.MINUTE);
-            }
-
-            if(currentDateCal.get(Calendar.SECOND)<feedPostedCal.get(Calendar.SECOND))
-                diff--;
-
-
-            if(diff>0)return diff+"m";
-
-            if(postedMin!=currentMin)
-                diff= (60-feedPostedCal.get(Calendar.SECOND))+currentDateCal.get(Calendar.SECOND);
-            else
-                diff=currentDateCal.get(Calendar.SECOND)- feedPostedCal.get(Calendar.SECOND);
-            return diff<0?0+"s":diff+"s";*/
-
         } else {
             return " " + DateParser.getLocalDateString(createdAtTime);
         }
@@ -447,13 +383,20 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
 
     @Override
     public int getItemCount() {
-        return feedDetailArrayList == null ? 0 : feedDetailArrayList.size();
+        headerViewHolderCount = 0;
+        if (showChangeLocation) headerViewHolderCount++;
+        if (showAddPostView) headerViewHolderCount++;
+
+
+        return feedDetailArrayList == null ? headerViewHolderCount : feedDetailArrayList.size() + headerViewHolderCount;
     }
+
 
     @Override
     public void onClickItem(View viewClicked, View itemView) {
 
         int position = recyclerView.getChildLayoutPosition(itemView);
+        position = position - headerViewHolderCount;
 
         switch (viewClicked.getId()) {
             case R.id.view_action_like:
@@ -469,23 +412,22 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
                 break;
             case R.id.iv_place_image:
                 final FeedDetail feedDetail = feedDetailArrayList.get(position);
-                ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages=null;
+                ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages = null;
 
                 //This means userimages are being displayed
-                if(feedDetail.getReviewImages()!=null && feedDetail.getReviewImages().size()>0)
-                    reviewImages=feedDetail.getReviewImages();
-                else if(!TextUtils.isEmpty(feedDetail.getRestaurantImage()))
-                {
+                if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 0)
+                    reviewImages = feedDetail.getReviewImages();
+                else if (!TextUtils.isEmpty(feedDetail.getRestaurantImage())) {
 
                     //Open the restaurant here
-                        //THis means only one image is being displayed which is restaurant Image
+                    //THis means only one image is being displayed which is restaurant Image
                  /*   FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage(feedDetail.getRestaurantImage(),feedDetail.getRestaurantImage());
                     reviewImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) Collections.singletonList(reviewImage);*/
                 }
 
 
-                if(reviewImages!=null)//If null means no image is being showed Actually
-                   showZoomedPagerDialog(0, reviewImages,activity);
+                if (reviewImages != null)//If null means no image is being showed Actually
+                    showZoomedPagerDialog(0, reviewImages, activity);
                 break;
 
             default:
@@ -494,11 +436,10 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
     }
 
     /**
-     *
-     * @param pos position at which view should open when pager opens
+     * @param pos          position at which view should open when pager opens
      * @param reviewImages images List to be shown
      */
-    public static void showZoomedPagerDialog(int pos, ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages,Activity activity) {
+    public static void showZoomedPagerDialog(int pos, ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages, Activity activity) {
         ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(pos, reviewImages);
         dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
     }
@@ -591,13 +532,68 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
             ivPlaceImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickView.onClickItem(ivPlaceImage,view);
+                    onClickView.onClickItem(ivPlaceImage, view);
                 }
             });
 
         }
     }
 
+    private class ChangeLocationViewHolder extends RecyclerView.ViewHolder {
+
+        public ChangeLocationViewHolder(View itemView) {
+            super(itemView);
+            activity.setDeliveryAddressView(itemView);
+            activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
+            if (activity.getDeliveryAddressView() != null) {
+                activity.getDeliveryAddressView().scaleView();
+                activity.getDeliveryAddressView().tvDeliveryAddress.setText(R.string.label_location_feed);
+            }
+        }
+    }
+
+    private class AddNewPostViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView tvAddPost;
+
+        public AddNewPostViewHolder(View itemView) {
+            super(itemView);
+            tvAddPost = (TextView) itemView.findViewById(R.id.tvAddPost);
+            tvAddPost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    activity.openFeedAddPostFragment();
+                }
+            });
+
+
+        }
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if (position == 0) {
+            if (showChangeLocation)
+                return LAYOUT_CHANGE_LOCATION;
+            else if (showAddPostView)
+                return LAYOUT_WHATS_ON_MIND;
+            else
+                return LAYOUT_FEED;
+        }
+        if (position == 1) {
+            if (showChangeLocation && showAddPostView)
+                return LAYOUT_WHATS_ON_MIND;
+            else
+                return LAYOUT_FEED;
+
+        }
+
+        return LAYOUT_FEED;
+
+    }
 
     public int getPositionOfChild(final View child, final int childParentId, final RecyclerView recyclerView) {
 
@@ -613,29 +609,33 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
         return recyclerView.getChildAdapterPosition(parent);
     }
 
-   public static class MyClickableSpan extends ClickableSpan {// extend ClickableSpan
+    private static class MyClickableSpan extends ClickableSpan {// extend ClickableSpan
 
-       private int restaurantId;
-       private FeedPostCallback feedPostCallback;
+        private int restaurantId;
+        private FeedPostCallback feedPostCallback;
 
-       private MyClickableSpan(){
+        private MyClickableSpan() {
 
-       }
+        }
 
-       public MyClickableSpan(int restaurantId, FeedPostCallback feedPostCallback) {
-           super();
-           this.restaurantId = restaurantId;
-           this.feedPostCallback = feedPostCallback;
-       }
+        MyClickableSpan(int restaurantId, FeedPostCallback feedPostCallback) {
+            super();
+            this.restaurantId = restaurantId;
+            this.feedPostCallback = feedPostCallback;
+        }
 
 
-       public void onClick(View tv) {
-           feedPostCallback.onRestaurantClick(restaurantId);
-       }
+        public void onClick(View tv) {
+            feedPostCallback.onRestaurantClick(restaurantId);
+        }
 
-       public void updateDrawState(TextPaint ds) {// override updateDrawState
-           ds.setUnderlineText(false); // set to false to remove underline
+        public void updateDrawState(TextPaint ds) {// override updateDrawState
+            ds.setUnderlineText(false); // set to false to remove underline
 
-       }
-   }
+        }
+    }
+
+    public void notifyFeedListItem(int postitioninFeedList) {
+        notifyItemChanged(postitioninFeedList + headerViewHolderCount);
+    }
 }

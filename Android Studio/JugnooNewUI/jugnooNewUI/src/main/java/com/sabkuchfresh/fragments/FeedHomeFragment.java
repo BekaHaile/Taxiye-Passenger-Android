@@ -51,6 +51,7 @@ import retrofit.mime.TypedByteArray;
 public class FeedHomeFragment extends Fragment {
 
 
+    // TODO: 19/03/17 Fetch feed API after post or review added
     private FeedOfferingListAdapter feedOfferingListAdapter;
     private TextView tvAddPost;
     private LikeFeed likeFeed;
@@ -139,21 +140,21 @@ public class FeedHomeFragment extends Fragment {
             public String getEditTextString() {
                 return null;
             }
-        });
+        },false);
         recyclerView.setAdapter(feedOfferingListAdapter);
-        activity.setDeliveryAddressView(rootView);
+        /*activity.setDeliveryAddressView(rootView);
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
         if (activity.getDeliveryAddressView() != null) {
             activity.getDeliveryAddressView().scaleView();
             activity.getDeliveryAddressView().tvDeliveryAddress.setText(R.string.label_location_feed);
-        }
-        tvAddPost = (TextView) rootView.findViewById(R.id.tvAddPost);
+        }*/
+        /*tvAddPost = (TextView) rootView.findViewById(R.id.tvAddPost);
         tvAddPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.getTransactionUtils().openFeedAddPostFragment(activity, activity.getRelativeLayoutContainer());
             }
-        });
+        });*/
 
 
         try {
@@ -214,20 +215,18 @@ public class FeedHomeFragment extends Fragment {
                         swipeRefreshLayout.setRefreshing(false);
                         try {
                             String message = feedbackResponse.getMessage();
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
-                                    feedbackResponse.getError(), feedbackResponse.getMessage())) {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 relativeLayoutNotAvailable.setVisibility(View.GONE);
                                 if(feedbackResponse.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     relativeLayoutNotAvailable.setVisibility(View.VISIBLE);
-                                    textViewNothingFound.setText(!TextUtils.isEmpty(feedbackResponse.getMessage()) ?
-                                            feedbackResponse.getMessage() :
-                                            activity.getString(R.string.nothing_found_near_you));
+                                    textViewNothingFound.setText(!TextUtils.isEmpty(feedbackResponse.getMessage()) ? feedbackResponse.getMessage() : activity.getString(R.string.nothing_found_near_you));
+                                    feedOfferingListAdapter.setList(feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),false);
                                 } else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    feedOfferingListAdapter.setList(feedbackResponse.getFeeds());
-                                    if(!TextUtils.isEmpty(feedbackResponse.getAddPostText())){
+                                    feedOfferingListAdapter.setList(feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),true);
+                                   /* if(!TextUtils.isEmpty(feedbackResponse.getAddPostText())){
                                         tvAddPost.setText(feedbackResponse.getAddPostText());
-                                    }
-                                    rlNoReviews.setVisibility(feedOfferingListAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+                                    }*/
+                                    rlNoReviews.setVisibility(feedbackResponse.getFeeds()==null||feedbackResponse.getFeeds().size()==0 ? View.VISIBLE : View.GONE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -290,6 +289,6 @@ public class FeedHomeFragment extends Fragment {
 
     public void notifyOnLikeFromCommentsFragment(int positionItemLikedUnlikedInCommentsFragment) {
         if(feedOfferingListAdapter!=null)
-            feedOfferingListAdapter.notifyItemChanged(positionItemLikedUnlikedInCommentsFragment);
+            feedOfferingListAdapter.notifyFeedListItem(positionItemLikedUnlikedInCommentsFragment);;
     }
 }

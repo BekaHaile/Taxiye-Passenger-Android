@@ -67,8 +67,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:layout_toLeftOf="@id/btnSubmit"
-            android:background="@color/dull_line"
-            />
+            android:background="@color/dull_line" />
 
 
         <TextView
@@ -83,6 +82,7 @@
             android:text="500"
             android:textColor="@color/text_color_light"
             android:textSize="@dimen/sp_13"
+            android:visibility="gone"
             app:font="maven"/>
 
 

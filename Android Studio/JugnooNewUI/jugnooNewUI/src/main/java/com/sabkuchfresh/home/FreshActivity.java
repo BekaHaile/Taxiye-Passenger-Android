@@ -1196,7 +1196,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.feed);
-
+                topBar.ivAddReview.setVisibility(View.VISIBLE);
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
@@ -3307,6 +3307,11 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         } else {
             return false;
         }
+    }
+
+    public void openFeedAddPostFragment() {
+       getTransactionUtils().openFeedAddPostFragment(this, getRelativeLayoutContainer());
+
     }
 
     public interface CityChangeCallback {
