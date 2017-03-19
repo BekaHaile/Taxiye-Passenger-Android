@@ -126,6 +126,7 @@
                 android:background="@color/dull_line" />
 
             <RelativeLayout
+                android:id="@+id/layout_select_restaurant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/menu_item_selector_color_F7"

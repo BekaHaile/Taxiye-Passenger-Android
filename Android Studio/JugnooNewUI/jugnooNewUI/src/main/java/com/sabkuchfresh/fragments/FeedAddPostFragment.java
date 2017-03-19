@@ -79,6 +79,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     private ImageView ivAccessCamera;
     private Button btnSubmit;
     private TextView tvCharCount;
+    private RelativeLayout rlSelectRestaurant;
 
     private View rootView;
     private FreshActivity activity;
@@ -143,7 +144,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         rvRestaurantSuggestions.setItemAnimator(new DefaultItemAnimator());
         rvRestaurantSuggestions.setHasFixedSize(false);
         etContent = (EditText) rootView.findViewById(R.id.etContent);
-
+        rlSelectRestaurant =(RelativeLayout)rootView.findViewById(R.id.layout_select_restaurant);
         ivAccessCamera = (ImageView) rootView.findViewById(R.id.ivAccessCamera);
         btnSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
         tvCharCount = (TextView) rootView.findViewById(R.id.tvCharCount);
@@ -349,9 +350,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 vAskSelected.setVisibility(View.GONE);
                 ivReview.setImageResource(R.drawable.ic_feed_star);
                 ivAsk.setImageResource(R.drawable.ic_feed_ask_disabled);
-                llReviewLocation.setVisibility(View.VISIBLE);
                 etContent.setHint(R.string.share_your_experience);
                 ratingBar.setVisibility(View.VISIBLE);
+                rlSelectRestaurant.setVisibility(View.VISIBLE);
                 if(ratingBar!=null)
                     ratingBar.setScore(0);
                 break;
@@ -363,9 +364,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 vAskSelected.setVisibility(View.VISIBLE);
                 ivReview.setImageResource(R.drawable.ic_feed_star_disable);
                 ivAsk.setImageResource(R.drawable.ic_feed_ask);
-                llReviewLocation.setVisibility(View.GONE);
                 ratingBar.setVisibility(View.GONE);
                 etContent.setHint(R.string.looking_for_something);
+                rlSelectRestaurant.setVisibility(View.GONE);
                 break;
         }
         openSuggestionView(false);
