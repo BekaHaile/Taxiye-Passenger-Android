@@ -85,7 +85,7 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
         int position = recyclerView.getChildLayoutPosition(parentView);
 
         switch (viewClicked.getId()){
-            case R.id.ivRadio:
+            case R.id.llContainer:
                 for(int i=0; i<stores.size(); i++){
                     stores.get(i).setIsSelected(0);
                 }
@@ -111,10 +111,10 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
             tvCartItem = (TextView)itemView.findViewById(R.id.tvCartItem);
             tvMinOrder = (TextView)itemView.findViewById(R.id.tvMinOrder);
             tvRating = (TextView) itemView.findViewById(R.id.tvRating);
-            ivRadio.setOnClickListener(new View.OnClickListener() {
+            llContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemListener.onClickItem(ivRadio, itemView);
+                    itemListener.onClickItem(llContainer, itemView);
                 }
             });
         }

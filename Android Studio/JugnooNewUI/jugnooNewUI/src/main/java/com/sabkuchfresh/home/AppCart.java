@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.utils.Log;
 public class AppCart {
 
 	private HashMap<Integer, DeliveryStoreCart> deliveryStoreCartHashMap;
+	private int cityId;
 
 	public AppCart(){
 		deliveryStoreCartHashMap = new HashMap<>();
@@ -59,5 +60,13 @@ public class AppCart {
 			deliveryStoreCartHashMap.put(deliveryStore.getStoreId(), deliveryStoreCart);
 		}
 		return deliveryStoreCart;
+	}
+
+	public int getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(int cityId) {
+		this.cityId = cityId;
 	}
 }

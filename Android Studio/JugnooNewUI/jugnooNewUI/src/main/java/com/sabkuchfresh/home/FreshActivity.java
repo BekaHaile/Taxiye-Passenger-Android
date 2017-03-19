@@ -132,7 +132,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import io.paperdb.Paper;
@@ -1895,7 +1894,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     @Override
     protected void onPause() {
         super.onPause();
-        saveAppCart();
+        saveAppCart(getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
 
         if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
             updateCartFromSPFMG(null);
@@ -1919,42 +1918,18 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     private void saveCartToSPFMG(SubItem subItemToUpdate) {
         try {
-            JSONObject jCart = new JSONObject();
-            if (getAppType() == AppConstant.ApplicationType.FRESH) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if (getAppType() == AppConstant.ApplicationType.GROCERY) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
-                if (subItemToUpdate != null) {
-                    jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-                }
-            }
-
             // hash Current delivery store cart object for updating subItems list quantity
             DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
 
-            Gson gson = new Gson();
             if (subItemToUpdate == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
                         if (subItem.getSubItemQuantitySelected() > 0) {
-                            try {
-                                jCart.put(String.valueOf(subItem.getSubItemId()), gson.toJson(subItem, SubItem.class));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
                             // updating deliveryStoreCart subItem hashMap
                             deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
 
                         } else {
-                            try {
-                                jCart.remove(String.valueOf(subItem.getSubItemId()));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
                             // removing from deliveryStoreCart subItem hashMap
                             deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
                         }
@@ -1962,32 +1937,12 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
             } else if (subItemToUpdate != null) {
                 if (subItemToUpdate.getSubItemQuantitySelected() > 0) {
-                    try {
-                        jCart.put(String.valueOf(subItemToUpdate.getSubItemId()), gson.toJson(subItemToUpdate, SubItem.class));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
                     // updating deliveryStoreCart subItem hashMap
                     deliveryStoreCart.getSubItemHashMap().put(subItemToUpdate.getSubItemId(), subItemToUpdate);
                 } else {
-                    try {
-                        jCart.remove(String.valueOf(subItemToUpdate.getSubItemId()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
                     // updating deliveryStoreCart subItem hashMap
                     deliveryStoreCart.getSubItemHashMap().put(subItemToUpdate.getSubItemId(), subItemToUpdate);
                 }
-            }
-            int type = getAppType();
-            if (type == AppConstant.ApplicationType.FRESH) {
-//                TODO Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
-            } else if (type == AppConstant.ApplicationType.GROCERY) {
-                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
-            } else {
-                Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2056,45 +2011,14 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public void updateCartFromSPFMG(ArrayList<SubItem> subItems) {
         try {
-            JSONObject jCart;
-            int type = getAppType();
-            if (type == AppConstant.ApplicationType.FRESH) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if (type == AppConstant.ApplicationType.GROCERY) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-            }
-
             // hash Current delivery store cart object for updating subItems list quantity
             DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
 
-            Gson gson = new Gson();
             if (subItems == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
-                boolean cartUpdated = false;
 
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
-//                        subItem.setSubItemQuantitySelected(0);
-
-                        // TODO updates subItem quantity from sp
-//                        try {
-//                            String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
-//                            if (!TextUtils.isEmpty(jItem)) {
-//                                SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
-//                                if (subItem.getStock() < subItemSaved.getSubItemQuantitySelected()) {
-//                                    subItemSaved.setSubItemQuantitySelected(subItem.getStock());
-//                                    cartUpdated = true;
-//                                }
-//                                subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
-//                            }
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-
-
-
                         // updating deliveryStoreCart subItem hashMap
                         if(deliveryStoreCart.getSubItemHashMap().containsKey(subItem.getSubItemId())){
                             subItem.setSubItemQuantitySelected(deliveryStoreCart.getSubItemHashMap()
@@ -2104,32 +2028,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                             }
                             deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
                         }
-
                     }
                 }
-                if (cartUpdated) {
-                    saveCartToSPFMG(null);
-                }
             } else if (subItems != null) {
-                boolean cartUpdated = false;
                 for (SubItem subItem : subItems) {
-//                    subItem.setSubItemQuantitySelected(0);
-                    // TODO updates subItem quantity from sp
-//                    try {
-//                        String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
-//                        if (!TextUtils.isEmpty(jItem)) {
-//                            SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
-//                            if (subItem.getStock() < subItemSaved.getSubItemQuantitySelected()) {
-//                                subItemSaved.setSubItemQuantitySelected(subItem.getStock());
-//                                cartUpdated = true;
-//                            }
-//                            subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-
-
                     // updating deliveryStoreCart subItem hashMap
                     if(deliveryStoreCart.getSubItemHashMap().containsKey(subItem.getSubItemId())){
                         subItem.setSubItemQuantitySelected(deliveryStoreCart.getSubItemHashMap()
@@ -2140,11 +2042,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
                     }
                 }
-                if (cartUpdated) {
-                    saveCartToSPFMG(null);
-                }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2202,19 +2100,16 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
 
     public void clearCart() {
-        Prefs.with(this).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
         Paper.book().delete(DB_FRESH_CART);
         createAppCart(Config.getFreshClientId());
     }
 
     private void clearMealCart() {
-        Prefs.with(this).save(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT);
         Paper.book().delete(DB_MEALS_CART);
         createAppCart(Config.getMealsClientId());
     }
 
     private void clearGroceryCart() {
-        Prefs.with(this).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
     }
 
 
@@ -3165,34 +3060,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public ArrayList<SubItem> fetchCartList() {
         ArrayList<SubItem> subItemsInCart = new ArrayList<>();
         try {
-            JSONObject jCart = new JSONObject();
-            if (getAppType() == AppConstant.ApplicationType.FRESH) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if (getAppType() == AppConstant.ApplicationType.GROCERY) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-            }
-
-            Gson gson = new Gson();
-            Iterator<String> itemIds = jCart.keys();
-            while (itemIds.hasNext()) {
-                String itemId = itemIds.next();
-                if (Utils.checkIfOnlyDigits(itemId)) {
-                    String jItem = jCart.optString(itemId, "");
-                    if (!TextUtils.isEmpty(jItem)) {
-                        SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
-                        if (subItemSaved.getSubItemQuantitySelected() > 0) {
-                            subItemsInCart.add(subItemSaved);
-                        }
-                    }
-                }
-            }
-
             // items fetched from opened store
             subItemsInCart.clear();
             subItemsInCart.addAll(getCart().getDeliveryStoreCart(getOpenedDeliveryStore()).getCartItems());
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3202,32 +3072,13 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public void saveCartList(ArrayList<SubItem> subItems) {
         try {
-            JSONObject jCart = new JSONObject();
-
             // hash Current delivery store cart object for updating subItems list quantity
             DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
 
             Gson gson = new Gson();
             for (SubItem subItem : subItems) {
-                if (subItem.getSubItemQuantitySelected() > 0) {
-                    try {
-                        jCart.put(String.valueOf(subItem.getSubItemId()), gson.toJson(subItem, SubItem.class));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
                 // updating deliveryStoreCart subItem hashMap
                 deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
-            }
-            jCart.put(Constants.KEY_CITY_ID, getCartCityId());
-            int type = getAppType();
-            if (type == AppConstant.ApplicationType.FRESH) {
-//                TODO Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
-            } else if (type == AppConstant.ApplicationType.GROCERY) {
-                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
-            } else {
-                Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -3236,15 +3087,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public int getCartCityId() {
         try {
-            JSONObject jCart = new JSONObject();
-            if (getAppType() == AppConstant.ApplicationType.FRESH) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if (getAppType() == AppConstant.ApplicationType.GROCERY) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-            }
-            return jCart.optInt(Constants.KEY_CITY_ID, -1);
+            return getCart().getCityId();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3253,23 +3096,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public void setCartCityId(int cityId) {
         try {
-            JSONObject jCart = new JSONObject();
-            if (getAppType() == AppConstant.ApplicationType.FRESH) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if (getAppType() == AppConstant.ApplicationType.GROCERY) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-            }
-            jCart.put(Constants.KEY_CITY_ID, cityId);
-            int type = getAppType();
-            if (type == AppConstant.ApplicationType.FRESH) {
-                Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
-            } else if (type == AppConstant.ApplicationType.GROCERY) {
-                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
-            } else {
-                Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
-            }
+            getCart().setCityId(cityId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3871,8 +3698,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             appCart = Paper.book().read(DB_MEALS_CART, new AppCart());
         }
     }
-    private void saveAppCart(){
-        String clientId = Prefs.with(this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+    private void saveAppCart(String clientId){
         if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
             Paper.book().write(DB_FRESH_CART, appCart);
         }
