@@ -14,7 +14,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_feed_detail"
         android:background="@color/feed_grey_background_light"
-        android:layout_above="@id/rlSubmit"
+        android:layout_above="@+id/imageViewShadowBelow"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -28,12 +28,26 @@
 
 
 
+    <ImageView
+        android:id="@id/imageViewShadowBelow"
+        android:layout_above="@+id/rlSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/spacing_extra_tiny"
+        android:rotationY="180"
+        android:background="@drawable/shadow_down_new" />
+
     <LinearLayout
+        android:id="@id/rlSubmit"
         android:orientation="horizontal"
         android:background="@android:color/white"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+
+
+
+
 
         <EditText
             android:background="@null"
@@ -45,7 +59,7 @@
             android:paddingBottom="@dimen/spacing_normal"
             android:textSize="@dimen/font_normal"
             android:maxLength="500"
-            android:hint="Write a comment"
+            android:hint="@string/write_a_comment"
             android:textCursorDrawable="@drawable/cursor_black"
             android:textColorHint="@color/feed_grey_hint_color"
             android:textColor="@color/feed_grey_text"
@@ -71,7 +85,7 @@
             android:id="@+id/submitDivider"
             android:layout_gravity="bottom"
             android:layout_width="1dp"
-            android:layout_height="20dp"
+            android:layout_height="@dimen/spacing_extra_huge"
             android:layout_marginBottom="@dimen/spacing_normal"
             android:layout_marginTop="8dp"
             android:background="@color/dull_line" />
@@ -79,10 +93,12 @@
         <Button
             android:id="@+id/btnSubmit"
             android:layout_gravity="bottom"
+            android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/spacing_extra_huge"
+            android:layout_marginBottom="@dimen/spacing_tiny"
             android:background="@null"
-            android:text="Submit"
+            android:text="Post"
             android:textAllCaps="false"
             android:textColor="@color/text_color_selector"
             android:textSize="@dimen/sp_15"

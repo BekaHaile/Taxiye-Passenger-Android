@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
@@ -9,28 +9,41 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_8"
-        android:background="@drawable/shadow_feed_sep"
-        />
+        android:background="@drawable/shadow_feed_sep" />
+
+    <ImageView
+        android:id="@+id/iv_profile_pic"
+        android:scaleType="centerCrop"
+        android:src="@drawable/whatsapp"
+        android:layout_width="40dp"
+        android:layout_marginLeft="@dimen/spacing_large"
+        android:layout_marginRight="@dimen/spacing_tiny"
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_height="40dp" />
 
     <TextView
         android:id="@+id/tvAddPost"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_toRightOf="@id/iv_profile_pic"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="?attr/selectableItemBackground"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingBottom="@dimen/dp_18"
-        android:paddingLeft="@dimen/dp_36"
+        android:gravity="center|left"
+        android:paddingLeft="@dimen/spacing_tiny"
         android:paddingRight="@dimen/dp_36"
-        android:paddingTop="@dimen/dp_18"
         android:text="@string/whats_on_your_mind"
         android:textColor="@color/text_color_light"
         android:textSize="@dimen/sp_14"
         app:font="@string/maven_r" />
 
     <View
+        android:layout_marginTop="@dimen/spacing_tiny"
+        android:layout_below="@id/tvAddPost"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_8"
         android:background="@drawable/shadow_feed_sep"
         />
-</LinearLayout>
+</RelativeLayout>

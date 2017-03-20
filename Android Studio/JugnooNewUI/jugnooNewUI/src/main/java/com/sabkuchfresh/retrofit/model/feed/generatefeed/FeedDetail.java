@@ -76,6 +76,13 @@ public class FeedDetail implements Serializable {
         return isLiked==1;
     }
 
+    @SerializedName("star_color")
+    private String ratingColor;
+
+    public String getRatingColor() {
+        return ratingColor;
+    }
+
     public void setLiked(boolean liked) {
             this.isLiked=liked?1:0;
     }

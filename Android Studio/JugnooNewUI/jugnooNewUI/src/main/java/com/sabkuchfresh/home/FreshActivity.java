@@ -762,6 +762,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public FeedHomeFragment getFeedHomeFragment(){
         return (FeedHomeFragment) getSupportFragmentManager().findFragmentByTag(FeedHomeFragment.class.getName());
     }
+    public FeedAddPostFragment getFeedAddPostFragment(){
+        return (FeedAddPostFragment) getSupportFragmentManager().findFragmentByTag(FeedAddPostFragment.class.getName());
+    }
 
     public VendorMenuFragment getVendorMenuFragment() {
         return (VendorMenuFragment) getSupportFragmentManager().findFragmentByTag(VendorMenuFragment.class.getName());

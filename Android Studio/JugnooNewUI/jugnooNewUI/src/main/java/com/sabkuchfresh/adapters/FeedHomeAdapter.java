@@ -37,6 +37,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -121,6 +122,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             if (!TextUtils.isEmpty(addPostText))
                 ((AddNewPostViewHolder) holder).tvAddPost.setText(addPostText);
+            if (Data.userData!=null) {
+                if (!TextUtils.isEmpty(Data.userData.userImage))
+                    Picasso.with(activity).load(Data.userData.userImage).resize(Utils.convertDpToPx(activity,40), Utils.convertDpToPx(activity,40)).centerCrop().transform(new CircleTransform()).into(((AddNewPostViewHolder) holder).ivMyProfilePic);
+                else
+                    ((AddNewPostViewHolder) holder).ivMyProfilePic.setImageResource(R.drawable.placeholder_img);
+            }
+
         }
 
 
@@ -245,7 +253,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         //Set Rating
         holder.tvFeedRating.setVisibility(rating == null ? View.GONE : View.VISIBLE);
         if (rating != null)
-            activity.setRatingAndGetColor(holder.tvFeedRating, rating, "#8dd061", true);
+            activity.setRatingAndGetColor(holder.tvFeedRating, rating, feedDetail.getRatingColor(), true);
 
         //Set Likes and Comments
         holder.tvLikeCommentStatus.setText(formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount(), activity));
@@ -560,6 +568,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private class AddNewPostViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tvAddPost;
+        public ImageView ivMyProfilePic;
 
         public AddNewPostViewHolder(View itemView) {
             super(itemView);
@@ -571,6 +580,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     activity.openFeedAddPostFragment();
                 }
             });
+            ivMyProfilePic=(ImageView)itemView.findViewById(R.id.iv_profile_pic);
 
 
         }

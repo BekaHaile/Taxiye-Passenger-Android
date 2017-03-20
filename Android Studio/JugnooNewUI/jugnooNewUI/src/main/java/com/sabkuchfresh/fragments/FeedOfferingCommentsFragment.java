@@ -99,7 +99,6 @@ public class FeedOfferingCommentsFragment extends Fragment {
         activity.fragmentUISetup(this);
         View rootView = inflater.inflate(R.layout.fragment_feed_comments, container, false);
         btnSubmit= (Button) rootView.findViewById(R.id.btnSubmit);
-        btnSubmit.setTypeface(btnSubmit.getTypeface(), Typeface.BOLD);
         btnSubmit.setEnabled(false);
         textViewCharCount= (TextView) rootView.findViewById(R.id.tvCharCount);
         edtMyComment = (EditText) rootView.findViewById(R.id.edt_my_comment);
