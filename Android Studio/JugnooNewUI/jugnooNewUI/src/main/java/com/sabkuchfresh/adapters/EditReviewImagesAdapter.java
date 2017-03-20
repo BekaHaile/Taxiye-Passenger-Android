@@ -124,22 +124,24 @@ public class EditReviewImagesAdapter extends RecyclerView.Adapter<EditReviewImag
     @Override
     public void onClickItem(View viewClicked, View itemView) {
         int position = recyclerView.getChildLayoutPosition(itemView);
-        switch (viewClicked.getId()){
-            case R.id.ivImage:
+        if (position!=RecyclerView.NO_POSITION) {
+            switch (viewClicked.getId()){
+                case R.id.ivImage:
 
-                    callback.onImageClick(reviewImages.get(position));
-
-
-                break;
-            case R.id.btn_remove:
-
-                    callback.onDelete(reviewImages.get(position));
-                    notifyItemRemoved(position);
+                        callback.onImageClick(reviewImages.get(position));
 
 
-                break;
-            default:
-                break;
+                    break;
+                case R.id.btn_remove:
+
+                        callback.onDelete(reviewImages.get(position));
+                        notifyItemRemoved(position);
+
+
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

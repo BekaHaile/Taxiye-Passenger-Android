@@ -169,13 +169,13 @@
 
 
 
-                        <View
+                       <!-- <View
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
                             android:layout_marginBottom="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="10dp"
-                            android:background="@color/dull_line" />
+                            android:background="@color/dull_line" />-->
 
                         <TextView
                             android:id="@+id/tvRestaurantLocation"

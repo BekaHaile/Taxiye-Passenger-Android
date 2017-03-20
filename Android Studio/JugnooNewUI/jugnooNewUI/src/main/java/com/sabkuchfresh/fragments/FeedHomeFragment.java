@@ -21,13 +21,12 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.adapters.FeedOfferingListAdapter;
+import com.sabkuchfresh.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.commoncalls.LikeFeed;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
-import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.HashMap;
 
@@ -52,7 +51,7 @@ public class FeedHomeFragment extends Fragment {
 
 
     // TODO: 19/03/17 Fetch feed API after post or review added
-    private FeedOfferingListAdapter feedOfferingListAdapter;
+    private FeedHomeAdapter feedHomeAdapter;
     private TextView tvAddPost;
     private LikeFeed likeFeed;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -106,14 +105,14 @@ public class FeedHomeFragment extends Fragment {
                 fetchFeedsApi(false);
             }
         });
-        feedOfferingListAdapter = new FeedOfferingListAdapter(getActivity(), null, recyclerView, new FeedOfferingListAdapter.FeedPostCallback() {
+        feedHomeAdapter = new FeedHomeAdapter(getActivity(), null, recyclerView, new FeedHomeAdapter.FeedPostCallback() {
             @Override
             public void onLikeClick(FeedDetail feedDetail, final int position) {
                 if (likeFeed == null)
                         likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
                         @Override
                         public void onSuccess(boolean isLiked,int position) {
-                            feedOfferingListAdapter.notifyOnLike(position,isLiked);
+                            feedHomeAdapter.notifyOnLike(position,isLiked);
                         }
                     });
 
@@ -141,7 +140,7 @@ public class FeedHomeFragment extends Fragment {
                 return null;
             }
         },false);
-        recyclerView.setAdapter(feedOfferingListAdapter);
+        recyclerView.setAdapter(feedHomeAdapter);
         /*activity.setDeliveryAddressView(rootView);
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
         if (activity.getDeliveryAddressView() != null) {
@@ -220,9 +219,9 @@ public class FeedHomeFragment extends Fragment {
                                 if(feedbackResponse.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     relativeLayoutNotAvailable.setVisibility(View.VISIBLE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(feedbackResponse.getMessage()) ? feedbackResponse.getMessage() : activity.getString(R.string.nothing_found_near_you));
-                                    feedOfferingListAdapter.setList(feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),false);
+                                    feedHomeAdapter.setList(feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),false);
                                 } else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    feedOfferingListAdapter.setList(feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),true);
+                                    feedHomeAdapter.setList(feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),true);
                                    /* if(!TextUtils.isEmpty(feedbackResponse.getAddPostText())){
                                         tvAddPost.setText(feedbackResponse.getAddPostText());
                                     }*/
@@ -288,7 +287,7 @@ public class FeedHomeFragment extends Fragment {
 
 
     public void notifyOnLikeFromCommentsFragment(int positionItemLikedUnlikedInCommentsFragment) {
-        if(feedOfferingListAdapter!=null)
-            feedOfferingListAdapter.notifyFeedListItem(positionItemLikedUnlikedInCommentsFragment);;
+        if(feedHomeAdapter !=null)
+            feedHomeAdapter.notifyFeedListItem(positionItemLikedUnlikedInCommentsFragment);;
     }
 }

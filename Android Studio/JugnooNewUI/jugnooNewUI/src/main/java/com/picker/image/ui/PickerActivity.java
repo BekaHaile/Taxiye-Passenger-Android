@@ -333,8 +333,7 @@ public class PickerActivity extends AppCompatActivity {
 
 
     private void refreshMediaScanner(final String imagePath) {
-        MediaScannerConnection.scanFile(this,
-                new String[]{imagePath}, null,
+        MediaScannerConnection.scanFile(this, new String[]{imagePath}, null,
                 new MediaScannerConnection.OnScanCompletedListener() {
                     @Override
                     public void onScanCompleted(final String path, final Uri uri) {

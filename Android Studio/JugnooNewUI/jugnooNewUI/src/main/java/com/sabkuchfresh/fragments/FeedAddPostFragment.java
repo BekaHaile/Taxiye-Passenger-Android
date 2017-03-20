@@ -90,19 +90,19 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     private RatingBarMenuFeedback ratingBar;
     private String[] permissionsRequest;
     private Picker picker;
-    private static  final int REQUEST_CODE_SELECT_IMAGE=106;
+    private static final int REQUEST_CODE_SELECT_IMAGE = 106;
 
     private ImageCompression imageCompressionTask;
     private EditReviewImagesAdapter editReviewImagesAdapter;
     private RecyclerView displayImagesRecycler;
     private ScrollView scrollView;
-    private ArrayList<ImageEntry> imageSelected ;
+    private ArrayList<ImageEntry> imageSelected;
 
     public FeedAddPostFragment() {
     }
 
 
-    public static FeedAddPostFragment newInstance(){
+    public static FeedAddPostFragment newInstance() {
         FeedAddPostFragment fragment = new FeedAddPostFragment();
         Bundle bundle = new Bundle();
 
@@ -125,12 +125,14 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
 
-        displayImagesRecycler= (RecyclerView) rootView.findViewById(R.id.recycler_view_photos);
-        scrollView= (ScrollView) rootView.findViewById(R.id.scroll_view);
+        displayImagesRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view_photos);
+        scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         rlReview = (RelativeLayout) rootView.findViewById(R.id.rlReview);
         rlAsk = (RelativeLayout) rootView.findViewById(R.id.rlAsk);
-        tvReview = (TextView) rootView.findViewById(R.id.tvReview); tvReview.setTypeface(tvReview.getTypeface(), Typeface.BOLD);
-        tvAsk = (TextView) rootView.findViewById(R.id.tvAsk); tvAsk.setTypeface(tvAsk.getTypeface(), Typeface.BOLD);
+        tvReview = (TextView) rootView.findViewById(R.id.tvReview);
+        tvReview.setTypeface(tvReview.getTypeface(), Typeface.BOLD);
+        tvAsk = (TextView) rootView.findViewById(R.id.tvAsk);
+        tvAsk.setTypeface(tvAsk.getTypeface(), Typeface.BOLD);
         vReviewSelected = rootView.findViewById(R.id.vReviewSelected);
         vAskSelected = rootView.findViewById(R.id.vAskSelected);
         ivReview = (ImageView) rootView.findViewById(R.id.ivReview);
@@ -144,11 +146,11 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         rvRestaurantSuggestions.setItemAnimator(new DefaultItemAnimator());
         rvRestaurantSuggestions.setHasFixedSize(false);
         etContent = (EditText) rootView.findViewById(R.id.etContent);
-        rlSelectRestaurant =(RelativeLayout)rootView.findViewById(R.id.layout_select_restaurant);
+        rlSelectRestaurant = (RelativeLayout) rootView.findViewById(R.id.layout_select_restaurant);
         ivAccessCamera = (ImageView) rootView.findViewById(R.id.ivAccessCamera);
         btnSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
         tvCharCount = (TextView) rootView.findViewById(R.id.tvCharCount);
-        ratingBar =(RatingBarMenuFeedback)rootView.findViewById(R.id.rating_bar_add_post);
+        ratingBar = (RatingBarMenuFeedback) rootView.findViewById(R.id.rating_bar_add_post);
         rlReview.setOnClickListener(this);
         rlAsk.setOnClickListener(this);
         tvRestaurantLocation.setOnClickListener(this);
@@ -180,12 +182,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().trim().length() > 2){
+                if (s.toString().trim().length() > 2) {
                     suggestRestaurantApi(s.toString().trim());
-                } else if(s.toString().trim().length() == 0) {
+                } else if (s.toString().trim().length() == 0) {
                     suggestions.clear();
                     suggestionsAdapter.notifyDataSetChanged();
-                    rvRestaurantSuggestions.setVisibility(suggestionsAdapter.getItemCount() == 0? View.GONE : View.VISIBLE);
+                    rvRestaurantSuggestions.setVisibility(suggestionsAdapter.getItemCount() == 0 ? View.GONE : View.VISIBLE);
                 }
             }
         });
@@ -212,18 +214,17 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
 
-                if(PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
-                        PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED)
-                {
-                    if (permissionsRequest ==null) {
+                if (PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
+                        PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED) {
+                    if (permissionsRequest == null) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             permissionsRequest = new String[2];
-                            permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
-                            permissionsRequest[1]=Manifest.permission.READ_EXTERNAL_STORAGE;
+                            permissionsRequest[0] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                            permissionsRequest[1] = Manifest.permission.READ_EXTERNAL_STORAGE;
                         }
                         {
                             permissionsRequest = new String[1];
-                            permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                            permissionsRequest[0] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
                         }
                     }
 
@@ -233,13 +234,13 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 }
 
 
-                if(picker ==null){
+                if (picker == null) {
                     picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
                 }
 
 
-                picker.setLimit(imageSelected==null?5:5-imageSelected.size());
-                picker.startActivity(FeedAddPostFragment.this,activity, REQUEST_CODE_SELECT_IMAGE);
+                picker.setLimit(imageSelected == null ? 5 : 5 - imageSelected.size());
+                picker.startActivity(FeedAddPostFragment.this, activity, REQUEST_CODE_SELECT_IMAGE);
 
             }
         });
@@ -250,31 +251,30 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             public void onClick(View v) {
                 String postText = etContent.getText().toString().trim();
 
-                    if(addPostType == AddPostType.REVIEW){
+                if (addPostType == AddPostType.REVIEW) {
 
-                        if(suggestionSelected == null){
-                            Toast.makeText(activity, "You need to select a restaurant to review", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        if(TextUtils.isEmpty(postText)){
-                            Toast.makeText(activity, R.string.please_enter_something, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        postFeedAPI(postText, suggestionSelected.getId());
-
-                    } else {
-                        if(TextUtils.isEmpty(postText)){
-                            Toast.makeText(activity, R.string.please_enter_something, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        postFeedAPI(postText, -1);
+                    if (suggestionSelected == null) {
+                        Toast.makeText(activity, "You need to select a restaurant to review", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+
+                    if (TextUtils.isEmpty(postText)) {
+                        Toast.makeText(activity, R.string.please_enter_something, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    postFeedAPI(postText, suggestionSelected.getId());
+
+                } else {
+                    if (TextUtils.isEmpty(postText)) {
+                        Toast.makeText(activity, R.string.please_enter_something, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    postFeedAPI(postText, -1);
+                }
 
             }
         });
-
 
 
         switchAddFeed(addPostType);
@@ -287,16 +287,15 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         super.onActivityResult(requestCode, resultCode, data);
 
         product.clicklabs.jugnoo.utils.Utils.hideKeyboard(getActivity());
-        if(requestCode== REQUEST_CODE_SELECT_IMAGE && resultCode==RESULT_OK){
-            if(data!=null && data.getSerializableExtra("imagesList")!=null)
-            {
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK) {
+            if (data != null && data.getSerializableExtra("imagesList") != null) {
 
                 ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
                 if (images != null && images.size() != 0) {
 
 
-                    if(imageSelected==null)
-                        imageSelected=new ArrayList<>();
+                    if (imageSelected == null)
+                        imageSelected = new ArrayList<>();
 
 
                     imageSelected.addAll(images);
@@ -307,10 +306,11 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         }
 
     }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden){
+        if (!hidden) {
             activity.fragmentUISetup(this);
         }
     }
@@ -323,7 +323,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.rlReview:
                 product.clicklabs.jugnoo.utils.Utils.hideKeyboard(getActivity());
                 switchAddFeed(AddPostType.REVIEW);
@@ -340,9 +340,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void switchAddFeed(AddPostType addPostType){
+    private void switchAddFeed(AddPostType addPostType) {
         this.addPostType = addPostType;
-        switch(addPostType){
+        switch (addPostType) {
             case REVIEW:
                 tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
@@ -353,7 +353,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 etContent.setHint(R.string.share_your_experience);
                 ratingBar.setVisibility(View.VISIBLE);
                 rlSelectRestaurant.setVisibility(View.VISIBLE);
-                if(ratingBar!=null)
+                imageSelected = null;
+                setUpAdapter();
+                if (ratingBar != null)
                     ratingBar.setScore(0);
                 break;
 
@@ -367,6 +369,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 ratingBar.setVisibility(View.GONE);
                 etContent.setHint(R.string.looking_for_something);
                 rlSelectRestaurant.setVisibility(View.GONE);
+                imageSelected = null;
+                setUpAdapter();
                 break;
         }
         openSuggestionView(false);
@@ -385,8 +389,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
     }
 
-    private void openSuggestionView(boolean open){
-        if(open){
+    private void openSuggestionView(boolean open) {
+        if (open) {
             tvRestaurantLocation.setVisibility(View.GONE);
             etRestaurantLocation.setVisibility(View.VISIBLE);
             etRestaurantLocation.setText(tvRestaurantLocation.getText());
@@ -409,7 +413,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
     private void suggestRestaurantApi(String query) {
         try {
-            if(MyApplication.getInstance().isOnline()) {
+            if (MyApplication.getInstance().isOnline()) {
                 pwRestLocQuery.setVisibility(View.VISIBLE);
 
                 HashMap<String, String> params = new HashMap<>();
@@ -425,11 +429,11 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                             String message = queryResp.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, queryResp.getFlag(),
                                     queryResp.getError(), queryResp.getMessage())) {
-                                if(queryResp.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                                if (queryResp.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     suggestions.clear();
                                     suggestions.addAll(queryResp.getSuggestions());
                                     suggestionsAdapter.notifyDataSetChanged();
-                                    rvRestaurantSuggestions.setVisibility(suggestionsAdapter.getItemCount() == 0? View.GONE : View.VISIBLE);
+                                    rvRestaurantSuggestions.setVisibility(suggestionsAdapter.getItemCount() == 0 ? View.GONE : View.VISIBLE);
                                 } else {
                                     suggestions.clear();
                                     SuggestRestaurantQueryResp.Suggestion suggestion = new SuggestRestaurantQueryResp.Suggestion();
@@ -437,7 +441,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                                     suggestion.setName("No results found");
                                     suggestions.add(suggestion);
                                     suggestionsAdapter.notifyDataSetChanged();
-                                    rvRestaurantSuggestions.setVisibility(suggestionsAdapter.getItemCount() == 0? View.GONE : View.VISIBLE);
+                                    rvRestaurantSuggestions.setVisibility(suggestionsAdapter.getItemCount() == 0 ? View.GONE : View.VISIBLE);
                                 }
                             }
                         } catch (Exception exception) {
@@ -458,11 +462,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     }
 
 
-    public enum AddPostType{
+    public enum AddPostType {
         REVIEW(0), ASK(1);
 
         private int ordinal;
-        AddPostType(int ordinal){
+
+        AddPostType(int ordinal) {
             this.ordinal = ordinal;
         }
 
@@ -478,17 +483,16 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
                 DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
 
-                if(imageSelected!=null && imageSelected.size()!=0){
+                if (imageSelected != null && imageSelected.size() != 0) {
                     //upload feedback with new Images
                     imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
                         @Override
                         public void processFinish(File[] output) {
 
-                            if(output!=null){
-                                for(File file:output)
-                                {
-                                    if(file!=null){
-                                        multipartTypedOutput.addPart(Constants.KEY_REVIEW_IMAGES,new TypedFile("image/*",file));
+                            if (output != null) {
+                                for (File file : output) {
+                                    if (file != null) {
+                                        multipartTypedOutput.addPart(Constants.KEY_REVIEW_IMAGES, new TypedFile("image/*", file));
                                     }
                                 }
 
@@ -498,22 +502,20 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                         }
 
                         @Override
-                        public  void onError(){
+                        public void onError() {
                             DialogPopup.dismissLoadingDialog();
 
                         }
-                    },activity);
+                    }, activity);
 
 
-                    String[] imagesToCompress = new String[imageSelected.size()] ;
-                    for(int i =0;i<imageSelected.size();i++)
-                    {
+                    String[] imagesToCompress = new String[imageSelected.size()];
+                    for (int i = 0; i < imageSelected.size(); i++) {
 
-                        imagesToCompress[i]=imageSelected.get(i).path;
+                        imagesToCompress[i] = imageSelected.get(i).path;
                     }
                     imageCompressionTask.execute(imagesToCompress);
-                }
-                else{
+                } else {
                     uploadParamsAndPost(multipartTypedOutput, postText, restId);
                 }
             } else {
@@ -533,9 +535,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         multipartTypedOutput.addPart(Constants.KEY_LONGITUDE, new TypedString(String.valueOf(activity.getSelectedLatLng().longitude)));
         multipartTypedOutput.addPart(Constants.KEY_POST_TEXT, new TypedString(postText));
 
-        if(addPostType == AddPostType.REVIEW) {
+        if (addPostType == AddPostType.REVIEW) {
             multipartTypedOutput.addPart(Constants.KEY_RESTAURANT_ID, new TypedString(String.valueOf(restId)));
-            multipartTypedOutput.addPart(Constants.KEY_STAR_COUNT,new TypedString(String.valueOf(Math.round(ratingBar.getScore()))));
+            multipartTypedOutput.addPart(Constants.KEY_STAR_COUNT, new TypedString(String.valueOf(Math.round(ratingBar.getScore()))));
         }
 
         multipartTypedOutput.addPart(Constants.KEY_APP_VERSION, new TypedString(String.valueOf(MyApplication.getInstance().appVersion())));
@@ -554,6 +556,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                         if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
                             activity.performBackPressed(false);
+                            if (activity.getFeedHomeFragment() != null && activity.getFeedHomeFragment().getView()!=null) {
+                                activity.getFeedHomeFragment().fetchFeedsApi(true);
+                            }
                         } else {
                             DialogPopup.alertPopup(activity, "", message);
                         }
@@ -592,6 +597,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                     }
                 });
     }
+
     private void setUpAdapter() {
 
 
@@ -609,18 +615,16 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
                 @Override
                 public void onDelete(Object object) {
-                    if(object instanceof ImageEntry)
-                    {
+                    if (object instanceof ImageEntry) {
                         imageSelected.remove(object);
-                        if(imageSelected.size()==0)
+                        if (imageSelected.size() == 0)
                             displayImagesRecycler.setVisibility(View.GONE);
-                        ivAccessCamera.setEnabled(imageSelected.size()<5);
+                        ivAccessCamera.setEnabled(imageSelected.size() < 5);
                     }
 
 
-
                 }
-            },displayImagesRecycler );
+            }, displayImagesRecycler);
             displayImagesRecycler.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
             displayImagesRecycler.setAdapter(editReviewImagesAdapter);
         } else {
@@ -631,10 +635,10 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             displayImagesRecycler.setVisibility(View.VISIBLE);
 
 
-        ivAccessCamera.setEnabled(imageSelected.size()<5);
+        ivAccessCamera.setEnabled(imageSelected.size() < 5);
 
 
-        if(imageSelected.size()>0)
+        if (imageSelected.size() > 0)
             displayImagesRecycler.smoothScrollToPosition(imageSelected.size());
 
 

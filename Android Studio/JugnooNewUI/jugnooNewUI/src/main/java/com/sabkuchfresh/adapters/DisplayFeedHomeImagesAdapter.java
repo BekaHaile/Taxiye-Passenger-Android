@@ -7,13 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.picker.image.model.ImageEntry;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
@@ -85,7 +83,7 @@ public class DisplayFeedHomeImagesAdapter extends RecyclerView.Adapter<DisplayFe
         int position = recyclerView.getChildLayoutPosition(itemView);
         switch (viewClicked.getId()){
             case R.id.ivImage:
-                  FeedOfferingListAdapter.showZoomedPagerDialog(position+1, reviewImages,activity);
+                  FeedHomeAdapter.showZoomedPagerDialog(position+1, reviewImages,activity);
                 break;
             case R.id.btn_remove:
 

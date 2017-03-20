@@ -46,7 +46,7 @@ import static com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail.FeedT
 /**
  * Created by Shankar on 7/17/15.
  */
-public class FeedOfferingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
+public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
 
     private FreshActivity activity;
@@ -63,7 +63,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private static final int LAYOUT_FEED = 101;
     private int headerViewHolderCount;
 
-    public FeedOfferingListAdapter(Activity activity, List<FeedDetail> reviewImages, RecyclerView recyclerView, FeedPostCallback feedPostCallback, boolean showAddPostView) {
+    public FeedHomeAdapter(Activity activity, List<FeedDetail> reviewImages, RecyclerView recyclerView, FeedPostCallback feedPostCallback, boolean showAddPostView) {
         this.activity = (FreshActivity) activity;
         this.feedDetailArrayList = reviewImages;
         this.feedPostCallback = feedPostCallback;
@@ -275,7 +275,7 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<RecyclerView.V
         Drawable drawableToSet = feedDetail.isLiked() ? ContextCompat.getDrawable(activity, R.drawable.ic_like_active) : ContextCompat.getDrawable(activity, R.drawable.ic_like);
         holder.tvLike.setCompoundDrawablesWithIntrinsicBounds(drawableToSet, null, null, null);
         if (feedDetail.isLiked())
-            holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_color_orange));
+            holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_color_like_active));
         else
             holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_grey_text));
 
@@ -396,42 +396,47 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onClickItem(View viewClicked, View itemView) {
 
         int position = recyclerView.getChildLayoutPosition(itemView);
-        position = position - headerViewHolderCount;
+        if (position!=RecyclerView.NO_POSITION) {
+            position = position - headerViewHolderCount;//position in feed ArrayList
 
-        switch (viewClicked.getId()) {
-            case R.id.view_action_like:
-                feedPostCallback.onLikeClick(feedDetailArrayList.get(position), position);
-                break;
-            case R.id.view_action_comment:
-            case R.id.root_layout_item:
-                feedPostCallback.onCommentClick(feedDetailArrayList.get(position), position);
-                break;
+            switch (viewClicked.getId()) {
+                case R.id.view_action_like:
+                    feedPostCallback.onLikeClick(feedDetailArrayList.get(position), position);
+                    break;
+                case R.id.view_action_comment:
+                case R.id.root_layout_item:
+                    feedPostCallback.onCommentClick(feedDetailArrayList.get(position), position);
+                    break;
 
-            case R.id.tv_feed_owner_title:
+                case R.id.tv_feed_owner_title:
 
-                break;
-            case R.id.iv_place_image:
-                final FeedDetail feedDetail = feedDetailArrayList.get(position);
-                ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages = null;
-
-                //This means userimages are being displayed
-                if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 0)
-                    reviewImages = feedDetail.getReviewImages();
-                else if (!TextUtils.isEmpty(feedDetail.getRestaurantImage())) {
-
-                    //Open the restaurant here
-                    //THis means only one image is being displayed which is restaurant Image
-                 /*   FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage(feedDetail.getRestaurantImage(),feedDetail.getRestaurantImage());
-                    reviewImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) Collections.singletonList(reviewImage);*/
-                }
+                    break;
+                case R.id.iv_place_image:
+                    final FeedDetail feedDetail = feedDetailArrayList.get(position);
 
 
-                if (reviewImages != null)//If null means no image is being showed Actually
-                    showZoomedPagerDialog(0, reviewImages, activity);
-                break;
 
-            default:
-                break;
+                    if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 0){
+                        //This means userimages are being displayed
+                        ArrayList<FetchFeedbackResponse.ReviewImage>   reviewImages = feedDetail.getReviewImages();
+                        showZoomedPagerDialog(0, reviewImages, activity);
+                    }
+
+                    else if (!TextUtils.isEmpty(feedDetail.getRestaurantImage())) {
+                        //Open the restaurant in menus
+                        feedPostCallback.onRestaurantClick(feedDetail.getRestaurantId());
+                        //THis means only one image is being displayed which is restaurant Image
+
+                    }
+
+
+               //If null means no image is being showed Actually
+
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 
