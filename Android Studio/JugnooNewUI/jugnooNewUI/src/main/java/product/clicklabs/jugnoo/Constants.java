@@ -649,4 +649,5 @@ public interface Constants {
     String KEY_LOGIN_TYPE = "login_type";
     String KEY_VENDOR_ID = "vendor_id";
 
+    String SP_VENDOR_ID = "sp_vendor_id";
 }

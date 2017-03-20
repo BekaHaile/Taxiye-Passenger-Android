@@ -98,8 +98,6 @@ import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
-import com.sabkuchfresh.retrofit.model.DeliveryStore;
-import com.sabkuchfresh.retrofit.model.DeliveryStoreCart;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -132,6 +130,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import io.paperdb.Paper;
@@ -1929,10 +1928,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     private void saveItemListToDBFMG(SubItem subItemToUpdate) {
         try {
             // hash Current delivery store cart object for updating subItems list quantity
-            DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
+            HashMap<Integer, SubItem> subItemHashMap = getCart().getSubItemHashMap(getOpenedVendorId());
             // if app opened is meals and not a particular item is needed to be updated, clear the cart
             if(getAppType() == AppConstant.ApplicationType.MEALS && subItemToUpdate == null){
-                deliveryStoreCart.getSubItemHashMap().clear();
+                subItemHashMap.clear();
             }
 
             if (subItemToUpdate == null && getProductsResponse() != null
@@ -1943,17 +1942,17 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     for (SubItem subItem : category.getSubItems()) {
                         if (subItem.getSubItemQuantitySelected() > 0) {
                             // updating deliveryStoreCart subItem hashMap
-                            deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+                            subItemHashMap.put(subItem.getSubItemId(), subItem);
                             // if app is meals increase mainItemCount
                             if(getAppType() == AppConstant.ApplicationType.MEALS && i == 0) mainItemsCount++;
                         } else {
                             // removing from deliveryStoreCart subItem hashMap
-                            deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
+                            subItemHashMap.remove(subItem.getSubItemId());
                         }
                     }
                     // if no main meal item selected clear cart and break from loop
                     if(getAppType() == AppConstant.ApplicationType.MEALS && i == 0 && mainItemsCount == 0){
-                        deliveryStoreCart.getSubItemHashMap().clear();
+                        subItemHashMap.clear();
                         break;
                     }
                     i++;
@@ -1961,10 +1960,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             } else if (subItemToUpdate != null) {
                 if (subItemToUpdate.getSubItemQuantitySelected() > 0) {
                     // updating deliveryStoreCart subItem hashMap
-                    deliveryStoreCart.getSubItemHashMap().put(subItemToUpdate.getSubItemId(), subItemToUpdate);
+                    subItemHashMap.put(subItemToUpdate.getSubItemId(), subItemToUpdate);
                 } else {
                     // updating deliveryStoreCart subItem hashMap
-                    deliveryStoreCart.getSubItemHashMap().remove(subItemToUpdate.getSubItemId());
+                    subItemHashMap.remove(subItemToUpdate.getSubItemId());
                 }
             }
         } catch (Exception e) {
@@ -2040,23 +2039,22 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public void updateItemListFromDBFMG(ArrayList<SubItem> subItems) {
         try {
             // hash Current delivery store cart object for updating subItems list quantity
-            DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
+            HashMap<Integer, SubItem> subItemHashMap = getCart().getSubItemHashMap(getOpenedVendorId());
 
             if (subItems == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
                         // updating deliveryStoreCart subItem hashMap
-                        if(deliveryStoreCart.getSubItemHashMap().containsKey(subItem.getSubItemId())){
-                            subItem.setSubItemQuantitySelected(deliveryStoreCart.getSubItemHashMap()
-                                    .get(subItem.getSubItemId()).getSubItemQuantitySelected());
+                        if(subItemHashMap.containsKey(subItem.getSubItemId())){
+                            subItem.setSubItemQuantitySelected(subItemHashMap.get(subItem.getSubItemId()).getSubItemQuantitySelected());
                             if (subItem.getStock() < subItem.getSubItemQuantitySelected()) {
                                 subItem.setSubItemQuantitySelected(subItem.getStock());
                             }
                             if (subItem.getSubItemQuantitySelected() > 0) {
-                                deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+                                subItemHashMap.put(subItem.getSubItemId(), subItem);
                             } else {
-                                deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
+                                subItemHashMap.remove(subItem.getSubItemId());
                             }
                         }
                     }
@@ -2064,16 +2062,15 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             } else if (subItems != null) {
                 for (SubItem subItem : subItems) {
                     // updating deliveryStoreCart subItem hashMap
-                    if(deliveryStoreCart.getSubItemHashMap().containsKey(subItem.getSubItemId())){
-                        subItem.setSubItemQuantitySelected(deliveryStoreCart.getSubItemHashMap()
-                                .get(subItem.getSubItemId()).getSubItemQuantitySelected());
+                    if(subItemHashMap.containsKey(subItem.getSubItemId())){
+                        subItem.setSubItemQuantitySelected(subItemHashMap.get(subItem.getSubItemId()).getSubItemQuantitySelected());
                         if (subItem.getStock() < subItem.getSubItemQuantitySelected()) {
                             subItem.setSubItemQuantitySelected(subItem.getStock());
                         }
                         if (subItem.getSubItemQuantitySelected() > 0) {
-                            deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+                            subItemHashMap.put(subItem.getSubItemId(), subItem);
                         } else {
-                            deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
+                            subItemHashMap.remove(subItem.getSubItemId());
                         }
                     }
                 }
@@ -3098,7 +3095,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         try {
             // items fetched from opened store
             subItemsInCart.clear();
-            subItemsInCart.addAll(getCart().getDeliveryStoreCart(getOpenedDeliveryStore()).getCartItems());
+            subItemsInCart.addAll(getCart().getCartItems(getOpenedVendorId()));
             Collections.reverse(subItemsInCart);
         } catch (Exception e) {
             e.printStackTrace();
@@ -3114,11 +3111,11 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public void saveCartList(ArrayList<SubItem> subItems) {
         try {
             // hash Current delivery store cart object for updating subItems list quantity
-            DeliveryStoreCart deliveryStoreCart = getCart().getDeliveryStoreCart(getOpenedDeliveryStore());
-            deliveryStoreCart.getSubItemHashMap().clear();
+            HashMap<Integer, SubItem> subItemHashMap = getCart().getSubItemHashMap(getOpenedVendorId());
+            subItemHashMap.clear();
             for (SubItem subItem : subItems) {
                 // updating deliveryStoreCart subItem hashMap
-                deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+                subItemHashMap.put(subItem.getSubItemId(), subItem);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -3727,10 +3724,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     private void createAppCart(String clientId){
         if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
             appCart = Paper.book().read(DB_FRESH_CART, new AppCart());
-            if(appCart.getDeliveryStoreCartHashMap().size() == 1){
-                ArrayList<DeliveryStoreCart> carts = new ArrayList<>(appCart.getDeliveryStoreCartHashMap().values());
-                setOpenedDeliveryStore(carts.get(0).getDeliveryStore());
-            }
         }
         else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
             appCart = Paper.book().read(DB_MEALS_CART, new AppCart());
@@ -3746,21 +3739,27 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
 
-    private DeliveryStore openedDeliveryStore;
-    public DeliveryStore getOpenedDeliveryStore(){
-        if(openedDeliveryStore == null){
-            openedDeliveryStore = new DeliveryStore();
-            openedDeliveryStore.setVendorId(0);
+    private Integer openedVendorId;
+    private String openedVendorName;
+    public Integer getOpenedVendorId(){
+        if(openedVendorId == null){
+            openedVendorId = Prefs.with(this).getInt(Constants.SP_VENDOR_ID, 0);
         }
-        return openedDeliveryStore;
+        return openedVendorId;
     }
-    public void setOpenedDeliveryStore(DeliveryStore deliveryStore){
-        openedDeliveryStore = deliveryStore;
+    public void setOpenedVendorIdName(Integer vendorId, String vendorName){
+        openedVendorId = vendorId;
+        openedVendorName = vendorName;
+        Prefs.with(this).save(Constants.SP_VENDOR_ID, vendorId.intValue());
     }
+    public String getOpenedVendorName(){
+        return openedVendorName;
+    }
+
 
 
     public void saveSubItemToDeliveryStoreCart(SubItem subItem){
-        getCart().saveSubItemToStore(getOpenedDeliveryStore(), subItem);
+        getCart().saveSubItemToStore(getOpenedVendorId(), subItem);
     }
 
 }

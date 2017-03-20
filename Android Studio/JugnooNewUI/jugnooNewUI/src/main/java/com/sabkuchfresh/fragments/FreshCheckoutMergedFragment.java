@@ -1387,7 +1387,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     GAUtils.event(activity.getGaCategory(), CHECKOUT, NOTES+ADDED);
                 }
                 if(type == AppConstant.ApplicationType.FRESH){
-                    params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedDeliveryStore().getVendorId()));
+                    params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedVendorId()));
                 }
 
                 Callback<PlaceOrderResponse> callback = new Callback<PlaceOrderResponse>() {
@@ -1988,7 +1988,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
 
                 if(type == AppConstant.ApplicationType.FRESH){
-                    params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedDeliveryStore().getVendorId()));
+                    params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedVendorId()));
                 }
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());

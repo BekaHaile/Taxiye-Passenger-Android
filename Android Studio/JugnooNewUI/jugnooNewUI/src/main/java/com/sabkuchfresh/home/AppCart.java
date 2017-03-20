@@ -1,9 +1,8 @@
 package com.sabkuchfresh.home;
 
-import com.sabkuchfresh.retrofit.model.DeliveryStore;
-import com.sabkuchfresh.retrofit.model.DeliveryStoreCart;
 import com.sabkuchfresh.retrofit.model.SubItem;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.utils.Log;
@@ -14,28 +13,27 @@ import product.clicklabs.jugnoo.utils.Log;
 
 public class AppCart {
 
-	private HashMap<Integer, DeliveryStoreCart> deliveryStoreCartHashMap;
+	private HashMap<Integer, HashMap<Integer, SubItem>> vendorCartHashMap;
 	private int cityId;
 
 	public AppCart(){
-		deliveryStoreCartHashMap = new HashMap<>();
+		vendorCartHashMap = new HashMap<>();
 	}
 
-	public HashMap<Integer, DeliveryStoreCart> getDeliveryStoreCartHashMap() {
-		return deliveryStoreCartHashMap;
+	public HashMap<Integer, HashMap<Integer, SubItem>> getVendorCartHashMap() {
+		return vendorCartHashMap;
 	}
 
-	public void setDeliveryStoreCartHashMap(HashMap<Integer, DeliveryStoreCart> deliveryStoreCartHashMap) {
-		this.deliveryStoreCartHashMap = deliveryStoreCartHashMap;
+	public void setVendorCartHashMap(HashMap<Integer, HashMap<Integer, SubItem>> vendorCartHashMap) {
+		this.vendorCartHashMap = vendorCartHashMap;
 	}
 
-	public void saveSubItemToStore(DeliveryStore deliveryStore, SubItem subItem){
-		DeliveryStoreCart deliveryStoreCart = getDeliveryStoreCart(deliveryStore);
+	public void saveSubItemToStore(Integer vendorId, SubItem subItem){
 		if(subItem.getSubItemQuantitySelected() == 0){
-			deliveryStoreCart.getSubItemHashMap().remove(subItem.getSubItemId());
+			getSubItemHashMap(vendorId).remove(subItem.getSubItemId());
 		} else {
-			if(!deliveryStoreCart.getSubItemHashMap().containsKey(subItem.getSubItemId())){
-				deliveryStoreCart.getSubItemHashMap().put(subItem.getSubItemId(), subItem);
+			if(!getSubItemHashMap(vendorId).containsKey(subItem.getSubItemId())){
+				getSubItemHashMap(vendorId).put(subItem.getSubItemId(), subItem);
 			}
 		}
 		Log.i(AppCart.class.getSimpleName(), "save to cart");
@@ -44,22 +42,32 @@ public class AppCart {
 
 	public double getSubTotal(){
 		double total = 0d;
-		for(DeliveryStoreCart deliveryStoreCart : deliveryStoreCartHashMap.values()){
-			total = total + deliveryStoreCart.getCartTotal();
+		for(Integer vendorId : vendorCartHashMap.keySet()){
+			total = total + getCartTotal(vendorId);
 		}
 		return total;
 	}
 
-	public DeliveryStoreCart getDeliveryStoreCart(DeliveryStore deliveryStore){
-		DeliveryStoreCart deliveryStoreCart;
-		if(deliveryStoreCartHashMap.containsKey(deliveryStore.getVendorId())){
-			deliveryStoreCart = deliveryStoreCartHashMap.get(deliveryStore.getVendorId());
-			deliveryStoreCart.setDeliveryStore(deliveryStore);
-		} else {
-			deliveryStoreCart = new DeliveryStoreCart(deliveryStore);
-			deliveryStoreCartHashMap.put(deliveryStore.getVendorId(), deliveryStoreCart);
+	public double getCartTotal(Integer vendorId){
+		double total = 0d;
+		for(SubItem subItem : getSubItemHashMap(vendorId).values()){
+			total = total + (((double) subItem.getSubItemQuantitySelected()) * subItem.getPrice());
 		}
-		return deliveryStoreCart;
+		return total;
+	}
+
+	public Collection<SubItem> getCartItems(Integer vendorId){
+		return getSubItemHashMap(vendorId).values();
+	}
+
+	public HashMap<Integer, SubItem> getSubItemHashMap(Integer vendorId){
+		if(vendorCartHashMap.containsKey(vendorId)) {
+			return vendorCartHashMap.get(vendorId);
+		} else {
+			HashMap<Integer, SubItem> subItemHashMap = new HashMap<>();
+			vendorCartHashMap.put(vendorId, subItemHashMap);
+			return subItemHashMap;
+		}
 	}
 
 	public int getCityId() {

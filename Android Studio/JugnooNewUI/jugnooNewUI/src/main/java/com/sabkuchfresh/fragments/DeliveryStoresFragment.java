@@ -66,11 +66,11 @@ public class DeliveryStoresFragment extends Fragment {
             @Override
             public void onStoreSelected(final int position, final DeliveryStore deliveryStore) {
 
-                if(activity.getOpenedDeliveryStore().getVendorId() != 0
-                        && !deliveryStore.getVendorId().equals(activity.getOpenedDeliveryStore().getVendorId())
-                        && activity.getCart().getDeliveryStoreCart(activity.getOpenedDeliveryStore()).getCartItems().size() > 0) {
+                if(activity.getOpenedVendorId() != 0
+                        && !deliveryStore.getVendorId().equals(activity.getOpenedVendorId())
+                        && activity.getCart().getCartItems(activity.getOpenedVendorId()).size() > 0) {
                     DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-                            activity.getString(R.string.you_have_selected_cart_from_this_vendor, activity.getOpenedDeliveryStore().getVendorName()),
+                            activity.getString(R.string.you_have_selected_cart_from_this_vendor, activity.getOpenedVendorName()),
                             activity.getString(R.string.continue_to_checkout),
                             activity.getString(R.string.change_store),
                             new View.OnClickListener() {
@@ -82,11 +82,11 @@ public class DeliveryStoresFragment extends Fragment {
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-//                                    TODO clear cart for previous selected activity.getCart().getDeliveryStoreCart(activity.getOpenedDeliveryStore()).getSubItemHashMap().clear();
+//                                    TODO clear cart for previous selected activity.getCart().getDeliveryStoreCart(activity.getOpenedVendorId()).getSubItemHashMap().clear();
                                     selectStore(position, deliveryStore);
                                 }
                             }, false, false);
-                } else if(!deliveryStore.getVendorId().equals(activity.getOpenedDeliveryStore().getVendorId())) {
+                } else if(!deliveryStore.getVendorId().equals(activity.getOpenedVendorId())) {
                     selectStore(position, deliveryStore);
                 }
             }
@@ -105,7 +105,7 @@ public class DeliveryStoresFragment extends Fragment {
         activity.getProductsResponse().getDeliveryStores().get(position).setIsSelected(1);
         deliveryStoresAdapter.notifyDataSetChanged();
 
-        activity.setOpenedDeliveryStore(deliveryStore);
+        activity.setOpenedVendorIdName(deliveryStore.getVendorId(), deliveryStore.getVendorName());
         activity.setRefreshCart(true);
         activity.performBackPressed(false);
     }
