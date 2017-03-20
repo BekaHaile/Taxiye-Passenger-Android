@@ -1386,6 +1386,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 if(!TextUtils.isEmpty(activity.getSpecialInst())){
                     GAUtils.event(activity.getGaCategory(), CHECKOUT, NOTES+ADDED);
                 }
+                if(type == AppConstant.ApplicationType.FRESH){
+                    params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedDeliveryStore().getVendorId()));
+                }
 
                 Callback<PlaceOrderResponse> callback = new Callback<PlaceOrderResponse>() {
                     @Override
@@ -1983,6 +1986,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     jItem.put(Constants.KEY_SUBSCRIPTION_ID, selectedSubscription.getId());
                     params.put(Constants.KEY_SUBSCRIPTION_INFO, jItem.toString());
                 }
+
+                if(type == AppConstant.ApplicationType.FRESH){
+                    params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedDeliveryStore().getVendorId()));
+                }
+
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
                 Callback<UserCheckoutResponse> callback = new Callback<UserCheckoutResponse>() {

@@ -15,10 +15,9 @@ import com.sabkuchfresh.adapters.DeliveryStoresAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryStore;
 
-import java.util.ArrayList;
-
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 
 /**
  * Created by ankit on 17/03/17.
@@ -31,7 +30,6 @@ public class DeliveryStoresFragment extends Fragment {
     private RelativeLayout llRoot;
     private RecyclerView rvDeliveryStores;
     private DeliveryStoresAdapter deliveryStoresAdapter;
-    private ArrayList<DeliveryStore> stores = new ArrayList<>();
 
     public static DeliveryStoresFragment newInstance() {
         Bundle args = new Bundle();
@@ -63,12 +61,34 @@ public class DeliveryStoresFragment extends Fragment {
         rvDeliveryStores.setHasFixedSize(false);
 
 
-        deliveryStoresAdapter = new DeliveryStoresAdapter(activity, activity.getProductsResponse().getDeliveryStores(), rvDeliveryStores, new DeliveryStoresAdapter.Callback() {
+        deliveryStoresAdapter = new DeliveryStoresAdapter(activity, activity.getProductsResponse().getDeliveryStores(),
+                rvDeliveryStores, new DeliveryStoresAdapter.Callback() {
             @Override
-            public void onStoreSelected(int position, DeliveryStore deliveryStore) {
-                activity.setOpenedDeliveryStore(deliveryStore);
-                activity.setRefreshCart(true);
-				activity.performBackPressed(false);
+            public void onStoreSelected(final int position, final DeliveryStore deliveryStore) {
+
+                if(activity.getOpenedDeliveryStore().getVendorId() != 0
+                        && !deliveryStore.getVendorId().equals(activity.getOpenedDeliveryStore().getVendorId())
+                        && activity.getCart().getDeliveryStoreCart(activity.getOpenedDeliveryStore()).getCartItems().size() > 0) {
+                    DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+                            activity.getString(R.string.you_have_selected_cart_from_this_vendor, activity.getOpenedDeliveryStore().getVendorName()),
+                            activity.getString(R.string.continue_to_checkout),
+                            activity.getString(R.string.change_store),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    activity.openCart(activity.getAppType());
+                                }
+                            },
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+//                                    TODO clear cart for previous selected activity.getCart().getDeliveryStoreCart(activity.getOpenedDeliveryStore()).getSubItemHashMap().clear();
+                                    selectStore(position, deliveryStore);
+                                }
+                            }, false, false);
+                } else if(!deliveryStore.getVendorId().equals(activity.getOpenedDeliveryStore().getVendorId())) {
+                    selectStore(position, deliveryStore);
+                }
             }
         });
 
@@ -76,4 +96,18 @@ public class DeliveryStoresFragment extends Fragment {
 
         return rootView;
     }
+
+
+    private void selectStore(int position, final DeliveryStore deliveryStore){
+        for(int i=0; i<activity.getProductsResponse().getDeliveryStores().size(); i++){
+            activity.getProductsResponse().getDeliveryStores().get(i).setIsSelected(0);
+        }
+        activity.getProductsResponse().getDeliveryStores().get(position).setIsSelected(1);
+        deliveryStoresAdapter.notifyDataSetChanged();
+
+        activity.setOpenedDeliveryStore(deliveryStore);
+        activity.setRefreshCart(true);
+        activity.performBackPressed(false);
+    }
+
 }

@@ -17,6 +17,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -56,8 +57,14 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
             Log.d("position", "position = "+(position));
 
             mHolder.tvStoreName.setText(store.getVendorName());
-            mHolder.tvDeliveryCharges.setText(String.format(activity.getResources().getString(R.string.delivery_charges_with_value), store.getDeliveryCharges()));
-            mHolder.tvMinOrder.setText(String.format(activity.getResources().getString(R.string.minimum_order_with_value), store.getMinDeliveryCharges()));
+            mHolder.tvDeliveryCharges.setText(activity.getString(R.string.delivery_charges_with_value, Utils.getMoneyDecimalFormat().format(store.getDeliveryCharges())));
+            mHolder.tvMinOrder.setText(activity.getString(R.string.minimum_order_with_value, Utils.getMoneyDecimalFormat().format(store.getMinDeliveryCharges())));
+            int numberItems = activity.getCart().getDeliveryStoreCart(store).getCartItems().size();
+            if(numberItems == 1){
+                mHolder.tvCartItem.setText(activity.getString(R.string.one_item_in_cart));
+            } else {
+                mHolder.tvCartItem.setText(activity.getString(R.string.number_items_in_cart, String.valueOf(numberItems)));
+            }
             int bottom = mHolder.llContainer.getPaddingBottom();
             int top = mHolder.llContainer.getPaddingTop();
             int right = mHolder.llContainer.getPaddingRight();
@@ -67,7 +74,6 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
                 mHolder.ivRadio.setImageResource(R.drawable.radio_active);
                 mHolder.llContainer.setBackgroundResource(R.drawable.bg_white_layer_shadow);
                 mHolder.llContainer.setPadding(left, top, right, bottom);
-                activity.getFreshFragment().getTvStoreName().setText(store.getVendorName());
             } else{
                 mHolder.ivRadio.setImageResource(R.drawable.radio_deactive);
                 mHolder.llContainer.setBackgroundResource(R.drawable.bg_white_transparent_layer_shadow);
@@ -91,10 +97,6 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
 
         switch (viewClicked.getId()){
             case R.id.llContainer:
-                for(int i=0; i<stores.size(); i++){
-                    stores.get(i).setIsSelected(0);
-                }
-                stores.get(position).setIsSelected(1);
                 callback.onStoreSelected(position, stores.get(position));
                 notifyDataSetChanged();
             break;

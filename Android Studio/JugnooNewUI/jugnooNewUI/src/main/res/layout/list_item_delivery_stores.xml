@@ -64,7 +64,7 @@
                 android:id="@+id/tvCartItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12 Items in cart"
+                android:text="@string/number_items_in_cart"
                 android:textSize="@dimen/sp_12"
                 android:textColor="@color/text_color"
                 android:layout_marginTop="@dimen/dp_4"

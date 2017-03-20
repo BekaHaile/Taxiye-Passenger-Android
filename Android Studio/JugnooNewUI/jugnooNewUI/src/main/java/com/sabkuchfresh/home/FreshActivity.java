@@ -368,6 +368,11 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                     updateItemListFromSPDB();
                     if (updateCartValuesGetTotalPrice().second > 0) {
+                        if (getMealAddonItemsFragment() == null && isMealAddonItemsAvailable()) {
+                            getTransactionUtils().addMealAddonItemsFragment(FreshActivity.this, relativeLayoutContainer);
+                        } else {
+                            openCart(appType);
+                        }
 
 
                         if(getTopFragment()!=null && getTopFragment() instanceof VendorMenuFragment) {
@@ -378,12 +383,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                             }
                         } else {
                             GAUtils.event(getGaCategory(), HOME, CART+CLICKED);
-
-                        }
-                        if (getMealAddonItemsFragment() == null && isMealAddonItemsAvailable()) {
-                            getTransactionUtils().addMealAddonItemsFragment(FreshActivity.this, relativeLayoutContainer);
-                        } else {
-                            openCart(appType);
                         }
                     } else {
                         Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty));
@@ -2571,7 +2570,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         }
     }
 
-    private void openCart(int appType) {
+    public void openCart(int appType) {
         if (appType == AppConstant.ApplicationType.MENUS && getVendorOpened() != null) {
             if (canExitVendorMenu()){
                 getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
@@ -3751,7 +3750,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public DeliveryStore getOpenedDeliveryStore(){
         if(openedDeliveryStore == null){
             openedDeliveryStore = new DeliveryStore();
-            openedDeliveryStore.setStoreId(0);
             openedDeliveryStore.setVendorId(0);
         }
         return openedDeliveryStore;

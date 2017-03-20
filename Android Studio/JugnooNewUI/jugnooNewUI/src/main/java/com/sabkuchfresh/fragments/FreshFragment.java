@@ -410,7 +410,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                             rlSelectedStore.setEnabled(true);
                                         } else{
                                             ivEditStore.setVisibility(View.GONE);
-                                            rlSelectedStore.setEnabled(false);
+											// TODO: 20/03/17 should be false
+											rlSelectedStore.setEnabled(true);
                                         }
                                         if(loader) {
                                             freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
