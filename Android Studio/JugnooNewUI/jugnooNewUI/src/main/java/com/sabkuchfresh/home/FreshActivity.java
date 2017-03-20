@@ -2890,26 +2890,29 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public void setAddressAndFetchOfferingData(int appType) {
         try {
             String address = "";
-            if (TextUtils.isEmpty(getSelectedAddressType())) {
-                String[] arr = null;
-                if (getSelectedAddress().contains(",")) {
-                    arr = getSelectedAddress().split(", ");
+//            if(appType == AppConstant.ApplicationType.FEED){
+//                String[] arr = null;
+//                if (getSelectedAddress().contains(",")) {
+//                    arr = getSelectedAddress().split(", ");
+//                } else {
+//                    arr = getSelectedAddress().split(" ");
+//                }
+//                if (arr.length > 1) {
+//                    address = arr[arr.length-2] + ", " + arr[arr.length-1];
+//                } else if (arr.length > 0) {
+//                    address = arr[arr.length-1];
+//                }
+//            } else {
+                if (TextUtils.isEmpty(getSelectedAddressType())) {
+                    address = getSelectedAddress();
                 } else {
-                    arr = getSelectedAddress().split(" ");
+                    address = getSelectedAddressType();
                 }
-                if (arr.length > 1) {
-                    address = arr[0] + ", " + arr[1];
-                } else if (arr.length > 0) {
-                    address = arr[0];
-                }
-                address = getSelectedAddress();
-            } else {
-                address = getSelectedAddressType();
-            }
+//            }
             setLocationAddress(address);
             if (getFreshCheckoutMergedFragment() == null && getMenusCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
                 if (appType == AppConstant.ApplicationType.FRESH && getFreshHomeFragment() != null) {
-                    getFreshHomeFragment().getSuperCategoriesAPI();
+                    getFreshHomeFragment().getSuperCategoriesAPI(true);
                 } else if (appType == AppConstant.ApplicationType.MEALS && getMealFragment() != null) {
                     getMealFragment().getAllProducts(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.GROCERY && getGroceryFragment() != null) {
