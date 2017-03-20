@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -75,12 +76,13 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private LinearLayout noFreshsView;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
-	private ImageView ivShadowBelowTab, ivShadowAboveTab;
+	private ImageView ivShadowBelowTab, ivShadowAboveTab, ivEditStore;
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
+    private TextView tvStoreName;
 
     private ArrayList<SubItem> freshData = new ArrayList<>();
     private boolean loader = true, resumed = false;
@@ -160,7 +162,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		viewPager.setAdapter(freshCategoryFragmentsAdapter);
 		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
 		ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
-        rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore);
+        rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore); rlSelectedStore.setEnabled(false);
+        tvStoreName = (TextView) rootView.findViewById(R.id.tvStoreName);
+        ivEditStore = (ImageView) rootView.findViewById(R.id.ivEditStore);
 
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.text_color_dark_1, R.color.text_color);
@@ -209,6 +213,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         });
 
 
+
         activity.setSortingList(this);
 
         getAllProducts(true, activity.getSelectedLatLng());
@@ -251,7 +256,11 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		return rootView;
 	}
 
-	@Override
+    public TextView getTvStoreName() {
+        return tvStoreName;
+    }
+
+    @Override
 	public void onResume() {
 		super.onResume();
 		if(!isHidden() && resumed) {
@@ -357,7 +366,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 									activity.getFreshHomeFragment().oSnapNotAvailableCase(message);
                                 }
                                 else {
-
                                     activity.setProductsResponse(productsResponse);
                                     activity.setMinOrderAmountText(FreshFragment.this);
 									activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
@@ -381,6 +389,17 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 										}
                                         activity.updateItemListFromSPDB();
                                         activity.updateCartValuesGetTotalPrice();
+                                        if(!TextUtils.isEmpty(activity.getProductsResponse().getDeliveryInfo().getVendorName())){
+                                            tvStoreName.setText(activity.getProductsResponse().getDeliveryInfo().getVendorName());
+                                        }
+                                        if(activity.getProductsResponse().getDeliveryStores() != null
+                                                && activity.getProductsResponse().getDeliveryStores().size() > 1){
+                                            ivEditStore.setVisibility(View.VISIBLE);
+                                            rlSelectedStore.setEnabled(true);
+                                        } else{
+                                            ivEditStore.setVisibility(View.GONE);
+                                            rlSelectedStore.setEnabled(true);
+                                        }
                                         if(loader) {
                                             freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
                                             tabs.setViewPager(viewPager);

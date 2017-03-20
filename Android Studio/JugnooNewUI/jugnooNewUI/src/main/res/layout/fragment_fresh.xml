@@ -71,7 +71,7 @@
                 android:padding="15px"
                 android:src="@drawable/edit_icon_selector"
                 android:tag="mwar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <View
                 android:layout_width="match_parent"

@@ -438,6 +438,8 @@
     <string name="connection_lost_title">CONNECTION LOST</string>
     <string name="connection_lost_desc">Oops! Your Internet is not working.\nPlease try again.</string>
     <string name="connection_lost_try_again">TRY AGAIN</string>
+    <string name="delivery_charges_with_value">Delivery Charges \u20B9%s</string>
+    <string name="minimum_order_with_value">Minimum order \u20B9%s for free delivery</string>
 
     <string-array name="CountryCodes">
         <item>93,AF</item>

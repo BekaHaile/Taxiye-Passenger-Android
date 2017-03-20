@@ -62,17 +62,8 @@ public class DeliveryStoresFragment extends Fragment {
         rvDeliveryStores.setItemAnimator(new DefaultItemAnimator());
         rvDeliveryStores.setHasFixedSize(false);
 
-        for(int i=0; i<3; i++){
-            DeliveryStore store = new DeliveryStore();
-            store.setVendorName("Exo Fresh");
-            store.setStoreId(i);
-            if(i == 0) {
-                store.setIsSelected(1);
-            }
-            stores.add(store);
-        }
 
-        deliveryStoresAdapter = new DeliveryStoresAdapter(activity, stores, rvDeliveryStores, new DeliveryStoresAdapter.Callback() {
+        deliveryStoresAdapter = new DeliveryStoresAdapter(activity, activity.getProductsResponse().getDeliveryStores(), rvDeliveryStores, new DeliveryStoresAdapter.Callback() {
             @Override
             public void onStoreSelected(int position, DeliveryStore deliveryStore) {
                 activity.setOpenedDeliveryStore(deliveryStore);

@@ -13,22 +13,23 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryStore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Log;
 
 
 /**
- * Created by Shankar on 7/17/15.
+ * Created by Ankit on 7/17/15.
  */
 public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAdapter.ViewHolderSlot> implements ItemListener {
 
     private FreshActivity activity;
-    private ArrayList<DeliveryStore> stores;
+    private List<DeliveryStore> stores;
     private Callback callback;
     private RecyclerView recyclerView;
 
-    public DeliveryStoresAdapter(FreshActivity activity, ArrayList<DeliveryStore> stores, RecyclerView recyclerView, Callback callback) {
+    public DeliveryStoresAdapter(FreshActivity activity, List<DeliveryStore> stores, RecyclerView recyclerView, Callback callback) {
         this.activity = activity;
         this.stores = stores;
         this.recyclerView = recyclerView;
@@ -54,6 +55,9 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
             activity.setRatingAndGetColor(mHolder.tvRating, rating, "#8dd061", true);
             Log.d("position", "position = "+(position));
 
+            mHolder.tvStoreName.setText(store.getVendorName());
+            mHolder.tvDeliveryCharges.setText(String.format(activity.getResources().getString(R.string.delivery_charges_with_value), store.getDeliveryCharges()));
+            mHolder.tvMinOrder.setText(String.format(activity.getResources().getString(R.string.minimum_order_with_value), store.getMinDeliveryCharges()));
             int bottom = mHolder.llContainer.getPaddingBottom();
             int top = mHolder.llContainer.getPaddingTop();
             int right = mHolder.llContainer.getPaddingRight();
@@ -63,6 +67,7 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
                 mHolder.ivRadio.setImageResource(R.drawable.radio_active);
                 mHolder.llContainer.setBackgroundResource(R.drawable.bg_white_layer_shadow);
                 mHolder.llContainer.setPadding(left, top, right, bottom);
+                activity.getFreshFragment().getTvStoreName().setText(store.getVendorName());
             } else{
                 mHolder.ivRadio.setImageResource(R.drawable.radio_deactive);
                 mHolder.llContainer.setBackgroundResource(R.drawable.bg_white_transparent_layer_shadow);
