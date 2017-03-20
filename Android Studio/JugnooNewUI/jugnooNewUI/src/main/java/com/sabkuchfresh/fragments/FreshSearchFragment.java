@@ -388,6 +388,10 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 						params.put(Constants.KEY_SEARCH_STRING, searchText);
 						params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategoryId));
 
+					if(activity.getAppType() == AppConstant.ApplicationType.FRESH){
+						params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedDeliveryStore().getVendorId()));
+					}
+
 						refreshingAutoComplete = true;
 
 					activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
