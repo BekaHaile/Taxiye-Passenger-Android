@@ -3728,6 +3728,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     private void createAppCart(String clientId){
         if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
             appCart = Paper.book().read(DB_FRESH_CART, new AppCart());
+            if(appCart.getDeliveryStoreCartHashMap().size() == 1){
+                ArrayList<DeliveryStoreCart> carts = new ArrayList<>(appCart.getDeliveryStoreCartHashMap().values());
+                setOpenedDeliveryStore(carts.get(0).getDeliveryStore());
+            }
         }
         else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
             appCart = Paper.book().read(DB_MEALS_CART, new AppCart());
@@ -3748,6 +3752,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         if(openedDeliveryStore == null){
             openedDeliveryStore = new DeliveryStore();
             openedDeliveryStore.setStoreId(0);
+            openedDeliveryStore.setVendorId(0);
         }
         return openedDeliveryStore;
     }

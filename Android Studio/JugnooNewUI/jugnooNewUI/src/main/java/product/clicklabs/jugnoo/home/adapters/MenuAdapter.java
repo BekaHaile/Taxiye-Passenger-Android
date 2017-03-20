@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.home.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
@@ -175,7 +174,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                                         .getString(R.string.rupees_value_format_without_space),
                                 Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
                         holder.textViewValue.setVisibility(View.VISIBLE);
-                    } catch (Resources.NotFoundException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else if(MenuInfoTags.INBOX.getTag().equalsIgnoreCase(menuInfo.getTag())){
@@ -207,7 +206,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
                 } else if(MenuInfoTags.SIGNUP_TUTORIAL.getTag().equalsIgnoreCase(menuInfo.getTag())){
-                    if(Prefs.with(activity).getInt(SPLabels.USERNAME_UPDATED, 0) == 1){
+                    if(!TextUtils.isEmpty(Data.userData.userName) && Prefs.with(activity).getInt(SPLabels.USERNAME_UPDATED, 0) == 1){
                         hideLayout(holder.relative);
                     } else {
                         holder.imageViewMenuIcon.setImageResource(R.drawable.ic_free_discount_selector);

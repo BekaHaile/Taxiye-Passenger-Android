@@ -306,7 +306,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Log.e("FreshCategoryItemsAdapter", "plus time ms = "+(System.currentTimeMillis() - time));
+                    Log.e("FreshCategoryItemsAdapter", "time="+(System.currentTimeMillis() - time));
                 }
             });
 

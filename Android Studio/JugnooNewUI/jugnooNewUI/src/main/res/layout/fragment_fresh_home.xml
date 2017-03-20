@@ -34,7 +34,8 @@
                     <RelativeLayout
                         android:id="@+id/rlPager"
                         android:layout_width="match_parent"
-                        android:layout_height="220px">
+                        android:layout_height="220px"
+                        android:visibility="gone">
 
                         <android.support.v4.view.ViewPager
                             android:id="@+id/pager"

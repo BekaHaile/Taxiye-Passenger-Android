@@ -67,6 +67,8 @@ public class DeliveryStoresFragment extends Fragment {
             @Override
             public void onStoreSelected(int position, DeliveryStore deliveryStore) {
                 activity.setOpenedDeliveryStore(deliveryStore);
+                activity.setRefreshCart(true);
+				activity.performBackPressed(false);
             }
         });
 

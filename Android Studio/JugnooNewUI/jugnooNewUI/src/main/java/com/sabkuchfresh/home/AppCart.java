@@ -52,12 +52,12 @@ public class AppCart {
 
 	public DeliveryStoreCart getDeliveryStoreCart(DeliveryStore deliveryStore){
 		DeliveryStoreCart deliveryStoreCart;
-		if(deliveryStoreCartHashMap.containsKey(deliveryStore.getStoreId())){
-			deliveryStoreCart = deliveryStoreCartHashMap.get(deliveryStore.getStoreId());
+		if(deliveryStoreCartHashMap.containsKey(deliveryStore.getVendorId())){
+			deliveryStoreCart = deliveryStoreCartHashMap.get(deliveryStore.getVendorId());
 			deliveryStoreCart.setDeliveryStore(deliveryStore);
 		} else {
 			deliveryStoreCart = new DeliveryStoreCart(deliveryStore);
-			deliveryStoreCartHashMap.put(deliveryStore.getStoreId(), deliveryStoreCart);
+			deliveryStoreCartHashMap.put(deliveryStore.getVendorId(), deliveryStoreCart);
 		}
 		return deliveryStoreCart;
 	}

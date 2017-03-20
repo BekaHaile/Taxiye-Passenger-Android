@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -89,19 +88,19 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         }
       /*  scrollView = (NestedScrollView) rootView.findViewById (R.id.nest_scrollview);
         scrollView.setFillViewport (true);*/
-        mImageViewPager = (ViewPager) rootView.findViewById(R.id.pager);
-        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabDots);
-        tabLayout.setupWithViewPager(mImageViewPager, true);
-        mCustomPagerAdapter = new CustomPagerAdapter(activity);
-
-        mImageViewPager.setAdapter(mCustomPagerAdapter);
-
-        for(int i=0; i < tabLayout.getTabCount(); i++) {
-            View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(i);
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
-            p.setMargins(20, 0, 0, 0);
-            tab.requestLayout();
-        }
+//        mImageViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+//        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabDots);
+//        tabLayout.setupWithViewPager(mImageViewPager, true);
+//        mCustomPagerAdapter = new CustomPagerAdapter(activity);
+//
+//        mImageViewPager.setAdapter(mCustomPagerAdapter);
+//
+//        for(int i=0; i < tabLayout.getTabCount(); i++) {
+//            View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(i);
+//            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+//            p.setMargins(20, 0, 0, 0);
+//            tab.requestLayout();
+//        }
 
         swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(this);

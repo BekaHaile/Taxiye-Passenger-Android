@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -143,6 +144,12 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             }
         });
 
+
+        try {
+            ((SwipeRefreshLayout)rootView.findViewById(R.id.swipe_container)).setEnabled(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         success(activity.getMenuProductsResponse());
 

@@ -17,7 +17,8 @@
             android:id="@+id/rlSelectedStore"
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_height"
-            android:background="@drawable/bg_white_menu_item_selector_color_selector">
+            android:background="@drawable/bg_white_menu_item_selector_color_selector"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/ivLoc"
@@ -54,7 +55,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="Sabharwal Market"
+                    android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28"
                     app:font="maven"/>

@@ -30,6 +30,7 @@ import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshNoDeliveriesDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.retrofit.model.DeliveryStore;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
@@ -163,6 +164,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
 		ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
         rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore); rlSelectedStore.setEnabled(false);
+		rlSelectedStore.setVisibility(View.VISIBLE);
         tvStoreName = (TextView) rootView.findViewById(R.id.tvStoreName);
         ivEditStore = (ImageView) rootView.findViewById(R.id.ivEditStore);
 
@@ -342,6 +344,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 params.put(Constants.KEY_CLIENT_ID, ""+ Config.getFreshClientId());
                 params.put(Constants.INTERATED, "1");
 				params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategory.getSuperCategoryId()));
+				params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedDeliveryStore().getVendorId()));
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 
 				new HomeUtil().putDefaultParams(params);
@@ -387,18 +390,27 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 											ivShadowBelowTab.setVisibility(View.GONE);
 											ivShadowAboveTab.setVisibility(View.VISIBLE);
 										}
-                                        activity.updateItemListFromSPDB();
-                                        activity.updateCartValuesGetTotalPrice();
-                                        if(!TextUtils.isEmpty(activity.getProductsResponse().getDeliveryInfo().getVendorName())){
-                                            tvStoreName.setText(activity.getProductsResponse().getDeliveryInfo().getVendorName());
-                                        }
+
+                                        for(DeliveryStore deliveryStore : activity.getProductsResponse().getDeliveryStores()){
+											if(deliveryStore.getIsSelected() == 1){
+												activity.setOpenedDeliveryStore(deliveryStore);
+												break;
+											}
+										}
+
+										if(!TextUtils.isEmpty(activity.getOpenedDeliveryStore().getVendorName())){
+											tvStoreName.setText(activity.getOpenedDeliveryStore().getVendorName());
+										}
+
+										activity.updateItemListFromSPDB();
+										activity.updateCartValuesGetTotalPrice();
                                         if(activity.getProductsResponse().getDeliveryStores() != null
                                                 && activity.getProductsResponse().getDeliveryStores().size() > 1){
                                             ivEditStore.setVisibility(View.VISIBLE);
                                             rlSelectedStore.setEnabled(true);
                                         } else{
                                             ivEditStore.setVisibility(View.GONE);
-                                            rlSelectedStore.setEnabled(true);
+                                            rlSelectedStore.setEnabled(false);
                                         }
                                         if(loader) {
                                             freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
