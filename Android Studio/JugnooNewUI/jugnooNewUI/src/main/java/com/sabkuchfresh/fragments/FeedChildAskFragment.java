@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.sabkuchfresh.home.FreshActivity;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -30,7 +31,10 @@ public class FeedChildAskFragment extends ImageSelectFragment {
         View rootView = inflater.inflate(R.layout.fragment_child_feed_review, container, false);
         activity = ((FreshActivity) getActivity());
         etContent = (EditText) rootView.findViewById(R.id.etContent);
-        etContent.setHint(R.string.looking_for_something);
+        if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getFeedAddPostHInt()))
+            etContent.setHint(Data.getFeedData().getFeedAddPostHInt());
+        else
+            etContent.setHint(R.string.looking_for_something);
         displayImagesRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view_photos);
         scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         return rootView;
@@ -71,7 +75,7 @@ public class FeedChildAskFragment extends ImageSelectFragment {
 
     @Override
     public boolean cameraEnableState() {
-        return (imageSelected == null || imageSelected.size() < 5);
+        return true;
 
     }
 }

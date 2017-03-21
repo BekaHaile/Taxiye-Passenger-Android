@@ -339,9 +339,32 @@ public class LoginResponse {
 		@SerializedName("contacts_synced")
 		@Expose
 		private Integer contactsSynced;
-		@SerializedName("feature_feed_offering")
+
+
+
+		@SerializedName("review_placeholder")
 		@Expose
-		private Integer featureFeedOffering;
+		private String feedAddReviewHint;
+
+		@SerializedName("ask_something_placeholder")
+		@Expose
+		private String feedAddPostHInt;
+
+		@SerializedName("max_upload_images")
+		@Expose
+		private Integer maxUploadImagesFeed;
+
+		public String getFeedAddReviewHint() {
+			return feedAddReviewHint;
+		}
+
+		public String getFeedAddPostHInt() {
+			return feedAddPostHInt;
+		}
+
+		public Integer getMaxUploadImagesFeed() {
+			return maxUploadImagesFeed;
+		}
 
 		public Integer getContactsSynced() {
 			return contactsSynced;
@@ -351,13 +374,7 @@ public class LoginResponse {
 			this.contactsSynced = contactsSynced;
 		}
 
-		public Integer getFeatureFeedOffering() {
-			return featureFeedOffering;
-		}
 
-		public void setFeatureFeedOffering(Integer featureFeedOffering) {
-			this.featureFeedOffering = featureFeedOffering;
-		}
 	}
 
 	public class Pay{

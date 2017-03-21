@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
@@ -20,6 +23,7 @@ import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 
 import static android.app.Activity.RESULT_OK;
@@ -40,9 +44,17 @@ public abstract class ImageSelectFragment extends Fragment {
     protected ScrollView scrollView;
     protected ArrayList<ImageEntry> imageSelected;
     protected FreshActivity activity;
+    protected int maxNoImages;
 
 
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(Data.getFeedData()!=null && Data.getFeedData().getMaxUploadImagesFeed()>0)
+            maxNoImages=Data.getFeedData().getMaxUploadImagesFeed();
+        else
+            maxNoImages=5;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -72,7 +84,7 @@ public abstract class ImageSelectFragment extends Fragment {
                         if (imageSelected.size() == 0)
                             displayImagesRecycler.setVisibility(View.GONE);
 
-                        setCameraEnabled(imageSelected.size()<5);
+                        setCameraEnabled(imageSelected.size()<maxNoImages);
 
                     }
 
@@ -89,7 +101,7 @@ public abstract class ImageSelectFragment extends Fragment {
             displayImagesRecycler.setVisibility(View.VISIBLE);
 
 
-        setCameraEnabled(imageSelected.size()<5);
+        setCameraEnabled(imageSelected.size()<maxNoImages);
 
 
 
@@ -125,6 +137,14 @@ public abstract class ImageSelectFragment extends Fragment {
     }
 
     public void onAddImageClick() {
+
+        if(imageSelected!=null && imageSelected.size()>=maxNoImages) {
+            Toast.makeText(activity, "Cannot upload more images", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+
         if (PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
                 PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED) {
             if (permissionsRequest == null) {
@@ -150,7 +170,7 @@ public abstract class ImageSelectFragment extends Fragment {
         }
 
 
-        picker.setLimit(imageSelected == null ? 5 : 5 - imageSelected.size());
+        picker.setLimit(imageSelected == null ? maxNoImages : maxNoImages - imageSelected.size());
         picker.startActivity(ImageSelectFragment.this, activity, REQUEST_CODE_SELECT_IMAGE);
     }
 

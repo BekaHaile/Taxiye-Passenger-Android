@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -187,6 +188,8 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
                 }
             }
         });
+        if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getFeedAddReviewHint()))
+            etContent.setHint(Data.getFeedData().getFeedAddReviewHint());
         return rootView;
 
 
@@ -249,7 +252,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
             disabledViewNoRestaurant.setVisibility(View.GONE);
             ratingBar.setEnabled(true);
             etContent.setEnabled(true);
-            setCameraEnabled(imageSelected==null || imageSelected.size()<5);
+            setCameraEnabled(true);
         }
         else {
             disabledViewNoRestaurant.setVisibility(View.VISIBLE);
@@ -276,7 +279,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
 
     @Override
     public boolean cameraEnableState() {
-        return disabledViewNoRestaurant.getVisibility() != View.VISIBLE && (imageSelected == null || imageSelected.size() < 5);
+        return disabledViewNoRestaurant.getVisibility() == View.GONE ;
 
     }
 }
