@@ -438,6 +438,8 @@
     <string name="connection_lost_title">CONNECTION LOST</string>
     <string name="connection_lost_desc">Oops! Your Internet is not working.\nPlease try again.</string>
     <string name="connection_lost_try_again">TRY AGAIN</string>
+    <string name="delivery_charges_with_value">Delivery Charges \u20B9%s</string>
+    <string name="minimum_order_with_value">Minimum order \u20B9%s for free delivery</string>
 
     <string-array name="CountryCodes">
         <item>93,AF</item>
@@ -1591,5 +1593,14 @@
     <string name="contacts_synced_successfully">Contacts synced successfully</string>
     <string name="please_enter_something">Please enter text</string>
     <string name="label_location_feed">Location</string>
+    <string name="selected_store">Selected Store</string>
+    <string name="delivery_stores">Delivery Stores</string>
+    <string name="you_have_selected_cart_from_this_vendor">You have some items in your cart from %s store.\nChanging the store will clear your cart.</string>
+    <string name="you_have_selected_cart_from_this_vendor_clear_cart">You have some items in your cart from %s store.\nDo you want to clear your cart?</string>
+    <string name="continue_to_checkout">Continue to checkout</string>
+    <string name="change_store">Change store</string>
+    <string name="number_items_in_cart">%s Items in cart</string>
+    <string name="one_item_in_cart">1 Item in cart</string>
+    <string name="clear_cart">Clear Cart</string>
 
 </resources>

@@ -352,7 +352,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 											mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 											mainLayout.setVisibility(View.GONE);
 										}
-                                        activity.updateCartFromSP();
+                                        activity.updateItemListFromSPDB();
                                         activity.updateCartValuesGetTotalPrice();
                                         if(loader) {
                                             freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());

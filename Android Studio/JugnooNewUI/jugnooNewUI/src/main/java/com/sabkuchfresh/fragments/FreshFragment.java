@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -28,6 +30,7 @@ import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshNoDeliveriesDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.retrofit.model.DeliveryStore;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
@@ -74,17 +77,19 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private LinearLayout noFreshsView;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
-	private ImageView ivShadowBelowTab, ivShadowAboveTab;
+	private ImageView ivShadowBelowTab, ivShadowAboveTab, ivEditStore;
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
+    private TextView tvStoreName;
 
     private ArrayList<SubItem> freshData = new ArrayList<>();
     private boolean loader = true, resumed = false;
     protected Bus mBus;
     PushDialog pushDialog;
+    private RelativeLayout rlSelectedStore;
 
 	private SuperCategoriesData.SuperCategory superCategory;
 
@@ -158,6 +163,10 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		viewPager.setAdapter(freshCategoryFragmentsAdapter);
 		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
 		ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
+        rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore); rlSelectedStore.setEnabled(false);
+		rlSelectedStore.setVisibility(View.VISIBLE);
+        tvStoreName = (TextView) rootView.findViewById(R.id.tvStoreName);
+        ivEditStore = (ImageView) rootView.findViewById(R.id.ivEditStore);
 
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.text_color_dark_1, R.color.text_color);
@@ -206,6 +215,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         });
 
 
+
         activity.setSortingList(this);
 
         getAllProducts(true, activity.getSelectedLatLng());
@@ -238,10 +248,21 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			e.printStackTrace();
 		}
 
+        rlSelectedStore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.getTransactionUtils().openDeliveryStoresFragment(activity, activity.getRelativeLayoutContainer());
+            }
+        });
+
 		return rootView;
 	}
 
-	@Override
+    public TextView getTvStoreName() {
+        return tvStoreName;
+    }
+
+    @Override
 	public void onResume() {
 		super.onResume();
 		if(!isHidden() && resumed) {
@@ -289,7 +310,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
             activity.resumeMethod();
             if(activity.getCartChangedAtCheckout()){
-				activity.updateCartFromSP();
+				activity.updateItemListFromSPDB();
 				onUpdateListEvent(new UpdateMainList(true));
 				activity.updateCartValuesGetTotalPrice();
 			}
@@ -323,6 +344,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 params.put(Constants.KEY_CLIENT_ID, ""+ Config.getFreshClientId());
                 params.put(Constants.INTERATED, "1");
 				params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategory.getSuperCategoryId()));
+				params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getLastCartVendorId()));
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 
 				new HomeUtil().putDefaultParams(params);
@@ -347,7 +369,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 									activity.getFreshHomeFragment().oSnapNotAvailableCase(message);
                                 }
                                 else {
-
                                     activity.setProductsResponse(productsResponse);
                                     activity.setMinOrderAmountText(FreshFragment.this);
 									activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
@@ -369,8 +390,28 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 											ivShadowBelowTab.setVisibility(View.GONE);
 											ivShadowAboveTab.setVisibility(View.VISIBLE);
 										}
-                                        activity.updateCartFromSP();
-                                        activity.updateCartValuesGetTotalPrice();
+
+                                        for(DeliveryStore deliveryStore : activity.getProductsResponse().getDeliveryStores()){
+											if(deliveryStore.getIsSelected() == 1){
+												activity.setOpenedVendorIdName(deliveryStore.getVendorId(), deliveryStore);
+												break;
+											}
+										}
+
+										if(!TextUtils.isEmpty(activity.getOpenedDeliveryStore().getVendorName())){
+											tvStoreName.setText(activity.getOpenedDeliveryStore().getVendorName());
+										}
+
+										activity.updateItemListFromSPDB();
+										activity.updateCartValuesGetTotalPrice();
+                                        if(activity.getProductsResponse().getDeliveryStores() != null
+                                                && activity.getProductsResponse().getDeliveryStores().size() > 1){
+                                            ivEditStore.setVisibility(View.VISIBLE);
+                                            rlSelectedStore.setEnabled(true);
+                                        } else{
+                                            ivEditStore.setVisibility(View.GONE);
+											rlSelectedStore.setEnabled(false);
+                                        }
                                         if(loader) {
                                             freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
                                             tabs.setViewPager(viewPager);

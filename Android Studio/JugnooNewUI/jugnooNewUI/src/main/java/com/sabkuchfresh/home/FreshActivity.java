@@ -73,9 +73,10 @@ import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
+import com.sabkuchfresh.fragments.DeliveryStoresFragment;
 import com.sabkuchfresh.fragments.FeedAddPostFragment;
-import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedHomeFragment;
+import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
@@ -97,6 +98,7 @@ import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
+import com.sabkuchfresh.retrofit.model.DeliveryStore;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -129,9 +131,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -139,6 +143,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.OrderStatusFragment;
+import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -176,7 +181,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseAppCompatActivity implements GAAction, GACategory {
+public class FreshActivity extends BaseAppCompatActivity implements GAAction, GACategory, PaperDBKeys {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -362,8 +367,13 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     Utils.hideSoftKeyboard(FreshActivity.this, topBar.etSearch);
 
                     int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
-                    updateCartFromSP();
+                    updateItemListFromSPDB();
                     if (updateCartValuesGetTotalPrice().second > 0) {
+                        if (getMealAddonItemsFragment() == null && isMealAddonItemsAvailable()) {
+                            getTransactionUtils().addMealAddonItemsFragment(FreshActivity.this, relativeLayoutContainer);
+                        } else {
+                            openCart(appType);
+                        }
 
 
                         if(getTopFragment()!=null && getTopFragment() instanceof VendorMenuFragment) {
@@ -374,12 +384,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                             }
                         } else {
                             GAUtils.event(getGaCategory(), HOME, CART+CLICKED);
-
-                        }
-                        if (getMealAddonItemsFragment() == null && isMealAddonItemsAvailable()) {
-                            getTransactionUtils().addMealAddonItemsFragment(FreshActivity.this, relativeLayoutContainer);
-                        } else {
-                            openCart(appType);
                         }
                     } else {
                         Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty));
@@ -393,10 +397,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             ivSort.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-
-
                     if (viewSortFake.getVisibility() == View.GONE) {
 
                         if(getAppType()== AppConstant.ApplicationType.MENUS && getTopFragment() instanceof VendorMenuFragment) {
@@ -435,6 +435,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             try {
                 float marginBottom = 60f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+
+                createAppCart(lastClientId);
 
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                     addMealFragment();
@@ -542,10 +544,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     public void run() {
                         try {
                             if (getAppType() != AppConstant.ApplicationType.MENUS && productsResponse != null && productsResponse.getCategories() != null) {
-                                updateCartFromSP();
+                                updateItemListFromSPDB();
                                 topBar.getLlCartContainer().performClick();
                             } else if (getAppType() == AppConstant.ApplicationType.MENUS && getMenuProductsResponse() != null && getMenuProductsResponse().getCategories() != null) {
-                                updateCartFromSP();
+                                updateItemListFromSPDB();
                                 topBar.getLlCartContainer().performClick();
                             } else {
                                 updateCart = true;
@@ -584,7 +586,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                                 }
                                 String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
                                 if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
-                                    updateCartFromSP();
+                                    updateItemListFromSPDB();
                                     topBar.getLlCartContainer().performClick();
                                 } else {
                                     Bundle bundle = new Bundle();
@@ -600,7 +602,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                                 }
                                 String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getGroceryClientId());
                                 if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
-                                    updateCartFromSP();
+                                    updateItemListFromSPDB();
                                     topBar.getLlCartContainer().performClick();
                                 } else {
                                     Bundle bundle = new Bundle();
@@ -614,7 +616,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                                 }
                                 String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
                                 if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
-                                    updateCartFromSP();
+                                    updateItemListFromSPDB();
                                     topBar.getLlCartContainer().performClick();
                                 } else {
                                     Bundle bundle = new Bundle();
@@ -747,6 +749,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         return (FreshFragment) getSupportFragmentManager().findFragmentByTag(FreshFragment.class.getName());
     }
 
+    public DeliveryStoresFragment getDeliveryStoresFragment() {
+        return (DeliveryStoresFragment) getSupportFragmentManager().findFragmentByTag(DeliveryStoresFragment.class.getName());
+    }
+
     public MealFragment getMealFragment() {
         return (MealFragment) getSupportFragmentManager().findFragmentByTag(MealFragment.class.getName());
     }
@@ -846,7 +852,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public Pair<Double, Integer> updateCartValuesGetTotalPrice() {
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
-
             return updateCartValuesGetTotalPriceMenus();
         } else {
             return updateCartValuesGetTotalPriceFMG();
@@ -877,7 +882,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
     public Pair<Double, Integer> updateCartValuesGetTotalPriceFMG(SubItem subItemToUpdate) {
-        saveCartToSPFMG(subItemToUpdate);
+        saveItemListToDBFMG(subItemToUpdate);
         Pair<Double, Integer> pair = getSubItemInCartTotalPrice();
         try {
             updateTotalAmountPrice(totalPrice);
@@ -935,7 +940,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             e.printStackTrace();
         }
 
-        saveCartToSPMenus();
+        saveItemListToSPMenus();
         if (totalQuantity > 0) {
         }
         pair = new Pair<>(totalPrice, totalQuantity);
@@ -983,7 +988,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
                 llCartContainerVis = View.VISIBLE;
-                ivSearchVis = View.VISIBLE;
+                ivSearchVis = View.GONE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
 
@@ -1012,6 +1017,15 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 if (setMinOrderAmountText(fragment) == 1) {
                     textViewMinOrderVis = -1;
                 }
+
+            } else if(fragment instanceof DeliveryStoresFragment){
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
+
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getResources().getString(R.string.delivery_stores));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
             } else if (fragment instanceof MealFragment) {
                 llCartContainerVis = View.VISIBLE;
@@ -1371,9 +1385,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     if (Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
                         textViewMinOrderVis = View.VISIBLE;
                         textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
-                    } else if (totalQuantity > 0 && totalPrice < getSuperCategoriesData().getDeliveryInfo().getMinAmount()) {
+                    } else if (totalQuantity > 0 && totalPrice < getOpenedDeliveryStore().getMinAmount()) {
                         textViewMinOrderVis = View.VISIBLE;
-                        double leftAmount = getSuperCategoriesData().getDeliveryInfo().getMinAmount() - totalPrice;
+                        double leftAmount = getOpenedDeliveryStore().getMinAmount() - totalPrice;
                         textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
                                 Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
                     } else {
@@ -1401,9 +1415,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     topBar.title.invalidate();
                     topBar.animateSearchBar(true);
                       GAUtils.event(GACategory.MENUS, GAAction.HOME ,GAAction.SEARCH_BUTTON + GAAction.CLICKED);
-
-//                    FlurryEventLogger.eventGA(Events.MENUS, Events.CLICK_SEARCH_BUTTON_MENUS, Events.MENU_SEARCH);
-
                 }
                 else if (getTopFragment() instanceof VendorMenuFragment || getTopFragment() instanceof RestaurantImageFragment) {
                         if(getTopFragment() instanceof VendorMenuFragment){
@@ -1886,87 +1897,83 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     @Override
     protected void onPause() {
         super.onPause();
+
         if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
-            updateCartFromSPFMG(null);
+            updateItemListFromDBFMG(null);
         }
-        saveCartToSP();
+        saveItemListToSPDB();
+        saveAppCart(getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
             saveFilters();
         }
+
 
         MyApplication.getInstance().getLocationFetcher().destroy();
 
     }
 
-    public void saveCartToSP() {
+    public void saveItemListToSPDB() {
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
-            saveCartToSPMenus();
+            saveItemListToSPMenus();
         } else {
-            saveCartToSPFMG(null);
+            saveItemListToDBFMG(null);
         }
     }
 
-    private void saveCartToSPFMG(SubItem subItemToUpdate) {
+    /**
+     * saves productResponse items list to db hashMap
+     * if subItemToUpdate is null then it should be called only when item list is recreated from server's response
+     *
+     * @param subItemToUpdate item to save in db hashMap, if null whole categories list will be saved
+     */
+    private void saveItemListToDBFMG(SubItem subItemToUpdate) {
         try {
-            JSONObject jCart = new JSONObject();
-            if (getAppType() == AppConstant.ApplicationType.FRESH) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if (getAppType() == AppConstant.ApplicationType.GROCERY) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
-                if (subItemToUpdate != null) {
-                    jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-                }
+            // hash Current delivery store cart object for updating subItems list quantity
+            HashMap<Integer, SubItem> subItemHashMap = getCart().getSubItemHashMap(getOpenedVendorId());
+            // if app opened is meals and not a particular item is needed to be updated, clear the cart
+            if(getAppType() == AppConstant.ApplicationType.MEALS && subItemToUpdate == null){
+                subItemHashMap.clear();
             }
-            Gson gson = new Gson();
+
             if (subItemToUpdate == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
+                int i = 0;
                 for (Category category : getProductsResponse().getCategories()) {
+                    int mainItemsCount = 0;
                     for (SubItem subItem : category.getSubItems()) {
                         if (subItem.getSubItemQuantitySelected() > 0) {
-                            try {
-                                jCart.put(String.valueOf(subItem.getSubItemId()), gson.toJson(subItem, SubItem.class));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            // updating deliveryStoreCart subItem hashMap
+                            subItemHashMap.put(subItem.getSubItemId(), subItem);
+                            // if app is meals increase mainItemCount
+                            if(getAppType() == AppConstant.ApplicationType.MEALS && i == 0) mainItemsCount++;
                         } else {
-                            try {
-                                jCart.remove(String.valueOf(subItem.getSubItemId()));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            // removing from deliveryStoreCart subItem hashMap
+                            subItemHashMap.remove(subItem.getSubItemId());
                         }
                     }
+                    // if no main meal item selected clear cart and break from loop
+                    if(getAppType() == AppConstant.ApplicationType.MEALS && i == 0 && mainItemsCount == 0){
+                        subItemHashMap.clear();
+                        break;
+                    }
+                    i++;
                 }
             } else if (subItemToUpdate != null) {
                 if (subItemToUpdate.getSubItemQuantitySelected() > 0) {
-                    try {
-                        jCart.put(String.valueOf(subItemToUpdate.getSubItemId()), gson.toJson(subItemToUpdate, SubItem.class));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    // updating deliveryStoreCart subItem hashMap
+                    subItemHashMap.put(subItemToUpdate.getSubItemId(), subItemToUpdate);
                 } else {
-                    try {
-                        jCart.remove(String.valueOf(subItemToUpdate.getSubItemId()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    // updating deliveryStoreCart subItem hashMap
+                    subItemHashMap.remove(subItemToUpdate.getSubItemId());
                 }
-            }
-            int type = getAppType();
-            if (type == AppConstant.ApplicationType.FRESH) {
-                Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
-            } else if (type == AppConstant.ApplicationType.GROCERY) {
-                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
-            } else {
-                Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void saveCartToSPMenus() {
+    private void saveItemListToSPMenus() {
         try {
             Gson gson = new Gson();
             JSONObject jCart = new JSONObject();
@@ -2018,79 +2025,59 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
 
-    public void updateCartFromSP() {
+    public void updateItemListFromSPDB() {
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
-            updateCartFromSPMenus();
+            updateItemListFromSPMenus();
         } else {
-            updateCartFromSPFMG(null);
+            updateItemListFromDBFMG(null);
         }
     }
 
-    public void updateCartFromSPFMG(ArrayList<SubItem> subItems) {
+
+    /**
+     * Updates productResponse item list quantity from db and db items hashMap
+     * @param subItems list to update, if null whole categories will be updated
+     */
+    public void updateItemListFromDBFMG(ArrayList<SubItem> subItems) {
         try {
-            JSONObject jCart;
-            int type = getAppType();
-            if (type == AppConstant.ApplicationType.FRESH) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if (type == AppConstant.ApplicationType.GROCERY) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-            }
-            Gson gson = new Gson();
+            // hash Current delivery store cart object for updating subItems list quantity
+            HashMap<Integer, SubItem> subItemHashMap = getCart().getSubItemHashMap(getOpenedVendorId());
+
             if (subItems == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
-                boolean cartUpdated = false;
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
-                        subItem.setSubItemQuantitySelected(0);
-                        try {
-                            String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
-                            if (!TextUtils.isEmpty(jItem)) {
-                                SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
-                                if (subItem.getStock() < subItemSaved.getSubItemQuantitySelected()) {
-                                    subItemSaved.setSubItemQuantitySelected(subItem.getStock());
-                                    cartUpdated = true;
-                                }
-                                subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        updateSubItemInListAndSaveInDB(subItemHashMap, subItem);
                     }
-                }
-                if (cartUpdated) {
-                    saveCartToSPFMG(null);
                 }
             } else if (subItems != null) {
-                boolean cartUpdated = false;
                 for (SubItem subItem : subItems) {
-                    subItem.setSubItemQuantitySelected(0);
-                    try {
-                        String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
-                        if (!TextUtils.isEmpty(jItem)) {
-                            SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
-                            if (subItem.getStock() < subItemSaved.getSubItemQuantitySelected()) {
-                                subItemSaved.setSubItemQuantitySelected(subItem.getStock());
-                                cartUpdated = true;
-                            }
-                            subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (cartUpdated) {
-                    saveCartToSPFMG(null);
+                    updateSubItemInListAndSaveInDB(subItemHashMap, subItem);
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void updateCartFromSPMenus() {
+    private void updateSubItemInListAndSaveInDB(HashMap<Integer, SubItem> subItemHashMap, SubItem subItem){
+        // updating deliveryStoreCart subItem hashMap
+        if(subItemHashMap.containsKey(subItem.getSubItemId())){
+            subItem.setSubItemQuantitySelected(subItemHashMap.get(subItem.getSubItemId()).getSubItemQuantitySelected());
+            if (subItem.getStock() < subItem.getSubItemQuantitySelected()) {
+                subItem.setSubItemQuantitySelected(subItem.getStock());
+            }
+            if (subItem.getSubItemQuantitySelected() > 0) {
+                subItemHashMap.put(subItem.getSubItemId(), subItem);
+            } else {
+                subItemHashMap.remove(subItem.getSubItemId());
+            }
+        } else {
+            subItem.setSubItemQuantitySelected(0);
+        }
+    }
+
+    private void updateItemListFromSPMenus() {
         try {
             Gson gson = new Gson();
             JSONObject jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
@@ -2142,15 +2129,18 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
 
     public void clearCart() {
-        Prefs.with(this).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
+        Paper.book().delete(DB_FRESH_CART);
+        Paper.book().delete(DB_PREVIOUS_VENDOR);
+        createAppCart(Config.getFreshClientId());
     }
 
     private void clearMealCart() {
-        Prefs.with(this).save(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT);
+        Paper.book().delete(DB_MEALS_CART);
+        Paper.book().delete(DB_PREVIOUS_VENDOR);
+        createAppCart(Config.getMealsClientId());
     }
 
     private void clearGroceryCart() {
-        Prefs.with(this).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
     }
 
 
@@ -2500,7 +2490,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public boolean checkForMinus(int position, SubItem subItem) {
         if (isMealAddonItemsAvailable()) {
-            updateCartFromSPFMG(null);
+            updateItemListFromDBFMG(null);
             boolean addOnAdded = false;
             boolean itemIsAddon = false;
             for (SubItem si : getProductsResponse().getCategories().get(1).getSubItems()) {
@@ -2538,6 +2528,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                             for (SubItem subItem : category.getSubItems()) {
                                 if (subItem.getSubItemQuantitySelected() > 0) {
                                     subItem.setSubItemQuantitySelected(0);
+                                    saveSubItemToDeliveryStoreCart(subItem);
                                 }
                             }
                         }
@@ -2546,7 +2537,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
             }
             clearMealCart();
-            updateCartFromSP();
+            updateItemListFromSPDB();
             updateCartValuesGetTotalPrice();
         } catch (Exception e) {
             e.printStackTrace();
@@ -2575,7 +2566,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         }
     }
 
-    private void openCart(int appType) {
+    public void openCart(int appType) {
         if (appType == AppConstant.ApplicationType.MENUS && getVendorOpened() != null) {
             if (canExitVendorMenu()){
                 getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
@@ -2792,8 +2783,40 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
             return checkForAdd(-1, null, null);
         } else {
-            return true;
+            return checkForAddFM();
         }
+    }
+
+    private boolean checkForAddFM(){
+        Set<Integer> keySet = getCart().getVendorCartHashMap().keySet();
+        for(Integer vendorId : keySet){
+            if(!vendorId.equals(getOpenedVendorId()) && getCart().getCartItems(vendorId).size() > 0){
+                final DeliveryStore deliveryStoreLast = getLastDeliveryStore();
+                if(deliveryStoreLast != null) {
+                    DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+                            getString(R.string.you_have_selected_cart_from_this_vendor_clear_cart, deliveryStoreLast.getVendorName()),
+                            getString(R.string.clear_cart),
+                            getString(R.string.cancel),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (deliveryStoreLast != null) {
+                                        getCart().getSubItemHashMap(deliveryStoreLast.getVendorId()).clear();
+                                    }
+                                }
+                            },
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+//                                    TODO clear cart for previous selected activity.getCart().getDeliveryStoreCart(activity.getOpenedVendorId()).getSubItemHashMap().clear();
+                                }
+                            }, true, false);
+                }
+
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean checkForAdd(final int position, final Item item, final MenusCategoryItemsAdapter.CallbackCheckForAdd callbackCheckForAdd) {
@@ -3101,29 +3124,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public ArrayList<SubItem> fetchCartList() {
         ArrayList<SubItem> subItemsInCart = new ArrayList<>();
         try {
-            JSONObject jCart = new JSONObject();
-            if (getAppType() == AppConstant.ApplicationType.FRESH) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if (getAppType() == AppConstant.ApplicationType.GROCERY) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-            }
-
-            Gson gson = new Gson();
-            Iterator<String> itemIds = jCart.keys();
-            while (itemIds.hasNext()) {
-                String itemId = itemIds.next();
-                if (Utils.checkIfOnlyDigits(itemId)) {
-                    String jItem = jCart.optString(itemId, "");
-                    if (!TextUtils.isEmpty(jItem)) {
-                        SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
-                        if (subItemSaved.getSubItemQuantitySelected() > 0) {
-                            subItemsInCart.add(subItemSaved);
-                        }
-                    }
-                }
-            }
+            // items fetched from opened store
+            subItemsInCart.clear();
+            subItemsInCart.addAll(getCart().getCartItems(getOpenedVendorId()));
+            Collections.reverse(subItemsInCart);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3131,27 +3135,18 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
 
+    /**
+     * only called to overwrite db saved cart in the Checkout page api
+     * @param subItems to save in cart
+     */
     public void saveCartList(ArrayList<SubItem> subItems) {
         try {
-            JSONObject jCart = new JSONObject();
-            Gson gson = new Gson();
+            // hash Current delivery store cart object for updating subItems list quantity
+            HashMap<Integer, SubItem> subItemHashMap = getCart().getSubItemHashMap(getOpenedVendorId());
+            subItemHashMap.clear();
             for (SubItem subItem : subItems) {
-                if (subItem.getSubItemQuantitySelected() > 0) {
-                    try {
-                        jCart.put(String.valueOf(subItem.getSubItemId()), gson.toJson(subItem, SubItem.class));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            jCart.put(Constants.KEY_CITY_ID, getCartCityId());
-            int type = getAppType();
-            if (type == AppConstant.ApplicationType.FRESH) {
-                Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
-            } else if (type == AppConstant.ApplicationType.GROCERY) {
-                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
-            } else {
-                Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
+                // updating deliveryStoreCart subItem hashMap
+                subItemHashMap.put(subItem.getSubItemId(), subItem);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -3160,15 +3155,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public int getCartCityId() {
         try {
-            JSONObject jCart = new JSONObject();
-            if (getAppType() == AppConstant.ApplicationType.FRESH) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if (getAppType() == AppConstant.ApplicationType.GROCERY) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-            }
-            return jCart.optInt(Constants.KEY_CITY_ID, -1);
+            return getCart().getCityId();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3177,23 +3164,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public void setCartCityId(int cityId) {
         try {
-            JSONObject jCart = new JSONObject();
-            if (getAppType() == AppConstant.ApplicationType.FRESH) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if (getAppType() == AppConstant.ApplicationType.GROCERY) {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-            }
-            jCart.put(Constants.KEY_CITY_ID, cityId);
-            int type = getAppType();
-            if (type == AppConstant.ApplicationType.FRESH) {
-                Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
-            } else if (type == AppConstant.ApplicationType.GROCERY) {
-                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
-            } else {
-                Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
-            }
+            getCart().setCityId(cityId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3293,7 +3264,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         public void onClick(View v) {
                             clearCart();
                             setCartCityId(cityId);
-                            updateCartFromSP();
+                            updateItemListFromSPDB();
                             updateCartValuesGetTotalPrice();
                             callback.onYesClick();
                         }
@@ -3302,8 +3273,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         @Override
                         public void onClick(View v) {
                             setDeliveryAddressModelToSelectedAddress();
-//                            setRefreshCart(true);
-//                            getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
                             callback.onNoClick();
                         }
                     }, false, false);
@@ -3672,7 +3641,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             appBarLayout.setExpanded(false, false);
             topBar.llCartContainer.setVisibility(View.GONE);
             topBar.ivSearch.setVisibility(View.GONE);
-//            FlurryEventLogger.eventGA(Events.MENUS,Events.CLICK_ON_RATING_BUTTON_RESTRO,Events.MENU_RESTRO_RATING_CLICK);
             GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.FEED + GAAction.CLICKED);
             getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
         }
@@ -3688,13 +3656,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
     public boolean canExitVendorMenu() {
-
-
         if (getTopFragment() != null && getTopFragment() instanceof VendorMenuFragment && mCurrentState == State.IDLE && currentVerticalOffSet != -1)
             return false;
         else
             return true;
-
     }
 
     public FetchFeedbackResponse.Review getCurrentReview() {
@@ -3780,6 +3745,76 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         }
         apiFetchRestaurantMenu.getVendorMenu(restaurantId, getSelectedLatLng().latitude,
                 getSelectedLatLng().longitude, restaurantInfo, vendor);
+    }
+
+
+    private AppCart appCart;
+    public AppCart getCart(){
+        return appCart;
+    }
+    private void createAppCart(String clientId){
+        if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
+            appCart = Paper.book().read(DB_FRESH_CART, new AppCart());
+        }
+        else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
+            appCart = Paper.book().read(DB_MEALS_CART, new AppCart());
+        }
+    }
+    private void saveAppCart(String clientId){
+        if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
+            Paper.book().write(DB_FRESH_CART, appCart);
+        }
+        else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
+            Paper.book().write(DB_MEALS_CART, appCart);
+        }
+    }
+
+
+    private Integer openedVendorId;
+    private DeliveryStore openedDeliveryStore;
+    public Integer getOpenedVendorId(){
+        if(openedVendorId == null){
+            openedVendorId = Prefs.with(this).getInt(Constants.SP_VENDOR_ID, 0);
+        }
+        return openedVendorId;
+    }
+    public void setOpenedVendorIdName(Integer vendorId, DeliveryStore deliveryStore){
+        openedVendorId = vendorId;
+        if(openedDeliveryStore != null){
+            saveLastDeliveryStore(openedDeliveryStore);
+        }
+        openedDeliveryStore = deliveryStore;
+        Prefs.with(this).save(Constants.SP_VENDOR_ID, vendorId.intValue());
+    }
+    public DeliveryStore getOpenedDeliveryStore(){
+        return openedDeliveryStore;
+    }
+
+    public DeliveryStore getLastDeliveryStore(){
+        return Paper.book().read(DB_PREVIOUS_VENDOR, null);
+    }
+    public void saveLastDeliveryStore(DeliveryStore deliveryStore){
+        Paper.book().write(DB_PREVIOUS_VENDOR, deliveryStore);
+    }
+
+    public Integer getLastCartVendorId(){
+        Set<Integer> keySet = getCart().getVendorCartHashMap().keySet();
+        for(Integer vendorId : keySet) {
+            if (getCart().getCartItems(vendorId).size() > 0) {
+                return vendorId;
+            }
+        }
+        int selectedVendorId = Prefs.with(this).getInt(Constants.SP_SELECTED_VENDOR_ID, -1);
+        if(selectedVendorId != -1){
+            Prefs.with(this).save(Constants.SP_SELECTED_VENDOR_ID, -1);
+            return selectedVendorId;
+        }
+        return 0;
+    }
+
+
+    public void saveSubItemToDeliveryStoreCart(SubItem subItem){
+        getCart().saveSubItemToStore(getOpenedVendorId(), subItem);
     }
 
 }

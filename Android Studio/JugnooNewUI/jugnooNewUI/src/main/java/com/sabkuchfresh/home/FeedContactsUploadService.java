@@ -116,8 +116,6 @@ public class FeedContactsUploadService extends IntentService {
 			public int compare(ContactBean o1, ContactBean o2) {
 				if (o1.getPhone().equalsIgnoreCase(o2.getPhone())) {
 					return 0;
-				} else if (o1.getName().equalsIgnoreCase(o2.getName())) {
-					return 0;
 				}
 				return 1;
 			}

@@ -8,6 +8,7 @@ import android.view.View;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
+import com.sabkuchfresh.fragments.DeliveryStoresFragment;
 import com.sabkuchfresh.fragments.FeedAddPostFragment;
 import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
@@ -46,6 +47,19 @@ public class TransactionUtils {
                     .add(container.getId(), FreshFragment.newInstance(superCategory),
                             FreshFragment.class.getName())
                     .addToBackStack(FreshFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openDeliveryStoresFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, DeliveryStoresFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                    .add(container.getId(), DeliveryStoresFragment.newInstance(),
+                            DeliveryStoresFragment.class.getName())
+                    .addToBackStack(DeliveryStoresFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

@@ -410,9 +410,9 @@ public class FeedOfferingListAdapter extends RecyclerView.Adapter<FeedOfferingLi
     }
 
     @Override
-    public void onClickItem(View viewClicked, View itemView) {
+    public void onClickItem(View viewClicked, View parentView) {
 
-        int position = recyclerView.getChildLayoutPosition(itemView);
+        int position = recyclerView.getChildLayoutPosition(parentView);
 
         switch (viewClicked.getId()) {
             case R.id.view_action_like:

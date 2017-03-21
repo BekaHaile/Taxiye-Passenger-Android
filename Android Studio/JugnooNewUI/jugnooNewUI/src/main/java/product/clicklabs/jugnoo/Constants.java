@@ -45,9 +45,6 @@ public interface Constants {
     String KEY_CART = "cart";
     String KEY_SUB_ITEM_ID = "sub_item_id";
     String KEY_QUANTITY = "quantity";
-    String SP_FRESH_CART = "fresh_cart";
-    String SP_MEAL_CART = "meal_cart";
-    String SP_GROCERY_CART = "grocery_cart";
     String SP_MENUS_CART = "menus_cart";
     String KEY_CATEGORY_POSITION = "category_position";
     String KEY_SUBCATEGORY_POSITION = "subcategory_position";
@@ -650,5 +647,8 @@ public interface Constants {
     String KEY_POST_TEXT = "post_text";
     String KEY_STAR_COUNT = "star_count";
     String KEY_LOGIN_TYPE = "login_type";
+    String KEY_VENDOR_ID = "vendor_id";
 
+    String SP_VENDOR_ID = "sp_vendor_id";
+    String SP_SELECTED_VENDOR_ID = "sp_selected_vendor_id";
 }

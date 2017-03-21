@@ -37,6 +37,7 @@ import java.util.Map;
 
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -100,6 +101,9 @@ public class MyApplication extends Application {
 //			return;
 //		}
 //		LeakCanary.install(this);
+
+		Paper.init(this);
+
         try {
             Fabric.with(this, new Crashlytics());
             if (!this.isTestModeEnabled()) {

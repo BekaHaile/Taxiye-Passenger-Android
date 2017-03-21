@@ -289,6 +289,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.imageViewPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    long time = System.currentTimeMillis();
                     try {
                         int pos = (int) v.getTag();
                         mHolder.linearLayoutQuantitySelector.performClick();
@@ -305,6 +306,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    Log.e("FreshCategoryItemsAdapter", "time="+(System.currentTimeMillis() - time));
                 }
             });
 

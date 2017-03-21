@@ -299,8 +299,8 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
             }, 700);
 			activity.fragmentUISetup(this);
 			if(activity.getCartChangedAtCheckout()){
-				activity.updateCartFromSP();
-				activity.updateCartFromSPFMG(subItemsInSearch);
+				activity.updateItemListFromSPDB();
+				activity.updateItemListFromDBFMG(subItemsInSearch);
 				freshCategoryItemsAdapter.notifyDataSetChanged();
 				activity.updateCartValuesGetTotalPrice();
 			}
@@ -388,6 +388,10 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 						params.put(Constants.KEY_SEARCH_STRING, searchText);
 						params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategoryId));
 
+					if(activity.getAppType() == AppConstant.ApplicationType.FRESH){
+						params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedVendorId()));
+					}
+
 						refreshingAutoComplete = true;
 
 					activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
@@ -409,7 +413,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 													}
 												}
 											}
-											activity.updateCartFromSPFMG(subItemsInSearch);
+											activity.updateItemListFromDBFMG(subItemsInSearch);
 											freshCategoryItemsAdapter.notifyDataSetChanged();
 											if(subItemsInSearch.size() > 0){
 												textViewPlaceholder.setVisibility(View.GONE);

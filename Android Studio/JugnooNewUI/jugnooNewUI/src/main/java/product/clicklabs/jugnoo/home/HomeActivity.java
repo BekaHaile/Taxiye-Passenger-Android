@@ -9180,8 +9180,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     drawerLayout.closeDrawer(GravityCompat.START);
                                 }
                                 if (Prefs.with(HomeActivity.this).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()).equals(Config.getAutosClientId())) {
-                                    //                    updateCartFromSP();
-                                    //                    relativeLayoutCart.performClick();
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
