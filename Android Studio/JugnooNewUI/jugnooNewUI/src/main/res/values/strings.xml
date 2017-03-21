@@ -1595,5 +1595,6 @@
     <string name="please_select_one_reason">Please select one reason</string>
     <string name="error_feed_review_restaurant_not_selected">You need to select a restaurant to review</string>
     <string name="write_a_comment">Write a comment...</string>
+    <string name="label_city">City</string>
 
 </resources>

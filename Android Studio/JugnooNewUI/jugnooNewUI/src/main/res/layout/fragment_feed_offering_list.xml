@@ -1,13 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context="com.sabkuchfresh.fragments.FeedHomeFragment">
+
+    tools:context="com.sabkuchfresh.fragments.FeedHomeFragment">
 
     <!--<include layout="@layout/layout_delivery_address_bar"/>-->
-
 
 
 
@@ -71,6 +70,11 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:src="@drawable/shadow_down_new" />
 
 
-</LinearLayout>
+
+</RelativeLayout>

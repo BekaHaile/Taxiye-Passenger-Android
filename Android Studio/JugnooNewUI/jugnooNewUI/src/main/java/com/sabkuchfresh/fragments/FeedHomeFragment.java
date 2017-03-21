@@ -28,7 +28,9 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -109,7 +111,7 @@ public class FeedHomeFragment extends Fragment {
                 fetchFeedsApi(false);
             }
         });
-        feedHomeAdapter = new FeedHomeAdapter(getActivity(), null, recyclerView, new FeedHomeAdapter.FeedPostCallback() {
+        feedHomeAdapter = new FeedHomeAdapter(getActivity(), getAdapterList(false,null,null,activity.getSelectedAddress()), recyclerView, new FeedHomeAdapter.FeedPostCallback() {
             @Override
             public void onLikeClick(FeedDetail feedDetail, final int position) {
                 if (likeFeed == null)
@@ -143,26 +145,10 @@ public class FeedHomeFragment extends Fragment {
             public String getEditTextString() {
                 return null;
             }
-        },false);
+        });
         recyclerView.setAdapter(feedHomeAdapter);
-        /*activity.setDeliveryAddressView(rootView);
-        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
-        if (activity.getDeliveryAddressView() != null) {
-            activity.getDeliveryAddressView().scaleView();
-            activity.getDeliveryAddressView().tvDeliveryAddress.setText(R.string.label_location_feed);
-        }*/
-        /*tvAddPost = (TextView) rootView.findViewById(R.id.tvAddPost);
-        tvAddPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.getTransactionUtils().openFeedAddPostFragment(activity, activity.getRelativeLayoutContainer());
-            }
-        });*/
-
-
         try {
-            if (Data.getFeedData() != null
-                    && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
+            if (Data.getFeedData() != null && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
                 Intent syncContactsIntent = new Intent(activity, FeedContactsUploadService.class);
                 syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 activity.startService(syncContactsIntent);
@@ -223,12 +209,10 @@ public class FeedHomeFragment extends Fragment {
                                 if(feedbackResponse.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     relativeLayoutNotAvailable.setVisibility(View.VISIBLE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(feedbackResponse.getMessage()) ? feedbackResponse.getMessage() : activity.getString(R.string.nothing_found_near_you));
-                                    feedHomeAdapter.setList(feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),false);
+                                    feedHomeAdapter.setList(getAdapterList(false,feedbackResponse.getFeeds(),null,feedbackResponse.getCity()));
+
                                 } else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    feedHomeAdapter.setList(feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),true);
-                                   /* if(!TextUtils.isEmpty(feedbackResponse.getAddPostText())){
-                                        tvAddPost.setText(feedbackResponse.getAddPostText());
-                                    }*/
+                                    feedHomeAdapter.setList(getAdapterList(true,feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),feedbackResponse.getCity()));
                                     rlNoReviews.setVisibility(feedbackResponse.getFeeds()==null||feedbackResponse.getFeeds().size()==0 ? View.VISIBLE : View.GONE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -255,6 +239,41 @@ public class FeedHomeFragment extends Fragment {
             e.printStackTrace();
             swipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    private ArrayList<Object> adapterList;
+    private ArrayList<Object> getAdapterList(boolean showAddPostText,List<FeedDetail> feedDetailList,String addPostText,String cityName) {
+        if(adapterList ==null) {
+            adapterList = new ArrayList<>();
+        }
+
+        adapterList.clear();
+
+        //Add Location Type
+        adapterList.add(new FeedHomeAdapter.SelectedLocation(cityName));
+
+        //Add AddPostText
+        if(showAddPostText)
+        {
+            String imageUrl =null;
+            if(Data.userData!=null && !TextUtils.isEmpty(Data.userData.userImage)) {
+                imageUrl = Data.userData.userImage;
+            }
+
+            adapterList.add(new FeedHomeAdapter.AddPostData(addPostText,imageUrl));
+        }
+
+
+        if(feedDetailList!=null && feedDetailList.size()>0){
+
+            adapterList.addAll(feedDetailList);
+            adapterList.add(FeedHomeAdapter.ITEM_FOOTER_BLANK);
+
+
+        }
+
+        return adapterList;
+
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {
@@ -294,4 +313,8 @@ public class FeedHomeFragment extends Fragment {
         if(feedHomeAdapter !=null)
             feedHomeAdapter.notifyFeedListItem(positionItemLikedUnlikedInCommentsFragment);;
     }
+
+
+
+
 }

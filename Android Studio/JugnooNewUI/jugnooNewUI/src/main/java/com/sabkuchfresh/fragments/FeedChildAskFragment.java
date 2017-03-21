@@ -35,6 +35,7 @@ public class FeedChildAskFragment extends ImageSelectFragment {
             etContent.setHint(Data.getFeedData().getFeedAddPostHInt());
         else
             etContent.setHint(R.string.looking_for_something);
+        etContent.addTextChangedListener(editTextWacherContent);
         displayImagesRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view_photos);
         scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         return rootView;
@@ -77,5 +78,9 @@ public class FeedChildAskFragment extends ImageSelectFragment {
     public boolean cameraEnableState() {
         return true;
 
+    }
+    @Override
+    public boolean submitEnabledState() {
+        return etContent.getText().toString().trim().length()>0;
     }
 }

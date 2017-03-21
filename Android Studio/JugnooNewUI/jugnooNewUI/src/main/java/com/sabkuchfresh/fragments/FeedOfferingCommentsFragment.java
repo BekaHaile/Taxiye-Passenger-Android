@@ -51,7 +51,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
     private FreshActivity activity;
     private ArrayList<Object> dataList;
     private TextView textViewCharCount;
-    private Button btnSubmit;
+    private TextView btnSubmit;
     public String commentAdded;
     private LikeFeed likeFeed;
     private int positionInOriginalList;
@@ -98,7 +98,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         activity.fragmentUISetup(this);
         View rootView = inflater.inflate(R.layout.fragment_feed_comments, container, false);
-        btnSubmit= (Button) rootView.findViewById(R.id.btnSubmit);
+        btnSubmit= (TextView) rootView.findViewById(R.id.btnSubmit);
         btnSubmit.setEnabled(false);
         textViewCharCount= (TextView) rootView.findViewById(R.id.tvCharCount);
         edtMyComment = (EditText) rootView.findViewById(R.id.edt_my_comment);

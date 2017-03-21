@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.picker.image.util.Util;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -52,31 +53,27 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private FreshActivity activity;
     private FeedPostCallback feedPostCallback;
-    private List<FeedDetail> feedDetailArrayList;
+    private List<?> adapterList;
     private RecyclerView recyclerView;
     private static final StyleSpan BOLD_SPAN = new StyleSpan(android.graphics.Typeface.BOLD);
     private static final StyleSpan BOLD_SPAN_2 = new StyleSpan(android.graphics.Typeface.BOLD);//since we cant reuse same style span again in a spannable
-    private boolean showAddPostView;
-    private boolean showChangeLocation = true;
-    private String addPostText;
-    private static final int LAYOUT_CHANGE_LOCATION = 99;
-    private static final int LAYOUT_WHATS_ON_MIND = 100;
-    private static final int LAYOUT_FEED = 101;
-    private int headerViewHolderCount;
+    private static final int ITEM_LOCATION_SELECTED = 99;
+    private static final int ITEM_ADD_POST = 100;
+    private static final int ITEM_FEED = 101;
+    public static final int ITEM_FOOTER_BLANK = 122;
 
-    public FeedHomeAdapter(Activity activity, List<FeedDetail> reviewImages, RecyclerView recyclerView, FeedPostCallback feedPostCallback, boolean showAddPostView) {
+
+    public FeedHomeAdapter(Activity activity, List<?> reviewImages, RecyclerView recyclerView, FeedPostCallback feedPostCallback) {
         this.activity = (FreshActivity) activity;
-        this.feedDetailArrayList = reviewImages;
+        this.adapterList = reviewImages;
         this.feedPostCallback = feedPostCallback;
         this.recyclerView = recyclerView;
-        this.showAddPostView = showAddPostView;
+
 
     }
 
-    public void setList(List<FeedDetail> reviewImages, String addPostText, boolean showAddPostView) {
-        this.feedDetailArrayList = reviewImages;
-        if (!TextUtils.isEmpty(addPostText)) this.addPostText = addPostText;
-        this.showAddPostView = showAddPostView;
+    public void setList(List<?> reviewImages) {
+        this.adapterList = reviewImages;
         notifyDataSetChanged();
     }
 
@@ -85,15 +82,20 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
         switch (viewType) {
-            case LAYOUT_CHANGE_LOCATION:
+            case ITEM_LOCATION_SELECTED:
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_delivery_address_bar, parent, false);
                 return new ChangeLocationViewHolder(v);
-            case LAYOUT_WHATS_ON_MIND:
+            case ITEM_ADD_POST:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed_list_add_new_post, parent, false);
                 return new AddNewPostViewHolder(v);
-            case LAYOUT_FEED:
+            case ITEM_FEED:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed_list, parent, false);
                 return new ViewHolderReviewImage(v, this);
+            case ITEM_FOOTER_BLANK:
+                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
+                 RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, Utils.convertDpToPx(activity,180));
+                 v.setLayoutParams(layoutParams);
+                 return new ViewBlankHolder(v);
             default:
                 throw new IllegalArgumentException();
 
@@ -109,9 +111,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof ViewHolderReviewImage) {
 
 
-            FeedDetail feedDetail = feedDetailArrayList.get(position - headerViewHolderCount);
+            FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
             setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback);
-            if ((position - headerViewHolderCount) == feedDetailArrayList.size()-1) {
+            if (position == adapterList.size() - 2) {
                 ((ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
             } else {
                 ((ViewHolderReviewImage) holder).shadow.setVisibility(View.VISIBLE);
@@ -120,15 +122,22 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         } else if (holder instanceof AddNewPostViewHolder) {
 
-            if (!TextUtils.isEmpty(addPostText))
-                ((AddNewPostViewHolder) holder).tvAddPost.setText(addPostText);
-            if (Data.userData!=null) {
-                if (!TextUtils.isEmpty(Data.userData.userImage))
-                    Picasso.with(activity).load(Data.userData.userImage).resize(Utils.convertDpToPx(activity,40), Utils.convertDpToPx(activity,40)).centerCrop().transform(new CircleTransform()).into(((AddNewPostViewHolder) holder).ivMyProfilePic);
-                else
-                    ((AddNewPostViewHolder) holder).ivMyProfilePic.setImageResource(R.drawable.placeholder_img);
+            AddPostData addPostData = (AddPostData) adapterList.get(position);
+            if(addPostData.getAddPostText()!=null)
+            {
+                ((AddNewPostViewHolder) holder).tvAddPost.setText(addPostData.getAddPostText());
+            }
+            if(addPostData.getImageUrl()!=null){
+             Picasso.with(activity).load(addPostData.getImageUrl()).resize(Utils.convertDpToPx(activity, 40), Utils.convertDpToPx(activity, 40)).centerCrop().transform(new CircleTransform()).into(((AddNewPostViewHolder) holder).ivMyProfilePic);
+
             }
 
+
+        }
+        else if(holder instanceof ChangeLocationViewHolder){
+
+            SelectedLocation selectedLocation = (SelectedLocation) adapterList.get(position);
+            ((ChangeLocationViewHolder) holder).textViewLocation.setText(selectedLocation.getCityName());
         }
 
 
@@ -256,7 +265,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             activity.setRatingAndGetColor(holder.tvFeedRating, rating, feedDetail.getRatingColor(), true);
 
         //Set Likes and Comments
-        holder.tvLikeCommentStatus.setText(formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount(), activity));
+        String likesCommentString = formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount(), activity);
+        holder.tvLikeCommentStatus.setText(likesCommentString);
+        holder.tvLikeCommentStatus.setVisibility(likesCommentString==null?View.GONE:View.VISIBLE);
 
         //Set Content
         holder.tvFeedDescription.setText(feedDetail.getContent());
@@ -305,18 +316,25 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private static String formLikesComment(int likeCount, int commentCount, FreshActivity activity) {
+        if(likeCount==0 && commentCount==0)
+            return null;
+
 
         String likeSuffix = likeCount > 1 ? " Likes " : " Like ";
+        likeSuffix=likeCount>0? likeCount+likeSuffix:"";
         String commentSuffix = commentCount > 1 ? " Comments " : " Comment ";
-        return likeCount + likeSuffix + activity.getString(R.string.bullet) + " " + commentCount + commentSuffix;
+        commentSuffix=commentCount>0?commentCount+commentSuffix:"";
+        String divider = likeCount!=0 && commentCount!=0 ?activity.getString(R.string.bullet) + " ":"";
+
+        return  likeSuffix + divider +commentSuffix;
     }
 
 
     public void notifyOnLike(int position, boolean isLiked) {
 
-        if (feedDetailArrayList != null && position < feedDetailArrayList.size()) {
+        if (adapterList != null && position < adapterList.size()) {
 
-            FeedDetail feedDetail = feedDetailArrayList.get(position);
+            FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
             if (isLiked)
                 feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
             else if (feedDetail.getLikeCount() > 0)
@@ -391,12 +409,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        headerViewHolderCount = 0;
-        if (showChangeLocation) headerViewHolderCount++;
-        if (showAddPostView) headerViewHolderCount++;
 
 
-        return feedDetailArrayList == null ? headerViewHolderCount : feedDetailArrayList.size() + headerViewHolderCount;
+        return adapterList == null ? 0 : adapterList.size();
     }
 
 
@@ -404,33 +419,27 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onClickItem(View viewClicked, View itemView) {
 
         int position = recyclerView.getChildLayoutPosition(itemView);
-        if (position!=RecyclerView.NO_POSITION) {
-            position = position - headerViewHolderCount;//position in feed ArrayList
-
+        if (position != RecyclerView.NO_POSITION && adapterList.get(position) instanceof FeedDetail) {
+            final FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
             switch (viewClicked.getId()) {
                 case R.id.view_action_like:
-                    feedPostCallback.onLikeClick(feedDetailArrayList.get(position), position);
+                    feedPostCallback.onLikeClick(feedDetail, position);
                     break;
                 case R.id.view_action_comment:
                 case R.id.root_layout_item:
-                    feedPostCallback.onCommentClick(feedDetailArrayList.get(position), position);
+                    feedPostCallback.onCommentClick(feedDetail, position);
                     break;
 
                 case R.id.tv_feed_owner_title:
 
                     break;
                 case R.id.iv_place_image:
-                    final FeedDetail feedDetail = feedDetailArrayList.get(position);
 
-
-
-                    if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 0){
+                    if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 0) {
                         //This means userimages are being displayed
-                        ArrayList<FetchFeedbackResponse.ReviewImage>   reviewImages = feedDetail.getReviewImages();
+                        ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages = feedDetail.getReviewImages();
                         showZoomedPagerDialog(0, reviewImages, activity);
-                    }
-
-                    else if (!TextUtils.isEmpty(feedDetail.getRestaurantImage())) {
+                    } else if (!TextUtils.isEmpty(feedDetail.getRestaurantImage())) {
                         //Open the restaurant in menus
                         feedPostCallback.onRestaurantClick(feedDetail.getRestaurantId());
                         //THis means only one image is being displayed which is restaurant Image
@@ -438,7 +447,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
 
 
-               //If null means no image is being showed Actually
+                    //If null means no image is being showed Actually
 
                     break;
 
@@ -554,14 +563,18 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private class ChangeLocationViewHolder extends RecyclerView.ViewHolder {
 
+
+        private TextView textViewLocation;
         public ChangeLocationViewHolder(View itemView) {
             super(itemView);
             activity.setDeliveryAddressView(itemView);
             activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
+            activity.getDeliveryAddressView().getShadowTop().setVisibility(View.GONE);
             if (activity.getDeliveryAddressView() != null) {
                 activity.getDeliveryAddressView().scaleView();
-                activity.getDeliveryAddressView().tvDeliveryAddress.setText(R.string.label_location_feed);
+                activity.getDeliveryAddressView().tvDeliveryAddress.setText(R.string.label_city);
             }
+            textViewLocation=activity.getDeliveryAddressView().getTvLocation();
         }
     }
 
@@ -580,34 +593,38 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     activity.openFeedAddPostFragment();
                 }
             });
-            ivMyProfilePic=(ImageView)itemView.findViewById(R.id.iv_profile_pic);
+            ivMyProfilePic = (ImageView) itemView.findViewById(R.id.iv_profile_pic);
 
 
         }
     }
 
+    private static class ViewBlankHolder extends RecyclerView.ViewHolder {
+
+//        public RelativeLayout relative;
+
+        public ViewBlankHolder(View itemView) {
+            super(itemView);
+//            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+        }
+    }
 
     @Override
     public int getItemViewType(int position) {
 
-        if (position == 0) {
-            if (showChangeLocation)
-                return LAYOUT_CHANGE_LOCATION;
-            else if (showAddPostView)
-                return LAYOUT_WHATS_ON_MIND;
-            else
-                return LAYOUT_FEED;
-        }
-        if (position == 1) {
-            if (showChangeLocation && showAddPostView)
-                return LAYOUT_WHATS_ON_MIND;
-            else
-                return LAYOUT_FEED;
 
+        if (adapterList.get(position) instanceof FeedDetail) {
+            return ITEM_FEED;
+        } else if (adapterList.get(position) instanceof SelectedLocation)
+            return ITEM_LOCATION_SELECTED;
+        else if (adapterList.get(position) instanceof AddPostData)
+            return ITEM_ADD_POST;
+        else if (adapterList.get(position) instanceof Integer && ((Integer) adapterList.get(position)) == ITEM_FOOTER_BLANK) {
+            return ITEM_FOOTER_BLANK;
         }
 
-        return LAYOUT_FEED;
 
+        throw new IllegalArgumentException("No View Type found");
     }
 
     public int getPositionOfChild(final View child, final int childParentId, final RecyclerView recyclerView) {
@@ -629,9 +646,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private int restaurantId;
         private FeedPostCallback feedPostCallback;
 
-        private MyClickableSpan() {
 
-        }
 
         MyClickableSpan(int restaurantId, FeedPostCallback feedPostCallback) {
             super();
@@ -651,6 +666,36 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void notifyFeedListItem(int postitioninFeedList) {
-        notifyItemChanged(postitioninFeedList + headerViewHolderCount);
+        notifyItemChanged(postitioninFeedList);
+    }
+
+    public static class SelectedLocation {
+        private String cityName;
+
+        public SelectedLocation(String cityName) {
+            this.cityName = cityName;
+        }
+
+        public String getCityName() {
+            return cityName;
+        }
+    }
+
+    public static class AddPostData {
+        private String addPostText;
+        private String imageUrl;
+
+        public AddPostData(String addPostText, String imageUrl) {
+            this.addPostText = addPostText;
+            this.imageUrl = imageUrl;
+        }
+
+        public String getAddPostText() {
+            return addPostText;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
     }
 }

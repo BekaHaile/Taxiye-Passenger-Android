@@ -10,8 +10,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -45,6 +48,7 @@ public abstract class ImageSelectFragment extends Fragment {
     protected ArrayList<ImageEntry> imageSelected;
     protected FreshActivity activity;
     protected int maxNoImages;
+
 
 
     @Override
@@ -84,7 +88,7 @@ public abstract class ImageSelectFragment extends Fragment {
                         if (imageSelected.size() == 0)
                             displayImagesRecycler.setVisibility(View.GONE);
 
-                        setCameraEnabled(imageSelected.size()<maxNoImages);
+//                        setCameraEnabled(imageSelected.size()<maxNoImages);
 
                     }
 
@@ -101,7 +105,7 @@ public abstract class ImageSelectFragment extends Fragment {
             displayImagesRecycler.setVisibility(View.VISIBLE);
 
 
-        setCameraEnabled(imageSelected.size()<maxNoImages);
+//        setCameraEnabled(imageSelected.size()<maxNoImages);
 
 
 
@@ -221,4 +225,24 @@ public abstract class ImageSelectFragment extends Fragment {
     }
 
    public abstract boolean cameraEnableState();
+
+    TextWatcher editTextWacherContent = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            setSubmitEnabled(s.toString().trim().length()>0);
+
+        }
+    };
+
+    public abstract boolean submitEnabledState();
 }

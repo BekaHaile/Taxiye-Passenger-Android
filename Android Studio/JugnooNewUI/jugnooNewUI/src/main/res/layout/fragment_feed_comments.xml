@@ -14,7 +14,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_feed_detail"
         android:background="@color/feed_grey_background_light"
-        android:layout_above="@+id/imageViewShadowBelow"
+        android:layout_above="@+id/rlSubmit"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -29,16 +29,17 @@
 
 
     <ImageView
-        android:id="@id/imageViewShadowBelow"
+        android:id="@+id/imageViewShadowBelow"
         android:layout_above="@+id/rlSubmit"
         android:layout_width="match_parent"
         android:layout_height="@dimen/spacing_extra_tiny"
-        android:rotationY="180"
-        android:background="@drawable/shadow_down_new" />
+
+        android:background="@drawable/shadow_up_new" />
 
     <LinearLayout
         android:id="@id/rlSubmit"
         android:orientation="horizontal"
+        android:paddingBottom="@dimen/spacing_small"
         android:background="@android:color/white"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
@@ -54,10 +55,10 @@
             android:id="@+id/edt_my_comment"
             android:paddingLeft="@dimen/spacing_normal"
             android:paddingRight="@dimen/spacing_small"
-            app:font="maven"
+            app:font="@string/maven_r"
             android:paddingTop="@dimen/spacing_normal"
             android:paddingBottom="@dimen/spacing_normal"
-            android:textSize="@dimen/font_normal"
+            android:textSize="@dimen/font_medium"
             android:maxLength="500"
             android:hint="@string/write_a_comment"
             android:textCursorDrawable="@drawable/cursor_black"
@@ -86,23 +87,23 @@
             android:layout_gravity="bottom"
             android:layout_width="1dp"
             android:layout_height="@dimen/spacing_extra_huge"
-            android:layout_marginBottom="@dimen/spacing_normal"
             android:layout_marginTop="8dp"
             android:background="@color/dull_line" />
 
-        <Button
+        <TextView
             android:id="@+id/btnSubmit"
             android:layout_gravity="bottom"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/spacing_extra_huge"
-            android:layout_marginBottom="@dimen/spacing_tiny"
-            android:background="@null"
+            android:layout_height="wrap_content"
             android:text="Post"
+            android:paddingLeft="@dimen/spacing_normal"
+            android:paddingRight="@dimen/spacing_normal"
+            android:paddingBottom="@dimen/spacing_extra_tiny"
             android:textAllCaps="false"
             android:textColor="@color/text_color_selector"
-            android:textSize="@dimen/sp_15"
-            app:font="maven"/>
+            android:textSize="@dimen/font_large"
+            app:font="@string/maven_r"/>
 
 
 

@@ -23,6 +23,10 @@ public class FeedListResponse {
     @SerializedName("add_post_text")
     @Expose
     private String addPostText;
+    @SerializedName("city_name")
+    @Expose
+    private String cityName;
+
 
     public int getFlag() {
         return flag;
@@ -59,5 +63,9 @@ public class FeedListResponse {
 
     public void setAddPostText(String addPostText) {
         this.addPostText = addPostText;
+    }
+
+    public String getCity() {
+        return cityName;
     }
 }

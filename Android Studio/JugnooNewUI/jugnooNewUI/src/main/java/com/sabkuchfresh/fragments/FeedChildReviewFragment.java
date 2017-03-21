@@ -188,8 +188,10 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
                 }
             }
         });
-        if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getFeedAddReviewHint()))
+        etContent.addTextChangedListener(editTextWacherContent);
+        if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getFeedAddReviewHint())) {
             etContent.setHint(Data.getFeedData().getFeedAddReviewHint());
+        }
         return rootView;
 
 
@@ -281,5 +283,10 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
     public boolean cameraEnableState() {
         return disabledViewNoRestaurant.getVisibility() == View.GONE ;
 
+    }
+
+    @Override
+    public boolean submitEnabledState() {
+        return etContent.getText().toString().trim().length()>0;
     }
 }

@@ -101,6 +101,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
                 switchAddFeed(position);
                 ivAccessCamera.setEnabled(getVisibleFragment().cameraEnableState());
+                btnSubmit.setEnabled(getVisibleFragment().submitEnabledState());
             }
 
             @Override
@@ -132,6 +133,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             }
         });
+
+
 
         return rootView;
     }
