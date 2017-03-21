@@ -399,8 +399,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     activity.openRestaurantReviewsListFragment();
                 }
             });
-
-
         }
     }
 

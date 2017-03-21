@@ -1330,6 +1330,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
      */
     public int setMinOrderAmountText(Fragment fragment) {
         try {
+            if(getFreshCheckoutMergedFragment() == null){
             if (getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                 int textViewMinOrderVis;
                 if (getProductsResponse() != null
@@ -1369,6 +1370,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
                 textViewMinOrder.setVisibility(textViewMinOrderVis);
                 return 1;
+            }
             } else {
                 textViewMinOrder.setVisibility(View.GONE);
             }
@@ -1525,8 +1527,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
 
 
-    private void checkForBackToFeed(){
-        if (getAppType() == AppConstant.ApplicationType.MENUS && getFeedHomeFragment() != null) {
+    private void checkForBackToFeed(boolean backPressed){
+        if (getFeedHomeFragment() != null && getAppType() == AppConstant.ApplicationType.MENUS
+                && ((backPressed && getTopFragment() instanceof VendorMenuFragment)
+                || (!backPressed && getTopFragment() instanceof FreshCheckoutMergedFragment))) {
             Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFeedClientId());
         }
@@ -1539,7 +1543,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         slotToSelect = null;
         paymentOption = null;
 
-        checkForBackToFeed();
+        checkForBackToFeed(false);
 
         FragmentManager fm = getSupportFragmentManager();
         for (int i = 0; i < fm.getBackStackEntryCount() - 1; i++) {
@@ -1642,7 +1646,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             }
         }
 
-        checkForBackToFeed();
+        checkForBackToFeed(true);
 
         if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finish();

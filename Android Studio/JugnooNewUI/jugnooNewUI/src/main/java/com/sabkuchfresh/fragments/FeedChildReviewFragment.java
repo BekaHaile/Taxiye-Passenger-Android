@@ -22,6 +22,7 @@ import com.sabkuchfresh.adapters.RestaurantQuerySuggestionsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
+import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,8 +69,6 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
     private void suggestRestaurantApi(String query) {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                pwRestLocQuery.setVisibility(View.VISIBLE);
-
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_INPUT, query);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
@@ -107,6 +106,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
                         pwRestLocQuery.setVisibility(View.GONE);
                     }
                 });
+                pwRestLocQuery.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,7 +127,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
         llReviewLocation = (LinearLayout) rootView.findViewById(R.id.llReviewLocation);
         tvRestaurantLocation = (TextView) rootView.findViewById(R.id.tvRestaurantLocation);
         etRestaurantLocation = (EditText) rootView.findViewById(R.id.etRestaurantLocation);
-        pwRestLocQuery = (ProgressWheel) rootView.findViewById(R.id.pwRestLocQuery);
+        pwRestLocQuery = (ProgressWheel) rootView.findViewById(R.id.pwRestLocQuery); pwRestLocQuery.setVisibility(View.GONE);
         rvRestaurantSuggestions = (RecyclerView) rootView.findViewById(R.id.rvRestaurantSuggestions);
         rvRestaurantSuggestions.setLayoutManager(new LinearLayoutManager(activity));
         rvRestaurantSuggestions.setItemAnimator(new DefaultItemAnimator());
@@ -208,6 +208,8 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
             llReviewLocation.setLayoutParams(params);
             rvRestaurantSuggestions.setVisibility(View.GONE);
             etRestaurantLocation.requestFocus();
+            pwRestLocQuery.setVisibility(View.GONE);
+            Utils.showSoftKeyboard(activity, etRestaurantLocation);
         } else {
             tvRestaurantLocation.setVisibility(View.VISIBLE);
             etRestaurantLocation.setVisibility(View.GONE);

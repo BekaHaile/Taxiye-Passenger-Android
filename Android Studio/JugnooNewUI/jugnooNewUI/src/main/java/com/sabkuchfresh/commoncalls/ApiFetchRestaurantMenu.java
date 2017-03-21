@@ -72,6 +72,7 @@ public class ApiFetchRestaurantMenu {
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
 									activity.setVendorOpened(productsResponse.getVendor());
 									if(activity.getAppType() == AppConstant.ApplicationType.FEED) {
+										Data.AppType = AppConstant.ApplicationType.MENUS;
 										Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
 										Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
 									}

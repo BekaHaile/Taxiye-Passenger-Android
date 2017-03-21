@@ -524,7 +524,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         activity.setSelectedPromoCoupon(noSelectionCoupon);
 
-        updateCouponsDataView();
 
 
 
