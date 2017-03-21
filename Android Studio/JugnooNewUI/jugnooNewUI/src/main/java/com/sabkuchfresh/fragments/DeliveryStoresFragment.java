@@ -86,7 +86,7 @@ public class DeliveryStoresFragment extends Fragment {
 //                                    TODO clear cart for previous selected activity.getCart().getDeliveryStoreCart(activity.getOpenedVendorId()).getSubItemHashMap().clear();
                                     selectStore(position, deliveryStore);
                                 }
-                            }, false, false);
+                            }, true, false);
                 } else if(!deliveryStore.getVendorId().equals(activity.getOpenedVendorId())) {
                     selectStore(position, deliveryStore);
                 }
