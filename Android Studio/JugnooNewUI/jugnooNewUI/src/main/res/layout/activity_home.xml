@@ -172,7 +172,7 @@
             <RelativeLayout
                 android:id="@+id/changeLocalityLayout"
                 android:layout_width="match_parent"
-                android:layout_height="350px"
+                android:layout_height="180px"
                 android:layout_alignParentBottom="true"
                 android:visibility="gone"
                 android:soundEffectsEnabled="false"
