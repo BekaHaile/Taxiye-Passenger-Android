@@ -133,6 +133,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
@@ -2134,11 +2135,13 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public void clearCart() {
         Paper.book().delete(DB_FRESH_CART);
+        Paper.book().delete(DB_PREVIOUS_VENDOR);
         createAppCart(Config.getFreshClientId());
     }
 
     private void clearMealCart() {
         Paper.book().delete(DB_MEALS_CART);
+        Paper.book().delete(DB_PREVIOUS_VENDOR);
         createAppCart(Config.getMealsClientId());
     }
 
@@ -2785,8 +2788,40 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         if (getAppType() == AppConstant.ApplicationType.MENUS) {
             return checkForAdd(-1, null, null);
         } else {
-            return true;
+            return checkForAddFM();
         }
+    }
+
+    private boolean checkForAddFM(){
+        Set<Integer> keySet = getCart().getVendorCartHashMap().keySet();
+        for(Integer vendorId : keySet){
+            if(!vendorId.equals(getOpenedVendorId()) && getCart().getCartItems(vendorId).size() > 0){
+                DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+                        getString(R.string.you_have_selected_cart_from_this_vendor, "Other"),
+                        getString(R.string.checkout),
+                        getString(R.string.change_store),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                DeliveryStore deliveryStoreLast = getLastDeliveryStore();
+                                if(deliveryStoreLast != null){
+                                    setOpenedVendorIdName(deliveryStoreLast.getVendorId(), deliveryStoreLast);
+                                    setRefreshCart(true);
+                                    openCart(getAppType());
+                                }
+                            }
+                        },
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+//                                    TODO clear cart for previous selected activity.getCart().getDeliveryStoreCart(activity.getOpenedVendorId()).getSubItemHashMap().clear();
+                            }
+                        }, true, false);
+
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean checkForAdd(final int position, final Item item, final MenusCategoryItemsAdapter.CallbackCheckForAdd callbackCheckForAdd) {
@@ -3750,11 +3785,21 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
     public void setOpenedVendorIdName(Integer vendorId, DeliveryStore deliveryStore){
         openedVendorId = vendorId;
+        if(openedDeliveryStore != null){
+            saveLastDeliveryStore(openedDeliveryStore);
+        }
         openedDeliveryStore = deliveryStore;
         Prefs.with(this).save(Constants.SP_VENDOR_ID, vendorId.intValue());
     }
     public DeliveryStore getOpenedDeliveryStore(){
         return openedDeliveryStore;
+    }
+
+    public DeliveryStore getLastDeliveryStore(){
+        return Paper.book().read(DB_PREVIOUS_VENDOR, null);
+    }
+    public void saveLastDeliveryStore(DeliveryStore deliveryStore){
+        Paper.book().write(DB_PREVIOUS_VENDOR, deliveryStore);
     }
 
 

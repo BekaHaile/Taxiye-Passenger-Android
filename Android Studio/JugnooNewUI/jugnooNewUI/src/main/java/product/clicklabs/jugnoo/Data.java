@@ -270,6 +270,7 @@ public class Data {
 
 			Paper.book().delete(PaperDBKeys.DB_FRESH_CART);
 			Paper.book().delete(PaperDBKeys.DB_MEALS_CART);
+			Paper.book().delete(PaperDBKeys.DB_PREVIOUS_VENDOR);
 
 
 		} catch (Exception e) {

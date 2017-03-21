@@ -8,5 +8,6 @@ public interface PaperDBKeys {
 
 	String DB_FRESH_CART = "db_fresh_cart";
 	String DB_MEALS_CART = "db_meals_cart";
+	String DB_PREVIOUS_VENDOR = "db_previous_vendor";
 
 }

@@ -16,7 +16,6 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryStore;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 
@@ -83,7 +82,7 @@ public class DeliveryStoresFragment extends Fragment {
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-//                                    TODO clear cart for previous selected activity.getCart().getDeliveryStoreCart(activity.getOpenedVendorId()).getSubItemHashMap().clear();
+                                    activity.getCart().getSubItemHashMap(activity.getOpenedVendorId()).clear();
                                     selectStore(position, deliveryStore);
                                 }
                             }, true, false);
