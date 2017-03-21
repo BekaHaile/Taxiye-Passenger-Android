@@ -21,7 +21,7 @@ public class DeliveryStore {
 	@SerializedName("vendor_phone")
 	@Expose
 	private String vendorPhone;
-	@SerializedName("city_id")
+	@SerializedName("cityId")
 	@Expose
 	private Integer cityId;
 	@SerializedName("store_id")
