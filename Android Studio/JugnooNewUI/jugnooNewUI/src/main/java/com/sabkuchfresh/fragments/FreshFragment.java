@@ -222,14 +222,15 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
 
         try {
-            if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
-                activity.getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        activity.openFeedback();
-                    }
-                }, 300);
-            }
+			// TODO: 21/03/17 remove this
+//            if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
+//                activity.getHandler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        activity.openFeedback();
+//                    }
+//                }, 300);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

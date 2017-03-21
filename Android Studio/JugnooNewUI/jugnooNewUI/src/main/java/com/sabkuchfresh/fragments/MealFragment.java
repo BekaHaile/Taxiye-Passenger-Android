@@ -186,6 +186,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            activity.setAddressTextToLocationPlaceHolder();
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
             if(activity.getCartChangedAtCheckout()){

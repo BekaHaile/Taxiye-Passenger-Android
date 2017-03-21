@@ -235,6 +235,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            activity.setAddressTextToLocationPlaceHolder();
             activity.resumeMethod();
             menusRestaurantAdapter.applyFilter();
             activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);

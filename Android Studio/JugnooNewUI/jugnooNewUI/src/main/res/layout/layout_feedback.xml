@@ -362,11 +362,12 @@
                     android:hint="@string/leave_a_comment"
                     android:padding="20px"
                     android:scrollbars="vertical"
-                    android:textColor="@color/grey_dark_more"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@drawable/cursor_black"
                     android:textSize="28px"
                     android:visibility="visible"
-                    android:inputType="textCapSentences"
+                    android:inputType="textCapSentences|textMultiLine"
                     app:font="maven"
                     />
 

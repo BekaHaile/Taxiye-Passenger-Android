@@ -178,6 +178,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         super.onHiddenChanged(hidden);
         if(!hidden){
             adapter.notifyDataSetChanged();
+            activity.setAddressTextToLocationPlaceHolder();
             activity.fragmentUISetup(this);
             if(activity.getCartChangedAtCheckout()){
                 activity.updateItemListFromSPDB();
