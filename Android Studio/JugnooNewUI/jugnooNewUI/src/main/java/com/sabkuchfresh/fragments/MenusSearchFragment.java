@@ -322,6 +322,8 @@ public class MenusSearchFragment extends Fragment {
 			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
 				new ItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
 			}
+			activity.setMinOrderAmountText(MenusSearchFragment.this);
+
 		}
 	}
 

@@ -17,6 +17,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
@@ -35,6 +36,8 @@ public class ReviewImagePagerDialog extends DialogFragment {
 	private ViewPager vpImages;
 	private TextView tvLikeShareCount;
 
+
+
 	public static ReviewImagePagerDialog newInstance(int positionImageClicked, int likeIsEnabled, int shareIsEnabled){
 		ReviewImagePagerDialog dialog = new ReviewImagePagerDialog();
 		Bundle bundle = new Bundle();
@@ -45,6 +48,28 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		return dialog;
 	}
 
+
+	public static ReviewImagePagerDialog newInstance(int positionImageClicked, ArrayList<FetchFeedbackResponse.ReviewImage> imageList){
+		ReviewImagePagerDialog dialog = new ReviewImagePagerDialog();
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_POSITION, positionImageClicked);
+		bundle.putBoolean(Constants.KEY_HIDE_LIKE_SHARE, true);
+		bundle.putSerializable(Constants.LIST_IMAGES, imageList);
+		dialog.setArguments(bundle);
+		return dialog;
+	}
+
+
+	/*public static ReviewImagePagerDialog newInstance(int positionImageClicked, int likeIsEnabled, int shareIsEnabled, boolean showLikeShare){
+		ReviewImagePagerDialog dialog = new ReviewImagePagerDialog();
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_POSITION, positionImageClicked);
+		bundle.putInt(Constants.KEY_LIKE_IS_ENABLED, likeIsEnabled);
+		bundle.putInt(Constants.KEY_SHARE_IS_ENABLED, shareIsEnabled);
+		dialog.setArguments(bundle);
+		return dialog;
+	}
+*/
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +85,11 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		int positionImageClicked = getArguments().getInt(Constants.KEY_POSITION, 0);
 		int likeIsEnabled = getArguments().getInt(Constants.KEY_LIKE_IS_ENABLED, 1);
 		int shareIsEnabled = getArguments().getInt(Constants.KEY_SHARE_IS_ENABLED, 1);
+		boolean hideLikeShareCount = getArguments().getBoolean(Constants.KEY_HIDE_LIKE_SHARE, false);
+		ArrayList<FetchFeedbackResponse.ReviewImage> imageArrayList =null;
+		if(getArguments().containsKey(Constants.LIST_IMAGES)) {
+			imageArrayList = (ArrayList<FetchFeedbackResponse.ReviewImage>) getArguments().getSerializable(Constants.LIST_IMAGES);
+		}
 
 		activity = (FreshActivity) getActivity();
 
@@ -68,7 +98,9 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		tvLikeShareCount = (TextView) rootView.findViewById(R.id.tvLikeShareCount);
 
 		try {
-			vpImages.setAdapter(new ImagePagerAdapter(activity, activity.getCurrentReview().getImages()));
+			vpImages.setAdapter(new ImagePagerAdapter(activity,imageArrayList==null? activity.getCurrentReview().getImages():imageArrayList));
+
+
 
 			ivClose.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -77,27 +109,32 @@ public class ReviewImagePagerDialog extends DialogFragment {
 				}
 			});
 
-			StringBuilder likeCount = new StringBuilder();
-			StringBuilder shareCount = new StringBuilder();
-			if (activity.getCurrentReview().getLikeCount() > 1) {
-				likeCount.append(activity.getCurrentReview().getLikeCount()).append(" ").append(activity.getString(R.string.likes));
-			} else {
-				likeCount.append(activity.getCurrentReview().getLikeCount()).append(" ").append(activity.getString(R.string.like));
-			}
-			if (activity.getCurrentReview().getShareCount() > 1) {
-				shareCount.append(activity.getCurrentReview().getShareCount()).append(" ").append(activity.getString(R.string.shares));
-			} else {
-				shareCount.append(activity.getCurrentReview().getShareCount()).append(" ").append(activity.getString(R.string.share));
+			if(hideLikeShareCount){
+				tvLikeShareCount.setVisibility(View.GONE);
+			} else{
+				StringBuilder likeCount = new StringBuilder();
+				StringBuilder shareCount = new StringBuilder();
+				if (activity.getCurrentReview().getLikeCount() > 1) {
+					likeCount.append(activity.getCurrentReview().getLikeCount()).append(" ").append(activity.getString(R.string.likes));
+				} else {
+					likeCount.append(activity.getCurrentReview().getLikeCount()).append(" ").append(activity.getString(R.string.like));
+				}
+				if (activity.getCurrentReview().getShareCount() > 1) {
+					shareCount.append(activity.getCurrentReview().getShareCount()).append(" ").append(activity.getString(R.string.shares));
+				} else {
+					shareCount.append(activity.getCurrentReview().getShareCount()).append(" ").append(activity.getString(R.string.share));
+				}
+
+				if(likeIsEnabled != 1){
+					likeCount.delete(0, likeCount.length());
+				}
+				if(shareIsEnabled != 1){
+					shareCount.delete(0, shareCount.length());
+				}
+				String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
+				tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
 			}
 
-			if(likeIsEnabled != 1){
-				likeCount.delete(0, likeCount.length());
-			}
-			if(shareIsEnabled != 1){
-				shareCount.delete(0, shareCount.length());
-			}
-			String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
-			tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
 
 			WindowManager.LayoutParams layoutParams = getDialog().getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;

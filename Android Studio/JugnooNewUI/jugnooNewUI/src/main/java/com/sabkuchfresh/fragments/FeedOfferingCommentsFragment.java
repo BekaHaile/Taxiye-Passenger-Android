@@ -14,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.adapters.FeedOfferingCommentsAdapter;
 import com.sabkuchfresh.commoncalls.LikeFeed;
 import com.sabkuchfresh.home.FreshActivity;
@@ -49,10 +51,11 @@ public class FeedOfferingCommentsFragment extends Fragment {
     private FreshActivity activity;
     private ArrayList<Object> dataList;
     private TextView textViewCharCount;
-    private Button btnSubmit;
+    private TextView btnSubmit;
     public String commentAdded;
     private LikeFeed likeFeed;
     private int positionInOriginalList;
+    private EditText edtMyComment;
 
 
     public FeedOfferingCommentsFragment() {
@@ -95,35 +98,42 @@ public class FeedOfferingCommentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         activity.fragmentUISetup(this);
         View rootView = inflater.inflate(R.layout.fragment_feed_comments, container, false);
-        btnSubmit= (Button) rootView.findViewById(R.id.btnSubmit);
-        btnSubmit.setTypeface(btnSubmit.getTypeface(), Typeface.BOLD);
+        btnSubmit= (TextView) rootView.findViewById(R.id.btnSubmit);
         btnSubmit.setEnabled(false);
         textViewCharCount= (TextView) rootView.findViewById(R.id.tvCharCount);
+        edtMyComment = (EditText) rootView.findViewById(R.id.edt_my_comment);
+        edtMyComment.addTextChangedListener(submitTextWatcher);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        feedOfferingCommentsAdapter = new FeedOfferingCommentsAdapter(getActivity(), null, recyclerView, new FeedOfferingCommentsAdapter.Callback() {
+        feedOfferingCommentsAdapter = new FeedOfferingCommentsAdapter(getActivity(), null, recyclerView, new FeedHomeAdapter.FeedPostCallback() {
             @Override
-            public void onLikeClick(final int position) {
+            public void onLikeClick(FeedDetail object, int position) {
                 if(likeFeed ==null)
-                    likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
-                        @Override
-                        public void onSuccess(boolean isLikeAPI,int position) {
-                            feedOfferingCommentsAdapter.notifyOnLike(position,isLikeAPI);
-                            if(activity.getFeedHomeFragment()!=null) {
-                                //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
-                                activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
-                            }
+                likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
+                    @Override
+                    public void onSuccess(boolean isLikeAPI,int position) {
+                        feedOfferingCommentsAdapter.notifyOnLike(position,isLikeAPI);
+                        if(activity.getFeedHomeFragment()!=null) {
+                            //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
+                            activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
                         }
+                    }
 
-                    });
+                });
                 likeFeed.likeFeed(feedDetail.getPostId(),getActivity(), !feedDetail.isLiked(), position);
+            }
 
+            @Override
+            public void onCommentClick(FeedDetail postId, int position) {
 
             }
 
             @Override
-            public void onCommentClick(Object object) {
-
+            public void onRestaurantClick(int restaurantId) {
+                if(restaurantId > 0){
+                    activity.fetchRestaurantMenuAPI(restaurantId);
+                }
+//                Toast.makeText(activity, "Hey here Comments", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -224,7 +234,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
 
         dataList.clear();
         dataList.add(feedDetail);
-        dataList.add(FeedOfferingCommentsAdapter.TYPE_MY_COMMENT);
+//        dataList.add(FeedOfferingCommentsAdapter.TYPE_MY_COMMENT);
 
         if(feedbackResponse.getFeedComments()!=null)
           dataList.addAll(feedbackResponse.getFeedComments());
@@ -255,6 +265,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
                                     Utils.hideKeyboard(getActivity());
                                     commentAdded=null;
                                     feedDetail.setCommentCount(feedDetail.getCommentCount()+1);
+                                    edtMyComment.setText(null);
                                     prepareListAndNotifyAdapter(feedbackResponse);
                                     if(activity.getFeedHomeFragment()!=null) {
                                         //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
@@ -347,7 +358,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
         @Override
         public void afterTextChanged(Editable s) {
             commentAdded=s.toString();
-            textViewCharCount.setText(String.valueOf(500-s.toString().trim().length()));
+//            textViewCharCount.setText(String.valueOf(500-s.toString().trim().length()));
             btnSubmit.setEnabled(s.length()>0);
 
 

@@ -203,10 +203,12 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
 
-    public void getSuperCategoriesAPI() {
+    public void getSuperCategoriesAPI(boolean showDialog) {
         try {
             if(MyApplication.getInstance().isOnline()) {
-                DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+                if(showDialog) {
+                    DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+                }
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -252,6 +254,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                             retryDialogSuperCategoriesAPI(DialogErrorType.SERVER_ERROR);
                             stopOhSnap();
                         }
+                        swipeContainer.setRefreshing(false);
                     }
 
                     @Override
@@ -259,15 +262,17 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                         DialogPopup.dismissLoadingDialog();
                         retryDialogSuperCategoriesAPI(DialogErrorType.CONNECTION_LOST);
                         stopOhSnap();
+                        swipeContainer.setRefreshing(false);
                     }
                 });
             }
             else {
                 retryDialogSuperCategoriesAPI(DialogErrorType.NO_NET);
+                swipeContainer.setRefreshing(false);
             }
-            swipeContainer.setRefreshing(false);
         } catch (Exception e) {
             e.printStackTrace();
+            swipeContainer.setRefreshing(false);
         }
     }
 
@@ -289,7 +294,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        getSuperCategoriesAPI();
+                        getSuperCategoriesAPI(true);
                     }
 
                     @Override
@@ -318,7 +323,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
-        getSuperCategoriesAPI();
+        getSuperCategoriesAPI(false);
     }
 
     class CustomPagerAdapter extends PagerAdapter {

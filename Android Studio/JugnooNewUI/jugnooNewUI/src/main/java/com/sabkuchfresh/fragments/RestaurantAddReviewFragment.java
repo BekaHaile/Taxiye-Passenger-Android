@@ -409,7 +409,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
                     updateSubmitButtonStatus();
 
                 }
-            });
+            }, displayImagesRecycler);
             displayImagesRecycler.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
             displayImagesRecycler.setAdapter(editReviewImagesAdapter);
         } else {
@@ -421,7 +421,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
 
 
       ibAccessCamera.setEnabled(objectList.size()<5);
-        updateSubmitButtonStatus();
+       updateSubmitButtonStatus();
 
     if(objectList.size()>0)
         displayImagesRecycler.smoothScrollToPosition(objectList.size());

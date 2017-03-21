@@ -137,7 +137,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
-                activity.fetchRestaurantMenuAPI(vendor.getRestaurantId(), 0, vendor);
+                activity.fetchRestaurantMenuAPI(vendor.getRestaurantId());
                 Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
             }
 
@@ -335,7 +335,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                             int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""));
                                             for (MenusResponse.Vendor vendor : vendors) {
                                                 if (restId == vendor.getRestaurantId()) {
-                                                    activity.fetchRestaurantMenuAPI(vendor.getRestaurantId(), 0, vendor);
+                                                    activity.fetchRestaurantMenuAPI(vendor.getRestaurantId());
                                                     break;
                                                 }
                                             }

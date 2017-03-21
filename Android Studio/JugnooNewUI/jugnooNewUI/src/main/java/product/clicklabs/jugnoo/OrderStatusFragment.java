@@ -32,6 +32,8 @@ import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.commoncalls.ApiCancelOrder;
+import com.sabkuchfresh.fragments.OrderCancelReasonsFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
 import com.sabkuchfresh.utils.TextViewStrikeThrough;
@@ -47,11 +49,9 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
-import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -83,7 +83,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private NonScrollListView listViewOrder;
     private OrderItemsAdapter orderItemsAdapter;
     private LinearLayout llFinalAmount, llDeliveryPlace, orderComplete, orderCancel;
-    private ArrayList<HistoryResponse.OrderItem> subItemsOrders = new ArrayList<HistoryResponse.OrderItem>();
+    private ArrayList<HistoryResponse.OrderItem> subItemsOrders = new ArrayList<>();
     private HistoryResponse.Datum orderHistory;
     private FragmentActivity activity;
     private CardView cvOrderStatus;
@@ -412,109 +412,6 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }
     }
 
-    private void cancelOrderApiCall(int orderId) {
-        try {
-            if (MyApplication.getInstance().isOnline()) {
-                DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_FRESH_ORDER_ID, String.valueOf(orderId));
-                params.put(Constants.KEY_CLIENT_ID, orderHistory.getClientId());
-                params.put(Constants.INTERATED, "1");
-                try {
-                    if (orderHistory.getStoreId() != null) {
-                        params.put(Constants.STORE_ID, "" + orderHistory.getStoreId());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
-                    @Override
-                    public void success(SettleUserDebt orderHistoryResponse, Response response) {
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i("Order Status", "Fresh order cancel response = " + responseStr);
-                        DialogPopup.dismissLoadingDialog();
-                        long time = 0L;
-                        Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
-                        try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            String message = JSONParser.getServerMessage(jObj);
-                            if (orderHistoryResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-                                        Data.isOrderCancelled = true;
-                                        orderHistory.setCancellable(0);
-
-                                        Intent intent = new Intent(Data.LOCAL_BROADCAST);
-                                        intent.putExtra("message", "Order cancelled, refresh inventory");
-                                        intent.putExtra("open_type", 10);
-                                        LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
-
-                                        activity.onBackPressed();
-
-                                    }
-                                });
-                            } else {
-                                DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-                                    }
-                                });
-                            }
-
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            retryDialog(DialogErrorType.SERVER_ERROR);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e("Order Status", "Fresh Cancel Order error" + error.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        retryDialog(DialogErrorType.CONNECTION_LOST);
-                    }
-                };
-
-                new HomeUtil().putDefaultParams(params);
-                if(productType == ProductType.MENUS.getOrdinal()){
-                    RestClient.getMenusApiService().cancelOrder(params, callback);
-                } else {
-                    RestClient.getFreshApiService().cancelOrder(params, callback);
-                }
-            } else {
-                retryDialog(DialogErrorType.NO_NET);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void retryDialog(DialogErrorType dialogErrorType) {
-        DialogPopup.dialogNoInternet(activity,
-                dialogErrorType,
-                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
-                    @Override
-                    public void positiveClick(View view) {
-                        cancelOrderApiCall(orderHistory.getOrderId());
-                    }
-
-                    @Override
-                    public void neutralClick(View view) {
-
-                    }
-
-                    @Override
-                    public void negativeClick(View view) {
-                    }
-                });
-    }
 
     private void showPossibleStatus(ArrayList<String> possibleStatus, int status){
         setDefaultState();
@@ -867,21 +764,44 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         switch (tag) {
             case R.id.buttonCancelOrder:
                 if (orderHistory.getCancellable() == 1) {
-                    DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want to cancel this order?", getResources().getString(R.string.ok),
-                            getResources().getString(R.string.cancel), new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    cancelOrderApiCall(orderHistory.getOrderId());
-                                    if(activity instanceof FreshActivity) {
-                                        GAUtils.event(((FreshActivity)activity).getGaCategory(), ORDER_STATUS, ORDER+CANCELLED);
+                    int storeId = orderHistory.getStoreId() == null ? 0 : orderHistory.getStoreId();
+                    if(orderHistory.getShowCancellationReasons() == 1){
+                        int containerId = -1;
+                        if(activity instanceof FreshActivity) {
+                            containerId = ((FreshActivity)activity).getRelativeLayoutContainer().getId();
+                        } else if(activity instanceof RideTransactionsActivity)  {
+                            containerId = ((RideTransactionsActivity)activity).getContainer().getId();
+                        } else if (activity instanceof SupportActivity) {
+                            containerId = ((SupportActivity)activity).getContainer().getId();
+                        }
+                        if(containerId > -1) {
+                            activity.getSupportFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                                    .add(containerId, OrderCancelReasonsFragment.newInstance(orderHistory.getOrderId(),
+                                            productType, storeId, orderHistory.getClientId()),
+                                            OrderCancelReasonsFragment.class.getName())
+                                    .addToBackStack(OrderCancelReasonsFragment.class.getName())
+                                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                                    .commitAllowingStateLoss();
+                        }
+                    } else {
+                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want to cancel this order?", getResources().getString(R.string.ok),
+                                getResources().getString(R.string.cancel), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        cancelOrderApi();
+                                        if (activity instanceof FreshActivity) {
+                                            GAUtils.event(((FreshActivity) activity).getGaCategory(), ORDER_STATUS, ORDER + CANCELLED);
+                                        }
                                     }
-                                }
-                            }, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                                }, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
 
-                                }
-                            }, false, false);
+                                    }
+                                }, false, false);
+                    }
                 } else {
                     feedbackBtn.performClick();
                 }
@@ -995,4 +915,49 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
         }
     };
+
+    private ApiCancelOrder apiCancelOrder;
+    private void cancelOrderApi(){
+        if(apiCancelOrder == null){
+            apiCancelOrder = new ApiCancelOrder(activity, new ApiCancelOrder.Callback() {
+                @Override
+                public void onSuccess(String message) {
+                    DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Data.isOrderCancelled = true;
+                            orderHistory.setCancellable(0);
+
+                            Intent intent = new Intent(Data.LOCAL_BROADCAST);
+                            intent.putExtra("message", "Order cancelled, refresh inventory");
+                            intent.putExtra("open_type", 10);
+                            LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
+
+                            activity.onBackPressed();
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onRetry(View view) {
+                    cancelOrderApi();
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            });
+        }
+        int storeId = orderHistory.getStoreId() == null ? 0 : orderHistory.getStoreId();
+        apiCancelOrder.hit(orderHistory.getOrderId(), orderHistory.getClientId(),
+                storeId,
+                productType);
+    }
+
 }

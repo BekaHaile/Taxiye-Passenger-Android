@@ -267,6 +267,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
             }
             activity.setRefreshCart(false);
+            activity.setMinOrderAmountText(VendorMenuFragment.this);
 
         }
         else{
@@ -405,8 +406,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     activity.openRestaurantReviewsListFragment();
                 }
             });
-
-
         }
     }
 

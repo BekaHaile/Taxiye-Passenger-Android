@@ -651,4 +651,8 @@ public interface Constants {
 
     String SP_VENDOR_ID = "sp_vendor_id";
     String SP_SELECTED_VENDOR_ID = "sp_selected_vendor_id";
+    String LIST_IMAGES = "list_images";
+    String KEY_HIDE_LIKE_SHARE = "hide_like_share";
+    String KEY_REASONS = "reasons";
+    String KEY_ADDN_REASON = "addn_reason";
 }

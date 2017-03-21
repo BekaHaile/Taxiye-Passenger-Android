@@ -283,10 +283,10 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
+			activity.setMinOrderAmountText(GroceryFragment.this);
 			activity.getHandler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					activity.setMinOrderAmountText(GroceryFragment.this);
 					if(activity.isRefreshCart()){
 						activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
 					}

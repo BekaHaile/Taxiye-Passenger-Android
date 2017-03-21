@@ -280,8 +280,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             itemsInCart.clear();
 
 
-            if(activity.getMenusResponse() != null
-                    && activity.getMenuProductsResponse().getCategories() != null) {
+            if(activity.getMenuProductsResponse().getCategories() != null) {
                 for (Category category : activity.getMenuProductsResponse().getCategories()) {
                     if(category.getSubcategories() != null){
                         for(Subcategory subcategory : category.getSubcategories()){
@@ -525,7 +524,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         activity.setSelectedPromoCoupon(noSelectionCoupon);
 
-        updateCouponsDataView();
 
 
 
@@ -1866,14 +1864,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             } else {
                 linearLayoutOffers.setVisibility(View.GONE);
             }
-            PromoCoupon pcOld = activity.getSelectedPromoCoupon();
-            activity.setSelectedPromoCoupon(noSelectionCoupon);
-            for(PromoCoupon promoCoupon : promoCoupons){
-                if(promoCoupon.getIsSelected() == 1){
-                    activity.setSelectedPromoCoupon(promoCoupon);
-                    break;
-                }
-            }
+            PromoCoupon pcOld = selectServerMarkedCouponAndReturnOld();
             setPromoAmount();
             promoCouponsAdapter.setList(promoCoupons);
 
@@ -1892,6 +1883,22 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }
         }
+    }
+
+    private PromoCoupon selectServerMarkedCouponAndReturnOld(){
+        if(activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getRefreshOnCartChange() == 1) {
+            PromoCoupon pcOld = activity.getSelectedPromoCoupon();
+            activity.setSelectedPromoCoupon(noSelectionCoupon);
+            for (PromoCoupon promoCoupon : promoCoupons) {
+                if (promoCoupon.getIsSelected() == 1) {
+                    activity.setSelectedPromoCoupon(promoCoupon);
+                    break;
+                }
+            }
+            return pcOld;
+        }
+        return null;
     }
 
     private void setPromoAmount(){

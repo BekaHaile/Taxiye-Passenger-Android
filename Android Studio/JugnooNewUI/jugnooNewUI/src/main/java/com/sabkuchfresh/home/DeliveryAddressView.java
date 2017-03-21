@@ -17,6 +17,7 @@ public class DeliveryAddressView {
 
 	public LinearLayout llLocation;
 	public TextView tvDeliveryAddress, tvLocation;
+	public View shadowTop;
 
 	public DeliveryAddressView(Context context, View rootView){
 		init(context, rootView);
@@ -27,10 +28,18 @@ public class DeliveryAddressView {
 		llLocation.setVisibility(View.VISIBLE);
 		tvDeliveryAddress = (TextView) rootView.findViewById(R.id.tvDeliveryAddress); tvDeliveryAddress.setTypeface(Fonts.mavenMedium(context));
 		tvLocation = (TextView) rootView.findViewById(R.id.tvLocation); tvLocation.setTypeface(Fonts.mavenMedium(context));
+		shadowTop = (View) rootView.findViewById(R.id.shadow_top);
 	}
 
 	public void scaleView(){
 		ASSL.DoMagic(llLocation);
 	}
 
+	public TextView getTvLocation() {
+		return tvLocation;
+	}
+
+	public View getShadowTop() {
+		return shadowTop;
+	}
 }

@@ -336,4 +336,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
     public void setHalfStars(boolean halfStars) {
         mHalfStars = halfStars;
     }
+    public void setEnabled(boolean isEnabled){
+        mOnlyForDisplay = !isEnabled;
+    }
 }

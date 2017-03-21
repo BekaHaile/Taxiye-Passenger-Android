@@ -179,7 +179,7 @@ public class AppSwitcher {
 							activity.startActivity(intent);
 							activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
 							ActivityCompat.finishAffinity(activity);
-							new ApiUpdateClientId().updateClientId(clientId);
+							new ApiUpdateClientId().updateClientId(clientId, latLng);
 							Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						}
 					} else if (clientId.equalsIgnoreCase(Config.getFreshClientId()) && !(activity instanceof FreshActivity)) {
@@ -192,7 +192,7 @@ public class AppSwitcher {
 							activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
 							ActivityCompat.finishAffinity(activity);
 
-							new ApiUpdateClientId().updateClientId(clientId);
+							new ApiUpdateClientId().updateClientId(clientId, latLng);
 							Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						}
 					} else if (clientId.equalsIgnoreCase(Config.getMealsClientId()) && !(activity instanceof FreshActivity)) {
@@ -205,7 +205,7 @@ public class AppSwitcher {
 							activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
 							ActivityCompat.finishAffinity(activity);
 
-							new ApiUpdateClientId().updateClientId(clientId);
+							new ApiUpdateClientId().updateClientId(clientId, latLng);
 							Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						}
 					} else if (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && !(activity instanceof FreshActivity)) {
@@ -218,7 +218,7 @@ public class AppSwitcher {
 							activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
 							ActivityCompat.finishAffinity(activity);
 
-						new ApiUpdateClientId().updateClientId(clientId);
+						new ApiUpdateClientId().updateClientId(clientId, latLng);
 						Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					}
 				} else if (clientId.equalsIgnoreCase(Config.getMenusClientId()) && !(activity instanceof FreshActivity)) {
@@ -231,7 +231,7 @@ public class AppSwitcher {
 						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 						ActivityCompat.finishAffinity(activity);
 
-						new ApiUpdateClientId().updateClientId(clientId);
+						new ApiUpdateClientId().updateClientId(clientId, latLng);
 						Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					}
 				}
@@ -286,7 +286,7 @@ public class AppSwitcher {
 						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 						ActivityCompat.finishAffinity(activity);
 
-						new ApiUpdateClientId().updateClientId(clientId);
+						new ApiUpdateClientId().updateClientId(clientId, latLng);
 						Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					}
 				}
@@ -300,7 +300,7 @@ public class AppSwitcher {
 							activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
 							ActivityCompat.finishAffinity(activity);
 
-							new ApiUpdateClientId().updateClientId(clientId);
+							new ApiUpdateClientId().updateClientId(clientId, latLng);
 							Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						}
 					}
@@ -318,7 +318,7 @@ public class AppSwitcher {
 							activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 							ActivityCompat.finishAffinity(activity);
 
-							new ApiUpdateClientId().updateClientId(clientId);
+							new ApiUpdateClientId().updateClientId(clientId, latLng);
 							Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						}
 					}
