@@ -6,7 +6,6 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
 
@@ -46,8 +45,7 @@ public class ApiFetchRestaurantMenu {
 		this.callback = callback;
 	}
 
-	public void hit(final int restaurantId, final double latitude, final double longitude, final int restaurantInfo,
-					final MenusResponse.Vendor vendor) {
+	public void hit(final int restaurantId, final double latitude, final double longitude) {
 		try {
 			if (MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
@@ -59,7 +57,6 @@ public class ApiFetchRestaurantMenu {
 				params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(restaurantId));
 				params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
 				params.put(Constants.INTERATED, "1");
-				params.put(Constants.KEY_RESTAURANT_INFO, String.valueOf(restaurantInfo));
 				Log.i(TAG, "restaurantMenu params=" + params.toString());
 
 				new HomeUtil().putDefaultParams(params);
@@ -73,14 +70,11 @@ public class ApiFetchRestaurantMenu {
 							String message = productsResponse.getMessage();
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
-									if(vendor == null && restaurantInfo == 1){
-										activity.setVendorOpened(productsResponse.getVendor());
-										// TODO: 16/03/17 remove this
+									activity.setVendorOpened(productsResponse.getVendor());
+									if(activity.getAppType() == AppConstant.ApplicationType.FEED) {
+										Data.AppType = AppConstant.ApplicationType.MENUS;
 										Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
 										Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
-										activity.setVendorOpened(FreshActivity.vendorStatic);
-									} else {
-										activity.setVendorOpened(vendor);
 									}
 									activity.setMenuProductsResponse(productsResponse);
 									if (activity.menusSort == -1) {

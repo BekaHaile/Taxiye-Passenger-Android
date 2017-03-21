@@ -127,6 +127,13 @@ public class FABViewTest implements GACategory, GAAction {
                         ivJeanieHelp.setVisibility(View.GONE);
                         GAUtils.event(JUGNOO, getOffering()+HOME, GENIE+CLOSED);
                     }
+                    try {
+                        if(activity instanceof HomeActivity) {
+                            ((HomeActivity) activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSurgeImageVisibility();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -167,12 +174,17 @@ public class FABViewTest implements GACategory, GAAction {
             public void onAnimationStart(Animator animation) {
                 menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
                         ? R.drawable.ic_fab_jeanie : R.drawable.ic_fab_cross);
-                if(activity instanceof HomeActivity) {
-                    if (menuLabelsRightTest.isOpened()) {
-                        ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
-                    } else {
-                        ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
-                    }
+                try {
+                    if(activity instanceof HomeActivity) {
+						if (menuLabelsRightTest.isOpened()) {
+							((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
+						} else {
+							((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
+                            ((HomeActivity) activity).getSlidingBottomPanel().getImageViewSurgeOverSlidingBottom().setVisibility(View.GONE);
+						}
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -183,7 +195,6 @@ public class FABViewTest implements GACategory, GAAction {
 
         menuLabelsRightTest.setIconToggleAnimatorSet(set);
     }
-
 
     public void setFABButtons(){
         try {
@@ -454,6 +465,10 @@ public class FABViewTest implements GACategory, GAAction {
         } else {
             return RIDES;
         }
+    }
+
+    public boolean getIsOpened(){
+        return isOpened;
     }
 
 }

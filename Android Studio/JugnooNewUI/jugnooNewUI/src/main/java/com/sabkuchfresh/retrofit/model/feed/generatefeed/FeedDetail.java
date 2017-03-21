@@ -3,8 +3,10 @@ package com.sabkuchfresh.retrofit.model.feed.generatefeed;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class FeedDetail implements Serializable {
 
@@ -25,7 +27,7 @@ public class FeedDetail implements Serializable {
     private String content;
     @SerializedName("image_url")
     @Expose
-    private String imageUrl;
+    private ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
@@ -72,6 +74,13 @@ public class FeedDetail implements Serializable {
 
     public boolean isLiked() {
         return isLiked==1;
+    }
+
+    @SerializedName("star_color")
+    private String ratingColor;
+
+    public String getRatingColor() {
+        return ratingColor;
     }
 
     public void setLiked(boolean liked) {
@@ -122,12 +131,12 @@ public class FeedDetail implements Serializable {
         this.content = content;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public ArrayList<FetchFeedbackResponse.ReviewImage>  getReviewImages() {
+        return reviewImages;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setReviewImages(ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages) {
+        this.reviewImages = reviewImages;
     }
 
     public String getCreatedAt() {
@@ -229,7 +238,7 @@ public class FeedDetail implements Serializable {
         LIKE_ON_POST(" liked "),
         LIKE_ON_REVIEW (" liked "),
         COMMENT_ON_POST(" commented on "),
-        COMMENT_ON_REVIEW(" commented on  ");
+        COMMENT_ON_REVIEW(" commented on ");
 
         private String value;
         FeedType(String value) {

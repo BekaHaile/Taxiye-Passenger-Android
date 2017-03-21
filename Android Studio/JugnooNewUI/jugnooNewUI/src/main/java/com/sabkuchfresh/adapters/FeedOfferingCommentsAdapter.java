@@ -16,9 +16,11 @@ import android.widget.TextView;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -36,7 +38,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
     private FreshActivity activity;
-    private Callback callback;
+    private FeedHomeAdapter.FeedPostCallback callback;
     private List<Object> feedDetailData;
     private RecyclerView recyclerView;
     public static final int TYPE_POST_LAYOUT = 1;
@@ -48,7 +50,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     private static final StyleSpan BOLD_SPAN = new StyleSpan(Typeface.BOLD);
     private static final StyleSpan BOLD_SPAN_2 = new StyleSpan(Typeface.BOLD);//since we cant reuse same style span again in a spannable
 
-    public FeedOfferingCommentsAdapter(Activity activity, List<Object> reviewImages, RecyclerView recyclerView, Callback callback, TextWatcher textWatcherMyComment) {
+    public FeedOfferingCommentsAdapter(Activity activity, List<Object> reviewImages, RecyclerView recyclerView, FeedHomeAdapter.FeedPostCallback callback, TextWatcher textWatcherMyComment) {
         this.activity = (FreshActivity) activity;
         this.feedDetailData = reviewImages;
         this.callback = callback;
@@ -71,7 +73,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         switch (viewType) {
             case TYPE_POST_LAYOUT:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed_list, parent, false);
-                return new FeedOfferingListAdapter.ViewHolderReviewImage(v,this);
+                return new FeedHomeAdapter.ViewHolderReviewImage(v,this);
             case TYPE_USERS_COMMENTS:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed_comment, parent, false);
                 return new UserCommentViewHolder(v);
@@ -89,11 +91,11 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        if(holder instanceof FeedOfferingListAdapter.ViewHolderReviewImage)
+        if(holder instanceof FeedHomeAdapter.ViewHolderReviewImage)
         {
 
-            FeedOfferingListAdapter.setData((FeedOfferingListAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity);
-            ((FeedOfferingListAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
+            FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback);
+            ((FeedHomeAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
 
         }
         else if(holder instanceof MyCommentViewHolder){
@@ -124,7 +126,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
                 userCommentViewHolder.tvUserTimePosted.setVisibility(View.GONE);
             else {
                 userCommentViewHolder.tvUserTimePosted.setVisibility(View.VISIBLE);
-                userCommentViewHolder.tvUserTimePosted.setText(FeedOfferingListAdapter.getTimeToDisplay(((FeedComment) feedDetailData.get(position)).getTimeCreated(), activity.isTimeAutomatic));
+                userCommentViewHolder.tvUserTimePosted.setText(FeedHomeAdapter.getTimeToDisplay(((FeedComment) feedDetailData.get(position)).getTimeCreated(), activity.isTimeAutomatic));
             }
 
             if (!TextUtils.isEmpty(feedComment.getUserImage()))
@@ -159,14 +161,37 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
 
         int position = recyclerView.getChildLayoutPosition(itemView);
 
-        switch (viewClicked.getId()) {
-            case R.id.view_action_like:
-                    callback.onLikeClick(position);
-                break;
-            case R.id.view_action_comment:
-                break;
-            default:
-                break;
+        if (position!=RecyclerView.NO_POSITION) {
+            switch (viewClicked.getId()) {
+                case R.id.view_action_like:
+                        callback.onLikeClick(null,position);
+                    break;
+                case R.id.view_action_comment:
+                    break;
+                case R.id.iv_place_image:
+                    if(feedDetailData.get(position) instanceof  FeedDetail)
+                    {
+                        FeedDetail feedDetail = (FeedDetail) feedDetailData.get(position);
+
+                        if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 0){
+                            //This means userimages are being displayed
+                            ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages = feedDetail.getReviewImages();
+                            FeedHomeAdapter.showZoomedPagerDialog(0, reviewImages, activity);
+                        }
+
+                        else if (!TextUtils.isEmpty(feedDetail.getRestaurantImage())) {
+                            //Open the restaurant in menus
+                            callback.onRestaurantClick(feedDetail.getRestaurantId());
+                            //THis means only one image is being displayed which is restaurant Image
+
+                        }
+                    }
+
+
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -194,13 +219,13 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
 
-    public interface Callback {
+    /*public interface Callback {
         void onLikeClick(int positionOfLayout);
 
         void onCommentClick(Object object);
 
         String getEditTextString();
-    }
+    }*/
 
 
 

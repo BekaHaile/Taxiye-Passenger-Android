@@ -302,6 +302,9 @@ public class HistoryResponse {
         @SerializedName("note")
         @Expose
         private String note;
+        @SerializedName("show_cancellation_reasons")
+        @Expose
+        private Integer showCancellationReasons;
 
         /**
          * @return The pickupAddress
@@ -1161,6 +1164,17 @@ public class HistoryResponse {
 
         public void setNote(String note) {
             this.note = note;
+        }
+
+        public Integer getShowCancellationReasons() {
+            if(showCancellationReasons == null){
+                showCancellationReasons = 0;
+            }
+            return showCancellationReasons;
+        }
+
+        public void setShowCancellationReasons(Integer showCancellationReasons) {
+            this.showCancellationReasons = showCancellationReasons;
         }
     }
 

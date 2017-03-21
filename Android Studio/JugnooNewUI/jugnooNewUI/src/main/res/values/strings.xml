@@ -12,7 +12,7 @@
     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>
     Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
+     <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -1582,7 +1582,7 @@
     <string name="feed">Feed</string>
     <string name="review">Review</string>
     <string name="ask">Ask</string>
-    <string name="review_at">Review @</string>
+    <string name="review_at">Review</string>
     <string name="share_your_experience">Share your experience…</string>
     <string name="enter_restaurant_name">Enter restaurant name</string>
     <string name="add_post">Add Post</string>
@@ -1591,5 +1591,10 @@
     <string name="contacts_synced_successfully">Contacts synced successfully</string>
     <string name="please_enter_something">Please enter text</string>
     <string name="label_location_feed">Location</string>
+    <string name="i_want_to_cancel_my_order_because">I want to cancel my Order because</string>
+    <string name="please_select_one_reason">Please select one reason</string>
+    <string name="error_feed_review_restaurant_not_selected">You need to select a restaurant to review</string>
+    <string name="write_a_comment">Write a comment...</string>
+    <string name="label_city">City</string>
 
 </resources>

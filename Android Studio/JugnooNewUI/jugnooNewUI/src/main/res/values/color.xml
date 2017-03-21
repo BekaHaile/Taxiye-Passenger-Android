@@ -329,7 +329,7 @@
   <color name="feed_grey_background">#eaeaea</color>
   <color name="feed_grey_background_light">#f7f7f7</color>
   <color name="feed_color_orange">#ff834e</color>
-
-
+    <color name="feed_color_like_active">#ef6692</color>
+    <color name="feed_disabled_grey">#f7f7f7</color>
 
 </resources>
