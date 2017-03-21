@@ -2047,38 +2047,33 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     && getProductsResponse().getCategories() != null) {
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
-                        // updating deliveryStoreCart subItem hashMap
-                        if(subItemHashMap.containsKey(subItem.getSubItemId())){
-                            subItem.setSubItemQuantitySelected(subItemHashMap.get(subItem.getSubItemId()).getSubItemQuantitySelected());
-                            if (subItem.getStock() < subItem.getSubItemQuantitySelected()) {
-                                subItem.setSubItemQuantitySelected(subItem.getStock());
-                            }
-                            if (subItem.getSubItemQuantitySelected() > 0) {
-                                subItemHashMap.put(subItem.getSubItemId(), subItem);
-                            } else {
-                                subItemHashMap.remove(subItem.getSubItemId());
-                            }
-                        }
+                        updateSubItemInListAndSaveInDB(subItemHashMap, subItem);
                     }
                 }
             } else if (subItems != null) {
                 for (SubItem subItem : subItems) {
-                    // updating deliveryStoreCart subItem hashMap
-                    if(subItemHashMap.containsKey(subItem.getSubItemId())){
-                        subItem.setSubItemQuantitySelected(subItemHashMap.get(subItem.getSubItemId()).getSubItemQuantitySelected());
-                        if (subItem.getStock() < subItem.getSubItemQuantitySelected()) {
-                            subItem.setSubItemQuantitySelected(subItem.getStock());
-                        }
-                        if (subItem.getSubItemQuantitySelected() > 0) {
-                            subItemHashMap.put(subItem.getSubItemId(), subItem);
-                        } else {
-                            subItemHashMap.remove(subItem.getSubItemId());
-                        }
-                    }
+                    updateSubItemInListAndSaveInDB(subItemHashMap, subItem);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void updateSubItemInListAndSaveInDB(HashMap<Integer, SubItem> subItemHashMap, SubItem subItem){
+        // updating deliveryStoreCart subItem hashMap
+        if(subItemHashMap.containsKey(subItem.getSubItemId())){
+            subItem.setSubItemQuantitySelected(subItemHashMap.get(subItem.getSubItemId()).getSubItemQuantitySelected());
+            if (subItem.getStock() < subItem.getSubItemQuantitySelected()) {
+                subItem.setSubItemQuantitySelected(subItem.getStock());
+            }
+            if (subItem.getSubItemQuantitySelected() > 0) {
+                subItemHashMap.put(subItem.getSubItemId(), subItem);
+            } else {
+                subItemHashMap.remove(subItem.getSubItemId());
+            }
+        } else {
+            subItem.setSubItemQuantitySelected(0);
         }
     }
 
