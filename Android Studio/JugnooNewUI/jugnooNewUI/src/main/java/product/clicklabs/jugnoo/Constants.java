@@ -650,4 +650,5 @@ public interface Constants {
     String KEY_VENDOR_ID = "vendor_id";
 
     String SP_VENDOR_ID = "sp_vendor_id";
+    String SP_SELECTED_VENDOR_ID = "sp_selected_vendor_id";
 }

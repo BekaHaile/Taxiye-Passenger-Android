@@ -2796,27 +2796,27 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         Set<Integer> keySet = getCart().getVendorCartHashMap().keySet();
         for(Integer vendorId : keySet){
             if(!vendorId.equals(getOpenedVendorId()) && getCart().getCartItems(vendorId).size() > 0){
-                DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
-                        getString(R.string.you_have_selected_cart_from_this_vendor, "Other"),
-                        getString(R.string.checkout),
-                        getString(R.string.change_store),
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                DeliveryStore deliveryStoreLast = getLastDeliveryStore();
-                                if(deliveryStoreLast != null){
-                                    setOpenedVendorIdName(deliveryStoreLast.getVendorId(), deliveryStoreLast);
-                                    setRefreshCart(true);
-                                    openCart(getAppType());
+                final DeliveryStore deliveryStoreLast = getLastDeliveryStore();
+                if(deliveryStoreLast != null) {
+                    DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+                            getString(R.string.you_have_selected_cart_from_this_vendor_clear_cart, deliveryStoreLast.getVendorName()),
+                            getString(R.string.clear_cart),
+                            getString(R.string.cancel),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (deliveryStoreLast != null) {
+                                        getCart().getSubItemHashMap(deliveryStoreLast.getVendorId()).clear();
+                                    }
                                 }
-                            }
-                        },
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                            },
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 //                                    TODO clear cart for previous selected activity.getCart().getDeliveryStoreCart(activity.getOpenedVendorId()).getSubItemHashMap().clear();
-                            }
-                        }, true, false);
+                                }
+                            }, true, false);
+                }
 
                 return false;
             }
@@ -3802,6 +3802,20 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         Paper.book().write(DB_PREVIOUS_VENDOR, deliveryStore);
     }
 
+    public Integer getLastCartVendorId(){
+        Set<Integer> keySet = getCart().getVendorCartHashMap().keySet();
+        for(Integer vendorId : keySet) {
+            if (getCart().getCartItems(vendorId).size() > 0) {
+                return vendorId;
+            }
+        }
+        int selectedVendorId = Prefs.with(this).getInt(Constants.SP_SELECTED_VENDOR_ID, -1);
+        if(selectedVendorId != -1){
+            Prefs.with(this).save(Constants.SP_SELECTED_VENDOR_ID, -1);
+            return selectedVendorId;
+        }
+        return 0;
+    }
 
 
     public void saveSubItemToDeliveryStoreCart(SubItem subItem){

@@ -15,9 +15,11 @@ import com.sabkuchfresh.adapters.DeliveryStoresAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryStore;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by ankit on 17/03/17.
@@ -98,6 +100,13 @@ public class DeliveryStoresFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            activity.fragmentUISetup(this);
+        }
+    }
 
     private void selectStore(int position, final DeliveryStore deliveryStore){
         for(int i=0; i<activity.getProductsResponse().getDeliveryStores().size(); i++){
@@ -106,6 +115,7 @@ public class DeliveryStoresFragment extends Fragment {
         activity.getProductsResponse().getDeliveryStores().get(position).setIsSelected(1);
         deliveryStoresAdapter.notifyDataSetChanged();
 
+        Prefs.with(activity).save(Constants.SP_SELECTED_VENDOR_ID, deliveryStore.getVendorId().intValue());
         activity.setOpenedVendorIdName(deliveryStore.getVendorId(), deliveryStore);
         activity.setRefreshCart(true);
         activity.performBackPressed(false);
