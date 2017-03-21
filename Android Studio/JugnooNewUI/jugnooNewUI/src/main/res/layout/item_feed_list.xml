@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:id="@+id/layout_user_activity_heading"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/spacing_normal"
@@ -21,6 +21,7 @@
             android:id="@+id/iv_user_profile_pic"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:visibility="gone"
             android:layout_marginRight="@dimen/spacing_small"
             android:src="@drawable/ic_fresh_item_placeholder" />
 
@@ -30,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/spacing_small"
             android:layout_toRightOf="@id/iv_user_profile_pic"
+            android:layout_marginBottom="@dimen/padding_2dp"
             android:text="@string/dummy_text_2"
             android:textColor="@color/feed_grey_text_heading"
             android:textSize="@dimen/font_large"
@@ -52,7 +54,7 @@
     </RelativeLayout>
 
     <View
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/divider_user_activity"
         android:layout_width="match_parent"
         android:layout_height="1dp"

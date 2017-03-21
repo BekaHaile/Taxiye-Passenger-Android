@@ -53,7 +53,9 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
     private RecyclerView rvRestaurantSuggestions;
     private RestaurantQuerySuggestionsAdapter suggestionsAdapter;
     private ArrayList<SuggestRestaurantQueryResp.Suggestion> suggestions;
-    private View disabledViewNoRestaurant;
+    private LinearLayout layoutContent;
+//    private View viewContentDisabled;
+
 
 
 
@@ -118,8 +120,8 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_child_feed_review, container, false);
         rootView.findViewById(R.id.layout_select_restaurant).setVisibility(View.VISIBLE);
-        disabledViewNoRestaurant=rootView.findViewById(R.id.disabled_view);
-        disabledViewNoRestaurant.setVisibility(View.VISIBLE);
+        layoutContent= (LinearLayout) rootView.findViewById(R.id.layout_share_experience);
+//        viewContentDisabled  = rootView.findViewById(R.id.view_content_disabled);
         activity = ((FreshActivity) getActivity());
         etContent = (EditText) rootView.findViewById(R.id.etContent);
         displayImagesRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view_photos);
@@ -188,6 +190,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
                 }
             }
         });
+        onRestaurantChanged(false);
         etContent.addTextChangedListener(editTextWacherContent);
         if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getFeedAddReviewHint())) {
             etContent.setHint(Data.getFeedData().getFeedAddReviewHint());
@@ -245,7 +248,8 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
             return false;
         }
 
-        return disabledViewNoRestaurant.getVisibility() != View.VISIBLE;
+        return   layoutContent.isEnabled();
+
 
     }
 
@@ -253,13 +257,13 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
 
     public void onRestaurantChanged(boolean isSelected){
         if(isSelected){
-            disabledViewNoRestaurant.setVisibility(View.GONE);
+            layoutContent.setEnabled(true);
             ratingBar.setEnabled(true);
             etContent.setEnabled(true);
             setCameraEnabled(true);
         }
         else {
-            disabledViewNoRestaurant.setVisibility(View.VISIBLE);
+            layoutContent.setEnabled(false);
             ratingBar.setEnabled(false);
             etContent.setEnabled(false);
             setCameraEnabled(false);
@@ -283,7 +287,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
 
     @Override
     public boolean cameraEnableState() {
-        return disabledViewNoRestaurant.getVisibility() == View.GONE ;
+        return  layoutContent.isEnabled() ;
 
     }
 

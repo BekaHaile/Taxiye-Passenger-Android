@@ -12,9 +12,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
 
         <View
@@ -24,8 +22,8 @@
             android:background="@color/dull_line" />
 
         <RelativeLayout
-            android:layout_below="@id/line_nested_top"
             android:visibility="gone"
+            android:layout_below="@id/line_nested_top"
             android:id="@+id/layout_select_restaurant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -142,66 +140,72 @@
 
 
 
-
-        <View
-            android:id="@+id/line_below_restaurant"
-            android:layout_below="@id/layout_select_restaurant"
+         <LinearLayout
+            android:id="@+id/layout_share_experience"
+            android:orientation="vertical"
+             android:background="@drawable/background_layout_share_experience"
+             android:layout_below="@id/layout_select_restaurant"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/dull_line" />
+            android:layout_height="match_parent">
 
 
-        <View
-            android:id="@+id/disabled_view"
-            android:visibility="gone"
-            android:background="@color/feed_disabled_grey"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/line_below_restaurant" />
-
-        <EditText
-            android:layout_below="@id/line_below_restaurant"
-            android:id="@+id/etContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/rating_bar_add_post"
-            android:background="@null"
-            android:gravity="left"
-            android:hint="@string/share_your_experience"
-            android:inputType="textCapSentences|textMultiLine"
-            android:maxLength="500"
-            android:padding="20dp"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color_hint"
-            android:textCursorDrawable="@drawable/cursor_black"
-            android:textSize="@dimen/sp_14"
-            app:font="maven" />
-
-        <com.sabkuchfresh.utils.RatingBarMenuFeedback
-            android:id="@id/rating_bar_add_post"
-            android:layout_above="@+id/recycler_view_photos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:halfStars="false"
-            app:maxStars="5"
-            android:layout_centerHorizontal="true"
-            app:onlyForDisplay="false"
-            android:visibility="gone"
-            app:starOff="@drawable/ic_menu_feedback_star_off"
-            app:starOn="@drawable/ic_menu_feedback_star_on" />
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_alignParentBottom="true"
-            android:id="@id/recycler_view_photos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <View
+                android:id="@+id/line_below_restaurant"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dull_line" />
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/dull_line" />
+
+            <EditText
+                android:id="@+id/etContent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="100dp"
+                android:background="@null"
+                android:gravity="left"
+                android:hint="@string/share_your_experience"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLength="500"
+                android:paddingLeft="@dimen/spacing_large"
+                android:paddingRight="@dimen/spacing_large"
+                android:paddingTop="@dimen/spacing_small"
+                android:paddingBottom="@dimen/spacing_tiny"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/text_color_hint"
+                android:textCursorDrawable="@drawable/cursor_black"
+                android:textSize="@dimen/sp_14"
+                app:font="maven" />
+
+            <com.sabkuchfresh.utils.RatingBarMenuFeedback
+                android:id="@+id/rating_bar_add_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:halfStars="false"
+                app:maxStars="5"
+                app:onlyForDisplay="false"
+                android:visibility="gone"
+                app:starOff="@drawable/ic_menu_feedback_star_off"
+                app:starOn="@drawable/ic_menu_feedback_star_on" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_photos"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dull_line" />
+
+
+        </LinearLayout>
+
+
 
 
     </RelativeLayout>

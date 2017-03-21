@@ -55,7 +55,7 @@
             android:id="@+id/edt_my_comment"
             android:paddingLeft="@dimen/spacing_normal"
             android:paddingRight="@dimen/spacing_small"
-            app:font="@string/maven_r"
+            app:font="maven"
             android:paddingTop="@dimen/spacing_normal"
             android:paddingBottom="@dimen/spacing_normal"
             android:textSize="@dimen/font_medium"
@@ -97,13 +97,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Post"
-            android:paddingLeft="@dimen/spacing_normal"
-            android:paddingRight="@dimen/spacing_normal"
+            android:paddingLeft="@dimen/spacing_large"
+            android:paddingRight="@dimen/spacing_large"
             android:paddingBottom="@dimen/spacing_extra_tiny"
             android:textAllCaps="false"
             android:textColor="@color/text_color_selector"
-            android:textSize="@dimen/font_large"
-            app:font="@string/maven_r"/>
+            android:textSize="@dimen/font_extra_large"
+            app:font="maven"/>
 
 
 

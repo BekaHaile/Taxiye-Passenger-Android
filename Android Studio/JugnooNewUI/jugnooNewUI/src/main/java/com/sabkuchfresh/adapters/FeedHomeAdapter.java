@@ -155,7 +155,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 case COMMENT_ON_REVIEW:
                 case LIKE_ON_REVIEW:
                 case REVIEW:
-                    if (feedDetail.getFeedType() != REVIEW) {
+                    if (feedDetail.getFeedType() != REVIEW && !TextUtils.isEmpty(feedDetail.getUserName()) &&!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         showUserActivity = true;
                         userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s review.");
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -181,7 +181,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         rating = feedDetail.getStarCount();
 
 
-                    if (!TextUtils.isEmpty(feedDetail.getOwnerName())) {
+                    if (!TextUtils.isEmpty(feedDetail.getOwnerName()) && !TextUtils.isEmpty(feedDetail.getRestaurantName())) {
                         String actualTitle = feedDetail.getOwnerName() + REVIEW.getValue() + feedDetail.getRestaurantName() + ".";
                         title = new SpannableString(actualTitle);
                         title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -277,8 +277,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.layoutUserActivity.setVisibility(View.VISIBLE);
             holder.dividerUserActivity.setVisibility(View.VISIBLE);
             holder.tvUserActivityTitle.setText(userActivityTitle);
-            if (userImage != null)
-                Picasso.with(activity).load(userImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivUserProfilePic);
+           /* if (userImage != null)
+                Picasso.with(activity).load(userImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivUserProfilePic);*/
 
         } else {
             holder.layoutUserActivity.setVisibility(View.GONE);
