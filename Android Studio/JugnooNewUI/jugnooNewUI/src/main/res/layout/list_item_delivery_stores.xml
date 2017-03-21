@@ -57,6 +57,7 @@
                 android:layout_marginTop="@dimen/dp_6"
                 android:gravity="center_vertical"
                 android:drawablePadding="@dimen/dp_2"
+                android:visibility="gone"
                 android:drawableLeft="@drawable/ic_delivery_time"
                 app:font="@string/maven_r"/>
 
@@ -67,7 +68,7 @@
                 android:text="@string/number_items_in_cart"
                 android:textSize="@dimen/sp_12"
                 android:textColor="@color/text_color"
-                android:layout_marginTop="@dimen/dp_4"
+                android:layout_marginTop="@dimen/dp_6"
                 android:gravity="center_vertical"
                 android:drawablePadding="@dimen/dp_2"
                 android:drawableLeft="@drawable/ic_delivery_store_cart"

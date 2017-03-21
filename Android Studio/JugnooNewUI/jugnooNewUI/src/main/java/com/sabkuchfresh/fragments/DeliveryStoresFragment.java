@@ -16,6 +16,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryStore;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 
@@ -71,7 +72,7 @@ public class DeliveryStoresFragment extends Fragment {
                         && activity.getCart().getCartItems(activity.getOpenedVendorId()).size() > 0) {
                     DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
                             activity.getString(R.string.you_have_selected_cart_from_this_vendor, activity.getOpenedVendorName()),
-                            activity.getString(R.string.continue_to_checkout),
+                            activity.getString(R.string.checkout),
                             activity.getString(R.string.change_store),
                             new View.OnClickListener() {
                                 @Override
@@ -91,6 +92,7 @@ public class DeliveryStoresFragment extends Fragment {
                 }
             }
         });
+
 
         rvDeliveryStores.setAdapter(deliveryStoresAdapter);
 
