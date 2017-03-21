@@ -71,7 +71,7 @@ public class DeliveryStoresFragment extends Fragment {
                         && !deliveryStore.getVendorId().equals(activity.getOpenedVendorId())
                         && activity.getCart().getCartItems(activity.getOpenedVendorId()).size() > 0) {
                     DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-                            activity.getString(R.string.you_have_selected_cart_from_this_vendor, activity.getOpenedVendorName()),
+                            activity.getString(R.string.you_have_selected_cart_from_this_vendor, activity.getOpenedDeliveryStore().getVendorName()),
                             activity.getString(R.string.checkout),
                             activity.getString(R.string.change_store),
                             new View.OnClickListener() {
@@ -107,7 +107,7 @@ public class DeliveryStoresFragment extends Fragment {
         activity.getProductsResponse().getDeliveryStores().get(position).setIsSelected(1);
         deliveryStoresAdapter.notifyDataSetChanged();
 
-        activity.setOpenedVendorIdName(deliveryStore.getVendorId(), deliveryStore.getVendorName());
+        activity.setOpenedVendorIdName(deliveryStore.getVendorId(), deliveryStore);
         activity.setRefreshCart(true);
         activity.performBackPressed(false);
     }

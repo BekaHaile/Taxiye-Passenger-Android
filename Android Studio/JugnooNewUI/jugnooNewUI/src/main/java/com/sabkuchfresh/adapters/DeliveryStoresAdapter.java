@@ -52,13 +52,17 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
     public void onBindViewHolder(DeliveryStoresAdapter.ViewHolderSlot mHolder, int position) {
         try {
             DeliveryStore store = stores.get(position);
-            double rating = 4.3d;
-            activity.setRatingAndGetColor(mHolder.tvRating, rating, "#8dd061", true);
+            /*double rating = 4.3d;
+            activity.setRatingAndGetColor(mHolder.tvRating, rating, "#8dd061", true);*/
             Log.d("position", "position = "+(position));
 
             mHolder.tvStoreName.setText(store.getVendorName());
-            mHolder.tvDeliveryCharges.setText(activity.getString(R.string.delivery_charges_with_value, Utils.getMoneyDecimalFormat().format(store.getDeliveryCharges())));
-            mHolder.tvMinOrder.setText(activity.getString(R.string.minimum_order_with_value, Utils.getMoneyDecimalFormat().format(store.getMinDeliveryCharges())));
+            if(store.getMinAmount() > 0) {
+                mHolder.tvDeliveryCharges.setText(activity.getString(R.string.delivery_charges_with_value,
+                        Utils.getMoneyDecimalFormat().format(store.getDeliveryCharges())));
+            } else{
+                mHolder.tvDeliveryCharges.setText(activity.getString(R.string.free_delivery));
+            }
             int numberItems = activity.getCart().getCartItems(store.getVendorId()).size();
             if(numberItems == 1){
                 mHolder.tvCartItem.setText(activity.getString(R.string.one_item_in_cart));

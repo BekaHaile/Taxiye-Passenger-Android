@@ -98,6 +98,7 @@ import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
+import com.sabkuchfresh.retrofit.model.DeliveryStore;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -1383,9 +1384,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     if (Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
                         textViewMinOrderVis = View.VISIBLE;
                         textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
-                    } else if (totalQuantity > 0 && totalPrice < getSuperCategoriesData().getDeliveryInfo().getMinAmount()) {
+                    } else if (totalQuantity > 0 && totalPrice < getOpenedDeliveryStore().getMinAmount()) {
                         textViewMinOrderVis = View.VISIBLE;
-                        double leftAmount = getSuperCategoriesData().getDeliveryInfo().getMinAmount() - totalPrice;
+                        double leftAmount = getOpenedDeliveryStore().getMinAmount() - totalPrice;
                         textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
                                 Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
                     } else {
@@ -3740,20 +3741,20 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
 
     private Integer openedVendorId;
-    private String openedVendorName;
+    private DeliveryStore openedDeliveryStore;
     public Integer getOpenedVendorId(){
         if(openedVendorId == null){
             openedVendorId = Prefs.with(this).getInt(Constants.SP_VENDOR_ID, 0);
         }
         return openedVendorId;
     }
-    public void setOpenedVendorIdName(Integer vendorId, String vendorName){
+    public void setOpenedVendorIdName(Integer vendorId, DeliveryStore deliveryStore){
         openedVendorId = vendorId;
-        openedVendorName = vendorName;
+        openedDeliveryStore = deliveryStore;
         Prefs.with(this).save(Constants.SP_VENDOR_ID, vendorId.intValue());
     }
-    public String getOpenedVendorName(){
-        return openedVendorName;
+    public DeliveryStore getOpenedDeliveryStore(){
+        return openedDeliveryStore;
     }
 
 
