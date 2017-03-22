@@ -133,7 +133,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             }
         });
         rvFreshSuper.setLayoutManager(gridLayoutManager);
-        adapter = new FreshSuperCategoriesAdapter(activity, new FreshSuperCategoriesAdapter.Callback() {
+        adapter = new FreshSuperCategoriesAdapter(activity, mResources, new FreshSuperCategoriesAdapter.Callback() {
             @Override
             public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
                 if(superCategory.getIsEnabled() == 0){
@@ -222,6 +222,8 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
                 params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
                 params.put(Constants.INTERATED, "1");
+
+                params.put(Constants.STORE_ID, String.valueOf(activity.getLastCartVendorId()));
 
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getFreshApiService().getSuperCategories(params, new Callback<SuperCategoriesData>() {

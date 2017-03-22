@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
 
             <Button
@@ -64,18 +64,31 @@
         android:id="@+id/linearLayoutNoNet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutLoginSignupButtons"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/px_130"
+        android:layout_marginTop="@dimen/px_0"
         android:orientation="vertical"
+        android:layout_centerInParent="true"
         android:splitMotionEvents="false"
         android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageViewJugnooLogo"
+            android:layout_width="300px"
+            android:layout_height="316px"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/logo_big"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:tag="mhar"
+            android:visibility="visible" />
 
         <ImageView
             android:layout_width="128px"
             android:layout_height="126px"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/no_internet_icon"
+            android:layout_marginTop="@dimen/px_120"
             android:tag="mwar" />
 
         <TextView
