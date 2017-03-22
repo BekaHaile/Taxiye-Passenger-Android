@@ -62,6 +62,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -163,7 +164,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		viewPager.setAdapter(freshCategoryFragmentsAdapter);
 		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
 		ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
-        rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore); rlSelectedStore.setEnabled(false);
+        rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore);
 		rlSelectedStore.setVisibility(View.VISIBLE);
         tvStoreName = (TextView) rootView.findViewById(R.id.tvStoreName);
         ivEditStore = (ImageView) rootView.findViewById(R.id.ivEditStore);
@@ -252,7 +253,13 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         rlSelectedStore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.getTransactionUtils().openDeliveryStoresFragment(activity, activity.getRelativeLayoutContainer());
+                if(activity.getProductsResponse().getDeliveryStores() != null
+                        && activity.getProductsResponse().getDeliveryStores().size() > 1){
+                    activity.getTransactionUtils().openDeliveryStoresFragment(activity, activity.getRelativeLayoutContainer());
+                } else{
+                    Utils.showToast(activity, activity.getString(R.string.no_other_store_available));
+                }
+
             }
         });
 
@@ -408,10 +415,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                         if(activity.getProductsResponse().getDeliveryStores() != null
                                                 && activity.getProductsResponse().getDeliveryStores().size() > 1){
                                             ivEditStore.setVisibility(View.VISIBLE);
-                                            rlSelectedStore.setEnabled(true);
                                         } else{
                                             ivEditStore.setVisibility(View.GONE);
-											rlSelectedStore.setEnabled(false);
                                         }
                                         if(loader) {
                                             freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());

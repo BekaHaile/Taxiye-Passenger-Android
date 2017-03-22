@@ -148,10 +148,8 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 
 			if (superCategory.getIsEnabled() == 0) {
 				holder.viewBG.setBackgroundResource(R.drawable.bg_white_60_selector_color);
-				holder.llRoot.setEnabled(false);
 			} else {
 				holder.viewBG.setBackgroundResource(R.drawable.bg_transparent_white_60_selector);
-				holder.llRoot.setEnabled(true);
 			}
 		} else if(mholder instanceof ViewHolderCategorySingle) {
 			ViewHolderCategorySingle singleHolder = ((ViewHolderCategorySingle) mholder);
@@ -196,7 +194,8 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 	@Override
 	public int getItemViewType(int position) {
 		if(position == 0 && isSingleItem) {
-			return SINGLE_ITEM;
+//			return SINGLE_ITEM;
+			return MAIN_ITEM;
 		} else {
 			return MAIN_ITEM;
 		}
