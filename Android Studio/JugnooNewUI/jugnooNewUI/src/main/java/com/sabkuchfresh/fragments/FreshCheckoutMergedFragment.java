@@ -83,8 +83,10 @@ import com.squareup.otto.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 
@@ -1303,7 +1305,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
                 chargeDetails.put(CITY, Data.userData.getCity());
 
-                HashMap<String, String> params = new HashMap<>();
+                final HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
@@ -1416,6 +1418,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             }, 3000);
                                     } else {
                                         orderPlacedSuccess(placeOrderResponse);
+                                        fbPurchasedEvent(params, placeOrderResponse);
                                     }
                                 } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
                                     setSlideInitial();
@@ -1552,6 +1555,33 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             e.printStackTrace();
         }
         buttonPlaceOrder.setEnabled(true);
+    }
+
+    private void fbPurchasedEvent(HashMap<String, String> params, PlaceOrderResponse placeOrderResponse) {
+        try {
+            Bundle bundle = new Bundle();
+            for(String key : params.keySet()){
+				bundle.putString(key, params.get(key));
+			}
+            bundle.putString("order_id", String.valueOf(placeOrderResponse.getOrderId()));
+            bundle.putString("amount", String.valueOf(placeOrderResponse.getAmount()));
+
+            if (type == AppConstant.ApplicationType.MENUS){
+				bundle.putString("product_type", "Menus");
+			} else if (type ==AppConstant.ApplicationType.MEALS){
+				bundle.putString("product_type", "Meals");
+			} else if (type == AppConstant.ApplicationType.FRESH) {
+				bundle.putString("product_type", "Fresh");
+			}
+
+            MyApplication.getInstance().getAppEventsLogger().logPurchase(
+					BigDecimal.valueOf(placeOrderResponse.getAmount()),
+					Currency.getInstance("INR"),
+					bundle
+			);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void retryDialog(DialogErrorType dialogErrorType, final int apiHit) {

@@ -491,5 +491,13 @@ public class MyApplication extends Application {
 		return false;
 	}
 
+	private AppEventsLogger appEventsLogger;
+	public AppEventsLogger getAppEventsLogger(){
+		if(appEventsLogger == null){
+			appEventsLogger = AppEventsLogger.newLogger(this);
+		}
+		return appEventsLogger;
+	}
+
 
 }

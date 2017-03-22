@@ -26,7 +26,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -193,7 +192,6 @@ import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
-import product.clicklabs.jugnoo.tutorials.SignUpTutorial;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -7025,6 +7023,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     executionTime = serverRequestStartTime + elapsedTime;
                                                 }
                                                 if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
+                                                    fbLogEvent(nameValuePairs);
+
                                                     // Ride Requested
                                                     // Google Android in-app conversion tracking snippet
                                                     // Add this code to the event you'd like to track in your app.
@@ -7198,6 +7198,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
         });
+    }
+
+    private void fbLogEvent(HashMap<String, String> params) {
+        try {
+            Bundle bundle = new Bundle();
+            for(String key : params.keySet()){
+                bundle.putString(key, params.get(key));
+            }
+
+            MyApplication.getInstance().getAppEventsLogger().logEvent("request_ride",
+                    bundle
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
