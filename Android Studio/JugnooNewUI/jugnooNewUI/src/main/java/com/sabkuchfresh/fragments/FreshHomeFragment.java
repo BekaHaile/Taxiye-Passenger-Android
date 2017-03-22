@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.CustomPagerAdapter;
 import com.sabkuchfresh.adapters.FreshSuperCategoriesAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -84,9 +85,9 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
 
-        for(int j=0; j<3; j++) {
+        /*for(int j=0; j<3; j++) {
             mResources.add("https://visitorinvictoria.ca/wp-content/uploads/2017/03/groceries.jpg");
-        }
+        }*/
       /*  scrollView = (NestedScrollView) rootView.findViewById (R.id.nest_scrollview);
         scrollView.setFillViewport (true);*/
 //        mImageViewPager = (ViewPager) rootView.findViewById(R.id.pager);
@@ -125,6 +126,8 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 switch (adapter.getItemViewType(position)){
                     case FreshSuperCategoriesAdapter.SINGLE_ITEM:
                         return 2;
+                    case FreshSuperCategoriesAdapter.PAGER:
+                        return 3;
                     case FreshSuperCategoriesAdapter.MAIN_ITEM:
                         return 1;
                     default:
@@ -334,45 +337,5 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         getSuperCategoriesAPI(false);
     }
 
-    class CustomPagerAdapter extends PagerAdapter {
 
-        Context mContext;
-        LayoutInflater mLayoutInflater;
-
-        public CustomPagerAdapter(Context context) {
-            mContext = context;
-            mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public int getCount() {
-            return mResources.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == ((LinearLayout) object);
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            View itemView = mLayoutInflater.inflate(R.layout.item_pager_promo, container, false);
-
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.ivPromo);
-            Picasso.with(mContext).load(mResources.get(position))
-                    .placeholder(R.drawable.ic_fresh_new_placeholder)
-                    .error(R.drawable.ic_fresh_new_placeholder)
-                    .fit()
-                    .into(imageView);
-
-            container.addView(itemView);
-
-            return itemView;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((LinearLayout) object);
-        }
-    }
 }

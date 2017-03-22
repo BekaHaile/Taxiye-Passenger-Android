@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.fragments.FreshHomeFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.squareup.picasso.Picasso;
 
@@ -38,6 +39,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 	public static final int MAIN_ITEM = 1;
 	public static final int SINGLE_ITEM = 0;
 	public static final int PAGER = 2;
+	private CustomPagerAdapter mCustomPagerAdapter;
 
 	public FreshSuperCategoriesAdapter(Context context, ArrayList<String> offerList, Callback callback){
 		this.context = context;
@@ -138,8 +140,11 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder mholder, int position) {
-		SuperCategoriesData.SuperCategory superCategory = superCategories.get(position);
 		if(mholder instanceof ViewHolderCategory) {
+			if(offerList.size() > 0){
+				position--;
+			}
+			SuperCategoriesData.SuperCategory superCategory = superCategories.get(position);
 			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
 			holder.tvSuperCategoryName.setText(superCategory.getSuperCategoryName());
 			holder.llRoot.setTag(position);
@@ -177,6 +182,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 				holder.viewBG.setBackgroundResource(R.drawable.bg_transparent_white_60_selector);
 			}
 		} else if(mholder instanceof ViewHolderCategorySingle) {
+			SuperCategoriesData.SuperCategory superCategory = superCategories.get(position);
 			ViewHolderCategorySingle singleHolder = ((ViewHolderCategorySingle) mholder);
 			singleHolder.tvSuperCategoryName.setText(superCategory.getSuperCategoryName());
 			singleHolder.llRoot.setTag(position);
@@ -208,7 +214,17 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 						.into(singleHolder.ivSuperCategoryImage);
 			}
 		} else if(mholder instanceof ViewHolderPager){
+			ViewHolderPager pagerHolder = ((ViewHolderPager) mholder);
+			pagerHolder.tabDots.setupWithViewPager(pagerHolder.pager, true);
+        	mCustomPagerAdapter = new CustomPagerAdapter(context, offerList);
+			pagerHolder.pager.setAdapter(mCustomPagerAdapter);
 
+			for(int i=0; i < pagerHolder.tabDots.getTabCount(); i++) {
+            View tab = ((ViewGroup) pagerHolder.tabDots.getChildAt(0)).getChildAt(i);
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+            p.setMargins(20, 0, 0, 0);
+            tab.requestLayout();
+        }
 		}
 
 
@@ -216,7 +232,13 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 
 	@Override
 	public int getItemCount() {
-		return superCategories == null ? 0 : superCategories.size();
+		if(superCategories == null){
+			return 0;
+		} else if(offerList.size() > 0){
+			return superCategories.size()+1;
+		} else{
+			return superCategories.size();
+		}
 	}
 
 	@Override
@@ -225,9 +247,9 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 //			return SINGLE_ITEM;
 			return MAIN_ITEM;
 		}
-//		else if(position == 0 && offerList.size() > 0){
-//			return PAGER;
-//		}
+		else if(position == 0 && offerList.size() > 0){
+			return PAGER;
+		}
 		else{
 			return MAIN_ITEM;
 		}
