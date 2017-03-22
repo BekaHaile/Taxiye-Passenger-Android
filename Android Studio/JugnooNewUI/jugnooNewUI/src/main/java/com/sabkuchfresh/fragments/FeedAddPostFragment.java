@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.MultipartTypedOutput;
@@ -100,8 +101,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
 
                 switchAddFeed(position);
-                ivAccessCamera.setEnabled(getVisibleFragment().cameraEnableState());
-                btnSubmit.setEnabled(getVisibleFragment().submitEnabledState());
+//                ivAccessCamera.setEnabled(getVisibleFragment().canUploadImages());
+                btnSubmit.setActivated(getVisibleFragment().submitEnabledState());
             }
 
             @Override
@@ -126,6 +127,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 if (getVisibleFragment().canSubmit()) {
+                    Utils.hideKeyboard(activity);
                     PostReviewAPIData postReviewAPIData = getVisibleFragment().getSubmitAPIData();
                     postFeedAPI(postReviewAPIData.getContent(), postReviewAPIData.getImagesSelected(), postReviewAPIData.getRestaurantId(), postReviewAPIData.getScore());
 
@@ -393,7 +395,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
     public void setSubmitEnabled(boolean isEnable) {
         if (getView() != null && btnSubmit != null) {
-            btnSubmit.setEnabled(isEnable);
+            btnSubmit.setActivated(isEnable);
         }
     }
 

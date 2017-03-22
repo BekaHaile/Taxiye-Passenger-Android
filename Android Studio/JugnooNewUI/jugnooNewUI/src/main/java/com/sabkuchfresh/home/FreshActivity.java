@@ -1643,6 +1643,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public void performBackPressed(boolean isBackPressed) {
 
+
+
+
         if (isBackPressed) {
             if (getTopFragment() instanceof MealAddonItemsFragment) {
                 GAUtils.event(getGaCategory(), ADD_ONS, BACK + BUTTON + CLICKED);

@@ -2,6 +2,7 @@ package com.sabkuchfresh.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -38,8 +39,7 @@ public class FeedChildAskFragment extends ImageSelectFragment {
         etContent.addTextChangedListener(editTextWacherContent);
         displayImagesRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view_photos);
         scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
-        setCameraEnabled(true);
-        setSubmitEnabled(false);
+        setSubmitActivated(false);
         return rootView;
 
 
@@ -77,7 +77,7 @@ public class FeedChildAskFragment extends ImageSelectFragment {
     }
 
     @Override
-    public boolean cameraEnableState() {
+    public boolean canUploadImages() {
         return true;
 
     }

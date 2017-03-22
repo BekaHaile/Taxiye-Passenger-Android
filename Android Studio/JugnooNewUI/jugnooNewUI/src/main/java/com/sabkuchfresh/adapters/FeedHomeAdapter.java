@@ -266,8 +266,12 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         //Set Likes and Comments
         String likesCommentString = formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount(), activity);
-        holder.tvLikeCommentStatus.setText(likesCommentString);
-        holder.tvLikeCommentStatus.setVisibility(likesCommentString==null?View.GONE:View.VISIBLE);
+
+        holder.tvLikeStatus.setText(String.valueOf(feedDetail.getLikeCount()));
+        holder.tvLikeStatus.setVisibility(feedDetail.getLikeCount()>0?View.VISIBLE:View.INVISIBLE);
+        String commentSuffix = feedDetail.getCommentCount() > 1 ? " Comments" : " Comment";
+        holder.tvCommentStatus.setText(feedDetail.getCommentCount()+commentSuffix);
+        holder.tvCommentStatus.setVisibility(feedDetail.getCommentCount()>0?View.VISIBLE:View.INVISIBLE);
 
         //Set Content
         holder.tvFeedDescription.setText(feedDetail.getContent());
@@ -395,10 +399,12 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             diffC = diffT / (60 * 1000) % 60;
             if (diffC >= 1) return diffC + "m";
             diffC = diffT / 1000 % 60;
-            if (diffC >= 0)
+
+            return " Just now";
+           /* if (diffC >= 0)
                 return diffC + "s";
             else
-                return 0 + "s";
+                return 0 + "s";*/
 
         } else {
             return " " + DateParser.getLocalDateString(createdAtTime);
@@ -487,8 +493,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView tvFeedDescription;
         @Bind(R.id.iv_place_image)
         ImageView ivPlaceImage;
-        @Bind(R.id.tv_like_comment_status)
-        TextView tvLikeCommentStatus;
+        @Bind(R.id.tv_like_status)
+        TextView tvLikeStatus;
+        @Bind(R.id.tv_comment_status)
+        TextView tvCommentStatus;
         @Bind(R.id.tv_action_comment)
         TextView tvComment;
         @Bind(R.id.tv_action_like)

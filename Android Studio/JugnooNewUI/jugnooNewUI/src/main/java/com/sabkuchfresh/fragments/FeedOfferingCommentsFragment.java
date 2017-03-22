@@ -12,6 +12,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -57,6 +59,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
     private LikeFeed likeFeed;
     private int positionInOriginalList;
     private EditText edtMyComment;
+    private RecyclerView recyclerView;
 
 
     public FeedOfferingCommentsFragment() {
@@ -104,7 +107,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
         textViewCharCount= (TextView) rootView.findViewById(R.id.tvCharCount);
         edtMyComment = (EditText) rootView.findViewById(R.id.edt_my_comment);
         edtMyComment.addTextChangedListener(submitTextWatcher);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed_detail);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         feedOfferingCommentsAdapter = new FeedOfferingCommentsAdapter(getActivity(), null, recyclerView, new FeedHomeAdapter.FeedPostCallback() {
             @Override
@@ -126,7 +129,8 @@ public class FeedOfferingCommentsFragment extends Fragment {
 
             @Override
             public void onCommentClick(FeedDetail postId, int position) {
-
+                edtMyComment.requestFocus();
+                Utils.showKeyboard(activity,edtMyComment);
             }
 
             @Override
@@ -157,6 +161,10 @@ public class FeedOfferingCommentsFragment extends Fragment {
     }
 
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {

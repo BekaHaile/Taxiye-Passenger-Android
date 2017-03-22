@@ -167,6 +167,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
                         callback.onLikeClick(null,position);
                     break;
                 case R.id.view_action_comment:
+                        callback.onCommentClick(null,position);
                     break;
                 case R.id.iv_place_image:
                     if(feedDetailData.get(position) instanceof  FeedDetail)

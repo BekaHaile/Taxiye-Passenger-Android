@@ -8,14 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.PermissionChecker;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -142,6 +140,11 @@ public abstract class ImageSelectFragment extends Fragment {
 
     public void onAddImageClick() {
 
+
+
+        if(!canUploadImages())
+            return;
+
         if(imageSelected!=null && imageSelected.size()>=maxNoImages) {
             Toast.makeText(activity, "Cannot upload more images", Toast.LENGTH_SHORT).show();
             return;
@@ -206,7 +209,7 @@ public abstract class ImageSelectFragment extends Fragment {
 
     protected abstract Integer getScore();
 
-    public void setSubmitEnabled(boolean isEnabled){
+    public void setSubmitActivated(boolean isEnabled){
         if(  activity.getFeedAddPostFragment()!=null && activity.getFeedAddPostFragment().getView()!=null){
 
              activity.getFeedAddPostFragment().setSubmitEnabled(isEnabled);
@@ -224,7 +227,7 @@ public abstract class ImageSelectFragment extends Fragment {
 
     }
 
-   public abstract boolean cameraEnableState();
+   public abstract boolean canUploadImages();
 
     TextWatcher editTextWacherContent = new TextWatcher() {
         @Override
@@ -239,7 +242,7 @@ public abstract class ImageSelectFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable s) {
-            setSubmitEnabled(s.toString().trim().length()>0);
+            setSubmitActivated(s.toString().trim().length()>0);
 
         }
     };
