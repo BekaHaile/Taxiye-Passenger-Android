@@ -281,6 +281,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
                                     if(activity.getFeedHomeFragment()!=null) {
                                         //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
                                         activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
+                                        recyclerView.smoothScrollToPosition(feedOfferingCommentsAdapter.getItemCount()-1);
                                     }
 
                                 } else {

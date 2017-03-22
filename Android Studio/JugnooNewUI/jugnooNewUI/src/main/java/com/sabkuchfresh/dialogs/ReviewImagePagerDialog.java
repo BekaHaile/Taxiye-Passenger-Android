@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.DirectionsGestureListener;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 2/19/17.
@@ -189,10 +191,13 @@ public class ReviewImagePagerDialog extends DialogFragment {
 				}
 			});
 
-			Picasso.with(context).load(reviewImages.get(position).getUrl())
+
+
+			Glide.with(activity).load(reviewImages.get(position).getUrl()).centerCrop().into(ivReviewImage);
+			/*Picasso.with(context).load(reviewImages.get(position).getUrl())
 					.placeholder(R.drawable.ic_fresh_new_placeholder)
 					.into(ivReviewImage);
-
+*/
 			container.addView(ivReviewImage);
 			return ivReviewImage;
 		}

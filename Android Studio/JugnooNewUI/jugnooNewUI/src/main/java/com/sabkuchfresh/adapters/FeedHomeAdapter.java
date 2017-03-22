@@ -21,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -243,7 +245,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         //SetImageUrl
         holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.VISIBLE);
         if (imageUrl != null)
-            Picasso.with(activity).load(imageUrl).resize(Utils.convertDpToPx(activity, 310), Utils.convertDpToPx(activity, 110)).centerCrop().transform(new RoundedCornersTransformation(Utils.convertDpToPx(activity, 6), 0)).into(holder.ivPlaceImage);
+            Glide.with(activity).load(imageUrl).override(Utils.convertDpToPx(activity, 310), Utils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
         else
             holder.ivPlaceImage.setImageResource(R.drawable.placeholder_img);
 
