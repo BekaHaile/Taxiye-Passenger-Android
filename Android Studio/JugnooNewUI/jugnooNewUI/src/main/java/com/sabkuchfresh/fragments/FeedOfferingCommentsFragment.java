@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -148,7 +149,9 @@ public class FeedOfferingCommentsFragment extends Fragment {
                     commentOnFeed(commentAdded.trim());
             }
         });
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);;
         recyclerView.setAdapter(feedOfferingCommentsAdapter);
+
         fetchFeedDetail();
         return rootView;
     }

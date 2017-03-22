@@ -118,7 +118,7 @@
 
 
 
-    <android.support.v4.view.ViewPager
+    <com.sabkuchfresh.utils.NonSwipeAbleViewPager
         android:id="@+id/view_pager"
         android:layout_above="@+id/rlSubmit"
         android:layout_below="@id/llTabs"
@@ -360,7 +360,7 @@
             android:background="@null"
             android:text="Submit"
             android:textAllCaps="false"
-            android:textColor="@color/text_color_theme_alpha_selector"
+            android:textColor="@drawable/text_color_submit_add_post"
             android:textSize="@dimen/sp_15"
             app:font="maven" />
 
