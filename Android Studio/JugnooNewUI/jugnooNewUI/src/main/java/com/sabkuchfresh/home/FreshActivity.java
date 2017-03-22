@@ -1212,6 +1212,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             } else if (fragment instanceof FeedHomeFragment) {
+                topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
@@ -1225,6 +1226,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 setMinOrderAmountText(fragment);
             }
             else if(fragment instanceof FeedOfferingCommentsFragment){
+                topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
@@ -1371,6 +1373,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             } else if (fragment instanceof VendorMenuFragment || fragment instanceof MenusSearchFragment) {
                 int textViewMinOrderVis = View.GONE;
                 if (getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
+                    if(totalQuantity > 0){
                     if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrderVis = View.VISIBLE;
                         textViewMinOrder.setText(getString(R.string.minimum_order) + " "
@@ -1381,6 +1384,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                         double leftAmount = getVendorOpened().getDeliveryAmountThreshold() - totalPrice;
                         textViewMinOrder.setText(getString(R.string.away_from_free_delivery_value_format,
                                 Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
+                    }
                     } else {
                         textViewMinOrderVis = View.GONE;
                     }

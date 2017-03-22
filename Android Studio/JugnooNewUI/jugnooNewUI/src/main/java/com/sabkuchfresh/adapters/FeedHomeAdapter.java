@@ -268,10 +268,19 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String likesCommentString = formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount(), activity);
 
         holder.tvLikeStatus.setText(String.valueOf(feedDetail.getLikeCount()));
-        holder.tvLikeStatus.setVisibility(feedDetail.getLikeCount()>0?View.VISIBLE:View.INVISIBLE);
+
         String commentSuffix = feedDetail.getCommentCount() > 1 ? " Comments" : " Comment";
         holder.tvCommentStatus.setText(feedDetail.getCommentCount()+commentSuffix);
+
+        holder.tvLikeStatus.setVisibility(feedDetail.getLikeCount()>0?View.VISIBLE:View.INVISIBLE);
         holder.tvCommentStatus.setVisibility(feedDetail.getCommentCount()>0?View.VISIBLE:View.INVISIBLE);
+        /*if(feedDetail.getLikeCount()>0 && feedDetail.getCommentCount()<1)
+        {
+            holder.tvCommentStatus.setVisibility(View.INVISIBLE);
+            //because the views below are aligned as per tvCommentStatus Visibility
+
+        }*/
+
 
         //Set Content
         holder.tvFeedDescription.setText(feedDetail.getContent());

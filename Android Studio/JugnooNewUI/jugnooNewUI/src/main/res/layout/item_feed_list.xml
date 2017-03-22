@@ -210,7 +210,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/recycler_user_images"
         android:layout_marginBottom="@dimen/spacing_small"
-
         android:layout_marginRight="@dimen/spacing_large"
         android:text="76876867 8768Comments"
         android:textColor="@color/feed_grey_text"
