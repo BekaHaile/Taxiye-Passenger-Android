@@ -190,7 +190,9 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
                 }
             }
         });
-        onRestaurantChanged(false);
+        layoutContent.setEnabled(false);
+        ratingBar.setEnabled(false);
+        etContent.setEnabled(false);
         etContent.addTextChangedListener(editTextWacherContent);
         if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getFeedAddReviewHint())) {
             etContent.setHint(Data.getFeedData().getFeedAddReviewHint());

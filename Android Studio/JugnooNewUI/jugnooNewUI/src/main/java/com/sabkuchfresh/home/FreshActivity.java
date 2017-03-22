@@ -698,7 +698,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 menuBar.setUserData();
 
 
-                fetchWalletBalance(this);
+
+                if(getAppType()!= AppConstant.ApplicationType.FEED) {
+                    fetchWalletBalance(this);
+                }
 
                 MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 60000l);
 
