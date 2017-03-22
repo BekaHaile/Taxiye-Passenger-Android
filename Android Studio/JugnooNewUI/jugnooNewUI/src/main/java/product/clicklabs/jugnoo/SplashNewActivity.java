@@ -2774,7 +2774,15 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
-							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+							} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+								SplashNewActivity.this.name = name;
+								SplashNewActivity.this.emailId = emailId;
+								SplashNewActivity.this.phoneNo = phoneNo;
+								SplashNewActivity.this.password = password;
+								SplashNewActivity.this.referralCode = referralCode;
+								SplashNewActivity.this.accessToken = "";
+								parseDataSendToMultipleAccountsScreen(activity, jObj);
+							}else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 								enteredEmail = jObj.getString("user_email");
 								linkedWallet = jObj.optInt("reg_wallet_type");
 								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
