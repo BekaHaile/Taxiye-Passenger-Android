@@ -38,6 +38,8 @@ public class FeedChildAskFragment extends ImageSelectFragment {
         etContent.addTextChangedListener(editTextWacherContent);
         displayImagesRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view_photos);
         scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
+        setCameraEnabled(true);
+        setSubmitEnabled(false);
         return rootView;
 
 

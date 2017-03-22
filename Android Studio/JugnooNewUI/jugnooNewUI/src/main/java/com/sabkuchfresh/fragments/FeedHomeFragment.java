@@ -251,7 +251,8 @@ public class FeedHomeFragment extends Fragment {
         adapterList.clear();
 
         //Add Location Type
-        adapterList.add(new FeedHomeAdapter.SelectedLocation(cityName));
+        String location =!TextUtils.isEmpty(cityName)?cityName:activity.getSelectedAddress();
+        adapterList.add(new FeedHomeAdapter.SelectedLocation(location,!TextUtils.isEmpty(cityName)));
 
         //Add AddPostText
         if(showAddPostText)

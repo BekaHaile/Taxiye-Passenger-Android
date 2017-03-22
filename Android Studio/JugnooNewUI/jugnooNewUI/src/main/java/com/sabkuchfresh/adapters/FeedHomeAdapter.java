@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.picker.image.util.Util;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -38,7 +37,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -138,6 +136,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             SelectedLocation selectedLocation = (SelectedLocation) adapterList.get(position);
             ((ChangeLocationViewHolder) holder).textViewLocation.setText(selectedLocation.getCityName());
+            ((ChangeLocationViewHolder) holder).tvLabel.setText(selectedLocation.isCity()?"City":"Location");
+
         }
 
 
@@ -565,6 +565,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
         private TextView textViewLocation;
+        private TextView tvLabel;
         public ChangeLocationViewHolder(View itemView) {
             super(itemView);
             activity.setDeliveryAddressView(itemView);
@@ -573,8 +574,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (activity.getDeliveryAddressView() != null) {
                 activity.getDeliveryAddressView().scaleView();
                 activity.getDeliveryAddressView().tvDeliveryAddress.setText(R.string.label_city);
+                textViewLocation=activity.getDeliveryAddressView().getTvLocation();
+                tvLabel=activity.getDeliveryAddressView().tvDeliveryAddress;
             }
-            textViewLocation=activity.getDeliveryAddressView().getTvLocation();
+
         }
     }
 
@@ -671,13 +674,19 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public static class SelectedLocation {
         private String cityName;
+        private boolean isCity;
 
-        public SelectedLocation(String cityName) {
+        public SelectedLocation(String cityName,boolean isCity) {
             this.cityName = cityName;
+            this.isCity=isCity;
         }
 
         public String getCityName() {
             return cityName;
+        }
+
+        public boolean isCity() {
+            return isCity;
         }
     }
 
