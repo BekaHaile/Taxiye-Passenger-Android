@@ -2820,7 +2820,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                                 }
                             }, true, false);
                 }
-
                 return false;
             }
         }

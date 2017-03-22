@@ -78,7 +78,7 @@
                 android:id="@+id/tvMinOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Minimum order 350 for free"
+                android:text="@string/minimum_order_with_value"
                 android:textSize="@dimen/sp_12"
                 android:textColor="@color/text_color"
                 android:layout_marginTop="@dimen/dp_4"

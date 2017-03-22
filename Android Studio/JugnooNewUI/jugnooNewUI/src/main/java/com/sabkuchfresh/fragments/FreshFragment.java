@@ -62,6 +62,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -163,7 +164,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		viewPager.setAdapter(freshCategoryFragmentsAdapter);
 		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
 		ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
-        rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore); rlSelectedStore.setEnabled(false);
+        rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore);
 		rlSelectedStore.setVisibility(View.VISIBLE);
         tvStoreName = (TextView) rootView.findViewById(R.id.tvStoreName);
         ivEditStore = (ImageView) rootView.findViewById(R.id.ivEditStore);
@@ -252,7 +253,13 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         rlSelectedStore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.getTransactionUtils().openDeliveryStoresFragment(activity, activity.getRelativeLayoutContainer());
+                if(activity.getProductsResponse().getDeliveryStores() != null
+                        && activity.getProductsResponse().getDeliveryStores().size() > 1){
+                    activity.getTransactionUtils().openDeliveryStoresFragment(activity, activity.getRelativeLayoutContainer());
+                } else{
+                    Utils.showToast(activity, activity.getString(R.string.no_other_store_available));
+                }
+
             }
         });
 
@@ -355,7 +362,14 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 					public void success(ProductsResponse productsResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
-
+						try {
+							if(finalProgressDialog != null)
+								finalProgressDialog.dismiss();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						if(!loader)
+							mBus.post(new SwipeCheckout(1));
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
@@ -394,7 +408,33 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
                                         for(DeliveryStore deliveryStore : activity.getProductsResponse().getDeliveryStores()){
 											if(deliveryStore.getIsSelected() == 1){
-												activity.setOpenedVendorIdName(deliveryStore.getVendorId(), deliveryStore);
+												if(!deliveryStore.getVendorId().equals(activity.getOpenedVendorId())
+														&& activity.getCart().getCartItems(activity.getOpenedVendorId()).size() > 0){
+													final DeliveryStore deliveryStoreLast = activity.getOpenedDeliveryStore();
+													if(deliveryStoreLast != null) {
+														DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+																getString(R.string.you_have_selected_cart_from_this_vendor_clear_cart, deliveryStoreLast.getVendorName()),
+																getString(R.string.clear_cart),
+																getString(R.string.cancel),
+																new View.OnClickListener() {
+																	@Override
+																	public void onClick(View v) {
+																		if (deliveryStoreLast != null) {
+																			activity.getCart().getSubItemHashMap(deliveryStoreLast.getVendorId()).clear();
+																			getAllProducts(true, activity.getSelectedLatLng());
+																		}
+																	}
+																},
+																new View.OnClickListener() {
+																	@Override
+																	public void onClick(View v) {
+																		activity.performBackPressed(false);
+																	}
+																}, false, false);
+													}
+												} else {
+													activity.setOpenedVendorIdName(deliveryStore.getVendorId(), deliveryStore);
+												}
 												break;
 											}
 										}
@@ -408,10 +448,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                         if(activity.getProductsResponse().getDeliveryStores() != null
                                                 && activity.getProductsResponse().getDeliveryStores().size() > 1){
                                             ivEditStore.setVisibility(View.VISIBLE);
-                                            rlSelectedStore.setEnabled(true);
                                         } else{
                                             ivEditStore.setVisibility(View.GONE);
-											rlSelectedStore.setEnabled(false);
                                         }
                                         if(loader) {
                                             freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
@@ -448,14 +486,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 						} catch (Exception exception) {
 							exception.printStackTrace();
 						}
-                        try {
-                            if(finalProgressDialog != null)
-                            finalProgressDialog.dismiss();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if(!loader)
-                            mBus.post(new SwipeCheckout(1));
 					}
 
 					@Override

@@ -44,6 +44,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -135,8 +136,12 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         adapter = new FreshSuperCategoriesAdapter(activity, new FreshSuperCategoriesAdapter.Callback() {
             @Override
             public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
-                activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
-                activity.getFabViewTest().hideJeanieHelpInSession();
+                if(superCategory.getIsEnabled() == 0){
+                    Utils.showToast(activity, getString(R.string.coming_soon_to_your_city));
+                } else {
+                    activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
+                    activity.getFabViewTest().hideJeanieHelpInSession();
+                }
                 try {
                     GAUtils.event(FRESH, HOME+SUPER+CATEGORY+CLICKED, superCategory.getSuperCategoryName());
                 } catch (Exception e) {

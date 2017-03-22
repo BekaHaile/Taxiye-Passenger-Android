@@ -67,7 +67,16 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
             if(numberItems == 1){
                 mHolder.tvCartItem.setText(activity.getString(R.string.one_item_in_cart));
             } else {
-                mHolder.tvCartItem.setText(activity.getString(R.string.number_items_in_cart, String.valueOf(numberItems)));
+                mHolder.tvCartItem.setText(activity.getString(R.string.number_items_in_cart,
+                        String.valueOf(numberItems)));
+            }
+            double cartAmount = activity.getCart().getCartTotal(store.getVendorId());
+            if(cartAmount > 0){
+                mHolder.tvMinOrder.setText(activity.getString(R.string.away_from_free_delivery_value,
+                        Utils.getMoneyDecimalFormat().format(cartAmount)));
+            } else {
+                mHolder.tvMinOrder.setText(activity.getString(R.string.minimum_order_with_value,
+                        Utils.getMoneyDecimalFormat().format(store.getMinAmount())));
             }
             int bottom = mHolder.llContainer.getPaddingBottom();
             int top = mHolder.llContainer.getPaddingTop();
