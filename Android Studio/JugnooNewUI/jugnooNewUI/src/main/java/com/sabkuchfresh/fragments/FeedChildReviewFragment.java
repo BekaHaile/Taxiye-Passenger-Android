@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -87,6 +88,16 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
                                     suggestions.addAll(queryResp.getSuggestions());
                                     suggestionsAdapter.notifyDataSetChanged();
                                     rvRestaurantSuggestions.setVisibility(suggestionsAdapter.getItemCount() == 0 ? View.GONE : View.VISIBLE);
+                                    if(suggestionsAdapter.getItemCount()>3){
+                                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) rvRestaurantSuggestions.getLayoutParams();
+                                        layoutParams.height= product.clicklabs.jugnoo.utils.Utils.convertDpToPx(activity,200);
+                                        rvRestaurantSuggestions.setLayoutParams(layoutParams);
+                                    }
+                                    else{
+                                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) rvRestaurantSuggestions.getLayoutParams();
+                                        layoutParams.height= LinearLayout.LayoutParams.WRAP_CONTENT;
+                                        rvRestaurantSuggestions.setLayoutParams(layoutParams);
+                                    }
                                 } else {
                                     suggestions.clear();
                                     SuggestRestaurantQueryResp.Suggestion suggestion = new SuggestRestaurantQueryResp.Suggestion();
@@ -190,9 +201,14 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
                 }
             }
         });
+
+        //Restaurant Enabled
         layoutContent.setEnabled(false);
         ratingBar.setEnabled(false);
         etContent.setEnabled(false);
+        ratingBar.setRatingDisabled(true);
+
+
         etContent.addTextChangedListener(editTextWacherContent);
         if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getFeedAddReviewHint())) {
             etContent.setHint(Data.getFeedData().getFeedAddReviewHint());
@@ -262,14 +278,19 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
             layoutContent.setEnabled(true);
             ratingBar.setEnabled(true);
             etContent.setEnabled(true);
-            setCameraEnabled(true);
+//            setCameraEnabled(true);
+            ratingBar.setRatingDisabled(false);
         }
         else {
             layoutContent.setEnabled(false);
             ratingBar.setEnabled(false);
             etContent.setEnabled(false);
-            setCameraEnabled(false);
+//            setCameraEnabled(false);
+            if(Math.round(ratingBar.getScore())<1)
+                ratingBar.setRatingDisabled(true);
         }
+
+
     }
 
     @Override
@@ -288,7 +309,11 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
     }
 
     @Override
-    public boolean cameraEnableState() {
+    public boolean canUploadImages() {
+
+        if(!layoutContent.isEnabled())
+            Toast.makeText(activity, "Select a restaurant to review.", Toast.LENGTH_SHORT).show();
+
         return  layoutContent.isEnabled() ;
 
     }

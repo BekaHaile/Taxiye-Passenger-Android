@@ -34,6 +34,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -198,7 +199,11 @@ public class Utils implements GAAction, GACategory{
 			e.printStackTrace();
 		}
 	}
-	
+
+	public static void showKeyboard(Activity activity, EditText editText){
+		InputMethodManager inputMethodManager = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+	}
 	
 	public static void showSoftKeyboard(Activity activity, View searchET){
 	    try {

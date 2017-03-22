@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:id="@+id/layout_user_activity_heading"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/spacing_normal"
@@ -54,7 +54,7 @@
     </RelativeLayout>
 
     <View
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/divider_user_activity"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -132,9 +132,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_owner_feed_layout"
-        android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginLeft="@dimen/spacing_large"
         android:layout_marginRight="@dimen/spacing_large"
+        android:layout_marginBottom="@dimen/spacing_small"
         android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
         android:textColor="@color/feed_grey_text"
         android:textSize="@dimen/font_small"
@@ -146,6 +146,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_height_feed"
         android:layout_below="@id/tv_feed_description"
+
         android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginLeft="@dimen/spacing_large"
         android:layout_marginRight="@dimen/spacing_large"
@@ -185,22 +186,39 @@
         app:font="@string/maven_r" />
 
     <TextView
-        android:id="@+id/tv_like_comment_status"
+        android:id="@+id/tv_like_status"
         android:layout_width="wrap_content"
-        android:gravity="bottom"
         android:layout_height="wrap_content"
         android:layout_below="@id/recycler_user_images"
-        android:layout_marginBottom="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginLeft="@dimen/spacing_large"
+        android:layout_marginRight="@dimen/spacing_small"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="2 "
+        android:drawablePadding="@dimen/spacing_tiny"
+        android:drawableLeft="@drawable/ic_like_active"
+        android:textColor="@color/feed_grey_text"
+        app:font="maven" />
+
+    <TextView
+        android:id="@+id/tv_comment_status"
+        android:layout_width="wrap_content"
+        android:gravity="right"
+        android:layout_toRightOf="@id/tv_like_status"
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recycler_user_images"
+        android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginRight="@dimen/spacing_large"
-        android:text="115 Likes  154 Comments"
-        android:textColor="@color/feed_grey_text_secondary"
+        android:text="76876867 8768Comments"
+        android:textColor="@color/feed_grey_text"
         app:font="maven" />
 
     <View
         android:id="@+id/line_below_like_status"
         style="@style/Feed_Line_Horizontal"
-        android:layout_below="@id/tv_like_comment_status" />
+        android:layout_below="@id/tv_comment_status" />
 
     <View
         android:id="@+id/line_divider_like_comment"

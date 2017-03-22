@@ -1,6 +1,8 @@
 
 package com.sabkuchfresh.retrofit.model.feed.generatefeed;
 
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;

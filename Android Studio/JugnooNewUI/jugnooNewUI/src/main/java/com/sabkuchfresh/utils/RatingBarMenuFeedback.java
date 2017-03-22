@@ -36,6 +36,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
     private static final int LOW_RATING_RED = Color.parseColor("#FB9758");
     private static final int MEDIUM_RATING_YELLOW = Color.parseColor("#FFD365");
     private static final int GOOD_RATING_GREEN = Color.parseColor("#8DCF61");
+    private static final int RATING_DISABLED_COLOR = Color.parseColor("#efefef");
     private static final int NO_RATING_COLOR = Color.GRAY;
     private boolean mAnimate=true;
     private boolean mDisplayText=true;
@@ -338,5 +339,16 @@ public class RatingBarMenuFeedback extends LinearLayout {
     }
     public void setEnabled(boolean isEnabled){
         mOnlyForDisplay = !isEnabled;
+    }
+
+    public void setRatingDisabled(boolean disabled){
+        if (disabled) {
+            for (int i = 1; i <= mMaxStars; i++) {
+                    mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(RATING_DISABLED_COLOR, PorterDuff.Mode.SRC_ATOP);
+             }
+        }
+        else{
+            refreshStars();
+        }
     }
 }
