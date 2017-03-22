@@ -441,7 +441,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 											}
 										}
 
-										if(!TextUtils.isEmpty(activity.getOpenedDeliveryStore().getVendorName())){
+										if(activity.getOpenedDeliveryStore() != null
+											&& !TextUtils.isEmpty(activity.getOpenedDeliveryStore().getVendorName())){
 											tvStoreName.setText(activity.getOpenedDeliveryStore().getVendorName());
 										}
 
