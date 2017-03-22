@@ -31,7 +31,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 
 @SuppressLint("ValidFragment")
-public class MenusItemCustomizeFragment extends Fragment {
+public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 
 	private RelativeLayout rlRoot;
 
@@ -160,6 +160,7 @@ public class MenusItemCustomizeFragment extends Fragment {
 			e.printStackTrace();
 		}
 
+		GAUtils.trackScreenView(MENUS+CUSTOMIZE_ITEM);
 		activity.getHandler().postDelayed(new Runnable() {
 			@Override
 			public void run() {

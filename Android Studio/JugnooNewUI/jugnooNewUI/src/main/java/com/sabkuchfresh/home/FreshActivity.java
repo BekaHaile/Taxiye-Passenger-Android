@@ -982,7 +982,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             topBar.tvNameCap.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
             int padding = (int) (20f * ASSL.minRatio());
-            textViewMinOrder.setVisibility(View.GONE);
+            int visMinOrder = -1;
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -999,7 +999,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.fresh));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-                setMinOrderAmountText(fragment);
+                visMinOrder = setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof FreshFragment) {
                 llCartContainerVis = View.VISIBLE;
@@ -1011,7 +1011,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.fresh));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                setMinOrderAmountText(fragment);
+                visMinOrder = setMinOrderAmountText(fragment);
 
             } else if(fragment instanceof DeliveryStoresFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1048,7 +1048,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.grocery));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-                setMinOrderAmountText(fragment);
+                visMinOrder = setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof MenusFragment) {
                 ivSearchVis = View.VISIBLE;
@@ -1067,7 +1067,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
-                setMinOrderAmountText(fragment);
+                visMinOrder = setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof VendorMenuFragment || fragment instanceof RestaurantImageFragment) {
                 llCartContainerVis = View.VISIBLE;
@@ -1080,7 +1080,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(vendorOpened.getName());
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                setMinOrderAmountText(fragment);
+                visMinOrder = setMinOrderAmountText(fragment);
 
 
             } else if (fragment instanceof MenusItemCustomizeFragment) {
@@ -1116,7 +1116,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 topBar.title.setText(getResources().getString(R.string.checkout));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-                setMinOrderAmountText(fragment);
+                visMinOrder = setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1154,7 +1154,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                setMinOrderAmountText(fragment);
+                visMinOrder = setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof FeedbackFragment || fragment instanceof NewFeedbackFragment) {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -1223,7 +1223,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 }
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-                setMinOrderAmountText(fragment);
+                visMinOrder = setMinOrderAmountText(fragment);
             }
             else if(fragment instanceof FeedOfferingCommentsFragment){
                 topBar.getLlSearchCart().setLayoutTransition(null);
@@ -1236,6 +1236,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             }
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
+            if(visMinOrder != 1) {
+                textViewMinOrder.setVisibility(View.GONE);
+            }
 
             topBar.getLlSearchCartContainer().setVisibility(llSearchCartContainerVis);
             topBar.getLlSearchCart().setVisibility(llSearchCartVis);
@@ -1349,51 +1352,50 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
      */
     public int setMinOrderAmountText(Fragment fragment) {
         try {
-            if(getFreshCheckoutMergedFragment() == null){
-            if (getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
-                int textViewMinOrderVis;
-                if (getProductsResponse() != null
-                        && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)) {
-                    if (Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
-                        textViewMinOrderVis = View.VISIBLE;
-                        textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
-                    } else if (totalQuantity > 0 && totalPrice < getOpenedDeliveryStore().getMinAmount()) {
-                        textViewMinOrderVis = View.VISIBLE;
-                        double leftAmount = getOpenedDeliveryStore().getMinAmount() - totalPrice;
-                        textViewMinOrder.setText(getString(R.string.away_from_free_delivery_value_format,
-                                Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
+            if (getFreshCheckoutMergedFragment() == null) {
+                if (getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
+                    int textViewMinOrderVis;
+                    if (getProductsResponse() != null
+                            && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)) {
+                        if (Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
+                            textViewMinOrderVis = View.VISIBLE;
+                            textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
+                        } else if (totalQuantity > 0 && totalPrice < getOpenedDeliveryStore().getMinAmount()) {
+                            textViewMinOrderVis = View.VISIBLE;
+                            double leftAmount = getOpenedDeliveryStore().getMinAmount() - totalPrice;
+                            textViewMinOrder.setText(getString(R.string.away_from_free_delivery_value_format,
+                                    Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
+                        } else {
+                            textViewMinOrderVis = View.GONE;
+                        }
                     } else {
                         textViewMinOrderVis = View.GONE;
                     }
-                } else {
-                    textViewMinOrderVis = View.GONE;
-                }
-                textViewMinOrder.setVisibility(textViewMinOrderVis);
-                return 1;
-            } else if (fragment instanceof VendorMenuFragment || fragment instanceof MenusSearchFragment) {
-                int textViewMinOrderVis = View.GONE;
-                if (getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
-                    if(totalQuantity > 0){
-                    if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
-                        textViewMinOrderVis = View.VISIBLE;
-                        textViewMinOrder.setText(getString(R.string.minimum_order) + " "
-                                + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
-                    } else if (getVendorOpened().getShowFreeDeliveryText() == 1
-                            && totalPrice < getVendorOpened().getDeliveryAmountThreshold()) {
-                        textViewMinOrderVis = View.VISIBLE;
-                        double leftAmount = getVendorOpened().getDeliveryAmountThreshold() - totalPrice;
-                        textViewMinOrder.setText(getString(R.string.away_from_free_delivery_value_format,
-                                Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
+                    textViewMinOrder.setVisibility(textViewMinOrderVis);
+                    return 1;
+                } else if (fragment instanceof VendorMenuFragment || fragment instanceof MenusSearchFragment) {
+                    int textViewMinOrderVis = View.GONE;
+                    if (getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
+                        if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
+                            textViewMinOrderVis = View.VISIBLE;
+                            textViewMinOrder.setText(getString(R.string.minimum_order) + " "
+                                    + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
+                        } else if (totalQuantity > 0 && getVendorOpened().getShowFreeDeliveryText() == 1
+                                && totalPrice < getVendorOpened().getDeliveryAmountThreshold()) {
+                            textViewMinOrderVis = View.VISIBLE;
+                            double leftAmount = getVendorOpened().getDeliveryAmountThreshold() - totalPrice;
+                            textViewMinOrder.setText(getString(R.string.away_from_free_delivery_value_format,
+                                    Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
+                        } else {
+                            textViewMinOrderVis = View.GONE;
+                        }
                     }
-                    } else {
-                        textViewMinOrderVis = View.GONE;
-                    }
+                    textViewMinOrder.setVisibility(textViewMinOrderVis);
+                    return 1;
                 }
-                textViewMinOrder.setVisibility(textViewMinOrderVis);
-                return 1;
-            }
             } else {
                 textViewMinOrder.setVisibility(View.GONE);
+                return 1;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1647,9 +1649,6 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public void performBackPressed(boolean isBackPressed) {
 
-
-
-
         if (isBackPressed) {
             if (getTopFragment() instanceof MealAddonItemsFragment) {
                 GAUtils.event(getGaCategory(), ADD_ONS, BACK + BUTTON + CLICKED);
@@ -1681,7 +1680,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             finish();
         }
         try {
-            Utils.hideSoftKeyboard(this, textViewMinOrder);
+            Utils.hideSoftKeyboard(this, topBar.etSearch);
         } catch (Exception e) {
         }
         final AddToAddressBookFragment fragment = getAddToAddressBookFragment();
@@ -3801,11 +3800,16 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         openedVendorId = vendorId;
         if(openedDeliveryStore != null){
             saveLastDeliveryStore(openedDeliveryStore);
+        } else {
+            saveLastDeliveryStore(deliveryStore);
         }
         openedDeliveryStore = deliveryStore;
         Prefs.with(this).save(Constants.SP_VENDOR_ID, vendorId.intValue());
     }
     public DeliveryStore getOpenedDeliveryStore(){
+        if(openedDeliveryStore == null){
+            openedDeliveryStore = getLastDeliveryStore();
+        }
         return openedDeliveryStore;
     }
 

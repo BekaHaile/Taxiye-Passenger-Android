@@ -70,7 +70,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class RestaurantAddReviewFragment extends Fragment  {
+public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
     private final String TAG = RestaurantAddReviewFragment.class.getSimpleName();
 
@@ -135,6 +135,8 @@ public class RestaurantAddReviewFragment extends Fragment  {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        GAUtils.trackScreenView(MENUS+ADD_FEED);
 
         etReviewMaxLength = getResources().getInteger(R.integer.edt_add_review_max_length);
         etFeedback = (EditText) rootView.findViewById(R.id.etFeedback);

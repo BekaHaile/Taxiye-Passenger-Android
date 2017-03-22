@@ -108,8 +108,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
         activity = getActivity();
 
+
         if(activity instanceof FreshActivity){
             ((FreshActivity)activity).fragmentUISetup(this);
+            GAUtils.trackScreenView(((FreshActivity)activity).getGaCategory()+ORDER_STATUS);
         }
 
         new ASSL(activity, relative, 1134, 720, false);

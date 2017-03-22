@@ -174,7 +174,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             e.printStackTrace();
         }
 
-        GAUtils.trackScreenView(FRESH_SCREEN);
         return rootView;
     }
 

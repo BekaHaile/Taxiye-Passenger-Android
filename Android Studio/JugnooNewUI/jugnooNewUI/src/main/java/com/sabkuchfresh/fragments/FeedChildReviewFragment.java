@@ -11,7 +11,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -312,7 +311,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
     public boolean canUploadImages() {
 
         if(!layoutContent.isEnabled())
-            Toast.makeText(activity, "Select a restaurant to review.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.error_feed_review_restaurant_not_selected, Toast.LENGTH_SHORT).show();
 
         return  layoutContent.isEnabled() ;
 

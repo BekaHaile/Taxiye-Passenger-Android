@@ -40,6 +40,9 @@ public class GAUtils {
 	}
 
 	public static void trackScreenView(String screenName) {
+		if(screenName != null){
+			screenName = screenName.trim();
+		}
 		try{ MyApplication.getInstance().trackScreenView(screenName);}catch (Exception e){}
 	}
 

@@ -44,7 +44,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 
 
-public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener {
+public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener, GAAction {
 
     private final String TAG = VendorMenuFragment.class.getSimpleName();
     private LinearLayout llRoot;
@@ -106,6 +106,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        GAUtils.trackScreenView(MENUS+RESTAURANT_HOME);
 
 
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);

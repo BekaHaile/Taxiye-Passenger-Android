@@ -16,6 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
@@ -34,7 +37,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 
 
 @SuppressLint("ValidFragment")
-public class MenusSearchFragment extends Fragment {
+public class MenusSearchFragment extends Fragment implements GACategory, GAAction {
 
 	private RelativeLayout rlRoot;
 
@@ -64,6 +67,8 @@ public class MenusSearchFragment extends Fragment {
 
         activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
+
+		GAUtils.trackScreenView(activity.getGaCategory()+HOME+SEARCH);
 
 		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
 		try {

@@ -16,6 +16,7 @@ import com.sabkuchfresh.adapters.AddOnItemsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -32,7 +33,7 @@ import product.clicklabs.jugnoo.utils.NonScrollListView;
 /**
  * Created by shankar on 10/10/16.
  */
-public class MealAddonItemsFragment extends Fragment implements GAAction, MealAdapter.Callback {
+public class MealAddonItemsFragment extends Fragment implements GACategory, GAAction, MealAdapter.Callback {
     private final String TAG = "Meals Addon Screen";
 
     private RelativeLayout linearLayoutRoot;
@@ -65,6 +66,8 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_addon_items, container, false);
+
+        GAUtils.trackScreenView(MEALS+ADD_ONS);
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);

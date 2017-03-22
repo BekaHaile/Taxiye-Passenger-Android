@@ -1604,7 +1604,7 @@
     <string name="clear_cart">Clear Cart</string>
     <string name="i_want_to_cancel_my_order_because">I want to cancel my Order because</string>
     <string name="please_select_one_reason">Please select one reason</string>
-    <string name="error_feed_review_restaurant_not_selected">You need to select a restaurant to review</string>
+    <string name="error_feed_review_restaurant_not_selected">Select a restaurant to review</string>
     <string name="write_a_comment">Write a comment...</string>
     <string name="label_city">City</string>
     <string name="away_from_free_delivery_value">\u20B9%s away from free delivery</string>

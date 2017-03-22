@@ -32,7 +32,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class RestaurantReviewsListFragment extends Fragment{
+public class RestaurantReviewsListFragment extends Fragment implements GAAction{
     private final String TAG = RestaurantReviewsListFragment.class.getSimpleName();
 
     private RelativeLayout rlRoot;
@@ -78,6 +78,7 @@ public class RestaurantReviewsListFragment extends Fragment{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        GAUtils.trackScreenView(MENUS+FEED);
 
         recyclerViewReviews = (RecyclerView) rootView.findViewById(R.id.recyclerViewReviews);
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(activity));

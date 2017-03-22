@@ -30,7 +30,7 @@ import static product.clicklabs.jugnoo.Constants.OFFERSDISCOUNT;
 import static product.clicklabs.jugnoo.Constants.PUREVEGETARIAN;
 
 
-public class MenusFilterFragment extends Fragment{
+public class MenusFilterFragment extends Fragment implements GAAction{
 
 	private final String TAG = MenusFilterFragment.class.getSimpleName();
 	private RelativeLayout rlRoot;
@@ -104,6 +104,8 @@ public class MenusFilterFragment extends Fragment{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		GAUtils.trackScreenView(MENUS+FILTERS);
 
 		textViewQuickFilters = (TextView) rootView.findViewById(R.id.textViewQuickFilters); textViewQuickFilters.setTypeface(Fonts.mavenMedium(activity));
 		textViewAcceptOnline = (TextView) rootView.findViewById(R.id.textViewAcceptOnline); textViewAcceptOnline.setTypeface(Fonts.mavenMedium(activity));

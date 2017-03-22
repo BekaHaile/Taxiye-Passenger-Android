@@ -119,6 +119,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         if(activity instanceof FreshActivity) {
             ((FreshActivity)activity).fragmentUISetup(this);
             editTextDeliveryAddress = ((FreshActivity)activity).getTopBar().editTextDeliveryAddress;
+            GAUtils.trackScreenView(((FreshActivity)activity).getGaCategory()+DELIVERY_ADDRESS);
         }else if(activity instanceof AddPlaceActivity){
             editTextDeliveryAddress = ((AddPlaceActivity)activity).getEditTextDeliveryAddress();
         }

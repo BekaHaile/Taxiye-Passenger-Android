@@ -258,6 +258,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         activity.setCartChangedAtCheckout(false);
         type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
 
+        GAUtils.trackScreenView(activity.getGaCategory()+CHECKOUT);
+
         linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
         try {
             if (linearLayoutRoot != null) {

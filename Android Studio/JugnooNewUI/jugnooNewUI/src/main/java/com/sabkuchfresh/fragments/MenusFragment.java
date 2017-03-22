@@ -22,7 +22,6 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -215,7 +214,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
-        GAUtils.trackScreenView(MENUS_SCREEN);
 
         return rootView;
     }

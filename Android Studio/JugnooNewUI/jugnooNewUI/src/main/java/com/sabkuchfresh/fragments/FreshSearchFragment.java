@@ -92,6 +92,8 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 
 		searchText = "";
 
+		GAUtils.trackScreenView(activity.getGaCategory()+HOME+SEARCH);
+
 		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
 		try {
 			if(rlRoot != null) {

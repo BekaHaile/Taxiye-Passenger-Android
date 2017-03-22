@@ -96,6 +96,8 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
         relative = (RelativeLayout) findViewById(R.id.linearLayoutRoot);
         new ASSL(PromotionActivity.this, relative, 1134, 720, false);
 
+        GAUtils.trackScreenView(PROMOTIONS);
+
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
         textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_OFFERS);
