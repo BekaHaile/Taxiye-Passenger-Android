@@ -6,15 +6,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
+import com.sabkuchfresh.utils.DirectionsGestureListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -35,6 +39,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 	private ImageView ivClose;
 	private ViewPager vpImages;
 	private TextView tvLikeShareCount;
+	private RelativeLayout rlRoot;
 
 
 
@@ -146,6 +151,16 @@ public class ReviewImagePagerDialog extends DialogFragment {
 			e.printStackTrace();
 		}
 
+		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
+		rlRoot.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return gesture.onTouchEvent(event);
+			}
+		});
+
+
+
 		return rootView;
 	}
 
@@ -166,6 +181,13 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 			ImageView ivReviewImage = (ImageView) inflater.inflate(R.layout.dialog_item_review_image, container, false);
+
+			ivReviewImage.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					return gesture.onTouchEvent(event);
+				}
+			});
 
 			Picasso.with(context).load(reviewImages.get(position).getUrl())
 					.placeholder(R.drawable.ic_fresh_new_placeholder)
@@ -195,7 +217,29 @@ public class ReviewImagePagerDialog extends DialogFragment {
 				e.printStackTrace();
 			}
 		}
-
 	}
+
+	final GestureDetector gesture = new GestureDetector(getActivity(),
+			new DirectionsGestureListener(new DirectionsGestureListener.Callback() {
+				@Override
+				public void topSwipe() {
+					getDialog().dismiss();
+				}
+
+				@Override
+				public void bottomSwipe() {
+					getDialog().dismiss();
+				}
+
+				@Override
+				public void leftSwipe() {
+
+				}
+
+				@Override
+				public void rightSwipe() {
+
+				}
+			}));
 
 }
