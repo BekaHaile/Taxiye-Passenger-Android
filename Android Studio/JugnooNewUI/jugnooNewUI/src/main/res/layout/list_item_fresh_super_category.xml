@@ -28,12 +28,6 @@
                 android:src="@drawable/ic_fresh_new_placeholder"
                 android:tag="mwar" />
 
-            <View
-                android:id="@+id/viewBG"
-                android:layout_width="@dimen/px_100"
-                android:layout_height="@dimen/px_100"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/bg_transparent_white_60_selector" />
 
             <TextView
                 android:id="@+id/tvSuperCategoryName"
@@ -47,7 +41,16 @@
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_22" />
 
+
+
         </RelativeLayout>
+
+        <View
+            android:id="@+id/viewBG"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/bg_transparent_white_60_selector" />
 
 
     </RelativeLayout>

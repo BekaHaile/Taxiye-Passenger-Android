@@ -223,6 +223,8 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
                 params.put(Constants.INTERATED, "1");
 
+                params.put(Constants.STORE_ID, String.valueOf(activity.getLastCartVendorId()));
+
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getFreshApiService().getSuperCategories(params, new Callback<SuperCategoriesData>() {
                     @Override
