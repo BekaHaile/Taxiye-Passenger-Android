@@ -362,7 +362,14 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 					public void success(ProductsResponse productsResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
-
+						try {
+							if(finalProgressDialog != null)
+								finalProgressDialog.dismiss();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						if(!loader)
+							mBus.post(new SwipeCheckout(1));
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
@@ -401,7 +408,33 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
                                         for(DeliveryStore deliveryStore : activity.getProductsResponse().getDeliveryStores()){
 											if(deliveryStore.getIsSelected() == 1){
-												activity.setOpenedVendorIdName(deliveryStore.getVendorId(), deliveryStore);
+												if(!deliveryStore.getVendorId().equals(activity.getOpenedVendorId())
+														&& activity.getCart().getCartItems(activity.getOpenedVendorId()).size() > 0){
+													final DeliveryStore deliveryStoreLast = activity.getOpenedDeliveryStore();
+													if(deliveryStoreLast != null) {
+														DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+																getString(R.string.you_have_selected_cart_from_this_vendor_clear_cart, deliveryStoreLast.getVendorName()),
+																getString(R.string.clear_cart),
+																getString(R.string.cancel),
+																new View.OnClickListener() {
+																	@Override
+																	public void onClick(View v) {
+																		if (deliveryStoreLast != null) {
+																			activity.getCart().getSubItemHashMap(deliveryStoreLast.getVendorId()).clear();
+																			getAllProducts(true, activity.getSelectedLatLng());
+																		}
+																	}
+																},
+																new View.OnClickListener() {
+																	@Override
+																	public void onClick(View v) {
+																		activity.performBackPressed(false);
+																	}
+																}, false, false);
+													}
+												} else {
+													activity.setOpenedVendorIdName(deliveryStore.getVendorId(), deliveryStore);
+												}
 												break;
 											}
 										}
@@ -453,14 +486,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 						} catch (Exception exception) {
 							exception.printStackTrace();
 						}
-                        try {
-                            if(finalProgressDialog != null)
-                            finalProgressDialog.dismiss();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if(!loader)
-                            mBus.post(new SwipeCheckout(1));
 					}
 
 					@Override

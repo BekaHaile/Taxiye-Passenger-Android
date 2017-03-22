@@ -62,6 +62,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 	private boolean otherChecked = false;
 	private TextView textViewCancelInfo;
 	private ScrollView scrollView;
+	private Button buttonCancelRide;
 
 	private Activity activity;
 	private int orderId, productType, storeId;
@@ -116,7 +117,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 		textViewOtherError = (TextView) rootView.findViewById(R.id.textViewOtherError);
 		textViewOtherError.setVisibility(View.GONE);
 
-		Button buttonCancelRide = (Button) rootView.findViewById(R.id.buttonCancelRide);
+		buttonCancelRide = (Button) rootView.findViewById(R.id.buttonCancelRide);
 		textViewCancelInfo = (TextView) rootView.findViewById(R.id.textViewCancelInfo);
 
 		scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
@@ -376,6 +377,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 									OrderCancelReasonsFragment.this.reasonsResponse = reasonsResponse;
 									cancelOptions.clear();
 									cancelOptions.addAll(reasonsResponse.getCancelOptions());
+									buttonCancelRide.setVisibility(View.VISIBLE);
 									setCancelOptionsDataToUI();
 								} else {
 									DialogPopup.alertPopup(activity, "", message);
