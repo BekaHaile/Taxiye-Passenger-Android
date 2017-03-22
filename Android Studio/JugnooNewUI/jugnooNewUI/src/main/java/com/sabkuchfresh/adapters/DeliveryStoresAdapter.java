@@ -57,12 +57,7 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
             Log.d("position", "position = "+(position));
 
             mHolder.tvStoreName.setText(store.getVendorName());
-            if(store.getMinAmount() > 0) {
-                mHolder.tvDeliveryCharges.setText(activity.getString(R.string.delivery_charges_with_value,
-                        Utils.getMoneyDecimalFormat().format(store.getDeliveryCharges())));
-            } else{
-                mHolder.tvDeliveryCharges.setText(activity.getString(R.string.free_delivery));
-            }
+
             int numberItems = activity.getCart().getCartItems(store.getVendorId()).size();
             if(numberItems == 1){
                 mHolder.tvCartItem.setText(activity.getString(R.string.one_item_in_cart));
@@ -71,12 +66,18 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
                         String.valueOf(numberItems)));
             }
             double cartAmount = activity.getCart().getCartTotal(store.getVendorId());
-            if(cartAmount > 0){
-                mHolder.tvMinOrder.setText(activity.getString(R.string.away_from_free_delivery_value,
-                        Utils.getMoneyDecimalFormat().format(cartAmount)));
-            } else {
+//            if(cartAmount > 0){
+//                mHolder.tvMinOrder.setText(activity.getString(R.string.away_from_free_delivery_value,
+//                        Utils.getMoneyDecimalFormat().format(cartAmount)));
+//            } else {
                 mHolder.tvMinOrder.setText(activity.getString(R.string.minimum_order_with_value,
                         Utils.getMoneyDecimalFormat().format(store.getMinAmount())));
+//            }
+            if(store.getMinAmount() > 0 && cartAmount < store.getMinAmount()) {
+                mHolder.tvDeliveryCharges.setText(activity.getString(R.string.delivery_charges_with_value,
+                        Utils.getMoneyDecimalFormat().format(store.getDeliveryCharges())));
+            } else{
+                mHolder.tvDeliveryCharges.setText(activity.getString(R.string.free_delivery));
             }
             int bottom = mHolder.llContainer.getPaddingBottom();
             int top = mHolder.llContainer.getPaddingTop();
