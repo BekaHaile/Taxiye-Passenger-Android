@@ -43,7 +43,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:padding="@dimen/px_10"
-                android:text="Produce asdfasfsadf asdfsdfsfsdfsd"
+                android:text=""
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_22" />
 

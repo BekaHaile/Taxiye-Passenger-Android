@@ -133,7 +133,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             }
         });
         rvFreshSuper.setLayoutManager(gridLayoutManager);
-        adapter = new FreshSuperCategoriesAdapter(activity, new FreshSuperCategoriesAdapter.Callback() {
+        adapter = new FreshSuperCategoriesAdapter(activity, mResources, new FreshSuperCategoriesAdapter.Callback() {
             @Override
             public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
                 if(superCategory.getIsEnabled() == 0){
