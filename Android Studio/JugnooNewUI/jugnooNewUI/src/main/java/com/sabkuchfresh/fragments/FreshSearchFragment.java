@@ -187,6 +187,10 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 		listHashMap.clear();
 	}
 
+	private synchronized void notifyAdapter(){
+		freshCategoryItemsAdapter.notifyDataSetChanged();
+	}
+
 	private String tokenSearched = "";
 	private HashMap<String, List<SubItem>> listHashMap = new HashMap<>();
 	private class SubItemsSearchAsync extends AsyncTask<String, Integer, String> {
@@ -240,7 +244,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 			try {
-				freshCategoryItemsAdapter.notifyDataSetChanged();
+				notifyAdapter();
 				if(subItemsInSearch.size() > 0){
 					textViewPlaceholder.setVisibility(View.GONE);
 				} else{
@@ -303,7 +307,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 			if(activity.getCartChangedAtCheckout()){
 				activity.updateItemListFromSPDB();
 				activity.updateItemListFromDBFMG(subItemsInSearch);
-				freshCategoryItemsAdapter.notifyDataSetChanged();
+				notifyAdapter();
 				activity.updateCartValuesGetTotalPrice();
 			}
 			activity.setCartChangedAtCheckout(false);
@@ -354,7 +358,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 			} else {
 				subItemsInSearch.clear();
 				clearArrays();
-				freshCategoryItemsAdapter.notifyDataSetChanged();
+				notifyAdapter();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -364,7 +368,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 			searchFreshItemsAutoComplete(searchText);
 		} else if(searchText.length() == 0){
 			subItemsInSearch.clear();
-			freshCategoryItemsAdapter.notifyDataSetChanged();
+			notifyAdapter();
 			textViewPlaceholder.setVisibility(View.GONE);
 		}
 	}
@@ -411,7 +415,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 												}
 											}
 											activity.updateItemListFromDBFMG(subItemsInSearch);
-											freshCategoryItemsAdapter.notifyDataSetChanged();
+											notifyAdapter();
 											if(subItemsInSearch.size() > 0){
 												textViewPlaceholder.setVisibility(View.GONE);
 											} else{
