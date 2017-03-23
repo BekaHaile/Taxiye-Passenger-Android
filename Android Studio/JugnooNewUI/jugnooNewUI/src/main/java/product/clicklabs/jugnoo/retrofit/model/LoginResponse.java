@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.util.ArrayList;
@@ -775,6 +776,10 @@ public class LoginResponse {
 		@Expose
 		private SignupTutorial signupTutorial;
 
+		@SerializedName("payment_gateway_mode_config_data")
+		@Expose
+		private List<PaymentGatewayModeConfig> paymentGatewayModeConfigData;
+
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
 		}
@@ -941,6 +946,14 @@ public class LoginResponse {
 
 		public void setSignUpTutorial(SignupTutorial signUpTutorial) {
 			this.signupTutorial = signUpTutorial;
+		}
+
+		public List<PaymentGatewayModeConfig> getPaymentGatewayModeConfigData() {
+			return paymentGatewayModeConfigData;
+		}
+
+		public void setPaymentGatewayModeConfigData(List<PaymentGatewayModeConfig> paymentGatewayModeConfigData) {
+			this.paymentGatewayModeConfigData = paymentGatewayModeConfigData;
 		}
 	}
 

@@ -255,6 +255,7 @@ public class JSONParser implements Constants {
         parseSavedAddresses(context, userData, KEY_USER_SAVED_ADDRESSES);
 
         MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData.optJSONObject(KEY_WALLET_BALANCE));
+        MyApplication.getInstance().getWalletCore().parsePaymentGatewayModeConfigs(loginUserData.getPaymentGatewayModeConfigData());
 
         try {
             Data.userData.setEmergencyContactsList(JSONParser.parseEmergencyContacts(userData));

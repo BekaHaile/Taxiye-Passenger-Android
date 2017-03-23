@@ -1613,5 +1613,8 @@
     <string name="away_from_free_delivery_value">\u20B9%s away from free delivery</string>
     <string name="no_other_store_available">No other stores available</string>
     <string name="type_address">Type Address</string>
+    <string name="other_modes_to_pay">Other modes to pay</string>
+    <string name="other_mode">Other mode</string>
+    <string name="other_payment_mode">Other payment mode</string>
 
 </resources>

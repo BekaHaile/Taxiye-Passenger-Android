@@ -516,18 +516,8 @@
             android:value="@string/razorpay_test_api_key"
             />
 
-        <activity
-            android:name="com.sabkuchfresh.home.RazorPayActivity"
-            android:label="RazorPay"
-            android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"
-                  >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <service android:name="com.sabkuchfresh.home.RazorpayCallbackService" android:enabled="true" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
     </application>
 
