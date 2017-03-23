@@ -278,40 +278,44 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
         if(isMenusOpen()){
-            if(itemsInCart == null) {
-                itemsInCart = new ArrayList<>();
-            }
-            itemsInCart.clear();
-
-
-            if(activity.getMenuProductsResponse().getCategories() != null) {
-                for (Category category : activity.getMenuProductsResponse().getCategories()) {
-                    if(category.getSubcategories() != null){
-                        for(Subcategory subcategory : category.getSubcategories()){
-                            for(Item item : subcategory.getItems()){
-                                if(item.getTotalQuantity() > 0){
-                                    itemsInCart.add(item);
-                                }
-                            }
-                        }
-                    } else if(category.getItems() != null){
-                        for(Item item : category.getItems()){
-                            if(item.getTotalQuantity() > 0){
-                                itemsInCart.add(item);
-                            }
-                        }
-                    }
-                }
-            }
-
             try {
-                for (int i = 0; i < itemsInCart.size(); i++) {
-                    MyApplication.getInstance().getCleverTapUtils().addToCart(itemsInCart.get(i).getItemName(),
-                            itemsInCart.get(i).getRestaurantItemId(), itemsInCart.get(i).getTotalQuantity(),
-                            itemsInCart.get(i).getPrice(),
-                            Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
-                            Data.userData.getCity());
-                }
+                if(itemsInCart == null) {
+					itemsInCart = new ArrayList<>();
+				}
+                itemsInCart.clear();
+
+
+                if(activity.getMenuProductsResponse().getCategories() != null) {
+					for (Category category : activity.getMenuProductsResponse().getCategories()) {
+						if(category.getSubcategories() != null){
+							for(Subcategory subcategory : category.getSubcategories()){
+								for(Item item : subcategory.getItems()){
+									if(item.getTotalQuantity() > 0){
+										itemsInCart.add(item);
+									}
+								}
+							}
+						} else if(category.getItems() != null){
+							for(Item item : category.getItems()){
+								if(item.getTotalQuantity() > 0){
+									itemsInCart.add(item);
+								}
+							}
+						}
+					}
+				}
+
+                try {
+					for (int i = 0; i < itemsInCart.size(); i++) {
+						MyApplication.getInstance().getCleverTapUtils().addToCart(itemsInCart.get(i).getItemName(),
+								itemsInCart.get(i).getRestaurantItemId(), itemsInCart.get(i).getTotalQuantity(),
+								itemsInCart.get(i).getPrice(),
+								Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
+								Data.userData.getCity());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
             } catch (Exception e) {
                 e.printStackTrace();
             }
