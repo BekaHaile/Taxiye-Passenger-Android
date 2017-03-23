@@ -224,20 +224,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
 		GAUtils.trackScreenView(activity.getGaCategory()+superCategory.getSuperCategoryName());
 
-        try {
-			// TODO: 21/03/17 remove this
-//            if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
-//                activity.getHandler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        activity.openFeedback();
-//                    }
-//                }, 300);
-//            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
 		try {
 			if(Data.userData.getPromoSuccess() == 0) {
 				showPromoFailedAtSignupDialog();
@@ -325,10 +311,10 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 				activity.updateCartValuesGetTotalPrice();
 			}
 			activity.setCartChangedAtCheckout(false);
-//			activity.setMinOrderAmountText(FreshFragment.this);
             activity.getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+					activity.setMinOrderAmountText(FreshFragment.this);
 					if(activity.isRefreshCart() && !activity.refreshCart2){
                         getAllProducts(true, activity.getSelectedLatLng());
 					}

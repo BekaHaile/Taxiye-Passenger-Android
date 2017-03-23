@@ -52,7 +52,6 @@ import retrofit.mime.TypedByteArray;
 public class FeedHomeFragment extends Fragment {
 
 
-    // TODO: 19/03/17 Fetch feed API after post or review added
     private FeedHomeAdapter feedHomeAdapter;
     private TextView tvAddPost;
     private LikeFeed likeFeed;
