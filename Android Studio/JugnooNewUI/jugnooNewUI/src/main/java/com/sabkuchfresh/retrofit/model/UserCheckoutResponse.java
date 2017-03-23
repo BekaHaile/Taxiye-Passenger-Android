@@ -66,7 +66,7 @@ public class UserCheckoutResponse{
 	private RestaurantInfo restaurantInfo;
 	@SerializedName("refresh_on_cart_change")
 	@Expose
-	private Integer hitCheckoutApi;
+	private Integer refreshOnCartChange;
 
 	/**
 	 *
@@ -232,15 +232,15 @@ public class UserCheckoutResponse{
 		this.restaurantInfo = restaurantInfo;
 	}
 
-	public Integer getHitCheckoutApi() {
-		if(hitCheckoutApi == null){
-			hitCheckoutApi = 0;
+	public Integer getRefreshOnCartChange() {
+		if(refreshOnCartChange == null){
+			refreshOnCartChange = 0;
 		}
-		return hitCheckoutApi;
+		return refreshOnCartChange;
 	}
 
-	public void setHitCheckoutApi(Integer hitCheckoutApi) {
-		this.hitCheckoutApi = hitCheckoutApi;
+	public void setRefreshOnCartChange(Integer refreshOnCartChange) {
+		this.refreshOnCartChange = refreshOnCartChange;
 	}
 
 	public class Subscription {

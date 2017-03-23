@@ -192,6 +192,8 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             activity.finish();
         rootView = inflater.inflate(R.layout.layout_feedback, container, false);
 
+        GAUtils.trackScreenView(activity.getGaCategory()+FEEDBACK);
+
         setUp();
 
         return rootView;

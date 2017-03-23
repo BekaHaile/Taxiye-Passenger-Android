@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -43,7 +44,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 
 
-public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener {
+public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener, GAAction {
 
     private final String TAG = VendorMenuFragment.class.getSimpleName();
     private LinearLayout llRoot;
@@ -106,6 +107,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             e.printStackTrace();
         }
 
+        GAUtils.trackScreenView(MENUS+RESTAURANT_HOME);
+
 
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
 
@@ -143,6 +146,12 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             }
         });
 
+
+        try {
+            ((SwipeRefreshLayout)rootView.findViewById(R.id.swipe_container)).setEnabled(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         success(activity.getMenuProductsResponse());
 
@@ -260,6 +269,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
             }
             activity.setRefreshCart(false);
+            activity.setMinOrderAmountText(VendorMenuFragment.this);
 
         }
         else{
@@ -337,7 +347,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     ivShadowAboveTab.setVisibility(View.VISIBLE);
                     ivShadowBelowTab.setVisibility(View.VISIBLE);
 
-                    activity.updateCartFromSP();
+                    activity.updateItemListFromSPDB();
                     activity.updateCartValuesGetTotalPrice();
                     menusCategoryFragmentsAdapter.setCategories(activity.getMenuProductsResponse().getCategories());
                     tabs.setViewPager(viewPager);
@@ -398,8 +408,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     activity.openRestaurantReviewsListFragment();
                 }
             });
-
-
         }
     }
 

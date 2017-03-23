@@ -70,7 +70,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class RestaurantAddReviewFragment extends Fragment  {
+public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
     private final String TAG = RestaurantAddReviewFragment.class.getSimpleName();
 
@@ -135,6 +135,8 @@ public class RestaurantAddReviewFragment extends Fragment  {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        GAUtils.trackScreenView(MENUS+ADD_FEED);
 
         etReviewMaxLength = getResources().getInteger(R.integer.edt_add_review_max_length);
         etFeedback = (EditText) rootView.findViewById(R.id.etFeedback);
@@ -224,10 +226,11 @@ public class RestaurantAddReviewFragment extends Fragment  {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length()==0||s.length()==1)
-                updateSubmitButtonStatus();
+                if(s.length()>0)
+                    bSubmit.setEnabled(true);
+                else
+                    updateSubmitButtonStatus();
 
-//                bSubmit.setEnabled(s.length() > 0);
                 updateTextCount();
             }
         });
@@ -408,7 +411,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
                     updateSubmitButtonStatus();
 
                 }
-            });
+            }, displayImagesRecycler);
             displayImagesRecycler.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
             displayImagesRecycler.setAdapter(editReviewImagesAdapter);
         } else {
@@ -420,7 +423,7 @@ public class RestaurantAddReviewFragment extends Fragment  {
 
 
       ibAccessCamera.setEnabled(objectList.size()<5);
-        updateSubmitButtonStatus();
+       updateSubmitButtonStatus();
 
     if(objectList.size()>0)
         displayImagesRecycler.smoothScrollToPosition(objectList.size());

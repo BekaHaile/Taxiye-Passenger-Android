@@ -625,8 +625,17 @@ public class FloatingActionMenu extends ViewGroup {
         }
     }
 
+    private boolean lock = false;
+    private Handler handler = new Handler();
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            lock = false;
+        }
+    };
+
     public void open(final boolean animate) {
-        if (!isOpened()) {
+        if (!lock && !isOpened()) {
             if (isBackgroundEnabled()) {
                 mShowBackgroundAnimator.start();
             }
@@ -678,11 +687,14 @@ public class FloatingActionMenu extends ViewGroup {
                     }
                 }
             }, ++counter * mAnimationDelayPerItem);
+            lock = true;
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, 200);
         }
     }
 
     public void close(final boolean animate) {
-        if (isOpened()) {
+        if (!lock && isOpened()) {
             if (isBackgroundEnabled()) {
                 mHideBackgroundAnimator.start();
             }
@@ -734,6 +746,9 @@ public class FloatingActionMenu extends ViewGroup {
                     }
                 }
             }, ++counter * mAnimationDelayPerItem);
+            lock = true;
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, 200);
         }
     }
 

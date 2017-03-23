@@ -7,6 +7,7 @@
     android:visibility="gone">
 
     <ImageView
+        android:id="@+id/shadow_top"
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_new_height"
         android:src="@drawable/shadow_down_new" />

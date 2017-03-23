@@ -44,7 +44,9 @@ public enum AppLinkIndex {
 
 	WALLET_TRANSACTIONS(20), //20 Jugnoo_Star_Screen
 
-	OPEN_COUPONS_DIALOG(21) //open coupons dialog
+	OPEN_COUPONS_DIALOG(21), //open coupons dialog
+
+	FEED_PAGE(22), // open Feed Screen
 
 	;
 

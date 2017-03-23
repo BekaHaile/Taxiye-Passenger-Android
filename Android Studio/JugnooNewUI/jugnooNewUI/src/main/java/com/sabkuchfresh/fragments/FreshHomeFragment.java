@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.CustomPagerAdapter;
 import com.sabkuchfresh.adapters.FreshSuperCategoriesAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -24,6 +26,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -38,6 +41,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -56,6 +60,10 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     private FreshSuperCategoriesAdapter adapter;
     private TextView textViewNothingFound;
     private SwipeRefreshLayout swipeContainer;
+    private ViewPager mImageViewPager;
+    private CustomPagerAdapter mCustomPagerAdapter;
+    private ArrayList<String> mResources = new ArrayList<>();
+//    private Scr scrollView;
 
     @Nullable
     @Override
@@ -73,6 +81,25 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
 
+        /*for(int j=0; j<3; j++) {
+            mResources.add("https://visitorinvictoria.ca/wp-content/uploads/2017/03/groceries.jpg");
+        }*/
+      /*  scrollView = (NestedScrollView) rootView.findViewById (R.id.nest_scrollview);
+        scrollView.setFillViewport (true);*/
+//        mImageViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+//        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabDots);
+//        tabLayout.setupWithViewPager(mImageViewPager, true);
+//        mCustomPagerAdapter = new CustomPagerAdapter(activity);
+//
+//        mImageViewPager.setAdapter(mCustomPagerAdapter);
+//
+//        for(int i=0; i < tabLayout.getTabCount(); i++) {
+//            View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(i);
+//            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+//            p.setMargins(20, 0, 0, 0);
+//            tab.requestLayout();
+//        }
+
         swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(this);
         swipeContainer.setColorSchemeResources(R.color.white);
@@ -87,7 +114,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         relativeLayoutNoMenus.setVisibility(View.GONE);
         rvFreshSuper = (RecyclerView) rootView.findViewById(R.id.rvFreshSuper);
         rvFreshSuper.setItemAnimator(new DefaultItemAnimator());
-        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
 
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
             @Override
@@ -95,6 +122,8 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 switch (adapter.getItemViewType(position)){
                     case FreshSuperCategoriesAdapter.SINGLE_ITEM:
                         return 2;
+                    case FreshSuperCategoriesAdapter.PAGER:
+                        return 3;
                     case FreshSuperCategoriesAdapter.MAIN_ITEM:
                         return 1;
                     default:
@@ -103,11 +132,15 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             }
         });
         rvFreshSuper.setLayoutManager(gridLayoutManager);
-        adapter = new FreshSuperCategoriesAdapter(activity, new FreshSuperCategoriesAdapter.Callback() {
+        adapter = new FreshSuperCategoriesAdapter(activity, mResources, new FreshSuperCategoriesAdapter.Callback() {
             @Override
             public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
-                activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
-                activity.getFabViewTest().hideJeanieHelpInSession();
+                if(superCategory.getIsEnabled() == 0){
+                    Utils.showToast(activity, getString(R.string.coming_soon_to_your_city));
+                } else {
+                    activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
+                    activity.getFabViewTest().hideJeanieHelpInSession();
+                }
                 try {
                     GAUtils.event(FRESH, HOME+SUPER+CATEGORY+CLICKED, superCategory.getSuperCategoryName());
                 } catch (Exception e) {
@@ -140,8 +173,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             e.printStackTrace();
         }
 
-        GAUtils.trackScreenView(FRESH_SCREEN);
-
         return rootView;
     }
 
@@ -150,9 +181,10 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         super.onHiddenChanged(hidden);
         if(!hidden){
             adapter.notifyDataSetChanged();
+            activity.setAddressTextToLocationPlaceHolder();
             activity.fragmentUISetup(this);
             if(activity.getCartChangedAtCheckout()){
-                activity.updateCartFromSP();
+                activity.updateItemListFromSPDB();
                 activity.updateCartValuesGetTotalPrice();
             }
             activity.setCartChangedAtCheckout(false);
@@ -175,10 +207,12 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
 
-    public void getSuperCategoriesAPI() {
+    public void getSuperCategoriesAPI(boolean showDialog) {
         try {
             if(MyApplication.getInstance().isOnline()) {
-                DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+                if(showDialog) {
+                    DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+                }
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -186,6 +220,8 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
                 params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
                 params.put(Constants.INTERATED, "1");
+
+                params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getLastCartVendorId()));
 
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getFreshApiService().getSuperCategories(params, new Callback<SuperCategoriesData>() {
@@ -224,6 +260,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                             retryDialogSuperCategoriesAPI(DialogErrorType.SERVER_ERROR);
                             stopOhSnap();
                         }
+                        swipeContainer.setRefreshing(false);
                     }
 
                     @Override
@@ -231,15 +268,17 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                         DialogPopup.dismissLoadingDialog();
                         retryDialogSuperCategoriesAPI(DialogErrorType.CONNECTION_LOST);
                         stopOhSnap();
+                        swipeContainer.setRefreshing(false);
                     }
                 });
             }
             else {
                 retryDialogSuperCategoriesAPI(DialogErrorType.NO_NET);
+                swipeContainer.setRefreshing(false);
             }
-            swipeContainer.setRefreshing(false);
         } catch (Exception e) {
             e.printStackTrace();
+            swipeContainer.setRefreshing(false);
         }
     }
 
@@ -261,7 +300,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        getSuperCategoriesAPI();
+                        getSuperCategoriesAPI(true);
                     }
 
                     @Override
@@ -290,6 +329,8 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
-        getSuperCategoriesAPI();
+        getSuperCategoriesAPI(false);
     }
+
+
 }

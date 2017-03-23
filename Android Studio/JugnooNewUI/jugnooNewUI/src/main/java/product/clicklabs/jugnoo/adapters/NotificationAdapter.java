@@ -288,6 +288,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 intent.putExtra(Constants.KEY_WALLET_TRANSACTIONS, 1);
                 activity.startActivity(intent);
             }
+            else if(AppLinkIndex.FEED_PAGE.getOrdinal() == deepInt){
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFeedClientId(), new LatLng(Data.latitude, Data.longitude), true);
+            }
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch(Exception e){
             e.printStackTrace();

@@ -420,6 +420,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
         notificationManager.cancel(NOTIFICATION_ID);
     }
 
+	public static void clearNotification(Context context, int notifId) {
+		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancel(notifId);
+	}
+
 
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -564,6 +569,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 						notificationManager(this, title, message1, playSound);
 						stopLocationUpdateService();
+						Intent intentBr = new Intent(Constants.ACTION_FINISH_ACTIVITY);
+						intentBr.putExtra(Constants.KEY_FINISH_ACTIVITY, 1);
+						sendBroadcast(intentBr);
 
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag
 							|| PushFlags.WAITING_ENDED.getOrdinal() == flag) {
@@ -796,6 +804,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 						} else {
 							// Nothing
+							clearNotification(this, PROMOTION_NOTIFICATION_ID);
 						}
 					} else if (PushFlags.REFRESH_PAY_DATA.getOrdinal() == flag) {
 						message1 = jObj.optString(KEY_MESSAGE, "");

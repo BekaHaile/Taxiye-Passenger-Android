@@ -84,6 +84,7 @@
 
     <color name="grey_btn">#8E8E8E</color>
     <color name="grey_btn_pressed">#7E7E7E</color>
+    <color name="grey_e7">#e7e7e7</color>
 
 
     <color name="blue_dark_btn">#3B5999</color>
@@ -211,6 +212,7 @@
     <color name="menu_item_selector_color_F7">#F7F7F7</color>
     <color name="ride_history_item_text_color">#0EB2CE</color>
     <color name="google_path_polyline_color">#0889da</color>
+    <color name="bar_color">#EBEBEB</color>
 
     <color name="text_green_color">#22BD21</color>
 
@@ -316,8 +318,21 @@
     <color name="purple_menus_fab_pressed">#9f5495</color>
     <color name="yellow_pay_fab">#faaf40</color>
     <color name="yellow_pay_fab_pressed">#e69b2c</color>
+    <color name="grey_feed_fab">#5e657e</color>
+    <color name="grey_feed_fab_pressed">#545b74</color>
 
 
+    <color name="feed_grey_text">#595968</color>
+  <color name="feed_grey_text_heading">#474655</color>
+    <color name="feed_grey_hint_color">#a4a4a4</color>
+  <color name="feed_grey_text_secondary">#9b9b9b</color>
+  <color name="feed_grey_background">#eaeaea</color>
+  <color name="feed_grey_background_light">#f7f7f7</color>
+  <color name="feed_color_orange">#ff834e</color>
+    <color name="green_delivery_stores">#8dcf61</color>
 
+
+    <color name="feed_color_like_active">#ef6692</color>
+    <color name="feed_disabled_grey">#f7f7f7</color>
 
 </resources>

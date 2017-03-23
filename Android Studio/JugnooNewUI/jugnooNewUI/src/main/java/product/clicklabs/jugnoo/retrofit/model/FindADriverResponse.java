@@ -75,6 +75,9 @@ public class FindADriverResponse {
     @SerializedName("pay_enabled")
     @Expose
     private Integer payEnabled = 0;
+    @SerializedName("feed_enabled")
+    @Expose
+    private Integer feedEnabled = 0;
     @SerializedName("integrated_jugnoo_enabled")
     @Expose
     private Integer integratedJugnooEnabled;
@@ -516,5 +519,16 @@ public class FindADriverResponse {
 
     public void setPointsOfInterestAddresses(List<FetchUserAddressResponse.Address> pointsOfInterestAddresses) {
         this.pointsOfInterestAddresses = pointsOfInterestAddresses;
+    }
+
+    public Integer getFeedEnabled() {
+        if(feedEnabled == null){
+            feedEnabled = 0;
+        }
+        return feedEnabled;
+    }
+
+    public void setFeedEnabled(Integer feedEnabled) {
+        this.feedEnabled = feedEnabled;
     }
 }

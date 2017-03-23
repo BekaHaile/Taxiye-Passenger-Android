@@ -92,6 +92,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
+import com.sabkuchfresh.home.TransactionUtils;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
@@ -482,6 +483,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private boolean setPickupAddressZoomedOnce = false;
     private GoogleApiClient mGoogleApiClient;
     private float previousZoomLevel = -1.0f;
+    private TransactionUtils transactionUtils;
+    private RelativeLayout relativeLayoutContainer;
+    private FrameLayout coordinatorLayout;
 
 
     @SuppressLint("NewApi")
@@ -563,12 +567,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         rideNowClicked = false;
 
 
-
+        coordinatorLayout = (FrameLayout) findViewById(R.id.coordinatorLayout);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 
-        assl = new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
+        assl = new ASSL(HomeActivity.this, coordinatorLayout, 1134, 720, false);
 
 
         //Swipe menu
@@ -753,6 +757,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonCallDriver.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
+        relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
 
 		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenMedium(this));
@@ -1433,6 +1438,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+        changeLocalityLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutRideSummary, textViewRSScroll,
                 new KeyboardLayoutListener.KeyBoardStateHandler() {
                     @Override
@@ -1629,10 +1641,38 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+
         // Show tutorial for Jeanie
 //        if(Data.userData.getShowHomeScreen() == 1){
 //            fabViewTest.getMenuLabelsRightTest().performClick();
 //        }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(Data.userData.getSignupTutorial() != null) {
+						if (Data.userData.getSignupTutorial().getTs1() == 1
+								|| Data.userData.getSignupTutorial().getTs2() == 1) {
+							getTransactionUtils().openSignUpTutorialFragment(HomeActivity.this, relativeLayoutContainer, 2);
+						}
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 2000);
+    }
+
+    public TransactionUtils getTransactionUtils() {
+        if (transactionUtils == null) {
+            transactionUtils = new TransactionUtils();
+        }
+        return transactionUtils;
+    }
+
+    public RelativeLayout getRelativeLayoutContainer() {
+        return relativeLayoutContainer;
     }
 
     @Override
@@ -3937,6 +3977,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 dataFoundNull = true;
             } else if(clientId.equalsIgnoreCase(Config.getPayClientId()) && Data.getPayData() == null){
                 dataFoundNull = true;
+            } else if(clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.getFeedData() == null){
+                dataFoundNull = true;
             }
             if(dataFoundNull) {
                 activity.startActivity(new Intent(activity, SplashNewActivity.class));
@@ -4808,7 +4850,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) &&
                         (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
-                        && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)) {
+                        && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
+                        && (Data.userData.getFeedEnabled() == 0)) {
                     //imageViewFabFake.setVisibility(View.GONE);
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 } else {
@@ -6984,6 +7027,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     executionTime = serverRequestStartTime + elapsedTime;
                                                 }
                                                 if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
+                                                    fbLogEvent(nameValuePairs);
+
                                                     // Ride Requested
                                                     // Google Android in-app conversion tracking snippet
                                                     // Add this code to the event you'd like to track in your app.
@@ -7157,6 +7202,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
         });
+    }
+
+    private void fbLogEvent(HashMap<String, String> params) {
+        try {
+            Bundle bundle = new Bundle();
+            for(String key : params.keySet()){
+                bundle.putString(key, params.get(key));
+            }
+
+            MyApplication.getInstance().getAppEventsLogger().logEvent("request_ride",
+                    bundle
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -9146,8 +9206,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     drawerLayout.closeDrawer(GravityCompat.START);
                                 }
                                 if (Prefs.with(HomeActivity.this).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()).equals(Config.getAutosClientId())) {
-                                    //                    updateCartFromSP();
-                                    //                    relativeLayoutCart.performClick();
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,

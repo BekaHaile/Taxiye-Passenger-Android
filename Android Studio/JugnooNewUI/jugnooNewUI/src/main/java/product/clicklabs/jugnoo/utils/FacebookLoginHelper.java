@@ -128,7 +128,12 @@ public class FacebookLoginHelper {
 
                             if (object != null) {
                                 String fbId = object.optString("id");
-                                String firstName = object.optString("first_name");
+                                String firstName;
+                                if(object.has("name")){
+                                    firstName = object.optString("name");
+                                } else {
+                                    firstName = object.optString("first_name");
+                                }
                                 String lastName = object.optString("last_name");
                                 String userName = object.optString("user_name");
 

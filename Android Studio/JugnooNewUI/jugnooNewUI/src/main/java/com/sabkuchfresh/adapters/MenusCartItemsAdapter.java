@@ -32,7 +32,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -250,27 +249,27 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				try {
 					final int pos = (int) v.getTag();
-					if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
-						DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
-								context.getString(R.string.coupon_remove_reapply_before_checkout),
-								context.getString(R.string.ok),
-								context.getString(R.string.cancel),
-								new View.OnClickListener(){
-									@Override
-									public void onClick(View v) {
-										doMinus(pos);
-										callback.removeCoupon();
-									}
-								},
-								new View.OnClickListener(){
-									@Override
-									public void onClick(View v) {
-
-									}
-								}, true, false);
-					} else{
+//					if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
+//						DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
+//								context.getString(R.string.coupon_remove_reapply_before_checkout),
+//								context.getString(R.string.ok),
+//								context.getString(R.string.cancel),
+//								new View.OnClickListener(){
+//									@Override
+//									public void onClick(View v) {
+//										doMinus(pos);
+//										callback.removeCoupon();
+//									}
+//								},
+//								new View.OnClickListener(){
+//									@Override
+//									public void onClick(View v) {
+//
+//									}
+//								}, true, false);
+//					} else{
 						doMinus(pos);
-					}
+//					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -282,27 +281,27 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				try {
 					final int pos = (int) v.getTag();
-					if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
-						DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
-								context.getString(R.string.coupon_remove_reapply_before_checkout),
-								context.getString(R.string.ok),
-								context.getString(R.string.cancel),
-								new View.OnClickListener(){
-									@Override
-									public void onClick(View v) {
-										doPlus(pos);
-										callback.removeCoupon();
-									}
-								},
-								new View.OnClickListener(){
-									@Override
-									public void onClick(View v) {
-
-									}
-								}, true, false);
-					} else{
+//					if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
+//						DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
+//								context.getString(R.string.coupon_remove_reapply_before_checkout),
+//								context.getString(R.string.ok),
+//								context.getString(R.string.cancel),
+//								new View.OnClickListener(){
+//									@Override
+//									public void onClick(View v) {
+//										doPlus(pos);
+//										callback.removeCoupon();
+//									}
+//								},
+//								new View.OnClickListener(){
+//									@Override
+//									public void onClick(View v) {
+//
+//									}
+//								}, true, false);
+//					} else{
 						doPlus(pos);
-					}
+//					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

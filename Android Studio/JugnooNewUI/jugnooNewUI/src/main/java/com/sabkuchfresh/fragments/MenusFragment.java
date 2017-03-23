@@ -22,13 +22,10 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.analytics.GACategory;
-import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
-import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
@@ -139,10 +136,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
-
-
-
-                getVendorMenu(vendor);
+                activity.fetchRestaurantMenuAPI(vendor.getRestaurantId());
                 Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
             }
 
@@ -220,7 +214,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
-        GAUtils.trackScreenView(MENUS_SCREEN);
 
         return rootView;
     }
@@ -240,6 +233,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            activity.setAddressTextToLocationPlaceHolder();
             activity.resumeMethod();
             menusRestaurantAdapter.applyFilter();
             activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
@@ -340,7 +334,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                             int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""));
                                             for (MenusResponse.Vendor vendor : vendors) {
                                                 if (restId == vendor.getRestaurantId()) {
-                                                    getVendorMenu(vendor);
+                                                    activity.fetchRestaurantMenuAPI(vendor.getRestaurantId());
                                                     break;
                                                 }
                                             }
@@ -411,92 +405,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 });
     }
 
-
-    public void getVendorMenu(final MenusResponse.Vendor vendor) {
-        try {
-            if (MyApplication.getInstance().isOnline()) {
-                DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
-                params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(vendor.getRestaurantId()));
-                params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
-                params.put(Constants.INTERATED, "1");
-                Log.i(TAG, "getVendorMenu params=" + params.toString());
-
-                new HomeUtil().putDefaultParams(params);
-                RestClient.getMenusApiService().restaurantMenu(params, new Callback<VendorMenuResponse>() {
-                    @Override
-                    public void success(VendorMenuResponse productsResponse, Response response) {
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i(TAG, "getVendorMenu response = " + responseStr);
-                        try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            String message = productsResponse.getMessage();
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
-                                    activity.setVendorOpened(vendor);
-                                    activity.setMenuProductsResponse(productsResponse);
-                                    if (activity.menusSort == -1) {
-                                        activity.menusSort = jObj.getInt(Constants.SORTED_BY);
-                                    }
-                                    if (vendor.getIsClosed() == 1) {
-                                        activity.clearMenusCart();
-                                    }
-
-//                                    FlurryEventLogger.eventGA(Events.MENUS, Events.SELECT_RESTAURANT, Events.MENU_SELECT_RESTAURANT);
-
-                                    GAUtils.event(GACategory.MENUS, GAAction.HOME + GAAction.RESTAURANT_CLICKED,vendor.getName());
-                                    activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
-                                    activity.getFabViewTest().hideJeanieHelpInSession();
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", message);
-                                }
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        retryDialogVendorData(DialogErrorType.CONNECTION_LOST, vendor);
-                    }
-                });
-            } else {
-                retryDialogVendorData(DialogErrorType.NO_NET, vendor);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    private void retryDialogVendorData(DialogErrorType dialogErrorType, final MenusResponse.Vendor vendor) {
-        DialogPopup.dialogNoInternet(activity,
-                dialogErrorType,
-                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
-                    @Override
-                    public void positiveClick(View view) {
-                        getVendorMenu(vendor);
-                    }
-
-                    @Override
-                    public void neutralClick(View view) {
-
-                    }
-
-                    @Override
-                    public void negativeClick(View view) {
-                    }
-                });
-    }
 
     private void showPromoFailedAtSignupDialog() {
         try {

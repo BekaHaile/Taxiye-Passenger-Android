@@ -28,6 +28,21 @@ public class DeliveryInfo {
 	@SerializedName("cityId")
 	@Expose
 	private Integer cityId;
+	@SerializedName("vendor_id")
+	@Expose
+	private Integer vendorId;
+	@SerializedName("vendor_name")
+	@Expose
+	private String vendorName;
+	@SerializedName("vendor_address")
+	@Expose
+	private String vendorAddress;
+	@SerializedName("vendor_phone")
+	@Expose
+	private String vendorPhone;
+	@SerializedName("store_id")
+	@Expose
+	private Integer storeId;
 
 	/**
 	 *
@@ -98,6 +113,46 @@ public class DeliveryInfo {
 
 	public void setDynamicDeliveryCharges(Integer dynamicDeliveryCharges) {
 		this.dynamicDeliveryCharges = dynamicDeliveryCharges;
+	}
+
+	public Integer getVendorId() {
+		return vendorId;
+	}
+
+	public void setVendorId(Integer vendorId) {
+		this.vendorId = vendorId;
+	}
+
+	public String getVendorName() {
+		return vendorName;
+	}
+
+	public void setVendorName(String vendorName) {
+		this.vendorName = vendorName;
+	}
+
+	public String getVendorAddress() {
+		return vendorAddress;
+	}
+
+	public void setVendorAddress(String vendorAddress) {
+		this.vendorAddress = vendorAddress;
+	}
+
+	public String getVendorPhone() {
+		return vendorPhone;
+	}
+
+	public void setVendorPhone(String vendorPhone) {
+		this.vendorPhone = vendorPhone;
+	}
+
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
 	}
 
 	public Double getApplicableDeliveryCharges(int type, double subTotalAmount){

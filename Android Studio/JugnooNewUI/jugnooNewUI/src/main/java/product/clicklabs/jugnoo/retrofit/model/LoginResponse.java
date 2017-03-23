@@ -13,6 +13,7 @@ import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.datastructure.SignupTutorial;
 
 /**
  * Created by shankar on 1/5/16.
@@ -24,6 +25,14 @@ public class LoginResponse {
 
 	public void setPay(Pay pay) {
 		this.pay = pay;
+	}
+
+	public Feed getFeed() {
+		return feed;
+	}
+
+	public void setFeed(Feed feed) {
+		this.feed = feed;
 	}
 
 	public class Cancellation {
@@ -109,6 +118,9 @@ public class LoginResponse {
 	@SerializedName("pay")
 	@Expose
 	private Pay pay;
+	@SerializedName("feed")
+	@Expose
+	private Feed feed;
 	@SerializedName("delivery")
 	@Expose
 	private Delivery delivery;
@@ -321,6 +333,48 @@ public class LoginResponse {
 		public void setCoupons(List<CouponInfo> coupons) {
 			this.coupons = coupons;
 		}
+	}
+
+	public class Feed{
+		@SerializedName("contacts_synced")
+		@Expose
+		private Integer contactsSynced;
+
+
+
+		@SerializedName("review_placeholder")
+		@Expose
+		private String feedAddReviewHint;
+
+		@SerializedName("ask_something_placeholder")
+		@Expose
+		private String feedAddPostHInt;
+
+		@SerializedName("max_upload_images")
+		@Expose
+		private Integer maxUploadImagesFeed;
+
+		public String getFeedAddReviewHint() {
+			return feedAddReviewHint;
+		}
+
+		public String getFeedAddPostHInt() {
+			return feedAddPostHInt;
+		}
+
+		public Integer getMaxUploadImagesFeed() {
+			return maxUploadImagesFeed;
+		}
+
+		public Integer getContactsSynced() {
+			return contactsSynced;
+		}
+
+		public void setContactsSynced(Integer contactsSynced) {
+			this.contactsSynced = contactsSynced;
+		}
+
+
 	}
 
 	public class Pay{
@@ -717,6 +771,9 @@ public class LoginResponse {
 		@SerializedName("subscription_data")
 		@Expose
 		private SubscriptionData subscriptionData;
+		@SerializedName("signup_tutorial")
+		@Expose
+		private SignupTutorial signupTutorial;
 
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
@@ -876,6 +933,14 @@ public class LoginResponse {
 
 		public void setSubscriptionData(SubscriptionData subscriptionData) {
 			this.subscriptionData = subscriptionData;
+		}
+
+		public SignupTutorial getSignUpTutorial() {
+			return signupTutorial;
+		}
+
+		public void setSignUpTutorial(SignupTutorial signUpTutorial) {
+			this.signupTutorial = signUpTutorial;
 		}
 	}
 

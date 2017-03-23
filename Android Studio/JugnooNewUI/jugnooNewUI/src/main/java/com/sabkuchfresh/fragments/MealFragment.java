@@ -100,6 +100,8 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_category_items, container, false);
 
+        GAUtils.trackScreenView(MEALS+HOME);
+
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
@@ -166,7 +168,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             e.printStackTrace();
         }
 
-        GAUtils.trackScreenView(MEALS_SCREEN);
 
         return rootView;
     }
@@ -186,10 +187,11 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            activity.setAddressTextToLocationPlaceHolder();
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
             if(activity.getCartChangedAtCheckout()){
-                activity.updateCartFromSP();
+                activity.updateItemListFromSPDB();
                 mealAdapter.notifyDataSetChanged();
                 activity.updateCartValuesGetTotalPrice();
             }
@@ -375,7 +377,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                                     if (activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
-                                        activity.updateCartFromSP();
+                                        activity.updateItemListFromSPDB(); // this is necessary
                                         activity.updateCartValuesGetTotalPrice();
                                     }
                                 }
@@ -447,12 +449,14 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
+        activity.saveSubItemToDeliveryStoreCart(subItem);
         activity.updateCartValuesGetTotalPrice();
         activity.getFabViewTest().hideJeanieHelpInSession();
     }
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
+        activity.saveSubItemToDeliveryStoreCart(subItem);
         activity.updateCartValuesGetTotalPrice();
         activity.getFabViewTest().hideJeanieHelpInSession();
     }

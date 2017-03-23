@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.apis.ApiTrackPush;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
@@ -27,6 +28,7 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -100,6 +102,7 @@ public class Data {
 	private static DeliveryData DeliveryData;
 	private static MenusData menusData;
 	private static PayData payData;
+	private static LoginResponse.Feed feedData;
 
 	
 
@@ -143,6 +146,7 @@ public class Data {
 			autoData = null;
 			freshData = null;
 			mealsData = null;
+			feedData = null;
 			DeliveryData = null;
 
 			facebookUserData = null;
@@ -252,9 +256,6 @@ public class Data {
 			Prefs.with(context).remove(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED);
 
 
-			Prefs.with(context).remove(Constants.SP_FRESH_CART);
-			Prefs.with(context).remove(Constants.SP_MEAL_CART);
-			Prefs.with(context).remove(Constants.SP_GROCERY_CART);
 			Prefs.with(context).remove(Constants.SP_MENUS_CART);
 			Prefs.with(context).remove(Constants.SP_FRESH_CHECKOUT_SAVE_DATA);
 			Prefs.with(context).remove(Constants.SP_MEALS_CHECKOUT_SAVE_DATA);
@@ -262,9 +263,14 @@ public class Data {
 			Prefs.with(context).remove(Constants.SP_MENUS_CHECKOUT_SAVE_DATA);
 
 			Prefs.with(context).remove(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+			Prefs.with(context).remove(SPLabels.USERNAME_UPDATED);
 
 
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_address_selected));
+
+			Paper.book().delete(PaperDBKeys.DB_FRESH_CART);
+			Paper.book().delete(PaperDBKeys.DB_MEALS_CART);
+			Paper.book().delete(PaperDBKeys.DB_PREVIOUS_VENDOR);
 
 
 		} catch (Exception e) {
@@ -517,5 +523,13 @@ public class Data {
 	}
 	public static boolean isJeanieShownInSession(){
 		return jeanieShownInSession;
+	}
+
+	public static LoginResponse.Feed getFeedData() {
+		return feedData;
+	}
+
+	public static void setFeedData(LoginResponse.Feed feedData) {
+		Data.feedData = feedData;
 	}
 }

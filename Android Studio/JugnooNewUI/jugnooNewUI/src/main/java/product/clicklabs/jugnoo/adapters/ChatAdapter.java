@@ -56,36 +56,40 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-		if(holder instanceof ChatViewHolder) {
-			final ChatViewHolder chatViewHolder = ((ChatViewHolder)holder);
-			FetchChatResponse.ChatHistory chatHistory = chatHistories.get(position);
+		try {
+			if(holder instanceof ChatViewHolder) {
+				final ChatViewHolder chatViewHolder = ((ChatViewHolder)holder);
+				FetchChatResponse.ChatHistory chatHistory = chatHistories.get(position);
 
-			if (chatHistory.getIsSender() == 1) {
-				chatViewHolder.layoutYou.setVisibility(View.GONE);
-				chatViewHolder.layoutMe.setVisibility(View.VISIBLE);
+				if (chatHistory.getIsSender() == 1) {
+					chatViewHolder.layoutYou.setVisibility(View.GONE);
+					chatViewHolder.layoutMe.setVisibility(View.VISIBLE);
 
-				chatViewHolder.chatTextMe.setText(chatHistory.getMessage());
-				chatViewHolder.chatTimeMe.setText(DateOperations.convertDateViaFormatOnlyTime(DateOperations.utcToLocalWithTZFallback(chatHistory.getCreatedAt())));
-			/*Picasso.with(context).
-					load(chat.getImage()).
-					transform(new CircleTransform()).
-					fit().into(holder.userIconMe);*/
-			} else {
-				chatViewHolder.layoutYou.setVisibility(View.VISIBLE);
-				chatViewHolder.layoutMe.setVisibility(View.GONE);
+					chatViewHolder.chatTextMe.setText(chatHistory.getMessage());
+					chatViewHolder.chatTimeMe.setText(DateOperations.convertDateViaFormatOnlyTime(DateOperations.utcToLocalWithTZFallback(chatHistory.getCreatedAt())));
+				/*Picasso.with(context).
+						load(chat.getImage()).
+						transform(new CircleTransform()).
+						fit().into(holder.userIconMe);*/
+				} else {
+					chatViewHolder.layoutYou.setVisibility(View.VISIBLE);
+					chatViewHolder.layoutMe.setVisibility(View.GONE);
 
-				chatViewHolder.chatTextYou.setText(chatHistory.getMessage());
-				chatViewHolder.chatTimeYou.setText(DateOperations.convertDateViaFormatOnlyTime(DateOperations.utcToLocalWithTZFallback(chatHistory.getCreatedAt())));
-				if(Data.autoData.getAssignedDriverInfo().image != null && !"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().image)) {
-					float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-					Picasso.with(context).
-							load(Data.autoData.getAssignedDriverInfo().image)
-							.placeholder(R.drawable.ic_driver_placeholder)
-							.transform(new CircleTransform())
-							.resize((int) (130f * minRatio), (int) (130f * minRatio)).centerCrop()
-							.into(chatViewHolder.userIconYou);
+					chatViewHolder.chatTextYou.setText(chatHistory.getMessage());
+					chatViewHolder.chatTimeYou.setText(DateOperations.convertDateViaFormatOnlyTime(DateOperations.utcToLocalWithTZFallback(chatHistory.getCreatedAt())));
+					if(Data.autoData.getAssignedDriverInfo().image != null && !"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().image)) {
+						float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+						Picasso.with(context).
+								load(Data.autoData.getAssignedDriverInfo().image)
+								.placeholder(R.drawable.ic_driver_placeholder)
+								.transform(new CircleTransform())
+								.resize((int) (130f * minRatio), (int) (130f * minRatio)).centerCrop()
+								.into(chatViewHolder.userIconYou);
+					}
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

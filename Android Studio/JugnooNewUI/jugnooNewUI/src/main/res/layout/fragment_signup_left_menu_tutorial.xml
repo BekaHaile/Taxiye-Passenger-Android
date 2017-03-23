@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/rlFreeCoupons"
+        android:layout_width="@dimen/px_585"
+        android:layout_height="@dimen/px_135"
+        android:layout_marginTop="@dimen/px_300"
+        android:background="@drawable/background_white_grey_light_selector">
+
+        <TextView
+            android:layout_width="@dimen/px_400"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/get_free_discount_coupons"
+            android:textColor="@color/text_color"
+            android:layout_marginLeft="@dimen/px_50"
+            android:textSize="@dimen/px_36"/>
+
+        <ImageView
+            android:id="@+id/imageViewArrow"
+            android:layout_width="23px"
+            android:layout_height="41px"
+            android:rotation="180"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/px_50"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back"
+            android:tag="mwar"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/ivArrow"
+        android:layout_width="243px"
+        android:layout_height="263px"
+        android:layout_below="@+id/rlFreeCoupons"
+        android:layout_marginLeft="180px"
+        android:layout_marginTop="@dimen/px_30"
+        android:src="@drawable/ic_arrow_signup_tutorial_coupons"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/complete_your_profile_and_get_free_coupons"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_40"
+        android:layout_marginLeft="@dimen/px_60"
+        android:layout_marginRight="@dimen/px_60"
+        android:layout_below="@+id/ivArrow"
+        android:layout_marginTop="@dimen/px_20"
+        android:gravity="center"
+        app:font="maven"/>
+
+</RelativeLayout>

@@ -39,6 +39,9 @@ public class ProductsResponse {
 	@SerializedName("delivery_info")
 	@Expose
 	private DeliveryInfo deliveryInfo;
+	@SerializedName("delivery_stores")
+	@Expose
+	private List<DeliveryStore> deliveryStores = new ArrayList<DeliveryStore>();
 
 	/**
 	 *
@@ -141,5 +144,13 @@ public class ProductsResponse {
 
 	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
 		this.deliveryInfo = deliveryInfo;
+	}
+
+	public List<DeliveryStore> getDeliveryStores() {
+		return deliveryStores;
+	}
+
+	public void setDeliveryStores(List<DeliveryStore> deliveryStores) {
+		this.deliveryStores = deliveryStores;
 	}
 }

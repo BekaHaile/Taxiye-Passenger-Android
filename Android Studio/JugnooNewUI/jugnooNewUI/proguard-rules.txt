@@ -141,3 +141,12 @@
 -keepclassmembers class com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse$ReviewImage {
     private <fields>;
 }
+
+
+#Paper Db
+-keep class org.objenesis.** { *; }
+-keep interface org.objenesis.** { *; }
+-dontwarn org.objenesis.**
+
+-keepattributes InnerClasses
+-keepattributes EnclosingMethod

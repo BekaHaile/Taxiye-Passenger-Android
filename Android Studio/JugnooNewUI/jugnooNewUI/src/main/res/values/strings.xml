@@ -9,9 +9,10 @@
     <string name="no_more_than">Can\'t order more than %d units</string>
     <string name="no_more_than_star">Can\'t add more than %d unit</string>
 
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live
+    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>
+    Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
+     <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -268,7 +269,7 @@
 
     <!-- Jugnoo Jeanie Strings-->
     <string name="jugnoo_jeanie">Jugnoo Jeanie</string>
-	<string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
+    <string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
 		We believe you should always get the best deal for your daily commute and thus we are allowing you to compare other available options with Jugnoo ETA and prices.
 		Get the best deal always!\n
 		And don’t worry about the standard privacy notification on the next screen, we will never store any of your actions from Jugnoo Jeanie.
@@ -437,6 +438,8 @@
     <string name="connection_lost_title">CONNECTION LOST</string>
     <string name="connection_lost_desc">Oops! Your Internet is not working.\nPlease try again.</string>
     <string name="connection_lost_try_again">TRY AGAIN</string>
+    <string name="delivery_charges_with_value">Delivery Charges \u20B9%s</string>
+    <string name="minimum_order_with_value">Minimum order \u20B9%s for free delivery</string>
 
     <string-array name="CountryCodes">
         <item>93,AF</item>
@@ -704,7 +707,7 @@
 
     <string name="tnc_apply">T&amp;C Apply</string>
     <string name="tnc">T&amp;C</string>
-	<string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
+    <string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
 		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
@@ -1445,7 +1448,7 @@
     <string name="did_you_know">Did you know?</string>
     <string name="star_description">You can now avail unlimited FREE delivery, special discounts and much more!</string>
     <string name="click_to_find">Click to find out how…</string>
-    <string name="fresh_min_order_value_format">Just \u20B9%s away from FREE delivery</string>
+    <string name="away_from_free_delivery_value_format">Just \u20B9%s away from FREE delivery</string>
     <string name="jugnoo_star_details">Jugnoo star details</string>
     <string name="membership_plan">Membership plan</string>
     <string name="expires_on">Expires on</string>
@@ -1558,5 +1561,53 @@
     <string name="na">NA</string>
     <string name="login_signup_with">Login / Signup with</string>
     <string name="please_check_tnc">Offer conditions not met. Please review detailed Terms and Conditions for more information</string>
+    <string name="checkout_our_different_services_from_here">Checkout our different services from here</string>
+    <string name="get_free_discount_coupons">Get Free Discount\nCoupons</string>
+    <string name="complete_your_profile_and_get_free_coupons">Complete your profile and get free coupons!</string>
+    <string name="claim_coupon">Claim Coupon</string>
+    <string name="enter_referral_code">Enter Referral Code</string>
+    <string name="complete_your_profile_and_earn_cashback">Complete your profile and earn a 10% Cashback coupon on your next transaction.</string>
+    <string name="link_social_account">Link Social Account</string>
+    <string name="pro_tip">Pro Tip</string>
+    <string name="this_will_enable_one_touch_login">This will enable one touch login</string>
+    <string name="or_enter">Or Enter</string>
+    <string name="finish">Finish</string>
+    <string name="connect_your_wallet_to_grab">Connect your wallets to grab</string>
+    <string name="free_coupons">Free Coupons</string>
+    <string name="add_referral_code">Add Referral Code</string>
+    <string name="connect_wallets">Connect Wallets</string>
+    <string name="complete_profile">Complete Profile</string>
+    <string name="offer_removed_alert">Your Offer has been removed. You need to apply again</string>
+    <string name="offer_applied">Offer Applied</string>
+    <string name="dummy_text"><b>Matthew Young</b> reviewed <b>Pizza Hut</b></string>
+    <string name="dummy_text_2">Matthew Young reviewed Pizza Hut</string>
+    <string name="feed">Feed</string>
+    <string name="review">Review</string>
+    <string name="ask">Ask</string>
+    <string name="review_at">Review</string>
+    <string name="share_your_experience">Share your experience…</string>
+    <string name="enter_restaurant_name">Enter restaurant name</string>
+    <string name="add_post">Add Post</string>
+    <string name="looking_for_something">Looking for something?</string>
+    <string name="whats_on_your_mind">What\'s on your mind?</string>
+    <string name="contacts_synced_successfully">Contacts synced successfully</string>
+    <string name="please_enter_something">Please enter text</string>
+    <string name="label_location_feed">Location</string>
+    <string name="selected_store">Selected Store</string>
+    <string name="delivery_stores">Delivery Stores</string>
+    <string name="you_have_selected_cart_from_this_vendor">You have some items in your cart from %s store.\nChanging the store will clear your cart.</string>
+    <string name="you_have_selected_cart_from_this_vendor_clear_cart">You have some items in your cart from %s store.\nDo you want to clear your cart?</string>
+    <string name="continue_to_checkout">Continue to checkout</string>
+    <string name="change_store">Change store</string>
+    <string name="number_items_in_cart">%s Items in cart</string>
+    <string name="one_item_in_cart">1 Item in cart</string>
+    <string name="clear_cart">Clear Cart</string>
+    <string name="i_want_to_cancel_my_order_because">I want to cancel my Order because</string>
+    <string name="please_select_one_reason">Please select one reason</string>
+    <string name="error_feed_review_restaurant_not_selected">Select a restaurant to review</string>
+    <string name="write_a_comment">Write a comment...</string>
+    <string name="label_city">City</string>
+    <string name="away_from_free_delivery_value">\u20B9%s away from free delivery</string>
+    <string name="no_other_store_available">No other stores available</string>
 
 </resources>

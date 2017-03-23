@@ -16,6 +16,7 @@ import com.sabkuchfresh.adapters.AddOnItemsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -32,7 +33,7 @@ import product.clicklabs.jugnoo.utils.NonScrollListView;
 /**
  * Created by shankar on 10/10/16.
  */
-public class MealAddonItemsFragment extends Fragment implements GAAction, MealAdapter.Callback {
+public class MealAddonItemsFragment extends Fragment implements GACategory, GAAction, MealAdapter.Callback {
     private final String TAG = "Meals Addon Screen";
 
     private RelativeLayout linearLayoutRoot;
@@ -53,7 +54,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
     private View rootView;
     private FreshActivity activity;
 
-    private ArrayList<SubItem> mealsAddonData = new ArrayList<>();
+    private ArrayList<SubItem> mealsAddonSubItems = new ArrayList<>();
     private int addOnSelectedCount = 0;
     public ArrayList<SubItem> subItemsInCart;
 
@@ -65,6 +66,8 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_addon_items, container, false);
+
+        GAUtils.trackScreenView(MEALS+ADD_ONS);
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
@@ -94,7 +97,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
         listViewAddonItems.addHeaderView(header, null, false);
         ((TextView)header.findViewById(R.id.textViewCompleteMeal)).setTypeface(Fonts.mavenMedium(activity));
 
-        addOnItemsAdapter = new AddOnItemsAdapter(activity, mealsAddonData, this);
+        addOnItemsAdapter = new AddOnItemsAdapter(activity, mealsAddonSubItems, this);
         listViewAddonItems.setAdapter(addOnItemsAdapter);
 
         relativeLayoutProceed.setOnClickListener(new View.OnClickListener() {
@@ -123,8 +126,8 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
                 new FreshCartItemsAdapter.Callback() {
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {
-                        activity.saveCartList(subItemsInCart);
-                        activity.updateCartFromSP();
+                        activity.saveSubItemToDeliveryStoreCart(subItem);
+                        activity.updateItemListFromSPDB();
                         updateCartDataView();
                         updateAddonsListCount();
                         GAUtils.event(activity.getGaCategory(), ADD_ONS, CART+EXISTING+ITEM+INCREASED);
@@ -132,11 +135,11 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
 
                     @Override
                     public void onMinusClicked(int position, SubItem subItem) {
+                        activity.saveSubItemToDeliveryStoreCart(subItem);
                         if(subItem.getSubItemQuantitySelected() == 0){
                             subItemsInCart.remove(position);
                         }
-                        activity.saveCartList(subItemsInCart);
-                        activity.updateCartFromSP();
+                        activity.updateItemListFromSPDB();
                         updateCartDataView();
                         updateAddonsListCount();
                         checkIfEmpty();
@@ -212,7 +215,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
             activity.fragmentUISetup(this);
 
             if(activity.getCartChangedAtCheckout()){
-                activity.updateCartFromSP();
+                activity.updateItemListFromSPDB();
                 freshCartItemsAdapter.notifyDataSetChanged();
                 addOnItemsAdapter.notifyDataSetChanged();
                 activity.updateCartValuesGetTotalPrice();
@@ -252,6 +255,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
+        activity.saveSubItemToDeliveryStoreCart(subItem);
         updateCartTopBarView(activity.updateCartValuesGetTotalPriceFMG(subItem));
         addOnSelectedCount++;
         updateBottomBar();
@@ -261,6 +265,7 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
+        activity.saveSubItemToDeliveryStoreCart(subItem);
         updateCartTopBarView(activity.updateCartValuesGetTotalPriceFMG(subItem));
         addOnSelectedCount--;
         updateBottomBar();
@@ -310,9 +315,9 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
     public void deleteCart() {
         for(SubItem subItem : subItemsInCart){
             subItem.setSubItemQuantitySelected(0);
+            activity.saveSubItemToDeliveryStoreCart(subItem);
         }
-        activity.saveCartList(subItemsInCart);
-        activity.updateCartFromSP();
+        activity.updateItemListFromSPDB();
         updateCartDataView();
         subItemsInCart.clear();
         activity.setCartChangedAtCheckout(true);
@@ -323,9 +328,9 @@ public class MealAddonItemsFragment extends Fragment implements GAAction, MealAd
     private void updateAddonsListCount(){
         try {
             addOnSelectedCount = 0;
-            mealsAddonData.clear();
-            mealsAddonData.addAll(activity.getProductsResponse().getCategories().get(1).getSubItems());
-            for(SubItem subItem : mealsAddonData){
+            mealsAddonSubItems.clear();
+            mealsAddonSubItems.addAll(activity.getProductsResponse().getCategories().get(1).getSubItems());
+            for(SubItem subItem : mealsAddonSubItems){
                 addOnSelectedCount = addOnSelectedCount + subItem.getSubItemQuantitySelected();
             }
         } catch (Exception e) {

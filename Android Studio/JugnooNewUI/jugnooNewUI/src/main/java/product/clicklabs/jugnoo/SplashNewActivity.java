@@ -93,8 +93,6 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
-import product.clicklabs.jugnoo.fbaccountkit.ErrorActivity;
-import product.clicklabs.jugnoo.fbaccountkit.TokenActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -1914,10 +1912,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 toastMessage = "Login Cancelled";
             } else if (loginResult.getError() != null) {
                 toastMessage = loginResult.getError().getErrorType().getMessage();
-                final Intent intent = new Intent(this, ErrorActivity.class);
-                intent.putExtra(ErrorActivity.HELLO_TOKEN_ACTIVITY_ERROR_EXTRA, loginResult.getError());
-
-                startActivity(intent);
             } else {
                 String authorizationCode = loginResult.getAuthorizationCode();
                 final long tokenRefreshIntervalInSeconds =
@@ -2740,6 +2734,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			params.put("longitude", "" + Data.loginLongitude);
 			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 			params.put("fb_account_code", accountCode);
+			params.put("login_type", "0");
 			params.put(Constants.KEY_ACCOUNT_KIT_VERSION, "4.19.0");
 			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
@@ -2779,7 +2774,15 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
-							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+							} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+								SplashNewActivity.this.name = name;
+								SplashNewActivity.this.emailId = emailId;
+								SplashNewActivity.this.phoneNo = phoneNo;
+								SplashNewActivity.this.password = password;
+								SplashNewActivity.this.referralCode = referralCode;
+								SplashNewActivity.this.accessToken = "";
+								parseDataSendToMultipleAccountsScreen(activity, jObj);
+							}else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 								enteredEmail = jObj.getString("user_email");
 								linkedWallet = jObj.optInt("reg_wallet_type");
 								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");

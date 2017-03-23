@@ -99,7 +99,7 @@ public class PickerActivity extends AppCompatActivity {
         toolbarTitle=(TextView)findViewById(R.id.toolbar_title);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.root_layout);
         recyclerViewSelectedImages =(RecyclerView)findViewById(R.id.selected_images) ;
-         setUpRecycler();
+//         setUpRecycler();
          findViewById(R.id.imageViewBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +131,7 @@ public class PickerActivity extends AppCompatActivity {
         mPickOptions= (Picker) savedInstanceState.getSerializable("pickOptions");
         sCheckedImages= (ArrayList<ImageEntry>) savedInstanceState.getSerializable("photos");
         updateCount();
-        updateRecycler();
+//        updateRecycler();
     }
 
     @Override
@@ -333,8 +333,7 @@ public class PickerActivity extends AppCompatActivity {
 
 
     private void refreshMediaScanner(final String imagePath) {
-        MediaScannerConnection.scanFile(this,
-                new String[]{imagePath}, null,
+        MediaScannerConnection.scanFile(this, new String[]{imagePath}, null,
                 new MediaScannerConnection.OnScanCompletedListener() {
                     @Override
                     public void onScanCompleted(final String path, final Uri uri) {
@@ -356,9 +355,12 @@ public class PickerActivity extends AppCompatActivity {
                                     onEvent(new Events.OnPickImageEvent(imageEntry));
 
 
+                                onClickDone(mDoneFab);//Directly take user back after clicking camera pic
 
-                                reloadAlbums();
-                                Log.d("onActivityResult", "New image should appear in Folder Name folder");
+
+
+//                                reloadAlbums();
+
                             }
                         });
 
@@ -577,7 +579,7 @@ public class PickerActivity extends AppCompatActivity {
 
         updateFab();
         updateCount();
-        updateRecycler();
+//        updateRecycler();
 
     }
 
@@ -591,7 +593,7 @@ public class PickerActivity extends AppCompatActivity {
         updateCount();
         updateFab();
         hideDeselectAll();
-       updateRecycler();
+//        updateRecycler();
     }
 
     public void onEvent(final Events.OnChangingDisplayedImageEvent newImageEvent) {
@@ -736,7 +738,6 @@ public class PickerActivity extends AppCompatActivity {
 
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
             refreshMediaScanner(mCurrentPhotoPath);
 
 

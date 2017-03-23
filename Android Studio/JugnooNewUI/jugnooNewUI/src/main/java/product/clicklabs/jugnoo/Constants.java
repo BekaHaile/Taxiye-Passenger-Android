@@ -45,9 +45,6 @@ public interface Constants {
     String KEY_CART = "cart";
     String KEY_SUB_ITEM_ID = "sub_item_id";
     String KEY_QUANTITY = "quantity";
-    String SP_FRESH_CART = "fresh_cart";
-    String SP_MEAL_CART = "meal_cart";
-    String SP_GROCERY_CART = "grocery_cart";
     String SP_MENUS_CART = "menus_cart";
     String KEY_CATEGORY_POSITION = "category_position";
     String KEY_SUBCATEGORY_POSITION = "subcategory_position";
@@ -182,6 +179,7 @@ public interface Constants {
     String KEY_EMERGENCY_CONTACTS = "emergency_contacts";
     String KEY_NAME = "name";
     String KEY_TRIP_TOTAL = "trip_total";
+    String KEY_OFFER_TEXT = "offer_text";
 
 
     String KEY_T20_WC_ENABLE = "t20_wc_enable";
@@ -439,6 +437,7 @@ public interface Constants {
     String KEY_GROCERY = "grocery";
     String KEY_MENUS = "menus";
     String KEY_PAY = "pay";
+    String KEY_FEED = "feed";
 
     String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
     String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
@@ -458,6 +457,7 @@ public interface Constants {
     String KEY_GROCERY_ENABLED = "grocery_enabled";
     String KEY_MENUS_ENABLED = "menus_enabled";
     String KEY_PAY_ENABLED = "pay_enabled";
+    String KEY_FEED_ENABLED = "feed_enabled";
     String KEY_DELIVERY_ENABLED = "delivery_enabled";
     String KEY_ORDER_HISTORY = "order_history";
     String INTENT_KEY_FROM_BAD = "FromBad";
@@ -633,4 +633,26 @@ public interface Constants {
     String KEY_FB_TOKEN = "fb_token";
     String KEY_ACCOUNT_KIT_VERSION = "account_kit_version";
     String KEY_RIDE_ACCEPTED = "ride_accepted";
+    String KEY_FINISH_ACTIVITY = "finish_activity";
+    String ACTION_FINISH_ACTIVITY = "product.clicklabs.jugnoo.finish_activity";
+    String KEY_MENU_SIGNUP_TUTORIAL = "menu_signup_tutorial";
+    String KEY_POST_ID = "post_id";
+    String ACTION_CONTACTS_UPLOADED = "product.clicklabs.jugnoo.ACTION_CONTACTS_UPLOADED";
+    String KEY_UPLOADED = "uploaded";
+    String KEY_COMMENT_CONTENT = "comment_content";
+    String KEY_RESTAURANT_INFO = "restaurant_info";
+
+    String KEY_INPUT = "input";
+
+    String KEY_POST_TEXT = "post_text";
+    String KEY_STAR_COUNT = "star_count";
+    String KEY_LOGIN_TYPE = "login_type";
+    String KEY_VENDOR_ID = "vendor_id";
+
+    String SP_VENDOR_ID = "sp_vendor_id";
+    String SP_SELECTED_VENDOR_ID = "sp_selected_vendor_id";
+    String LIST_IMAGES = "list_images";
+    String KEY_HIDE_LIKE_SHARE = "hide_like_share";
+    String KEY_REASONS = "reasons";
+    String KEY_ADDN_REASON = "addn_reason";
 }

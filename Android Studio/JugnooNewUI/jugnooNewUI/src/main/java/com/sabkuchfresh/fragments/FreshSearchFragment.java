@@ -92,6 +92,8 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 
 		searchText = "";
 
+		GAUtils.trackScreenView(activity.getGaCategory()+HOME+SEARCH);
+
 		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
 		try {
 			if(rlRoot != null) {
@@ -299,26 +301,32 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
             }, 700);
 			activity.fragmentUISetup(this);
 			if(activity.getCartChangedAtCheckout()){
-				activity.updateCartFromSP();
-				activity.updateCartFromSPFMG(subItemsInSearch);
+				activity.updateItemListFromSPDB();
+				activity.updateItemListFromDBFMG(subItemsInSearch);
 				freshCategoryItemsAdapter.notifyDataSetChanged();
 				activity.updateCartValuesGetTotalPrice();
 			}
 			activity.setCartChangedAtCheckout(false);
-			activity.getHandler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					activity.setMinOrderAmountText(FreshSearchFragment.this);
-				}
-			}, 300);
+			activity.setMinOrderAmountText(FreshSearchFragment.this);
 			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
 				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
 			}
 		}
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		try {
+			if(activity != null) {
+				activity.clearEtFocus();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    @Override
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
         ASSL.closeActivity(rlRoot);
@@ -377,6 +385,10 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 						params.put(Constants.KEY_SEARCH_STRING, searchText);
 						params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategoryId));
 
+					if(activity.getAppType() == AppConstant.ApplicationType.FRESH){
+						params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedVendorId()));
+					}
+
 						refreshingAutoComplete = true;
 
 					activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
@@ -398,7 +410,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 													}
 												}
 											}
-											activity.updateCartFromSPFMG(subItemsInSearch);
+											activity.updateItemListFromDBFMG(subItemsInSearch);
 											freshCategoryItemsAdapter.notifyDataSetChanged();
 											if(subItemsInSearch.size() > 0){
 												textViewPlaceholder.setVisibility(View.GONE);

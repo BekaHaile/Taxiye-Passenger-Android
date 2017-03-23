@@ -36,7 +36,10 @@ public class RatingBarMenuFeedback extends LinearLayout {
     private static final int LOW_RATING_RED = Color.parseColor("#FB9758");
     private static final int MEDIUM_RATING_YELLOW = Color.parseColor("#FFD365");
     private static final int GOOD_RATING_GREEN = Color.parseColor("#8DCF61");
+    private static final int RATING_DISABLED_COLOR = Color.parseColor("#efefef");
     private static final int NO_RATING_COLOR = Color.GRAY;
+    private boolean mAnimate=true;
+    private boolean mDisplayText=true;
 
     public IRatingBarCallbacks getOnScoreChanged() {
         return onScoreChanged;
@@ -53,8 +56,8 @@ public class RatingBarMenuFeedback extends LinearLayout {
 
     private int mMaxStars = 5;
     private float mCurrentScore = 0f;
-    private int mStarOnResource = R.drawable.ic_menu_feedback_star_on;
-    private int mStarOffResource = R.drawable.ic_menu_feedback_star_off;
+    private int mStarOnResource ;
+    private int mStarOffResource;
     private int mStarHalfResource = R.drawable.ic_menu_feedback_star_off;
     private TextView[] mStarsViews;
     private float mStarPadding;
@@ -127,6 +130,10 @@ public class RatingBarMenuFeedback extends LinearLayout {
                 mOnlyForDisplay = a.getBoolean(attr, false);
             else if (attr == R.styleable.CustomRatingBar_halfStars)
                 mHalfStars = a.getBoolean(attr, true);
+            else if (attr == R.styleable.CustomRatingBar_animate)
+                mAnimate = a.getBoolean(attr, true);
+            else if (attr == R.styleable.CustomRatingBar_displayText)
+                mDisplayText = a.getBoolean(attr, true);
         }
         a.recycle();
     }
@@ -207,26 +214,28 @@ public class RatingBarMenuFeedback extends LinearLayout {
                 mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(NO_RATING_COLOR, PorterDuff.Mode.SRC_ATOP);
             }
 
-            if (i == mCurrentScore) {
-                switch (i) {
-                    case 1:
-                        mStarsViews[i - 1].setText("Terrible");
-                        break;
-                    case 2:
-                        mStarsViews[i - 1].setText("Bad");
-                        break;
-                    case 3:
-                        mStarsViews[i - 1].setText("Okay");
-                        break;
-                    case 4:
-                        mStarsViews[i - 1].setText("Good");
-                        break;
-                    case 5:
-                        mStarsViews[i - 1].setText("Great");
-                        break;
+            if (mDisplayText) {
+                if (i == mCurrentScore) {
+                    switch (i) {
+                        case 1:
+                            mStarsViews[i - 1].setText("Terrible");
+                            break;
+                        case 2:
+                            mStarsViews[i - 1].setText("Bad");
+                            break;
+                        case 3:
+                            mStarsViews[i - 1].setText("Okay");
+                            break;
+                        case 4:
+                            mStarsViews[i - 1].setText("Good");
+                            break;
+                        case 5:
+                            mStarsViews[i - 1].setText("Great");
+                            break;
+                    }
+                } else {
+                    mStarsViews[i - 1].setText(null);
                 }
-            } else {
-                mStarsViews[i - 1].setText(null);
             }
 
         }
@@ -303,17 +312,21 @@ public class RatingBarMenuFeedback extends LinearLayout {
     }
 
     private void animateStarPressed(TextView star, float score) {
-        if (star != null)
-            ViewCompat.animate(star).scaleX(1.2f).scaleY(1.2f).setDuration(100).start();
+        if (mAnimate) {
+            if (star != null)
+                ViewCompat.animate(star).scaleX(1.2f).scaleY(1.2f).setDuration(100).start();
+        }
 //            star.setTextSize(TypedValue.COMPLEX_UNIT_PX, 28);
 
     }
 
     private void animateStarRelease(TextView star, float score) {
-        if (star != null) {
-            ViewCompat.animate(star).scaleX(1f).scaleY(1f).setDuration(100).start();
-//            star.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26);
+        if (mAnimate) {
+            if (star != null) {
+                ViewCompat.animate(star).scaleX(1f).scaleY(1f).setDuration(100).start();
+    //            star.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26);
 
+            }
         }
     }
 
@@ -323,5 +336,19 @@ public class RatingBarMenuFeedback extends LinearLayout {
 
     public void setHalfStars(boolean halfStars) {
         mHalfStars = halfStars;
+    }
+    public void setEnabled(boolean isEnabled){
+        mOnlyForDisplay = !isEnabled;
+    }
+
+    public void setRatingDisabled(boolean disabled){
+        if (disabled) {
+            for (int i = 1; i <= mMaxStars; i++) {
+                    mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(RATING_DISABLED_COLOR, PorterDuff.Mode.SRC_ATOP);
+             }
+        }
+        else{
+            refreshStars();
+        }
     }
 }
