@@ -211,7 +211,7 @@
         android:layout_below="@id/recycler_user_images"
         android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginRight="@dimen/spacing_large"
-        android:text="76876867 8768Comments"
+        android:text="Comments"
         android:textColor="@color/feed_grey_text"
         app:font="maven" />
 
@@ -248,7 +248,7 @@
             android:text="Comment"
             android:textColor="@color/feed_grey_text"
             android:textSize="@dimen/font_small"
-            app:font="@string/maven_r" />
+            app:font="maven" />
 
     </LinearLayout>
 
@@ -272,7 +272,7 @@
             android:text="Like"
             android:textColor="@color/feed_grey_text"
             android:textSize="@dimen/font_small"
-            app:font="@string/maven_r" />
+            app:font="maven" />
     </LinearLayout>
 
     <View

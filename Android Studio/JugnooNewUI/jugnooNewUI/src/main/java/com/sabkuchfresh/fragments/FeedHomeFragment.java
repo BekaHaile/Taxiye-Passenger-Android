@@ -111,7 +111,7 @@ public class FeedHomeFragment extends Fragment {
                 fetchFeedsApi(false);
             }
         });
-        feedHomeAdapter = new FeedHomeAdapter(getActivity(), getAdapterList(false,null,null,activity.getSelectedAddress()), recyclerView, new FeedHomeAdapter.FeedPostCallback() {
+        feedHomeAdapter = new FeedHomeAdapter(getActivity(), getAdapterList(false,null,null,null), recyclerView, new FeedHomeAdapter.FeedPostCallback() {
             @Override
             public void onLikeClick(FeedDetail feedDetail, final int position) {
                 if (likeFeed == null)
