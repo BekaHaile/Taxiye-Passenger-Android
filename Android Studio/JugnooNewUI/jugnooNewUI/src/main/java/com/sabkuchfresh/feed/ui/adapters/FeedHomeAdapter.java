@@ -466,6 +466,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     //If null means no image is being showed Actually
 
                     break;
+                case R.id.ib_arrow_more:
+                    feedPostCallback.onMoreClick(feedDetail,position,viewClicked);
+                    break;
 
                 default:
                     break;
@@ -491,6 +494,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         void onRestaurantClick(int restaurantId);
 
         String getEditTextString();//required Only For Comments Adapter
+
+
+        void onMoreClick(FeedDetail feedDetail, int positionInOriginalList, View moreItemView);
     }
 
 
@@ -535,6 +541,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View shadow;
         @Bind(R.id.root_layout_item)
         RelativeLayout layoutItem;
+        @Bind(R.id.ib_arrow_more)
+        ImageView ivMore;
         @Bind(R.id.recycler_user_images)
         RecyclerView recyclerViewUserImages;//feeddetail.getReviewImages field is greater than 1 than we  have to show this recycler view
         DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
@@ -573,6 +581,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
                     onClickView.onClickItem(ivPlaceImage, view);
+                }
+            });
+
+            ivMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickView.onClickItem(ivMore, view);
                 }
             });
 

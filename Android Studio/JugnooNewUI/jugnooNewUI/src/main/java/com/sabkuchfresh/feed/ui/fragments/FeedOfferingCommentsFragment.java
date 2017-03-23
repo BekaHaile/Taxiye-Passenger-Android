@@ -143,6 +143,11 @@ public class FeedOfferingCommentsFragment extends Fragment {
             public String getEditTextString() {
                 return commentAdded;
             }
+
+            @Override
+            public void onMoreClick(FeedDetail feedDetail, int positionInOriginalList, View moreItemView) {
+
+            }
         },submitTextWatcher);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override

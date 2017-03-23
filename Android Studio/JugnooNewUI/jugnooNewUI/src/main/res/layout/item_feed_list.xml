@@ -70,7 +70,7 @@
         android:layout_below="@id/divider_user_activity"
         android:layout_marginBottom="@dimen/spacing_tiny"
         android:layout_marginLeft="@dimen/spacing_normal"
-        android:layout_marginRight="@dimen/spacing_normal">
+       >
 
         <ImageView
             android:id="@+id/iv_owner_profile_pic"
@@ -110,7 +110,7 @@
             android:id="@id/tv_feed_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/ib_arrow_more"
             android:background="@drawable/capsule_text_color"
             android:gravity="center_vertical"
             android:maxLines="1"
@@ -119,10 +119,27 @@
             android:paddingRight="@dimen/spacing_extra_tiny"
             android:paddingTop="@dimen/spacing_tiny"
             android:text="Rating 2.1"
+            android:layout_alignWithParentIfMissing="true"
             android:textColor="@color/white"
             android:textSize="@dimen/font_tiny"
             android:visibility="visible"
             app:font="maven" />
+
+        <ImageView
+            android:id="@id/ib_arrow_more"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/spacing_tiny"
+            android:background="@null"
+            android:rotation="270"
+            android:src="@drawable/ic_back"
+            android:scaleY="0.6"
+            android:scaleX="0.6"
+            android:layout_marginTop="-7dp"
+            android:paddingLeft="@dimen/spacing_small"
+            android:paddingRight="@dimen/spacing_normal"
+            android:paddingBottom="@dimen/spacing_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </RelativeLayout>
 

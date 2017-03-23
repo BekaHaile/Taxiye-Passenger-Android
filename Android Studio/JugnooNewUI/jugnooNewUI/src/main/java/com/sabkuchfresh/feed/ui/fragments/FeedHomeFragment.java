@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.commoncalls.LikeFeed;
+import com.sabkuchfresh.feed.ui.view.FeedContextMenu;
+import com.sabkuchfresh.feed.ui.view.FeedContextMenuManager;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -60,6 +64,7 @@ public class FeedHomeFragment extends Fragment {
     private TextView textViewNothingFound;
     private RelativeLayout rlNoReviews;
     private TextView tvFeedEmpty;
+    private View viewDisabledEditPostPopUp;
 
 
     public FeedHomeFragment() {
@@ -97,8 +102,15 @@ public class FeedHomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         activity.fragmentUISetup(this);
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
+        viewDisabledEditPostPopUp= initWindowBlockedView();
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
+            }
+        });
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
         swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
@@ -126,7 +138,8 @@ public class FeedHomeFragment extends Fragment {
             }
 
             @Override
-            public void onCommentClick(final FeedDetail feedDetail,int positionInOriginalList) {
+            public void onCommentClick(final FeedDetail feedDetail, int positionInOriginalList) {
+
 
                 activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail,positionInOriginalList);
 
@@ -143,6 +156,32 @@ public class FeedHomeFragment extends Fragment {
             @Override
             public String getEditTextString() {
                 return null;
+            }
+
+            @Override
+            public void onMoreClick(final FeedDetail feedDetail, int positionInOriginalList, View moreItemView){
+
+                FeedContextMenuManager.getInstance().toggleContextMenuFromView(moreItemView, positionInOriginalList, new FeedContextMenu.OnFeedContextMenuItemClickListener() {
+                    @Override
+                    public void onReportClick(int feedItem) {
+
+                    }
+
+                    @Override
+                    public void onSharePhotoClick(int feedItem) {
+
+                    }
+
+                    @Override
+                    public void onCopyShareUrlClick(int feedItem) {
+
+                    }
+
+                    @Override
+                    public void onCancelClick(int feedItem) {
+
+                    }
+                },viewDisabledEditPostPopUp,activity);
             }
         });
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);;
@@ -318,5 +357,14 @@ public class FeedHomeFragment extends Fragment {
 
 
 
-
+    public View initWindowBlockedView(){
+        final View view = activity.findViewById(R.id.edit_popup_disabled);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              FeedContextMenuManager.getInstance().hideContextMenu();
+            }
+        });
+        return view;
+    }
 }

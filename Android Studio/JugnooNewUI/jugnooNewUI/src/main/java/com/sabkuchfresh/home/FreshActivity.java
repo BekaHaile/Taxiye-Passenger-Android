@@ -3302,6 +3302,17 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     }
 
+    public View initWindowBlockedView(){
+        final View view = findViewById(R.id.edit_popup_disabled);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.setVisibility(View.GONE);
+            }
+        });
+        return view;
+    }
+
     public interface CityChangeCallback {
         void onYesClick();
 
