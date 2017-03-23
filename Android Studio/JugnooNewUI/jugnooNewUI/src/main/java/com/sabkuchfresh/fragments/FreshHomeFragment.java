@@ -1,11 +1,9 @@
 package com.sabkuchfresh.fragments;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,7 +13,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,7 +25,6 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -225,7 +221,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
                 params.put(Constants.INTERATED, "1");
 
-                params.put(Constants.STORE_ID, String.valueOf(activity.getLastCartVendorId()));
+                params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getLastCartVendorId()));
 
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getFreshApiService().getSuperCategories(params, new Callback<SuperCategoriesData>() {

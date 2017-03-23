@@ -22,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -31,7 +30,6 @@ import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.DateParser;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -203,7 +201,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 case COMMENT_ON_POST:
                 case LIKE_ON_POST:
 
-                    if (feedDetail.getFeedType() != FeedDetail.FeedType.POST) {
+                    if (feedDetail.getFeedType() != FeedDetail.FeedType.POST && !TextUtils.isEmpty(feedDetail.getUserName()) &&!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         showUserActivity = true;
                         userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s post.");
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -235,47 +233,44 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             }
 
+//SetAddress
+            holder.tvFeedAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
+            holder.tvFeedAddress.setText(restaurantAddress);
 
-        }
-
-        //SetAddress
-        holder.tvFeedAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
-        holder.tvFeedAddress.setText(restaurantAddress);
-
-        //SetImageUrl
-        holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.VISIBLE);
-        if (imageUrl != null)
-            Glide.with(activity).load(imageUrl).override(Utils.convertDpToPx(activity, 310), Utils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
-        else
-            holder.ivPlaceImage.setImageResource(R.drawable.placeholder_img);
+            //SetImageUrl
+            holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.VISIBLE);
+            if (imageUrl != null)
+                Glide.with(activity).load(imageUrl).override(Utils.convertDpToPx(activity, 310), Utils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
+            else
+                holder.ivPlaceImage.setImageResource(R.drawable.placeholder_img);
 
 
-        //Set Profile Pic
-        if (ownerImage != null)
-            Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
-        else
-            holder.ivFeedOwnerPic.setImageResource(R.drawable.placeholder_img);
+            //Set Profile Pic
+            if (ownerImage != null)
+                Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
+            else
+                holder.ivFeedOwnerPic.setImageResource(R.drawable.placeholder_img);
 
-        //set Heading
-        holder.tvFeedOwnerTitle.setText(title);
-        holder.tvFeedOwnerTitle.setMovementMethod(setMovementMethod ? LinkMovementMethod.getInstance() : null);
+            //set Heading
+            holder.tvFeedOwnerTitle.setText(title);
+            holder.tvFeedOwnerTitle.setMovementMethod(setMovementMethod ? LinkMovementMethod.getInstance() : null);
 
 
-        //Set Rating
-        holder.tvFeedRating.setVisibility(rating == null ? View.GONE : View.VISIBLE);
-        if (rating != null)
-            activity.setRatingAndGetColor(holder.tvFeedRating, rating, feedDetail.getRatingColor(), true);
+            //Set Rating
+            holder.tvFeedRating.setVisibility(rating == null ? View.GONE : View.VISIBLE);
+            if (rating != null)
+                activity.setRatingAndGetColor(holder.tvFeedRating, rating, feedDetail.getRatingColor(), true);
 
-        //Set Likes and Comments
-        String likesCommentString = formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount(), activity);
+            //Set Likes and Comments
+            String likesCommentString = formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount(), activity);
 
-        holder.tvLikeStatus.setText(String.valueOf(feedDetail.getLikeCount()));
+            holder.tvLikeStatus.setText(String.valueOf(feedDetail.getLikeCount()));
 
-        String commentSuffix = feedDetail.getCommentCount() > 1 ? " Comments" : " Comment";
-        holder.tvCommentStatus.setText(feedDetail.getCommentCount()+commentSuffix);
+            String commentSuffix = feedDetail.getCommentCount() > 1 ? " Comments" : " Comment";
+            holder.tvCommentStatus.setText(feedDetail.getCommentCount()+commentSuffix);
 
-        holder.tvLikeStatus.setVisibility(feedDetail.getLikeCount()>0?View.VISIBLE:View.INVISIBLE);
-        holder.tvCommentStatus.setVisibility(feedDetail.getCommentCount()>0?View.VISIBLE:View.INVISIBLE);
+            holder.tvLikeStatus.setVisibility(feedDetail.getLikeCount()>0?View.VISIBLE:View.INVISIBLE);
+            holder.tvCommentStatus.setVisibility(feedDetail.getCommentCount()>0?View.VISIBLE:View.INVISIBLE);
         /*if(feedDetail.getLikeCount()>0 && feedDetail.getCommentCount()<1)
         {
             holder.tvCommentStatus.setVisibility(View.INVISIBLE);
@@ -284,48 +279,51 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }*/
 
 
-        //Set Content
-        holder.tvFeedDescription.setText(feedDetail.getContent());
+            //Set Content
+            holder.tvFeedDescription.setText(feedDetail.getContent());
 
-        //Show User Acitivty Layout such as Person A commented on Person B's post
-        if (showUserActivity) {
-            holder.layoutUserActivity.setVisibility(View.VISIBLE);
-            holder.dividerUserActivity.setVisibility(View.VISIBLE);
-            holder.tvUserActivityTitle.setText(userActivityTitle);
+            //Show User Acitivty Layout such as Person A commented on Person B's post
+            if (showUserActivity) {
+                holder.layoutUserActivity.setVisibility(View.VISIBLE);
+                holder.dividerUserActivity.setVisibility(View.VISIBLE);
+                holder.tvUserActivityTitle.setText(userActivityTitle);
            /* if (userImage != null)
                 Picasso.with(activity).load(userImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivUserProfilePic);*/
 
-        } else {
-            holder.layoutUserActivity.setVisibility(View.GONE);
-            holder.dividerUserActivity.setVisibility(View.GONE);
-
-        }
-
-        //show posted Time
-        holder.tvOwnerTime.setText(getTimeToDisplay(feedDetail.getCreatedAt(), activity.isTimeAutomatic));
-
-
-        //Set Like Icons and like text color
-        Drawable drawableToSet = feedDetail.isLiked() ? ContextCompat.getDrawable(activity, R.drawable.ic_like_active) : ContextCompat.getDrawable(activity, R.drawable.ic_like);
-        holder.tvLike.setCompoundDrawablesWithIntrinsicBounds(drawableToSet, null, null, null);
-        if (feedDetail.isLiked())
-            holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_color_like_active));
-        else
-            holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_grey_text));
-
-        //Show user Images if greater than 1 in a recycler view
-        if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 1) {
-            holder.recyclerViewUserImages.setVisibility(View.VISIBLE);
-            if (holder.displayFeedHomeImagesAdapter == null) {
-                holder.displayFeedHomeImagesAdapter = new DisplayFeedHomeImagesAdapter(activity, feedDetail.getReviewImages(), holder.recyclerViewUserImages);
-                holder.recyclerViewUserImages.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
-                holder.recyclerViewUserImages.setAdapter(holder.displayFeedHomeImagesAdapter);
             } else {
-                holder.displayFeedHomeImagesAdapter.setList(feedDetail.getReviewImages());
+                holder.layoutUserActivity.setVisibility(View.GONE);
+                holder.dividerUserActivity.setVisibility(View.GONE);
+
             }
-        } else {
-            holder.recyclerViewUserImages.setVisibility(View.GONE);
+
+            //show posted Time
+            holder.tvOwnerTime.setText(getTimeToDisplay(feedDetail.getCreatedAt(), activity.isTimeAutomatic));
+
+
+            //Set Like Icons and like text color
+            Drawable drawableToSet = feedDetail.isLiked() ? ContextCompat.getDrawable(activity, R.drawable.ic_like_active) : ContextCompat.getDrawable(activity, R.drawable.ic_like);
+            holder.tvLike.setCompoundDrawablesWithIntrinsicBounds(drawableToSet, null, null, null);
+            if (feedDetail.isLiked())
+                holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_color_like_active));
+            else
+                holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_grey_text));
+
+            //Show user Images if greater than 1 in a recycler view
+            if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 1) {
+                holder.recyclerViewUserImages.setVisibility(View.VISIBLE);
+                if (holder.displayFeedHomeImagesAdapter == null) {
+                    holder.displayFeedHomeImagesAdapter = new DisplayFeedHomeImagesAdapter(activity, feedDetail.getReviewImages(), holder.recyclerViewUserImages);
+                    holder.recyclerViewUserImages.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
+                    holder.recyclerViewUserImages.setAdapter(holder.displayFeedHomeImagesAdapter);
+                } else {
+                    holder.displayFeedHomeImagesAdapter.setList(feedDetail.getReviewImages());
+                }
+            } else {
+                holder.recyclerViewUserImages.setVisibility(View.GONE);
+            }
+
         }
+
 
 
     }
