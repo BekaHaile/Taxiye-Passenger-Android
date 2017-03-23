@@ -1,4 +1,4 @@
-package com.sabkuchfresh.adapters;
+package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;

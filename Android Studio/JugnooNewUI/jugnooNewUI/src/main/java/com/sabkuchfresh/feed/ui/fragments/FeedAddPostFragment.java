@@ -1,4 +1,4 @@
-package com.sabkuchfresh.fragments;
+package com.sabkuchfresh.feed.ui.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.picker.image.model.ImageEntry;
-import com.sabkuchfresh.adapters.FeedAddPostPagerAdapter;
+import com.sabkuchfresh.feed.ui.adapters.FeedAddPostPagerAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.ImageCompression;
 

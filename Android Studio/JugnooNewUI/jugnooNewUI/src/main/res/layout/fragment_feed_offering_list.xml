@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
 
-    tools:context="com.sabkuchfresh.fragments.FeedHomeFragment">
+    tools:context="com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment">
 
     <!--<include layout="@layout/layout_delivery_address_bar"/>-->
 

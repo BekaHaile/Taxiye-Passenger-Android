@@ -1,4 +1,4 @@
-package com.sabkuchfresh.fragments;
+package com.sabkuchfresh.feed.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

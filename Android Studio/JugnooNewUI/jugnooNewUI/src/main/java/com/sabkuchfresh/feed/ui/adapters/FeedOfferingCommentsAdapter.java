@@ -1,4 +1,4 @@
-package com.sabkuchfresh.adapters;
+package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
 import android.graphics.Typeface;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;

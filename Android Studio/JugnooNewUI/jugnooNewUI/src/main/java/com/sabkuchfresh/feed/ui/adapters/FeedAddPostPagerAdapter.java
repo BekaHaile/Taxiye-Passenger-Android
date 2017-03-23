@@ -1,11 +1,11 @@
-package com.sabkuchfresh.adapters;
+package com.sabkuchfresh.feed.ui.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.sabkuchfresh.fragments.FeedChildAskFragment;
-import com.sabkuchfresh.fragments.FeedChildReviewFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedChildAskFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedChildReviewFragment;
 
 /**
  * Created by Parminder Singh on 3/20/17.
