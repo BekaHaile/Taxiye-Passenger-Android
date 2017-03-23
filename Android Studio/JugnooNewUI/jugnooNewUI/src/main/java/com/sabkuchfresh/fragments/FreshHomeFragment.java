@@ -81,9 +81,9 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
 
-        /*for(int j=0; j<3; j++) {
+        for(int j=0; j<3; j++) {
             mResources.add("https://visitorinvictoria.ca/wp-content/uploads/2017/03/groceries.jpg");
-        }*/
+        }
       /*  scrollView = (NestedScrollView) rootView.findViewById (R.id.nest_scrollview);
         scrollView.setFillViewport (true);*/
 //        mImageViewPager = (ViewPager) rootView.findViewById(R.id.pager);
