@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_height"
             android:background="@drawable/bg_white_menu_item_selector_color_selector"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/ivLoc"

@@ -1115,7 +1115,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private void placeOrder() {
         try {
-            final int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
             boolean goAhead = true;
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
                 if (Data.userData.getPaytmBalance() < payableAmount()) {
@@ -1127,7 +1126,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         showWalletBalanceLowDialog(PaymentOption.PAYTM);
                     }
                     goAhead = false;
-                    setSlideInitial();
                 }
             }
             else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
@@ -1140,7 +1138,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         showWalletBalanceLowDialog(PaymentOption.MOBIKWIK);
                     }
                     goAhead = false;
-                    setSlideInitial();
                 }
             }
             else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
@@ -1153,14 +1150,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         showWalletBalanceLowDialog(PaymentOption.FREECHARGE);
                     }
                     goAhead = false;
-                    setSlideInitial();
                 }
             }
             else if (activity.getPaymentOption() == PaymentOption.JUGNOO_PAY) {
                 if (Data.getPayData() == null || Data.getPayData().getPay().getHasVpa() != 1) {
                     relativeLayoutJugnooPay.performClick();
                     goAhead = false;
-                    setSlideInitial();
                 }
             }
             if (goAhead) {
@@ -1182,9 +1177,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                 @Override
                                 public void onClick(View v) {
                                     buttonPlaceOrder.setEnabled(true);
+                                    setSlideInitial();
                                 }
                             }, false, false);
                 }
+            } else {
+                setSlideInitial();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1399,6 +1397,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 Callback<PlaceOrderResponse> callback = new Callback<PlaceOrderResponse>() {
                     @Override
                     public void success(PlaceOrderResponse placeOrderResponse, Response response) {
+                        boolean doSlideInitial = true;
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
 //						DialogPopup.dismissLoadingDialog();
@@ -1425,9 +1424,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                     } else {
                                         orderPlacedSuccess(placeOrderResponse);
                                         fbPurchasedEvent(params, placeOrderResponse);
+                                        doSlideInitial = false;
                                     }
                                 } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
-                                    setSlideInitial();
                                     final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
                                     final double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, 0);
                                     Log.e("USER_IN_DEBT message", "=" + message1);
@@ -1442,7 +1441,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                                             }).showUserDebtDialog(userDebt, message1);
                                 } else if (ApiResponseFlags.INSUFFICIENT_BALANCE.getOrdinal() == flag) {
-                                    setSlideInitial();
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -1450,7 +1448,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         }
                                     });
                                 } else if (ApiResponseFlags.INVALID_DELIVERY_SLOT.getOrdinal() == flag) {
-                                    setSlideInitial();
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -1458,7 +1455,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         }
                                     });
                                 } else {
-                                    setSlideInitial();
                                     final int validStockCount = jObj.optInt(Constants.KEY_VALID_STOCK_COUNT, -1);
                                     if(validStockCount > -1){
                                         DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
@@ -1528,12 +1524,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                 }
                             }
                         } catch (Exception exception) {
-                            setSlideInitial();
                             exception.printStackTrace();
                             retryDialog(DialogErrorType.SERVER_ERROR, 1);
                         }
 //                        123
                         DialogPopup.dismissLoadingDialog();
+                        if(doSlideInitial){
+                            setSlideInitial();
+                        }
                     }
 
                     @Override
