@@ -682,7 +682,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 tvPaymentMethodVal.setText(R.string.jugnoo_pay);
                 params.setMargins((int)(ASSL.Xscale() * 35f), 0, 0, 0);
             } else if(datum.getPaymentMode() == PaymentOption.RAZOR_PAY.getOrdinal()){
-                tvPaymentMethodVal.setText(R.string.other_payment_mode);
+                if(!TextUtils.isEmpty(datum.getOtherPaymentModeText())){
+                    tvPaymentMethodVal.setText(datum.getOtherPaymentModeText());
+                } else {
+                    tvPaymentMethodVal.setText(R.string.other_payment_mode);
+                }
                 params.setMargins((int)(ASSL.Xscale() * 35f), 0, 0, 0);
             }
             tvPaymentMethodVal.setLayoutParams(params);

@@ -3356,6 +3356,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private DeliveryAddressModel deliveryAddressModel;
     private Gson gson = new Gson();
+    public Gson getGson(){
+        return gson;
+    }
 
     public void saveDeliveryAddressModel() {
         deliveryAddressModel = new DeliveryAddressModel(getSelectedAddress(), getSelectedLatLng(),
