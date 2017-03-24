@@ -21,6 +21,7 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
+import com.sabkuchfresh.retrofit.model.DeliveryStore;
 import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
@@ -62,6 +63,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
     private int currentGroupId = 1, superCategoryId = -1, cityId = 1;
 	private ArrayList<SubItem> subItemsInSearch;
 
+	private FreshSearchResponse freshSearchResponse;
 
     @Override
     public void onStart() {
@@ -140,6 +142,14 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 					@Override
 					public void onPlusClicked(int position, SubItem subItem) {
 						activity.updateCartValuesGetTotalPriceFMG(subItem);
+						if(freshSearchResponse != null && freshSearchResponse.getDeliveryStores() != null){
+							for(DeliveryStore deliveryStore : freshSearchResponse.getDeliveryStores()){
+								if(deliveryStore.getVendorId().equals(subItem.getVendorId())){
+									activity.getSuperCategoriesData().setDeliveryInfo(deliveryStore);
+									break;
+								}
+							}
+						}
 					}
 
 					@Override
@@ -307,7 +317,12 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 				activity.updateCartValuesGetTotalPrice();
 			}
 			activity.setCartChangedAtCheckout(false);
-			activity.setMinOrderAmountText(FreshSearchFragment.this);
+			activity.getHandler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					activity.setMinOrderAmountText(FreshSearchFragment.this);
+				}
+			}, 200);
 			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
 				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
 			}
@@ -386,7 +401,11 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 						params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategoryId));
 
 					if(activity.getAppType() == AppConstant.ApplicationType.FRESH){
-						params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedVendorId()));
+						if(activity.getFreshFragment() != null) {
+							params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedVendorId()));
+						} else {
+							params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getLastCartVendorId()));
+						}
 					}
 
 						refreshingAutoComplete = true;
@@ -403,6 +422,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 									String message = freshSearchResponse.getMessage();
 										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == freshSearchResponse.getFlag()) {
 											//subItemsInSearch.clear();
+											FreshSearchFragment.this.freshSearchResponse = freshSearchResponse;
 											for(SuperCategoriesData.SuperCategory superCategory : freshSearchResponse.getSuperCategories()){
 												if(!superCategory.getSuperCategoryId().equals(superCategoryId)) {
 													for (Category category : superCategory.getCategories()) {

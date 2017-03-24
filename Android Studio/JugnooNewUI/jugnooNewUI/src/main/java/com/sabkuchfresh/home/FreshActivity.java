@@ -894,8 +894,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             updateTotalAmountPrice(totalPrice);
             if (getFreshFragment() != null) {
                 setMinOrderAmountText(getFreshFragment());
-            } else if (getGroceryFragment() != null) {
-                setMinOrderAmountText(getGroceryFragment());
+            } else if (getFreshHomeFragment() != null) {
+                setMinOrderAmountText(getFreshHomeFragment());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -987,7 +987,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
                 llCartContainerVis = View.VISIBLE;
-                ivSearchVis = View.GONE;
+                ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
 
@@ -1353,11 +1353,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public int setMinOrderAmountText(Fragment fragment) {
         try {
             if (getFreshCheckoutMergedFragment() == null) {
-                if (getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
+                if (getFreshFragment() != null || getFreshHomeFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                     int textViewMinOrderVis;
-                    if (getProductsResponse() != null
-                            && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)) {
-                        if (Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
+                    if (fragment instanceof FreshFragment || fragment instanceof FreshHomeFragment || fragment instanceof FreshSearchFragment) {
+                        if (Data.userData.isSubscriptionActive() && getProductsResponse() != null && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
                             textViewMinOrderVis = View.VISIBLE;
                             textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
                         } else if (totalQuantity > 0 && totalPrice < getOpenedDeliveryStore().getMinAmount()) {
