@@ -780,6 +780,10 @@ public class LoginResponse {
 		@Expose
 		private List<PaymentGatewayModeConfig> paymentGatewayModeConfigData;
 
+		@SerializedName("expand_jeanie")
+		@Expose
+		private int expandJeanie;
+
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
 		}
@@ -954,6 +958,14 @@ public class LoginResponse {
 
 		public void setPaymentGatewayModeConfigData(List<PaymentGatewayModeConfig> paymentGatewayModeConfigData) {
 			this.paymentGatewayModeConfigData = paymentGatewayModeConfigData;
+		}
+
+		public int getExpandJeanie() {
+			return expandJeanie;
+		}
+
+		public void setExpandJeanie(int expandJeanie) {
+			this.expandJeanie = expandJeanie;
 		}
 	}
 

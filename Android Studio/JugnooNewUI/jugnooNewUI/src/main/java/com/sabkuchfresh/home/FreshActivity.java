@@ -498,6 +498,21 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         initCollapseToolBarViews();
+
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(Data.userData != null && Data.userData.getExpandJeanie() == 1) {
+                        fabViewTest.getMenuLabelsRightTest().open(true);
+                        Data.userData.setExpandJeanie(0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
+
     }
 
 

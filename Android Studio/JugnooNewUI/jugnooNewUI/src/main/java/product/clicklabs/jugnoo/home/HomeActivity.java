@@ -1647,7 +1647,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //            fabViewTest.getMenuLabelsRightTest().performClick();
 //        }
 
-        new Handler().postDelayed(new Runnable() {
+        getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -1662,6 +1662,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
         }, 2000);
+
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(Data.userData != null && Data.userData.getExpandJeanie() == 1) {
+						fabViewTest.getMenuLabelsRightTest().open(true);
+                        Data.userData.setExpandJeanie(0);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
     }
 
     public TransactionUtils getTransactionUtils() {
