@@ -894,8 +894,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             updateTotalAmountPrice(totalPrice);
             if (getFreshFragment() != null) {
                 setMinOrderAmountText(getFreshFragment());
-            } else if (getFreshHomeFragment() != null) {
-                setMinOrderAmountText(getFreshHomeFragment());
+            } else if (getFreshSearchFragment() != null) {
+                setMinOrderAmountText(getFreshSearchFragment());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1353,9 +1353,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public int setMinOrderAmountText(Fragment fragment) {
         try {
             if (getFreshCheckoutMergedFragment() == null) {
-                if (getFreshFragment() != null || getFreshHomeFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
+                if (getFreshFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                     int textViewMinOrderVis;
-                    if (fragment instanceof FreshFragment || fragment instanceof FreshHomeFragment || fragment instanceof FreshSearchFragment) {
+                    if (fragment instanceof FreshFragment || fragment instanceof FreshSearchFragment) {
                         if (Data.userData.isSubscriptionActive() && getProductsResponse() != null && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
                             textViewMinOrderVis = View.VISIBLE;
                             textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
