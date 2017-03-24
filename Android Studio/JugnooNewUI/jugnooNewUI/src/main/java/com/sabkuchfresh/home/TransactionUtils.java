@@ -351,11 +351,23 @@ public class TransactionUtils {
         }
     }
 
-    public void openFeedAddPostFragment(FragmentActivity activity, View container) {
+    public void openFeedAddPostFragment(FragmentActivity activity, View container, FeedDetail feedDetail) {
         if (!checkIfFragmentAdded(activity, FeedAddPostFragment.class.getName())) {
+
+
+            FeedAddPostFragment feedAddPostFragment;
+            if(feedDetail==null){
+                feedAddPostFragment = new FeedAddPostFragment();
+            }
+            else{
+                feedAddPostFragment = FeedAddPostFragment.newInstance(feedDetail);
+            }
+
+
+
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, 0)
-                    .add(container.getId(), FeedAddPostFragment.newInstance(),
+                    .add(container.getId(), feedAddPostFragment,
                             FeedAddPostFragment.class.getName())
                     .addToBackStack(FeedAddPostFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

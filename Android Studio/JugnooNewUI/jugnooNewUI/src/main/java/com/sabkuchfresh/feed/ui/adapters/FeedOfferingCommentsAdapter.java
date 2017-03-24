@@ -191,6 +191,9 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
 
 
                     break;
+                case R.id.ib_arrow_more:
+                    callback.onMoreClick((FeedDetail) feedDetailData.get(position),0,viewClicked);
+                    break;
                 default:
                     break;
             }

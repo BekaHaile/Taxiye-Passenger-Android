@@ -20,7 +20,11 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.feed.ui.adapters.FeedOfferingCommentsAdapter;
-import com.sabkuchfresh.commoncalls.LikeFeed;
+import com.sabkuchfresh.feed.ui.api.DeleteFeed;
+import com.sabkuchfresh.feed.ui.api.LikeFeed;
+import com.sabkuchfresh.feed.ui.view.DeletePostDialog;
+import com.sabkuchfresh.feed.ui.view.FeedContextMenu;
+import com.sabkuchfresh.feed.ui.view.FeedContextMenuManager;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -42,8 +46,10 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment.initWindowBlockedView;
 
-public class FeedOfferingCommentsFragment extends Fragment {
+
+public class FeedOfferingCommentsFragment extends Fragment  implements DeletePostDialog.DeleteDialogCallback{
 
     private static final String FEED_DETAIL = "feed_detail";
     private static final String POSITION_IN_ORIGINAL_LIST = "positionInOriginalList";
@@ -58,6 +64,8 @@ public class FeedOfferingCommentsFragment extends Fragment {
     private int positionInOriginalList;
     private EditText edtMyComment;
     private RecyclerView recyclerView;
+    private DeleteFeed deleteFeed;
+    private View viewDisabledEditPostPopUp;
 
 
     public FeedOfferingCommentsFragment() {
@@ -100,6 +108,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         activity.fragmentUISetup(this);
         View rootView = inflater.inflate(R.layout.fragment_feed_comments, container, false);
+        viewDisabledEditPostPopUp = initWindowBlockedView(activity);
         btnSubmit= (TextView) rootView.findViewById(R.id.btnSubmit);
         btnSubmit.setEnabled(false);
         textViewCharCount= (TextView) rootView.findViewById(R.id.tvCharCount);
@@ -117,7 +126,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
                         feedOfferingCommentsAdapter.notifyOnLike(position,isLikeAPI);
                         if(activity.getFeedHomeFragment()!=null) {
                             //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
-                            activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
+                            activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
                         }
                     }
 
@@ -147,6 +156,21 @@ public class FeedOfferingCommentsFragment extends Fragment {
             @Override
             public void onMoreClick(FeedDetail feedDetail, int positionInOriginalList, View moreItemView) {
 
+                FeedContextMenuManager.getInstance().toggleContextMenuFromView(moreItemView, feedDetail, new FeedContextMenu.OnFeedContextMenuItemClickListener() {
+                    @Override
+                    public void onEditClick(FeedDetail feedItem, int position) {
+
+                          onEdit(feedItem);
+
+                    }
+
+
+                    @Override
+                    public void onDeleteClick(FeedDetail feedItem, int position) {
+                        getDeletePostDialog().show(feedItem,position);
+
+                    }
+                },viewDisabledEditPostPopUp,activity,positionInOriginalList);
             }
         },submitTextWatcher);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -209,8 +233,8 @@ public class FeedOfferingCommentsFragment extends Fragment {
                                     if(activity.getFeedHomeFragment()!=null) {
 
 
-                                        //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
-                                        activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
+                                        //notifies the feed home fragment that user has commented on post so it can refresh accordingly i.e increase comment count
+                                        activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
                                     }
                                 }
 
@@ -283,7 +307,7 @@ public class FeedOfferingCommentsFragment extends Fragment {
                                     prepareListAndNotifyAdapter(feedbackResponse);
                                     if(activity.getFeedHomeFragment()!=null) {
                                         //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
-                                        activity.getFeedHomeFragment().notifyOnLikeFromCommentsFragment(positionInOriginalList);
+                                        activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
                                         recyclerView.smoothScrollToPosition(feedOfferingCommentsAdapter.getItemCount()-1);
                                     }
 
@@ -379,4 +403,44 @@ public class FeedOfferingCommentsFragment extends Fragment {
 
         }
     };
+
+    public DeletePostDialog deletePostDialog;
+
+    public DeletePostDialog getDeletePostDialog(){
+        if(deletePostDialog==null)
+            deletePostDialog=new DeletePostDialog(this,R.style.AppTheme_Dialog,activity);
+
+        return deletePostDialog;
+    }
+
+    @Override
+    public void onDelete(FeedDetail feedDetail, int position) {
+        if(deleteFeed ==null)
+            deleteFeed =new DeleteFeed(new DeleteFeed.DeleteApiCallback() {
+                @Override
+                public void onSuccess(int posInOriginalList) {
+                    if(activity.getFeedHomeFragment()!=null) {
+                        //notifies the feed home fragment that user has deleted the post
+                        activity.onBackPressed();
+                        activity.getFeedHomeFragment().notifyOnDelete(positionInOriginalList);
+
+                    }
+                }
+            });
+        deleteFeed.delete(feedDetail.getPostId(),activity,positionInOriginalList);
+    }
+
+    @Override
+    public void onEdit(FeedDetail feedDetail) {
+        activity.openFeedAddPostFragment(feedDetail);
+    }
+
+    @Override
+    public void onDismiss(FeedDetail feedDetail) {
+
+    }
+
+    public void fetchDetailAPI() {
+
+    }
 }

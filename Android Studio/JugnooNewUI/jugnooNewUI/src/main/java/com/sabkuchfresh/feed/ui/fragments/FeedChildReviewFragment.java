@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.sabkuchfresh.adapters.RestaurantQuerySuggestionsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
 
@@ -37,6 +38,8 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment.FEED_DETAIL;
 
 /**
  * Created by Parminder Singh on 3/20/17.
@@ -67,6 +70,25 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
     private EditText etContent;
     private SuggestRestaurantQueryResp.Suggestion suggestionSelected;
 
+    public static FeedChildReviewFragment newInstance(FeedDetail feedDetail) {
+        FeedChildReviewFragment feedChildReviewFragment = new FeedChildReviewFragment();
+        if(feedDetail!=null){
+            Bundle bundle =new Bundle();
+            bundle.putSerializable(FEED_DETAIL,feedDetail);
+            feedChildReviewFragment.setArguments(bundle);
+        }
+        return feedChildReviewFragment;
+
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        if(getArguments()!=null && getArguments().containsKey(FEED_DETAIL)){
+            feedDetail= (FeedDetail) getArguments().getSerializable(FEED_DETAIL);
+        }
+        super.onCreate(savedInstanceState);
+    }
 
     private void suggestRestaurantApi(String query) {
         try {
@@ -201,17 +223,33 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
             }
         });
 
-        //Restaurant Enabled
-        layoutContent.setEnabled(false);
-        ratingBar.setEnabled(false);
-        etContent.setEnabled(false);
-        ratingBar.setRatingDisabled(true);
+
 
 
         etContent.addTextChangedListener(editTextWacherContent);
         if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getFeedAddReviewHint())) {
             etContent.setHint(Data.getFeedData().getFeedAddReviewHint());
         }
+
+
+        if(feedDetail!=null){
+            //If editing
+            etContent.setText(feedDetail.getContent());
+            setUpImagesAdapter();
+            suggestionSelected = new SuggestRestaurantQueryResp.Suggestion();
+            suggestionSelected.setId(feedDetail.getRestaurantId());
+            ratingBar.setScore(feedDetail.getStarCount().floatValue());
+            tvRestaurantLocation.setText(feedDetail.getRestaurantName());
+            tvRestaurantLocation.setOnClickListener(null);
+
+        }else{
+            // if fresh review then Restaurant Enabled
+            layoutContent.setEnabled(false);
+            ratingBar.setEnabled(false);
+            etContent.setEnabled(false);
+            ratingBar.setRatingDisabled(true);
+        }
+
         return rootView;
 
 
@@ -242,12 +280,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
     }
 
 
-    public static FeedChildReviewFragment newInstance() {
-        FeedChildReviewFragment feedChildReviewFragment = new FeedChildReviewFragment();
-        return feedChildReviewFragment;
 
-
-    }
 
 
 
@@ -299,7 +332,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
 
     @Override
     public Integer getRestaurantId() {
-        return suggestionSelected.getId();
+        return   suggestionSelected.getId();
     }
 
     @Override

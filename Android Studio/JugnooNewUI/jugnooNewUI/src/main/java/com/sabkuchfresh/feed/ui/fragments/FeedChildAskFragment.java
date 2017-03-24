@@ -12,9 +12,12 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+
+import static com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment.FEED_DETAIL;
 
 /**
  * Created by Parminder Singh on 3/20/17.
@@ -39,15 +42,38 @@ public class FeedChildAskFragment extends ImageSelectFragment {
         displayImagesRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view_photos);
         scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         setSubmitActivated(false);
+
+        if(feedDetail!=null){
+            etContent.setText(feedDetail.getContent());
+            setUpImagesAdapter();
+        }
         return rootView;
 
 
     }
 
 
-    public static FeedChildAskFragment newInstance() {
-        return new FeedChildAskFragment();
+    public static FeedChildAskFragment newInstance(FeedDetail feedDetail) {
+        FeedChildAskFragment feedChildAskFragment = new FeedChildAskFragment();
+        if(feedDetail!=null){
+            Bundle bundle =new Bundle();
+            bundle.putSerializable(FEED_DETAIL,feedDetail);
+            feedChildAskFragment.setArguments(bundle);
+        }
+        return feedChildAskFragment;
+
+
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        if(getArguments()!=null && getArguments().containsKey(FEED_DETAIL)){
+            feedDetail= (FeedDetail) getArguments().getSerializable(FEED_DETAIL);
+        }
+        super.onCreate(savedInstanceState);
+    }
+
+
 
     @Override
     public boolean canSubmit() {

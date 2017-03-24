@@ -7,6 +7,8 @@ import android.os.Build;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.google.gson.Gson;
+
 /**
  * Created by froger_mcs on 05.11.14.
  */
@@ -44,5 +46,13 @@ public class Utils {
 
     public static boolean isAndroid5() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    private static Gson gson;
+
+    public static Gson getGson(){
+        if(gson==null)
+           gson= new Gson();
+        return gson;
     }
 }

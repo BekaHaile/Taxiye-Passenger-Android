@@ -70,6 +70,7 @@
         android:layout_below="@id/divider_user_activity"
         android:layout_marginBottom="@dimen/spacing_tiny"
         android:layout_marginLeft="@dimen/spacing_normal"
+        android:layout_marginRight="@dimen/spacing_tiny"
        >
 
         <ImageView
@@ -114,6 +115,7 @@
             android:background="@drawable/capsule_text_color"
             android:gravity="center_vertical"
             android:maxLines="1"
+            android:layout_marginRight="@dimen/spacing_small"
             android:paddingBottom="@dimen/spacing_tiny"
             android:paddingLeft="@dimen/spacing_extra_tiny"
             android:paddingRight="@dimen/spacing_extra_tiny"
@@ -128,7 +130,7 @@
         <ImageView
             android:id="@id/ib_arrow_more"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/spacing_tiny"
+
             android:background="@null"
             android:rotation="270"
             android:src="@drawable/ic_back"
@@ -136,7 +138,7 @@
             android:scaleX="0.6"
             android:layout_marginTop="-7dp"
             android:paddingLeft="@dimen/spacing_small"
-            android:paddingRight="@dimen/spacing_normal"
+            android:paddingRight="@dimen/spacing_small"
             android:paddingBottom="@dimen/spacing_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -176,7 +178,7 @@
         android:layout_marginLeft="@dimen/spacing_large"
         android:layout_marginRight="@dimen/spacing_large"
         android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:visibility="gone"
         android:layout_height="wrap_content"/>
 

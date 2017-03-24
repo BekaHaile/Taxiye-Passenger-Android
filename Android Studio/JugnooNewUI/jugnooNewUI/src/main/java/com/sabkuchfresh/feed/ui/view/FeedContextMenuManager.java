@@ -14,6 +14,7 @@ import android.view.animation.OvershootInterpolator;
 
 import com.sabkuchfresh.feed.utils.Utils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
 
 /**
@@ -31,6 +32,7 @@ public class FeedContextMenuManager extends RecyclerView.OnScrollListener implem
     private View openingView;
     private View viewDisabledEditPostPopUp;
     private FreshActivity freshActivity;
+    private FeedDetail feedDetail;
 
     public static FeedContextMenuManager getInstance() {
         if (instance == null) {
@@ -43,12 +45,12 @@ public class FeedContextMenuManager extends RecyclerView.OnScrollListener implem
 
     }
 
-public void toggleContextMenuFromView(View openingView, int feedItem, FeedContextMenu.OnFeedContextMenuItemClickListener listener, View viewDisabledEditPostPopUp, FreshActivity activity) {
+public void toggleContextMenuFromView(View openingView, FeedDetail feedItem, FeedContextMenu.OnFeedContextMenuItemClickListener listener, View viewDisabledEditPostPopUp, FreshActivity activity,int position) {
     this.openingView=openingView;
     this.viewDisabledEditPostPopUp = viewDisabledEditPostPopUp;
     this.freshActivity=activity;
     if (contextMenuView == null) {
-        showContextMenuFromView(openingView, feedItem, listener);
+        showContextMenuFromView(openingView, feedItem, listener,position);
         toggleActivityState(true);
 
     } else {
@@ -58,11 +60,11 @@ public void toggleContextMenuFromView(View openingView, int feedItem, FeedContex
     }
 }
 
-    private void showContextMenuFromView(final View openingView, int feedItem, FeedContextMenu.OnFeedContextMenuItemClickListener listener) {
+    private void showContextMenuFromView(final View openingView, FeedDetail feedItem, FeedContextMenu.OnFeedContextMenuItemClickListener listener,int position) {
         if (!isContextMenuShowing) {
             isContextMenuShowing = true;
             contextMenuView = new FeedContextMenu(openingView.getContext());
-            contextMenuView.bindToItem(feedItem);
+            contextMenuView.bindToItem(feedItem,position);
             contextMenuView.addOnAttachStateChangeListener(this);
             contextMenuView.setOnFeedMenuItemClickListener(listener);
 
@@ -94,7 +96,7 @@ public void toggleContextMenuFromView(View openingView, int feedItem, FeedContex
     private void performShowAnimation() {
 
         if(openingView!=null){
-            contextMenuView.setPivotX(openingView.getX());
+            contextMenuView.setPivotX(openingView.getX()+ (openingView.getWidth()/2));
             contextMenuView.setPivotY(openingView.getY());
         }
         else{
@@ -150,7 +152,6 @@ public void toggleContextMenuFromView(View openingView, int feedItem, FeedContex
                         }
 
                         toggleActivityState(false);
-
                         isContextMenuDismissing = false;
                     }
                 });

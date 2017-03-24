@@ -20,6 +20,7 @@ import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.EditReviewImagesAdapter;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
 import java.util.ArrayList;
 
@@ -42,9 +43,13 @@ public abstract class ImageSelectFragment extends Fragment {
     protected EditReviewImagesAdapter editReviewImagesAdapter;
     protected RecyclerView displayImagesRecycler;
     protected ScrollView scrollView;
-    protected ArrayList<ImageEntry> imageSelected;
+    protected ArrayList<Object> imageSelected;
     protected FreshActivity activity;
     protected int maxNoImages;
+
+
+    //This object would only be intialised if we are editing post
+    protected FeedDetail feedDetail;
 
 
 
@@ -55,7 +60,19 @@ public abstract class ImageSelectFragment extends Fragment {
             maxNoImages=Data.getFeedData().getMaxUploadImagesFeed();
         else
             maxNoImages=5;
+
+        if(feedDetail!=null && feedDetail.getReviewImages()!=null &&feedDetail.getReviewImages().size()>0){
+            if (imageSelected == null)
+                imageSelected = new ArrayList<>();
+
+            imageSelected.addAll(feedDetail.getReviewImages());
+
+            if(feedDetail.getReviewImages().size()>maxNoImages)
+                maxNoImages=feedDetail.getReviewImages().size();
+        }
     }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -63,7 +80,7 @@ public abstract class ImageSelectFragment extends Fragment {
         activity = (FreshActivity) context;
     }
 
-    private void setUpAdapter() {
+    public void setUpImagesAdapter() {
 
 
         if (imageSelected == null || imageSelected.size() == 0) {
@@ -80,14 +97,10 @@ public abstract class ImageSelectFragment extends Fragment {
 
                 @Override
                 public void onDelete(Object object) {
-                    if (object instanceof ImageEntry) {
+
                         imageSelected.remove(object);
                         if (imageSelected.size() == 0)
                             displayImagesRecycler.setVisibility(View.GONE);
-
-//                        setCameraEnabled(imageSelected.size()<maxNoImages);
-
-                    }
 
 
                 }
@@ -129,7 +142,7 @@ public abstract class ImageSelectFragment extends Fragment {
 
 
                     imageSelected.addAll(images);
-                    setUpAdapter();
+                    setUpImagesAdapter();
                     scrollView.fullScroll(View.FOCUS_DOWN);
                 }
             }
@@ -247,4 +260,6 @@ public abstract class ImageSelectFragment extends Fragment {
     };
 
     public abstract boolean submitEnabledState();
+
+
 }

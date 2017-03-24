@@ -323,6 +323,17 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.recyclerViewUserImages.setVisibility(View.GONE);
             }
 
+            //Show Edit post option if available
+            holder.ivMore.setVisibility(feedDetail.isPostEditable()?View.VISIBLE:View.GONE);
+          /*  RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.tvFeedRating.getLayoutParams();
+                 if(feedDetail.isPostEditable())
+                   layoutParams.rightMargin=Utils.convertDpToPx(activity,10);
+                else
+                    layoutParams.rightMargin=0;
+            holder.ivMore.setLayoutParams(layoutParams);*/
+
+
+
         }
 
 
@@ -626,7 +637,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
 
-                    activity.openFeedAddPostFragment();
+                    activity.openFeedAddPostFragment(null);
                 }
             });
             ivMyProfilePic = (ImageView) itemView.findViewById(R.id.iv_profile_pic);

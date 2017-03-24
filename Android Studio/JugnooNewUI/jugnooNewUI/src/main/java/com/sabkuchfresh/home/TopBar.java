@@ -235,7 +235,7 @@ public class TopBar {
                 case R.id.ivAddReview:
                     if (activity instanceof FreshActivity) {
                         if (((FreshActivity) activity).getTopFragment() instanceof FeedHomeFragment) {
-                            ((FreshActivity) activity).openFeedAddPostFragment();
+                            ((FreshActivity) activity).openFeedAddPostFragment(null);
                         } else
                             ((FreshActivity) activity).openRestaurantAddReviewFragment(true);
                     }

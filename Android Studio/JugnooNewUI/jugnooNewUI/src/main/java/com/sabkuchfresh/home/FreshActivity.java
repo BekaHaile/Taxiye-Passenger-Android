@@ -109,6 +109,7 @@ import com.sabkuchfresh.retrofit.model.SubItemComparePriceLowToHigh;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriority;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemCompareAtoZ;
@@ -770,6 +771,10 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public FeedHomeFragment getFeedHomeFragment(){
         return (FeedHomeFragment) getSupportFragmentManager().findFragmentByTag(FeedHomeFragment.class.getName());
+    }
+
+    public FeedOfferingCommentsFragment getOfferingsCommentFragment(){
+        return (FeedOfferingCommentsFragment) getSupportFragmentManager().findFragmentByTag(FeedOfferingCommentsFragment.class.getName());
     }
     public FeedAddPostFragment getFeedAddPostFragment(){
         return (FeedAddPostFragment) getSupportFragmentManager().findFragmentByTag(FeedAddPostFragment.class.getName());
@@ -3297,8 +3302,12 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         }
     }
 
-    public void openFeedAddPostFragment() {
-       getTransactionUtils().openFeedAddPostFragment(this, getRelativeLayoutContainer());
+    /**
+     * The Add Post fragment opens in two modes when we are adding or when are editing
+     * @param feedDetail If feed detail object is null then it means a new post is being added
+     */
+    public void openFeedAddPostFragment(FeedDetail feedDetail) {
+       getTransactionUtils().openFeedAddPostFragment(this, getRelativeLayoutContainer(),feedDetail);
 
     }
 

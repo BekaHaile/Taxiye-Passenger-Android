@@ -1,6 +1,7 @@
 package com.sabkuchfresh.feed.ui.fragments;
 
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +9,6 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +23,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
-import com.sabkuchfresh.commoncalls.LikeFeed;
+import com.sabkuchfresh.feed.ui.api.DeleteFeed;
+import com.sabkuchfresh.feed.ui.api.LikeFeed;
+import com.sabkuchfresh.feed.ui.view.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.view.FeedContextMenu;
 import com.sabkuchfresh.feed.ui.view.FeedContextMenuManager;
 import com.sabkuchfresh.home.FeedContactsUploadService;
@@ -53,11 +54,10 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class FeedHomeFragment extends Fragment {
+public class FeedHomeFragment extends Fragment implements DeletePostDialog.DeleteDialogCallback{
 
 
     private FeedHomeAdapter feedHomeAdapter;
-    private TextView tvAddPost;
     private LikeFeed likeFeed;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout relativeLayoutNotAvailable;
@@ -87,6 +87,7 @@ public class FeedHomeFragment extends Fragment {
         }
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -102,15 +103,15 @@ public class FeedHomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         activity.fragmentUISetup(this);
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
-        viewDisabledEditPostPopUp= initWindowBlockedView();
+        viewDisabledEditPostPopUp= initWindowBlockedView(activity);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+       /* recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
             }
-        });
+        });*/
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
         swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
@@ -161,27 +162,21 @@ public class FeedHomeFragment extends Fragment {
             @Override
             public void onMoreClick(final FeedDetail feedDetail, int positionInOriginalList, View moreItemView){
 
-                FeedContextMenuManager.getInstance().toggleContextMenuFromView(moreItemView, positionInOriginalList, new FeedContextMenu.OnFeedContextMenuItemClickListener() {
+                FeedContextMenuManager.getInstance().toggleContextMenuFromView(moreItemView, feedDetail, new FeedContextMenu.OnFeedContextMenuItemClickListener() {
                     @Override
-                    public void onReportClick(int feedItem) {
+                    public void onEditClick(FeedDetail feedItem, int position) {
+
+                        onEdit(feedItem);
 
                     }
 
-                    @Override
-                    public void onSharePhotoClick(int feedItem) {
-
-                    }
 
                     @Override
-                    public void onCopyShareUrlClick(int feedItem) {
+                    public void onDeleteClick(FeedDetail feedItem, int position) {
+                        getDeletePostDialog().show(feedItem,position);
 
                     }
-
-                    @Override
-                    public void onCancelClick(int feedItem) {
-
-                    }
-                },viewDisabledEditPostPopUp,activity);
+                },viewDisabledEditPostPopUp,activity,positionInOriginalList);
             }
         });
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);;
@@ -233,7 +228,6 @@ public class FeedHomeFragment extends Fragment {
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
-
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getFeedApiService().generateFeed(params, new retrofit.Callback<FeedListResponse>() {
                     @Override
@@ -350,14 +344,14 @@ public class FeedHomeFragment extends Fragment {
     };
 
 
-    public void notifyOnLikeFromCommentsFragment(int positionItemLikedUnlikedInCommentsFragment) {
-        if(feedHomeAdapter !=null)
-            feedHomeAdapter.notifyFeedListItem(positionItemLikedUnlikedInCommentsFragment);;
+    public void refreshFeedInHomeFragment(int positionItemChangedInCommentsFragment) {
+        if(feedHomeAdapter!=null && adapterList!=null && adapterList.size()>positionItemChangedInCommentsFragment)
+            feedHomeAdapter.notifyFeedListItem(positionItemChangedInCommentsFragment);;
     }
 
 
 
-    public View initWindowBlockedView(){
+    public static  View initWindowBlockedView(Activity activity){
         final View view = activity.findViewById(R.id.edit_popup_disabled);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -365,6 +359,47 @@ public class FeedHomeFragment extends Fragment {
               FeedContextMenuManager.getInstance().hideContextMenu();
             }
         });
+
         return view;
+    }
+
+
+   public DeletePostDialog deletePostDialog;
+
+    public DeletePostDialog getDeletePostDialog(){
+        if(deletePostDialog==null)
+            deletePostDialog=new DeletePostDialog(this,R.style.AppTheme_Dialog,activity);
+
+        return deletePostDialog;
+    }
+
+
+    private DeleteFeed deleteFeed;
+    @Override
+    public void onDelete(FeedDetail feedDetail,int pos) {
+        if(deleteFeed==null)
+            deleteFeed=new DeleteFeed(new DeleteFeed.DeleteApiCallback() {
+                @Override
+                public void onSuccess(int posInOriginalList) {
+                    if(feedHomeAdapter!=null)
+                        feedHomeAdapter.notifyItemRemoved(posInOriginalList);
+                }
+            });
+        deleteFeed.delete(feedDetail.getPostId(),activity,pos);
+    }
+
+    @Override
+    public void onEdit(FeedDetail feedDetail) {
+        activity.openFeedAddPostFragment(feedDetail);
+    }
+
+    @Override
+    public void onDismiss(FeedDetail feedDetail) {
+
+    }
+
+    public void notifyOnDelete(int positionInOriginalList) {
+        if(feedHomeAdapter!=null && adapterList!=null && adapterList.size()>positionInOriginalList)
+            feedHomeAdapter.notifyItemRemoved(positionInOriginalList);
     }
 }

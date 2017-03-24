@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.sabkuchfresh.feed.utils.Utils;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -18,7 +19,8 @@ import product.clicklabs.jugnoo.R;
 public class FeedContextMenu extends LinearLayout {
     private static final int CONTEXT_MENU_WIDTH = Utils.dpToPx(240);
 
-    private int feedItem = -1;
+    private FeedDetail feedItem =null;
+    private int position;
 
     private OnFeedContextMenuItemClickListener onItemClickListener;
 
@@ -34,8 +36,9 @@ public class FeedContextMenu extends LinearLayout {
         setLayoutParams(new LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
-    public void bindToItem(int feedItem) {
+    public void bindToItem(FeedDetail feedItem,int position) {
         this.feedItem = feedItem;
+        this.position=position;
     }
 
     @Override
@@ -51,7 +54,9 @@ public class FeedContextMenu extends LinearLayout {
     @OnClick(R.id.btnReport)
     public void onReportClick() {
         if (onItemClickListener != null) {
-            onItemClickListener.onReportClick(feedItem);
+            dismiss();
+            FeedContextMenuManager.getInstance().toggleActivityState(false);
+            onItemClickListener.onEditClick(feedItem,position);
         }
     }
 
@@ -60,7 +65,9 @@ public class FeedContextMenu extends LinearLayout {
     @OnClick(R.id.btnCancel)
     public void onCancelClick() {
         if (onItemClickListener != null) {
-            onItemClickListener.onCancelClick(feedItem);
+            dismiss();
+            FeedContextMenuManager.getInstance().toggleActivityState(false);
+            onItemClickListener.onDeleteClick(feedItem,position);
         }
     }
 
@@ -69,12 +76,8 @@ public class FeedContextMenu extends LinearLayout {
     }
 
     public interface OnFeedContextMenuItemClickListener {
-        public void onReportClick(int feedItem);
+        public void onEditClick(FeedDetail feedItem, int position);
 
-        public void onSharePhotoClick(int feedItem);
-
-        public void onCopyShareUrlClick(int feedItem);
-
-        public void onCancelClick(int feedItem);
+        public void onDeleteClick(FeedDetail feedItem, int position);
     }
 }
