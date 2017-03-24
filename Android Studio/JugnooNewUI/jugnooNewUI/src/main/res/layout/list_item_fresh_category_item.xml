@@ -216,6 +216,7 @@
         android:background="@drawable/bg_white_round_layer_shadow"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:tag="mwar"
         android:visibility="visible">
 
         <ImageView
@@ -232,10 +233,11 @@
             android:layout_width="70px"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:singleLine="true"
+            android:maxLines="1"
             android:text="998"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_34"
+            android:tag="mwar"
             android:visibility="visible" />
 
         <ImageView

@@ -87,7 +87,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     ImageView imageViewProfileImage;
 	EditText editTextUserName, editTextEmail, editTextPhone;
     LinearLayout linearLayoutPhone;
-    ImageView imageViewEditProfile;
+    ImageView imageViewEditProfile, ivEditPhone;
 
     RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact;
     TextView textViewEmergencyContact;
@@ -147,6 +147,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         linearLayoutSave = (LinearLayout)findViewById(R.id.linearLayoutSave);
         textViewPasswordSave = (TextView) findViewById(R.id.textViewPasswordSave); textViewPasswordSave.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPasswordSave = (LinearLayout) findViewById(R.id.linearLayoutPasswordSave);
+        ivEditPhone = (ImageView) findViewById(R.id.ivEditPhone);
 
         relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
         ((TextView) findViewById(R.id.textViewChangePassword)).setTypeface(Fonts.mavenMedium(this));
@@ -307,6 +308,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
         });
 
+        ivEditPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         linearLayoutAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -423,7 +431,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         //editTextPhone.setEnabled(true);
                         editTextPhone.setEnabled(false);
-                        linearLayoutPhone.setBackgroundResource(R.drawable.bg_white_orange_bb);
+//                        linearLayoutPhone.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         //buttonEditProfile.setText(getResources().getString(R.string.save_changes));
                         imageViewEditProfile.setVisibility(View.GONE);
                         linearLayoutSave.setVisibility(View.VISIBLE);

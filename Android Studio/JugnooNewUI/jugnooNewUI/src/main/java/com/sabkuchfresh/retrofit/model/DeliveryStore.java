@@ -29,10 +29,10 @@ public class DeliveryStore {
 	private Integer storeId;
 	@SerializedName("delivery_charges")
 	@Expose
-	private Integer deliveryCharges;
+	private Double deliveryCharges;
 	@SerializedName("min_amount")
 	@Expose
-	private Integer minAmount;
+	private Double minAmount;
 	@SerializedName("dynamic_delivery_charges")
 	@Expose
 	private Integer dynamicDeliveryCharges;
@@ -106,19 +106,19 @@ public class DeliveryStore {
 		this.storeId = storeId;
 	}
 
-	public Integer getDeliveryCharges() {
+	public Double getDeliveryCharges() {
 		return deliveryCharges;
 	}
 
-	public void setDeliveryCharges(Integer deliveryCharges) {
+	public void setDeliveryCharges(Double deliveryCharges) {
 		this.deliveryCharges = deliveryCharges;
 	}
 
-	public Integer getMinAmount() {
+	public Double getMinAmount() {
 		return minAmount;
 	}
 
-	public void setMinAmount(Integer minAmount) {
+	public void setMinAmount(Double minAmount) {
 		this.minAmount = minAmount;
 	}
 
