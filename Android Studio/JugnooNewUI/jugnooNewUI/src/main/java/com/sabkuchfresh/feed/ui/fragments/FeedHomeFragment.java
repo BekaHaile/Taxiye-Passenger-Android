@@ -1,7 +1,6 @@
 package com.sabkuchfresh.feed.ui.fragments;
 
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,9 +24,8 @@ import android.widget.TextView;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
-import com.sabkuchfresh.feed.ui.view.DeletePostDialog;
-import com.sabkuchfresh.feed.ui.view.FeedContextMenu;
-import com.sabkuchfresh.feed.ui.view.FeedContextMenuManager;
+import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
+import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -54,7 +52,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class FeedHomeFragment extends Fragment implements DeletePostDialog.DeleteDialogCallback{
+public class FeedHomeFragment extends Fragment implements DeletePostDialog.DeleteDialogCallback,EditPostPopup.EditPostDialogCallback{
 
 
     private FeedHomeAdapter feedHomeAdapter;
@@ -103,15 +101,8 @@ public class FeedHomeFragment extends Fragment implements DeletePostDialog.Delet
                              Bundle savedInstanceState) {
         activity.fragmentUISetup(this);
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
-        viewDisabledEditPostPopUp= initWindowBlockedView(activity);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-       /* recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
-            }
-        });*/
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
         swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
@@ -162,21 +153,11 @@ public class FeedHomeFragment extends Fragment implements DeletePostDialog.Delet
             @Override
             public void onMoreClick(final FeedDetail feedDetail, int positionInOriginalList, View moreItemView){
 
-                FeedContextMenuManager.getInstance().toggleContextMenuFromView(moreItemView, feedDetail, new FeedContextMenu.OnFeedContextMenuItemClickListener() {
-                    @Override
-                    public void onEditClick(FeedDetail feedItem, int position) {
-
-                        onEdit(feedItem);
-
-                    }
+               getEditPostDialog().show(feedDetail,moreItemView,positionInOriginalList);
+//                getEditPostDialog().show(feedDetail,moreItemView,positionInOriginalList);
 
 
-                    @Override
-                    public void onDeleteClick(FeedDetail feedItem, int position) {
-                        getDeletePostDialog().show(feedItem,position);
 
-                    }
-                },viewDisabledEditPostPopUp,activity,positionInOriginalList);
             }
         });
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);;
@@ -351,26 +332,23 @@ public class FeedHomeFragment extends Fragment implements DeletePostDialog.Delet
 
 
 
-    public static  View initWindowBlockedView(Activity activity){
-        final View view = activity.findViewById(R.id.edit_popup_disabled);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              FeedContextMenuManager.getInstance().hideContextMenu();
-            }
-        });
 
-        return view;
-    }
-
-
-   public DeletePostDialog deletePostDialog;
+   private DeletePostDialog deletePostDialog;
 
     public DeletePostDialog getDeletePostDialog(){
         if(deletePostDialog==null)
-            deletePostDialog=new DeletePostDialog(this,R.style.AppTheme_Dialog,activity);
+            deletePostDialog=new DeletePostDialog(this,R.style.Feed_Popup_Theme,activity);
 
         return deletePostDialog;
+    }
+
+    private EditPostPopup editPostDialog;
+
+    public EditPostPopup getEditPostDialog(){
+
+            editPostDialog=new EditPostPopup(this,R.style.Feed_Popup_Theme,activity);
+
+        return editPostDialog;
     }
 
 
@@ -401,5 +379,16 @@ public class FeedHomeFragment extends Fragment implements DeletePostDialog.Delet
     public void notifyOnDelete(int positionInOriginalList) {
         if(feedHomeAdapter!=null && adapterList!=null && adapterList.size()>positionInOriginalList)
             feedHomeAdapter.notifyItemRemoved(positionInOriginalList);
+    }
+
+    @Override
+    public void onMoreDelete(FeedDetail feedDetail, int positionInList) {
+        getDeletePostDialog().show(feedDetail,positionInList);
+    }
+
+    @Override
+    public void onMoreEdit(FeedDetail feedDetail, int positionInList) {
+        onEdit(feedDetail);
+
     }
 }

@@ -7,17 +7,10 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="@dimen/spacing_normal"
-        android:paddingLeft="@dimen/spacing_large"
-        android:paddingRight="@dimen/spacing_large"
-        android:paddingTop="@dimen/spacing_normal"
+        style="@style/text_feed_popup"
         android:textSize="@dimen/font_small"
-        android:text="Do you really want to delete this post? If you delete once it will no longer be available."
-        android:textColor="@color/feed_grey_text"
-        app:font="@string/maven_r" />
+        android:text="@string/feed_delete_popup_message"
+        android:textColor="@color/feed_grey_text" />
 
     <View
         android:layout_width="match_parent"
@@ -28,17 +21,9 @@
 
     <TextView
         android:id="@+id/tv_delete_post"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="@dimen/font_large"
-        android:paddingBottom="@dimen/spacing_small"
-        android:paddingLeft="@dimen/spacing_large"
-        android:paddingRight="@dimen/spacing_large"
-        android:paddingTop="@dimen/spacing_small"
         android:text="Delete Post"
-        android:textColor="@color/text_color_theme_color_selector"
-        app:font="@string/maven_r" />
+        style="@style/text_feed_popup"
+         />
 
     <View
         android:layout_width="match_parent"
@@ -49,17 +34,8 @@
 
     <TextView
         android:id="@+id/tv_edit_post"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="@dimen/font_large"
-        android:paddingBottom="@dimen/spacing_small"
-        android:paddingLeft="@dimen/spacing_large"
-        android:paddingRight="@dimen/spacing_large"
-        android:paddingTop="@dimen/spacing_small"
-        android:textColor="@color/text_color_theme_color_selector"
-        android:text="Edit Post"
-        app:font="@string/maven_r" />
+        style="@style/text_feed_popup"
+        android:text="Edit Post" />
 
     <View
         android:layout_width="match_parent"
@@ -70,17 +46,8 @@
 
     <TextView
         android:id="@+id/tv_cancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="@dimen/spacing_small"
-        android:paddingLeft="@dimen/spacing_large"
-        android:paddingRight="@dimen/spacing_large"
-        android:paddingTop="@dimen/spacing_small"
-        android:text="Cancel"
-        android:textColor="@color/text_color_theme_color_selector"
-        android:textSize="@dimen/font_large"
-        app:font="@string/maven_r" />
+        style="@style/text_feed_popup"
+        android:text="Cancel" />
 
 
 

@@ -1609,6 +1609,10 @@
     <string name="label_city">City</string>
     <string name="away_from_free_delivery_value">\u20B9%s away from free delivery</string>
     <string name="no_other_store_available">No other stores available</string>
+
     <string name="type_address">Type Address</string>
+
+    <string name="feed_delete_popup_message">Do you really want to delete this post? If you delete once it will no longer be available.</string>
+
 
 </resources>

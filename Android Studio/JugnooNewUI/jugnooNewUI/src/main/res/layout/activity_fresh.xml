@@ -96,12 +96,6 @@
         <include layout="@layout/layout_home_activity_fab_test" />
 
 
-        <View
-            android:visibility="gone"
-            android:id="@+id/edit_popup_disabled"
-            android:background="@color/black_60"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
 
 
     </android.support.design.widget.CoordinatorLayout>

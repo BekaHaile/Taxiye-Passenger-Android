@@ -1,8 +1,10 @@
-package com.sabkuchfresh.feed.ui.view;
+package com.sabkuchfresh.feed.ui.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.view.Gravity;
@@ -25,7 +27,7 @@ public class DeletePostDialog extends Dialog {
     private FeedDetail feedDetail;
     private int positionInList;
 
-    public<T extends DeleteDialogCallback>  DeletePostDialog(@NonNull T deleteDialogCall, @StyleRes int themeResId, Activity context) {
+    public<T extends DeleteDialogCallback> DeletePostDialog(@NonNull T deleteDialogCall, @StyleRes int themeResId, Activity context) {
         super(context, themeResId);
         this.deleteDialogCallback=deleteDialogCall;
         setContentView(R.layout.dialog_feed_delete_post);
@@ -54,13 +56,11 @@ public class DeletePostDialog extends Dialog {
         });
         Window window = getWindow();
         WindowManager.LayoutParams wlp = getWindow().getAttributes();
-        setCanceledOnTouchOutside(true);
         wlp.gravity = Gravity.BOTTOM;
-        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         wlp.height=WindowManager.LayoutParams.WRAP_CONTENT;
         wlp.width=WindowManager.LayoutParams.MATCH_PARENT;
-        wlp.dimAmount = 0.7f;
-        window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        wlp.windowAnimations=R.style.dialog_anim_from_bottom;
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//to avoid black background during animation
         window.setAttributes(wlp);
 
     }
