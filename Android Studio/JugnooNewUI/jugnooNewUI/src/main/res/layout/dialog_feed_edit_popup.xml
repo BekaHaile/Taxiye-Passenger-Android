@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@android:color/white"
-    android:layout_height="wrap_content">
 
+    android:layout_height="wrap_content">
+    <View
+        android:background="@drawable/background_popup_edit_feed"
+        android:layout_gravity="right"
+        android:layout_marginTop="-10dp"
+        android:layout_marginRight="@dimen/spacing_normal"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
 
     <TextView
         android:id="@+id/tv_edit_post"
         android:drawablePadding="@dimen/spacing_normal"
         android:gravity="left"
+        android:background="@android:color/white"
         android:drawableLeft="@drawable/edit_icon_normal"
         android:text="Edit"
         style="@style/text_feed_popup" />
@@ -24,7 +31,10 @@
         android:id="@+id/tv_delete_post"
         android:drawablePadding="@dimen/spacing_normal"
         android:gravity="left"
+        android:background="@android:color/white"
         android:drawableLeft="@drawable/edit_icon_normal"
         android:text="Delete"
         style="@style/text_feed_popup" />
+
+
 </LinearLayout>

@@ -15,11 +15,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by Parminder Singh on 3/24/17.
@@ -123,7 +125,7 @@ public class EditPostPopup extends Dialog {
             viewClicked.getLocationOnScreen(openingViewLocation);
             WindowManager.LayoutParams wlp = getWindow().getAttributes();
             wlp.x = openingViewLocation[0];
-            wlp.y = openingViewLocation[1];
+            wlp.y = openingViewLocation[1]+ viewClicked.getHeight()- com.sabkuchfresh.feed.utils.Utils.dpToPx(10);
             getWindow().getDecorView().setPivotX(viewClicked.getX()+viewClicked.getWidth()/2);
             getWindow().getDecorView().setPivotY(viewClicked.getY());
             getWindow().getDecorView().setScaleX(0.1f);

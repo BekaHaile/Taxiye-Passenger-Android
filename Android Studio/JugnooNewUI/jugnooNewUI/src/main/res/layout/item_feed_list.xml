@@ -70,8 +70,10 @@
         android:layout_below="@id/divider_user_activity"
         android:layout_marginBottom="@dimen/spacing_tiny"
         android:layout_marginLeft="@dimen/spacing_normal"
-        android:layout_marginRight="@dimen/spacing_tiny"
-       >
+        android:layout_marginRight="@dimen/spacing_tiny">
+
+        <!--Any change in margin right of this view or padding right of image arrow
+        may cause the dialog opened on edit popup display at different position-->
 
         <ImageView
             android:id="@+id/iv_owner_profile_pic"
@@ -130,18 +132,13 @@
         <ImageView
             android:id="@id/ib_arrow_more"
             android:layout_alignParentRight="true"
-
             android:background="@null"
-            android:rotation="270"
-            android:src="@drawable/ic_back"
-            android:scaleY="0.6"
-            android:scaleX="0.6"
+            android:src="@drawable/drawable_arrow_layer_list"
+            android:rotation="90"
+            android:padding="@dimen/spacing_small"
             android:layout_marginTop="-7dp"
-            android:paddingLeft="@dimen/spacing_small"
-            android:paddingRight="@dimen/spacing_small"
-            android:paddingBottom="@dimen/spacing_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
 
     </RelativeLayout>
 
