@@ -3,6 +3,7 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +21,9 @@ public class FreshSearchResponse {
     @SerializedName("item_info")
     @Expose
     private List<SuperCategoriesData.SuperCategory> superCategories = null;
+    @SerializedName("delivery_stores")
+    @Expose
+    private List<DeliveryStore> deliveryStores = new ArrayList<DeliveryStore>();
 
     public Integer getFlag() {
         return flag;
@@ -43,5 +47,13 @@ public class FreshSearchResponse {
 
     public void setSuperCategories(List<SuperCategoriesData.SuperCategory> superCategories) {
         this.superCategories = superCategories;
+    }
+
+    public List<DeliveryStore> getDeliveryStores() {
+        return deliveryStores;
+    }
+
+    public void setDeliveryStores(List<DeliveryStore> deliveryStores) {
+        this.deliveryStores = deliveryStores;
     }
 }

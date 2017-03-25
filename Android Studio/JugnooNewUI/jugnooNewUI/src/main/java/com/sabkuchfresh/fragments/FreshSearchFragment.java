@@ -21,6 +21,7 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
+import com.sabkuchfresh.retrofit.model.DeliveryStore;
 import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
@@ -62,6 +63,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
     private int currentGroupId = 1, superCategoryId = -1, cityId = 1;
 	private ArrayList<SubItem> subItemsInSearch;
 
+	private FreshSearchResponse freshSearchResponse;
 
     @Override
     public void onStart() {
@@ -140,6 +142,14 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 					@Override
 					public void onPlusClicked(int position, SubItem subItem) {
 						activity.updateCartValuesGetTotalPriceFMG(subItem);
+						if(freshSearchResponse != null && freshSearchResponse.getDeliveryStores() != null){
+							for(DeliveryStore deliveryStore : freshSearchResponse.getDeliveryStores()){
+								if(deliveryStore.getVendorId().equals(subItem.getVendorId())){
+									activity.getSuperCategoriesData().setDeliveryInfo(deliveryStore);
+									break;
+								}
+							}
+						}
 					}
 
 					@Override
@@ -185,6 +195,10 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 		subItemsInSearch.clear();
 		tokenSearched = "";
 		listHashMap.clear();
+	}
+
+	private synchronized void notifyAdapter(){
+		freshCategoryItemsAdapter.notifyDataSetChanged();
 	}
 
 	private String tokenSearched = "";
@@ -240,7 +254,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 			try {
-				freshCategoryItemsAdapter.notifyDataSetChanged();
+				notifyAdapter();
 				if(subItemsInSearch.size() > 0){
 					textViewPlaceholder.setVisibility(View.GONE);
 				} else{
@@ -303,11 +317,16 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 			if(activity.getCartChangedAtCheckout()){
 				activity.updateItemListFromSPDB();
 				activity.updateItemListFromDBFMG(subItemsInSearch);
-				freshCategoryItemsAdapter.notifyDataSetChanged();
+				notifyAdapter();
 				activity.updateCartValuesGetTotalPrice();
 			}
 			activity.setCartChangedAtCheckout(false);
-			activity.setMinOrderAmountText(FreshSearchFragment.this);
+			activity.getHandler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					activity.setMinOrderAmountText(FreshSearchFragment.this);
+				}
+			}, 200);
 			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
 				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
 			}
@@ -354,7 +373,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 			} else {
 				subItemsInSearch.clear();
 				clearArrays();
-				freshCategoryItemsAdapter.notifyDataSetChanged();
+				notifyAdapter();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -364,7 +383,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 			searchFreshItemsAutoComplete(searchText);
 		} else if(searchText.length() == 0){
 			subItemsInSearch.clear();
-			freshCategoryItemsAdapter.notifyDataSetChanged();
+			notifyAdapter();
 			textViewPlaceholder.setVisibility(View.GONE);
 		}
 	}
@@ -386,7 +405,11 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 						params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategoryId));
 
 					if(activity.getAppType() == AppConstant.ApplicationType.FRESH){
-						params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedVendorId()));
+						if(activity.getFreshFragment() != null) {
+							params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedVendorId()));
+						} else {
+							params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getLastCartVendorId()));
+						}
 					}
 
 						refreshingAutoComplete = true;
@@ -403,6 +426,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 									String message = freshSearchResponse.getMessage();
 										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == freshSearchResponse.getFlag()) {
 											//subItemsInSearch.clear();
+											FreshSearchFragment.this.freshSearchResponse = freshSearchResponse;
 											for(SuperCategoriesData.SuperCategory superCategory : freshSearchResponse.getSuperCategories()){
 												if(!superCategory.getSuperCategoryId().equals(superCategoryId)) {
 													for (Category category : superCategory.getCategories()) {
@@ -411,7 +435,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 												}
 											}
 											activity.updateItemListFromDBFMG(subItemsInSearch);
-											freshCategoryItemsAdapter.notifyDataSetChanged();
+											notifyAdapter();
 											if(subItemsInSearch.size() > 0){
 												textViewPlaceholder.setVisibility(View.GONE);
 											} else{

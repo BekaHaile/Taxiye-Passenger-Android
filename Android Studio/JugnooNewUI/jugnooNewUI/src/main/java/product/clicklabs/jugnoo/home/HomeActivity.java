@@ -2605,7 +2605,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             poolPathZoomAtConfirm();
             return;
         }
-        if(passengerScreenMode != PassengerScreenMode.P_INITIAL){
+        if(passengerScreenMode != PassengerScreenMode.P_INITIAL
+                && Data.autoData != null
+                && Data.autoData.getAssignedDriverInfo() != null
+                && Data.autoData.getAssignedDriverInfo().latLng != null){
             zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
         }else {
             myLocationButtonClicked = true;

@@ -32,6 +32,7 @@ import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
+import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 
 import java.util.Arrays;
@@ -120,6 +121,11 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             ((FreshActivity)activity).fragmentUISetup(this);
             editTextDeliveryAddress = ((FreshActivity)activity).getTopBar().editTextDeliveryAddress;
             GAUtils.trackScreenView(((FreshActivity)activity).getGaCategory()+DELIVERY_ADDRESS);
+            if(((FreshActivity)activity).getAppType() == AppConstant.ApplicationType.FEED){
+                editTextDeliveryAddress.setHint(R.string.type_address);
+            } else {
+                editTextDeliveryAddress.setHint(R.string.type_delivery_address);
+            }
         }else if(activity instanceof AddPlaceActivity){
             editTextDeliveryAddress = ((AddPlaceActivity)activity).getEditTextDeliveryAddress();
         }

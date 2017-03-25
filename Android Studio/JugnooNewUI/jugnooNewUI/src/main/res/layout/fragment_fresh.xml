@@ -22,12 +22,13 @@
 
             <ImageView
                 android:id="@+id/ivLoc"
-                android:layout_width="25px"
-                android:layout_height="34px"
+                android:layout_width="35px"
+                android:layout_height="35px"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/px_42"
+                android:layout_marginLeft="@dimen/px_35"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_new_fresh_location" />
+                android:tag="mwar"
+                android:src="@drawable/ic_default_store" />
 
             <LinearLayout
                 android:layout_width="match_parent"

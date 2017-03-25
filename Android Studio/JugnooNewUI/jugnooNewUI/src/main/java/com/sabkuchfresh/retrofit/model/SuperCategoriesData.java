@@ -74,8 +74,17 @@ public class SuperCategoriesData {
 		return deliveryInfo;
 	}
 
-	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
-		this.deliveryInfo = deliveryInfo;
+	public void setDeliveryInfo(DeliveryStore deliveryStore) {
+		this.deliveryInfo = new DeliveryInfo();
+		deliveryInfo.setCityId(deliveryStore.getCityId());
+		deliveryInfo.setDeliveryCharges(deliveryStore.getDeliveryCharges());
+		deliveryInfo.setDynamicDeliveryCharges(deliveryStore.getDynamicDeliveryCharges());
+		deliveryInfo.setMinAmount(deliveryStore.getMinAmount());
+		deliveryInfo.setStoreId(deliveryStore.getStoreId());
+		deliveryInfo.setVendorAddress(deliveryStore.getVendorAddress());
+		deliveryInfo.setVendorId(deliveryStore.getVendorId());
+		deliveryInfo.setVendorName(deliveryStore.getVendorName());
+		deliveryInfo.setVendorPhone(deliveryStore.getVendorPhone());
 	}
 
 	public class SuperCategory {

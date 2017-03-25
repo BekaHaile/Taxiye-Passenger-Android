@@ -21,6 +21,7 @@ import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.DisplayOffersAdapter;
@@ -92,7 +93,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         viewPromoTitle = rootView.findViewById(R.id.layout_offer_title);
         //ifHasAnyOffers
 
-
+        RelativeLayout rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore);
+        rlSelectedStore.setVisibility(View.GONE);
 
         mBus = (activity).getBus();
         activity.setSwipeAvailable(false);

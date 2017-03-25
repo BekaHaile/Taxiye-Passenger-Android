@@ -799,14 +799,19 @@ public class Utils implements GAAction, GACategory{
     }
 
 	public static String firstCharCapital(String str){
-		String[] strArray = str.split(" ");
-		StringBuilder builder = new StringBuilder();
-		for (String s : strArray) {
-			String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
-			builder.append(cap + " ");
+		try {
+			String[] strArray = str.split(" ");
+			StringBuilder builder = new StringBuilder();
+			for (String s : strArray) {
+				String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
+				builder.append(cap + " ");
+			}
+			String finalStr = builder.toString();
+			return finalStr.substring(0, finalStr.length()-1);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		String finalStr = builder.toString();
-		return finalStr.substring(0, finalStr.length()-1);
+		return str;
 	}
 
 	public static int dpToPx(Context context, float dp) {
