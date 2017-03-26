@@ -42,7 +42,7 @@ public class EditPostPopup extends Dialog {
         findViewById(R.id.tv_edit_post).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                EditPostPopup.super.dismiss();
                 editPostDialogCallback.onMoreEdit(feedDetail,positionInList);
             }
         });
@@ -92,12 +92,14 @@ public class EditPostPopup extends Dialog {
     @Override
     public void dismiss() {
         if (viewClicked != null) {
-            getWindow().getDecorView().setPivotX(viewClicked.getX()+viewClicked.getWidth()/2);
+            int[] openingViewLocation = new int[2];
+            viewClicked.getLocationOnScreen(openingViewLocation);
+            getWindow().getDecorView().setPivotX(openingViewLocation[0]- viewClicked.getMeasuredWidth()/2);
             getWindow().getDecorView().setPivotY(viewClicked.getY());
             getWindow().getDecorView().animate()
                     .scaleX(0.1f)
                     .scaleY(0.1f)
-                    .setDuration(200)
+                    .setDuration(150)
                     .setInterpolator(new AccelerateInterpolator())
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
@@ -126,7 +128,7 @@ public class EditPostPopup extends Dialog {
             WindowManager.LayoutParams wlp = getWindow().getAttributes();
             wlp.x = openingViewLocation[0];
             wlp.y = openingViewLocation[1]+ viewClicked.getHeight()- com.sabkuchfresh.feed.utils.Utils.dpToPx(10);
-            getWindow().getDecorView().setPivotX(viewClicked.getX()+viewClicked.getWidth()/2);
+            getWindow().getDecorView().setPivotX(openingViewLocation[0]-viewClicked.getMeasuredWidth()/2);
             getWindow().getDecorView().setPivotY(viewClicked.getY());
             getWindow().getDecorView().setScaleX(0.1f);
             getWindow().getDecorView().setScaleY(0.1f);
@@ -135,7 +137,7 @@ public class EditPostPopup extends Dialog {
                     animate().
                     scaleX(1f).
                     scaleY(1f).
-                    setDuration(200).
+                    setDuration(150).
                     setInterpolator(new OvershootInterpolator());
         }
     }

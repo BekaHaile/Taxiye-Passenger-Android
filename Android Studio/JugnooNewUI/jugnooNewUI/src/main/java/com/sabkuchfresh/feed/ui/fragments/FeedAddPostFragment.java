@@ -160,6 +160,14 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         if (isEditingPost) {
 
             rootView.findViewById(R.id.llTabs).setVisibility(View.GONE);
+            rootView.findViewById(R.id.id_top_line).setVisibility(View.GONE);
+            if(feedDetail!=null ){
+                if(feedDetail.getFeedType()== FeedDetail.FeedType.POST)
+                    activity.getTopBar().title.setText("Edit Post");
+                else if(feedDetail.getFeedType()== FeedDetail.FeedType.REVIEW)
+                    activity.getTopBar().title.setText("Edit Review");
+
+            }
 
         }
 
