@@ -303,6 +303,20 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                     recentOrder.clear();
                                     recentOrder.addAll(menusResponse.getRecentOrders());
+                                    // TODO: 26/03/17 remove this
+                                    for(RecentOrder recentOrder1 : recentOrder){
+                                        recentOrder1.setDeliveryId(2752);
+                                        recentOrder1.setPickupLatitude(30.719);
+                                        recentOrder1.setPickupLongitude(76.8108);
+                                        recentOrder1.setDeliveryLatitude(30.71885);
+                                        recentOrder1.setDeliveryLongitude(76.81036);
+                                        recentOrder1.setShowLiveTracking(1);
+                                        recentOrder1.setRestaurantId(1);
+                                        recentOrder1.setRestaurantName("Burger Zone");
+                                        recentOrder1.setOrderAmount(365D);
+                                    }
+
+
                                     status.clear();
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 

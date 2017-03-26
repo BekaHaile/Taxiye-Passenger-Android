@@ -655,4 +655,9 @@ public interface Constants {
     String KEY_HIDE_LIKE_SHARE = "hide_like_share";
     String KEY_REASONS = "reasons";
     String KEY_ADDN_REASON = "addn_reason";
+    String KEY_DELIVERY_ID = "delivery_id";
+    String KEY_PICKUP_LATITUDE = "pickup_latitude";
+    String KEY_PICKUP_LONGITUDE = "pickup_longitude";
+    String KEY_DELIVERY_LATITUDE = "delivery_latitude";
+    String KEY_DELIVERY_LONGITUDE = "delivery_longitude";
 }

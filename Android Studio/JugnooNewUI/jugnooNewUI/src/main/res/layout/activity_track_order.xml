@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/rlTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_id_format"
+            android:textAllCaps="true"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/sp_17"
+            android:textColor="@color/text_color"
+            app:font="maven"
+
+            />
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_back_selector"
+            android:scaleType="centerInside"
+            android:layout_marginLeft="5dp"
+            />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rlMapContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rlTopBar">
+
+        <fragment
+            android:id="@+id/googleMap"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tvTrackingInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="14dp"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/white"
+            android:background="@drawable/background_black_80_r"
+            android:layout_centerInParent="true"
+            android:text="some text"
+            android:padding="10dp"
+            app:font="maven"
+            />
+
+
+        <TextView
+            android:id="@+id/tvETA"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:layout_margin="10dp"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/text_color"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/circle_white_stroke_alpha_border"
+            android:text="35\nmin"
+            android:padding="10dp"
+            android:gravity="center"
+            app:font="maven"
+            />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_7"
+        android:background="@drawable/shadow_down_new"
+        android:layout_below="@+id/rlTopBar"
+        />
+
+
+</RelativeLayout>
