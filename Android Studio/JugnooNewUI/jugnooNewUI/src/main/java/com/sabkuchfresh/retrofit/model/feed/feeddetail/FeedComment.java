@@ -15,6 +15,16 @@ public class FeedComment {
     @SerializedName("user_image")
     @Expose
     private String userImage;
+    @SerializedName("activity_id")
+    @Expose
+    private long activityId;
+
+
+    public long getActivityId() {
+        return activityId;
+    }
+
+
 
     public String getCommentContent() {
         return commentContent;

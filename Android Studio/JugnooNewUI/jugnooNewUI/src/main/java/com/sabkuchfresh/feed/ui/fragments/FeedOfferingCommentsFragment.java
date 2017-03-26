@@ -202,7 +202,6 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                                     feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     prepareListAndNotifyAdapter(feedbackResponse);
-//                                    feedOfferingCommentsAdapter.setList(feedbackResponse.getFeeds());
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -431,6 +430,12 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
     }
 
+    public void deleteComment(long activityId,int positionOfCommentInList){
+
+
+
+    }
+
     @Override
     public void onMoreDelete(FeedDetail feedDetail, int positionInList) {
           getDeletePostDialog().show(feedDetail,positionInList);
@@ -440,4 +445,5 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
     public void onMoreEdit(FeedDetail feedDetail, int positionInList) {
             onEdit(feedDetail);
     }
+
 }

@@ -64,5 +64,9 @@ public interface FeedApiService {
     void editFeed(@Body MultipartTypedOutput multipartTypedOutput, Callback<SettleUserDebt> callback);
 
 
+    @POST("/feeds/v1/delete_comment")
+    void deleteCo(@Body MultipartTypedOutput multipartTypedOutput, Callback<SettleUserDebt> callback);
+
+
 
 }
