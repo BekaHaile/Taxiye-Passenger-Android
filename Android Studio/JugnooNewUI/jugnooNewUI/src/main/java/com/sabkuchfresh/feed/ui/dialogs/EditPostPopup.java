@@ -49,7 +49,7 @@ public class EditPostPopup extends Dialog {
         findViewById(R.id.tv_delete_post).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                EditPostPopup.super.dismiss();
                 editPostDialogCallback.onMoreDelete(feedDetail,positionInList);
             }
         });
