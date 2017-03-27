@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.AppConstant;
@@ -508,6 +509,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
         void onMoreClick(FeedDetail feedDetail, int positionInOriginalList, View moreItemView);
+
+        void onDeleteComment(FeedComment feedComment, int position, View viewClicked);
     }
 
 

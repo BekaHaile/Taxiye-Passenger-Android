@@ -28,6 +28,7 @@ import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
 
@@ -157,6 +158,11 @@ public class FeedHomeFragment extends Fragment implements DeletePostDialog.Delet
 //                getEditPostDialog().show(feedDetail,moreItemView,positionInOriginalList);
 
 
+
+            }
+
+            @Override
+            public void onDeleteComment(FeedComment feedComment, int position, View viewClicked) {
 
             }
         });
@@ -377,8 +383,11 @@ public class FeedHomeFragment extends Fragment implements DeletePostDialog.Delet
     }
 
     public void notifyOnDelete(int positionInOriginalList) {
-        if(feedHomeAdapter!=null && adapterList!=null && adapterList.size()>positionInOriginalList)
+        if(feedHomeAdapter!=null && adapterList!=null && adapterList.size()>positionInOriginalList){
+             adapterList.remove(positionInOriginalList);
             feedHomeAdapter.notifyItemRemoved(positionInOriginalList);
+        }
+
     }
 
     @Override

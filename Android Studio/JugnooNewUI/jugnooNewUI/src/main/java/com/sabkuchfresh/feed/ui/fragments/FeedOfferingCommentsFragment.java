@@ -25,6 +25,8 @@ import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
+import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
@@ -148,8 +150,13 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
             @Override
             public void onMoreClick(FeedDetail feedDetail, int positionInOriginalList, View moreItemView) {
+                getEditPostDialog().show(feedDetail,moreItemView,positionInOriginalList);
 
+            }
 
+            @Override
+            public void onDeleteComment(FeedComment feedComment, int positionInList, View viewClicked) {
+                deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
             }
         }, submitTextWatcher);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -198,24 +205,15 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                         DialogPopup.dismissLoadingDialog();
                         try {
                             String message = feedbackResponse.getMessage();
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
-                                    feedbackResponse.getError(), feedbackResponse.getMessage())) {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                    setFeedObjectAndRefresh(feedbackResponse);
                                     prepareListAndNotifyAdapter(feedbackResponse);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
 
-                                if (feedbackResponse.getPostDetails() != null) {
-                                    feedDetail.setLikeCount(feedbackResponse.getPostDetails().getLikeCount());
-                                    feedDetail.setCommentCount(feedbackResponse.getPostDetails().getCommentCount());
-                                    if (activity.getFeedHomeFragment() != null) {
 
-
-                                        //notifies the feed home fragment that user has commented on post so it can refresh accordingly i.e increase comment count
-                                        activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
-                                    }
-                                }
 
 
                             }
@@ -240,6 +238,27 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         }
 
 
+    }
+
+    private void setFeedObjectAndRefresh(FeedDetailResponse feedbackResponse) {
+        if (feedbackResponse.getPostDetails() != null) {
+            feedDetail.setLikeCount(feedbackResponse.getPostDetails().getLikeCount());
+            feedDetail.setCommentCount(feedbackResponse.getPostDetails().getCommentCount());
+            feedDetail.setContent(feedbackResponse.getPostDetails().getContent());
+            feedDetail.setPostEditable(feedbackResponse.getPostDetails().isPostEditable());
+            feedDetail.setStarCount(feedbackResponse.getPostDetails().getStarCount());
+            feedDetail.setRestaurantImage(feedbackResponse.getPostDetails().getRestaurantImage());
+            feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
+            feedDetail.setReviewImages(feedbackResponse.getPostDetails().getReviewImages());
+
+
+            if (activity.getFeedHomeFragment() != null) {
+
+
+                //notifies the feed home fragment that user has commented on post so it can refresh accordingly i.e increase comment count
+                activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
+            }
+        }
     }
 
     private void prepareListAndNotifyAdapter(FeedDetailResponse feedbackResponse) {
@@ -279,15 +298,10 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     Utils.hideKeyboard(getActivity());
                                     commentAdded = null;
-                                    feedDetail.setCommentCount(feedDetail.getCommentCount() + 1);
                                     edtMyComment.setText(null);
+                                    setFeedObjectAndRefresh(feedbackResponse);
                                     prepareListAndNotifyAdapter(feedbackResponse);
-                                    if (activity.getFeedHomeFragment() != null) {
-                                        //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
-                                        activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
-                                        recyclerView.smoothScrollToPosition(feedOfferingCommentsAdapter.getItemCount() - 1);
-                                    }
-
+                                    recyclerView.smoothScrollToPosition(feedOfferingCommentsAdapter.getItemCount() - 1);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -418,7 +432,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
     private EditPostPopup editPostDialog;
 
     public EditPostPopup getEditPostDialog(){
-        if(editPostDialog==null)
+//        if(editPostDialog==null)
             editPostDialog=new EditPostPopup(this,R.style.Feed_Popup_Theme,activity);
 
         return editPostDialog;
@@ -427,14 +441,90 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
 
     public void fetchDetailAPI() {
+                fetchFeedDetail();
+    }
+
+    public void deleteCommentAPI(final long activityId, final int positionOfCommentInList,final long postId){
+
+        try {
+            if (MyApplication.getInstance().isOnline()) {
+
+                DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_ACTIVITY_ID, String.valueOf(activityId));
+                params.put(Constants.KEY_POST_ID, String.valueOf(activityId));
+                new HomeUtil().putDefaultParams(params);
+
+            RestClient.getFeedApiService().deleteComment(params, new retrofit.Callback<FeedCommonResponse>() {
+                    @Override
+                    public void success(FeedCommonResponse feedbackResponse, Response response) {
+                        DialogPopup.dismissLoadingDialog();
+                        try {
+                            String message = feedbackResponse.getMessage();
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
+                                if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                    Utils.hideKeyboard(getActivity());
+                                    feedDetail.setCommentCount(feedDetail.getCommentCount() - 1);
+                                    dataList.remove(positionOfCommentInList);
+                                    feedOfferingCommentsAdapter.notifyItemRemoved(positionOfCommentInList);
+                                    if(dataList!=null && dataList.size()==2){
+                                        feedOfferingCommentsAdapter.notifyItemChanged(1);//If only one comment is left remove horizontal line below it
+                                    }
+                                    if (activity.getFeedHomeFragment() != null) {
+                                        //notifies the feed home fragment
+                                        activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
+
+                                    }
+
+                                } else {
+                                    DialogPopup.alertPopup(activity, "", message);
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            retryDeleteCommentAPIDialog(DialogErrorType.SERVER_ERROR, activityId,positionOfCommentInList,postId);
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        DialogPopup.dismissLoadingDialog();
+                        retryDeleteCommentAPIDialog(DialogErrorType.CONNECTION_LOST, activityId,positionOfCommentInList,postId);
+
+                    }
+                });
+            } else {
+                retryDialog(DialogErrorType.NO_NET);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public void deleteComment(long activityId,int positionOfCommentInList){
+    private void retryDeleteCommentAPIDialog(DialogErrorType serverError, final long activityId, final int positionOfCommentInList, final long postId) {
+        DialogPopup.dialogNoInternet(activity,
+                serverError,
+                new Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        deleteCommentAPI(activityId,positionOfCommentInList,postId);
+                    }
 
+                    @Override
+                    public void neutralClick(View view) {
 
+                    }
 
+                    @Override
+                    public void negativeClick(View view) {
+
+                    }
+                });
     }
+
 
     @Override
     public void onMoreDelete(FeedDetail feedDetail, int positionInList) {

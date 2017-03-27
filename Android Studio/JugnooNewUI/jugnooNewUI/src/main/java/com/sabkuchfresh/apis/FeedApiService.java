@@ -1,5 +1,6 @@
 package com.sabkuchfresh.apis;
 
+import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
@@ -63,9 +64,9 @@ public interface FeedApiService {
     @POST("/feeds/v1/edit_post")
     void editFeed(@Body MultipartTypedOutput multipartTypedOutput, Callback<SettleUserDebt> callback);
 
-
+    @FormUrlEncoded
     @POST("/feeds/v1/delete_comment")
-    void deleteCo(@Body MultipartTypedOutput multipartTypedOutput, Callback<SettleUserDebt> callback);
+    void deleteComment(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
 
 
 
