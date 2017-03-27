@@ -1,11 +1,12 @@
 package com.sabkuchfresh.home;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,7 +38,6 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -119,6 +119,13 @@ public class TrackOrderActivity extends AppCompatActivity {
 			}
 		});
 
+		ivBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onBackPressed();
+			}
+		});
+
 	}
 
 	@Override
@@ -157,6 +164,9 @@ public class TrackOrderActivity extends AppCompatActivity {
 					if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 						final double latitude = jObj.optDouble(Constants.KEY_LATITUDE, 0d);
 						final double longitude = jObj.optDouble(Constants.KEY_LONGITUDE, 0d);
+						final String eta = jObj.optString(Constants.KEY_ETA, "");
+						final String trackingInfo = jObj.optString(Constants.KEY_TRACKING_INFO, "");
+
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
@@ -166,13 +176,18 @@ public class TrackOrderActivity extends AppCompatActivity {
 								} else {
 									markerDriver.setPosition(new LatLng(latitude, longitude));
 								}
+								if(!TextUtils.isEmpty(trackingInfo)){
+									tvTrackingInfo.setVisibility(View.VISIBLE);
+									tvTrackingInfo.setText(trackingInfo);
+								} else {
+									tvTrackingInfo.setVisibility(View.GONE);
+								}
 							}
 						});
 
 						response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
 								deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
-						String result = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i("result", "=" + result);
+						final String result = new String(((TypedByteArray) response.getBody()).getBytes());
 						final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
 						if (list.size() > 0) {
 							runOnUiThread(new Runnable() {
@@ -180,11 +195,27 @@ public class TrackOrderActivity extends AppCompatActivity {
 								@Override
 								public void run() {
 									try {
+										if(TextUtils.isEmpty(eta)) {
+											JSONObject jObj1 = new JSONObject(result);
+											double durationInSec = jObj1.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
+											long mins = (long) (durationInSec / 60d);
+											tvETA.setText(mins + "\n" + (mins > 1 ? "mins" : "min"));
+										} else {
+											long etaLong = 2;
+											try {etaLong = Long.getLong(eta);} catch (Exception e) {}
+											tvETA.setText(eta + "\n" + (etaLong > 1 ? "mins" : "min"));
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+									try {
 										if (polylinePath != null) {
 											polylinePath.remove();
 										}
 										PolylineOptions polylineOptions = new PolylineOptions();
-										polylineOptions.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
+										polylineOptions.width(ASSL.Xscale() * 7)
+												.color(ContextCompat.getColor(TrackOrderActivity.this,
+														R.color.google_path_polyline_color)).geodesic(true);
 										for (int z = 0; z < list.size(); z++) {
 											polylineOptions.add(list.get(z));
 										}
