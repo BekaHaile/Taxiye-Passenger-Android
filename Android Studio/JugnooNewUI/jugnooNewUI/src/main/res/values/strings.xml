@@ -34,7 +34,7 @@
     <string name="clevertap_account_token">a10-52b</string>
 
     <string name="razorpay_test_api_key">rzp_test_qux6pkeYktNeoX</string>
-    <string name="razorpay_live_api_key">rzp_test_qux6pkeYktNeoX</string>
+    <string name="razorpay_live_api_key">rzp_live_fsWpMDBnrFvyiW</string>
 
 
     <string name="rupee">\u20B9</string>

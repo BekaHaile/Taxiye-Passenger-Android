@@ -482,7 +482,9 @@ public class FABViewTest implements GACategory, GAAction {
 
     public void expandJeanieFirstTime(){
         try {
-            if(Data.userData != null && Data.userData.getExpandJeanie() == 1) {
+            long lastTime = Prefs.with(activity).getLong(Constants.SP_EXPAND_JEANIE_TIME, System.currentTimeMillis()-3*Constants.HOUR_MILLIS);
+            if(Data.userData != null && Data.userData.getExpandJeanie() == 1
+                    && (System.currentTimeMillis() - lastTime) >= 2*Constants.HOUR_MILLIS) {
 				getMenuLabelsRightTest().open(true);
 				if(!TextUtils.isEmpty(Data.userData.getExpandedGenieText())) {
 					tvGenieExpandMessage.setText(Data.userData.getExpandedGenieText());
@@ -502,7 +504,10 @@ public class FABViewTest implements GACategory, GAAction {
                         }
                     }
                 }, 500);
-			}
+                Prefs.with(activity).save(Constants.SP_EXPAND_JEANIE_TIME, System.currentTimeMillis());
+			} else if(Data.userData != null){
+                Data.userData.setExpandJeanie(0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

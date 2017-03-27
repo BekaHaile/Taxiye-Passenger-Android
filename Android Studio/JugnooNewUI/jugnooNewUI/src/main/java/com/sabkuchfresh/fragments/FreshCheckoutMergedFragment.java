@@ -2945,12 +2945,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             int flag = jsonObject.getInt(Constants.KEY_FLAG);
             String message = JSONParser.getServerMessage(jsonObject);
             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                if(jsonObject.has(Constants.KEY_REFERRAL_POPUP_CONTENT)){
-                    PlaceOrderResponse.ReferralPopupContent referralPopupContent = activity.getGson()
-                            .fromJson(jsonObject.getJSONObject(Constants.KEY_REFERRAL_POPUP_CONTENT).toString(),
-                                    PlaceOrderResponse.ReferralPopupContent.class);
-                    activity.getPlaceOrderResponse().setReferralPopupContent(referralPopupContent);
-                }
+//                if(jsonObject.has(Constants.KEY_REFERRAL_POPUP_CONTENT)){
+//                    PlaceOrderResponse.ReferralPopupContent referralPopupContent = activity.getGson()
+//                            .fromJson(jsonObject.getJSONObject(Constants.KEY_REFERRAL_POPUP_CONTENT).toString(),
+//                                    PlaceOrderResponse.ReferralPopupContent.class);
+//                    activity.getPlaceOrderResponse().setReferralPopupContent(referralPopupContent);
+//                }
 				orderPlacedSuccess(activity.getPlaceOrderResponse());
 			}
 			else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {

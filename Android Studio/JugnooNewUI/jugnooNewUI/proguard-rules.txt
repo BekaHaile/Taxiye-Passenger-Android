@@ -149,12 +149,12 @@
 
 -keepattributes InnerClasses
 -keepattributes EnclosingMethod
+
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }
 
 -keepattributes JavascriptInterface
--keepattributes *Annotation*
 
 -dontwarn com.razorpay.**
 -keep class com.razorpay.** {*;}
