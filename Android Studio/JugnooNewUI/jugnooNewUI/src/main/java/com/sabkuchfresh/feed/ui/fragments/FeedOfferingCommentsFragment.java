@@ -454,7 +454,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_ACTIVITY_ID, String.valueOf(activityId));
-                params.put(Constants.KEY_POST_ID, String.valueOf(activityId));
+                params.put(Constants.KEY_POST_ID, String.valueOf(postId));
                 new HomeUtil().putDefaultParams(params);
 
             RestClient.getFeedApiService().deleteComment(params, new retrofit.Callback<FeedCommonResponse>() {
@@ -469,6 +469,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                                     feedDetail.setCommentCount(feedDetail.getCommentCount() - 1);
                                     dataList.remove(positionOfCommentInList);
                                     feedOfferingCommentsAdapter.notifyItemRemoved(positionOfCommentInList);
+                                    feedOfferingCommentsAdapter.notifyItemChanged(0);
                                     if(dataList!=null && dataList.size()==2){
                                         feedOfferingCommentsAdapter.notifyItemChanged(1);//If only one comment is left remove horizontal line below it
                                     }

@@ -15,7 +15,8 @@
         android:id="@+id/tv_edit_post"
         android:drawablePadding="@dimen/spacing_normal"
         android:gravity="left"
-        android:background="?attr/selectableItemBackground"
+        android:textColor="@color/feed_grey_text"
+        android:background="@drawable/background_white_grey_light_selector"
         android:drawableLeft="@drawable/edit_icon_normal"
         android:text="Edit Post"
         style="@style/text_feed_popup" />
@@ -31,7 +32,8 @@
         android:id="@+id/tv_delete_post"
         android:drawablePadding="@dimen/spacing_normal"
         android:gravity="left"
-        android:background="?attr/selectableItemBackground"
+        android:background="@drawable/background_white_grey_light_selector"
+        android:textColor="@color/feed_grey_text"
         android:drawableLeft="@drawable/edit_icon_normal"
         android:text="Delete Post"
         style="@style/text_feed_popup" />
