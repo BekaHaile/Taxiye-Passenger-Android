@@ -304,7 +304,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     statusHolder.tvViewOrder.setOnClickListener(viewOrderOnClickListener);
                     statusHolder.tvTrackOrder.setOnClickListener(trackOrderOnClickListener);
 
-                    statusHolder.rlTrackViewOrder.setVisibility(recentOrder.getShowLiveTracking() == 1 ? View.VISIBLE : View.GONE);
+                    statusHolder.rlTrackViewOrder.setVisibility((recentOrder.getShowLiveTracking() == 1
+                            && recentOrder.getDeliveryId() != null && recentOrder.getDeliveryId() > 0) ? View.VISIBLE : View.GONE);
                     statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
                     statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
                     if(recentOrder.getOrderAmount() != null) {

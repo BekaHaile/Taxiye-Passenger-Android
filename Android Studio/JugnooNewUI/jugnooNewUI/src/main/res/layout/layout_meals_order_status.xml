@@ -295,7 +295,7 @@
                 android:layout_height="match_parent"
                 android:textSize="@dimen/px_26"
                 android:textColor="@color/purple_text_color_selector"
-                android:text="@string/track_order"
+                android:text="@string/track_delivery"
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:background="?attr/selectableItemBackground"

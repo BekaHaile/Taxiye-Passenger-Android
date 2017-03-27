@@ -42,9 +42,6 @@ public class RecentOrder {
     @SerializedName("delivery_id")
     @Expose
     private Integer deliveryId;
-    @SerializedName("restaurant_id")
-    @Expose
-    private Integer restaurantId;
     @SerializedName("restaurant_name")
     @Expose
     private String restaurantName;
@@ -179,14 +176,6 @@ public class RecentOrder {
 
     public void setDeliveryId(Integer deliveryId) {
         this.deliveryId = deliveryId;
-    }
-
-    public Integer getRestaurantId() {
-        return restaurantId;
-    }
-
-    public void setRestaurantId(Integer restaurantId) {
-        this.restaurantId = restaurantId;
     }
 
     public String getRestaurantName() {

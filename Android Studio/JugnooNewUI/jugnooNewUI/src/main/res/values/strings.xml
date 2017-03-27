@@ -1612,5 +1612,6 @@
     <string name="type_address">Type Address</string>
     <string name="track_order">Track Order</string>
     <string name="view_order">View Order</string>
+    <string name="track_delivery">Track Delivery</string>
 
 </resources>
