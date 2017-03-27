@@ -255,6 +255,7 @@ public class JSONParser implements Constants {
         parseSavedAddresses(context, userData, KEY_USER_SAVED_ADDRESSES);
 
         Data.userData.setExpandJeanie(loginUserData.getExpandJeanie());
+        Data.userData.setExpandedGenieText(loginUserData.getExpandedGenieText());
 
         MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData.optJSONObject(KEY_WALLET_BALANCE));
         MyApplication.getInstance().getWalletCore().parsePaymentGatewayModeConfigs(loginUserData.getPaymentGatewayModeConfigData());

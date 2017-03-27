@@ -1671,10 +1671,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void run() {
                 try {
-                    if(Data.userData != null && Data.userData.getExpandJeanie() == 1) {
-						fabViewTest.getMenuLabelsRightTest().open(true);
-                        Data.userData.setExpandJeanie(0);
-					}
+                    fabViewTest.expandJeanieFirstTime();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -783,6 +783,9 @@ public class LoginResponse {
 		@SerializedName("expand_jeanie")
 		@Expose
 		private int expandJeanie;
+		@SerializedName("expanded_genie_text")
+		@Expose
+		private String expandedGenieText;
 
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
@@ -966,6 +969,14 @@ public class LoginResponse {
 
 		public void setExpandJeanie(int expandJeanie) {
 			this.expandJeanie = expandJeanie;
+		}
+
+		public String getExpandedGenieText() {
+			return expandedGenieText;
+		}
+
+		public void setExpandedGenieText(String expandedGenieText) {
+			this.expandedGenieText = expandedGenieText;
 		}
 	}
 

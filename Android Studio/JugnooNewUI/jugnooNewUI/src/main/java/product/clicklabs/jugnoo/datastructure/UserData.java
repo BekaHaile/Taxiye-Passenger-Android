@@ -86,6 +86,7 @@ public class UserData {
 	private int showTutorial;
 	private SignupTutorial signupTutorial;
 	private int expandJeanie;
+	private String expandedGenieText;
 
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
@@ -976,6 +977,14 @@ public class UserData {
 
 	public void setExpandJeanie(int expandJeanie) {
 		this.expandJeanie = expandJeanie;
+	}
+
+	public String getExpandedGenieText() {
+		return expandedGenieText;
+	}
+
+	public void setExpandedGenieText(String expandedGenieText) {
+		this.expandedGenieText = expandedGenieText;
 	}
 
 	//	"meals_enabled": 1,
