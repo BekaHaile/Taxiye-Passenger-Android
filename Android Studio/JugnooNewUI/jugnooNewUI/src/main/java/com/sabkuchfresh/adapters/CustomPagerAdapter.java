@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.R;
 
@@ -22,9 +24,9 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     Context mContext;
     LayoutInflater mLayoutInflater;
-    private ArrayList<String> mResources;
+    private List<SuperCategoriesData.Ad> mResources;
 
-    public CustomPagerAdapter(Context context, ArrayList<String>mResources) {
+    public CustomPagerAdapter(Context context, List<SuperCategoriesData.Ad> mResources) {
         mContext = context;
         this.mResources = mResources;
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -45,7 +47,7 @@ public class CustomPagerAdapter extends PagerAdapter {
         View itemView = mLayoutInflater.inflate(R.layout.item_pager_promo, container, false);
 
         ImageView imageView = (ImageView) itemView.findViewById(R.id.ivPromo);
-        Picasso.with(mContext).load(mResources.get(position))
+        Picasso.with(mContext).load(mResources.get(position).getImageUrl())
                 .placeholder(R.drawable.ic_fresh_new_placeholder)
                 .error(R.drawable.ic_fresh_new_placeholder)
                 .fit()

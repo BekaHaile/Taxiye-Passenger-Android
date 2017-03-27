@@ -35,15 +35,14 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
     private List<SuperCategoriesData.SuperCategory> superCategories;
     private Callback callback;
     private boolean isSingleItem;
-    private ArrayList<String> offerList;
+    private List<SuperCategoriesData.Ad> offerList;
     public static final int MAIN_ITEM = 1;
     public static final int SINGLE_ITEM = 0;
     public static final int PAGER = 2;
     private CustomPagerAdapter mCustomPagerAdapter;
 
-    public FreshSuperCategoriesAdapter(Context context, ArrayList<String> offerList, Callback callback) {
+    public FreshSuperCategoriesAdapter(Context context, Callback callback) {
         this.context = context;
-        this.offerList = offerList;
         this.callback = callback;
     }
 
@@ -54,7 +53,8 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
         notifyDataSetChanged();
     }
 
-    public synchronized void setList(List<SuperCategoriesData.SuperCategory> elements) {
+    public synchronized void setList(List<SuperCategoriesData.SuperCategory> elements, List<SuperCategoriesData.Ad> offerList) {
+        this.offerList = offerList;
         this.superCategories = elements;
         int enabledItem = 0;
         for (int i = 0; i < elements.size(); i++) {

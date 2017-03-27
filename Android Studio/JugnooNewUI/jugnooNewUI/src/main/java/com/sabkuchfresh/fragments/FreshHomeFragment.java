@@ -28,6 +28,7 @@ import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -62,7 +63,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     private SwipeRefreshLayout swipeContainer;
     private ViewPager mImageViewPager;
     private CustomPagerAdapter mCustomPagerAdapter;
-    private ArrayList<String> mResources = new ArrayList<>();
+    private ArrayList<SuperCategoriesData.Ad> ads = new ArrayList<>();
 //    private Scr scrollView;
 
     @Nullable
@@ -80,25 +81,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         }
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
-
-        /*for(int j=0; j<3; j++) {
-            mResources.add("https://visitorinvictoria.ca/wp-content/uploads/2017/03/groceries.jpg");
-        }*/
-      /*  scrollView = (NestedScrollView) rootView.findViewById (R.id.nest_scrollview);
-        scrollView.setFillViewport (true);*/
-//        mImageViewPager = (ViewPager) rootView.findViewById(R.id.pager);
-//        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabDots);
-//        tabLayout.setupWithViewPager(mImageViewPager, true);
-//        mCustomPagerAdapter = new CustomPagerAdapter(activity);
-//
-//        mImageViewPager.setAdapter(mCustomPagerAdapter);
-//
-//        for(int i=0; i < tabLayout.getTabCount(); i++) {
-//            View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(i);
-//            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
-//            p.setMargins(20, 0, 0, 0);
-//            tab.requestLayout();
-//        }
 
         swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(this);
@@ -132,7 +114,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             }
         });
         rvFreshSuper.setLayoutManager(gridLayoutManager);
-        adapter = new FreshSuperCategoriesAdapter(activity, mResources, new FreshSuperCategoriesAdapter.Callback() {
+        adapter = new FreshSuperCategoriesAdapter(activity, new FreshSuperCategoriesAdapter.Callback() {
             @Override
             public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
                 if(superCategory.getIsEnabled() == 0){
@@ -287,11 +269,13 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         activity.saveDeliveryAddressModel();
         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
         activity.setSuperCategoriesData(superCategoriesData);
-        adapter.setList(superCategoriesData.getSuperCategories());
+
         activity.updateCartValuesGetTotalPrice();
         stopOhSnap();
         rvFreshSuper.smoothScrollToPosition(0);
+        adapter.setList(superCategoriesData.getSuperCategories(), superCategoriesData.getAds());
     }
+
 
     private void retryDialogSuperCategoriesAPI(DialogErrorType dialogErrorType){
         swipeContainer.setVisibility(View.VISIBLE);

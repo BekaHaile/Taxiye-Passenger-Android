@@ -29,6 +29,10 @@ public class SuperCategoriesData {
 	@SerializedName("delivery_info")
 	@Expose
 	private DeliveryInfo deliveryInfo;
+	@SerializedName("ads")
+	@Expose
+	private List<Ad> ads = null;
+
 
 	public Integer getFlag() {
 		return flag;
@@ -85,6 +89,14 @@ public class SuperCategoriesData {
 		deliveryInfo.setVendorId(deliveryStore.getVendorId());
 		deliveryInfo.setVendorName(deliveryStore.getVendorName());
 		deliveryInfo.setVendorPhone(deliveryStore.getVendorPhone());
+	}
+
+	public List<Ad> getAds() {
+		return ads;
+	}
+
+	public void setAds(List<Ad> ads) {
+		this.ads = ads;
 	}
 
 	public class SuperCategory {
@@ -213,6 +225,55 @@ public class SuperCategoriesData {
 
 		public void setDescription(Object description) {
 			this.description = description;
+		}
+
+	}
+
+	public class Ad {
+
+		@SerializedName("title")
+		@Expose
+		private String title;
+		@SerializedName("description")
+		@Expose
+		private String description;
+		@SerializedName("image_url")
+		@Expose
+		private String imageUrl;
+		@SerializedName("super_category_id")
+		@Expose
+		private Integer superCategoryId;
+
+		public String getTitle() {
+			return title;
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public String getImageUrl() {
+			return imageUrl;
+		}
+
+		public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
+		}
+
+		public Integer getSuperCategoryId() {
+			return superCategoryId;
+		}
+
+		public void setSuperCategoryId(Integer superCategoryId) {
+			this.superCategoryId = superCategoryId;
 		}
 
 	}

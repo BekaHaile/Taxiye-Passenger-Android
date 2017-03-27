@@ -206,7 +206,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
                 } else if(MenuInfoTags.SIGNUP_TUTORIAL.getTag().equalsIgnoreCase(menuInfo.getTag())){
-                    if(!TextUtils.isEmpty(Data.userData.userName) && Prefs.with(activity).getInt(SPLabels.USERNAME_UPDATED, 0) == 1){
+                    if(!TextUtils.isEmpty(Data.userData.userName)
+                            //&& (!TextUtils.isEmpty(Data.userData.userEmail))
+                            && Prefs.with(activity).getInt(SPLabels.USERNAME_UPDATED, 0) == 1){
                         hideLayout(holder.relative);
                     } else {
                         holder.imageViewMenuIcon.setImageResource(R.drawable.ic_free_discount_selector);
