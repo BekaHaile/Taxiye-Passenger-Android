@@ -1611,6 +1611,9 @@
     <string name="no_other_store_available">No other stores available</string>
 
     <string name="type_address">Type Address</string>
+    <string name="track_order">Track Order</string>
+    <string name="view_order">View Order</string>
+    <string name="track_delivery">Track Delivery</string>
 
     <string name="feed_delete_popup_message">Do you really want to delete this post? If you delete once it will no longer be available.</string>
 
