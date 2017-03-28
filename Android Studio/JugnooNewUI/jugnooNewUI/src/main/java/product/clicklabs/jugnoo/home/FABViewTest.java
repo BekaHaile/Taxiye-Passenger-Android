@@ -179,9 +179,11 @@ public class FABViewTest implements GACategory, GAAction {
                 if(Data.userData == null || Data.userData.getExpandJeanie() == 0) {
                     menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
                             ? R.drawable.ic_fab_jeanie : R.drawable.ic_fab_cross);
+                    menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity, R.color.white));
                 } else if(Data.userData != null) {
                     Data.userData.setExpandJeanie(0);
                     menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
+                    menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity, R.color.grey_light));
                 }
                 try {
                     if(activity instanceof HomeActivity) {
@@ -482,9 +484,7 @@ public class FABViewTest implements GACategory, GAAction {
 
     public void expandJeanieFirstTime(){
         try {
-            long lastTime = Prefs.with(activity).getLong(Constants.SP_EXPAND_JEANIE_TIME, System.currentTimeMillis()-3*Constants.HOUR_MILLIS);
-            if(Data.userData != null && Data.userData.getExpandJeanie() == 1
-                    && (System.currentTimeMillis() - lastTime) >= 2*Constants.HOUR_MILLIS) {
+            if(Data.userData != null && Data.userData.getExpandJeanie() == 1) {
 				getMenuLabelsRightTest().open(true);
 				if(!TextUtils.isEmpty(Data.userData.getExpandedGenieText())) {
 					tvGenieExpandMessage.setText(Data.userData.getExpandedGenieText());
@@ -504,7 +504,6 @@ public class FABViewTest implements GACategory, GAAction {
                         }
                     }
                 }, 500);
-                Prefs.with(activity).save(Constants.SP_EXPAND_JEANIE_TIME, System.currentTimeMillis());
 			} else if(Data.userData != null){
                 Data.userData.setExpandJeanie(0);
             }

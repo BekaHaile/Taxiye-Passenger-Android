@@ -1421,6 +1421,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         // razor pay case send data to RazorPay Checkout page
                                         activity.setPlaceOrderResponse(placeOrderResponse);
                                         activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT));
+                                        doSlideInitial = false;
                                     } else {
                                         orderPlacedSuccess(placeOrderResponse);
                                         fbPurchasedEvent(params, placeOrderResponse);

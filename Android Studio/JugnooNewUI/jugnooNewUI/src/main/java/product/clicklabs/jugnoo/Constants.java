@@ -667,7 +667,6 @@ public interface Constants {
     String KEY_RAZORPAY_PREFILL_CONTACT = "prefill.contact";
     String KEY_USER_EMAIL = "user_email";
     String KEY_RAZORPAY_THEME_COLOR = "theme.color";
-    String SP_EXPAND_JEANIE_TIME = "sp_expand_jeanie_time";
 
 
 }
