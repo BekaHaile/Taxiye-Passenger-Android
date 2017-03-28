@@ -5,69 +5,130 @@ import android.view.View;
 
 import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.MultipartTypedOutput;
 
 /**
  * Created by Parminder Singh on 3/27/17.
  */
 
-public class ApiCommon {
+/**
+ *
+ * @param <T> Expected Response Type Class
+ */
+public class ApiCommon<T extends FeedCommonResponse> {
+    private Callback callback;
+    private Activity activity;
+    private boolean showLoader = true;
+    private boolean putDefaultParams = true;
+    private APICommonCallback<T> apiCommonCallback;
+    private HashMap<String, String> params;
+    private MultipartTypedOutput multipartTypedOutput;
+    private ApiName apiName;
 
 
-    public static <T extends FeedCommonResponse> Callback<T> hitAPI(final Activity activity, final boolean showLoader, final APICommonCallback apiCommonCallback) {
+    /**
+     * Generates a new constructor with type parameter and context
+     * @param activity  Context Of The Calling Activity
+     */
+    public ApiCommon (Activity activity) {
+        this.activity = activity;
+    }
+
+    public ApiCommon showLoader(boolean showLoader) {
+        this.showLoader = showLoader;
+        return this;
+    }
+
+    public ApiCommon putDefaultParams(boolean putDefaultParams) {
+        this.putDefaultParams = putDefaultParams;
+        return this;
+    }
+
+    public void  execute(HashMap<String, String> params, ApiName apiName, APICommonCallback<T> apiCommonCallback) {
+        this.apiCommonCallback = apiCommonCallback;
+        this.params = params;
+        this.apiName = apiName;
+        hitAPI();
+    }
+
+    public void execute(MultipartTypedOutput params, ApiName apiName, APICommonCallback<T> apiCommonCallback) {
+        this.apiCommonCallback = apiCommonCallback;
+        this.multipartTypedOutput = params;
+        this.apiName = apiName;
+        hitAPI();
+    }
+
+    private void hitAPI() {
 
 
         if (!MyApplication.getInstance().isOnline()) {
-            if (apiCommonCallback.onNotConnected()) {
-                ApiCommon.<T>retryDialog(DialogErrorType.NO_NET, activity, showLoader, apiCommonCallback);
+            if (!apiCommonCallback.onNotConnected()) {
+                retryDialog(DialogErrorType.NO_NET);
             }
-            return null;
+
         }
 
 
-        return new Callback<T>() {
-            @Override
-            public void success(T feedCommonResponse, Response response) {
+        if (callback == null) {
+            callback = new Callback<T>() {
+                @Override
+                public void success(T feedCommonResponse, Response response) {
 
-                if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                    apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
+                    if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                        apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
 
-                } else {
-                    if (apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag())) {
-                        DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage());
+                    } else {
+                        if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag())) {
+                            DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage());
+                        }
                     }
+
+
                 }
 
+                @Override
+                public void failure(RetrofitError error) {
+                    error.printStackTrace();
+                    if (!apiCommonCallback.onException(error)) {
+                        retryDialog(DialogErrorType.CONNECTION_LOST);
+                    }
 
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                error.printStackTrace();
-                if (apiCommonCallback.onException(error)) {
-                    ApiCommon.<T>retryDialog(DialogErrorType.CONNECTION_LOST, activity, showLoader, apiCommonCallback);
                 }
+            };
+        }
 
 
-            }
-        };
+        switch (apiName) {
+            case GENERATE_FEED_API:
+                RestClient.getFeedApiService().testAPI(params, callback);
+                break;
+
+            default:
+                throw new IllegalArgumentException("API Type not declared");
+
+        }
 
 
     }
 
-    private static <T extends FeedCommonResponse> void retryDialog(DialogErrorType dialogErrorType, final Activity activity, final boolean showLoader, final APICommonCallback apiCommonCallback) {
+    private void retryDialog(DialogErrorType dialogErrorType) {
         DialogPopup.dialogNoInternet(activity, dialogErrorType,
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        ApiCommon.<T>hitAPI(activity, showLoader, apiCommonCallback);
+                        hitAPI();
                     }
 
                     @Override
@@ -80,6 +141,7 @@ public class ApiCommon {
 
                     }
                 });
+
     }
 
 
