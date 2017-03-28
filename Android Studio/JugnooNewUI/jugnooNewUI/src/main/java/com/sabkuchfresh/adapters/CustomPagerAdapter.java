@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
@@ -24,19 +23,19 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     Context mContext;
     LayoutInflater mLayoutInflater;
-    private List<SuperCategoriesData.SuperCategory> mResources;
+    private List<SuperCategoriesData.SuperCategory> offerList;
     private Callback callback;
 
-    public CustomPagerAdapter(Context context, List<SuperCategoriesData.SuperCategory> mResources, Callback callback) {
+    public CustomPagerAdapter(Context context, List<SuperCategoriesData.SuperCategory> offerList, Callback callback) {
         mContext = context;
-        this.mResources = mResources;
+        this.offerList = offerList;
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.callback = callback;
     }
 
     @Override
     public int getCount() {
-        return mResources.size();
+        return offerList.size();
     }
 
     @Override
@@ -45,7 +44,7 @@ public class CustomPagerAdapter extends PagerAdapter {
     }
 
     public synchronized void setList(List<SuperCategoriesData.SuperCategory> mResources){
-        this.mResources = mResources;
+        this.offerList = mResources;
         notifyDataSetChanged();
     }
 
@@ -54,7 +53,7 @@ public class CustomPagerAdapter extends PagerAdapter {
         View itemView = mLayoutInflater.inflate(R.layout.item_pager_promo, container, false);
 
         ImageView imageView = (ImageView) itemView.findViewById(R.id.ivPromo);
-        Picasso.with(mContext).load(mResources.get(position).getImageUrl())
+        Picasso.with(mContext).load(offerList.get(position).getImageUrl())
                 .placeholder(R.drawable.ic_fresh_new_placeholder)
                 .error(R.drawable.ic_fresh_new_placeholder)
                 .fit()
@@ -68,7 +67,7 @@ public class CustomPagerAdapter extends PagerAdapter {
             public void onClick(View v) {
                 try {
                     int pos = (int) v.getTag();
-                    callback.onOfferClick(pos, mResources.get(pos));
+                    callback.onOfferClick(pos, offerList.get(pos));
                 } catch (Exception e){}
             }
         });

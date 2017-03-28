@@ -3,6 +3,7 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class SuperCategoriesData {
 	private DeliveryInfo deliveryInfo;
 	@SerializedName("ads")
 	@Expose
-	private List<SuperCategory> ads = null;
+	private List<SuperCategory> ads = new ArrayList<>();
 
 
 	public Integer getFlag() {
