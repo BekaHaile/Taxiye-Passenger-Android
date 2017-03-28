@@ -74,7 +74,7 @@ public class FeedReserveSpotFragment extends Fragment {
         }else{
             btnReserveSpot.setVisibility(View.GONE);
             setMeter(Data.getFeedData().getFeedUsersCount()-Data.getFeedData().getUserRank());
-            tvRankDescription.setText("Already ahead of you in queue");
+            tvRankDescription.setText("Already ahead of you in queue.");
 
         }
     }
@@ -104,7 +104,6 @@ public class FeedReserveSpotFragment extends Fragment {
         v.setPadding(Utils.dpToPx(6), Utils.dpToPx(8f), Utils.dpToPx(6), Utils.dpToPx(8f));
         v.setGravity(Gravity.CENTER);
         v.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        ;
         v.setTypeface(Fonts.mavenRegular(getContext()), Typeface.BOLD);
         v.setTextColor(ContextCompat.getColor(getContext(), R.color.feed_grey_text));
         v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 33);
@@ -126,7 +125,7 @@ public class FeedReserveSpotFragment extends Fragment {
         if(Data.getFeedData().getUserRank()==null)
         {
             if(Data.longitude==0||Data.latitude==0){
-                Toast.makeText(activity, "Please turn on  your location to register.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Please turn on your location to register.", Toast.LENGTH_SHORT).show();
                 return;
             }
             HashMap<String,String> params = new HashMap<>();
@@ -138,7 +137,7 @@ public class FeedReserveSpotFragment extends Fragment {
            new ApiCommon<RegisterForFeedResponse>(activity).putDefaultParams(true).execute(params, ApiName.REGISTER_FOR_FEED, new APICommonCallback<RegisterForFeedResponse>() {
                @Override
                public boolean onNotConnected() {
-                   return false;
+                   return false;//return true to not show dialog error
                }
 
                @Override
