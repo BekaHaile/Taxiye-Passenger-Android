@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="@dimen/px_150"
-            android:descendantFocusability="blocksDescendants">
+            android:descendantFocusability="blocksDescendants"
+            >
 
             <!-- Delivery Address view -->
             <LinearLayout

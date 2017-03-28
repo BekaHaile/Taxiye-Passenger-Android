@@ -2206,6 +2206,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         if(finalLoaderShown) {
                             DialogPopup.dismissLoadingDialog();
                         }
+                        linearLayoutMain.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
                     }
 
                     @Override
