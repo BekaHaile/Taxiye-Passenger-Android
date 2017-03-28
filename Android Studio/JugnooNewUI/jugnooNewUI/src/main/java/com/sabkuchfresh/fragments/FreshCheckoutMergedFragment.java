@@ -1947,6 +1947,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }
             return pcOld;
+        } else if(activity.getUserCheckoutResponse() != null){
+            PromoCoupon pcOld = activity.getSelectedPromoCoupon();
+            if(promoCoupons.size() == 0){
+                activity.setSelectedPromoCoupon(noSelectionCoupon);
+            }
+            return pcOld;
         }
         return null;
     }
