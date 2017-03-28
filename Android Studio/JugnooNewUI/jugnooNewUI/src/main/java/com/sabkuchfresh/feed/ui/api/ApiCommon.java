@@ -1,6 +1,7 @@
 package com.sabkuchfresh.feed.ui.api;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -45,24 +47,24 @@ public class ApiCommon<T extends FeedCommonResponse> {
         this.activity = activity;
     }
 
-    public ApiCommon showLoader(boolean showLoader) {
+    public ApiCommon<T> showLoader(boolean showLoader) {
         this.showLoader = showLoader;
         return this;
     }
 
-    public ApiCommon putDefaultParams(boolean putDefaultParams) {
+    public ApiCommon<T> putDefaultParams(boolean putDefaultParams) {
         this.putDefaultParams = putDefaultParams;
         return this;
     }
 
-    public void  execute(HashMap<String, String> params, ApiName apiName, APICommonCallback<T> apiCommonCallback) {
+    public void  execute(HashMap<String, String> params, @NonNull ApiName apiName, APICommonCallback<T> apiCommonCallback) {
         this.apiCommonCallback = apiCommonCallback;
         this.params = params;
         this.apiName = apiName;
         hitAPI();
     }
 
-    public void execute(MultipartTypedOutput params, ApiName apiName, APICommonCallback<T> apiCommonCallback) {
+    public void execute(MultipartTypedOutput params, @NonNull ApiName apiName, APICommonCallback<T> apiCommonCallback) {
         this.apiCommonCallback = apiCommonCallback;
         this.multipartTypedOutput = params;
         this.apiName = apiName;
@@ -108,11 +110,17 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 }
             };
         }
+        if(putDefaultParams){
+            new HomeUtil().putDefaultParams(params);
+        }
 
 
         switch (apiName) {
             case GENERATE_FEED_API:
                 RestClient.getFeedApiService().testAPI(params, callback);
+                break;
+            case REGISTER_FOR_FEED:
+                RestClient.getFeedApiService().registerForFeed(params, callback);
                 break;
 
             default:

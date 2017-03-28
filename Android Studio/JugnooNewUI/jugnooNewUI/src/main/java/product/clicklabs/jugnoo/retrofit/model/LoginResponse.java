@@ -354,6 +354,37 @@ public class LoginResponse {
 		@Expose
 		private Integer maxUploadImagesFeed;
 
+		@SerializedName("feed_reg_string")
+		@Expose
+		private String feedIntroString;
+
+
+		@SerializedName("user_count")
+		@Expose
+		private long feedUsersCount;
+
+		@SerializedName("feed_active")
+		private int isFeedActive;
+
+		@SerializedName("feed_rank")
+		private Integer userRank;
+
+		public String getFeedIntroString() {
+			return feedIntroString;
+		}
+
+		public long getFeedUsersCount() {
+			return feedUsersCount;
+		}
+
+		public boolean getIsFeedActive() {
+			return isFeedActive==1;
+		}
+
+		public Integer getUserRank() {
+			return userRank;
+		}
+
 		public String getFeedAddReviewHint() {
 			return feedAddReviewHint;
 		}
@@ -374,7 +405,9 @@ public class LoginResponse {
 			this.contactsSynced = contactsSynced;
 		}
 
-
+		public void setUserRank(Integer userRank) {
+			this.userRank = userRank;
+		}
 	}
 
 	public class Pay{

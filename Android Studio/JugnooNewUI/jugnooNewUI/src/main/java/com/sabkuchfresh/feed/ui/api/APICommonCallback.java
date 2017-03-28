@@ -8,7 +8,7 @@ import retrofit.RetrofitError;
  * Created by Parminder Singh on 3/28/17.
  */
 
-public interface APICommonCallback<T> {
+public interface APICommonCallback<T extends FeedCommonResponse> {
 
     boolean onNotConnected();
 

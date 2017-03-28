@@ -17,5 +17,6 @@ public enum ApiName {
     SYNC_CONTACTS,
     EDIT_FEED,
     DELETE_COMMENT,
-    UNLIKE_FEED
+    UNLIKE_FEED,
+    REGISTER_FOR_FEED
 }

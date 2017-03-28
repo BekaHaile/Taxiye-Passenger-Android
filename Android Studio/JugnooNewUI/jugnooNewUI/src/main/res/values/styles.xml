@@ -410,4 +410,13 @@
         <item name="android:textColor">@color/text_color_theme_color_selector</item>
         <item name="font">@string/maven_r</item>
     </style>
+
+    <style name="Feed.SignUp.Meter" parent="TextAppearance.AppCompat">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">33sp</item>
+        <item name="android:textColor">@color/text_color_theme_color_selector</item>
+        <item name="font">@string/maven_r</item>
+    </style>
+
+
 </resources>

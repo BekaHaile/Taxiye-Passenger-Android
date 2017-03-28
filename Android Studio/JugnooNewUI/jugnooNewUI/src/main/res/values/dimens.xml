@@ -473,6 +473,7 @@
     <dimen name="spacing_small">10dp</dimen>
     <dimen name="spacing_tiny">5dp</dimen>
     <dimen name="spacing_extra_tiny">7dp</dimen>
+    <dimen name="spacing_dimin">3.5dp</dimen>
 
 
 
@@ -561,5 +562,7 @@
     <dimen name="sp_24">
         24sp
     </dimen>
+    <dimen name="dp_342">342dp</dimen>
+    <dimen name="dp_283">283dp</dimen>
 
 </resources>

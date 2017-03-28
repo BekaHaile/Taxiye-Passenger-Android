@@ -70,6 +70,7 @@ import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
+import com.sabkuchfresh.feed.ui.fragments.FeedReserveSpotFragment;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
@@ -456,7 +457,11 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     lastClientId = Config.getMenusClientId();
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
-                    addFeedFragment();
+
+                    if(Data.getFeedData().getIsFeedActive())
+                         addFeedFragment();
+                    else
+                           addFeedResrveSpotFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
                     lastClientId = Config.getFeedClientId();
 
@@ -1216,19 +1221,22 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 llSearchCartVis = View.GONE;
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FeedHomeFragment) {
+            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment) {
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.feed);
-                topBar.ivAddReview.setVisibility(View.VISIBLE);
+
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
+                if(fragment instanceof FeedHomeFragment){
+                    topBar.ivAddReview.setVisibility(View.VISIBLE);
+                }
             }
             else if(fragment instanceof FeedOfferingCommentsFragment){
                 topBar.getLlSearchCart().setLayoutTransition(null);
@@ -1631,6 +1639,14 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 .add(relativeLayoutContainer.getId(), new FeedHomeFragment(),
                         FeedHomeFragment.class.getName())
                 .addToBackStack(FeedHomeFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
+    private void addFeedResrveSpotFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new FeedReserveSpotFragment(),
+                        FeedReserveSpotFragment.class.getName())
+                .addToBackStack(FeedReserveSpotFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 
