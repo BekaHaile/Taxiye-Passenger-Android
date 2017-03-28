@@ -24,12 +24,14 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     Context mContext;
     LayoutInflater mLayoutInflater;
-    private List<SuperCategoriesData.Ad> mResources;
+    private List<SuperCategoriesData.SuperCategory> mResources;
+    private Callback callback;
 
-    public CustomPagerAdapter(Context context, List<SuperCategoriesData.Ad> mResources) {
+    public CustomPagerAdapter(Context context, List<SuperCategoriesData.SuperCategory> mResources, Callback callback) {
         mContext = context;
         this.mResources = mResources;
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.callback = callback;
     }
 
     @Override
@@ -40,6 +42,11 @@ public class CustomPagerAdapter extends PagerAdapter {
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view == ((LinearLayout) object);
+    }
+
+    public synchronized void setList(List<SuperCategoriesData.SuperCategory> mResources){
+        this.mResources = mResources;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -55,11 +62,26 @@ public class CustomPagerAdapter extends PagerAdapter {
 
         container.addView(itemView);
 
+        imageView.setTag(position);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    int pos = (int) v.getTag();
+                    callback.onOfferClick(pos, mResources.get(pos));
+                } catch (Exception e){}
+            }
+        });
+
         return itemView;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((LinearLayout) object);
+    }
+
+    public interface Callback{
+        void onOfferClick(int pos, SuperCategoriesData.SuperCategory superCategory);
     }
 }
