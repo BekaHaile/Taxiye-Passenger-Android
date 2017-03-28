@@ -9,6 +9,7 @@ import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -82,11 +83,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
         }
 
 
+
         if (callback == null) {
             callback = new Callback<T>() {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
-
+                    DialogPopup.dismissLoadingDialog();
                     if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                         apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
 
@@ -101,6 +103,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
                 @Override
                 public void failure(RetrofitError error) {
+                    DialogPopup.dismissLoadingDialog();
                     error.printStackTrace();
                     if (!apiCommonCallback.onException(error)) {
                         retryDialog(DialogErrorType.CONNECTION_LOST);
@@ -115,6 +118,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
         }
 
 
+        if(showLoader) {
+            DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+        }
         switch (apiName) {
             case GENERATE_FEED_API:
                 RestClient.getFeedApiService().testAPI(params, callback);

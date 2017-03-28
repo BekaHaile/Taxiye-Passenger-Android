@@ -73,7 +73,12 @@ public class FeedReserveSpotFragment extends Fragment {
             setMeter(Data.getFeedData().getFeedUsersCount());
         }else{
             btnReserveSpot.setVisibility(View.GONE);
-            setMeter(Data.getFeedData().getFeedUsersCount()-Data.getFeedData().getUserRank());
+
+            //if(user_ahead_count added by backend)
+              setMeter(Data.getFeedData().getUserAheadCount());
+            //else
+//            setMeter(Data.getFeedData().getFeedUsersCount()-Data.getFeedData().getUserRank());
+
             tvRankDescription.setText("Already ahead of you in queue.");
 
         }
@@ -148,6 +153,14 @@ public class FeedReserveSpotFragment extends Fragment {
                @Override
                public void onSuccess(RegisterForFeedResponse registerForFeedResponse, String message, int flag) {
                    Data.getFeedData().setUserRank(registerForFeedResponse.getUserRank());
+
+
+                   //iff(user_ahead_count added by backend)
+                     Data.getFeedData().setUserAheadCount(registerForFeedResponse.getUserAheadCount());
+                   //else
+                   // Data.getFeedData().incrementUserCount();
+
+
                    setFeedUsersData();
 
                }

@@ -11,10 +11,17 @@ import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
 public class RegisterForFeedResponse extends FeedCommonResponse {
 
     @SerializedName("feed_rank")
-    private int userRank;
+    private long userRank;
 
-    public int getUserRank() {
+    public long getUserRank() {
         return userRank;
     }
+    @SerializedName("user_ahead_count")
+    private long userAheadCount;
 
+
+
+    public long getUserAheadCount() {
+        return userAheadCount;
+    }
 }

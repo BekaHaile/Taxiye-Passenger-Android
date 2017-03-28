@@ -367,7 +367,20 @@ public class LoginResponse {
 		private int isFeedActive;
 
 		@SerializedName("feed_rank")
-		private Integer userRank;
+		private Long userRank;
+
+		@SerializedName("user_ahead_count")
+		private long userAheadCount;
+
+
+
+		public long getUserAheadCount() {
+			return userAheadCount;
+		}
+
+		public void setUserAheadCount(long userAheadCount) {
+			this.userAheadCount = userAheadCount;
+		}
 
 		public String getFeedIntroString() {
 			return feedIntroString;
@@ -381,7 +394,7 @@ public class LoginResponse {
 			return isFeedActive==1;
 		}
 
-		public Integer getUserRank() {
+		public Long getUserRank() {
 			return userRank;
 		}
 
@@ -405,8 +418,12 @@ public class LoginResponse {
 			this.contactsSynced = contactsSynced;
 		}
 
-		public void setUserRank(Integer userRank) {
+		public void setUserRank(Long userRank) {
 			this.userRank = userRank;
+		}
+
+		public void incrementUserCount(){
+			feedUsersCount++;
 		}
 	}
 
