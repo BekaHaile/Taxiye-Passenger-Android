@@ -558,5 +558,8 @@
     <dimen name="dp_17">
         17dp
     </dimen>
+    <dimen name="sp_24">
+        24sp
+    </dimen>
 
 </resources>

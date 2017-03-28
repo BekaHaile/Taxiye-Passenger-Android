@@ -73,7 +73,7 @@
             android:layout_width="68dp"
             android:layout_height="68dp"
             android:layout_margin="10dp"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_24"
             android:textColor="@color/text_color"
             android:layout_centerHorizontal="true"
             android:background="@drawable/circle_white_stroke_alpha_border"

@@ -3789,10 +3789,18 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
     private void saveAppCart(String clientId){
         if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
-            Paper.book().write(DB_FRESH_CART, appCart);
+            if(appCart != null) {
+                Paper.book().write(DB_FRESH_CART, appCart);
+            } else {
+                Paper.book().delete(DB_FRESH_CART);
+            }
         }
         else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
-            Paper.book().write(DB_MEALS_CART, appCart);
+            if(appCart != null) {
+                Paper.book().write(DB_MEALS_CART, appCart);
+            } else {
+                Paper.book().delete(DB_MEALS_CART);
+            }
         }
     }
 
