@@ -1,4 +1,4 @@
-package com.sabkuchfresh.adapters;
+package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
 import android.graphics.Typeface;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -76,7 +77,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
                 return new FeedHomeAdapter.ViewHolderReviewImage(v,this);
             case TYPE_USERS_COMMENTS:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed_comment, parent, false);
-                return new UserCommentViewHolder(v);
+                return new UserCommentViewHolder(v,this);
             case TYPE_MY_COMMENT:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed_my_comment, parent, false);
                 return new MyCommentViewHolder(v);
@@ -132,6 +133,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
             if (!TextUtils.isEmpty(feedComment.getUserImage()))
                 Picasso.with(activity).load(feedComment.getUserImage()).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(userCommentViewHolder.ivUserCommentPic);
 
+            ((UserCommentViewHolder) holder).ivDeleteComment.setVisibility(feedComment.canEdit()?View.VISIBLE:View.GONE);
         }
 
 
@@ -190,6 +192,12 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
 
 
                     break;
+                case R.id.ib_arrow_more:
+                    callback.onMoreClick((FeedDetail) feedDetailData.get(position),0,viewClicked);
+                    break;
+                case R.id.iv_delete_comment:
+                    callback.onDeleteComment((FeedComment) feedDetailData.get(position),position,viewClicked);
+                    break;
                 default:
                     break;
             }
@@ -241,11 +249,19 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         TextView tvUserTimePosted;
          @Bind(R.id.line_bottom)
          View lineBottom;
+         @Bind(R.id.iv_delete_comment)
+          ImageView ivDeleteComment;
 
-         UserCommentViewHolder(View view) {
+         UserCommentViewHolder(final View view, final ItemListener itemListener) {
             super(view);
             ButterKnife.bind(this, view);
-             tvUserCommentName.setTypeface(tvUserCommentName.getTypeface(), Typeface.BOLD);
+            tvUserCommentName.setTypeface(tvUserCommentName.getTypeface(), Typeface.BOLD);
+             ivDeleteComment.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                     itemListener.onClickItem(ivDeleteComment,view);
+                 }
+             });
         }
     }
 

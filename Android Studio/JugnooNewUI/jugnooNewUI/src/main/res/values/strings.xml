@@ -33,6 +33,9 @@
     <string name="clevertap_account_id">8R5-WZ7-R74Z</string>
     <string name="clevertap_account_token">a10-52b</string>
 
+    <string name="razorpay_test_api_key">rzp_test_qux6pkeYktNeoX</string>
+    <string name="razorpay_live_api_key">rzp_live_fsWpMDBnrFvyiW</string>
+
 
     <string name="rupee">\u20B9</string>
 
@@ -1063,6 +1066,7 @@
     <string name="transaction_id_format">Transaction ID: %s</string>
     <string name="id_colon">ID:</string>
     <string name="order_id_format">Order ID: %s</string>
+    <string name="order_hash_format">Order #%s</string>
     <string name="from_colon">From:</string>
     <string name="to_colon">To:</string>
     <string name="details_colon">Details:</string>
@@ -1609,6 +1613,16 @@
     <string name="label_city">City</string>
     <string name="away_from_free_delivery_value">\u20B9%s away from free delivery</string>
     <string name="no_other_store_available">No other stores available</string>
+
     <string name="type_address">Type Address</string>
+    <string name="other_modes_to_pay">Other modes to pay</string>
+    <string name="other_mode">Other mode</string>
+    <string name="other_payment_mode">Other payment mode</string>
+    <string name="track_order">Track Order</string>
+    <string name="view_order">View Order</string>
+    <string name="track_delivery">Track Delivery</string>
+
+    <string name="feed_delete_popup_message">Do you really want to delete this post? If you delete once it will no longer be available.</string>
+
 
 </resources>

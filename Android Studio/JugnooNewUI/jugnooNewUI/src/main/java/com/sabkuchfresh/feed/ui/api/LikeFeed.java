@@ -1,4 +1,4 @@
-package com.sabkuchfresh.commoncalls;
+package com.sabkuchfresh.feed.ui.api;
 
 import android.app.Activity;
 import android.view.View;

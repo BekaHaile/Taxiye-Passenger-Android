@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.AppSwitcher;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
 import product.clicklabs.jugnoo.utils.CleverTapUtils;
@@ -499,5 +500,12 @@ public class MyApplication extends Application {
 		return appEventsLogger;
 	}
 
+	private HomeUtil homeUtil;
+	public HomeUtil getHomeUtil(){
+		if(homeUtil == null){
+			homeUtil = new HomeUtil();
+		}
+		return homeUtil;
+	}
 
 }

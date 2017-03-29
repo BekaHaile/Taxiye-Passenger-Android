@@ -1,9 +1,13 @@
 package com.sabkuchfresh.apis;
 
+import com.jugnoo.pay.models.CommonResponse;
+import com.sabkuchfresh.feed.models.RegisterForFeedResponse;
+import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -24,7 +28,11 @@ public interface FeedApiService {
 
     @FormUrlEncoded
     @POST("/feeds/v1/generate_feed")
-    void generateFeed(@FieldMap Map<String, String> params, Callback<FeedListResponse> callback);
+   void generateFeed(@FieldMap Map<String, String> params, Callback<FeedListResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/feeds/v1/generate_feed")
+    <T extends FeedCommonResponse>void testAPI(@FieldMap Map<String, String> params, Callback<T> callback);
 
 
     @FormUrlEncoded
@@ -48,12 +56,28 @@ public interface FeedApiService {
     void unlikeFeed(@FieldMap Map<String, String> params, Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST("/feeds/v1/delete_post")
+    void deleteFeed(@FieldMap Map<String, String> params, Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
     @POST("/suggest")
     void suggestRestaurant(@FieldMap Map<String, String> params, Callback<SuggestRestaurantQueryResp> callback);
 
     @FormUrlEncoded
     @POST("/feeds/v1/sync_contacts")
     Response syncContacts(@FieldMap Map<String, String> params);
+
+    @POST("/feeds/v1/edit_post")
+    void editFeed(@Body MultipartTypedOutput multipartTypedOutput, Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/feeds/v1/delete_comment")
+    void deleteComment(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/feeds/v1/register_feeds")
+   void registerForFeed(@FieldMap Map<String, String> params, Callback<RegisterForFeedResponse> callback);
+
 
 
 }

@@ -572,4 +572,8 @@ public interface ApiService {
     void referralUserEvent(@FieldMap Map<String, String> params,
                       Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/menus_live_tracking")
+    Response menusLiveTracking(@FieldMap Map<String, String> params);
+
 }

@@ -1,4 +1,4 @@
-package com.sabkuchfresh.fragments;
+package com.sabkuchfresh.feed.ui.fragments;
 
 
 import android.content.BroadcastReceiver;
@@ -21,10 +21,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.sabkuchfresh.adapters.FeedHomeAdapter;
-import com.sabkuchfresh.commoncalls.LikeFeed;
+import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
+import com.sabkuchfresh.feed.ui.api.DeleteFeed;
+import com.sabkuchfresh.feed.ui.api.LikeFeed;
+import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
+import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
 
@@ -49,17 +53,17 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class FeedHomeFragment extends Fragment {
+public class FeedHomeFragment extends Fragment implements DeletePostDialog.DeleteDialogCallback,EditPostPopup.EditPostDialogCallback{
 
 
     private FeedHomeAdapter feedHomeAdapter;
-    private TextView tvAddPost;
     private LikeFeed likeFeed;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout relativeLayoutNotAvailable;
     private TextView textViewNothingFound;
     private RelativeLayout rlNoReviews;
     private TextView tvFeedEmpty;
+    private View viewDisabledEditPostPopUp;
 
 
     public FeedHomeFragment() {
@@ -81,6 +85,7 @@ public class FeedHomeFragment extends Fragment {
             activity.registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_CONTACTS_UPLOADED));
         }
     }
+
 
     @Override
     public void onDestroyView() {
@@ -126,7 +131,8 @@ public class FeedHomeFragment extends Fragment {
             }
 
             @Override
-            public void onCommentClick(final FeedDetail feedDetail,int positionInOriginalList) {
+            public void onCommentClick(final FeedDetail feedDetail, int positionInOriginalList) {
+
 
                 activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail,positionInOriginalList);
 
@@ -143,6 +149,21 @@ public class FeedHomeFragment extends Fragment {
             @Override
             public String getEditTextString() {
                 return null;
+            }
+
+            @Override
+            public void onMoreClick(final FeedDetail feedDetail, int positionInOriginalList, View moreItemView){
+
+               getEditPostDialog().show(feedDetail,moreItemView,positionInOriginalList);
+//                getEditPostDialog().show(feedDetail,moreItemView,positionInOriginalList);
+
+
+
+            }
+
+            @Override
+            public void onDeleteComment(FeedComment feedComment, int position, View viewClicked) {
+
             }
         });
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);;
@@ -194,7 +215,6 @@ public class FeedHomeFragment extends Fragment {
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
-
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getFeedApiService().generateFeed(params, new retrofit.Callback<FeedListResponse>() {
                     @Override
@@ -311,12 +331,73 @@ public class FeedHomeFragment extends Fragment {
     };
 
 
-    public void notifyOnLikeFromCommentsFragment(int positionItemLikedUnlikedInCommentsFragment) {
-        if(feedHomeAdapter !=null)
-            feedHomeAdapter.notifyFeedListItem(positionItemLikedUnlikedInCommentsFragment);;
+    public void refreshFeedInHomeFragment(int positionItemChangedInCommentsFragment) {
+        if(feedHomeAdapter!=null && adapterList!=null && adapterList.size()>positionItemChangedInCommentsFragment)
+            feedHomeAdapter.notifyFeedListItem(positionItemChangedInCommentsFragment);;
     }
 
 
 
 
+   private DeletePostDialog deletePostDialog;
+
+    public DeletePostDialog getDeletePostDialog(){
+        if(deletePostDialog==null)
+            deletePostDialog=new DeletePostDialog(this,R.style.Feed_Popup_Theme,activity);
+
+        return deletePostDialog;
+    }
+
+    private EditPostPopup editPostDialog;
+
+    public EditPostPopup getEditPostDialog(){
+
+            editPostDialog=new EditPostPopup(this,R.style.Feed_Popup_Theme,activity);
+
+        return editPostDialog;
+    }
+
+
+    private DeleteFeed deleteFeed;
+    @Override
+    public void onDelete(FeedDetail feedDetail,int pos) {
+        if(deleteFeed==null)
+            deleteFeed=new DeleteFeed(new DeleteFeed.DeleteApiCallback() {
+                @Override
+                public void onSuccess(int posInOriginalList) {
+                    if(feedHomeAdapter!=null)
+                        feedHomeAdapter.notifyItemRemoved(posInOriginalList);
+                }
+            });
+        deleteFeed.delete(feedDetail.getPostId(),activity,pos);
+    }
+
+    @Override
+    public void onEdit(FeedDetail feedDetail) {
+        activity.openFeedAddPostFragment(feedDetail);
+    }
+
+    @Override
+    public void onDismiss(FeedDetail feedDetail) {
+
+    }
+
+    public void notifyOnDelete(int positionInOriginalList) {
+        if(feedHomeAdapter!=null && adapterList!=null && adapterList.size()>positionInOriginalList){
+             adapterList.remove(positionInOriginalList);
+            feedHomeAdapter.notifyItemRemoved(positionInOriginalList);
+        }
+
+    }
+
+    @Override
+    public void onMoreDelete(FeedDetail feedDetail, int positionInList) {
+        getDeletePostDialog().show(feedDetail,positionInList);
+    }
+
+    @Override
+    public void onMoreEdit(FeedDetail feedDetail, int positionInList) {
+        onEdit(feedDetail);
+
+    }
 }

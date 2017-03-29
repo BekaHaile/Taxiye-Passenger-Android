@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -184,9 +185,11 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     public void getSuperCategoriesAPI(boolean showDialog) {
         try {
             if(MyApplication.getInstance().isOnline()) {
+                ProgressDialog progressDialog = null;
                 if(showDialog) {
-                    DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+                    progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
                 }
+                final ProgressDialog finalProgressDialog = progressDialog;
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -201,7 +204,9 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 RestClient.getFreshApiService().getSuperCategories(params, new Callback<SuperCategoriesData>() {
                     @Override
                     public void success(final SuperCategoriesData superCategoriesData, Response response) {
-                        DialogPopup.dismissLoadingDialog();
+                        if(finalProgressDialog != null){
+                            finalProgressDialog.dismiss();
+                        }
                         try {
                             if(superCategoriesData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                 oSnapNotAvailableCase(superCategoriesData.getMessage());
@@ -239,7 +244,9 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
 
                     @Override
                     public void failure(RetrofitError error) {
-                        DialogPopup.dismissLoadingDialog();
+                        if(finalProgressDialog != null){
+                            finalProgressDialog.dismiss();
+                        }
                         retryDialogSuperCategoriesAPI(DialogErrorType.CONNECTION_LOST);
                         stopOhSnap();
                         swipeContainer.setRefreshing(false);

@@ -488,6 +488,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
+        <activity
+            android:name="com.sabkuchfresh.home.TrackOrderActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"
+            />
 
         <activity android:name="com.picker.image.ui.PickerActivity"  android:theme="@style/AppThemePicker.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -510,6 +516,15 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="@string/razorpay_test_api_key"
+            />
+
+        <service android:name="com.sabkuchfresh.home.RazorpayCallbackService" android:enabled="true" />
+
+
     </application>
 
 

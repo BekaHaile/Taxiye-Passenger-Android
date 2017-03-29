@@ -36,6 +36,10 @@ public class PlaceOrderResponse {
 	@Expose
 	private SendMoneyResponse.TxnDetails paymentObject;
 
+	@SerializedName("razorpay_payment_object")
+	@Expose
+	private RazorPaymentObject razorPaymentObject;
+
 	@SerializedName("subscription_message")
 	@Expose
 	private SubscriptionMessage subscriptionMessage;
@@ -189,6 +193,14 @@ public class PlaceOrderResponse {
 		this.subscriptionDataPlaceOrder = subscriptionDataPlaceOrder;
 	}
 
+	public RazorPaymentObject getRazorPaymentObject() {
+		return razorPaymentObject;
+	}
+
+	public void setRazorPaymentObject(RazorPaymentObject razorPaymentObject) {
+		this.razorPaymentObject = razorPaymentObject;
+	}
+
 	public class SubscriptionMessage {
 
 		@SerializedName("heading")
@@ -336,6 +348,65 @@ public class PlaceOrderResponse {
 			this.cancellationChargesPopupTextLine2 = cancellationChargesPopupTextLine2;
 		}
 
+	}
+
+
+	public class RazorPaymentObject{
+		@SerializedName("order_id")
+		@Expose
+		private String orderId;
+		@SerializedName("phone_no")
+		@Expose
+		private String phoneNo;
+		@SerializedName("user_email")
+		@Expose
+		private String userEmail;
+		@SerializedName("description")
+		@Expose
+		private String description;
+		@SerializedName("auth_order_id")
+		@Expose
+		private Integer authOrderId;
+
+		public String getOrderId() {
+			return orderId;
+		}
+
+		public void setOrderId(String orderId) {
+			this.orderId = orderId;
+		}
+
+		public String getPhoneNo() {
+			return phoneNo;
+		}
+
+		public void setPhoneNo(String phoneNo) {
+			this.phoneNo = phoneNo;
+		}
+
+		public String getUserEmail() {
+			return userEmail;
+		}
+
+		public void setUserEmail(String userEmail) {
+			this.userEmail = userEmail;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public Integer getAuthOrderId() {
+			return authOrderId;
+		}
+
+		public void setAuthOrderId(Integer authOrderId) {
+			this.authOrderId = authOrderId;
+		}
 	}
 
 }

@@ -303,6 +303,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                     recentOrder.clear();
                                     recentOrder.addAll(menusResponse.getRecentOrders());
+
                                     status.clear();
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 

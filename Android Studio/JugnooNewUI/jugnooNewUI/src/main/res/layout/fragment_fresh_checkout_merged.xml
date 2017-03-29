@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="@dimen/px_150"
-            android:descendantFocusability="blocksDescendants">
+            android:descendantFocusability="blocksDescendants"
+            >
 
             <!-- Delivery Address view -->
             <LinearLayout
@@ -464,7 +465,6 @@
                             android:layout_height="80px"
                             android:background="@drawable/bg_transparent_menu_item_selector"
                             android:visibility="visible"
-
                             >
 
                             <LinearLayout
@@ -541,6 +541,40 @@
                                     android:text="@string/cash"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlOtherModesToPay"
+                            android:layout_width="match_parent"
+                            android:layout_height="80px"
+                            android:background="@drawable/bg_transparent_menu_item_selector"
+                            android:visibility="visible">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/ivOtherModesToPay"
+                                    style="@style/ic_radio_button_style"
+                                    android:layout_marginLeft="30px" />
+
+
+                                <TextView
+                                    android:id="@+id/tvOtherModesToPay"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="16px"
+                                    android:text="@string/other_modes_to_pay"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/text_size_34"
+                                    app:font="maven"
+                                    />
 
                             </LinearLayout>
 

@@ -272,6 +272,7 @@
 
     <color name="stroke_light_grey">#979797</color>
     <color name="stroke_light_grey_alpha">#33979797</color>
+    <color name="stroke_light_grey_alpha_less">#88979797</color>
     <color name="no_internet_text_color">#979797</color>
     <color name="order_history_status_color">#1fbd2a</color>
 
@@ -332,7 +333,11 @@
     <color name="green_delivery_stores">#8dcf61</color>
 
 
+
     <color name="feed_color_like_active">#ef6692</color>
     <color name="feed_disabled_grey">#f7f7f7</color>
+
+    <color name="purple_text_color">#b368a9</color>
+    <color name="purple_text_color_aplha">#aab368a9</color>
 
 </resources>

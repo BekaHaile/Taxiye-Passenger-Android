@@ -25,6 +25,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.home.TrackOrderActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.RestaurantSearchResponse;
@@ -105,8 +106,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         searchApiHitOnce = false;
     }
 
-    Handler timerHandler;
-    Runnable timerRunnable = new Runnable() {
+    private Handler timerHandler;
+    private Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
             try {
@@ -165,14 +166,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         vendorsFiltered.clear();
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         for (MenusResponse.Vendor vendor : vendorsComplete) {
-            boolean cuisineMatched = false, moMatched = false, dtMatched = false;
+            boolean cuisineMatched = false, moMatched, dtMatched;
             for (String cuisine : activity.getCuisinesSelected()) {
                 if (vendor.getCuisines().contains(cuisine)) {
                     cuisineMatched = true;
                     break;
                 }
             }
-            cuisineMatched = activity.getCuisinesSelected().size() > 0 ? cuisineMatched : true;
+            cuisineMatched = activity.getCuisinesSelected().size() <= 0 || cuisineMatched;
 
             moMatched = activity.getMoSelected() == MenusFilterFragment.MinOrder.NONE
                     || vendor.getMinimumOrderAmount() <= activity.getMoSelected().getOrdinal();
@@ -194,9 +195,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             try {
                 if (DateOperations.getTimeDifferenceInHHmmss(vendor.getCloseIn(), vendor.getOpensAt()) >= 0) {
-					String currentSystemTime = dateFormat.format(new Date()).toString();
+					String currentSystemTime = dateFormat.format(new Date());
 					long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
-					long minutes = ((timeDiff1 / (1000l * 60l)));
+					long minutes = ((timeDiff1 / (1000L * 60L)));
 					if (minutes <= 0) {
 						vendor.setIsClosed(1);
 					}
@@ -293,24 +294,24 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                     }
                     showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
-                    statusHolder.tvOrderIdValue.setText(recentOrder.getOrderId().toString());
+                    statusHolder.tvOrderIdValue.setText("#"+recentOrder.getOrderId().toString());
                     statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
+
                     statusHolder.container.setTag(position);
-                    statusHolder.container.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try {
-                                int pos = (int) v.getTag();
-                                Intent intent = new Intent(activity, RideTransactionsActivity.class);
-                                intent.putExtra(Constants.KEY_ORDER_ID, recentOrders.get(pos).getOrderId());
-                                intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MENUS.getOrdinal());
-                                activity.startActivity(intent);
-                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                    statusHolder.tvViewOrder.setTag(position);
+                    statusHolder.tvTrackOrder.setTag(position);
+                    statusHolder.container.setOnClickListener(viewOrderOnClickListener);
+                    statusHolder.tvViewOrder.setOnClickListener(viewOrderOnClickListener);
+                    statusHolder.tvTrackOrder.setOnClickListener(trackOrderOnClickListener);
+
+                    statusHolder.rlTrackViewOrder.setVisibility((recentOrder.getShowLiveTracking() == 1
+                            && recentOrder.getDeliveryId() != null && recentOrder.getDeliveryId() > 0) ? View.VISIBLE : View.GONE);
+                    statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
+                    statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
+                    if(recentOrder.getOrderAmount() != null) {
+                        statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(recentOrder.getOrderAmount())));
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -324,9 +325,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 mHolder.vSep.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
 
                 DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
-                String currentSystemTime = dateFormat.format(new Date()).toString();
+                String currentSystemTime = dateFormat.format(new Date());
                 long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
-                long minutes = ((timeDiff1 / (1000l * 60l)));
+                long minutes = ((timeDiff1 / (1000L* 60L)));
 
                 int visibilityCloseTime = View.VISIBLE;
                 RelativeLayout.LayoutParams paramsCloseTime = (RelativeLayout.LayoutParams) mHolder.textViewRestaurantCloseTime.getLayoutParams();
@@ -397,8 +398,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         try {
                             int pos = (int) v.getTag();
                             callback.onRestaurantSelected(pos, vendorsToShow.get(pos));
-                            if(searchApiHitOnce && searchText.length() > 0){
-                            }
+//                            if(searchApiHitOnce && searchText.length() > 0){
+//                            for analytics event
+//                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -439,7 +441,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
 
-/**
+/*
  Edited by Parminder Singh on 2/24/17 at 6:10 PM
  Displaying Offers strip
  **/
@@ -494,12 +496,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 statusHolder.tvStatus3.setText(possibleStatus.get(3));
                 if (status == 3) {
                     statusHolder.ivStatus3.setBackgroundResource(R.drawable.circle_order_status_green);
-                    statusHolder.lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                    statusHolder.lineStatus3.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
                 } else if (status > 3) {
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     statusHolder.ivStatus3.setLayoutParams(layoutParams);
                     statusHolder.ivStatus3.setBackgroundResource(R.drawable.ic_order_status_green);
-                    statusHolder.lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                    statusHolder.lineStatus3.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
                 }
             case 3:
                 statusHolder.tvStatus2.setVisibility(View.VISIBLE);
@@ -508,12 +510,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 statusHolder.tvStatus2.setText(possibleStatus.get(2));
                 if (status == 2) {
                     statusHolder.ivStatus2.setBackgroundResource(R.drawable.circle_order_status_green);
-                    statusHolder.lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                    statusHolder.lineStatus2.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
                 } else if (status > 2) {
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     statusHolder.ivStatus2.setLayoutParams(layoutParams);
                     statusHolder.ivStatus2.setBackgroundResource(R.drawable.ic_order_status_green);
-                    statusHolder.lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                    statusHolder.lineStatus2.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
                 }
             case 2:
                 statusHolder.tvStatus1.setVisibility(View.VISIBLE);
@@ -522,12 +524,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 statusHolder.tvStatus1.setText(possibleStatus.get(1));
                 if (status == 1) {
                     statusHolder.ivStatus1.setBackgroundResource(R.drawable.circle_order_status_green);
-                    statusHolder.lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                    statusHolder.lineStatus1.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
                 } else if (status > 1) {
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     statusHolder.ivStatus1.setLayoutParams(layoutParams);
                     statusHolder.ivStatus1.setBackgroundResource(R.drawable.ic_order_status_green);
-                    statusHolder.lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                    statusHolder.lineStatus1.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
                 }
             case 1:
                 statusHolder.tvStatus0.setVisibility(View.VISIBLE);
@@ -550,13 +552,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
         statusHolder.ivStatus3.setBackgroundResource(R.drawable.circle_order_status);
         statusHolder.ivStatus3.setLayoutParams(layoutParams);
-        statusHolder.lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.rank_5));
+        statusHolder.lineStatus3.setBackgroundColor(ContextCompat.getColor(activity, R.color.rank_5));
         statusHolder.ivStatus2.setBackgroundResource(R.drawable.circle_order_status);
         statusHolder.ivStatus2.setLayoutParams(layoutParams);
-        statusHolder.lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.rank_5));
+        statusHolder.lineStatus2.setBackgroundColor(ContextCompat.getColor(activity, R.color.rank_5));
         statusHolder.ivStatus1.setBackgroundResource(R.drawable.circle_order_status);
         statusHolder.ivStatus1.setLayoutParams(layoutParams);
-        statusHolder.lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.rank_5));
+        statusHolder.lineStatus1.setBackgroundColor(ContextCompat.getColor(activity, R.color.rank_5));
         statusHolder.ivStatus0.setBackgroundResource(R.drawable.circle_order_status);
         statusHolder.ivStatus0.setLayoutParams(layoutParams);
     }
@@ -616,17 +618,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.searchApiHitOnce = searchApiHitOnce;
     }
 
-    public boolean isSearchApiHitOnce() {
-        return searchApiHitOnce;
-    }
-
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout rlRoot;
-        public View vSep, viewOffer;
-        public ImageView imageViewRestaurantImage;
-        public TextView textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
-        public TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery, tvRating,tvOffer;
+        View vSep, viewOffer;
+        ImageView imageViewRestaurantImage;
+        TextView textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
+        TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery, tvRating,tvOffer;
 
 
 
@@ -643,17 +641,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);textViewDelivery.setTypeface(Fonts.mavenMedium(context));
             tvRating = (TextView) itemView.findViewById(R.id.tvRating);
             tvOffer = (TextView)itemView.findViewById(R.id.tv_offer);
-            viewOffer = (View) itemView.findViewById(R.id.tv_offer_view);
+            viewOffer = itemView.findViewById(R.id.tv_offer_view);
         }
     }
 
 
-    class ViewHolderRestaurantForm extends RecyclerView.ViewHolder {
-        public TextView tvCouldNotFind, tvRecommend;
-        public EditText etRestaurantName, etLocality, etTelephone;
-        public Button bSubmit;
+    private class ViewHolderRestaurantForm extends RecyclerView.ViewHolder {
+        TextView tvCouldNotFind, tvRecommend;
+        EditText etRestaurantName, etLocality, etTelephone;
+        Button bSubmit;
 
-        public ViewHolderRestaurantForm(View itemView, Context context) {
+        ViewHolderRestaurantForm(View itemView, Context context) {
             super(itemView);
             tvCouldNotFind = (TextView) itemView.findViewById(R.id.tvCouldNotFind);
             tvCouldNotFind.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
@@ -675,11 +673,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    class ViewNoVenderItem extends RecyclerView.ViewHolder {
-        public RelativeLayout rlLayoutNoVender;
-        public TextView textViewNoMenus;
+    private class ViewNoVenderItem extends RecyclerView.ViewHolder {
+        RelativeLayout rlLayoutNoVender;
+        TextView textViewNoMenus;
 
-        public ViewNoVenderItem(View itemView, Context context) {
+        ViewNoVenderItem(View itemView, Context context) {
             super(itemView);
             rlLayoutNoVender = (RelativeLayout) itemView.findViewById(R.id.rlLayoutNoVender);
             textViewNoMenus = (TextView) itemView.findViewById(R.id.textViewNoMenus);
@@ -690,15 +688,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
 
-    class ViewTitleStatus extends RecyclerView.ViewHolder {
+    private class ViewTitleStatus extends RecyclerView.ViewHolder {
 
         public LinearLayout linear;
-        public RelativeLayout container, relativeStatusBar;
-        public TextView tvOrderId, tvOrderIdValue, tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
-        public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
-        public View lineStatus1, lineStatus2, lineStatus3;
+        RelativeLayout container, relativeStatusBar;
+        TextView tvOrderId, tvOrderIdValue, tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
+        ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
+        View lineStatus1, lineStatus2, lineStatus3;
+        RelativeLayout rlRestaurantInfo, rlTrackViewOrder;
+        TextView tvRestaurantName, tvOrderAmount, tvTrackOrder, tvViewOrder;
 
-        public ViewTitleStatus(View itemView, Context context) {
+        ViewTitleStatus(View itemView, Context context) {
             super(itemView);
             linear = (LinearLayout) itemView.findViewById(R.id.linear);
             container = (RelativeLayout) itemView.findViewById(R.id.container);
@@ -723,9 +723,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ivStatus1 = (ImageView) itemView.findViewById(R.id.ivStatus1);
             ivStatus2 = (ImageView) itemView.findViewById(R.id.ivStatus2);
             ivStatus3 = (ImageView) itemView.findViewById(R.id.ivStatus3);
-            lineStatus1 = (View) itemView.findViewById(R.id.lineStatus1);
-            lineStatus2 = (View) itemView.findViewById(R.id.lineStatus2);
-            lineStatus3 = (View) itemView.findViewById(R.id.lineStatus3);
+            lineStatus1 = itemView.findViewById(R.id.lineStatus1);
+            lineStatus2 = itemView.findViewById(R.id.lineStatus2);
+            lineStatus3 = itemView.findViewById(R.id.lineStatus3);
+            rlRestaurantInfo = (RelativeLayout) itemView.findViewById(R.id.rlRestaurantInfo);
+            rlTrackViewOrder = (RelativeLayout) itemView.findViewById(R.id.rlTrackViewOrder);
+            tvRestaurantName = (TextView) itemView.findViewById(R.id.tvRestaurantName);
+            tvOrderAmount = (TextView) itemView.findViewById(R.id.tvOrderAmount);
+            tvTrackOrder = (TextView) itemView.findViewById(R.id.tvTrackOrder); tvTrackOrder.setTypeface(tvTrackOrder.getTypeface(), Typeface.BOLD);
+            tvViewOrder = (TextView) itemView.findViewById(R.id.tvViewOrder); tvViewOrder.setTypeface(tvViewOrder.getTypeface(), Typeface.BOLD);
         }
     }
 
@@ -766,7 +772,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private HashMap<String, List<Integer>> queryMap = new HashMap<>();
     private boolean refreshingAutoComplete = false;
-    public void searchRestaurantsAutoComplete(final String searchText) {
+    private void searchRestaurantsAutoComplete(final String searchText) {
         try {
             if(!refreshingAutoComplete) {
                 if (MyApplication.getInstance().isOnline()) {
@@ -892,7 +898,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     };
 
 
-    public void apiRecommendRestaurant() {
+    private void apiRecommendRestaurant() {
         try {
             if(TextUtils.isEmpty(restaurantName)){
                 Utils.showToast(activity, activity.getString(R.string.restaurant_name_is_neccessary));
@@ -959,5 +965,43 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     };
 
+
+    private View.OnClickListener viewOrderOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            try {
+                int pos = (int) v.getTag();
+                Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                intent.putExtra(Constants.KEY_ORDER_ID, recentOrders.get(pos).getOrderId());
+                intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MENUS.getOrdinal());
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private View.OnClickListener trackOrderOnClickListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            try {
+                int pos = (int) v.getTag();
+                RecentOrder order = recentOrders.get(pos);
+                Intent intent = new Intent(activity, TrackOrderActivity.class);
+                intent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                intent.putExtra(Constants.KEY_ORDER_ID, order.getOrderId());
+                intent.putExtra(Constants.KEY_DELIVERY_ID, order.getDeliveryId());
+                intent.putExtra(Constants.KEY_PICKUP_LATITUDE, order.getPickupLatitude());
+                intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, order.getPickupLongitude());
+                intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
+                intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
 
 }
