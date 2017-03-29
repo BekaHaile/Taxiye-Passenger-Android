@@ -7,11 +7,13 @@ import android.view.View;
 
 import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
+import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
@@ -38,6 +40,7 @@ public class WalletCore {
 	private Context context;
 
 	private ArrayList<PaymentModeConfigData> paymentModeConfigDatas;
+	private ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs;
 
 	public WalletCore(Context context){
 		this.context = context;
@@ -293,12 +296,12 @@ public class WalletCore {
 				return PaymentOption.JUGNOO_PAY.getOrdinal();
 			}
 			else {
-				return PaymentOption.CASH.getOrdinal();
+				return previousPaymentOption;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return PaymentOption.CASH.getOrdinal();
+		return previousPaymentOption;
 	}
 
 	public int getPaymentOptionIconSmall(int paymentOption){
@@ -600,6 +603,17 @@ public class WalletCore {
 		return paymentModeConfigDatas;
 	}
 
+	public ArrayList<PaymentGatewayModeConfig> getPaymentGatewayModeConfigs(){
+		return paymentGatewayModeConfigs;
+	}
+
+	public void parsePaymentGatewayModeConfigs(List<PaymentGatewayModeConfig> paymentGatewayModeConfigs){
+		this.paymentGatewayModeConfigs = new ArrayList<>();
+		if(paymentGatewayModeConfigs != null) {
+			this.paymentGatewayModeConfigs.addAll(paymentGatewayModeConfigs);
+		}
+	}
+
 	public void setDefaultPaymentOption(){
 		try{
 			Data.autoData.setPickupPaymentOption(getDefaultPaymentOption().getOrdinal());
@@ -657,6 +671,8 @@ public class WalletCore {
 			return PaymentOption.FREECHARGE;
 		} else if(PaymentOption.JUGNOO_PAY.getOrdinal() == paymentOption){
 			return PaymentOption.JUGNOO_PAY;
+		} else if(PaymentOption.RAZOR_PAY.getOrdinal() == paymentOption){
+			return PaymentOption.RAZOR_PAY;
 		} else{
 			return PaymentOption.CASH;
 		}
@@ -1009,8 +1025,6 @@ public class WalletCore {
 				}
 			}
 			else if(paymentOption == PaymentOption.CASH){
-				if(Data.autoData.getPickupPaymentOption() == PaymentOption.PAYTM.getOrdinal()){
-				}
 				callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.CASH);
 			}
 		} catch (Exception e) {

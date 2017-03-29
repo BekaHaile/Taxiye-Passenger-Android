@@ -305,6 +305,9 @@ public class HistoryResponse {
         @SerializedName("show_cancellation_reasons")
         @Expose
         private Integer showCancellationReasons;
+        @SerializedName("other_payment_mode_text")
+        @Expose
+        private String otherPaymentModeText;
 
         /**
          * @return The pickupAddress
@@ -1175,6 +1178,14 @@ public class HistoryResponse {
 
         public void setShowCancellationReasons(Integer showCancellationReasons) {
             this.showCancellationReasons = showCancellationReasons;
+        }
+
+        public String getOtherPaymentModeText() {
+            return otherPaymentModeText;
+        }
+
+        public void setOtherPaymentModeText(String otherPaymentModeText) {
+            this.otherPaymentModeText = otherPaymentModeText;
         }
     }
 

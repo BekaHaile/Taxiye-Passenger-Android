@@ -15,6 +15,7 @@ import java.util.Map;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -101,5 +102,9 @@ public interface MenusApiService {
 	@POST("/v1/customer/like_share_feedback")
 	void customerLikeShareFeedback(@FieldMap Map<String, String> params,
 								  Callback<FetchFeedbackResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/razorpay_place_order_callback")
+	Response razorpayPlaceOrderCallback(@FieldMap Map<String, String> params);
 
 }

@@ -972,7 +972,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex() == -1
+                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex() == AppLinkIndex.OPEN_JEANIE.getOrdinal()
+                            && fabViewTest != null){
+                        fabViewTest.menuLabelsRightTest.open(true);
+                    }
+                    else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex() == -1
 							|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
 							.getDeepindex() == AppLinkIndex.OPEN_COUPONS_DIALOG.getOrdinal()){
 						if(Data.autoData.getRegions().size() == 1){
@@ -983,7 +987,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 					} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
 						Data.deepLinkIndex = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex();
-						deepLinkAction.openDeepLink(menuBar);
+                        deepLinkAction.openDeepLink(menuBar);
 					}
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1647,7 +1651,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //            fabViewTest.getMenuLabelsRightTest().performClick();
 //        }
 
-        new Handler().postDelayed(new Runnable() {
+        getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -1662,6 +1666,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
         }, 2000);
+
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    fabViewTest.expandJeanieFirstTime();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
     }
 
     public TransactionUtils getTransactionUtils() {

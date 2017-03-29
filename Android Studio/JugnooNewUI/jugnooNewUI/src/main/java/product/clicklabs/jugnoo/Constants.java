@@ -655,4 +655,18 @@ public interface Constants {
     String KEY_HIDE_LIKE_SHARE = "hide_like_share";
     String KEY_REASONS = "reasons";
     String KEY_ADDN_REASON = "addn_reason";
+
+    String KEY_RAZORPAY_PAYMENT_OBJECT = "razorpay_payment_object";
+    String KEY_AUTH_ORDER_ID = "auth_order_id";
+    String KEY_APP_TYPE = "app_type";
+    String KEY_RAZORPAY_SIGNATURE = "razorpay_signature";
+    String KEY_RAZORPAY_PAYMENT_ID = "razorpay_payment_id";
+    String INTENT_ACTION_RAZOR_PAY_CALLBACK = "INTENT_ACTION_RAZOR_PAY_CALLBACK";
+    String KEY_RESPONSE = "response";
+    String KEY_RAZORPAY_PREFILL_EMAIL = "prefill.email";
+    String KEY_RAZORPAY_PREFILL_CONTACT = "prefill.contact";
+    String KEY_USER_EMAIL = "user_email";
+    String KEY_RAZORPAY_THEME_COLOR = "theme.color";
+
+
 }

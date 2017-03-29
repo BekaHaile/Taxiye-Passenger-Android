@@ -510,6 +510,15 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="@string/razorpay_test_api_key"
+            />
+
+        <service android:name="com.sabkuchfresh.home.RazorpayCallbackService" android:enabled="true" />
+
+
     </application>
 
 

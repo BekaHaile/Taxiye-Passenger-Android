@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.util.ArrayList;
@@ -775,6 +776,17 @@ public class LoginResponse {
 		@Expose
 		private SignupTutorial signupTutorial;
 
+		@SerializedName("payment_gateway_mode_config_data")
+		@Expose
+		private List<PaymentGatewayModeConfig> paymentGatewayModeConfigData;
+
+		@SerializedName("expand_jeanie")
+		@Expose
+		private int expandJeanie;
+		@SerializedName("expanded_genie_text")
+		@Expose
+		private String expandedGenieText;
+
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
 		}
@@ -941,6 +953,30 @@ public class LoginResponse {
 
 		public void setSignUpTutorial(SignupTutorial signUpTutorial) {
 			this.signupTutorial = signUpTutorial;
+		}
+
+		public List<PaymentGatewayModeConfig> getPaymentGatewayModeConfigData() {
+			return paymentGatewayModeConfigData;
+		}
+
+		public void setPaymentGatewayModeConfigData(List<PaymentGatewayModeConfig> paymentGatewayModeConfigData) {
+			this.paymentGatewayModeConfigData = paymentGatewayModeConfigData;
+		}
+
+		public int getExpandJeanie() {
+			return expandJeanie;
+		}
+
+		public void setExpandJeanie(int expandJeanie) {
+			this.expandJeanie = expandJeanie;
+		}
+
+		public String getExpandedGenieText() {
+			return expandedGenieText;
+		}
+
+		public void setExpandedGenieText(String expandedGenieText) {
+			this.expandedGenieText = expandedGenieText;
 		}
 	}
 

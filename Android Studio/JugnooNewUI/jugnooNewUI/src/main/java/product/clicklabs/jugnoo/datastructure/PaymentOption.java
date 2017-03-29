@@ -5,7 +5,11 @@ public enum PaymentOption {
 	PAYTM(2),
 	MOBIKWIK(3),
     FREECHARGE(4),
-	JUGNOO_PAY(5)
+	JUGNOO_PAY(5),
+
+
+	// payment gateway
+	RAZOR_PAY(6)
 	;
 
 	private int ordinal;

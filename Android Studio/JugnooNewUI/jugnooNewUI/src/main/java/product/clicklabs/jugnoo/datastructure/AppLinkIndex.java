@@ -46,7 +46,9 @@ public enum AppLinkIndex {
 
 	OPEN_COUPONS_DIALOG(21), //open coupons dialog
 
-	FEED_PAGE(22), // open Feed Screen
+	FEED_PAGE(22), // open Feed Screen\
+
+	OPEN_JEANIE(23), // open Jeanie
 
 	;
 
