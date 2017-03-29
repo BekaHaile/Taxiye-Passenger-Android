@@ -70,7 +70,10 @@
         android:layout_below="@id/divider_user_activity"
         android:layout_marginBottom="@dimen/spacing_tiny"
         android:layout_marginLeft="@dimen/spacing_normal"
-        android:layout_marginRight="@dimen/spacing_normal">
+        android:layout_marginRight="@dimen/spacing_tiny">
+
+        <!--Any change in margin right of this view or padding right of image arrow
+        may cause the dialog opened on edit popup display at different position-->
 
         <ImageView
             android:id="@+id/iv_owner_profile_pic"
@@ -110,19 +113,32 @@
             android:id="@id/tv_feed_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/ib_arrow_more"
             android:background="@drawable/capsule_text_color"
             android:gravity="center_vertical"
             android:maxLines="1"
+            android:layout_marginRight="@dimen/spacing_small"
             android:paddingBottom="@dimen/spacing_tiny"
             android:paddingLeft="@dimen/spacing_extra_tiny"
             android:paddingRight="@dimen/spacing_extra_tiny"
             android:paddingTop="@dimen/spacing_tiny"
             android:text="Rating 2.1"
+            android:layout_alignWithParentIfMissing="true"
             android:textColor="@color/white"
             android:textSize="@dimen/font_tiny"
             android:visibility="visible"
             app:font="maven" />
+
+        <ImageView
+            android:id="@id/ib_arrow_more"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:src="@drawable/drawable_arrow_layer_list"
+            android:rotation="90"
+            android:padding="@dimen/spacing_small"
+            android:layout_marginTop="-7dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp" />
 
     </RelativeLayout>
 
@@ -159,7 +175,7 @@
         android:layout_marginLeft="@dimen/spacing_large"
         android:layout_marginRight="@dimen/spacing_large"
         android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:visibility="gone"
         android:layout_height="wrap_content"/>
 

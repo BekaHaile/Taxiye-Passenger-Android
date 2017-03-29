@@ -84,33 +84,6 @@ public class EditReviewImagesAdapter extends RecyclerView.Adapter<EditReviewImag
 
 
 
-
-/*
-
-            holder.ivImage.setTag(position);
-            holder.btnRemove.setTag(position);
-            holder.ivImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = (int) v.getTag();
-                    callback.onImageClick(reviewImages.get(pos));
-                }
-            });
-
-            holder.btnRemove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = (int) v.getTag();
-                    callback.onDelete(reviewImages.get(pos));
-                    notifyDataSetChanged();
-
-                }
-            });
-*/
-
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

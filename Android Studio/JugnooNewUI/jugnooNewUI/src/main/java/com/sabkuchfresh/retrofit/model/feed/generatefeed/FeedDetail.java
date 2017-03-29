@@ -81,6 +81,18 @@ public class FeedDetail implements Serializable {
     @SerializedName("star_color")
     private String ratingColor;
 
+
+    @SerializedName("is_post_editable")
+    private boolean isPostEditable;
+
+    public boolean isPostEditable() {
+        return isPostEditable;
+    }
+
+    public void setPostEditable(boolean postEditable) {
+        isPostEditable = postEditable;
+    }
+
     public String getRatingColor() {
         return ratingColor;
     }
