@@ -34,7 +34,7 @@ public class MarkerAnimation {
 
     private static final String TAG = MarkerAnimation.class.getSimpleName();
     public static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
-    private static final double ANIMATION_TIME = 15000;
+    private static final double ANIMATION_TIME = 12000;
 
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         final LatLng startPosition = marker.getPosition();

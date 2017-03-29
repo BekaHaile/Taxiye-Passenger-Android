@@ -17,7 +17,6 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -74,7 +73,7 @@ public class TrackOrderActivity extends AppCompatActivity {
 	private ImageView ivBack;
 	private GoogleMap googleMap;
 	private TextView tvTrackingInfo, tvETA;
-	private Button bMyLocation;
+	private ImageView bMyLocation;
 	private ASSL assl;
 
 	private Marker markerDriver;
@@ -104,7 +103,7 @@ public class TrackOrderActivity extends AppCompatActivity {
 		tvTrackingInfo.setVisibility(View.GONE);
 		tvETA = (TextView) findViewById(R.id.tvETA);
 		tvETA.setVisibility(View.GONE);
-		bMyLocation = (Button) findViewById(R.id.bMyLocation);
+		bMyLocation = (ImageView) findViewById(R.id.bMyLocation);
 
 		tvTitle.setText(getString(R.string.order_hash_format, String.valueOf(orderId)));
 
@@ -122,10 +121,10 @@ public class TrackOrderActivity extends AppCompatActivity {
 					llbBuilder.include(pickupLatLng).include(deliveryLatLng);
 					LatLngBounds latLngBounds = llbBuilder.build();
 
-					googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(100f*ASSL.minRatio())));
+					googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())));
 
-					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 87f, 147f));
-					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 87f, 147f));
+					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 87f, 147f, false));
+					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 87f, 147f, false));
 
 					googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 						@Override
@@ -149,11 +148,7 @@ public class TrackOrderActivity extends AppCompatActivity {
 		bMyLocation.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(myLocation != null && googleMap != null){
-					googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), MAP_ANIMATE_DURATION, null);
-				} else {
-					Utils.showToast(TrackOrderActivity.this, getString(R.string.waiting_for_location));
-				}
+				zoomToDriverAndDrop();
 			}
 		});
 
@@ -161,6 +156,31 @@ public class TrackOrderActivity extends AppCompatActivity {
 
 	}
 
+	private void zoomToDriverAndDrop(){
+		try {
+			if(googleMap != null && myLocation != null
+					&& MapUtils.distance(googleMap.getCameraPosition().target,
+					new LatLng(myLocation.getLatitude(), myLocation.getLongitude())) > 10){
+				LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
+				llbBuilder.include(deliveryLatLng);
+				if(markerDriver != null) {
+					llbBuilder.include(markerDriver.getPosition());
+				}
+				if(polylinePath != null) {
+					for (LatLng latLng : polylinePath.getPoints()) {
+						llbBuilder.include(latLng);
+					}
+				}
+
+				LatLngBounds latLngBounds = llbBuilder.build();
+				googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+			} else {
+				Utils.showToast(TrackOrderActivity.this, getString(R.string.waiting_for_location));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	protected void onDestroy() {
@@ -258,26 +278,30 @@ public class TrackOrderActivity extends AppCompatActivity {
 							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
-									if (markerDriver == null) {
-										markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
-												R.drawable.ic_auto_marker, 49f, 62f));
-									} else {
-										MarkerAnimation.animateMarkerToICS("-1", markerDriver,
-												new LatLng(latitude, longitude), new LatLngInterpolator.Spherical());
-									}
-									if(!zoomedFirstTime) {
-										LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
-										llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(new LatLng(latitude, longitude));
-										LatLngBounds latLngBounds = llbBuilder.build();
-										zoomedFirstTime = true;
-										googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(100f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
-									}
+									try {
+										if (markerDriver == null) {
+											markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
+													R.drawable.ic_bike_marker, 49f, 62f, true));
+										} else {
+											MarkerAnimation.animateMarkerToICS("-1", markerDriver,
+													new LatLng(latitude, longitude), new LatLngInterpolator.Spherical());
+										}
+										if(!zoomedFirstTime) {
+											LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
+											llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(new LatLng(latitude, longitude));
+											LatLngBounds latLngBounds = llbBuilder.build();
+											zoomedFirstTime = true;
+											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+										}
 
-									if (!TextUtils.isEmpty(trackingInfo)) {
-										tvTrackingInfo.setVisibility(View.VISIBLE);
-										tvTrackingInfo.setText(trackingInfo);
-									} else {
-										tvTrackingInfo.setVisibility(View.GONE);
+										if (!TextUtils.isEmpty(trackingInfo)) {
+											tvTrackingInfo.setVisibility(View.VISIBLE);
+											tvTrackingInfo.setText(trackingInfo);
+										} else {
+											tvTrackingInfo.setVisibility(View.GONE);
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
 									}
 								}
 							});
@@ -319,7 +343,7 @@ public class TrackOrderActivity extends AppCompatActivity {
 												builder.include(list.get(z));
 											}
 											polylinePath = googleMap.addPolyline(polylineOptions);
-											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int)(100f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
@@ -336,11 +360,14 @@ public class TrackOrderActivity extends AppCompatActivity {
 		return timerTask;
 	}
 
-	private MarkerOptions getMarkerOptionsForResource(LatLng latLng, int resId, float width, float height) {
+	private MarkerOptions getMarkerOptionsForResource(LatLng latLng, int resId, float width, float height, boolean setMidAnchor) {
 		MarkerOptions markerOptions = new MarkerOptions();
 		markerOptions.title("");
 		markerOptions.snippet("");
 		markerOptions.position(latLng);
+		if(setMidAnchor) {
+			markerOptions.anchor(0.5f, 0.5f);
+		}
 		markerOptions.icon(BitmapDescriptorFactory
 				.fromBitmap(CustomMapMarkerCreator
 						.createMarkerBitmapForResource(this, assl, resId, width, height)));
@@ -366,13 +393,13 @@ public class TrackOrderActivity extends AppCompatActivity {
 	private boolean timerStarted = false;
 	private void scheduleTimer(){
 		if(!timerStarted) {
-			getTimer().scheduleAtFixedRate(getTimerTask(), 0, 15 * Constants.SECOND_MILLIS);
+			getTimer().scheduleAtFixedRate(getTimerTask(), 0, 20 * Constants.SECOND_MILLIS);
 			timerStarted = true;
 		}
 	}
 
 
-	private void setEtaText(String etaStr, long etaLong){
+	private void setEtaText(String etaStr, long etaLong) {
 		tvETA.setText(etaStr + "\n");
 		SpannableString spannableString = new SpannableString(etaLong > 1 ? "mins" : "min");
 		spannableString.setSpan(new RelativeSizeSpan(0.6f), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

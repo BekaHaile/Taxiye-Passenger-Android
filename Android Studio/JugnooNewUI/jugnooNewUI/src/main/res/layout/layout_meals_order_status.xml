@@ -48,7 +48,7 @@
                 android:layout_marginBottom="20px"
                 android:text="Rs. 0"
                 android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_24"
+                android:textSize="@dimen/text_size_28"
                 app:font="maven"
                 />
 

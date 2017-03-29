@@ -1315,6 +1315,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
             if(topBar.ivAddReview.getVisibility() == View.VISIBLE){
                 titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.ivAddReview.getId());
+            } else if(fragment instanceof FeedReserveSpotFragment){
+                topBar.title.setGravity(Gravity.CENTER);
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);

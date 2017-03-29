@@ -55,6 +55,8 @@ public class FeedReserveSpotFragment extends Fragment {
     FreshActivity activity;
     @Bind(R.id.ivBg)
     ImageView ivBg;
+    @Bind(R.id.vSpacing)
+    View vSpacing;
 
     @Nullable
     @Override
@@ -72,6 +74,7 @@ public class FeedReserveSpotFragment extends Fragment {
         if(Data.getFeedData().getFeedRank() == null){
             //IF not registered
             setMeter(Data.getFeedData().getUsersCount());
+            vSpacing.setVisibility(View.GONE);
         }else{
             btnReserveSpot.setVisibility(View.GONE);
 
@@ -81,6 +84,7 @@ public class FeedReserveSpotFragment extends Fragment {
 //            setMeter(Data.getFeedData().getFeedUsersCount()-Data.getFeedData().getUserRank());
 
             tvRankDescription.setText("Already ahead of you in queue.");
+            vSpacing.setVisibility(View.VISIBLE);
 
         }
     }
@@ -93,11 +97,16 @@ public class FeedReserveSpotFragment extends Fragment {
             layoutMeterFeedUsers.addView(createTextView(String.valueOf(0)));
         } else {
 
-            while (number != 0) {
+//            while (number != 0) {
+//
+//                layoutMeterFeedUsers.addView(createTextView(String.valueOf(number % 10)));
+//
+//                number = number / 10;
+//            }
 
-                layoutMeterFeedUsers.addView(createTextView(String.valueOf(number % 10)));
-
-                number = number / 10;
+            char[] digits = String.valueOf(number).toCharArray();
+            for(char digit : digits){
+                layoutMeterFeedUsers.addView(createTextView(String.valueOf(digit)));
             }
 
         }

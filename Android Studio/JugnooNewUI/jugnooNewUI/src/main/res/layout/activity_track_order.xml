@@ -83,13 +83,13 @@
             app:font="maven"
             />
 
-        <Button
+        <ImageView
             android:id="@+id/bMyLocation"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:background="@drawable/mylocation_btn_selector"
+            android:src="@drawable/mylocation_btn_selector"
             android:contentDescription="@string/move_to_your_location"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="10dp"

@@ -92,7 +92,8 @@
                 android:text="have already signed up."
                 android:textColor="@color/feed_grey_text_heading"
                 android:textSize="20sp"
-                app:font="@string/maven_r"/>
+                app:font="@string/maven_r"
+                android:layout_marginBottom="10dp"/>
 
             <ImageView
                 android:id="@+id/ivBg"
@@ -100,6 +101,13 @@
                 android:layout_height="@dimen/dp_283"
                 android:layout_gravity="center"
                 android:src="@drawable/feed_image_reserve_my_spot"/>
+
+            <View
+                android:id="@+id/vSpacing"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                />
 
             <TextView
                 android:id="@+id/tv_placeholder_feed_introudction"
