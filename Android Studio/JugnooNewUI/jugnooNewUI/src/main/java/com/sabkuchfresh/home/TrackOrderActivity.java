@@ -290,7 +290,6 @@ public class TrackOrderActivity extends AppCompatActivity {
 											LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
 											llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(new LatLng(latitude, longitude));
 											LatLngBounds latLngBounds = llbBuilder.build();
-											zoomedFirstTime = true;
 											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 										}
 
@@ -338,15 +337,19 @@ public class TrackOrderActivity extends AppCompatActivity {
 													.color(ContextCompat.getColor(TrackOrderActivity.this,
 															R.color.google_path_polyline_color)).geodesic(true);
 											LatLngBounds.Builder builder = new LatLngBounds.Builder();
+											builder.include(new LatLng(latitude, longitude));
 											for (int z = 0; z < list.size(); z++) {
 												polylineOptions.add(list.get(z));
 												builder.include(list.get(z));
 											}
 											polylinePath = googleMap.addPolyline(polylineOptions);
-											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+											if(zoomedFirstTime) {
+												googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+											}
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
+										zoomedFirstTime = true;
 									}
 								});
 							}
@@ -401,6 +404,9 @@ public class TrackOrderActivity extends AppCompatActivity {
 
 	private void setEtaText(String etaStr, long etaLong) {
 		tvETA.setText(etaStr + "\n");
+		if(etaLong == 0){
+			etaLong = 1;
+		}
 		SpannableString spannableString = new SpannableString(etaLong > 1 ? "mins" : "min");
 		spannableString.setSpan(new RelativeSizeSpan(0.6f), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvETA.append(spannableString);
