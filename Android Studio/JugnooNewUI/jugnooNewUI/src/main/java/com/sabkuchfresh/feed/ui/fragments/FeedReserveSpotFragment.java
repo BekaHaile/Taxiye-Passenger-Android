@@ -33,6 +33,7 @@ import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.Fonts;
 import retrofit.RetrofitError;
 
@@ -51,9 +52,9 @@ public class FeedReserveSpotFragment extends Fragment {
     Button btnReserveSpot;
     @Bind(R.id.tv_rank_description)
     TextView tvRankDescription;
-    private FreshActivity activity;
+    FreshActivity activity;
     @Bind(R.id.ivBg)
-     ImageView ivBg;
+    ImageView ivBg;
 
     @Nullable
     @Override
@@ -68,14 +69,14 @@ public class FeedReserveSpotFragment extends Fragment {
     }
 
     private void setFeedUsersData() {
-        if(Data.getFeedData().getUserRank()==null){
+        if(Data.getFeedData().getFeedRank() == null){
             //IF not registered
-            setMeter(Data.getFeedData().getFeedUsersCount());
+            setMeter(Data.getFeedData().getUsersCount());
         }else{
             btnReserveSpot.setVisibility(View.GONE);
 
-            //if(user_ahead_count added by backend)
-              setMeter(Data.getFeedData().getUserAheadCount());
+            //if(user_count added by backend)
+              setMeter(Data.getFeedData().getFeedRank()-1);
             //else
 //            setMeter(Data.getFeedData().getFeedUsersCount()-Data.getFeedData().getUserRank());
 
@@ -127,7 +128,7 @@ public class FeedReserveSpotFragment extends Fragment {
     @OnClick(R.id.btn_reserve_spot)
     public void onClick() {
 
-        if(Data.getFeedData().getUserRank()==null)
+        if(Data.getFeedData().getFeedRank()==null)
         {
             if(Data.longitude==0||Data.latitude==0){
                 Toast.makeText(activity, "Please turn on your location to register.", Toast.LENGTH_SHORT).show();
@@ -152,16 +153,11 @@ public class FeedReserveSpotFragment extends Fragment {
 
                @Override
                public void onSuccess(RegisterForFeedResponse registerForFeedResponse, String message, int flag) {
-                   Data.getFeedData().setUserRank(registerForFeedResponse.getUserRank());
-
-
-                   //iff(user_ahead_count added by backend)
-                     Data.getFeedData().setUserAheadCount(registerForFeedResponse.getUserAheadCount());
-                   //else
-                   // Data.getFeedData().incrementUserCount();
-
-
+                   Data.getFeedData().setFeedRank(registerForFeedResponse.getFeedRank());
                    setFeedUsersData();
+                   if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                       product.clicklabs.jugnoo.utils.Utils.showToast(activity, message);
+                   }
 
                }
 

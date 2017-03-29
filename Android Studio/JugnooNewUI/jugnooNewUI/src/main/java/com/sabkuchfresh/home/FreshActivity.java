@@ -462,11 +462,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     lastClientId = Config.getMenusClientId();
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
-
-                    if(Data.getFeedData().getIsFeedActive())
-                         addFeedFragment();
-                    else
-                           addFeedResrveSpotFragment();
+                    if(Data.getFeedData().getFeedActive()) {
+                        addFeedFragment();
+                    }
+                    else {
+                        addFeedResrveSpotFragment();
+                    }
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
                     lastClientId = Config.getFeedClientId();
 

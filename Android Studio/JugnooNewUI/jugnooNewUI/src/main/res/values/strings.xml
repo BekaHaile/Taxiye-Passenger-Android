@@ -1066,6 +1066,7 @@
     <string name="transaction_id_format">Transaction ID: %s</string>
     <string name="id_colon">ID:</string>
     <string name="order_id_format">Order ID: %s</string>
+    <string name="order_hash_format">Order #%s</string>
     <string name="from_colon">From:</string>
     <string name="to_colon">To:</string>
     <string name="details_colon">Details:</string>

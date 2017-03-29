@@ -1,7 +1,6 @@
 package com.sabkuchfresh.feed.models;
 
 import com.google.gson.annotations.SerializedName;
-import com.jugnoo.pay.models.CommonResponse;
 import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
 
 /**
@@ -11,17 +10,13 @@ import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
 public class RegisterForFeedResponse extends FeedCommonResponse {
 
     @SerializedName("feed_rank")
-    private long userRank;
+    private long feedRank;
 
-    public long getUserRank() {
-        return userRank;
+    public long getFeedRank() {
+        return feedRank;
     }
-    @SerializedName("user_ahead_count")
-    private long userAheadCount;
 
-
-
-    public long getUserAheadCount() {
-        return userAheadCount;
+    public void setFeedRank(long feedRank) {
+        this.feedRank = feedRank;
     }
 }

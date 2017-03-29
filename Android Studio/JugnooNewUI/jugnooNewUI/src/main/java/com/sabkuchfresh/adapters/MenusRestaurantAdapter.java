@@ -294,7 +294,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                     }
                     showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
-                    statusHolder.tvOrderIdValue.setText(recentOrder.getOrderId().toString());
+                    statusHolder.tvOrderIdValue.setText("#"+recentOrder.getOrderId().toString());
                     statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
 
                     statusHolder.container.setTag(position);
