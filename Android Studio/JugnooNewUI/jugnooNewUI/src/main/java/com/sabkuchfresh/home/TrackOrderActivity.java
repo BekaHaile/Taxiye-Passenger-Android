@@ -31,6 +31,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 import org.json.JSONObject;
@@ -61,12 +64,12 @@ import retrofit.mime.TypedByteArray;
  * Created by shankar on 26/03/17.
  */
 
-public class TrackOrderActivity extends AppCompatActivity {
+public class TrackOrderActivity extends AppCompatActivity implements GACategory, GAAction {
 
 	private final String TAG = TrackOrderActivity.class.getSimpleName();
 
 	private String accessToken;
-	private int orderId, deliveryId;
+	private int orderId, deliveryId, showDeliveryRoute;
 	private LatLng pickupLatLng, deliveryLatLng;
 
 	private TextView tvTitle;
@@ -88,6 +91,8 @@ public class TrackOrderActivity extends AppCompatActivity {
 
 		assl = new ASSL(this, 1134, 720, false);
 
+		GAUtils.trackScreenView(TRACK_DELIVERY);
+
 		accessToken = getIntent().hasExtra(Constants.KEY_ACCESS_TOKEN) ? getIntent().getStringExtra(Constants.KEY_ACCESS_TOKEN) : "";
 		orderId = getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0);
 		deliveryId = getIntent().getIntExtra(Constants.KEY_DELIVERY_ID, 0);
@@ -95,6 +100,8 @@ public class TrackOrderActivity extends AppCompatActivity {
 				getIntent().getDoubleExtra(Constants.KEY_PICKUP_LONGITUDE, 0d));
 		deliveryLatLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_DELIVERY_LATITUDE, 0d),
 				getIntent().getDoubleExtra(Constants.KEY_DELIVERY_LONGITUDE, 0d));
+		showDeliveryRoute = getIntent().getIntExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, 0);
+
 
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
 		tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
@@ -123,8 +130,8 @@ public class TrackOrderActivity extends AppCompatActivity {
 
 					googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())));
 
-					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 87f, 147f, false));
-					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 87f, 147f, false));
+					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 87f, 147f, false, 0));
+					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 87f, 147f, false, 0));
 
 					googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 						@Override
@@ -281,7 +288,7 @@ public class TrackOrderActivity extends AppCompatActivity {
 									try {
 										if (markerDriver == null) {
 											markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
-													R.drawable.ic_bike_marker, 49f, 62f, true));
+													R.drawable.ic_bike_marker, 49f, 62f, true, 2));
 										} else {
 											MarkerAnimation.animateMarkerToICS("-1", markerDriver,
 													new LatLng(latitude, longitude), new LatLngInterpolator.Spherical());
@@ -305,54 +312,62 @@ public class TrackOrderActivity extends AppCompatActivity {
 								}
 							});
 
-							response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
-									deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
-							final String result = new String(((TypedByteArray) response.getBody()).getBytes());
-							final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
-							if (list.size() > 0) {
-								runOnUiThread(new Runnable() {
-
-									@Override
-									public void run() {
-										try {
-											if (TextUtils.isEmpty(eta)) {
-												JSONObject jObj1 = new JSONObject(result);
-												double durationInSec = jObj1.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
-												long mins = (long) (durationInSec / 60d);
-												setEtaText(String.valueOf(mins), mins);
-											} else {
-												long etaLong = 2;
-												try {etaLong = Long.getLong(eta);} catch (Exception e) {}
-												setEtaText(eta, etaLong);
-											}
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-										try {
-											if (polylinePath != null) {
-												polylinePath.remove();
-											}
-											PolylineOptions polylineOptions = new PolylineOptions();
-											polylineOptions.width(ASSL.Xscale() * 7f)
-													.color(ContextCompat.getColor(TrackOrderActivity.this,
-															R.color.google_path_polyline_color)).geodesic(true);
-											LatLngBounds.Builder builder = new LatLngBounds.Builder();
-											builder.include(new LatLng(latitude, longitude));
-											for (int z = 0; z < list.size(); z++) {
-												polylineOptions.add(list.get(z));
-												builder.include(list.get(z));
-											}
-											polylinePath = googleMap.addPolyline(polylineOptions);
-											if(zoomedFirstTime) {
-												googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
-											}
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-										zoomedFirstTime = true;
-									}
-								});
+							String resultStr = "";
+							if(showDeliveryRoute == 1) {
+								response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
+										deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
+								resultStr = new String(((TypedByteArray) response.getBody()).getBytes());
 							}
+							final String result = resultStr;
+							final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									try {
+										if (TextUtils.isEmpty(eta)) {
+											JSONObject jObj1 = new JSONObject(result);
+											double durationInSec = jObj1.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
+											long mins = (long) (durationInSec / 60d);
+											setEtaText(String.valueOf(mins), mins);
+										} else {
+											long etaLong = 2;
+											try {
+												etaLong = Long.getLong(eta);
+											} catch (Exception e) {
+											}
+											setEtaText(eta, etaLong);
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+										tvETA.setVisibility(View.GONE);
+									}
+									try {
+										if (polylinePath != null) {
+											polylinePath.remove();
+										}
+										PolylineOptions polylineOptions = new PolylineOptions();
+										polylineOptions.width(ASSL.Xscale() * 7f)
+												.color(ContextCompat.getColor(TrackOrderActivity.this,
+														R.color.google_path_polyline_color)).geodesic(true);
+										LatLngBounds.Builder builder = new LatLngBounds.Builder();
+										builder.include(deliveryLatLng).include(new LatLng(latitude, longitude));
+										for (int z = 0; z < list.size(); z++) {
+											polylineOptions.add(list.get(z));
+											builder.include(list.get(z));
+										}
+										if(list.size() > 0) {
+											polylinePath = googleMap.addPolyline(polylineOptions);
+										}
+										if (zoomedFirstTime) {
+											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+									zoomedFirstTime = true;
+								}
+							});
 						}
 					}
 				} catch (Exception e) {
@@ -363,11 +378,12 @@ public class TrackOrderActivity extends AppCompatActivity {
 		return timerTask;
 	}
 
-	private MarkerOptions getMarkerOptionsForResource(LatLng latLng, int resId, float width, float height, boolean setMidAnchor) {
+	private MarkerOptions getMarkerOptionsForResource(LatLng latLng, int resId, float width, float height, boolean setMidAnchor, int zIndex) {
 		MarkerOptions markerOptions = new MarkerOptions();
 		markerOptions.title("");
 		markerOptions.snippet("");
 		markerOptions.position(latLng);
+		markerOptions.zIndex(zIndex);
 		if(setMidAnchor) {
 			markerOptions.anchor(0.5f, 0.5f);
 		}

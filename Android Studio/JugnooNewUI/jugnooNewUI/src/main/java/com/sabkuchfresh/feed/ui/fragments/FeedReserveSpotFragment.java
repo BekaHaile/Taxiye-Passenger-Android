@@ -18,6 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.models.RegisterForFeedResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
@@ -41,7 +44,7 @@ import retrofit.RetrofitError;
  * Created by Parminder Singh on 3/28/17.
  */
 
-public class FeedReserveSpotFragment extends Fragment {
+public class FeedReserveSpotFragment extends Fragment implements GACategory, GAAction {
 
 
     @Bind(R.id.layout_meter_feed_users)
@@ -75,6 +78,7 @@ public class FeedReserveSpotFragment extends Fragment {
             //IF not registered
             setMeter(Data.getFeedData().getUsersCount());
             vSpacing.setVisibility(View.GONE);
+            GAUtils.trackScreenView(FEED+HOME+WAITLIST);
         }else{
             btnReserveSpot.setVisibility(View.GONE);
 
@@ -85,6 +89,7 @@ public class FeedReserveSpotFragment extends Fragment {
 
             tvRankDescription.setText("Already ahead of you in queue.");
             vSpacing.setVisibility(View.VISIBLE);
+            GAUtils.trackScreenView(FEED+HOME+WAITLIST+SHARING);
 
         }
     }

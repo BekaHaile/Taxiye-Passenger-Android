@@ -48,6 +48,9 @@ public class RecentOrder {
     @SerializedName("order_amount")
     @Expose
     private Double orderAmount;
+    @SerializedName("show_delivery_route")
+    @Expose
+    private int showDeliveryRoute;
 
 
     /**
@@ -192,5 +195,13 @@ public class RecentOrder {
 
     public void setOrderAmount(Double orderAmount) {
         this.orderAmount = orderAmount;
+    }
+
+    public int getShowDeliveryRoute() {
+        return showDeliveryRoute;
+    }
+
+    public void setShowDeliveryRoute(int showDeliveryRoute) {
+        this.showDeliveryRoute = showDeliveryRoute;
     }
 }

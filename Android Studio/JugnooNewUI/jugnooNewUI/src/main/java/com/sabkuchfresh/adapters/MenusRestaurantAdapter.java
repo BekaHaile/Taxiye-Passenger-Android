@@ -309,7 +309,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
                     statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
                     if(recentOrder.getOrderAmount() != null) {
-                        statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(recentOrder.getOrderAmount())));
+                        statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(recentOrder.getOrderAmount())));
                     }
 
                 } catch (Exception e) {
@@ -996,6 +996,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, order.getPickupLongitude());
                 intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
                 intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
+                intent.putExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, order.getShowDeliveryRoute());
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             } catch (Exception e){

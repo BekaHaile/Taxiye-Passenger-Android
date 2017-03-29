@@ -330,11 +330,7 @@ public interface Constants {
 
     String ACQUISITION = "Acquisition";
     String CAMPAIGNS = "Campaigns";
-    String ACTIVATION = "Activation";
-    String REVENUE = "Revenue";
-    String RETENTION = "Retention";
     String HELP = "Help";
-    String INFORMATIVE = "Informative";
     String REFERRAL = "Referral";
     String ISSUES = "Issues";
     String SLASH = "/";
@@ -677,4 +673,5 @@ public interface Constants {
     String KEY_DELIVERY_LONGITUDE = "delivery_longitude";
     String KEY_TRACKING_INFO = "tracking_info";
     String KEY_IS_AD = "is_ad";
+    String KEY_SHOW_DELIVERY_ROUTE = "show_delivery_route";
 }

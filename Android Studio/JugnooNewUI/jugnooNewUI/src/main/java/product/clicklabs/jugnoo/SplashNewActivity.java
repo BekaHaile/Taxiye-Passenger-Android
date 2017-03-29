@@ -1411,6 +1411,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				rlSplashLogo.setVisibility(View.VISIBLE);
 				linearLayoutLogin.setVisibility(View.GONE);
 				relativeLayoutSignup.setVisibility(View.GONE);
+
+				GAUtils.trackScreenView(SPLASH+SCREEN);
 				break;
 
 			case CLAIM_GIFT:
@@ -1458,6 +1460,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				relativeLayoutSignup.setVisibility(View.GONE);
 				relativeLayoutLS.setVisibility(View.GONE);
 
+				GAUtils.trackScreenView(REFERRAL_LANDING);
 				break;
 
 			case SPLASH_LS_NEW:
@@ -1496,6 +1499,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					rlClaimGift.startAnimation(animation9);
 					rlClaimGift.setVisibility(View.GONE);
 				}
+				GAUtils.trackScreenView(SIGNUP_LOGIN);
 
 				break;
 

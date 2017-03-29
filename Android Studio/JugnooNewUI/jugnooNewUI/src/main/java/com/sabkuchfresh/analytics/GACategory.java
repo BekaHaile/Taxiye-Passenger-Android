@@ -12,4 +12,8 @@ public interface GACategory {
 	String JUGNOO = "Jugnoo ";
 	String SIDE_MENU= "Side Menu ";
 	String PAY = "Pay ";
+	String SPLASH = "Splash ";
+	String SCREEN = "Screen ";
+	String REFERRAL_LANDING = "Referral Landing ";
+	String SIGNUP_LOGIN = "Signup Login ";
 }

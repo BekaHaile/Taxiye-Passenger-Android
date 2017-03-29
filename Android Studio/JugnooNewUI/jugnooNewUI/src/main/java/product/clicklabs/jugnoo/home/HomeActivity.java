@@ -493,7 +493,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GAUtils.trackScreenView(TAG);
+        GAUtils.trackScreenView(RIDES+HOME);
         Data.currentActivity = HomeActivity.class.getName();
 
        /* if((Data.userData.getShowHomeScreen() == 1)
