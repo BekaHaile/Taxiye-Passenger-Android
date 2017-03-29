@@ -676,4 +676,5 @@ public interface Constants {
     String KEY_DELIVERY_LATITUDE = "delivery_latitude";
     String KEY_DELIVERY_LONGITUDE = "delivery_longitude";
     String KEY_TRACKING_INFO = "tracking_info";
+    String KEY_IS_AD = "is_ad";
 }

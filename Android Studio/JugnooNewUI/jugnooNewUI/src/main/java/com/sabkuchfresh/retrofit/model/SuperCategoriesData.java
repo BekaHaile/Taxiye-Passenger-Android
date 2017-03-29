@@ -138,6 +138,9 @@ public class SuperCategoriesData {
 		@SerializedName("vendor_id")
 		@Expose
 		private Integer vendorId;
+		@SerializedName("is_ad")
+		@Expose
+		private Integer isAd;
 
 		public Integer getSuperCategoryId() {
 			return superCategoryId;
@@ -233,6 +236,14 @@ public class SuperCategoriesData {
 
 		public void setVendorId(Integer vendorId) {
 			this.vendorId = vendorId;
+		}
+
+		public Integer getIsAd() {
+			return isAd;
+		}
+
+		public void setIsAd(Integer isAd) {
+			this.isAd = isAd;
 		}
 	}
 

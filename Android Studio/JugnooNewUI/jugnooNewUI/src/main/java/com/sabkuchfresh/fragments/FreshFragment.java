@@ -340,6 +340,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 params.put(Constants.KEY_CLIENT_ID, ""+ Config.getFreshClientId());
                 params.put(Constants.INTERATED, "1");
 				params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategory.getSuperCategoryId()));
+				if(superCategory.getIsAd() != null && superCategory.getIsAd() != 0){
+					params.put(Constants.KEY_IS_AD, String.valueOf(superCategory.getIsAd()));
+				}
 				if(superCategory.getVendorId() != null && superCategory.getVendorId() != 0){
 					params.put(Constants.KEY_VENDOR_ID, String.valueOf(superCategory.getVendorId()));
 				} else{
