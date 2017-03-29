@@ -233,6 +233,8 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
             }
             if(offerList.size() == 1){
                 pagerHolder.tabDots.setVisibility(View.GONE);
+            } else{
+                pagerHolder.tabDots.setVisibility(View.VISIBLE);
             }
         }
 

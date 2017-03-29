@@ -2165,7 +2165,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             if(emptyCart == 1){
                                                 clearMenusCartAndGoToMenusFragment();
                                             } else if(redirect == 1) {
+                                                if(activity.getFreshSearchFragment() != null){
+                                                    activity.performBackPressed(false);
+                                                }
                                                 activity.performBackPressed(false);
+
                                             }
                                         }
                                     });

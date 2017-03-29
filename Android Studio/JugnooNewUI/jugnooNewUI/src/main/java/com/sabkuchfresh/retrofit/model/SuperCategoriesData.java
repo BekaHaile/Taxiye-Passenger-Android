@@ -135,6 +135,9 @@ public class SuperCategoriesData {
 		@SerializedName("image_url")
 		@Expose
 		private String imageUrl;
+		@SerializedName("vendor_id")
+		@Expose
+		private Integer vendorId;
 
 		public Integer getSuperCategoryId() {
 			return superCategoryId;
@@ -222,6 +225,14 @@ public class SuperCategoriesData {
 
 		public void setImageUrl(String imageUrl) {
 			this.imageUrl = imageUrl;
+		}
+
+		public Integer getVendorId() {
+			return vendorId;
+		}
+
+		public void setVendorId(Integer vendorId) {
+			this.vendorId = vendorId;
 		}
 	}
 

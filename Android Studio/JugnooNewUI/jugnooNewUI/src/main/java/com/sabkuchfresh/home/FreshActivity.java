@@ -1448,7 +1448,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         getTransactionUtils().openMenusFilterFragment(this, getRelativeLayoutContainer());
     }
 
-    private FreshSearchFragment getFreshSearchFragment() {
+    public FreshSearchFragment getFreshSearchFragment() {
         return (FreshSearchFragment) getSupportFragmentManager().findFragmentByTag(FreshSearchFragment.class.getName());
     }
 
