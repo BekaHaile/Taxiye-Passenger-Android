@@ -4,7 +4,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.adapters.CustomPagerAdapter;
 import com.sabkuchfresh.adapters.FreshSuperCategoriesAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -26,7 +24,6 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -57,13 +54,9 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     private RelativeLayout relativeLayoutNoMenus;
     private FreshActivity activity;
     private RecyclerView rvFreshSuper;
-    private FreshSuperCategoriesAdapter adapter;
+    private FreshSuperCategoriesAdapter superCategoriesAdapter;
     private TextView textViewNothingFound;
     private SwipeRefreshLayout swipeContainer;
-    private ViewPager mImageViewPager;
-    private CustomPagerAdapter mCustomPagerAdapter;
-    private ArrayList<String> mResources = new ArrayList<>();
-//    private Scr scrollView;
 
     @Nullable
     @Override
@@ -80,25 +73,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         }
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
-
-        /*for(int j=0; j<3; j++) {
-            mResources.add("https://visitorinvictoria.ca/wp-content/uploads/2017/03/groceries.jpg");
-        }*/
-      /*  scrollView = (NestedScrollView) rootView.findViewById (R.id.nest_scrollview);
-        scrollView.setFillViewport (true);*/
-//        mImageViewPager = (ViewPager) rootView.findViewById(R.id.pager);
-//        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabDots);
-//        tabLayout.setupWithViewPager(mImageViewPager, true);
-//        mCustomPagerAdapter = new CustomPagerAdapter(activity);
-//
-//        mImageViewPager.setAdapter(mCustomPagerAdapter);
-//
-//        for(int i=0; i < tabLayout.getTabCount(); i++) {
-//            View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(i);
-//            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
-//            p.setMargins(20, 0, 0, 0);
-//            tab.requestLayout();
-//        }
 
         swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(this);
@@ -119,7 +93,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
             @Override
             public int getSpanSize(int position) {
-                switch (adapter.getItemViewType(position)){
+                switch (superCategoriesAdapter.getItemViewType(position)){
                     case FreshSuperCategoriesAdapter.SINGLE_ITEM:
                         return 2;
                     case FreshSuperCategoriesAdapter.PAGER:
@@ -132,7 +106,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             }
         });
         rvFreshSuper.setLayoutManager(gridLayoutManager);
-        adapter = new FreshSuperCategoriesAdapter(activity, mResources, new FreshSuperCategoriesAdapter.Callback() {
+        superCategoriesAdapter = new FreshSuperCategoriesAdapter(activity, new FreshSuperCategoriesAdapter.Callback() {
             @Override
             public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
                 if(superCategory.getIsEnabled() == 0){
@@ -149,7 +123,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             }
         });
 
-        rvFreshSuper.setAdapter(adapter);
+        rvFreshSuper.setAdapter(superCategoriesAdapter);
 
         relativeLayoutNoMenus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,7 +154,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(!hidden){
-            adapter.notifyDataSetChanged();
+            superCategoriesAdapter.notifyDataSetChanged();
             activity.setAddressTextToLocationPlaceHolder();
             activity.fragmentUISetup(this);
             if(activity.getCartChangedAtCheckout()){
@@ -287,11 +261,13 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         activity.saveDeliveryAddressModel();
         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
         activity.setSuperCategoriesData(superCategoriesData);
-        adapter.setList(superCategoriesData.getSuperCategories());
+
         activity.updateCartValuesGetTotalPrice();
         stopOhSnap();
         rvFreshSuper.smoothScrollToPosition(0);
+        superCategoriesAdapter.setList(superCategoriesData.getSuperCategories(), superCategoriesData.getAds());
     }
+
 
     private void retryDialogSuperCategoriesAPI(DialogErrorType dialogErrorType){
         swipeContainer.setVisibility(View.VISIBLE);

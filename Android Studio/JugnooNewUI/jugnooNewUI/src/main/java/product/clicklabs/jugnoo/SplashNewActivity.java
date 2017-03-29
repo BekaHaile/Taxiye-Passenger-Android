@@ -1201,11 +1201,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	}
 
 	private void startFbAccountKit(PhoneNumber phoneNumber){
-//		if (AccountKit.getCurrentAccessToken() != null) {
-//			startActivity(new Intent(this, TokenActivity.class));
-//		} else{
 			onLogin(LoginType.PHONE, phoneNumber);
-		//}
 	}
 
 	private interface OnCompleteListener {
@@ -3034,7 +3030,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 								//sendToOtpScreen = true;
-								PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), null);
+								PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), "IND");
 								startFbAccountKit(phoneNumber);
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								loginDataFetched = true;
@@ -3153,7 +3149,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
 								//sendToOtpScreen = true;
 								googleRegister = true;
-								PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), null);
+								PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), "IND");
 								startFbAccountKit(phoneNumber);
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){

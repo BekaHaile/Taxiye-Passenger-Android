@@ -35,15 +35,13 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
     private List<SuperCategoriesData.SuperCategory> superCategories;
     private Callback callback;
     private boolean isSingleItem;
-    private ArrayList<String> offerList;
+    private List<SuperCategoriesData.SuperCategory> offerList;
     public static final int MAIN_ITEM = 1;
     public static final int SINGLE_ITEM = 0;
     public static final int PAGER = 2;
-    private CustomPagerAdapter mCustomPagerAdapter;
 
-    public FreshSuperCategoriesAdapter(Context context, ArrayList<String> offerList, Callback callback) {
+    public FreshSuperCategoriesAdapter(Context context, Callback callback) {
         this.context = context;
-        this.offerList = offerList;
         this.callback = callback;
     }
 
@@ -54,7 +52,8 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
         notifyDataSetChanged();
     }
 
-    public synchronized void setList(List<SuperCategoriesData.SuperCategory> elements) {
+    public synchronized void setList(List<SuperCategoriesData.SuperCategory> elements, List<SuperCategoriesData.SuperCategory> offerList) {
+        this.offerList = offerList;
         this.superCategories = elements;
         int enabledItem = 0;
         for (int i = 0; i < elements.size(); i++) {
@@ -108,12 +107,20 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
         public RelativeLayout rlPager;
         public ViewPager pager;
         public TabLayout tabDots;
+        private CustomPagerAdapter mCustomPagerAdapter;
 
         public ViewHolderPager(View view, Context context) {
             super(view);
             rlPager = (RelativeLayout) view.findViewById(R.id.rlPager);
             pager = (ViewPager) view.findViewById(R.id.pager);
             tabDots = (TabLayout) view.findViewById(R.id.tabDots);
+            mCustomPagerAdapter = new CustomPagerAdapter(context, offerList, new CustomPagerAdapter.Callback() {
+                @Override
+                public void onOfferClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
+                    callback.onItemClick(pos, superCategory);
+                }
+            });
+            pager.setAdapter(mCustomPagerAdapter);
         }
     }
 
@@ -216,8 +223,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
         } else if (mholder instanceof ViewHolderPager) {
             ViewHolderPager pagerHolder = ((ViewHolderPager) mholder);
             pagerHolder.tabDots.setupWithViewPager(pagerHolder.pager, true);
-            mCustomPagerAdapter = new CustomPagerAdapter(context, offerList);
-            pagerHolder.pager.setAdapter(mCustomPagerAdapter);
+            pagerHolder.mCustomPagerAdapter.setList(offerList);
 
             for (int i = 0; i < pagerHolder.tabDots.getTabCount(); i++) {
                 View tab = ((ViewGroup) pagerHolder.tabDots.getChildAt(0)).getChildAt(i);
@@ -227,6 +233,8 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
             }
             if(offerList.size() == 1){
                 pagerHolder.tabDots.setVisibility(View.GONE);
+            } else{
+                pagerHolder.tabDots.setVisibility(View.VISIBLE);
             }
         }
 

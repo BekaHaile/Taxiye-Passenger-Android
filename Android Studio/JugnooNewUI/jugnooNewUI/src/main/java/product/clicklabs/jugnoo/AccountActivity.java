@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
+import com.facebook.accountkit.PhoneNumber;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
@@ -311,7 +312,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         ivEditPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.v("phone click", "phone click");
+                PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(editTextPhone.getText().toString().trim()), "IND");
+                startFbAccountKit(phoneNumber);
             }
         });
 
@@ -321,27 +324,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 startActivity(new Intent(AccountActivity.this, AboutActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 GAUtils.event(SIDE_MENU, USER+PROFILE, GAAction.ABOUT);
-            }
-        });
-
-
-
-
-        imageViewJugnooJeanie.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                if (isAccessibilitySettingsOn(getApplicationContext())) {
-//                    if (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false) {
-//                        Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-//                        imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
-//                    } else {
-//                        Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
-//                        imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
-//                    }
-//                } else {
-//                    startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
-//                    setJeanieState = true;
-//                }
             }
         });
 
@@ -367,14 +349,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 if (v instanceof EditText) {
                     ((EditText) v).setError(null);
                 }
-            }
-        });
-
-        editTextPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.v("phone click", "phone click");
-                startFbAccountKit();
             }
         });
 
@@ -789,26 +763,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	@Override
 	protected void onResume() {
 		super.onResume();
-//        if(setJeanieState){
-//            setJeanieState = false;
-//            if(isAccessibilitySettingsOn(getApplicationContext())){
-//                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-//                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
-//            }else{ //((!isAccessibilitySettingsOn(getApplicationContext()) && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false))) {
-//                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
-//                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
-//            }
-//        }else{
-//            if((isAccessibilitySettingsOn(getApplicationContext())
-//                    && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == true))){
-//                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-//                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
-//            }else{ //((!isAccessibilitySettingsOn(getApplicationContext()) && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false))) {
-//                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
-//                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
-//            }
-//        }
-
         try {
             HomeActivity.checkForAccessTokenChange(this);
 
@@ -1088,9 +1042,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	}
 
 
-
-
-
     private void setSavePlaces() {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             String homeString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
@@ -1125,8 +1076,18 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     // Call Back method  to get the Message form other Activity
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Utils.hideKeyboard(AccountActivity.this);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                afterDataReceived(requestCode, resultCode, data);
+            }
+        },300);
+    }
+
+    private void afterDataReceived(int requestCode, int resultCode, Intent data){
         if (resultCode == RESULT_OK) {
             setSavePlaces();
             if (requestCode == FRAMEWORK_REQUEST_CODE){
@@ -1138,24 +1099,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     toastMessage = loginResult.getError().getErrorType().getMessage();
                 } else {
                     String authorizationCode = loginResult.getAuthorizationCode();
-                    final long tokenRefreshIntervalInSeconds =
-                            loginResult.getTokenRefreshIntervalInSeconds();
                     if (authorizationCode != null) {
                         toastMessage = "Success:" + authorizationCode;
-                        //startActivity(new Intent(this, TokenActivity.class));
-
                         apiChangeContactNumberUsingFB(AccountActivity.this, loginResult.getAuthorizationCode());
-
                     } else {
                         toastMessage = "Unknown response type";
                     }
                 }
-
-                Toast.makeText(
-                        this,
-                        toastMessage,
-                        Toast.LENGTH_LONG)
-                        .show();
+                //Toast.makeText(this,toastMessage,Toast.LENGTH_LONG).show();
             }
         } else if (resultCode == RESULT_CANCELED) {
             setSavePlaces();
@@ -1259,20 +1210,25 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         return textViewTitle;
     }
 
-    private void startFbAccountKit(){
-            onLogin(LoginType.PHONE);
+    private void startFbAccountKit(PhoneNumber phoneNumber){
+            onLogin(LoginType.PHONE, phoneNumber);
     }
 
     private interface OnCompleteListener {
         void onComplete();
     }
 
-    private void onLogin(final LoginType loginType) {
+    private void onLogin(final LoginType loginType, PhoneNumber phoneNumber) {
         final Intent intent = new Intent(this, AccountKitActivity.class);
         final AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder
                 = new AccountKitConfiguration.AccountKitConfigurationBuilder(
                 loginType,
                 AccountKitActivity.ResponseType.CODE);
+        configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
+        configurationBuilder.setTitleType(AccountKitActivity.TitleType.LOGIN);
+        if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
+            //configurationBuilder.setInitialPhoneNumber(phoneNumber);
+        }
         final AccountKitConfiguration configuration = configurationBuilder.build();
         intent.putExtra(
                 AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
@@ -1411,7 +1367,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
-            params.put(Constants.KEY_FB_TOKEN, fbAccessToken);
+            params.put(Constants.KEY_FB_ACCOUNT_CODE, fbAccessToken);
             params.put(Constants.KEY_ACCOUNT_KIT_VERSION, "4.19.0");
 
             new HomeUtil().putDefaultParams(params);
@@ -1426,14 +1382,11 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                             int flag = jObj.getInt("flag");
                             if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                String error = jObj.getString("error");
+                                String error = jObj.getString("message");
                                 DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                /*linearLayoutPasswordSave.setVisibility(View.GONE);
-                                imageViewChangePassword.setVisibility(View.VISIBLE);
-                                relativeLayoutChangePassword.performClick();
-                                String message = jObj.getString(Constants.KEY_MESSAGE);
-                                new HomeUtil().logoutFunc(activity, null);*/
+                                Data.userData.phoneNo = jObj.optString("phone_no");
+                                editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
