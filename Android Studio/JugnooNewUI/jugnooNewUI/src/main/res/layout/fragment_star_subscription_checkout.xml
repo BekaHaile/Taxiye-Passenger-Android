@@ -29,9 +29,163 @@
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="4px">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/rlPlan1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/px_20"
+                        android:paddingBottom="@dimen/px_20"
+                        android:background="@color/transparent">
+
+                        <ImageView
+                            android:id="@+id/ivRadio1"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_50"
+                            android:src="@drawable/ic_radio_button_normal"
+                            style="@style/ic_radio_button_style" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_24"
+                            android:layout_toRightOf="@+id/ivRadio1"
+                            android:layout_toLeftOf="@+id/tvAmount1"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/tvPeriod1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="Monthly"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <com.sabkuchfresh.utils.TextViewStrikeThrough
+                                    android:id="@+id/tvActualAmount1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="-10px"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:text="2388"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/text_size_24"
+                                    android:visibility="gone" />
+
+
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvAmount1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/px_50"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="199"
+                            android:textColor="@color/document_layout_bordor_color"
+                            android:textSize="@dimen/text_size_24" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlPlan2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/px_20"
+                        android:paddingBottom="@dimen/px_20"
+                        android:background="@color/transparent">
+
+                        <ImageView
+                            android:id="@+id/ivRadio2"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_50"
+                            android:src="@drawable/ic_radio_button_normal"
+                            style="@style/ic_radio_button_style" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_24"
+                            android:layout_toRightOf="@+id/ivRadio2"
+                            android:layout_toLeftOf="@+id/tvAmount2"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/tvPeriod2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="Annual"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <com.sabkuchfresh.utils.TextViewStrikeThrough
+                                    android:id="@+id/tvActualAmount2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="-10px"
+                                    android:ellipsize="end"
+                                    android:visibility="gone"
+                                    android:maxLines="1"
+                                    android:text="2388"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/text_size_24" />
+
+
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvAmount2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0px"
+                            android:ellipsize="end"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/px_50"
+                            android:maxLines="1"
+                            android:text="999"
+                            android:textColor="@color/document_layout_bordor_color"
+                            android:textSize="@dimen/text_size_24" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:padding="@dimen/text_size_30">
 
                     <ImageView

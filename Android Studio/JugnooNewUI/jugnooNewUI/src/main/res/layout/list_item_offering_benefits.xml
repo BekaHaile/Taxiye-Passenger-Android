@@ -8,15 +8,18 @@
         android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/sliding_bottom_bg_color"
+        android:layout_marginLeft="@dimen/px_26"
+        android:layout_marginRight="@dimen/px_26"
+        android:layout_marginBottom="@dimen/px_26"
+        android:background="@drawable/capsule_star_benefit"
         android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="98px"
             android:layout_height="98px"
-            android:layout_marginBottom="30px"
-            android:layout_marginLeft="30px"
-            android:layout_marginTop="30px"
+            android:layout_marginBottom="22px"
+            android:layout_marginLeft="22px"
+            android:layout_marginTop="22px"
             android:background="@drawable/circle_white_stroke_grey"
             android:tag="mwar">
 
@@ -45,28 +48,21 @@
                 android:layout_height="wrap_content"
                 android:text="@string/autos"
                 android:textAllCaps="true"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_24" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28" />
 
             <TextView
                 android:id="@+id/tvOfferingBenefits"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10px"
+                android:layout_marginTop="7px"
                 android:text="ajhdjkas"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_24" />
+                android:textSize="@dimen/text_size_26" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/ivSep"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:tag="@string/dont_touch_me"
-        android:layout_below="@+id/llMain"
-        android:background="@color/divider_color" />
 
 </RelativeLayout>

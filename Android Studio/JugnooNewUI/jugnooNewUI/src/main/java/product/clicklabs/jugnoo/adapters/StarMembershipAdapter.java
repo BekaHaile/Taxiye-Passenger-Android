@@ -60,8 +60,6 @@ public class StarMembershipAdapter extends BaseAdapter {
 				viewHolder.ivOfferring.setImageResource(R.drawable.ic_menus_grey);
 			}
 
-			//viewHolder.ivSep.setVisibility((position < getCount()-1) ? View.VISIBLE : View.GONE);
-
 		}
 	}
 
@@ -108,7 +106,7 @@ public class StarMembershipAdapter extends BaseAdapter {
 
 
 	static class ViewHolder extends RecyclerView.ViewHolder {
-		public ImageView ivOfferring, ivSep;
+		public ImageView ivOfferring;
 		public TextView tvOfferingName, tvOfferingBenefits;
 		public RelativeLayout relative;
 		public int id;
@@ -119,7 +117,6 @@ public class StarMembershipAdapter extends BaseAdapter {
 			ivOfferring = (ImageView) itemView.findViewById(R.id.ivOfferring);
 			tvOfferingName = (TextView) itemView.findViewById(R.id.tvOfferingName); tvOfferingName.setTypeface(Fonts.mavenMedium(context));
 			tvOfferingBenefits = (TextView) itemView.findViewById(R.id.tvOfferingBenefits);tvOfferingBenefits.setTypeface(Fonts.mavenRegular(context));
-			ivSep = (ImageView) itemView.findViewById(R.id.ivSep);
 		}
 	}
 
