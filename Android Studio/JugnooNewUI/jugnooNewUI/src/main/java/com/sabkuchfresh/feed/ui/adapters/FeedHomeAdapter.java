@@ -396,19 +396,29 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 diff--;
             }
 
-            if (diff > 0) return diff + " years ago";
+            if (diff > 0){
+                if(diff==1)
+                    return diff + " year ago";
+                else
+                    return diff + " years ago";
+            }
 
             if (yearPosted != yearCurrent) {
                 diff = currentMonth + (11 - postedMonth);
-                if (postedDate > currentDate) diff++;
+                if (postedDate > currentDate) diff--;
             } else {
                 diff = currentMonth - postedMonth;
                 if (currentMonth != postedMonth && postedDate > currentDate)
-                    diff++;
+                    diff--;
 
             }
 
-            if (diff > 0) return diff + " months ago";
+            if (diff > 0) {
+                if(diff==1)
+                    return diff + " month ago";
+                else
+                    return diff + " months ago";
+            }
 
 
             long diffT = currentDateCal.getTimeInMillis() - feedPostedCal.getTimeInMillis();

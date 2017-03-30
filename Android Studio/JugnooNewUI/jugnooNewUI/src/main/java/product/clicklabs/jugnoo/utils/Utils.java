@@ -896,8 +896,22 @@ public class Utils implements GAAction, GACategory{
 		return finalVal;
 	}
 
+	public static CharSequence trimHTML(CharSequence s) {
+		if(s.length()==0)
+			return "";
 
+		int start = 0;
+		int end = s.length();
+		while (start < end && Character.isWhitespace(s.charAt(start))) {
+			start++;
+		}
 
+		while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
+			end--;
+		}
+
+		return s.subSequence(start, end);
+	}
 
 }
 

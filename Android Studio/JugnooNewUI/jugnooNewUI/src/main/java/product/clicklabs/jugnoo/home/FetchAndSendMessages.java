@@ -43,7 +43,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 	private final String[] KEYWORDS_BODY = new String[]{ KEYWORD_OLA, KEYWORD_OLAX, KEYWORD_TFS,
 			KEYWORD_TAXI_FOR_SURE, KEYWORD_TAXI_FS, KEYWORD_PNR,
 			"faasos", "swiggy", "freshmenu", "bigbasketeer", "foodpanda", "yumist",
-			"bigbasket.com", "grofers", "tapzo", "order", "summary", "foodie", "delivery", "delivered"};
+			"bigbasket.com", "grofers", "tapzo", "order", "summary", "foodie", "delivery", "delivered", "upi"};
 	private final String[] KEYWORDS_FROM = new String[]{ "swiggy", "faasos", "panda", "tapzo" };
 
 	private ArrayList<KeywordDatum> keywordData;

@@ -1531,8 +1531,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 //                        123
                         DialogPopup.dismissLoadingDialog();
                         if(doSlideInitial){
-                            setSlideInitial();
+                            activity.getHandler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setSlideInitial();
+                                }
+                            }, 200);
                         }
+
                     }
 
                     @Override

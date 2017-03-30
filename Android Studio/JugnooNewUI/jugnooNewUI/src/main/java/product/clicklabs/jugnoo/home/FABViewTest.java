@@ -493,6 +493,7 @@ public class FABViewTest implements GACategory, GAAction {
 					animation.setFillAfter(false);
 					tvGenieExpandMessage.setVisibility(View.VISIBLE);
 					tvGenieExpandMessage.startAnimation(animation);
+                    GAUtils.trackScreenView(JEANIE+EXPANDED+AUTOMATIC);
 				}
                 new Handler().postDelayed(new Runnable() {
                     @Override

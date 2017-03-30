@@ -206,4 +206,8 @@ public interface GAAction {
 	String TRACK_DELIVERY = "Track Delivery ";
 	String WAITLIST = "Waitlist ";
 	String SHARING = "Sharing ";
+	String OFFERS = "Offers ";
+	String BAR = "Bar ";
+	String JEANIE = "Jeanie ";
+	String AUTOMATIC = "Automatic ";
 }

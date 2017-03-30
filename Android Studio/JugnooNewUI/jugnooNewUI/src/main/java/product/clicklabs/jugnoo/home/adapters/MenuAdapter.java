@@ -242,7 +242,23 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     public void onClick(View v) {
                         try {
                             int pos = (int)v.getTag();
-                            onClickAction(menuList.get(pos).getTag());
+                            String tag = menuList.get(pos).getTag();
+                            onClickAction(tag);
+                            if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(tag)){
+                                GAUtils.event(SIDE_MENU, FREE_GIFT+CLICKED, "");
+                            } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(tag)){
+                                GAUtils.event(SIDE_MENU, WALLET+CLICKED, "");
+                            } else if(MenuInfoTags.INBOX.getTag().equalsIgnoreCase(tag)){
+                                GAUtils.event(SIDE_MENU, INBOX+CLICKED, "");
+                            } else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(tag)) {
+                                GAUtils.event(SIDE_MENU, PROMOTIONS+CLICKED, "");
+                            } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(tag)) {
+                                GAUtils.event(SIDE_MENU, HISTORY+CLICKED, "");
+                            } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
+                                GAUtils.event(SIDE_MENU, SUPPORT+CLICKED, "");
+                            } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(tag)){
+                                GAUtils.event(SIDE_MENU, JUGNOO+STAR+CLICKED, "");
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -506,7 +522,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                GAUtils.event(SIDE_MENU, FREE_GIFT+CLICKED, "");
             }
             else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, ReferDriverActivity.class));
@@ -517,7 +532,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                GAUtils.event(SIDE_MENU, WALLET+CLICKED, "");
 
             } else if(MenuInfoTags.INBOX.getTag().equalsIgnoreCase(tag)){
                 LatLng currLatLng = null;
@@ -533,7 +547,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
                 activity.startActivity(new Intent(activity, NotificationCenterActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                GAUtils.event(SIDE_MENU, INBOX+CLICKED, "");
 
             }else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(tag)) {
                 LatLng currLatLng = null;
@@ -555,7 +568,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 if (MyApplication.getInstance().isOnline()) {
                     activity.startActivity(new Intent(activity, PromotionActivity.class));
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    GAUtils.event(SIDE_MENU, PROMOTIONS+CLICKED, "");
                 } else {
                     DialogPopup.dialogNoInternet(activity,
                             Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -583,7 +595,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 intent.putExtra(Constants.KEY_PRODUCT_TYPE, productType);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                GAUtils.event(SIDE_MENU, HISTORY+CLICKED, "");
 
             } else if(MenuInfoTags.SIGNUP_TUTORIAL.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, NewUserFlow.class);
@@ -594,7 +605,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
                 activity.startActivity(new Intent(activity, SupportActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                GAUtils.event(SIDE_MENU, SUPPORT+CLICKED, "");
 
             } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, AboutActivity.class));
@@ -607,7 +617,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     activity.startActivity(new Intent(activity, JugnooStarActivity.class));
                 }
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                GAUtils.event(SIDE_MENU, JUGNOO+STAR+CLICKED, "");
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 drawerLayout.closeDrawer(GravityCompat.START);

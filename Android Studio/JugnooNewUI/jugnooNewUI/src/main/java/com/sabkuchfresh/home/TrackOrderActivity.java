@@ -313,11 +313,9 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 							});
 
 							String resultStr = "";
-							if(showDeliveryRoute == 1) {
-								response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
-										deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
-								resultStr = new String(((TypedByteArray) response.getBody()).getBytes());
-							}
+							response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
+									deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
+							resultStr = new String(((TypedByteArray) response.getBody()).getBytes());
 							final String result = resultStr;
 							final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
 							runOnUiThread(new Runnable() {
@@ -356,7 +354,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 											polylineOptions.add(list.get(z));
 											builder.include(list.get(z));
 										}
-										if(list.size() > 0) {
+										if(showDeliveryRoute == 1 && list.size() > 0) {
 											polylinePath = googleMap.addPolyline(polylineOptions);
 										}
 										if (zoomedFirstTime) {
@@ -412,17 +410,18 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	private boolean timerStarted = false;
 	private void scheduleTimer(){
 		if(!timerStarted) {
-			getTimer().scheduleAtFixedRate(getTimerTask(), 0, 20 * Constants.SECOND_MILLIS);
+			getTimer().scheduleAtFixedRate(getTimerTask(), 0, 18 * Constants.SECOND_MILLIS);
 			timerStarted = true;
 		}
 	}
 
 
 	private void setEtaText(String etaStr, long etaLong) {
-		tvETA.setText(etaStr + "\n");
 		if(etaLong == 0){
 			etaLong = 1;
+			etaStr = "1";
 		}
+		tvETA.setText(etaStr + "\n");
 		SpannableString spannableString = new SpannableString(etaLong > 1 ? "mins" : "min");
 		spannableString.setSpan(new RelativeSizeSpan(0.6f), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvETA.append(spannableString);

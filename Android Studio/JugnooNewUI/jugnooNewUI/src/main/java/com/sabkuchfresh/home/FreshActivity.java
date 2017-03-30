@@ -760,7 +760,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             (getMealFragment() != null && !getMealFragment().isHidden()) ||
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
                             || (getMenusFragment() != null && !getMenusFragment().isHidden())
-                            || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())) {
+                            || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())
+                            || (getFeedReserveSpotFragment() != null && !getFeedReserveSpotFragment().isHidden())) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
                     }
@@ -819,6 +820,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public FeedHomeFragment getFeedHomeFragment(){
         return (FeedHomeFragment) getSupportFragmentManager().findFragmentByTag(FeedHomeFragment.class.getName());
+    }
+
+    public FeedReserveSpotFragment getFeedReserveSpotFragment(){
+        return (FeedReserveSpotFragment) getSupportFragmentManager().findFragmentByTag(FeedReserveSpotFragment.class.getName());
     }
 
     public FeedOfferingCommentsFragment getOfferingsCommentFragment(){
@@ -1622,7 +1627,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         paymentOption = null;
         setPlaceOrderResponse(null);
 
-        // TODO: 21/03/17 on suggestion of Sanjay sir
         setSelectedAddress("");
         setSelectedLatLng(null);
         setSelectedAddressId(0);

@@ -985,9 +985,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
 									Data.userData.getCoupons(ProductType.AUTO));
 						}
+                        GAUtils.event(RIDES, HOME, OFFERS+BAR+CLICKED);
 					} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
 						Data.deepLinkIndex = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex();
                         deepLinkAction.openDeepLink(menuBar);
+                        GAUtils.event(RIDES, HOME, OFFERS+BAR+CLICKED);
 					}
                 } catch (Exception e) {
                     e.printStackTrace();
