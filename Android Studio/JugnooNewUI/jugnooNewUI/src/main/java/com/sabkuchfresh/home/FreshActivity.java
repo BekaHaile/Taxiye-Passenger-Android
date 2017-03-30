@@ -73,14 +73,15 @@ import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
+import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedReserveSpotFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
@@ -464,9 +465,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
                     if(Data.getFeedData().getFeedActive()) {
                         addFeedFragment();
-                    }
-                    else {
-                        addFeedResrveSpotFragment();
+                    } else {
+                        addFeedReserveSpotFragment();
                     }
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
                     lastClientId = Config.getFeedClientId();
@@ -761,7 +761,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
                             || (getMenusFragment() != null && !getMenusFragment().isHidden())
                             || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())
-                            || (getFeedReserveSpotFragment() != null && !getFeedReserveSpotFragment().isHidden())) {
+                            || (getFeedReserveSpotFragment() != null && !getFeedReserveSpotFragment().isHidden())
+                            || (getFeedSpotReservedSharingFragment() != null && !getFeedSpotReservedSharingFragment().isHidden())) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
                     }
@@ -824,6 +825,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public FeedReserveSpotFragment getFeedReserveSpotFragment(){
         return (FeedReserveSpotFragment) getSupportFragmentManager().findFragmentByTag(FeedReserveSpotFragment.class.getName());
+    }
+
+    public FeedSpotReservedSharingFragment getFeedSpotReservedSharingFragment(){
+        return (FeedSpotReservedSharingFragment) getSupportFragmentManager().findFragmentByTag(FeedSpotReservedSharingFragment.class.getName());
     }
 
     public FeedOfferingCommentsFragment getOfferingsCommentFragment(){
@@ -1269,7 +1274,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llSearchCartVis = View.GONE;
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment) {
+            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment
+                    || fragment instanceof FeedSpotReservedSharingFragment) {
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -1320,7 +1326,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
             if(topBar.ivAddReview.getVisibility() == View.VISIBLE){
                 titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.ivAddReview.getId());
-            } else if(fragment instanceof FeedReserveSpotFragment){
+            } else if(fragment instanceof FeedReserveSpotFragment
+                    || fragment instanceof FeedSpotReservedSharingFragment){
                 topBar.title.setGravity(Gravity.CENTER);
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
@@ -1693,12 +1700,20 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 .commitAllowingStateLoss();
     }
 
-    private void addFeedResrveSpotFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new FeedReserveSpotFragment(),
-                        FeedReserveSpotFragment.class.getName())
-                .addToBackStack(FeedReserveSpotFragment.class.getName())
-                .commitAllowingStateLoss();
+    private void addFeedReserveSpotFragment() {
+        if(Data.getFeedData().getFeedRank() == null){
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), new FeedReserveSpotFragment(),
+                            FeedReserveSpotFragment.class.getName())
+                    .addToBackStack(FeedReserveSpotFragment.class.getName())
+                    .commitAllowingStateLoss();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), new FeedSpotReservedSharingFragment(),
+                            FeedSpotReservedSharingFragment.class.getName())
+                    .addToBackStack(FeedSpotReservedSharingFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
     }
 
 
@@ -1746,6 +1761,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         checkForBackToFeed(true);
+
+        if(getFeedSpotReservedSharingFragment() != null && getFeedReserveSpotFragment() != null){
+            finish();
+            return;
+        }
 
         if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finish();

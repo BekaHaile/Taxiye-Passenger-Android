@@ -26,6 +26,7 @@ public class BranchMetricsUtils {
     public static final String BRANCH_CHANNEL_EMAIL = "Email";
     public static final String BRANCH_CHANNEL_GENERIC = "Generic";
     public static final String BRANCH_CHANNEL_MENUS_REVIEW_SHARE = "Menus Review Share";
+    public static final String BRANCH_CHANNEL_FEED_EARLY_ACCESS = "Feed Early Access";
 
 
     public static void getBranchLinkForChannel(final Context context, final BranchMetricsEventHandler branchMetricsEventHandler, String channel, final String spKey, final String userIdentifier,

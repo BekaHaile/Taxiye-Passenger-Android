@@ -674,4 +674,5 @@ public interface Constants {
     String KEY_TRACKING_INFO = "tracking_info";
     String KEY_IS_AD = "is_ad";
     String KEY_SHOW_DELIVERY_ROUTE = "show_delivery_route";
+    String KEY_FEED_RANK = "feed_rank";
 }

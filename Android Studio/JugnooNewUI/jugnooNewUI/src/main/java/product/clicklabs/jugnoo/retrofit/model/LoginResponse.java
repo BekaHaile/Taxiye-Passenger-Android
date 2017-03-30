@@ -370,6 +370,20 @@ public class LoginResponse {
 		@Expose
 		private long usersCount;
 
+		@SerializedName("early_access_text")
+		@Expose
+		private String earlyAccessText;
+		@SerializedName("early_access_share_title")
+		@Expose
+		private String earlyAccessShareTitle;
+		@SerializedName("early_access_share_desc")
+		@Expose
+		private String earlyAccessShareDesc;
+		@SerializedName("early_access_share_image")
+		@Expose
+		private String earlyAccessShareImage;
+
+
 
 
 
@@ -415,6 +429,38 @@ public class LoginResponse {
 
 		public void incrementUserCount(){
 			usersCount++;
+		}
+
+		public String getEarlyAccessText() {
+			return earlyAccessText;
+		}
+
+		public void setEarlyAccessText(String earlyAccessText) {
+			this.earlyAccessText = earlyAccessText;
+		}
+
+		public String getEarlyAccessShareTitle() {
+			return earlyAccessShareTitle;
+		}
+
+		public void setEarlyAccessShareTitle(String earlyAccessShareTitle) {
+			this.earlyAccessShareTitle = earlyAccessShareTitle;
+		}
+
+		public String getEarlyAccessShareDesc() {
+			return earlyAccessShareDesc;
+		}
+
+		public void setEarlyAccessShareDesc(String earlyAccessShareDesc) {
+			this.earlyAccessShareDesc = earlyAccessShareDesc;
+		}
+
+		public String getEarlyAccessShareImage() {
+			return earlyAccessShareImage;
+		}
+
+		public void setEarlyAccessShareImage(String earlyAccessShareImage) {
+			this.earlyAccessShareImage = earlyAccessShareImage;
 		}
 	}
 

@@ -1623,6 +1623,10 @@
     <string name="track_delivery">Track Delivery</string>
 
     <string name="feed_delete_popup_message">Do you really want to delete this post? If you delete once it will no longer be available.</string>
+    <string name="people_ahead_of_you_in_queue">people ahead of you in the queue.</string>
+    <string name="want_early_access">Want early access?</string>
+    <string name="tweet">Tweet</string>
+    <string name="whatsapp">Whatsapp</string>
 
 
 </resources>

@@ -564,5 +564,8 @@
     </dimen>
     <dimen name="dp_342">342dp</dimen>
     <dimen name="dp_283">283dp</dimen>
+    <dimen name="dp_302">
+        302dp
+    </dimen>
 
 </resources>

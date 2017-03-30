@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:orientation="vertical">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      xmlns:app="http://schemas.android.com/apk/res-auto"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:animateLayoutChanges="true"
+                      android:background="@color/white"
+                      android:focusableInTouchMode="true"
+                      android:orientation="vertical"
+            >
+
+
+            <TextView
+                android:id="@+id/tvRankDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                android:text="@string/people_ahead_of_you_in_queue"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                app:font="@string/maven_r"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <ImageView
+                    android:id="@+id/ivBg"
+                    android:layout_width="@dimen/dp_360"
+                    android:layout_height="@dimen/dp_302"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/bg_feed_graphic"/>
+
+                <TextView
+                    android:id="@+id/tvWantEarlyAccess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="@string/want_early_access"
+                    android:textColor="@color/text_color"
+                    android:textSize="18sp"
+                    app:font="maven"
+                    android:textStyle="bold"
+                    android:layout_above="@+id/tvWantEarlyAccessMessage"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tvWantEarlyAccessMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="Skip ahead in the queue by spreading the word about FEED. The more friends that join, the sooner you’ll get access."
+                    android:textColor="@color/text_color"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    app:font="maven"
+                    android:layout_alignBottom="@+id/ivBg"
+                    />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"
+                >
+
+                <TextView
+                    android:id="@+id/tvShareFB"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:textSize="10sp"
+                    android:textColor="@color/white"
+                    android:text="@string/share"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:drawableLeft="@drawable/ic_facebook_white"
+                    android:drawablePadding="4dp"
+                    android:background="@drawable/capsule_blue_selector"
+                    app:font="maven"
+                    />
+
+                <TextView
+                    android:id="@+id/tvShareTweet"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:textSize="10sp"
+                    android:textColor="@color/white"
+                    android:text="@string/tweet"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:drawableLeft="@drawable/ic_twitter_white"
+                    android:drawablePadding="4dp"
+                    android:layout_marginLeft="8dp"
+                    app:font="maven"
+                    android:background="@drawable/capsule_purple_selector"
+                    />
+
+                <TextView
+                    android:id="@+id/tvShareEmail"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:textSize="10sp"
+                    android:textColor="@color/white"
+                    android:text="@string/email"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:drawableLeft="@drawable/ic_email_white"
+                    android:drawablePadding="4dp"
+                    android:layout_marginLeft="8dp"
+                    app:font="maven"
+                    android:background="@drawable/capsule_yellow_selector"
+                    />
+
+                <TextView
+                    android:id="@+id/tvShareWhatsapp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:textSize="10sp"
+                    android:textColor="@color/white"
+                    android:text="@string/share"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:drawableLeft="@drawable/ic_whatsapp_white_green"
+                    android:drawablePadding="4dp"
+                    android:layout_marginLeft="8dp"
+                    app:font="maven"
+                    android:background="@drawable/capsule_green_whatsapp_selector"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvMoreSharingOptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/text_color_selector"
+                android:text="@string/view_more_sharing_options"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="10dp"
+                app:font="maven"
+                android:layout_gravity="center_horizontal"
+                />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_7"
+        android:background="@drawable/shadow_down_new"
+        />
+
+</RelativeLayout>

@@ -340,4 +340,13 @@
     <color name="purple_text_color">#b368a9</color>
     <color name="purple_text_color_aplha">#aab368a9</color>
 
+    <color name="blue_facebook">#5a81d1</color>
+    <color name="blue_facebook_dark">#4a71c1</color>
+    <color name="purple_tweet">#794bc4</color>
+    <color name="purple_tweet_dark">#693bb4</color>
+    <color name="yellow_email">#ffae50</color>
+    <color name="yellow_email_dark">#ef9e40</color>
+    <color name="green_whatsapp">#57bb63</color>
+    <color name="green_whatsapp_dark">#47ab53</color>
+
 </resources>

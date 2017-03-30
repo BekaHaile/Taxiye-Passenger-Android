@@ -80,16 +80,18 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
             vSpacing.setVisibility(View.GONE);
             GAUtils.trackScreenView(FEED+HOME+WAITLIST);
         }else{
-            btnReserveSpot.setVisibility(View.GONE);
+//            btnReserveSpot.setVisibility(View.GONE);
+//            setMeter(Data.getFeedData().getFeedRank()-1);
+//            tvRankDescription.setText("people ahead of you in the waitlist.");
+//            vSpacing.setVisibility(View.VISIBLE);
+//            GAUtils.trackScreenView(FEED+HOME+WAITLIST+SHARING);
 
-            //if(user_count added by backend)
-              setMeter(Data.getFeedData().getFeedRank()-1);
-            //else
-//            setMeter(Data.getFeedData().getFeedUsersCount()-Data.getFeedData().getUserRank());
-
-            tvRankDescription.setText("people ahead of you in the waitlist.");
-            vSpacing.setVisibility(View.VISIBLE);
-            GAUtils.trackScreenView(FEED+HOME+WAITLIST+SHARING);
+            activity.getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    activity.getTransactionUtils().openFeedSpotReservedSharingFragment(activity, activity.getRelativeLayoutContainer());
+                }
+            }, 200);
 
         }
     }
