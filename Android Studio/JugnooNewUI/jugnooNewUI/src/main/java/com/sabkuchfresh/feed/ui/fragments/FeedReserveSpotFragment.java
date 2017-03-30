@@ -87,7 +87,7 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
             //else
 //            setMeter(Data.getFeedData().getFeedUsersCount()-Data.getFeedData().getUserRank());
 
-            tvRankDescription.setText("Already ahead of you in queue.");
+            tvRankDescription.setText("people ahead of you in the waitlist.");
             vSpacing.setVisibility(View.VISIBLE);
             GAUtils.trackScreenView(FEED+HOME+WAITLIST+SHARING);
 
