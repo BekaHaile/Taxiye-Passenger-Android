@@ -63,7 +63,8 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/textViewRegisterName"
@@ -91,7 +92,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px">
+                        android:layout_marginTop="10px"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/textViewRegisterEmail"

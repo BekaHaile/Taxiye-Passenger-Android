@@ -2782,6 +2782,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								SplashNewActivity.this.referralCode = referralCode;
 								SplashNewActivity.this.accessToken = "";
 								parseDataSendToMultipleAccountsScreen(activity, jObj);
+								Data.kitPhoneNumber = jObj.optString("kit_phone_no");
 							}else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 								enteredEmail = jObj.getString("user_email");
 								linkedWallet = jObj.optInt("reg_wallet_type");
