@@ -83,6 +83,14 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 		tvWantEarlyAccess.setTypeface(tvWantEarlyAccess.getTypeface(), Typeface.BOLD);
 
 		GAUtils.trackScreenView(FEED + HOME + WAITLIST + SHARING);
+
+		activity.getHandler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				activity.getTransactionUtils().openFeedNotificationsFragment(activity, activity.getRelativeLayoutContainer());
+			}
+		}, 200);
+
 		return rootView;
 	}
 
