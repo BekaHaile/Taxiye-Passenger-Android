@@ -555,6 +555,16 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 			relativeLayoutJugnooLogo.setOnClickListener(onClickListenerKeybordHide);
 
+			try {
+				if (getIntent().hasExtra(KEY_PREVIOUS_LOGIN_EMAIL)) {
+					String previousLoginPhone = getIntent().getStringExtra(KEY_PREVIOUS_LOGIN_EMAIL);
+					PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(previousLoginPhone), "IND");
+					startFbAccountKit(null);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll,
 					new KeyboardLayoutListener.KeyBoardStateHandler() {
 						@Override
@@ -2541,6 +2551,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				String previousLoginEmail = getIntent().getStringExtra(KEY_PREVIOUS_LOGIN_EMAIL);
 				editTextEmail.setText(previousLoginEmail);
 				fromPreviousAccounts = true;
+				PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), "IND");
+				startFbAccountKit(phoneNumber);
 			} else {
 				fromPreviousAccounts = false;
 			}
@@ -2781,8 +2793,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								SplashNewActivity.this.password = password;
 								SplashNewActivity.this.referralCode = referralCode;
 								SplashNewActivity.this.accessToken = "";
-								parseDataSendToMultipleAccountsScreen(activity, jObj);
 								Data.kitPhoneNumber = jObj.optString("kit_phone_no");
+								parseDataSendToMultipleAccountsScreen(activity, jObj);
 							}else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 								enteredEmail = jObj.getString("user_email");
 								linkedWallet = jObj.optInt("reg_wallet_type");
@@ -3900,7 +3912,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
         Data.previousAccountInfoList.clear();
         Data.previousAccountInfoList.addAll(JSONParser.parsePreviousAccounts(jObj));
         startActivity(new Intent(activity, MultipleAccountsActivity.class));
-        finish();
+        ActivityCompat.finishAffinity(this);
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 

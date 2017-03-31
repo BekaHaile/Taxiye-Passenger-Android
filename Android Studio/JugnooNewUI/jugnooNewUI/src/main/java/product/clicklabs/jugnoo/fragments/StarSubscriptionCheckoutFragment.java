@@ -73,7 +73,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private View rootView;
     private Activity activity;
-    private TextView tvPaymentPlan, tvPlanAmount, tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2;
+    private TextView tvPaymentPlan, tvPlanAmount, tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2,
+            tvDuration1, tvDuration2;
     private Button bPlaceOrder;
     private LinearLayout linearLayoutOffers, linearLayoutRoot;
     private NonScrollListView listViewOffers;
@@ -146,10 +147,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             ivRadio2 = (ImageView) rootView.findViewById(R.id.ivRadio2);
             tvActualAmount1 = (TextView) rootView.findViewById(R.id.tvActualAmount1); tvActualAmount1.setTypeface(Fonts.mavenRegular(activity));
             tvActualAmount2 = (TextView) rootView.findViewById(R.id.tvActualAmount2); tvActualAmount2.setTypeface(Fonts.mavenRegular(activity));
-            tvAmount1 = (TextView) rootView.findViewById(R.id.tvAmount1); tvAmount1.setTypeface(Fonts.mavenRegular(activity));
-            tvAmount2 = (TextView) rootView.findViewById(R.id.tvAmount2); tvAmount2.setTypeface(Fonts.mavenRegular(activity));
-            tvPeriod1 = (TextView) rootView.findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.mavenMedium(activity));
-            tvPeriod2 = (TextView) rootView.findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.mavenMedium(activity));
+            tvAmount1 = (TextView) rootView.findViewById(R.id.tvAmount1); tvAmount1.setTypeface(Fonts.mavenMedium(activity));
+            tvAmount2 = (TextView) rootView.findViewById(R.id.tvAmount2); tvAmount2.setTypeface(Fonts.mavenMedium(activity));
+            tvPeriod1 = (TextView) rootView.findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.mavenRegular(activity));
+            tvPeriod2 = (TextView) rootView.findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.mavenRegular(activity));
+            tvDuration1 = (TextView) rootView.findViewById(R.id.tvDuration1);
+            tvDuration2 = (TextView) rootView.findViewById(R.id.tvDuration2);
 
             relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
             relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -161,7 +164,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
             setPlan();
 
-            selectedPlan(rlPlan1, ivRadio1, 0);
+
 
             linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
             listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
@@ -191,41 +194,31 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             for(int i=0; i<Data.userData.getSubscriptionData().getSubscriptions().size(); i++) {
                 if (i == 0) {
                     rlPlan1.setVisibility(View.VISIBLE);
-                    if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText() != null && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText())){
-                        tvActualAmount1.setVisibility(View.VISIBLE);
-                        tvActualAmount1.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText()+" ");
-                        tvActualAmount1.setTextColor(ContextCompat.getColor(activity, R.color.green));
-                        tvAmount1.setTextColor(ContextCompat.getColor(activity, R.color.green));
-                        //tvActualAmount1.setPaintFlags(tvActualAmount1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    tvAmount1.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getAmountText());
+                    tvDuration1.setText("/"+Data.userData.getSubscriptionData().getSubscriptions().get(i).getDurationText());
+                    tvPeriod1.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getDescription()));
+                    if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getIsDefault() == 1) {
+                        selectedPlan(rlPlan1, ivRadio1, i);
                     }
-                    tvAmount1.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getFinalAmountText());
-                    tvPeriod1.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getPlanStringNew()));
                 } else if (i == 1) {
                     rlPlan2.setVisibility(View.VISIBLE);
-                    if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText() != null && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText())){
-                        tvActualAmount2.setVisibility(View.VISIBLE);
-                        tvActualAmount2.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmountText()+" ");
-                        tvActualAmount2.setTextColor(ContextCompat.getColor(activity, R.color.green));
-                        tvAmount2.setTextColor(ContextCompat.getColor(activity, R.color.green));
-                        //tvActualAmount2.setPaintFlags(tvActualAmount2.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    tvAmount2.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getAmountText());
+                    tvDuration2.setText("/"+Data.userData.getSubscriptionData().getSubscriptions().get(i).getDurationText());
+                    tvPeriod2.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getDescription()));
+                    if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getIsDefault() == 1) {
+                        selectedPlan(rlPlan2, ivRadio2, i);
                     }
-                    tvAmount2.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getFinalAmountText());
-                    tvPeriod2.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getPlanStringNew()));
                 }
             }
         }
     }
 
     private void selectedPlan(RelativeLayout rlPlan, ImageView ivRadio, int subId){
-        //rlPlan1.setBackgroundResource(R.drawable.capsule_white_stroke);
-        //rlPlan2.setBackgroundResource(R.drawable.capsule_white_stroke);
         ivRadio1.setImageResource(R.drawable.ic_radio_button_normal);
         ivRadio2.setImageResource(R.drawable.ic_radio_button_normal);
 
-        //rlPlan.setBackgroundResource(R.drawable.capsule_white_theme_stroke);
-        ivRadio.setImageResource(R.drawable.ic_order_status_green);
+        ivRadio.setImageResource(R.drawable.ic_radio_button_selected);
         subscription = Data.userData.getSubscriptionData().getSubscriptions().get(subId);
-        //selectedSubId = new Gson().toJson(subscription);
     }
 
     private void updateCouponsDataView(){

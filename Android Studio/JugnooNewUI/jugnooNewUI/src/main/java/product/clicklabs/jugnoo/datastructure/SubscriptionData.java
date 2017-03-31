@@ -46,6 +46,12 @@ public class SubscriptionData {
     @SerializedName("subscribed_user")
     @Expose
     private Integer subscribedUser;
+    @SerializedName("subscription_screen_title")
+    @Expose
+    private String subscriptionScreenTitle;
+    @SerializedName("subscription_screen_subtitle")
+    @Expose
+    private String subscriptionScreenSubtitle;
 
     public List<UserSubscription> getUserSubscriptions() {
         return userSubscriptions;
@@ -138,6 +144,30 @@ public class SubscriptionData {
 
     public void setSubscriptionBenefits(List<SubscriptionBenefits> subscriptionBenefits) {
         this.subscriptionBenefits = subscriptionBenefits;
+    }
+
+    public String getSubscriptionScreenTitle() {
+        if(subscriptionScreenTitle != null) {
+            return subscriptionScreenTitle;
+        }else{
+            return "";
+        }
+    }
+
+    public void setSubscriptionScreenTitle(String subscriptionScreenTitle) {
+        this.subscriptionScreenTitle = subscriptionScreenTitle;
+    }
+
+    public String getSubscriptionScreenSubtitle() {
+        if(subscriptionScreenSubtitle != null) {
+            return subscriptionScreenSubtitle;
+        }else{
+            return "";
+        }
+    }
+
+    public void setSubscriptionScreenSubtitle(String subscriptionScreenSubtitle) {
+        this.subscriptionScreenSubtitle = subscriptionScreenSubtitle;
     }
 
     public Integer getSubscribedUser() {
@@ -292,6 +322,15 @@ public class SubscriptionData {
         @SerializedName("cross_text")
         @Expose
         private String crossText;
+        @SerializedName("amount_text")
+        @Expose
+        private String amountText;
+        @SerializedName("duration_text")
+        @Expose
+        private String durationText;
+        @SerializedName("is_default")
+        @Expose
+        private Integer isDefault;
 
         public Integer getPlanDuration() {
             return planDuration;
@@ -388,6 +427,30 @@ public class SubscriptionData {
 
         public void setCrossText(String crossText) {
             this.crossText = crossText;
+        }
+
+        public String getAmountText() {
+            return amountText;
+        }
+
+        public void setAmountText(String amountText) {
+            this.amountText = amountText;
+        }
+
+        public String getDurationText() {
+            return durationText;
+        }
+
+        public void setDurationText(String durationText) {
+            this.durationText = durationText;
+        }
+
+        public Integer getIsDefault() {
+            return isDefault;
+        }
+
+        public void setIsDefault(Integer isDefault) {
+            this.isDefault = isDefault;
         }
     }
 

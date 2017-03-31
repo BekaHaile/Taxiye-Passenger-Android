@@ -45,19 +45,24 @@ public class StarMembershipAdapter extends BaseAdapter {
 			viewHolder.tvOfferingName.setText(benefits.get(position).getTitle());
 
 			if(benefits.get(position).getProductType() == ProductType.AUTO.getOrdinal()){
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_auto_grey);
+				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_theme);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_autos);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.FRESH.getOrdinal()){
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fresh_grey);
+				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_green_fresh_fab);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_fresh);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.MEALS.getOrdinal()){
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_meals_grey);
+				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_pink_meals_fab);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_meals);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.GROCERY.getOrdinal()){
+				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_purple_menu_fab);
 				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fresh_grey);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.MENUS.getOrdinal()){
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_menus_grey);
+				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_purple_menu_fab);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_menus);
 			}
 
 		}
@@ -108,12 +113,13 @@ public class StarMembershipAdapter extends BaseAdapter {
 	static class ViewHolder extends RecyclerView.ViewHolder {
 		public ImageView ivOfferring;
 		public TextView tvOfferingName, tvOfferingBenefits;
-		public RelativeLayout relative;
+		public RelativeLayout relative, rlOffering;
 		public int id;
 
 		public ViewHolder(View itemView, Context context) {
 			super(itemView);
 			relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+			rlOffering = (RelativeLayout) itemView.findViewById(R.id.rlOffering);
 			ivOfferring = (ImageView) itemView.findViewById(R.id.ivOfferring);
 			tvOfferingName = (TextView) itemView.findViewById(R.id.tvOfferingName); tvOfferingName.setTypeface(Fonts.mavenMedium(context));
 			tvOfferingBenefits = (TextView) itemView.findViewById(R.id.tvOfferingBenefits);tvOfferingBenefits.setTypeface(Fonts.mavenRegular(context));

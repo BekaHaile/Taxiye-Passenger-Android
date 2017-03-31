@@ -11,10 +11,10 @@
         android:layout_marginLeft="@dimen/px_26"
         android:layout_marginRight="@dimen/px_26"
         android:layout_marginBottom="@dimen/px_26"
-        android:background="@drawable/capsule_star_benefit"
         android:orientation="horizontal">
 
         <RelativeLayout
+            android:id="@+id/rlOffering"
             android:layout_width="98px"
             android:layout_height="98px"
             android:layout_marginBottom="22px"
