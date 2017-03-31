@@ -50,6 +50,8 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 	TextView tvShareWhatsapp;
 	@Bind(R.id.tvMoreSharingOptions)
 	TextView tvMoreSharingOptions;
+	@Bind(R.id.tvWantEarlyAccess)
+	TextView tvWantEarlyAccess;
 
 	FreshActivity activity;
 
@@ -78,6 +80,7 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 		tvShareEmail.setOnClickListener(this);
 		tvShareWhatsapp.setOnClickListener(this);
 		tvMoreSharingOptions.setOnClickListener(this);
+		tvWantEarlyAccess.setTypeface(tvWantEarlyAccess.getTypeface(), Typeface.BOLD);
 
 		GAUtils.trackScreenView(FEED + HOME + WAITLIST + SHARING);
 		return rootView;

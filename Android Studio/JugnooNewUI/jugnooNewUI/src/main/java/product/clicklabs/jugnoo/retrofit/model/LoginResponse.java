@@ -382,6 +382,9 @@ public class LoginResponse {
 		@SerializedName("early_access_share_image")
 		@Expose
 		private String earlyAccessShareImage;
+		@SerializedName("show_create_handle")
+		@Expose
+		private int showCreateHandle;
 
 
 
@@ -461,6 +464,14 @@ public class LoginResponse {
 
 		public void setEarlyAccessShareImage(String earlyAccessShareImage) {
 			this.earlyAccessShareImage = earlyAccessShareImage;
+		}
+
+		public boolean showCreateHandle() {
+			return showCreateHandle == 1;
+		}
+
+		public void setShowCreateHandle(int showCreateHandle) {
+			this.showCreateHandle = showCreateHandle;
 		}
 	}
 
