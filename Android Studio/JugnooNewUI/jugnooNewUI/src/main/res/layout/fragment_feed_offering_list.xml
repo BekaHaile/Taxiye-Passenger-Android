@@ -1,13 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment">
 
     <!--<include layout="@layout/layout_delivery_address_bar"/>-->
-
 
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -23,24 +21,25 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view_feed"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/hello_blank_fragment"/>
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/hello_blank_fragment" />
+
 
             <RelativeLayout
                 android:id="@+id/rlNoReviews"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
                 android:background="@color/white"
-                >
+                android:visibility="visible">
 
                 <ImageView
-                    android:layout_below="@+id/tvFeedEmpty"
-                    android:layout_marginTop="@dimen/spacing_extra_large"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="-140dp"
                     android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/tvFeedEmpty"
+                    android:layout_marginBottom="-140dp"
+                    android:layout_marginTop="@dimen/spacing_extra_large"
                     android:src="@drawable/bg_no_reviews"
 
                     />
@@ -56,14 +55,12 @@
                     android:text="Feed is empty!\nBE FIRST ONE TO ADD..."
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_16"
-                    app:font="maven"
-                    />
-
+                    app:font="maven" />
 
 
             </RelativeLayout>
 
-            <include layout="@layout/layout_offering_not_available_dp"/>
+            <include layout="@layout/layout_offering_not_available_dp" />
 
         </LinearLayout>
 
@@ -74,8 +71,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_new_height"
         android:src="@drawable/shadow_down_new" />
-
-
 
 
 </RelativeLayout>

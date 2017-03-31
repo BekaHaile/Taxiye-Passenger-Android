@@ -399,7 +399,8 @@ public class LoginResponse {
 		}
 
 		public boolean getFeedActive() {
-			return feedActive ==1;
+//			return feedActive ==1;
+			return true;
 		}
 
 		public Long getFeedRank() {

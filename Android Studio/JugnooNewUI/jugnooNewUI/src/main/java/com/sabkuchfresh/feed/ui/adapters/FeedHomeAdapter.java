@@ -407,6 +407,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 diff = currentMonth + (11 - postedMonth);
                 if (postedDate > currentDate) diff--;
             } else {
+
                 diff = currentMonth - postedMonth;
                 if (currentMonth != postedMonth && postedDate > currentDate)
                     diff--;

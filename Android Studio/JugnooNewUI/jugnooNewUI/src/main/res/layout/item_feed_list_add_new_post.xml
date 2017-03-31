@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
+<RelativeLayout
+    android:id="@+id/add_post"
+    android:tag="DontTouchMe"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom"
+    app:layout_scrollFlags="scroll|snap"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 

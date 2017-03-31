@@ -277,9 +277,11 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
         adapterList.clear();
 
-        //Add Location Type
+      /*  //Add Location Type
         String location =!TextUtils.isEmpty(cityName)?cityName:activity.getSelectedAddress();
-        adapterList.add(new FeedHomeAdapter.SelectedLocation(location,!TextUtils.isEmpty(cityName)));
+        adapterList.add(new FeedHomeAdapter.SelectedLocation(location,!TextUtils.isEmpty(cityName)));*/
+
+      /*
 
         //Add AddPostText
         if(showAddPostText)
@@ -291,7 +293,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
             adapterList.add(new FeedHomeAdapter.AddPostData(addPostText,imageUrl));
         }
-
+*/
 
         if(feedDetailList!=null && feedDetailList.size()>0){
 

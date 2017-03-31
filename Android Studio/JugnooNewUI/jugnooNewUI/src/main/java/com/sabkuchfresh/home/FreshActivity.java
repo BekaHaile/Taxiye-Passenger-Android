@@ -256,6 +256,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public CallbackManager callbackManager;
     public boolean isTimeAutomatic;
+    private CollapsingToolbarLayout collapsingToolbar;
+    private View whatsOnMindView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -267,6 +270,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             toolbar.setTitle("");
 
             appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
+            collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
             callbackManager = CallbackManager.Factory.create();
 
@@ -1345,6 +1349,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setCollapsingToolbar(boolean isEnable, Fragment fragment) {
 
 
+        AppBarLayout.LayoutParams collapsingToolBarParams = (AppBarLayout.LayoutParams) collapsingToolbar.getLayoutParams();
         CoordinatorLayout.LayoutParams relativeparams = (CoordinatorLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
         if (fragment instanceof RestaurantImageFragment)
             relativeparams.setBehavior(null);
@@ -1394,7 +1399,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 onStateChanged(appBarLayout, State.COLLAPSED);
             }
 
+            if(fragment instanceof FeedHomeFragment) {
+
+                collapsingToolBarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                collapsingToolbar.setLayoutParams(collapsingToolBarParams);
+                whatsOnMindView = findViewById(R.id.add_post);
+                appBarLayout.addOnOffsetChangedListener(feedHomeAppBarListener);
+            }
+
+
+
+
         }
+
 
 
 
@@ -1410,6 +1427,30 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         toolbar.setLayoutParams(collapseParams);
 */
     }
+
+
+    AppBarLayout.OnOffsetChangedListener feedHomeAppBarListener = new AppBarLayout.OnOffsetChangedListener() {
+        @Override
+        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
+
+            android.util.Log.i(TAG, "onOffsetChanged: " +((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* whatsOnMindView.getHeight());
+            whatsOnMindView.animate().translationY(whatsOnMindView.getHeight()+((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* whatsOnMindView.getHeight()).start();
+           /* if(verticalOffset== -appBarLayout.getTotalScrollRange())
+            {
+
+
+
+                if(findViewById(R.id.add_post).getVisibility()==View.VISIBLE)
+                {
+                    findViewById(R.id.add_post).setVisibility(View.GONE);
+                }
+            }
+            else if(findViewById(R.id.add_post).getVisibility()==View.GONE){
+                findViewById(R.id.add_post).setVisibility(View.VISIBLE);
+            }*/
+        }
+    };
 
     public void openRestaurantFragment() {
         if (canExitVendorMenu())
