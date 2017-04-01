@@ -119,6 +119,7 @@
                 android:text="What is everyone in the city upto? Find out through your own personalised FEED."
                 android:textColor="@color/feed_grey_text_heading"
                 android:textSize="16sp"
+                android:layout_marginTop="-4dp"
                 app:font="@string/maven_r"/>
 
             <Button
