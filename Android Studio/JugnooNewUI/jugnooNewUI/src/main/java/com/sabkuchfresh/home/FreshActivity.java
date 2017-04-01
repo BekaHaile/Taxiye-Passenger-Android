@@ -1337,8 +1337,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
-
+            whatsOnMindView = findViewById(R.id.add_post);
             setCollapsingToolbar(fragment instanceof VendorMenuFragment, fragment);
+
+
+            if(fragment instanceof FeedHomeFragment)
+                whatsOnMindView.setVisibility(View.VISIBLE);
+            else
+                whatsOnMindView.setVisibility(View.GONE);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1364,6 +1370,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             layoutParams.height = (int) (ASSL.Yscale() * COLLAPSE_TOOLBAR_HEIGHT);
             appBarLayout.setLayoutParams(layoutParams);
             appBarLayout.requestLayout();
+
+            collapsingToolBarParams.setScrollFlags(0);
+            collapsingToolBarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED|AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+            collapsingToolbar.setLayoutParams(collapsingToolBarParams);
+
 
             CollapsingToolbarLayout.LayoutParams toolBarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
             TypedValue tv = new TypedValue();
@@ -1400,11 +1411,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
             if(fragment instanceof FeedHomeFragment) {
-
+                collapsingToolBarParams.setScrollFlags(0);
                 collapsingToolBarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
                 collapsingToolbar.setLayoutParams(collapsingToolBarParams);
-                whatsOnMindView = findViewById(R.id.add_post);
+
                 appBarLayout.addOnOffsetChangedListener(feedHomeAppBarListener);
+            }
+            else{
+                collapsingToolBarParams.setScrollFlags(0);
+                collapsingToolbar.setLayoutParams(collapsingToolBarParams);
+
             }
 
 
@@ -1435,7 +1451,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             android.util.Log.i(TAG, "onOffsetChanged: " +((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* whatsOnMindView.getHeight());
-            whatsOnMindView.animate().translationY(whatsOnMindView.getHeight()+((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* whatsOnMindView.getHeight()).start();
+            whatsOnMindView.animate().translationY(whatsOnMindView.getHeight()-((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* whatsOnMindView.getHeight()).start();
            /* if(verticalOffset== -appBarLayout.getTotalScrollRange())
             {
 
