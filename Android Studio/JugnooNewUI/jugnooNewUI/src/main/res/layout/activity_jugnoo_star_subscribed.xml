@@ -419,7 +419,7 @@
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/px_20"
                 android:paddingRight="@dimen/px_20"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/tvUpgradingText"

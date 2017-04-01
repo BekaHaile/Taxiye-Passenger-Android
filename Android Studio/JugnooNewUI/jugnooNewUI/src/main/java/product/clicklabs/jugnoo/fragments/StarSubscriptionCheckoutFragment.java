@@ -76,10 +76,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private TextView tvPaymentPlan, tvPlanAmount, tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2,
             tvDuration1, tvDuration2;
     private Button bPlaceOrder;
-    private LinearLayout linearLayoutOffers, linearLayoutRoot;
+    private LinearLayout linearLayoutOffers, linearLayoutRoot, llStarPurchase;
     private NonScrollListView listViewOffers;
     private PromoCouponsAdapter promoCouponsAdapter;
-    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge, rlPlan1, rlPlan2;
+    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge, rlPlan1, rlPlan2, rlStarUpgrade;
     private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewRadioMobikwik, imageViewAddMobikwik,
             imageViewRadioFreeCharge, imageViewAddFreeCharge, ivRadio1, ivRadio2;
     private TextView textViewPaytmValue, textViewMobikwikValue, textViewFreeChargeValue;
@@ -123,7 +123,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             String plan = bundle.getString("plan", "");
             subscription = new Gson().fromJson(plan, SubscriptionData.Subscription.class);
 
-
+            llStarPurchase = (LinearLayout) rootView.findViewById(R.id.llStarPurchase);
+            rlStarUpgrade = (RelativeLayout) rootView.findViewById(R.id.rlStarUpgrade);
             tvPaymentPlan = (TextView) rootView.findViewById(R.id.tvPaymentPlan); tvPaymentPlan.setTypeface(Fonts.mavenMedium(activity));
             tvPlanAmount = (TextView) rootView.findViewById(R.id.tvPlanAmount); tvPlanAmount.setTypeface(Fonts.mavenMedium(activity));
             bPlaceOrder = (Button) rootView.findViewById(R.id.bPlaceOrder); bPlaceOrder.setTypeface(Fonts.mavenMedium(activity)); bPlaceOrder.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -158,13 +159,17 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
             relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
 
-            tvPaymentPlan.setText(subscription.getDescription());
-            tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                    Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
-
-            setPlan();
-
-
+            if(getActivity() instanceof JugnooStarActivity) {
+                llStarPurchase.setVisibility(View.VISIBLE);
+                rlStarUpgrade.setVisibility(View.GONE);
+                setPlan();
+            } else if(getActivity() instanceof JugnooStarSubscribedActivity){
+                llStarPurchase.setVisibility(View.GONE);
+                rlStarUpgrade.setVisibility(View.VISIBLE);
+                tvPaymentPlan.setText(subscription.getDescription());
+                tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
+                        Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
+            }
 
             linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
             listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);

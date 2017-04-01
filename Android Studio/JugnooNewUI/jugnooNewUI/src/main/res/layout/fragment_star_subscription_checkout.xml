@@ -28,9 +28,12 @@
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="4px">
 
+                <!-- Star purchase for first time view -->
                 <LinearLayout
+                    android:id="@+id/llStarPurchase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -209,10 +212,12 @@
 
                 </LinearLayout>
 
+                <!-- Star upgrade view -->
                 <RelativeLayout
+                    android:id="@+id/rlStarUpgrade"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:padding="@dimen/text_size_30">
 
                     <ImageView
@@ -263,7 +268,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="26px"
-                    android:text="@string/payment_mode"
+                    android:text="@string/payment_via"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_26"
