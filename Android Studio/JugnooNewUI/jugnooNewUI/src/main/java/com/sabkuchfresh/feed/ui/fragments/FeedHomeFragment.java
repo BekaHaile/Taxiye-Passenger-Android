@@ -35,6 +35,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -198,6 +199,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         tvFeedEmpty.append("\n");
         tvFeedEmpty.append(ssb);
 
+        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
 
         return rootView;
     }
