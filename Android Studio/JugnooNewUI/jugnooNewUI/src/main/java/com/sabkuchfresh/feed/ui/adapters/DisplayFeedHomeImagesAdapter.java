@@ -1,4 +1,4 @@
-package com.sabkuchfresh.adapters;
+package com.sabkuchfresh.feed.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.Picasso;
@@ -21,7 +22,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 /**
  * Created by Shankar on 7/17/15.
  */
-public class DisplayFeedHomeImagesAdapter extends RecyclerView.Adapter<DisplayFeedHomeImagesAdapter.ViewHolderReviewImage> implements ItemListener{
+public class DisplayFeedHomeImagesAdapter extends RecyclerView.Adapter<DisplayFeedHomeImagesAdapter.ViewHolderReviewImage> implements ItemListener {
 
     private FreshActivity activity;
     private ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages;

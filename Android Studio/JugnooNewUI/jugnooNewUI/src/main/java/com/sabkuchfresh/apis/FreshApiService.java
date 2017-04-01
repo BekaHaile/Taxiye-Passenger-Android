@@ -14,6 +14,7 @@ import java.util.Map;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
@@ -86,5 +87,9 @@ public interface FreshApiService {
 	@POST("/get_item_search")
 	void getItemSearch(@FieldMap Map<String, String> params,
 							Callback<FreshSearchResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/razorpay_place_order_callback")
+	Response razorpayPlaceOrderCallback(@FieldMap Map<String, String> params);
 
 }

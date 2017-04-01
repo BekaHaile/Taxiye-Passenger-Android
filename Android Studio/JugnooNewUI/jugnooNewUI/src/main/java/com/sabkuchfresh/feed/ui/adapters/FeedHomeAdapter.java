@@ -1,4 +1,4 @@
-package com.sabkuchfresh.adapters;
+package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -22,8 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.AppConstant;
@@ -322,6 +324,17 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.recyclerViewUserImages.setVisibility(View.GONE);
             }
 
+            //Show Edit post option if available
+            holder.ivMore.setVisibility(feedDetail.isPostEditable()?View.VISIBLE:View.GONE);
+          /*  RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.tvFeedRating.getLayoutParams();
+                 if(feedDetail.isPostEditable())
+                   layoutParams.rightMargin=Utils.convertDpToPx(activity,10);
+                else
+                    layoutParams.rightMargin=0;
+            holder.ivMore.setLayoutParams(layoutParams);*/
+
+
+
         }
 
 
@@ -383,19 +396,29 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 diff--;
             }
 
-            if (diff > 0) return diff + " years ago";
+            if (diff > 0){
+                if(diff==1)
+                    return diff + " year ago";
+                else
+                    return diff + " years ago";
+            }
 
             if (yearPosted != yearCurrent) {
                 diff = currentMonth + (11 - postedMonth);
-                if (postedDate > currentDate) diff++;
+                if (postedDate > currentDate) diff--;
             } else {
                 diff = currentMonth - postedMonth;
                 if (currentMonth != postedMonth && postedDate > currentDate)
-                    diff++;
+                    diff--;
 
             }
 
-            if (diff > 0) return diff + " months ago";
+            if (diff > 0) {
+                if(diff==1)
+                    return diff + " month ago";
+                else
+                    return diff + " months ago";
+            }
 
 
             long diffT = currentDateCal.getTimeInMillis() - feedPostedCal.getTimeInMillis();
@@ -465,6 +488,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     //If null means no image is being showed Actually
 
                     break;
+                case R.id.ib_arrow_more:
+                    feedPostCallback.onMoreClick(feedDetail,position,viewClicked);
+                    break;
 
                 default:
                     break;
@@ -490,6 +516,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         void onRestaurantClick(int restaurantId);
 
         String getEditTextString();//required Only For Comments Adapter
+
+
+        void onMoreClick(FeedDetail feedDetail, int positionInOriginalList, View moreItemView);
+
+        void onDeleteComment(FeedComment feedComment, int position, View viewClicked);
     }
 
 
@@ -534,6 +565,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View shadow;
         @Bind(R.id.root_layout_item)
         RelativeLayout layoutItem;
+        @Bind(R.id.ib_arrow_more)
+        ImageView ivMore;
         @Bind(R.id.recycler_user_images)
         RecyclerView recyclerViewUserImages;//feeddetail.getReviewImages field is greater than 1 than we  have to show this recycler view
         DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
@@ -575,6 +608,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
+            ivMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickView.onClickItem(ivMore, view);
+                }
+            });
+
         }
     }
 
@@ -610,7 +650,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
 
-                    activity.openFeedAddPostFragment();
+                    activity.openFeedAddPostFragment(null);
                 }
             });
             ivMyProfilePic = (ImageView) itemView.findViewById(R.id.iv_profile_pic);

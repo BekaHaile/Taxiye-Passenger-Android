@@ -330,11 +330,7 @@ public interface Constants {
 
     String ACQUISITION = "Acquisition";
     String CAMPAIGNS = "Campaigns";
-    String ACTIVATION = "Activation";
-    String REVENUE = "Revenue";
-    String RETENTION = "Retention";
     String HELP = "Help";
-    String INFORMATIVE = "Informative";
     String REFERRAL = "Referral";
     String ISSUES = "Issues";
     String SLASH = "/";
@@ -630,7 +626,7 @@ public interface Constants {
 
     String KEY_LIKE_IS_ENABLED = "like_is_enabled";
     String KEY_SHARE_IS_ENABLED = "share_is_enabled";
-    String KEY_FB_TOKEN = "fb_token";
+    String KEY_FB_ACCOUNT_CODE = "fb_account_code";
     String KEY_ACCOUNT_KIT_VERSION = "account_kit_version";
     String KEY_RIDE_ACCEPTED = "ride_accepted";
     String KEY_FINISH_ACTIVITY = "finish_activity";
@@ -655,4 +651,27 @@ public interface Constants {
     String KEY_HIDE_LIKE_SHARE = "hide_like_share";
     String KEY_REASONS = "reasons";
     String KEY_ADDN_REASON = "addn_reason";
+
+    String KEY_RAZORPAY_PAYMENT_OBJECT = "razorpay_payment_object";
+    String KEY_AUTH_ORDER_ID = "auth_order_id";
+    String KEY_APP_TYPE = "app_type";
+    String KEY_RAZORPAY_SIGNATURE = "razorpay_signature";
+    String KEY_RAZORPAY_PAYMENT_ID = "razorpay_payment_id";
+    String INTENT_ACTION_RAZOR_PAY_CALLBACK = "INTENT_ACTION_RAZOR_PAY_CALLBACK";
+    String KEY_RESPONSE = "response";
+    String KEY_RAZORPAY_PREFILL_EMAIL = "prefill.email";
+    String KEY_RAZORPAY_PREFILL_CONTACT = "prefill.contact";
+    String KEY_USER_EMAIL = "user_email";
+    String KEY_RAZORPAY_THEME_COLOR = "theme.color";
+
+
+    String KEY_ACTIVITY_ID = "activity_id";
+    String KEY_DELIVERY_ID = "delivery_id";
+    String KEY_PICKUP_LATITUDE = "pickup_latitude";
+    String KEY_PICKUP_LONGITUDE = "pickup_longitude";
+    String KEY_DELIVERY_LATITUDE = "delivery_latitude";
+    String KEY_DELIVERY_LONGITUDE = "delivery_longitude";
+    String KEY_TRACKING_INFO = "tracking_info";
+    String KEY_IS_AD = "is_ad";
+    String KEY_SHOW_DELIVERY_ROUTE = "show_delivery_route";
 }

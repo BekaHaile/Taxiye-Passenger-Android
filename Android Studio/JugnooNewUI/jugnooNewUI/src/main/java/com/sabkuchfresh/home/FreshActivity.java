@@ -58,6 +58,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.jugnoo.pay.activities.PaySDKUtils;
 import com.jugnoo.pay.models.MessageRequest;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
 import com.sabkuchfresh.adapters.FreshSortingAdapter;
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
@@ -70,13 +73,14 @@ import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
+import com.sabkuchfresh.feed.ui.fragments.FeedReserveSpotFragment;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
-import com.sabkuchfresh.fragments.FeedAddPostFragment;
-import com.sabkuchfresh.fragments.FeedHomeFragment;
-import com.sabkuchfresh.fragments.FeedOfferingCommentsFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
@@ -99,6 +103,7 @@ import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.retrofit.model.DeliveryStore;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -109,6 +114,7 @@ import com.sabkuchfresh.retrofit.model.SubItemComparePriceLowToHigh;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriority;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemCompareAtoZ;
@@ -136,6 +142,7 @@ import java.util.List;
 import java.util.Set;
 
 import io.paperdb.Paper;
+import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -181,7 +188,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseAppCompatActivity implements GAAction, GACategory, PaperDBKeys {
+public class FreshActivity extends BaseAppCompatActivity implements PaymentResultWithDataListener, GAAction, GACategory, PaperDBKeys {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -455,7 +462,12 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                     lastClientId = Config.getMenusClientId();
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
-                    addFeedFragment();
+                    if(Data.getFeedData().getFeedActive()) {
+                        addFeedFragment();
+                    }
+                    else {
+                        addFeedResrveSpotFragment();
+                    }
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
                     lastClientId = Config.getFeedClientId();
 
@@ -478,8 +490,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             }
 
 
-            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                    new IntentFilter(Data.LOCAL_BROADCAST));
+            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, getIntentFiler());
 
             openPushDialog();
             deepLinkAction.openDeepLink(menuBar);
@@ -494,6 +505,27 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         }
 
         initCollapseToolBarViews();
+
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    fabViewTest.expandJeanieFirstTime();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
+
+    }
+
+
+    // intentFilter to add multiple actions
+    public IntentFilter getIntentFiler(){
+        IntentFilter intent = new IntentFilter();
+        intent.addAction(Data.LOCAL_BROADCAST);
+        intent.addAction(Constants.INTENT_ACTION_RAZOR_PAY_CALLBACK);
+        return intent;
     }
 
     public void setSortingList(Fragment fragment) {
@@ -574,90 +606,107 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 @Override
                 public void run() {
                     try {
-                        int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
-                        if (flag == -1) {
-                            String message = intent.getStringExtra("message");
-                            int type = intent.getIntExtra("open_type", 0);
+                        switch (intent.getAction()) {
+                            case Data.LOCAL_BROADCAST:
+                                int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
+                                if (flag == -1) {
+                                    String message = intent.getStringExtra("message");
+                                    int type = intent.getIntExtra("open_type", 0);
 
-                            if (type == 0) {
-                                Log.d("receiver", "Got message: " + message);
-                                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                                    drawerLayout.closeDrawer(GravityCompat.START);
-                                }
-                                String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
-                                if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
-                                    updateItemListFromSPDB();
-                                    topBar.getLlCartContainer().performClick();
+                                    if (type == 0) {
+                                        Log.d("receiver", "Got message: " + message);
+                                        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                                            drawerLayout.closeDrawer(GravityCompat.START);
+                                        }
+                                        String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+                                        if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
+                                            updateItemListFromSPDB();
+                                            topBar.getLlCartContainer().performClick();
+                                        } else {
+                                            Bundle bundle = new Bundle();
+                                            bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+                                            MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
+                                                    getCurrentPlaceLatLng(), bundle);
+                                        }
+                                    } else if (type == 1) {
+                                        intentToShareActivity();
+                                    } else if (type == 2) {
+                                        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                                            drawerLayout.closeDrawer(GravityCompat.START);
+                                        }
+                                        String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getGroceryClientId());
+                                        if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+                                            updateItemListFromSPDB();
+                                            topBar.getLlCartContainer().performClick();
+                                        } else {
+                                            Bundle bundle = new Bundle();
+                                            bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+                                            MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
+                                                    getCurrentPlaceLatLng(), bundle);
+                                        }
+                                    } else if (type == 3) {
+                                        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                                            drawerLayout.closeDrawer(GravityCompat.START);
+                                        }
+                                        String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
+                                        if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                                            updateItemListFromSPDB();
+                                            topBar.getLlCartContainer().performClick();
+                                        } else {
+                                            Bundle bundle = new Bundle();
+                                            bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+                                            MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getMenusClientId(), null,
+                                                    getCurrentPlaceLatLng(), bundle);
+                                        }
+                                    } else if (type == 10) {
+                                        setRefreshCart(true);
+                                    }
                                 } else {
-                                    Bundle bundle = new Bundle();
-                                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
-                                    MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
-                                            getCurrentPlaceLatLng(), bundle);
+                                    if (flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()) {
+                                        Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
+                                        openPushDialog();
+                                    } else if (PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag) {
+                                        String message = intent.getStringExtra(Constants.KEY_MESSAGE);
+                                        Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
+                                        openPaytmRechargeDialog();
+                                    } else if (PushFlags.STATUS_CHANGED.getOrdinal() == flag) {
+                                        String clientId = intent.getStringExtra(Constants.KEY_CLIENT_ID);
+                                        Fragment fragment = getTopFragment();
+                                        if (fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()) {
+                                            ((MealFragment) fragment).getAllProducts(true, getSelectedLatLng());
+                                        } else {
+                                            Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
+                                            intent1.putExtra(Constants.KEY_FLAG, flag);
+                                            LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
+                                        }
+                                    } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
+                                        Fragment fragment = getMenusFragment();
+                                        if (fragment != null && FreshActivity.this.hasWindowFocus()) {
+                                            ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng());
+                                        } else {
+                                            Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
+                                            intent1.putExtra(Constants.KEY_FLAG, flag);
+                                            LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
+                                        }
+                                    } else if (Constants.OPEN_DEEP_INDEX == flag) {
+                                        deepLinkAction.openDeepLink(menuBar);
+                                    }
                                 }
-                            } else if (type == 1) {
-                                intentToShareActivity();
-                            } else if (type == 2) {
-                                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                                    drawerLayout.closeDrawer(GravityCompat.START);
-                                }
-                                String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getGroceryClientId());
-                                if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
-                                    updateItemListFromSPDB();
-                                    topBar.getLlCartContainer().performClick();
+                                break;
+
+
+                            case Constants.INTENT_ACTION_RAZOR_PAY_CALLBACK:
+                                DialogPopup.dismissLoadingDialog();
+                                String response = intent.getStringExtra(Constants.KEY_RESPONSE);
+                                if (!TextUtils.isEmpty(response)) {
+                                    getFreshCheckoutMergedFragment().razorpayServiceCallback(new JSONObject(response));
                                 } else {
-                                    Bundle bundle = new Bundle();
-                                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
-                                    MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
-                                            getCurrentPlaceLatLng(), bundle);
+                                    getFreshCheckoutMergedFragment().razorpayServiceCallback(null);
                                 }
-                            } else if (type == 3) {
-                                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                                    drawerLayout.closeDrawer(GravityCompat.START);
-                                }
-                                String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
-                                if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
-                                    updateItemListFromSPDB();
-                                    topBar.getLlCartContainer().performClick();
-                                } else {
-                                    Bundle bundle = new Bundle();
-                                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
-                                    MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getMenusClientId(), null,
-                                            getCurrentPlaceLatLng(), bundle);
-                                }
-                            } else if (type == 10) {
-                                setRefreshCart(true);
-                            }
-                        } else {
-                            if (flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()) {
-                                Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
-                                openPushDialog();
-                            } else if (PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag) {
-                                String message = intent.getStringExtra(Constants.KEY_MESSAGE);
-                                Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
-                                openPaytmRechargeDialog();
-                            } else if (PushFlags.STATUS_CHANGED.getOrdinal() == flag) {
-                                String clientId = intent.getStringExtra(Constants.KEY_CLIENT_ID);
-                                Fragment fragment = getTopFragment();
-                                if (fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()) {
-                                    ((MealFragment) fragment).getAllProducts(true, getSelectedLatLng());
-                                } else {
-                                    Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
-                                    intent1.putExtra(Constants.KEY_FLAG, flag);
-                                    LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
-                                }
-                            } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
-                                Fragment fragment = getMenusFragment();
-                                if (fragment != null && FreshActivity.this.hasWindowFocus()) {
-                                    ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng());
-                                } else {
-                                    Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
-                                    intent1.putExtra(Constants.KEY_FLAG, flag);
-                                    LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
-                                }
-                            } else if (Constants.OPEN_DEEP_INDEX == flag) {
-                                deepLinkAction.openDeepLink(menuBar);
-                            }
+                                break;
+
                         }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -711,7 +760,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                             (getMealFragment() != null && !getMealFragment().isHidden()) ||
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
                             || (getMenusFragment() != null && !getMenusFragment().isHidden())
-                            || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())) {
+                            || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())
+                            || (getFeedReserveSpotFragment() != null && !getFeedReserveSpotFragment().isHidden())) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
                     }
@@ -770,6 +820,14 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     public FeedHomeFragment getFeedHomeFragment(){
         return (FeedHomeFragment) getSupportFragmentManager().findFragmentByTag(FeedHomeFragment.class.getName());
+    }
+
+    public FeedReserveSpotFragment getFeedReserveSpotFragment(){
+        return (FeedReserveSpotFragment) getSupportFragmentManager().findFragmentByTag(FeedReserveSpotFragment.class.getName());
+    }
+
+    public FeedOfferingCommentsFragment getOfferingsCommentFragment(){
+        return (FeedOfferingCommentsFragment) getSupportFragmentManager().findFragmentByTag(FeedOfferingCommentsFragment.class.getName());
     }
     public FeedAddPostFragment getFeedAddPostFragment(){
         return (FeedAddPostFragment) getSupportFragmentManager().findFragmentByTag(FeedAddPostFragment.class.getName());
@@ -1211,19 +1269,22 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 llSearchCartVis = View.GONE;
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FeedHomeFragment) {
+            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment) {
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.feed);
-                topBar.ivAddReview.setVisibility(View.VISIBLE);
+
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
+                if(fragment instanceof FeedHomeFragment){
+                    topBar.ivAddReview.setVisibility(View.VISIBLE);
+                }
             }
             else if(fragment instanceof FeedOfferingCommentsFragment){
                 topBar.getLlSearchCart().setLayoutTransition(null);
@@ -1259,6 +1320,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
             }
             if(topBar.ivAddReview.getVisibility() == View.VISIBLE){
                 titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.ivAddReview.getId());
+            } else if(fragment instanceof FeedReserveSpotFragment){
+                topBar.title.setGravity(Gravity.CENTER);
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
@@ -1448,7 +1512,7 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         getTransactionUtils().openMenusFilterFragment(this, getRelativeLayoutContainer());
     }
 
-    private FreshSearchFragment getFreshSearchFragment() {
+    public FreshSearchFragment getFreshSearchFragment() {
         return (FreshSearchFragment) getSupportFragmentManager().findFragmentByTag(FreshSearchFragment.class.getName());
     }
 
@@ -1561,8 +1625,8 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         slotSelected = null;
         slotToSelect = null;
         paymentOption = null;
+        setPlaceOrderResponse(null);
 
-        // TODO: 21/03/17 on suggestion of Sanjay sir
         setSelectedAddress("");
         setSelectedLatLng(null);
         setSelectedAddressId(0);
@@ -1626,6 +1690,14 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
                 .add(relativeLayoutContainer.getId(), new FeedHomeFragment(),
                         FeedHomeFragment.class.getName())
                 .addToBackStack(FeedHomeFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
+    private void addFeedResrveSpotFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new FeedReserveSpotFragment(),
+                        FeedReserveSpotFragment.class.getName())
+                .addToBackStack(FeedReserveSpotFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 
@@ -3297,10 +3369,15 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
         }
     }
 
-    public void openFeedAddPostFragment() {
-       getTransactionUtils().openFeedAddPostFragment(this, getRelativeLayoutContainer());
+    /**
+     * The Add Post fragment opens in two modes when we are adding or when are editing
+     * @param feedDetail If feed detail object is null then it means a new post is being added
+     */
+    public void openFeedAddPostFragment(FeedDetail feedDetail) {
+       getTransactionUtils().openFeedAddPostFragment(this, getRelativeLayoutContainer(),feedDetail);
 
     }
+
 
     public interface CityChangeCallback {
         void onYesClick();
@@ -3310,6 +3387,9 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
 
     private DeliveryAddressModel deliveryAddressModel;
     private Gson gson = new Gson();
+    public Gson getGson(){
+        return gson;
+    }
 
     public void saveDeliveryAddressModel() {
         deliveryAddressModel = new DeliveryAddressModel(getSelectedAddress(), getSelectedLatLng(),
@@ -3779,10 +3859,18 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     }
     private void saveAppCart(String clientId){
         if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
-            Paper.book().write(DB_FRESH_CART, appCart);
+            if(appCart != null) {
+                Paper.book().write(DB_FRESH_CART, appCart);
+            } else {
+                Paper.book().delete(DB_FRESH_CART);
+            }
         }
         else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
-            Paper.book().write(DB_MEALS_CART, appCart);
+            if(appCart != null) {
+                Paper.book().write(DB_MEALS_CART, appCart);
+            } else {
+                Paper.book().delete(DB_MEALS_CART);
+            }
         }
     }
 
@@ -3838,5 +3926,78 @@ public class FreshActivity extends BaseAppCompatActivity implements GAAction, GA
     public void saveSubItemToDeliveryStoreCart(SubItem subItem){
         getCart().saveSubItemToStore(getOpenedVendorId(), subItem);
     }
+
+
+
+
+    // razor pay callbacks
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+        String paymentId = paymentData.getPaymentId();
+        String signature = paymentData.getSignature();
+        razorpayCallbackIntentService(paymentId, signature);
+    }
+
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+        razorpayCallbackIntentService("-1", "-1");
+    }
+
+    public void startRazorPayPayment(JSONObject options) {
+        Checkout checkout = new Checkout();
+        checkout.setImage(R.drawable.jugnoo_icon);
+        try {
+            options.remove(Constants.KEY_AUTH_ORDER_ID);
+
+            options.put(Constants.KEY_RAZORPAY_PREFILL_EMAIL, options.remove(Constants.KEY_USER_EMAIL).toString());
+            options.put(Constants.KEY_RAZORPAY_PREFILL_CONTACT, options.remove(Constants.KEY_PHONE_NO).toString());
+            options.put(Constants.KEY_RAZORPAY_THEME_COLOR, "#FD7945");
+
+            Log.i(TAG, "startRazorPayPayment options="+options);
+            checkout.setFullScreenDisable(true);
+
+            checkout.open(this, options);
+        } catch(Exception e) {
+            Log.e("TAG", "Error in starting Razorpay Checkout");
+        }
+    }
+
+    // razor pay callback intent service
+    public void razorpayCallbackIntentService(String paymentId, String signature){
+        try {
+            Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(this);
+            Intent intent = new Intent(this, RazorpayCallbackService.class);
+            intent.putExtra(Constants.KEY_APP_TYPE, getAppType());
+            intent.putExtra(Constants.KEY_ACCESS_TOKEN, pair.first);
+            intent.putExtra(Constants.KEY_RAZORPAY_PAYMENT_ID, paymentId);
+            intent.putExtra(Constants.KEY_RAZORPAY_SIGNATURE, signature);
+            intent.putExtra(Constants.KEY_ORDER_ID, getPlaceOrderResponse().getOrderId().intValue());
+            intent.putExtra(Constants.KEY_AUTH_ORDER_ID, getPlaceOrderResponse().getRazorPaymentObject().getAuthOrderId().intValue());
+            startService(intent);
+            DialogPopup.showLoadingDialog(this, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //placeOrderResponse cached for PAY and RAZORPAY payment callbacks
+    private PlaceOrderResponse placeOrderResponse;
+    public void setPlaceOrderResponse(PlaceOrderResponse placeOrderResponse){
+        this.placeOrderResponse = placeOrderResponse;
+        if(placeOrderResponse != null) {
+            Paper.book().write(PaperDBKeys.DB_PLACE_ORDER_RESP, placeOrderResponse);
+        } else {
+            Paper.book().delete(PaperDBKeys.DB_PLACE_ORDER_RESP);
+        }
+    }
+
+    public PlaceOrderResponse getPlaceOrderResponse(){
+        if(placeOrderResponse == null){
+            placeOrderResponse = Paper.book().read(PaperDBKeys.DB_PLACE_ORDER_RESP);
+        }
+        return placeOrderResponse;
+    }
+
+
 
 }

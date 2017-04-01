@@ -141,6 +141,8 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 				new FreshCategoryItemsAdapter.Callback() {
 					@Override
 					public void onPlusClicked(int position, SubItem subItem) {
+						activity.saveSubItemToDeliveryStoreCart(subItem);
+						activity.updateItemListFromDBFMG(null);
 						activity.updateCartValuesGetTotalPriceFMG(subItem);
 						if(freshSearchResponse != null && freshSearchResponse.getDeliveryStores() != null){
 							for(DeliveryStore deliveryStore : freshSearchResponse.getDeliveryStores()){
@@ -154,6 +156,8 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 
 					@Override
 					public void onMinusClicked(int position, SubItem subItem) {
+						activity.saveSubItemToDeliveryStoreCart(subItem);
+						activity.updateItemListFromDBFMG(null);
 						activity.updateCartValuesGetTotalPriceFMG(subItem);
 					}
 

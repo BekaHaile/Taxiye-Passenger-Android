@@ -15,6 +15,26 @@ public class FeedComment {
     @SerializedName("user_image")
     @Expose
     private String userImage;
+    @SerializedName("activity_id")
+    @Expose
+    private long activityId;
+    @SerializedName("is_comment_editable")
+    @Expose
+    private boolean canEdit;
+
+    public boolean canEdit() {
+        return canEdit;
+    }
+
+    public void setCanEdit(boolean canEdit) {
+        this.canEdit = canEdit;
+    }
+
+    public long getActivityId() {
+        return activityId;
+    }
+
+
 
     public String getCommentContent() {
         return commentContent;
@@ -43,4 +63,6 @@ public class FeedComment {
     public String getUserImage() {
         return userImage;
     }
+
+
 }

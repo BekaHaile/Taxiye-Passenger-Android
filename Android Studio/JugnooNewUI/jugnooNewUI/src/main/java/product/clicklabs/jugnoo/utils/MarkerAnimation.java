@@ -34,7 +34,7 @@ public class MarkerAnimation {
 
     private static final String TAG = MarkerAnimation.class.getSimpleName();
     public static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
-    private static final double ANIMATION_TIME = 15000;
+    private static final double ANIMATION_TIME = 14000;
 
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         final LatLng startPosition = marker.getPosition();
@@ -224,10 +224,12 @@ public class MarkerAnimation {
             if (rotation) {
                 MapUtils.rotateMarker(marker, (float) MapUtils.getBearing(marker.getPosition(), finalPosition));
             }
-            MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(engagementId),
-                    finalPosition, bearing,
-                    TrackingLogModeValue.MOVE.getOrdinal(),
-                    marker.getPosition(), (long)finalDuration);
+            if(Integer.parseInt(engagementId) > 0) {
+                MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(engagementId),
+                        finalPosition, bearing,
+                        TrackingLogModeValue.MOVE.getOrdinal(),
+                        marker.getPosition(), (long) finalDuration);
+            }
 
             animator.start();
         }
@@ -269,10 +271,12 @@ public class MarkerAnimation {
             animator.start();
             float bearing = (float) MapUtils.getBearing(marker.getPosition(), latLng);
             MapUtils.rotateMarker(marker, bearing);
-            MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(engagementId),
-                    latLng, bearing,
-                    TrackingLogModeValue.MOVE.getOrdinal(),
-                    marker.getPosition(), (long) ANIMATION_TIME);
+            if(Integer.parseInt(engagementId) > 0) {
+                MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(engagementId),
+                        latLng, bearing,
+                        TrackingLogModeValue.MOVE.getOrdinal(),
+                        marker.getPosition(), (long) ANIMATION_TIME);
+            }
         }
     }
 

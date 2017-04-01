@@ -203,4 +203,11 @@ public interface GAAction {
 	String MOBILE = "Mobile ";
 	String FACEBOOK = "Facebook ";
 	String GOOGLE = "Google ";
+	String TRACK_DELIVERY = "Track Delivery ";
+	String WAITLIST = "Waitlist ";
+	String SHARING = "Sharing ";
+	String OFFERS = "Offers ";
+	String BAR = "Bar ";
+	String JEANIE = "Jeanie ";
+	String AUTOMATIC = "Automatic ";
 }

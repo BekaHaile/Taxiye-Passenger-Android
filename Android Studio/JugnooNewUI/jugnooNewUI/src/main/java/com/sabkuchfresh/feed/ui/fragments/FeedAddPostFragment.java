@@ -1,7 +1,8 @@
-package com.sabkuchfresh.fragments;
+package com.sabkuchfresh.feed.ui.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -14,10 +15,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.picker.image.model.ImageEntry;
-import com.sabkuchfresh.adapters.FeedAddPostPagerAdapter;
+import com.sabkuchfresh.feed.ui.adapters.DisplayFeedHomeImagesAdapter;
+import com.sabkuchfresh.feed.ui.adapters.FeedAddPostPagerAdapter;
+import com.sabkuchfresh.feed.utils.Utils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.ImageCompression;
+
+import org.json.JSONArray;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,7 +40,6 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.MultipartTypedOutput;
@@ -53,6 +60,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     public static final int NOT_APPLICABLE = -1;
     private Button btnSubmit;
     private ImageView ivAccessCamera;
+    public static final String FEED_DETAIL = "feed_detail";
+    private FeedDetail feedDetail;
+    private boolean isEditingPost;
 
 
     public FeedAddPostFragment() {
@@ -60,13 +70,24 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     }
 
 
-    public static FeedAddPostFragment newInstance() {
+    public static FeedAddPostFragment newInstance(FeedDetail feedDetail) {
         FeedAddPostFragment fragment = new FeedAddPostFragment();
         Bundle bundle = new Bundle();
+        bundle.putSerializable(FEED_DETAIL, feedDetail);
         fragment.setArguments(bundle);
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            if (getArguments().containsKey(FEED_DETAIL)) {
+                this.feedDetail = (FeedDetail) getArguments().getSerializable(FEED_DETAIL);
+                isEditingPost = true;
+            }
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,7 +109,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         btnSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
         rlReview.setOnClickListener(this);
         rlAsk.setOnClickListener(this);
-        feedAddPostPagerAdapter = new FeedAddPostPagerAdapter(getChildFragmentManager());
+        feedAddPostPagerAdapter = new FeedAddPostPagerAdapter(getChildFragmentManager(), feedDetail);
         viewPager.setAdapter(feedAddPostPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -127,7 +148,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 if (getVisibleFragment().canSubmit()) {
-                    Utils.hideKeyboard(activity);
+                    product.clicklabs.jugnoo.utils.Utils.hideKeyboard(activity);
                     PostReviewAPIData postReviewAPIData = getVisibleFragment().getSubmitAPIData();
                     postFeedAPI(postReviewAPIData.getContent(), postReviewAPIData.getImagesSelected(), postReviewAPIData.getRestaurantId(), postReviewAPIData.getScore());
 
@@ -136,7 +157,19 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             }
         });
 
+        if (isEditingPost) {
 
+            rootView.findViewById(R.id.llTabs).setVisibility(View.GONE);
+            rootView.findViewById(R.id.id_top_line).setVisibility(View.GONE);
+            if(feedDetail!=null ){
+                if(feedDetail.getFeedType()== FeedDetail.FeedType.POST)
+                    activity.getTopBar().title.setText("Edit Post");
+                else if(feedDetail.getFeedType()== FeedDetail.FeedType.REVIEW)
+                    activity.getTopBar().title.setText("Edit Review");
+
+            }
+
+        }
 
         return rootView;
     }
@@ -195,14 +228,46 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     }
 
 
-    public void postFeedAPI(final String postText, final ArrayList<ImageEntry> imageSelected, final int restId, final int ratingScore) {
+    public void postFeedAPI(final String postText, final ArrayList<Object> images, final int restId, final int ratingScore) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
                 DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
 
-                if (imageSelected != null && imageSelected.size() != 0) {
-                    //upload feedback with new Images
+                if (images == null || images.size() == 0) {
+                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore);
+                    return;
+                }
+
+
+                ArrayList<ImageEntry> imageSelected = null;//New images added these will be first compressed and then sent
+                JSONArray reviewImages = null;//Server images will be sent back as it is in array
+
+                for (Object object : images) {
+                    if (object instanceof ImageEntry) {
+                        if (imageSelected == null)
+                            imageSelected = new ArrayList<>();
+
+                        imageSelected.add((ImageEntry) object);
+                    } else if (object instanceof FetchFeedbackResponse.ReviewImage) {
+                        if (reviewImages == null)
+                            reviewImages = new JSONArray();
+
+                        reviewImages.put(object);
+                    }
+                }
+
+                if(reviewImages!=null && reviewImages.length()>0){
+                    //send back old images if any exist else send empty array
+                    multipartTypedOutput.addPart(Constants.KEY_IMAGES, new TypedString(Utils.getGson().toJson((Utils.getGson().toJsonTree(reviewImages).getAsJsonObject().get("values")))));
+                }
+
+                if(imageSelected==null||imageSelected.size()==0)
+                {
+                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore);
+                    return;
+                }
+
                     ImageCompression imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
                         @Override
                         public void processFinish(File[] output) {
@@ -233,16 +298,14 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                         imagesToCompress[i] = imageSelected.get(i).path;
                     }
                     imageCompressionTask.execute(imagesToCompress);
-                } else {
-                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore);
-                }
+
             } else {
 
                 DialogPopup.dialogNoInternet(activity, DialogErrorType.NO_NET,
                         new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View view) {
-                                postFeedAPI(postText, imageSelected, restId, ratingScore);
+                                postFeedAPI(postText, images, restId, ratingScore);
                             }
 
                             @Override
@@ -260,13 +323,11 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             }
         } catch (Exception e) {
             e.printStackTrace();
-
+            DialogPopup.dismissLoadingDialog();
         }
     }
 
-    public void postFeedAPI(final String postText, ArrayList<ImageEntry> imageSelected) {
-        postFeedAPI(postText, imageSelected, NOT_APPLICABLE, NOT_APPLICABLE);
-    }
+
 
     private void uploadParamsAndPost(final MultipartTypedOutput multipartTypedOutput, final String postText, final int restId, final int rating) {
 
@@ -286,7 +347,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         multipartTypedOutput.addPart(Constants.KEY_APP_VERSION, new TypedString(String.valueOf(MyApplication.getInstance().appVersion())));
         multipartTypedOutput.addPart(Constants.KEY_DEVICE_TYPE, new TypedString(Data.DEVICE_TYPE));
 
-        RestClient.getFeedApiService().postFeed(multipartTypedOutput, new retrofit.Callback<SettleUserDebt>() {
+
+        retrofit.Callback<SettleUserDebt> APICallBack =  new retrofit.Callback<SettleUserDebt>() {
             @Override
             public void success(SettleUserDebt feedbackResponse, Response response) {
                 String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -302,6 +364,10 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                             if (activity.getFeedHomeFragment() != null && activity.getFeedHomeFragment().getView() != null) {
                                 activity.getFeedHomeFragment().fetchFeedsApi(true);
                             }
+                            if(activity.getTopFragment() instanceof FeedOfferingCommentsFragment){
+                                activity.getOfferingsCommentFragment().fetchDetailAPI();
+                            }
+
                         } else {
                             DialogPopup.alertPopup(activity, "", message);
                         }
@@ -318,7 +384,16 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 retryDialog(DialogErrorType.CONNECTION_LOST, multipartTypedOutput, postText, restId, rating);
 
             }
-        });
+        };
+
+        if(isEditingPost){
+            multipartTypedOutput.addPart(Constants.KEY_POST_ID,new TypedString(String.valueOf(feedDetail.getPostId())));
+            RestClient.getFeedApiService().editFeed(multipartTypedOutput,APICallBack);
+
+        }else{
+            RestClient.getFeedApiService().postFeed(multipartTypedOutput,APICallBack);
+
+        }
     }
 
     private void retryDialog(DialogErrorType dialogErrorType, final MultipartTypedOutput multipartTypedOutput, final String postText, final int restId, final int ratingScore) {
@@ -348,12 +423,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
     public static class PostReviewAPIData {
         private Integer restaurantId;
-        private ArrayList<ImageEntry> imagesSelected;
+        private ArrayList<Object> imagesSelected;
         private String content;
         private Integer score;
 
 
-        public PostReviewAPIData(Integer restaurantId, ArrayList<ImageEntry> imagesSelected, String content, Integer score) {
+        public PostReviewAPIData(Integer restaurantId, ArrayList<Object> imagesSelected, String content, Integer score) {
             this.restaurantId = restaurantId;
             this.imagesSelected = imagesSelected;
             this.content = content;
@@ -368,11 +443,11 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             this.restaurantId = restaurantId;
         }
 
-        public ArrayList<ImageEntry> getImagesSelected() {
+        public ArrayList<Object> getImagesSelected() {
             return imagesSelected;
         }
 
-        public void setImagesSelected(ArrayList<ImageEntry> imagesSelected) {
+        public void setImagesSelected(ArrayList<Object> imagesSelected) {
             this.imagesSelected = imagesSelected;
         }
 

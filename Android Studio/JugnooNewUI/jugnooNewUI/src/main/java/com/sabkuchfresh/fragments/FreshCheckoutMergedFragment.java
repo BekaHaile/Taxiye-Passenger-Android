@@ -62,6 +62,7 @@ import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.home.OrderCheckoutFailureDialog;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
+import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SlotViewType;
@@ -161,6 +162,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewRadioMobikwik, imageViewAddMobikwik,
             imageViewRadioFreeCharge, imageViewAddFreeCharge, imageViewRadioJugnooPay, imageViewAddJugnooPay, imageViewCashRadio;
     private TextView textViewPaytmValue, textViewMobikwikValue, textViewFreeChargeValue;
+	private RelativeLayout rlOtherModesToPay;
+	private ImageView ivOtherModesToPay;
+	private TextView tvOtherModesToPay;
 
     private LinearLayout linearLayoutOffers;
     private NonScrollListView listViewOffers;
@@ -465,6 +469,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         textViewFreeChargeValue = (TextView)rootView.findViewById(R.id.textViewFreeChargeValue);textViewFreeChargeValue.setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewJugnooPay)).setTypeface(Fonts.mavenMedium(activity));
+		rlOtherModesToPay = (RelativeLayout) rootView.findViewById(R.id.rlOtherModesToPay);
+		ivOtherModesToPay = (ImageView) rootView.findViewById(R.id.ivOtherModesToPay);
+		tvOtherModesToPay = (TextView) rootView.findViewById(R.id.tvOtherModesToPay);
 
         linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
         listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
@@ -529,6 +536,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutJugnooPay.setOnClickListener(onClickListenerPaymentOptionSelector);
+		rlOtherModesToPay.setOnClickListener(onClickListenerPaymentOptionSelector);
 
         activity.setSelectedPromoCoupon(noSelectionCoupon);
 
@@ -872,6 +880,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH,
                                 callbackPaymentOptionSelector);
                         break;
+
+					case R.id.rlOtherModesToPay:
+						callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
+						break;
                 }
                 GAUtils.event(activity.getGaCategory(), CHECKOUT+WALLET+MODIFIED, String.valueOf(activity.getPaymentOption()));
             } catch (Exception e) {
@@ -1072,39 +1084,23 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 imageViewAddJugnooPay.setVisibility(View.VISIBLE);
             }
 
+			imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
+			imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+			imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
+			imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
+			imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
+			ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_normal);
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
-                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
-            }
-            else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
-                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
+            } else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_selected);
-                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
-            }
-            else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
-                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+            } else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
                 imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_selected);
-                imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
-            }
-            else if (activity.getPaymentOption() == PaymentOption.JUGNOO_PAY) {
-                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
+            } else if (activity.getPaymentOption() == PaymentOption.JUGNOO_PAY) {
                 imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_selected);
-                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
-            }
-            else {
-                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
+            } else if(activity.getPaymentOption() == PaymentOption.RAZOR_PAY){
+				ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_selected);
+			} else {
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
             }
             updateCartDataView();
@@ -1408,7 +1404,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                 final int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     if(jObj.has(Constants.KEY_PAYMENT_OBJECT)){
-                                        FreshCheckoutMergedFragment.this.placeOrderResponse = placeOrderResponse;
+                                        activity.setPlaceOrderResponse(placeOrderResponse);
                                         final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity,
                                                 activity.getString(R.string.loading));
                                             activity.getHandler().postDelayed(new Runnable() {
@@ -1418,9 +1414,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                         progressDialog.dismiss();
                                                     }
                                                     activity.getPaySDKUtils().openSendMoneyPage(activity,
-                                                            FreshCheckoutMergedFragment.this.placeOrderResponse.getPaymentObject());
+                                                            activity.getPlaceOrderResponse().getPaymentObject());
                                                 }
                                             }, 3000);
+                                    } else if(jObj.has(Constants.KEY_RAZORPAY_PAYMENT_OBJECT)){
+                                        // razor pay case send data to RazorPay Checkout page
+                                        activity.setPlaceOrderResponse(placeOrderResponse);
+                                        activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT));
+                                        doSlideInitial = false;
                                     } else {
                                         orderPlacedSuccess(placeOrderResponse);
                                         fbPurchasedEvent(params, placeOrderResponse);
@@ -1530,8 +1531,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 //                        123
                         DialogPopup.dismissLoadingDialog();
                         if(doSlideInitial){
-                            setSlideInitial();
+                            activity.getHandler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setSlideInitial();
+                                }
+                            }, 200);
                         }
+
                     }
 
                     @Override
@@ -1838,12 +1845,26 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     }
                 }
 
+                // for pay only in fresh and meals
                 if (type != AppConstant.ApplicationType.MENUS
                         && Data.getPayData() != null && Data.userData.getPayEnabled() == 1) {
                     linearLayoutWalletContainer.addView(relativeLayoutJugnooPay);
                 }
 
             }
+
+            // for razorPay layout adding
+			ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
+			if(paymentGatewayModeConfigs != null && paymentGatewayModeConfigs.size() > 0){
+				for(PaymentGatewayModeConfig modeConfig : paymentGatewayModeConfigs){
+					if(modeConfig.getEnabled()!= null && modeConfig.getEnabled() == 1){
+						linearLayoutWalletContainer.addView(rlOtherModesToPay);
+						if(!TextUtils.isEmpty(modeConfig.getDisplayName()))
+							tvOtherModesToPay.setText(modeConfig.getDisplayName());
+					}
+				}
+			}
+
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -1855,6 +1876,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 					relativeLayoutMobikwik.setVisibility(View.GONE);
 					relativeLayoutFreeCharge.setVisibility(View.GONE);
                     relativeLayoutJugnooPay.setVisibility(View.GONE);
+					rlOtherModesToPay.setVisibility(View.GONE);
 				} else if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()){
 					relativeLayoutCash.setVisibility(View.GONE);
 				}
@@ -1931,6 +1953,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }
             return pcOld;
+        } else if(activity.getUserCheckoutResponse() != null){
+            PromoCoupon pcOld = activity.getSelectedPromoCoupon();
+            if(promoCoupons.size() == 0){
+                activity.setSelectedPromoCoupon(noSelectionCoupon);
+            }
+            return pcOld;
         }
         return null;
     }
@@ -1976,7 +2004,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         try {
             if (MyApplication.getInstance().isOnline()) {
 
-                DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+                boolean loaderShown = false;
+                if(!DialogPopup.isDialogShowing()) {
+                    DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+                    loaderShown = true;
+                }
+                final boolean finalLoaderShown = loaderShown;
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -2165,7 +2198,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             if(emptyCart == 1){
                                                 clearMenusCartAndGoToMenusFragment();
                                             } else if(redirect == 1) {
+                                                if(activity.getFreshSearchFragment() != null){
+                                                    activity.performBackPressed(false);
+                                                }
                                                 activity.performBackPressed(false);
+
                                             }
                                         }
                                     });
@@ -2176,13 +2213,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             exception.printStackTrace();
                             retryDialog(DialogErrorType.SERVER_ERROR);
                         }
-                        DialogPopup.dismissLoadingDialog();
+                        if(finalLoaderShown) {
+                            DialogPopup.dismissLoadingDialog();
+                        }
+                        linearLayoutMain.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
-                        DialogPopup.dismissLoadingDialog();
+                        if(finalLoaderShown) {
+                            DialogPopup.dismissLoadingDialog();
+                        }
                         retryDialog(DialogErrorType.CONNECTION_LOST);
                     }
                 };
@@ -2742,8 +2784,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
-    private PlaceOrderResponse placeOrderResponse;
-
 
     public void apiPlaceOrderPayCallback(final MessageRequest message){
         try {
@@ -2751,8 +2791,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 DialogPopup.showLoadingDialog(activity, "");
                 HashMap<String, String> params = new HashMap<>();
 
-                params.put(Constants.KEY_ORDER_ID, String.valueOf(placeOrderResponse.getOrderId()));
-                params.put(Constants.KEY_PAY_ORDER_ID, String.valueOf(placeOrderResponse.getPaymentObject().getOrderId()));
+                params.put(Constants.KEY_ORDER_ID, String.valueOf(activity.getPlaceOrderResponse().getOrderId()));
+                params.put(Constants.KEY_PAY_ORDER_ID, String.valueOf(activity.getPlaceOrderResponse().getPaymentObject().getOrderId()));
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID,
                         Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
@@ -2767,7 +2807,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         try {
                             int flag = commonResponse.getFlag();
                             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                orderPlacedSuccess(placeOrderResponse);
+                                orderPlacedSuccess(activity.getPlaceOrderResponse());
                             }
                             else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
                                 // DialogPopup.alertPopup(activity, "", commonResponse.getMessage());
@@ -2911,6 +2951,32 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         } else {
             llDeliveryFrom.setVisibility(View.GONE);
+        }
+    }
+
+
+
+    // razor pay back from service callback
+    public void razorpayServiceCallback(JSONObject jsonObject){
+        try {
+            setSlideInitial();
+            int flag = jsonObject.getInt(Constants.KEY_FLAG);
+            String message = JSONParser.getServerMessage(jsonObject);
+            if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+//                if(jsonObject.has(Constants.KEY_REFERRAL_POPUP_CONTENT)){
+//                    PlaceOrderResponse.ReferralPopupContent referralPopupContent = activity.getGson()
+//                            .fromJson(jsonObject.getJSONObject(Constants.KEY_REFERRAL_POPUP_CONTENT).toString(),
+//                                    PlaceOrderResponse.ReferralPopupContent.class);
+//                    activity.getPlaceOrderResponse().setReferralPopupContent(referralPopupContent);
+//                }
+				orderPlacedSuccess(activity.getPlaceOrderResponse());
+			}
+			else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
+				 DialogPopup.alertPopup(activity, "", message);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
         }
     }
 

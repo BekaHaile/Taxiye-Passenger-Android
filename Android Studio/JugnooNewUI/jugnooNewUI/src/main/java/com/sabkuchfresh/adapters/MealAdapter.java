@@ -3,7 +3,6 @@ package com.sabkuchfresh.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -135,8 +134,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         statusHolder.tvDeliveryTime.setText(activity.getResources().getString(R.string.delivery_before_colon)+" "+recentOrder.getEndTime());
                     }
 
-                    statusHolder.cvMain.setTag(position);
-                    statusHolder.cvMain.setOnClickListener(new View.OnClickListener() {
+                    statusHolder.container.setTag(position);
+                    statusHolder.container.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
@@ -485,16 +484,15 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     static class ViewTitleStatus extends RecyclerView.ViewHolder {
 
         public LinearLayout linear;
-        public CardView cvMain;
         public RelativeLayout container, relativeStatusBar;
         public TextView tvOrderId, tvOrderIdValue,tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
         public View lineStatus1, lineStatus2, lineStatus3;
+        private RelativeLayout rlRestaurantInfo, rlTrackViewOrder;
 
         public ViewTitleStatus(View itemView, Context context) {
             super(itemView);
             linear = (LinearLayout) itemView.findViewById(R.id.linear);
-            cvMain = (CardView) itemView.findViewById(R.id.cvMain);
             container = (RelativeLayout) itemView.findViewById(R.id.container);
             relativeStatusBar = (RelativeLayout) itemView.findViewById(R.id.relativeStatusBar);
             tvOrderId = (TextView) itemView.findViewById(R.id.tvOrderId); tvOrderId.setTypeface(Fonts.mavenRegular(context));
@@ -512,6 +510,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             lineStatus1 = (View) itemView.findViewById(R.id.lineStatus1);
             lineStatus2 = (View) itemView.findViewById(R.id.lineStatus2);
             lineStatus3 = (View) itemView.findViewById(R.id.lineStatus3);
+            rlRestaurantInfo = (RelativeLayout) itemView.findViewById(R.id.rlRestaurantInfo); rlRestaurantInfo.setVisibility(View.GONE);
+            rlTrackViewOrder = (RelativeLayout) itemView.findViewById(R.id.rlTrackViewOrder); rlTrackViewOrder.setVisibility(View.GONE);
         }
     }
 

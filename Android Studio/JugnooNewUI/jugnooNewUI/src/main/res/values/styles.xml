@@ -368,4 +368,55 @@
         <item name="android:background">@color/stroke_light_grey_alpha</item>
     </style>
 
+    <style name="ContextMenuButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/btn_context_menu</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:drawablePadding">20dp</item>
+        <item name="android:textColor">@color/feed_grey_text</item>
+        <item name="android:textSize">@dimen/font_large</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Feed_Popup_Theme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.7</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
+
+    <style name="dialog_anim_from_bottom">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <style name="text_feed_popup">
+
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/font_large</item>
+        <item name="android:paddingBottom">@dimen/spacing_small</item>
+        <item name="android:paddingLeft">@dimen/spacing_large</item>
+        <item name="android:paddingRight">@dimen/spacing_large</item>
+        <item name="android:paddingTop">@dimen/spacing_small</item>
+        <item name="android:textColor">@color/text_color_theme_color_selector</item>
+        <item name="font">@string/maven_r</item>
+    </style>
+
+    <style name="Feed.SignUp.Meter" parent="TextAppearance.AppCompat">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">33sp</item>
+        <item name="android:textColor">@color/text_color_theme_color_selector</item>
+        <item name="font">@string/maven_r</item>
+    </style>
+
+
 </resources>

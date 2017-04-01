@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -51,7 +52,7 @@ public class FABViewTest implements GACategory, GAAction {
     private final String GENIE_OPEN = "Genie Open";
 
     private RelativeLayout rlGenieHelp;
-    private TextView tvGenieHelp;
+    private TextView tvGenieHelp, tvGenieExpandMessage;
     private ImageView ivJeanieHelp;
 
     public FABViewTest(Activity activity, View view) {
@@ -97,6 +98,8 @@ public class FABViewTest implements GACategory, GAAction {
             rlGenieHelp = (RelativeLayout) view.findViewById(R.id.rlGenieHelp);
             tvGenieHelp = (TextView) view.findViewById(R.id.tvGenieHelp);
             ivJeanieHelp = (ImageView) view.findViewById(R.id.ivJeanieHelp);
+            tvGenieExpandMessage = (TextView) view.findViewById(R.id.tvGenieExpandMessage);
+
 
             setRlGenieHelpBottomMargin(170f);
         } catch (Exception e) {
@@ -125,6 +128,7 @@ public class FABViewTest implements GACategory, GAAction {
 //                            ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
                         }
                         ivJeanieHelp.setVisibility(View.GONE);
+                        tvGenieExpandMessage.setVisibility(View.GONE);
                         GAUtils.event(JUGNOO, getOffering()+HOME, GENIE+CLOSED);
                     }
                     try {
@@ -172,8 +176,15 @@ public class FABViewTest implements GACategory, GAAction {
         scaleInX.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
-                        ? R.drawable.ic_fab_jeanie : R.drawable.ic_fab_cross);
+                if(Data.userData == null || Data.userData.getExpandJeanie() == 0) {
+                    menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
+                            ? R.drawable.ic_fab_jeanie : R.drawable.ic_fab_cross);
+                    menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity, R.color.white));
+                } else if(Data.userData != null) {
+                    Data.userData.setExpandJeanie(0);
+                    menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
+                    menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity, R.color.grey_light));
+                }
                 try {
                     if(activity instanceof HomeActivity) {
 						if (menuLabelsRightTest.isOpened()) {
@@ -469,6 +480,37 @@ public class FABViewTest implements GACategory, GAAction {
 
     public boolean getIsOpened(){
         return isOpened;
+    }
+
+    public void expandJeanieFirstTime(){
+        try {
+            if(Data.userData != null && Data.userData.getExpandJeanie() == 1) {
+				getMenuLabelsRightTest().open(true);
+				if(!TextUtils.isEmpty(Data.userData.getExpandedGenieText())) {
+					tvGenieExpandMessage.setText(Data.userData.getExpandedGenieText());
+					Animation animation = new AlphaAnimation(0f, 1f);
+					animation.setDuration(500);
+					animation.setFillAfter(false);
+					tvGenieExpandMessage.setVisibility(View.VISIBLE);
+					tvGenieExpandMessage.startAnimation(animation);
+                    GAUtils.trackScreenView(JEANIE+EXPANDED+AUTOMATIC);
+				}
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Data.userData.setExpandJeanie(0);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 500);
+			} else if(Data.userData != null){
+                Data.userData.setExpandJeanie(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
