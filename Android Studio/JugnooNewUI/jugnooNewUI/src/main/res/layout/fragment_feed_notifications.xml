@@ -2,14 +2,57 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvNotifications"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/rank_2"
+    >
+    
+    <LinearLayout
+        android:id="@+id/llNoNotifications"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fadeScrollbars="true"
-        android:scrollbars="vertical"
-        android:splitMotionEvents="false"/>
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+        
+        <ImageView
+            android:layout_width="375dp"
+            android:layout_height="208dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/bg_no_notifications"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/no_notifications_yet"
+            android:textColor="@color/generalTxtColor"
+            android:textSize="@dimen/sp_18"
+            app:font="maven"
+            />
+        
+    </LinearLayout>
+    
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvNotifications"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="@drawable/shadow_down_new"
+        />
 
 </RelativeLayout>

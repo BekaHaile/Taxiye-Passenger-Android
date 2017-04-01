@@ -3,7 +3,7 @@ package com.sabkuchfresh.feed.ui.adapters;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -48,7 +48,7 @@ import static com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail.FeedT
 /**
  * Created by Shankar on 7/17/15.
  */
-public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
+public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener, DisplayFeedHomeImagesAdapter.Callback {
 
 
     private FreshActivity activity;
@@ -112,7 +112,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
-            setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback);
+            setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback, this);
             if (position == adapterList.size() - 2) {
                 ((ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
             } else {
@@ -145,7 +145,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
-    public static void setData(ViewHolderReviewImage holder, final FeedDetail feedDetail, FreshActivity activity, final FeedPostCallback feedPostCallback) {
+    public static void setData(ViewHolderReviewImage holder, final FeedDetail feedDetail, FreshActivity activity, final FeedPostCallback feedPostCallback,
+                               final DisplayFeedHomeImagesAdapter.Callback callback) {
         String imageUrl = null, restaurantAddress = null, ownerImage = null, userImage = null;
         Spannable title = null, userActivityTitle = null;
         Double rating = null;
@@ -310,18 +311,31 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             else
                 holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_grey_text));
 
+            // for adding restaurant image in reviewImages list if no images added
+            ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages;
+            if((feedDetail.getReviewImages() == null || feedDetail.getReviewImages().size() == 0)
+                    && !TextUtils.isEmpty(imageUrl)){
+                reviewImages = new ArrayList<>();
+                FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage(imageUrl, imageUrl);
+                reviewImage.setIsRestaurantImage(true);
+                reviewImages.add(reviewImage);
+            } else {
+                reviewImages = feedDetail.getReviewImages();
+            }
+
             //Show user Images if greater than 1 in a recycler view
-            if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 1) {
-                holder.recyclerViewUserImages.setVisibility(View.VISIBLE);
+            if (reviewImages != null && reviewImages.size() > 0) {
+                holder.vpReviewImages.setVisibility(View.VISIBLE);
                 if (holder.displayFeedHomeImagesAdapter == null) {
-                    holder.displayFeedHomeImagesAdapter = new DisplayFeedHomeImagesAdapter(activity, feedDetail.getReviewImages(), holder.recyclerViewUserImages);
-                    holder.recyclerViewUserImages.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
-                    holder.recyclerViewUserImages.setAdapter(holder.displayFeedHomeImagesAdapter);
+                    holder.displayFeedHomeImagesAdapter = new DisplayFeedHomeImagesAdapter(activity, reviewImages,
+                            feedDetail.getRestaurantId(),
+                            callback);
+                    holder.vpReviewImages.setAdapter(holder.displayFeedHomeImagesAdapter);
                 } else {
-                    holder.displayFeedHomeImagesAdapter.setList(feedDetail.getReviewImages());
+                    holder.displayFeedHomeImagesAdapter.setList(reviewImages, feedDetail.getRestaurantId());
                 }
             } else {
-                holder.recyclerViewUserImages.setVisibility(View.GONE);
+                holder.vpReviewImages.setVisibility(View.GONE);
             }
 
             //Show Edit post option if available
@@ -339,6 +353,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
+    }
+
+    @Override
+    public void onRestaurantImageClick(Integer restaurantId) {
+        feedPostCallback.onRestaurantClick(restaurantId);
     }
 
     private static String formLikesComment(int likeCount, int commentCount, FreshActivity activity) {
@@ -568,8 +587,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         RelativeLayout layoutItem;
         @Bind(R.id.ib_arrow_more)
         ImageView ivMore;
-        @Bind(R.id.recycler_user_images)
-        RecyclerView recyclerViewUserImages;//feeddetail.getReviewImages field is greater than 1 than we  have to show this recycler view
+        @Bind(R.id.vpReviewImages)
+        ViewPager vpReviewImages;
         DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
@@ -615,7 +634,6 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     onClickView.onClickItem(ivMore, view);
                 }
             });
-
         }
     }
 

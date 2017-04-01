@@ -169,15 +169,13 @@
         android:background="@drawable/ic_fresh_new_placeholder"
         android:scaleType="centerCrop" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_user_images"
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpReviewImages"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/image_height_feed"
         android:layout_below="@+id/iv_place_image"
-        android:layout_marginLeft="@dimen/spacing_large"
-        android:layout_marginRight="@dimen/spacing_large"
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_width="wrap_content"
-        android:visibility="gone"
-        android:layout_height="wrap_content"/>
+        android:layout_marginBottom="@dimen/spacing_small"/>
 
     <TextView
         android:id="@+id/tv_restaurant_feed_address"
@@ -205,7 +203,7 @@
         android:id="@+id/tv_like_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/recycler_user_images"
+        android:layout_below="@+id/vpReviewImages"
         android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginLeft="@dimen/spacing_large"
         android:layout_marginRight="@dimen/spacing_small"
@@ -224,7 +222,7 @@
         android:layout_toRightOf="@id/tv_like_status"
         android:layout_alignParentRight="true"
         android:layout_height="wrap_content"
-        android:layout_below="@id/recycler_user_images"
+        android:layout_below="@+id/vpReviewImages"
         android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginRight="@dimen/spacing_large"
         android:text="Comments"

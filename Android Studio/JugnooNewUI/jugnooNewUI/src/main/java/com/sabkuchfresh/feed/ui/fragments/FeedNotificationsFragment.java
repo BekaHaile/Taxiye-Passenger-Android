@@ -3,12 +3,14 @@ package com.sabkuchfresh.feed.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -30,6 +32,11 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 	@Bind(R.id.rvNotifications)
 	RecyclerView rvNotifications;
 	FeedNotificationsAdapter notificationsAdapter;
+
+	@Bind(R.id.swipeRefreshLayout)
+	SwipeRefreshLayout swipeRefreshLayout;
+	@Bind(R.id.llNoNotifications)
+	LinearLayout llNoNotifications;
 
 	FreshActivity activity;
 	private ArrayList<NotificationDatum> notificationData;
@@ -67,7 +74,22 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 
 
 
-
+		swipeRefreshLayout.setColorSchemeResources(R.color.white);
+		swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				// TODO: 01/04/17 remove this and add api
+				if(llNoNotifications.getVisibility() == View.GONE){
+					llNoNotifications.setVisibility(View.VISIBLE);
+					rvNotifications.setVisibility(View.GONE);
+				} else {
+					llNoNotifications.setVisibility(View.GONE);
+					rvNotifications.setVisibility(View.VISIBLE);
+				}
+				swipeRefreshLayout.setRefreshing(false);
+			}
+		});
 
 		rvNotifications.setLayoutManager(new LinearLayoutManager(getActivity()));
 		rvNotifications.setHasFixedSize(false);
@@ -85,6 +107,13 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 		return rootView;
 	}
 
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			activity.fragmentUISetup(this);
+		}
+	}
 
 	@Override
 	public void onDestroyView() {

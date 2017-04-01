@@ -36,7 +36,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by Shankar on 7/17/15.
  */
-public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
+public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener, DisplayFeedHomeImagesAdapter.Callback {
 
     private FreshActivity activity;
     private FeedHomeAdapter.FeedPostCallback callback;
@@ -95,7 +95,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         if(holder instanceof FeedHomeAdapter.ViewHolderReviewImage)
         {
 
-            FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback);
+            FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback, this);
             ((FeedHomeAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
 
         }
@@ -137,6 +137,11 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         }
 
 
+    }
+
+    @Override
+    public void onRestaurantImageClick(Integer restaurantId) {
+        callback.onRestaurantClick(restaurantId);
     }
 
 

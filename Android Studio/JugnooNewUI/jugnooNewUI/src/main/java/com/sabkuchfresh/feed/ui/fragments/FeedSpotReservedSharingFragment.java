@@ -70,7 +70,7 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 		tvRankDescription.append(activity.getString(R.string.people_ahead_of_you_in_queue));
 
 		if(!TextUtils.isEmpty(Data.getFeedData().getEarlyAccessText())) {
-			tvWantEarlyAccessMessage.setText(fromHtml(Data.getFeedData().getEarlyAccessText()));
+			tvWantEarlyAccessMessage.setText(Utils.trimHTML(fromHtml(Data.getFeedData().getEarlyAccessText())));
 		}
 
 		Utils.setTextUnderline(tvMoreSharingOptions, activity.getString(R.string.view_more_sharing_options));
@@ -84,6 +84,7 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 
 		GAUtils.trackScreenView(FEED + HOME + WAITLIST + SHARING);
 
+		// TODO: 01/04/17 remove this
 		activity.getHandler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
