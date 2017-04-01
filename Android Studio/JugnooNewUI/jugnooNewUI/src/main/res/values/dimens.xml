@@ -489,6 +489,9 @@
     <dimen name="image_height_feed">110dp</dimen>
     <dimen name="height_tabs_add_post">45dp</dimen>
 
+
+    <dimen name="feed_badge_text_size">9sp</dimen>
+
     <dimen name="dp_20">20dp</dimen>
     <dimen name="dp_36">
         36dp

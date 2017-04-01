@@ -258,7 +258,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public CallbackManager callbackManager;
     public boolean isTimeAutomatic;
     private CollapsingToolbarLayout collapsingToolbar;
-    private View whatsOnMindView;
+    private View feedHomeAddPostView;
+
+    public View getFeedHomeAddPostView() {
+        return feedHomeAddPostView;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,7 +273,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             toolbar.setTitle("");
-
+            setUpAddPostForFeedFragment();
             appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
             collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
@@ -522,6 +526,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         }, 500);
 
+    }
+
+    private void setUpAddPostForFeedFragment() {
+        feedHomeAddPostView = findViewById(R.id.add_post);
+        feedHomeAddPostView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getTopFragment()  instanceof FeedHomeFragment){
+                    openFeedAddPostFragment(null);
+                }
+            }
+        });
     }
 
 
@@ -1279,8 +1295,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llSearchCartVis = View.GONE;
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment
-                    || fragment instanceof FeedSpotReservedSharingFragment) {
+            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment) {
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -1293,9 +1308,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
-                if(fragment instanceof FeedHomeFragment){
-                    topBar.ivAddReview.setVisibility(View.VISIBLE);
-                }
+
             }
             else if(fragment instanceof FeedOfferingCommentsFragment
                     || fragment instanceof FeedNotificationsFragment){
@@ -1344,14 +1357,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
-            whatsOnMindView = findViewById(R.id.add_post);
             setCollapsingToolbar(fragment instanceof VendorMenuFragment, fragment);
 
 
             if(fragment instanceof FeedHomeFragment)
-                whatsOnMindView.setVisibility(View.VISIBLE);
+                feedHomeAddPostView.setVisibility(View.VISIBLE);
             else
-                whatsOnMindView.setVisibility(View.GONE);
+                feedHomeAddPostView.setVisibility(View.GONE);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1419,7 +1431,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             if(fragment instanceof FeedHomeFragment) {
                 collapsingToolBarParams.setScrollFlags(0);
-                collapsingToolBarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                collapsingToolBarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS| AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
                 collapsingToolbar.setLayoutParams(collapsingToolBarParams);
 
                 appBarLayout.addOnOffsetChangedListener(feedHomeAppBarListener);
@@ -1460,8 +1472,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
 
-            android.util.Log.i(TAG, "onOffsetChanged: " +((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* whatsOnMindView.getHeight());
-            whatsOnMindView.animate().translationY(whatsOnMindView.getHeight()-((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* whatsOnMindView.getHeight()).start();
+            android.util.Log.i(TAG, "onOffsetChanged: " +((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* feedHomeAddPostView.getHeight());
+            feedHomeAddPostView.animate().translationY(feedHomeAddPostView.getHeight()-((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* feedHomeAddPostView.getHeight()).start();
            /* if(verticalOffset== -appBarLayout.getTotalScrollRange())
             {
 

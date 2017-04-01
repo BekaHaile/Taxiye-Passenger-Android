@@ -418,5 +418,15 @@
         <item name="font">@string/maven_r</item>
     </style>
 
-
+    <style name="ThemeSwitch" >
+        <item name="colorControlActivated">@color/yellow_jugnoo</item>
+        <!--<item name="colorControlNormal">@color/white</item>-->
+        <!--<item name="colorPrimary">@color/red</item>
+        <item name="colorPrimaryDark">@color/red</item>
+        <item name="colorAccent">@color/red</item>
+        <item name="colorControlHighlight">@color/red</item>
+        <item name="colorButtonNormal">@color/red</item>
+        <item name="colorSwitchThumbNormal">@color/red</item>-->
+        <item name="android:colorForeground">@color/feed_grey_text_secondary</item>
+    </style>
 </resources>

@@ -6,18 +6,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.picker.image.model.ImageEntry;
-import com.sabkuchfresh.feed.ui.adapters.DisplayFeedHomeImagesAdapter;
 import com.sabkuchfresh.feed.ui.adapters.FeedAddPostPagerAdapter;
 import com.sabkuchfresh.feed.utils.Utils;
 import com.sabkuchfresh.home.FreshActivity;
@@ -63,6 +63,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     public static final String FEED_DETAIL = "feed_detail";
     private FeedDetail feedDetail;
     private boolean isEditingPost;
+    private SwitchCompat switchAnonymousPost;
+    private TextView labelAnonymousSwitch;
 
 
     public FeedAddPostFragment() {
@@ -97,6 +99,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         activity.fragmentUISetup(this);
         RelativeLayout rlReview = (RelativeLayout) rootView.findViewById(R.id.rlReview);
         RelativeLayout rlAsk = (RelativeLayout) rootView.findViewById(R.id.rlAsk);
+        switchAnonymousPost = (SwitchCompat) rootView.findViewById(R.id.switch_handle);
+        labelAnonymousSwitch = (TextView) rootView.findViewById(R.id.tv_switch_label);
         tvReview = (TextView) rootView.findViewById(R.id.tvReview);
         tvReview.setTypeface(tvReview.getTypeface(), Typeface.BOLD);
         tvAsk = (TextView) rootView.findViewById(R.id.tvAsk);
@@ -111,6 +115,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         rlAsk.setOnClickListener(this);
         feedAddPostPagerAdapter = new FeedAddPostPagerAdapter(getChildFragmentManager(), feedDetail);
         viewPager.setAdapter(feedAddPostPagerAdapter);
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -123,6 +128,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
                 switchAddFeed(position);
 //                ivAccessCamera.setEnabled(getVisibleFragment().canUploadImages());
+                toggleAnonymousPosting(getVisibleFragment().isAnonymousPostingEnabled());
                 btnSubmit.setActivated(getVisibleFragment().submitEnabledState());
             }
 
@@ -150,7 +156,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 if (getVisibleFragment().canSubmit()) {
                     product.clicklabs.jugnoo.utils.Utils.hideKeyboard(activity);
                     PostReviewAPIData postReviewAPIData = getVisibleFragment().getSubmitAPIData();
-                    postFeedAPI(postReviewAPIData.getContent(), postReviewAPIData.getImagesSelected(), postReviewAPIData.getRestaurantId(), postReviewAPIData.getScore());
+                    postFeedAPI(postReviewAPIData.getContent(), postReviewAPIData.getImagesSelected(), postReviewAPIData.getRestaurantId(), postReviewAPIData.getScore(), postReviewAPIData.isAnonymousPostingEnabled());
 
                 }
 
@@ -161,16 +167,24 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             rootView.findViewById(R.id.llTabs).setVisibility(View.GONE);
             rootView.findViewById(R.id.id_top_line).setVisibility(View.GONE);
-            if(feedDetail!=null ){
-                if(feedDetail.getFeedType()== FeedDetail.FeedType.POST)
+            if (feedDetail != null) {
+                if (feedDetail.getFeedType() == FeedDetail.FeedType.POST)
                     activity.getTopBar().title.setText("Edit Post");
-                else if(feedDetail.getFeedType()== FeedDetail.FeedType.REVIEW)
+                else if (feedDetail.getFeedType() == FeedDetail.FeedType.REVIEW)
                     activity.getTopBar().title.setText("Edit Review");
 
             }
 
         }
 
+
+        labelAnonymousSwitch.setTypeface(labelAnonymousSwitch.getTypeface(), Typeface.BOLD);
+        switchAnonymousPost.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                labelAnonymousSwitch.setText(isChecked ? "Handle" : "Anonymous");
+            }
+        });
+        switchAnonymousPost.setChecked(true);
         return rootView;
     }
 
@@ -228,14 +242,14 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     }
 
 
-    public void postFeedAPI(final String postText, final ArrayList<Object> images, final int restId, final int ratingScore) {
+    public void postFeedAPI(final String postText, final ArrayList<Object> images, final int restId, final int ratingScore, final boolean anonymousPostingEnabled) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
                 DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
 
                 if (images == null || images.size() == 0) {
-                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore);
+                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled);
                     return;
                 }
 
@@ -257,47 +271,46 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                     }
                 }
 
-                if(reviewImages!=null && reviewImages.length()>0){
+                if (reviewImages != null && reviewImages.length() > 0) {
                     //send back old images if any exist else send empty array
                     multipartTypedOutput.addPart(Constants.KEY_IMAGES, new TypedString(Utils.getGson().toJson((Utils.getGson().toJsonTree(reviewImages).getAsJsonObject().get("values")))));
                 }
 
-                if(imageSelected==null||imageSelected.size()==0)
-                {
-                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore);
+                if (imageSelected == null || imageSelected.size() == 0) {
+                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled);
                     return;
                 }
 
-                    ImageCompression imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
-                        @Override
-                        public void processFinish(File[] output) {
+                ImageCompression imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
+                    @Override
+                    public void processFinish(File[] output) {
 
-                            if (output != null) {
-                                for (File file : output) {
-                                    if (file != null) {
-                                        multipartTypedOutput.addPart(Constants.KEY_REVIEW_IMAGES, new TypedFile("image/*", file));
-                                    }
+                        if (output != null) {
+                            for (File file : output) {
+                                if (file != null) {
+                                    multipartTypedOutput.addPart(Constants.KEY_REVIEW_IMAGES, new TypedFile("image/*", file));
                                 }
-
                             }
-                            //upload feedback with new Images
-                            uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore);
-                        }
-
-                        @Override
-                        public void onError() {
-                            DialogPopup.dismissLoadingDialog();
 
                         }
-                    }, activity);
-
-
-                    String[] imagesToCompress = new String[imageSelected.size()];
-                    for (int i = 0; i < imageSelected.size(); i++) {
-
-                        imagesToCompress[i] = imageSelected.get(i).path;
+                        //upload feedback with new Images
+                        uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled);
                     }
-                    imageCompressionTask.execute(imagesToCompress);
+
+                    @Override
+                    public void onError() {
+                        DialogPopup.dismissLoadingDialog();
+
+                    }
+                }, activity);
+
+
+                String[] imagesToCompress = new String[imageSelected.size()];
+                for (int i = 0; i < imageSelected.size(); i++) {
+
+                    imagesToCompress[i] = imageSelected.get(i).path;
+                }
+                imageCompressionTask.execute(imagesToCompress);
 
             } else {
 
@@ -305,7 +318,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                         new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View view) {
-                                postFeedAPI(postText, images, restId, ratingScore);
+                                postFeedAPI(postText, images, restId, ratingScore, anonymousPostingEnabled);
                             }
 
                             @Override
@@ -328,8 +341,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     }
 
 
-
-    private void uploadParamsAndPost(final MultipartTypedOutput multipartTypedOutput, final String postText, final int restId, final int rating) {
+    private void uploadParamsAndPost(final MultipartTypedOutput multipartTypedOutput, final String postText, final int restId, final int rating, final boolean anonymousPostingEnabled) {
 
         multipartTypedOutput.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
         multipartTypedOutput.addPart(Constants.KEY_LATITUDE, new TypedString(String.valueOf(activity.getSelectedLatLng().latitude)));
@@ -343,12 +355,16 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 multipartTypedOutput.addPart(Constants.KEY_STAR_COUNT, new TypedString(String.valueOf(rating)));
         }
 
+       /* if(anonymousPostingEnabled){
+            multipartTypedOutput.addPart(Constants.IS_ANONYMOUS, new TypedString(String.valueOf(switchAnonymousPost.isChecked()?"1":"0")));
+        }*/
+
 
         multipartTypedOutput.addPart(Constants.KEY_APP_VERSION, new TypedString(String.valueOf(MyApplication.getInstance().appVersion())));
         multipartTypedOutput.addPart(Constants.KEY_DEVICE_TYPE, new TypedString(Data.DEVICE_TYPE));
 
 
-        retrofit.Callback<SettleUserDebt> APICallBack =  new retrofit.Callback<SettleUserDebt>() {
+        retrofit.Callback<SettleUserDebt> APICallBack = new retrofit.Callback<SettleUserDebt>() {
             @Override
             public void success(SettleUserDebt feedbackResponse, Response response) {
                 String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -364,7 +380,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                             if (activity.getFeedHomeFragment() != null && activity.getFeedHomeFragment().getView() != null) {
                                 activity.getFeedHomeFragment().fetchFeedsApi(true);
                             }
-                            if(activity.getTopFragment() instanceof FeedOfferingCommentsFragment){
+                            if (activity.getTopFragment() instanceof FeedOfferingCommentsFragment) {
                                 activity.getOfferingsCommentFragment().fetchDetailAPI();
                             }
 
@@ -374,34 +390,34 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                     }
                 } catch (Exception exception) {
                     exception.printStackTrace();
-                    retryDialog(DialogErrorType.SERVER_ERROR, multipartTypedOutput, postText, restId, rating);
+                    retryDialog(DialogErrorType.SERVER_ERROR, multipartTypedOutput, postText, restId, rating, anonymousPostingEnabled);
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 DialogPopup.dismissLoadingDialog();
-                retryDialog(DialogErrorType.CONNECTION_LOST, multipartTypedOutput, postText, restId, rating);
+                retryDialog(DialogErrorType.CONNECTION_LOST, multipartTypedOutput, postText, restId, rating, anonymousPostingEnabled);
 
             }
         };
 
-        if(isEditingPost){
-            multipartTypedOutput.addPart(Constants.KEY_POST_ID,new TypedString(String.valueOf(feedDetail.getPostId())));
-            RestClient.getFeedApiService().editFeed(multipartTypedOutput,APICallBack);
+        if (isEditingPost) {
+            multipartTypedOutput.addPart(Constants.KEY_POST_ID, new TypedString(String.valueOf(feedDetail.getPostId())));
+            RestClient.getFeedApiService().editFeed(multipartTypedOutput, APICallBack);
 
-        }else{
-            RestClient.getFeedApiService().postFeed(multipartTypedOutput,APICallBack);
+        } else {
+            RestClient.getFeedApiService().postFeed(multipartTypedOutput, APICallBack);
 
         }
     }
 
-    private void retryDialog(DialogErrorType dialogErrorType, final MultipartTypedOutput multipartTypedOutput, final String postText, final int restId, final int ratingScore) {
+    private void retryDialog(DialogErrorType dialogErrorType, final MultipartTypedOutput multipartTypedOutput, final String postText, final int restId, final int ratingScore, final boolean anonymousPostingEnabled) {
         DialogPopup.dialogNoInternet(activity, dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore);
+                        uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled);
                     }
 
                     @Override
@@ -426,13 +442,22 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         private ArrayList<Object> imagesSelected;
         private String content;
         private Integer score;
+        private boolean AnonymousPostingEnabled;
 
+        public boolean isAnonymousPostingEnabled() {
+            return AnonymousPostingEnabled;
+        }
 
-        public PostReviewAPIData(Integer restaurantId, ArrayList<Object> imagesSelected, String content, Integer score) {
+        public void setAnonymousPostingEnabled(boolean anonymousPostingEnabled) {
+            AnonymousPostingEnabled = anonymousPostingEnabled;
+        }
+
+        public PostReviewAPIData(Integer restaurantId, ArrayList<Object> imagesSelected, String content, Integer score, boolean anonymousPostingEnabled) {
             this.restaurantId = restaurantId;
             this.imagesSelected = imagesSelected;
             this.content = content;
             this.score = score;
+            this.AnonymousPostingEnabled = anonymousPostingEnabled;
         }
 
         public Integer getRestaurantId() {
@@ -477,6 +502,18 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     public void setCameraEnabled(boolean isEnable) {
         if (getView() != null && ivAccessCamera != null) {
             ivAccessCamera.setEnabled(isEnable);
+        }
+
+    }
+
+    public void toggleAnonymousPosting(boolean isEnable) {
+        if (isEnable) {
+            labelAnonymousSwitch.setVisibility(View.VISIBLE);
+            switchAnonymousPost.setVisibility(View.VISIBLE);
+        } else {
+
+            labelAnonymousSwitch.setVisibility(View.GONE);
+            switchAnonymousPost.setVisibility(View.GONE);
         }
     }
 }

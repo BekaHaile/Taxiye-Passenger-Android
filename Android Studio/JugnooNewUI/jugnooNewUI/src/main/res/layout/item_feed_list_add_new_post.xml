@@ -15,7 +15,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_8"
-        android:background="@drawable/shadow_feed_sep" />
+        android:background="@color/feed_grey_black" />
 
     <ImageView
         android:id="@+id/iv_profile_pic"
@@ -42,14 +42,14 @@
         android:paddingRight="@dimen/dp_36"
         android:text="@string/whats_on_your_mind"
         android:textColor="@color/text_color_light"
-        android:textSize="@dimen/sp_14"
+        android:textSize="@dimen/sp_15"
         app:font="@string/maven_r" />
 
-    <View
+   <!-- <View
         android:layout_marginTop="@dimen/spacing_tiny"
         android:layout_below="@id/tvAddPost"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_8"
         android:background="@drawable/shadow_feed_sep"
-        />
+        />-->
 </RelativeLayout>

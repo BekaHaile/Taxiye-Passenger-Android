@@ -205,13 +205,14 @@ public abstract class ImageSelectFragment extends Fragment {
 
     public  FeedAddPostFragment.PostReviewAPIData getSubmitAPIData(){
             if(feedAddPostData==null){
-                feedAddPostData = new FeedAddPostFragment.PostReviewAPIData(getRestaurantId(),imageSelected,getText(),getScore());
+                feedAddPostData = new FeedAddPostFragment.PostReviewAPIData(getRestaurantId(),imageSelected,getText(),getScore(),isAnonymousPostingEnabled());
                 return feedAddPostData;
             } else{
                 feedAddPostData.setContent(getText());
                 feedAddPostData.setImagesSelected(imageSelected);
                 feedAddPostData.setRestaurantId(getRestaurantId());
                 feedAddPostData.setScore(getScore());
+                feedAddPostData.setAnonymousPostingEnabled(isAnonymousPostingEnabled());
                 return feedAddPostData;
             }
 
@@ -261,5 +262,6 @@ public abstract class ImageSelectFragment extends Fragment {
 
     public abstract boolean submitEnabledState();
 
+    public abstract boolean isAnonymousPostingEnabled();
 
 }

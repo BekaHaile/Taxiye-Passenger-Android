@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,6 +18,9 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -30,6 +34,7 @@ import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
+import com.sabkuchfresh.feed.utils.BadgeDrawable;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -105,10 +110,10 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         activity.fragmentUISetup(this);
-
+        setHasOptionsMenu(true);
         GAUtils.trackScreenView(FEED+HOME);
-
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -239,11 +244,11 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     relativeLayoutNotAvailable.setVisibility(View.VISIBLE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(feedbackResponse.getMessage()) ? feedbackResponse.getMessage() : activity.getString(R.string.nothing_found_near_you));
                                     feedHomeAdapter.setList(getAdapterList(false,feedbackResponse.getFeeds(),null,feedbackResponse.getCity()));
-                                    activity.getTopBar().ivAddReview.setVisibility(View.GONE);
+                                    activity.getFeedHomeAddPostView().setVisibility(View.GONE);
                                 } else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     feedHomeAdapter.setList(getAdapterList(true,feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),feedbackResponse.getCity()));
                                     rlNoReviews.setVisibility(feedbackResponse.getFeeds()==null||feedbackResponse.getFeeds().size()==0 ? View.VISIBLE : View.GONE);
-                                    activity.getTopBar().ivAddReview.setVisibility(View.VISIBLE);
+                                    activity.getFeedHomeAddPostView().setVisibility(View.VISIBLE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -410,5 +415,31 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     public void onMoreEdit(FeedDetail feedDetail, int positionInList) {
         onEdit(feedDetail);
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.feed_home_menu, menu);
+        MenuItem itemCart = menu.findItem(R.id.item_notification);
+        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+        BadgeDrawable.setBadgeCount(activity, icon, "9");
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.item_location:
+                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
+                break;
+            case R.id.item_notification:
+                // TODO: 4/1/17 OPEN NOTIFICATION FRAGMENT
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

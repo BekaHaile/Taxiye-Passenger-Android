@@ -50,6 +50,7 @@
                     android:background="@android:color/white"
                     android:contentInsetLeft="0dp"
                     android:contentInsetStart="0dp"
+                    android:paddingRight="@dimen/px_38"
                     app:contentInsetLeft="0dp"
                     app:contentInsetStart="0dp"
                     app:layout_collapseMode="pin">

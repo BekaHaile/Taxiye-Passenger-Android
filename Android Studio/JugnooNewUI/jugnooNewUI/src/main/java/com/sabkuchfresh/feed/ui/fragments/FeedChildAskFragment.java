@@ -110,4 +110,9 @@ public class FeedChildAskFragment extends ImageSelectFragment {
     public boolean submitEnabledState() {
         return etContent.getText().toString().trim().length()>0;
     }
+
+    @Override
+    public boolean isAnonymousPostingEnabled() {
+        return true;
+    }
 }
