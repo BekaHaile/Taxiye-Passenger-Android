@@ -1421,6 +1421,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 collapsingToolBarParams.setScrollFlags(0);
                 collapsingToolbar.setLayoutParams(collapsingToolBarParams);
 
+                appBarLayout.removeOnOffsetChangedListener(feedHomeAppBarListener);
+                appBarLayout.removeOnOffsetChangedListener(collapseBarController);
+
             }
 
 
