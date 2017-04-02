@@ -94,7 +94,7 @@ public class EditPostPopup extends Dialog {
         if (viewClicked != null) {
             int[] openingViewLocation = new int[2];
             viewClicked.getLocationOnScreen(openingViewLocation);
-            getWindow().getDecorView().setPivotX(openingViewLocation[0]- viewClicked.getMeasuredWidth()/2);
+            getWindow().getDecorView().setPivotX(openingViewLocation[0]+ viewClicked.getMeasuredWidth()/2);
             getWindow().getDecorView().setPivotY(viewClicked.getY());
             getWindow().getDecorView().animate()
                     .scaleX(0.1f)
@@ -127,8 +127,8 @@ public class EditPostPopup extends Dialog {
             viewClicked.getLocationOnScreen(openingViewLocation);
             WindowManager.LayoutParams wlp = getWindow().getAttributes();
             wlp.x = openingViewLocation[0];
-            wlp.y = openingViewLocation[1]+ viewClicked.getHeight()- com.sabkuchfresh.feed.utils.Utils.dpToPx(10);
-            getWindow().getDecorView().setPivotX(openingViewLocation[0]-viewClicked.getMeasuredWidth()/2);
+            wlp.y = openingViewLocation[1]+ viewClicked.getHeight() - com.sabkuchfresh.feed.utils.Utils.dpToPx(10);
+            getWindow().getDecorView().setPivotX(openingViewLocation[0]+viewClicked.getMeasuredWidth()/2);
             getWindow().getDecorView().setPivotY(viewClicked.getY());
             getWindow().getDecorView().setScaleX(0.1f);
             getWindow().getDecorView().setScaleY(0.1f);

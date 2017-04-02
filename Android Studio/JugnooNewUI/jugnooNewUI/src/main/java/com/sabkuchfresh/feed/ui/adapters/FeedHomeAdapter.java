@@ -1,6 +1,7 @@
 package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,7 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -42,6 +44,7 @@ import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
+import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 import static com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail.FeedType.REVIEW;
 
 
@@ -222,7 +225,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     //Form Title
                     if (!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         title = new SpannableString(feedDetail.getOwnerName());
-                        title.setSpan(BOLD_SPAN, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        title.setSpan(BOLD_SPAN, 0, feedDetail.getOwnerName().length(), SPAN_INCLUSIVE_EXCLUSIVE);
                     }
 
                     //Chooser UsersImage
@@ -240,16 +243,16 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.tvFeedAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
             holder.tvFeedAddress.setText(restaurantAddress);
 
-            //SetImageUrl
+          /*  //SetImageUrl
             holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.GONE);
-//            if (imageUrl != null)
-//                Glide.with(activity).load(imageUrl).override(Utils.convertDpToPx(activity, 310), Utils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
-//            else
-//                holder.ivPlaceImage.setImageResource(R.drawable.placeholder_img);
-
+            if (imageUrl != null)
+                Glide.with(activity).load(imageUrl).override(Utils.convertDpToPx(activity, 310), Utils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
+            else
+                holder.ivPlaceImage.setImageResource(R.drawable.placeholder_img);
+*/
 
             //Set Profile Pic
-            if (ownerImage != null)
+          if (ownerImage != null)
                 Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
             else
                 holder.ivFeedOwnerPic.setImageResource(R.drawable.placeholder_img);
@@ -264,28 +267,41 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (rating != null)
                 activity.setRatingAndGetColor(holder.tvFeedRating, rating, feedDetail.getRatingColor(), true);
 
-            //Set Likes and Comments
-            String likesCommentString = formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount(), activity);
 
-            holder.tvLikeStatus.setText(String.valueOf(feedDetail.getLikeCount()));
+
+            //set Like Count and comment count
+            String likeSuffix = feedDetail.getLikeCount() > 1 ? " Likes" : " Like";
+            SpannableString likeText;
+            if(feedDetail.getLikeCount()>0){
+                //bold like Count
+                likeText = new SpannableString(String.valueOf(feedDetail.getLikeCount()) + likeSuffix);
+                likeText.setSpan(BOLD_SPAN,0,String.valueOf(feedDetail.getLikeCount()).length(),SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+            else{
+                likeText = new SpannableString(likeSuffix);
+            }
+            holder.tvLike.setText(likeText);
 
             String commentSuffix = feedDetail.getCommentCount() > 1 ? " Comments" : " Comment";
-            holder.tvCommentStatus.setText(feedDetail.getCommentCount()+commentSuffix);
+            SpannableString commentText;
+            if(feedDetail.getCommentCount()>0){
+                //bold comment Count
+                commentText = new SpannableString(String.valueOf(feedDetail.getCommentCount()) + commentSuffix);
+                commentText.setSpan(BOLD_SPAN,0,String.valueOf(feedDetail.getCommentCount()).length(),SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+            else{
+                commentText = new SpannableString(commentSuffix);
+            }
 
-            holder.tvLikeStatus.setVisibility(feedDetail.getLikeCount()>0?View.VISIBLE:View.INVISIBLE);
-            holder.tvCommentStatus.setVisibility(feedDetail.getCommentCount()>0?View.VISIBLE:View.INVISIBLE);
-        /*if(feedDetail.getLikeCount()>0 && feedDetail.getCommentCount()<1)
-        {
-            holder.tvCommentStatus.setVisibility(View.INVISIBLE);
-            //because the views below are aligned as per tvCommentStatus Visibility
+            holder.tvComment.setText(commentText);
 
-        }*/
+
 
 
             //Set Content
             holder.tvFeedDescription.setText(feedDetail.getContent());
 
-            //Show User Acitivty Layout such as Person A commented on Person B's post
+            //Show User Activity Layout such as Person A commented on Person B's post
             if (showUserActivity) {
                 holder.layoutUserActivity.setVisibility(View.VISIBLE);
                 holder.dividerUserActivity.setVisibility(View.VISIBLE);
@@ -311,6 +327,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             else
                 holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_grey_text));
 
+
+
             // for adding restaurant image in reviewImages list if no images added
             ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages;
             if((feedDetail.getReviewImages() == null || feedDetail.getReviewImages().size() == 0)
@@ -322,6 +340,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } else {
                 reviewImages = feedDetail.getReviewImages();
             }
+
+
 
             //Show user Images if greater than 1 in a recycler view
             if (reviewImages != null && reviewImages.size() > 0) {
@@ -347,13 +367,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             //Show Edit post option if available
-            holder.ivMore.setVisibility(feedDetail.isPostEditable()?View.VISIBLE:View.GONE);
-          /*  RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.tvFeedRating.getLayoutParams();
-                 if(feedDetail.isPostEditable())
-                   layoutParams.rightMargin=Utils.convertDpToPx(activity,10);
-                else
-                    layoutParams.rightMargin=0;
-            holder.ivMore.setLayoutParams(layoutParams);*/
+            holder.tvMore.setVisibility(feedDetail.isPostEditable()?View.VISIBLE:View.GONE);
+
 
 
 
@@ -392,6 +407,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
             else if (feedDetail.getLikeCount() > 0)
                 feedDetail.setLikeCount(feedDetail.getLikeCount() - 1);
+
             feedDetail.setLiked(isLiked);
             notifyFeedListItem(position);
         }
@@ -561,10 +577,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView tvFeedDescription;
         @Bind(R.id.iv_place_image)
         ImageView ivPlaceImage;
-        @Bind(R.id.tv_like_status)
+      /*  @Bind(R.id.tv_like_status)
         TextView tvLikeStatus;
         @Bind(R.id.tv_comment_status)
-        TextView tvCommentStatus;
+        TextView tvCommentStatus;*/
         @Bind(R.id.tv_action_comment)
         TextView tvComment;
         @Bind(R.id.tv_action_like)
@@ -594,7 +610,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Bind(R.id.root_layout_item)
         RelativeLayout layoutItem;
         @Bind(R.id.ib_arrow_more)
-        ImageView ivMore;
+        TextView tvMore;
         @Bind(R.id.vpReviewImages)
         ViewPager vpReviewImages;
         DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
@@ -638,10 +654,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
-            ivMore.setOnClickListener(new View.OnClickListener() {
+            tvMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickView.onClickItem(ivMore, view);
+                    onClickView.onClickItem(tvMore, view);
                 }
             });
             tabDots.setupWithViewPager(vpReviewImages, true);

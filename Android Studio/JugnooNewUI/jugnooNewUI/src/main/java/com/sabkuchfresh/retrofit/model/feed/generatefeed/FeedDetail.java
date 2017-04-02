@@ -75,7 +75,7 @@ public class FeedDetail implements Serializable {
     private int isLiked;
 
     public boolean isLiked() {
-        return isLiked==1;
+        return likeCount > 0 && isLiked==1;
     }
 
     @SerializedName("star_color")

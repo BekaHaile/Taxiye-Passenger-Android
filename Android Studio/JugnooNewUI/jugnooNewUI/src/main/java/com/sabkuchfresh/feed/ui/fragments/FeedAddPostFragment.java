@@ -65,6 +65,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     private boolean isEditingPost;
     private SwitchCompat switchAnonymousPost;
     private TextView labelAnonymousSwitch;
+    private String handleName = "Handle";
 
 
     public FeedAddPostFragment() {
@@ -167,7 +168,11 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             rootView.findViewById(R.id.llTabs).setVisibility(View.GONE);
             rootView.findViewById(R.id.id_top_line).setVisibility(View.GONE);
+            switchAnonymousPost.setVisibility(View.GONE);
+            labelAnonymousSwitch.setVisibility(View.GONE);
             if (feedDetail != null) {
+
+
                 if (feedDetail.getFeedType() == FeedDetail.FeedType.POST)
                     activity.getTopBar().title.setText("Edit Post");
                 else if (feedDetail.getFeedType() == FeedDetail.FeedType.REVIEW)
@@ -181,7 +186,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         labelAnonymousSwitch.setTypeface(labelAnonymousSwitch.getTypeface(), Typeface.BOLD);
         switchAnonymousPost.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                labelAnonymousSwitch.setText(isChecked ? "Handle" : "Anonymous");
+
+                labelAnonymousSwitch.setText(isChecked ? handleName : "Anonymous");
             }
         });
         switchAnonymousPost.setChecked(true);
@@ -355,9 +361,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 multipartTypedOutput.addPart(Constants.KEY_STAR_COUNT, new TypedString(String.valueOf(rating)));
         }
 
-       /* if(anonymousPostingEnabled){
-            multipartTypedOutput.addPart(Constants.IS_ANONYMOUS, new TypedString(String.valueOf(switchAnonymousPost.isChecked()?"1":"0")));
-        }*/
 
 
         multipartTypedOutput.addPart(Constants.KEY_APP_VERSION, new TypedString(String.valueOf(MyApplication.getInstance().appVersion())));
@@ -407,6 +410,10 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             RestClient.getFeedApiService().editFeed(multipartTypedOutput, APICallBack);
 
         } else {
+             /* if(anonymousPostingEnabled){
+            multipartTypedOutput.addPart(Constants.IS_ANONYMOUS, new TypedString(String.valueOf(switchAnonymousPost.isChecked()?"1":"0")));
+        }*/
+
             RestClient.getFeedApiService().postFeed(multipartTypedOutput, APICallBack);
 
         }

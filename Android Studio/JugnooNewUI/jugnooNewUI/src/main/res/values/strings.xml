@@ -1629,6 +1629,8 @@
     <string name="whatsapp">Whatsapp</string>
     <string name="create_a_handle">Create a Handle</string>
     <string name="no_notifications_yet">No Notificaitons Yet!</string>
+    <string name="horizontal_ellipsis">&#8230;</string>
+    <string name="bullet_three">\u2022\u2022\u2022</string>
 
 
 </resources>
