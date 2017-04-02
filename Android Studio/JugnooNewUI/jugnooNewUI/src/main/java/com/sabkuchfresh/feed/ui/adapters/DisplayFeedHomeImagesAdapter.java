@@ -6,12 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -52,14 +51,15 @@ public class DisplayFeedHomeImagesAdapter extends PagerAdapter {
 		View itemView = mLayoutInflater.inflate(R.layout.list_item_review_image, container, false);
 
 		ImageView ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
-
+		ivImage.setTag(null);
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ivImage.getLayoutParams();
 		params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-		params.height = (int) (ASSL.minRatio() * 244f);
+		params.height = (int) (ASSL.minRatio() * 234f);
 		ivImage.setLayoutParams(params);
 
-		ivImage.setTag(position);
-		ivImage.setOnClickListener(new View.OnClickListener() {
+		RelativeLayout relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+		relative.setTag(position);
+		relative.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
@@ -76,10 +76,16 @@ public class DisplayFeedHomeImagesAdapter extends PagerAdapter {
 		});
 
 		FetchFeedbackResponse.ReviewImage reviewImage = reviewImages.get(position);
-		Picasso.with(activity).load(reviewImage.getThumbnail())
-				.resize((int) (ASSL.minRatio() * 720f), (int) (ASSL.minRatio() * 244f))
+//		Picasso.with(activity).load(reviewImage.getThumbnail())
+//				.resize((int) (ASSL.minRatio() * 720f), (int) (ASSL.minRatio() * 234f))
+//				.centerCrop()
+////                        .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
+//				.placeholder(R.drawable.ic_fresh_item_placeholder)
+//				.into(ivImage);
+
+		Glide.with(activity).load(reviewImage.getThumbnail())
+				.override((int) (ASSL.minRatio() * 720f), (int) (ASSL.minRatio() * 234f))
 				.centerCrop()
-//                        .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
 				.placeholder(R.drawable.ic_fresh_item_placeholder)
 				.into(ivImage);
 
@@ -95,12 +101,12 @@ public class DisplayFeedHomeImagesAdapter extends PagerAdapter {
 
 	@Override
 	public boolean isViewFromObject(View view, Object object) {
-		return view == (object);
+		return view == object;
 	}
 
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
-		container.removeView((LinearLayout) object);
+		container.removeView((RelativeLayout) object);
 	}
 
 	public interface Callback {

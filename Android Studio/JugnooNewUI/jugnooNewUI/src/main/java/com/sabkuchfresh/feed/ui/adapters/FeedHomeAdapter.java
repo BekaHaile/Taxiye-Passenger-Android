@@ -2,6 +2,7 @@ package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
@@ -241,11 +241,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.tvFeedAddress.setText(restaurantAddress);
 
             //SetImageUrl
-            holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.VISIBLE);
-            if (imageUrl != null)
-                Glide.with(activity).load(imageUrl).override(Utils.convertDpToPx(activity, 310), Utils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
-            else
-                holder.ivPlaceImage.setImageResource(R.drawable.placeholder_img);
+            holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.GONE);
+//            if (imageUrl != null)
+//                Glide.with(activity).load(imageUrl).override(Utils.convertDpToPx(activity, 310), Utils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
+//            else
+//                holder.ivPlaceImage.setImageResource(R.drawable.placeholder_img);
 
 
             //Set Profile Pic
@@ -330,12 +330,20 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder.displayFeedHomeImagesAdapter = new DisplayFeedHomeImagesAdapter(activity, reviewImages,
                             feedDetail.getRestaurantId(),
                             callback);
-                    holder.vpReviewImages.setAdapter(holder.displayFeedHomeImagesAdapter);
                 } else {
                     holder.displayFeedHomeImagesAdapter.setList(reviewImages, feedDetail.getRestaurantId());
                 }
+                holder.vpReviewImages.setAdapter(holder.displayFeedHomeImagesAdapter);
+                for (int i = 0; i < holder.tabDots.getTabCount(); i++) {
+                    View tab = ((ViewGroup) holder.tabDots.getChildAt(0)).getChildAt(i);
+                    ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+                    p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+                    tab.requestLayout();
+                }
+                holder.tabDots.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);
             } else {
                 holder.vpReviewImages.setVisibility(View.GONE);
+                holder.tabDots.setVisibility(View.GONE);
             }
 
             //Show Edit post option if available
@@ -590,6 +598,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Bind(R.id.vpReviewImages)
         ViewPager vpReviewImages;
         DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
+        @Bind(R.id.tabDots)
+        TabLayout tabDots;
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
@@ -634,6 +644,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     onClickView.onClickItem(ivMore, view);
                 }
             });
+            tabDots.setupWithViewPager(vpReviewImages, true);
         }
     }
 
