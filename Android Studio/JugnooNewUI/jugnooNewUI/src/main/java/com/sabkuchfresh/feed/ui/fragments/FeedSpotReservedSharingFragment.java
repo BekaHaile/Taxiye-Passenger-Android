@@ -4,10 +4,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
@@ -70,7 +68,7 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 		tvRankDescription.append(activity.getString(R.string.people_ahead_of_you_in_queue));
 
 		if(!TextUtils.isEmpty(Data.getFeedData().getEarlyAccessText())) {
-			tvWantEarlyAccessMessage.setText(Utils.trimHTML(fromHtml(Data.getFeedData().getEarlyAccessText())));
+			tvWantEarlyAccessMessage.setText(Utils.trimHTML(Utils.fromHtml(Data.getFeedData().getEarlyAccessText())));
 		}
 
 		Utils.setTextUnderline(tvMoreSharingOptions, activity.getString(R.string.view_more_sharing_options));
@@ -84,26 +82,7 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 
 		GAUtils.trackScreenView(FEED + HOME + WAITLIST + SHARING);
 
-		// TODO: 01/04/17 remove this
-		activity.getHandler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				activity.getTransactionUtils().openFeedNotificationsFragment(activity, activity.getRelativeLayoutContainer());
-			}
-		}, 200);
-
 		return rootView;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static Spanned fromHtml(String html) {
-		Spanned result;
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-			result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
-		} else {
-			result = Html.fromHtml(html);
-		}
-		return result;
 	}
 
 

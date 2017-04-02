@@ -435,7 +435,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
                 break;
             case R.id.item_notification:
-                // TODO: 4/1/17 OPEN NOTIFICATION FRAGMENT
+                activity.getTransactionUtils().openFeedNotificationsFragment(activity, activity.getRelativeLayoutContainer());
                 break;
             default:
                 break;

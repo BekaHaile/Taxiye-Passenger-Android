@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.commoncalls.ApiFeedNotifications;
+import com.sabkuchfresh.feed.models.FeedNotificationsResponse;
 import com.sabkuchfresh.feed.models.NotificationDatum;
 import com.sabkuchfresh.feed.ui.adapters.FeedNotificationsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
@@ -79,15 +81,7 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				// TODO: 01/04/17 remove this and add api
-				if(llNoNotifications.getVisibility() == View.GONE){
-					llNoNotifications.setVisibility(View.VISIBLE);
-					rvNotifications.setVisibility(View.GONE);
-				} else {
-					llNoNotifications.setVisibility(View.GONE);
-					rvNotifications.setVisibility(View.VISIBLE);
-				}
-				swipeRefreshLayout.setRefreshing(false);
+				fetchFeedNotifications();
 			}
 		});
 
@@ -102,6 +96,8 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 			}
 		});
 		rvNotifications.setAdapter(notificationsAdapter);
+
+		fetchFeedNotifications();
 
 		GAUtils.trackScreenView(FEED + NOTIFICATIONS);
 		return rootView;
@@ -121,5 +117,41 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 		ButterKnife.unbind(this);
 	}
 
+
+	private ApiFeedNotifications apiFeedNotifications;
+	public void fetchFeedNotifications(){
+		if(apiFeedNotifications == null){
+			apiFeedNotifications = new ApiFeedNotifications(activity, new ApiFeedNotifications.Callback() {
+				@Override
+				public void onSuccess(FeedNotificationsResponse feedNotificationsResponse) {
+					notificationData.clear();
+					notificationData.addAll(feedNotificationsResponse.getNotificationData());
+					notificationsAdapter.notifyDataSetChanged();
+					if(notificationData.size() == 0){
+						llNoNotifications.setVisibility(View.VISIBLE);
+						rvNotifications.setVisibility(View.GONE);
+					} else {
+						llNoNotifications.setVisibility(View.GONE);
+						rvNotifications.setVisibility(View.VISIBLE);
+					}
+				}
+
+				@Override
+				public void onFailure() {
+				}
+
+				@Override
+				public void onRetry(View view) {
+					fetchFeedNotifications();
+				}
+
+				@Override
+				public void onNoRetry(View view) {
+
+				}
+			});
+		}
+		apiFeedNotifications.hit(swipeRefreshLayout);
+	}
 
 }

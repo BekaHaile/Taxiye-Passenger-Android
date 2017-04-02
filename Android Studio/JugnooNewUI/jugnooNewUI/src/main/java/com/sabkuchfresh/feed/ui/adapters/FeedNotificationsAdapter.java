@@ -63,7 +63,7 @@ public class FeedNotificationsAdapter extends RecyclerView.Adapter<FeedNotificat
                 holder.ivUserImage.setImageResource(R.drawable.placeholder_img);
             }
 
-            holder.tvNotificationText.setText(datum.getMessage());
+            holder.tvNotificationText.setText(Utils.trimHTML(Utils.fromHtml(datum.getMessage())));
             holder.tvNotificationTime.setText(FeedHomeAdapter.getTimeToDisplay(datum.getTime(), activity.isTimeAutomatic));
 
             if(datum.isRead()){
@@ -97,7 +97,6 @@ public class FeedNotificationsAdapter extends RecyclerView.Adapter<FeedNotificat
                 case R.id.relative:
                     callback.onNotificationClick(pos, notificationData.get(pos));
                     break;
-
             }
         }
     }
