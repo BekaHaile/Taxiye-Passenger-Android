@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class FeedOfferingCommentsFragment extends Fragment implements DeletePostDialog.DeleteDialogCallback,EditPostPopup.EditPostDialogCallback {
@@ -202,6 +203,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                 RestClient.getFeedApiService().fetchFeedDetails(params, new retrofit.Callback<FeedDetailResponse>() {
                     @Override
                     public void success(FeedDetailResponse feedbackResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         DialogPopup.dismissLoadingDialog();
                         try {
                             String message = feedbackResponse.getMessage();
@@ -242,14 +244,18 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
     private void setFeedObjectAndRefresh(FeedDetailResponse feedbackResponse) {
         if (feedbackResponse.getPostDetails() != null) {
-            feedDetail.setLikeCount(feedbackResponse.getPostDetails().getLikeCount());
-            feedDetail.setCommentCount(feedbackResponse.getPostDetails().getCommentCount());
-            feedDetail.setContent(feedbackResponse.getPostDetails().getContent());
-            feedDetail.setPostEditable(feedbackResponse.getPostDetails().isPostEditable());
-            feedDetail.setStarCount(feedbackResponse.getPostDetails().getStarCount());
-            feedDetail.setRestaurantImage(feedbackResponse.getPostDetails().getRestaurantImage());
-            feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
-            feedDetail.setReviewImages(feedbackResponse.getPostDetails().getReviewImages());
+            if(positionInOriginalList == -1) {
+                feedDetail = feedbackResponse.getPostDetails();
+            } else {
+                feedDetail.setLikeCount(feedbackResponse.getPostDetails().getLikeCount());
+                feedDetail.setCommentCount(feedbackResponse.getPostDetails().getCommentCount());
+                feedDetail.setContent(feedbackResponse.getPostDetails().getContent());
+                feedDetail.setPostEditable(feedbackResponse.getPostDetails().isPostEditable());
+                feedDetail.setStarCount(feedbackResponse.getPostDetails().getStarCount());
+                feedDetail.setRestaurantImage(feedbackResponse.getPostDetails().getRestaurantImage());
+                feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
+                feedDetail.setReviewImages(feedbackResponse.getPostDetails().getReviewImages());
+            }
 
 
             if (activity.getFeedHomeFragment() != null) {
