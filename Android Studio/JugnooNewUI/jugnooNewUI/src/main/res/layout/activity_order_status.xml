@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/relative"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,9 +21,8 @@
             android:orientation="vertical"
             android:paddingBottom="40px">
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cvOrderStatus"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="26px"
@@ -57,14 +56,14 @@
                             android:layout_height="@dimen/px_25"
                             android:background="@drawable/circle_order_status"
                             android:tag="mwar"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
 
                         <View
                             android:id="@+id/lineStatus1"
                             android:layout_width="135px"
                             android:layout_height="8px"
                             android:background="@color/rank_5"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
 
                         <ImageView
                             android:id="@+id/ivStatus1"
@@ -72,14 +71,14 @@
                             android:layout_height="@dimen/px_25"
                             android:background="@drawable/circle_order_status"
                             android:tag="mwar"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
 
                         <View
                             android:id="@+id/lineStatus2"
                             android:layout_width="135px"
                             android:layout_height="8px"
                             android:background="@color/rank_5"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
 
                         <ImageView
                             android:id="@+id/ivStatus2"
@@ -87,14 +86,14 @@
                             android:layout_height="@dimen/px_25"
                             android:background="@drawable/circle_order_status"
                             android:tag="mwar"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
 
                         <View
                             android:id="@+id/lineStatus3"
                             android:layout_width="135px"
                             android:layout_height="8px"
                             android:background="@color/rank_5"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
 
                         <ImageView
                             android:id="@+id/ivStatus3"
@@ -102,7 +101,7 @@
                             android:layout_height="@dimen/px_25"
                             android:background="@drawable/circle_order_status"
                             android:tag="mwar"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
                     </LinearLayout>
 
                     <TextView
@@ -118,7 +117,7 @@
                         android:text="Statu0"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                     <TextView
                         android:id="@+id/tvStatus1"
@@ -133,7 +132,7 @@
                         android:text="Status1"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                     <TextView
                         android:id="@+id/tvStatus2"
@@ -148,7 +147,7 @@
                         android:text="Status2"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                     <TextView
                         android:id="@+id/tvStatus3"
@@ -163,7 +162,7 @@
                         android:text="Status3"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
                 </RelativeLayout>
 
             </android.support.v7.widget.CardView>
@@ -184,7 +183,7 @@
                     android:text="@string/order_status_txt"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_24"/>
+                    android:textSize="@dimen/text_size_24" />
 
                 <TextView
                     android:id="@+id/tvOrderStatusVal"
@@ -195,7 +194,7 @@
                     android:text=""
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"/>
+                    android:textSize="@dimen/text_size_28" />
 
                 <ImageView
                     android:id="@+id/ivOrderCompleted"
@@ -206,11 +205,11 @@
                     android:layout_toRightOf="@+id/tvOrderStatusVal"
                     android:src="@drawable/ic_order_status_green"
                     android:tag="mwar"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <View
                     style="@style/HorizontalDivider"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -225,7 +224,7 @@
                     android:text="@string/order_time"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_24"/>
+                    android:textSize="@dimen/text_size_24" />
 
                 <TextView
                     android:id="@+id/tvOrderTimeVal"
@@ -235,11 +234,10 @@
                     android:layout_toRightOf="@+id/tvOrderTime"
                     android:text=""
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"/>
+                    android:textSize="@dimen/text_size_28" />
             </RelativeLayout>
 
-            <View
-                style="@style/HorizontalDivider"/>
+            <View style="@style/HorizontalDivider" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -253,8 +251,7 @@
                     android:text="@string/delivery_time"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_24"
-                    />
+                    android:textSize="@dimen/text_size_24" />
 
                 <TextView
                     android:id="@+id/tvDeliveryTimeVal"
@@ -266,7 +263,7 @@
                     android:layout_toRightOf="@+id/tvDeliveryTime"
                     android:text=""
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"/>
+                    android:textSize="@dimen/text_size_28" />
 
                 <ImageView
                     android:id="@+id/imageViewRestaurant"
@@ -276,8 +273,7 @@
                     android:layout_toRightOf="@+id/tvDeliveryTime"
                     android:src="@drawable/ic_restaurant"
                     android:tag="mwar"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/imageViewCallRestaurant"
@@ -288,21 +284,18 @@
                     android:layout_marginTop="15px"
                     android:src="@drawable/ic_call_vendor"
                     android:tag="mwar"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
 
                 <View
                     android:layout_width="1px"
                     android:layout_height="1px"
                     android:layout_below="@+id/tvDeliveryTimeVal"
-                    android:layout_marginTop="20px"
-                    />
+                    android:layout_marginTop="20px" />
 
             </RelativeLayout>
 
-            <View
-                style="@style/HorizontalDivider"/>
+            <View style="@style/HorizontalDivider" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -317,7 +310,7 @@
                     android:text="@string/delivery_to"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_24"/>
+                    android:textSize="@dimen/text_size_24" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -339,7 +332,7 @@
                             android:layout_width="40px"
                             android:layout_height="37px"
                             android:src="@drawable/home"
-                            android:tag="mwar"/>
+                            android:tag="mwar" />
 
                         <TextView
                             android:id="@+id/tvDelveryPlace"
@@ -349,7 +342,7 @@
                             android:text="HOME"
                             android:textAllCaps="true"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_28"/>
+                            android:textSize="@dimen/text_size_28" />
                     </LinearLayout>
 
                     <TextView
@@ -362,23 +355,23 @@
                         android:paddingTop="5px"
                         android:text=""
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_28"/>
+                        android:textSize="@dimen/text_size_28" />
 
                 </LinearLayout>
             </RelativeLayout>
 
 
             <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="wrap_content"
-                                                android:layout_marginTop="26px"
-                                                android:orientation="vertical"
-                                                android:paddingLeft="4px"
-                                                android:paddingRight="4px"
-                                                app:cardBackgroundColor="@color/white"
-                                                app:cardCornerRadius="8px"
-                                                app:cardPreventCornerOverlap="true"
-                                                app:cardUseCompatPadding="true">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26px"
+                android:orientation="vertical"
+                android:paddingLeft="4px"
+                android:paddingRight="4px"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8px"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -387,15 +380,13 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="92px"
-                        >
+                        android:layout_height="92px">
 
                         <View
                             style="@style/HorizontalDividerLight"
                             android:layout_alignParentBottom="true"
                             android:layout_marginLeft="@dimen/px_34"
-                            android:layout_marginRight="@dimen/px_34"
-                            />
+                            android:layout_marginRight="@dimen/px_34" />
 
                         <TextView
                             android:id="@+id/tvItemSummary"
@@ -406,8 +397,7 @@
                             android:text="@string/items_summary"
                             android:textAllCaps="true"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_28"
-                            />
+                            android:textSize="@dimen/text_size_28" />
 
                         <TextView
                             android:id="@+id/tvItemsQuantityVal"
@@ -418,8 +408,7 @@
                             android:layout_marginRight="@dimen/px_34"
                             android:text=""
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_28"
-                            />
+                            android:textSize="@dimen/text_size_28" />
                     </RelativeLayout>
 
                     <product.clicklabs.jugnoo.utils.NonScrollListView
@@ -429,22 +418,22 @@
                         android:background="@color/white"
                         android:divider="@color/transparent"
                         android:dividerHeight="0dp"
-                        android:splitMotionEvents="false"/>
+                        android:splitMotionEvents="false" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="wrap_content"
-                                                android:layout_marginTop="26px"
-                                                android:orientation="vertical"
-                                                android:paddingLeft="4px"
-                                                android:paddingRight="4px"
-                                                app:cardBackgroundColor="@color/white"
-                                                app:cardCornerRadius="8px"
-                                                app:cardPreventCornerOverlap="true"
-                                                app:cardUseCompatPadding="true">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26px"
+                android:orientation="vertical"
+                android:paddingLeft="4px"
+                android:paddingRight="4px"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8px"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -460,26 +449,22 @@
                         android:text="@string/bill_summary"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_28"
-                        />
+                        android:textSize="@dimen/text_size_28" />
 
                     <View
                         style="@style/HorizontalDividerLight"
                         android:layout_marginLeft="@dimen/px_34"
-                        android:layout_marginRight="@dimen/px_34"
-                        />
+                        android:layout_marginRight="@dimen/px_34" />
 
                     <LinearLayout
                         android:id="@+id/llExtraCharges"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        ></LinearLayout>
+                        android:orientation="vertical"></LinearLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:id="@+id/tvTotalAmount"
@@ -491,8 +476,7 @@
                             android:text="@string/total_amount"
                             android:textColor="@color/theme_color"
                             android:textSize="@dimen/text_size_40"
-                            app:font="maven"
-                            />
+                            app:font="maven" />
 
                         <com.sabkuchfresh.utils.TextViewStrikeThrough
                             android:id="@+id/tvTotalAmountValOld"
@@ -506,8 +490,7 @@
                             android:textColor="@color/text_color_light"
                             android:textSize="@dimen/text_size_40"
                             android:visibility="gone"
-                            app:font="maven"
-                            />
+                            app:font="maven" />
 
                         <TextView
                             android:id="@+id/tvTotalAmountVal"
@@ -520,7 +503,7 @@
                             android:text="@string/rupee_0"
                             android:textColor="@color/theme_color"
                             android:textSize="@dimen/text_size_40"
-                            app:font="maven"/>
+                            app:font="maven" />
 
 
                         <TextView
@@ -535,8 +518,7 @@
                             android:textColor="@color/text_color_light"
                             android:textSize="@dimen/text_size_24"
                             android:visibility="gone"
-                            app:font="maven"
-                            />
+                            app:font="maven" />
 
                     </RelativeLayout>
 
@@ -545,17 +527,19 @@
             </android.support.v7.widget.CardView>
 
 
-            <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="wrap_content"
-                                                android:layout_marginTop="26px"
-                                                android:orientation="vertical"
-                                                android:paddingLeft="4px"
-                                                android:paddingRight="4px"
-                                                app:cardBackgroundColor="@color/white"
-                                                app:cardCornerRadius="8px"
-                                                app:cardPreventCornerOverlap="true"
-                                                app:cardUseCompatPadding="true">
+            <android.support.v7.widget.CardView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cvPaymentMethod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26px"
+                android:orientation="vertical"
+                android:paddingLeft="4px"
+                android:paddingRight="4px"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8px"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -571,32 +555,29 @@
                         android:text="@string/payment_summary"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_28"
-                        />
+                        android:textSize="@dimen/text_size_28" />
 
                     <View
                         style="@style/HorizontalDividerLight"
                         android:layout_marginLeft="@dimen/px_34"
-                        android:layout_marginRight="@dimen/px_34"
-                        />
+                        android:layout_marginRight="@dimen/px_34" />
 
                     <RelativeLayout
                         android:id="@+id/rlWalletDeducted"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
+
                         <TextView
                             android:id="@+id/tvPaymentMethodVal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_40"
+                            android:tag="mwar"
                             android:text="@string/cash"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_32"
-                            android:tag="mwar"
-                            android:layout_centerVertical="true"
-                            app:font="maven"
-                            android:layout_marginLeft="@dimen/px_40"
-                            />
+                            app:font="maven" />
 
                         <TextView
                             android:id="@+id/tvAmountPayableVal"
@@ -604,21 +585,20 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="@dimen/px_34"
-                            android:text="@string/rupee_0"
                             android:layout_marginBottom="@dimen/px_26"
+                            android:layout_marginRight="@dimen/px_34"
                             android:layout_marginTop="@dimen/px_30"
+                            android:text="@string/rupee_0"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_32"
-                            app:font="maven"/>
+                            app:font="maven" />
 
                         <View
                             android:id="@+id/vDividerPayment"
                             style="@style/HorizontalDividerDotted"
                             android:layout_below="@+id/tvAmountPayableVal"
                             android:layout_marginLeft="@dimen/px_40"
-                            android:layout_marginRight="@dimen/px_40"
-                            />
+                            android:layout_marginRight="@dimen/px_40" />
 
                     </RelativeLayout>
 
@@ -626,9 +606,8 @@
                         android:id="@+id/llFinalAmount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_marginBottom="@dimen/px_10"
-                        />
+                        android:orientation="vertical" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -640,7 +619,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40px"
                 android:text="@string/need_help"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/order_cancel"
@@ -666,7 +645,7 @@
                     android:text="@string/need_help"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_34"/>
+                    android:textSize="@dimen/text_size_34" />
 
                 <Button
                     android:id="@+id/buttonCancelOrder"
@@ -679,7 +658,7 @@
                     android:text="@string/cancel_order"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_theme_selector"
-                    android:textSize="@dimen/text_size_34"/>
+                    android:textSize="@dimen/text_size_34" />
 
             </LinearLayout>
 
@@ -707,7 +686,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_34"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
                 <Button
                     android:id="@+id/reorderBtn"
@@ -720,7 +699,7 @@
                     android:text="Re-Order"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_34"/>
+                    android:textSize="@dimen/text_size_34" />
 
             </LinearLayout>
 
@@ -732,7 +711,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_new_height"
         android:background="@drawable/shadow_down_new"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 </RelativeLayout>
