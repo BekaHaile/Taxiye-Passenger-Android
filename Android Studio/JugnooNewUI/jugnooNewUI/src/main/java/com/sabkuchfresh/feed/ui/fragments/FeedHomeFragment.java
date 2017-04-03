@@ -76,6 +76,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private RelativeLayout rlNoReviews;
     private TextView tvFeedEmpty;
     private View viewDisabledEditPostPopUp;
+    private boolean updateFeedData;
 
 
     public FeedHomeFragment() {
@@ -216,6 +217,15 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            activity.getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(updateFeedData){
+                        fetchFeedsApi(true);
+                    }
+                    updateFeedData = false;
+                }
+            }, 200);
         }
     }
 
@@ -362,8 +372,12 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     public void refreshFeedInHomeFragment(int positionItemChangedInCommentsFragment) {
-        if(feedHomeAdapter!=null && adapterList!=null && adapterList.size()>positionItemChangedInCommentsFragment)
-            feedHomeAdapter.notifyFeedListItem(positionItemChangedInCommentsFragment);;
+        if(positionItemChangedInCommentsFragment == -1){
+            updateFeedData = true;
+        } else {
+            if (feedHomeAdapter != null && adapterList != null && adapterList.size() > positionItemChangedInCommentsFragment)
+                feedHomeAdapter.notifyFeedListItem(positionItemChangedInCommentsFragment);
+        }
     }
 
 
@@ -437,7 +451,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.feed_home_menu, menu);
         itemCart = menu.findItem(R.id.item_notification);
-        setNotificationCount("9");
+        setNotificationCount("0");
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -460,5 +474,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean isUpdateFeedData() {
+        return updateFeedData;
+    }
+
+    public void setUpdateFeedData(boolean updateFeedData) {
+        this.updateFeedData = updateFeedData;
     }
 }
