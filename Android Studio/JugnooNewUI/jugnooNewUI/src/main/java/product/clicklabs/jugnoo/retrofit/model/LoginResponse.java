@@ -386,6 +386,13 @@ public class LoginResponse {
 		@Expose
 		private int showCreateHandle;
 
+		@SerializedName("handle_name")
+		@Expose
+		private String handleName;
+		@SerializedName("anonymous_functionality_enabled")
+		@Expose
+		private int anonymousFunctionalityEnabled = 1;
+
 
 
 
@@ -473,6 +480,22 @@ public class LoginResponse {
 
 		public void setShowCreateHandle(int showCreateHandle) {
 			this.showCreateHandle = showCreateHandle;
+		}
+
+		public String getHandleName() {
+			return handleName;
+		}
+
+		public void setHandleName(String handleName) {
+			this.handleName = handleName;
+		}
+
+		public int getAnonymousFunctionalityEnabled() {
+			return anonymousFunctionalityEnabled;
+		}
+
+		public void setAnonymousFunctionalityEnabled(int anonymousFunctionalityEnabled) {
+			this.anonymousFunctionalityEnabled = anonymousFunctionalityEnabled;
 		}
 	}
 

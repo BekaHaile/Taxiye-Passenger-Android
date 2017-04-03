@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,7 +158,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 if (getVisibleFragment().canSubmit()) {
                     product.clicklabs.jugnoo.utils.Utils.hideKeyboard(activity);
                     PostReviewAPIData postReviewAPIData = getVisibleFragment().getSubmitAPIData();
-                    postFeedAPI(postReviewAPIData.getContent(), postReviewAPIData.getImagesSelected(), postReviewAPIData.getRestaurantId(), postReviewAPIData.getScore(), postReviewAPIData.isAnonymousPostingEnabled());
+                    postFeedAPI(postReviewAPIData.getContent(), postReviewAPIData.getImagesSelected(),
+                            postReviewAPIData.getRestaurantId(), postReviewAPIData.getScore(),
+                            postReviewAPIData.isAnonymousPostingEnabled());
 
                 }
 
@@ -180,8 +183,16 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             }
 
+        } else {
+            if (Data.getFeedData() != null) {
+                int visibility = Data.getFeedData().getAnonymousFunctionalityEnabled() == 1 ? View.VISIBLE : View.GONE;
+                labelAnonymousSwitch.setVisibility(visibility);
+                switchAnonymousPost.setVisibility(visibility);
+                if (!TextUtils.isEmpty(Data.getFeedData().getHandleName())) {
+                    handleName = Data.getFeedData().getHandleName();
+                }
+            }
         }
-
 
         labelAnonymousSwitch.setTypeface(labelAnonymousSwitch.getTypeface(), Typeface.BOLD);
         switchAnonymousPost.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -248,7 +259,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     }
 
 
-    public void postFeedAPI(final String postText, final ArrayList<Object> images, final int restId, final int ratingScore, final boolean anonymousPostingEnabled) {
+    public void postFeedAPI(final String postText, final ArrayList<Object> images, final int restId,
+                            final int ratingScore, final boolean anonymousPostingEnabled) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
@@ -347,7 +359,8 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     }
 
 
-    private void uploadParamsAndPost(final MultipartTypedOutput multipartTypedOutput, final String postText, final int restId, final int rating, final boolean anonymousPostingEnabled) {
+    private void uploadParamsAndPost(final MultipartTypedOutput multipartTypedOutput, final String postText,
+                                     final int restId, final int rating, final boolean anonymousPostingEnabled) {
 
         multipartTypedOutput.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
         multipartTypedOutput.addPart(Constants.KEY_LATITUDE, new TypedString(String.valueOf(activity.getSelectedLatLng().latitude)));
@@ -410,9 +423,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             RestClient.getFeedApiService().editFeed(multipartTypedOutput, APICallBack);
 
         } else {
-             /* if(anonymousPostingEnabled){
-            multipartTypedOutput.addPart(Constants.IS_ANONYMOUS, new TypedString(String.valueOf(switchAnonymousPost.isChecked()?"1":"0")));
-        }*/
+            if (anonymousPostingEnabled) {
+                multipartTypedOutput.addPart(Constants.IS_ANONYMOUS, new TypedString(String.valueOf(switchAnonymousPost.isChecked() ? "1" : "0")));
+            }
 
             RestClient.getFeedApiService().postFeed(multipartTypedOutput, APICallBack);
 

@@ -249,6 +249,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     feedHomeAdapter.setList(getAdapterList(true,feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),feedbackResponse.getCity()));
                                     rlNoReviews.setVisibility(feedbackResponse.getFeeds()==null||feedbackResponse.getFeeds().size()==0 ? View.VISIBLE : View.GONE);
                                     activity.getFeedHomeAddPostView().setVisibility(View.VISIBLE);
+                                    if(activity.getTvAddPost() != null) {
+                                        activity.getTvAddPost().setText(feedbackResponse.getAddPostText());
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -417,14 +420,19 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
     }
 
+
+    private MenuItem itemCart;
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.feed_home_menu, menu);
-        MenuItem itemCart = menu.findItem(R.id.item_notification);
-        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
-        BadgeDrawable.setBadgeCount(activity, icon, "9");
+        itemCart = menu.findItem(R.id.item_notification);
+        setNotificationCount("9");
         super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    private void setNotificationCount(String count){
+        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+        BadgeDrawable.setBadgeCount(activity, icon, count);
     }
 
     @Override

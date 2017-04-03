@@ -131,6 +131,8 @@ import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.CircleTransform;
+import com.squareup.picasso.Picasso;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 import org.json.JSONArray;
@@ -259,6 +261,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public boolean isTimeAutomatic;
     private CollapsingToolbarLayout collapsingToolbar;
     private View feedHomeAddPostView;
+    private TextView tvAddPost;
+    private ImageView ivProfilePic;
 
     public View getFeedHomeAddPostView() {
         return feedHomeAddPostView;
@@ -538,6 +542,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
             }
         });
+        tvAddPost = (TextView) findViewById(R.id.tvAddPost);
+        ivProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);
+    }
+
+    public TextView getTvAddPost(){
+        return tvAddPost;
     }
 
 
@@ -765,8 +775,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             if (!HomeActivity.checkIfUserDataNull(this)) {
-                menuBar.setUserData();
 
+                menuBar.setUserData();
+                try {
+                    if(getAppType() == AppConstant.ApplicationType.FEED) {
+                        int width = getResources().getDimensionPixelSize(R.dimen.dp_40);
+                        Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform())
+                                .resize(width, width).centerCrop()
+                                .placeholder(R.drawable.placeholder_img)
+                                .into(ivProfilePic);
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
 
 
                 if(getAppType()!= AppConstant.ApplicationType.FEED) {
