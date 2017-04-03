@@ -48,6 +48,7 @@ public class FeedChildAskFragment extends ImageSelectFragment {
             setUpImagesAdapter();
 
         }
+
         return rootView;
 
 
@@ -115,5 +116,10 @@ public class FeedChildAskFragment extends ImageSelectFragment {
     @Override
     public boolean isAnonymousPostingEnabled() {
         return true;
+    }
+
+    @Override
+    public EditText getFocusEditText() {
+        return etContent;
     }
 }

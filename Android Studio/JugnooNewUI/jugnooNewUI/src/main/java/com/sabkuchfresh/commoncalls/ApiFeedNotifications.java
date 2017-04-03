@@ -46,7 +46,7 @@ public class ApiFeedNotifications {
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
 				new HomeUtil().putDefaultParams(params);
-				RestClient.getFeedApiService().fetchNotifications(params, new retrofit.Callback<FeedNotificationsResponse>() {
+				RestClient.getFeedApiService().getNotifications(params, new retrofit.Callback<FeedNotificationsResponse>() {
 					@Override
 					public void success(FeedNotificationsResponse notificationsResponse, Response response) {
 //						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

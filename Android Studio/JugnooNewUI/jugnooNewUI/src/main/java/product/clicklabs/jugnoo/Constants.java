@@ -677,4 +677,5 @@ public interface Constants {
     String KEY_FEED_RANK = "feed_rank";
     String KEY_HANDLE = "handle";
     String IS_ANONYMOUS = "is_anonymous";
+    String KEY_IS_READ = "is_read";
 }

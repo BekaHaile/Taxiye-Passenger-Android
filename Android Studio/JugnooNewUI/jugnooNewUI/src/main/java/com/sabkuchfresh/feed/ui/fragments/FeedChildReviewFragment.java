@@ -250,6 +250,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
             ratingBar.setRatingDisabled(true);
         }
 
+
         return rootView;
 
 
@@ -358,5 +359,10 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
     @Override
     public boolean isAnonymousPostingEnabled() {
         return false;
+    }
+
+    @Override
+    public EditText getFocusEditText() {
+        return etRestaurantLocation;
     }
 }

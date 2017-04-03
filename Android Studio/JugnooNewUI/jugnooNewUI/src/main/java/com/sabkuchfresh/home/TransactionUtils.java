@@ -368,7 +368,7 @@ public class TransactionUtils {
 
 
             activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, 0)
+                    .setCustomAnimations(R.anim.bottom_in, 0)
                     .add(container.getId(), feedAddPostFragment,
                             FeedAddPostFragment.class.getName())
                     .addToBackStack(FeedAddPostFragment.class.getName())

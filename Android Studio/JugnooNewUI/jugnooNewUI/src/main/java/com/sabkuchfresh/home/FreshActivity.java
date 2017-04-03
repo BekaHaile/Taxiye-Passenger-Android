@@ -1493,8 +1493,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
 
-            android.util.Log.i(TAG, "onOffsetChanged: " +((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* feedHomeAddPostView.getHeight());
-            feedHomeAddPostView.animate().translationY(feedHomeAddPostView.getHeight()-((appBarLayout.getTotalScrollRange()+verticalOffset)*1.0f/appBarLayout.getTotalScrollRange())* feedHomeAddPostView.getHeight()).start();
+            if(getTopFragment() instanceof FeedHomeFragment) {
+                android.util.Log.i(TAG, "onOffsetChanged: " + ((appBarLayout.getTotalScrollRange() + verticalOffset) * 1.0f / appBarLayout.getTotalScrollRange()) * feedHomeAddPostView.getHeight());
+                feedHomeAddPostView.animate().translationY(feedHomeAddPostView.getHeight() - ((appBarLayout.getTotalScrollRange() + verticalOffset) * 1.0f / appBarLayout.getTotalScrollRange()) * feedHomeAddPostView.getHeight()).start();
+            }
            /* if(verticalOffset== -appBarLayout.getTotalScrollRange())
             {
 

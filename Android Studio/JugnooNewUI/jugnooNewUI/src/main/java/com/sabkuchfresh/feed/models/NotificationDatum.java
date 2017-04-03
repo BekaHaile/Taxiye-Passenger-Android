@@ -9,43 +9,27 @@ import com.google.gson.annotations.SerializedName;
 
 public class NotificationDatum {
 
-	@SerializedName("id")
+	@SerializedName("post_id")
 	@Expose
-	private int id;
-	@SerializedName("message")
+	private int postId;
+	@SerializedName("notification_id")
 	@Expose
-	private String message;
+	private int notificationId;
+	@SerializedName("notification_text")
+	@Expose
+	private String notificationText;
 	@SerializedName("user_image")
 	@Expose
 	private String userImage;
-	@SerializedName("time")
+	@SerializedName("updated_at")
 	@Expose
-	private String time;
-	@SerializedName("is_comment")
+	private String updatedAt;
+	@SerializedName("activity_type")
 	@Expose
-	private int isComment;
-	@SerializedName("is_like")
-	@Expose
-	private int isLike;
+	private int activityType;
 	@SerializedName("is_read")
 	@Expose
 	private int isRead;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
 
 	public String getUserImage() {
 		return userImage;
@@ -55,30 +39,6 @@ public class NotificationDatum {
 		this.userImage = userImage;
 	}
 
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
-	}
-
-	public boolean isComment() {
-		return isComment == 1;
-	}
-
-	public void setIsComment(int isComment) {
-		this.isComment = isComment;
-	}
-
-	public boolean isLike() {
-		return isLike == 1;
-	}
-
-	public void setIsLike(int isLike) {
-		this.isLike = isLike;
-	}
-
 	public boolean isRead() {
 		return isRead == 1;
 	}
@@ -86,4 +46,48 @@ public class NotificationDatum {
 	public void setIsRead(int isRead) {
 		this.isRead = isRead;
 	}
+
+	public String getNotificationText() {
+		return notificationText;
+	}
+
+	public void setNotificationText(String notificationText) {
+		this.notificationText = notificationText;
+	}
+
+	public int getPostId() {
+		return postId;
+	}
+
+	public void setPostId(int postId) {
+		this.postId = postId;
+	}
+
+	public int getNotificationId() {
+		return notificationId;
+	}
+
+	public void setNotificationId(int notificationId) {
+		this.notificationId = notificationId;
+	}
+
+	public String getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(String updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public int getActivityType() {
+		return activityType;
+	}
+
+	public void setActivityType(int activityType) {
+		this.activityType = activityType;
+	}
+
+	public static final int ACTIVITY_TYPE_LIKE = 1;
+	public static final int ACTIVITY_TYPE_COMMENT = 2;
+
 }

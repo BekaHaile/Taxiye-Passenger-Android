@@ -63,8 +63,8 @@ public class FeedNotificationsAdapter extends RecyclerView.Adapter<FeedNotificat
                 holder.ivUserImage.setImageResource(R.drawable.placeholder_img);
             }
 
-            holder.tvNotificationText.setText(Utils.trimHTML(Utils.fromHtml(datum.getMessage())));
-            holder.tvNotificationTime.setText(FeedHomeAdapter.getTimeToDisplay(datum.getTime(), activity.isTimeAutomatic));
+            holder.tvNotificationText.setText(Utils.trimHTML(Utils.fromHtml(datum.getNotificationText())));
+            holder.tvNotificationTime.setText(FeedHomeAdapter.getTimeToDisplay(datum.getUpdatedAt(), activity.isTimeAutomatic));
 
             if(datum.isRead()){
                 holder.relative.setBackgroundResource(R.drawable.bg_transp_menu_color_selector);
@@ -72,9 +72,9 @@ public class FeedNotificationsAdapter extends RecyclerView.Adapter<FeedNotificat
                 holder.relative.setBackgroundResource(R.drawable.bg_pale_orange_menu_color_selector);
             }
 
-            if(datum.isComment() && !datum.isLike()){
+            if(datum.getActivityType() == NotificationDatum.ACTIVITY_TYPE_COMMENT){
                 holder.tvNotificationTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_feed_notification_comment, 0, 0, 0);
-            } else if(!datum.isComment() && datum.isLike()){
+            } else if(datum.getActivityType() == NotificationDatum.ACTIVITY_TYPE_LIKE){
                 holder.tvNotificationTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active, 0, 0, 0);
             }
 

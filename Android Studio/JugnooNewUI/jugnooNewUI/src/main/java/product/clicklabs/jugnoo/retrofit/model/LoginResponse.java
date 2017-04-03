@@ -406,8 +406,7 @@ public class LoginResponse {
 		}
 
 		public boolean getFeedActive() {
-//			TODO open this: return feedActive == 1;
-			return true;
+			return feedActive == 1;
 		}
 
 		public Long getFeedRank() {

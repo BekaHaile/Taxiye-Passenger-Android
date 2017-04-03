@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.commoncalls.ApiFeedNotificationUpdate;
 import com.sabkuchfresh.commoncalls.ApiFeedNotifications;
 import com.sabkuchfresh.feed.models.FeedNotificationsResponse;
 import com.sabkuchfresh.feed.models.NotificationDatum;
@@ -54,27 +55,6 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 
 		notificationData = new ArrayList<>();
 
-		NotificationDatum datum = new NotificationDatum();
-		datum.setId(1);
-		datum.setIsComment(1);
-		datum.setIsLike(0);
-		datum.setMessage("Camila Cabelo liked your comment: “I would really like to go out with someone...”");
-		datum.setIsRead(0);
-		datum.setTime("2017-03-31T02:00:00.000Z");
-		datum.setUserImage("http://cdn.hercampus.com/s3fs-public/2016/12/19/627891a5-0dd1-4466-8168-e0dadd32aa50.jpg");
-		notificationData.add(datum);
-		datum = new NotificationDatum();
-		datum.setId(1);
-		datum.setIsComment(0);
-		datum.setIsLike(1);
-		datum.setMessage("Camila Cabelo liked your comment: “I would really like to go out with someone...”");
-		datum.setIsRead(1);
-		datum.setTime("2017-03-31T02:00:00.000Z");
-		datum.setUserImage("http://cdn.hercampus.com/s3fs-public/2016/12/19/627891a5-0dd1-4466-8168-e0dadd32aa50.jpg");
-		notificationData.add(datum);
-
-
-
 
 		swipeRefreshLayout.setColorSchemeResources(R.color.white);
 		swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
@@ -92,7 +72,8 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 				new FeedNotificationsAdapter.Callback() {
 			@Override
 			public void onNotificationClick(int position, NotificationDatum notificationDatum) {
-
+				updateFeedNotification(notificationDatum.getNotificationId());
+				// TODO: 03/04/17 open feed details fragment
 			}
 		});
 		rvNotifications.setAdapter(notificationsAdapter);
@@ -152,6 +133,16 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 			});
 		}
 		apiFeedNotifications.hit(swipeRefreshLayout);
+	}
+
+
+
+	private ApiFeedNotificationUpdate apiFeedNotificationUpdate;
+	public void updateFeedNotification(int notificationId){
+		if(apiFeedNotificationUpdate == null){
+			apiFeedNotificationUpdate = new ApiFeedNotificationUpdate();
+		}
+		apiFeedNotificationUpdate.hit(notificationId);
 	}
 
 }

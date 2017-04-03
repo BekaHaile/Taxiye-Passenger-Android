@@ -1,6 +1,7 @@
 package com.sabkuchfresh.feed.ui.fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.feed.utils.BadgeDrawable;
+import com.sabkuchfresh.fragments.FreshHomeFragment;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -221,8 +223,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         try {
             if (MyApplication.getInstance().isOnline()) {
 
+                ProgressDialog progressDialog = null;
                 if(loader) {
-                    DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
+                    progressDialog = DialogPopup.showLoadingDialogNewInstance(getActivity(), getActivity().getResources().getString(R.string.loading));
                 }
 
                 HashMap<String, String> params = new HashMap<>();
@@ -230,11 +233,14 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
                 new HomeUtil().putDefaultParams(params);
+                final ProgressDialog finalProgressDialog = progressDialog;
                 RestClient.getFeedApiService().generateFeed(params, new retrofit.Callback<FeedListResponse>() {
                     @Override
                     public void success(FeedListResponse feedbackResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        DialogPopup.dismissLoadingDialog();
+                        if(finalProgressDialog != null) {
+                            finalProgressDialog.dismiss();
+                        }
                         swipeRefreshLayout.setRefreshing(false);
                         try {
                             String message = feedbackResponse.getMessage();
@@ -248,10 +254,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                 } else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     feedHomeAdapter.setList(getAdapterList(true,feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),feedbackResponse.getCity()));
                                     rlNoReviews.setVisibility(feedbackResponse.getFeeds()==null||feedbackResponse.getFeeds().size()==0 ? View.VISIBLE : View.GONE);
-                                    activity.getFeedHomeAddPostView().setVisibility(View.VISIBLE);
+                                    if(activity.getTopFragment() instanceof FreshHomeFragment) {
+                                        activity.getFeedHomeAddPostView().setVisibility(View.VISIBLE);
+                                    }
                                     if(activity.getTvAddPost() != null) {
                                         activity.getTvAddPost().setText(feedbackResponse.getAddPostText());
                                     }
+                                    setNotificationCount(String.valueOf(feedbackResponse.getNotificationCount()));
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -264,7 +273,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
                     @Override
                     public void failure(RetrofitError error) {
-                        DialogPopup.dismissLoadingDialog();
+                        if(finalProgressDialog != null) {
+                            finalProgressDialog.dismiss();
+                        }
                         retryDialog(DialogErrorType.CONNECTION_LOST);
                         swipeRefreshLayout.setRefreshing(false);
                     }

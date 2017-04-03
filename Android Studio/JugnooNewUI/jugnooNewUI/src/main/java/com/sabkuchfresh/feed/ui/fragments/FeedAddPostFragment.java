@@ -132,6 +132,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 //                ivAccessCamera.setEnabled(getVisibleFragment().canUploadImages());
                 toggleAnonymousPosting(getVisibleFragment().isAnonymousPostingEnabled());
                 btnSubmit.setActivated(getVisibleFragment().submitEnabledState());
+
+                try {
+                    getVisibleFragment().getFocusEditText().requestFocus();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -168,7 +174,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         });
 
         if (isEditingPost) {
-
             rootView.findViewById(R.id.llTabs).setVisibility(View.GONE);
             rootView.findViewById(R.id.id_top_line).setVisibility(View.GONE);
             switchAnonymousPost.setVisibility(View.GONE);
@@ -202,6 +207,19 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             }
         });
         switchAnonymousPost.setChecked(true);
+
+        activity.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getVisibleFragment().getFocusEditText().requestFocus();
+                    product.clicklabs.jugnoo.utils.Utils.showKeyboard(activity, getVisibleFragment().getFocusEditText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 200);
+
         return rootView;
     }
 
@@ -527,7 +545,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     }
 
     public void toggleAnonymousPosting(boolean isEnable) {
-        if (isEnable) {
+        if (isEnable && !isEditingPost
+                && Data.getFeedData() != null
+                && Data.getFeedData().getAnonymousFunctionalityEnabled() == 1) {
             labelAnonymousSwitch.setVisibility(View.VISIBLE);
             switchAnonymousPost.setVisibility(View.VISIBLE);
         } else {

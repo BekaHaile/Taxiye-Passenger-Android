@@ -79,8 +79,13 @@ public interface FeedApiService {
 
 
 	@FormUrlEncoded
-	@POST("/feeds/v1/fetch_notifications")
-	void fetchNotifications(@FieldMap Map<String, String> params, Callback<FeedNotificationsResponse> callback);
+	@POST("/feeds/v1/get_notification")
+	void getNotifications(@FieldMap Map<String, String> params, Callback<FeedNotificationsResponse> callback);
+
+
+	@FormUrlEncoded
+	@POST("/feeds/v1/update_notification")
+	void updateNotification(@FieldMap Map<String, String> params, Callback<FeedNotificationsResponse> callback);
 
 
 }

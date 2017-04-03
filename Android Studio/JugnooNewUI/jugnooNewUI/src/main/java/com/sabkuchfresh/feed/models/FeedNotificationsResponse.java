@@ -20,7 +20,7 @@ public class FeedNotificationsResponse {
 	@SerializedName("error")
 	@Expose
 	private String error;
-	@SerializedName("notifications")
+	@SerializedName("notification")
 	@Expose
 	private List<NotificationDatum> notificationData;
 

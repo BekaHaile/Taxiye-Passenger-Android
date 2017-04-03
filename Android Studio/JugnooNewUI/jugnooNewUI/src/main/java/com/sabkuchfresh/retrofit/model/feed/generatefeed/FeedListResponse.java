@@ -26,6 +26,9 @@ public class FeedListResponse {
     @SerializedName("city_name")
     @Expose
     private String cityName;
+    @SerializedName("notification_count")
+    @Expose
+    private int notificationCount;
 
 
     public int getFlag() {
@@ -67,5 +70,13 @@ public class FeedListResponse {
 
     public String getCity() {
         return cityName;
+    }
+
+    public int getNotificationCount() {
+        return notificationCount;
+    }
+
+    public void setNotificationCount(int notificationCount) {
+        this.notificationCount = notificationCount;
     }
 }

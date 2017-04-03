@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -263,5 +264,7 @@ public abstract class ImageSelectFragment extends Fragment {
     public abstract boolean submitEnabledState();
 
     public abstract boolean isAnonymousPostingEnabled();
+
+    public abstract EditText getFocusEditText();
 
 }

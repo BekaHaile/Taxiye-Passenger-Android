@@ -1,7 +1,6 @@
 package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -18,7 +17,6 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -467,13 +465,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             long diffT = currentDateCal.getTimeInMillis() - feedPostedCal.getTimeInMillis();
             long diffC = diffT / (24 * 60 * 60 * 1000 * 7);
-            if (diffC >= 1) return diffC + "w";
+            if (diffC >= 1) return diffC + (diffC == 1?" week ago":" weeks ago");
             diffC = diffT / (24 * 60 * 60 * 1000);
-            if (diffC >= 1) return diffC + "d";
+            if (diffC >= 1) return diffC + (diffC == 1?" day ago":" days ago");
             diffC = diffT / (60 * 60 * 1000) % 24;
-            if (diffC >= 1) return diffC + "h";
+            if (diffC >= 1) return diffC + (diffC == 1?" hour ago":" hours ago");
             diffC = diffT / (60 * 1000) % 60;
-            if (diffC >= 1) return diffC + "m";
+            if (diffC >= 1) return diffC + (diffC == 1?" minute ago":" minutes ago");
             diffC = diffT / 1000 % 60;
 
             return " Just now";
