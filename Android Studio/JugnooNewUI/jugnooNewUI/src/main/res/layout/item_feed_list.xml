@@ -88,7 +88,7 @@
         <LinearLayout
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/iv_owner_profile_pic"
-            android:layout_toLeftOf="@+id/tv_feed_rating"
+            android:layout_toLeftOf="@+id/ib_arrow_more"
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -122,7 +122,7 @@
         </LinearLayout>
 
 
-        <TextView
+       <!-- <TextView
             android:id="@id/tv_feed_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/font_tiny"
             android:visibility="visible"
-            app:font="maven" />
+            app:font="maven" />-->
 
         <TextView
             android:id="@id/ib_arrow_more"

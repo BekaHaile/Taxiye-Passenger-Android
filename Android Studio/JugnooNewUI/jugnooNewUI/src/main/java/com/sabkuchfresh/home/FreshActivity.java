@@ -1473,9 +1473,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
 
-
-
-
        /* CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         AppBarLayout.LayoutParams appbar = new AppBarLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         collapsingToolbarLayout.setLayoutParams(appbar);
@@ -1494,8 +1491,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             if(getTopFragment() instanceof FeedHomeFragment) {
-//                android.util.Log.i(TAG, "onOffsetChanged: " + ((appBarLayout.getTotalScrollRange() + verticalOffset) * 1.0f / appBarLayout.getTotalScrollRange()) * feedHomeAddPostView.getHeight());
                 feedHomeAddPostView.animate().translationY(feedHomeAddPostView.getHeight() - ((appBarLayout.getTotalScrollRange() + verticalOffset) * 1.0f / appBarLayout.getTotalScrollRange()) * feedHomeAddPostView.getHeight()).start();
+                if(verticalOffset== -appBarLayout.getTotalScrollRange()) {
+                    if (fabViewTest.relativeLayoutFABTest.getVisibility() == View.VISIBLE) {
+                        fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+                    }
+                }
+                else{
+                    if(fabViewTest.relativeLayoutFABTest.getVisibility() == View.GONE){
+                        fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    }
+                }
             }
            /* if(verticalOffset== -appBarLayout.getTotalScrollRange())
             {

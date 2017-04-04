@@ -1501,6 +1501,8 @@
     <string name="restaurant_name_is_neccessary">Restaurant name is neccessary</string>
 
     <string name="star_icon">&#xe9d9;</string>
+    <string name="feed_star_selected">&#xe900;</string>
+    <string name="feed_star_deselected">&#xe9d7;</string>
     <string name="thanks_for_recommendation">Thanks for your recommendation!</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>

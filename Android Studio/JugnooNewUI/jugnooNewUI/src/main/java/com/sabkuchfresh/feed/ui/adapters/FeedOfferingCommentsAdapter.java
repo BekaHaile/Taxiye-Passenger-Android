@@ -95,7 +95,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         if(holder instanceof FeedHomeAdapter.ViewHolderReviewImage)
         {
 
-            FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback, this);
+            FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback, this, true);
             ((FeedHomeAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
 
         }

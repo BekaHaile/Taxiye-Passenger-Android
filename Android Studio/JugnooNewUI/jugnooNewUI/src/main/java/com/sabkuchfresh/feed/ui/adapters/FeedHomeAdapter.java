@@ -1,6 +1,7 @@
 package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TabLayout;
@@ -14,6 +15,8 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,7 @@ import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 import com.sabkuchfresh.utils.DateParser;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -63,6 +67,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int ITEM_ADD_POST = 100;
     private static final int ITEM_FEED = 101;
     public static final int ITEM_FOOTER_BLANK = 122;
+     private static Typeface FONT_STAR;
+
 
 
     public FeedHomeAdapter(Activity activity, List<?> reviewImages, RecyclerView recyclerView, FeedPostCallback feedPostCallback) {
@@ -70,13 +76,14 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.adapterList = reviewImages;
         this.feedPostCallback = feedPostCallback;
         this.recyclerView = recyclerView;
-
+        FONT_STAR = Typeface.createFromAsset(activity.getAssets(), "fonts/font_feed_star.ttf");
 
     }
 
     public void setList(List<?> reviewImages) {
         this.adapterList = reviewImages;
         notifyDataSetChanged();
+
     }
 
     @Override
@@ -114,7 +121,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
-            setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback, this);
+            setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback, this, false);
             if (position == adapterList.size() - 2) {
                 ((ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
             } else {
@@ -148,7 +155,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public static void setData(ViewHolderReviewImage holder, final FeedDetail feedDetail, FreshActivity activity, final FeedPostCallback feedPostCallback,
-                               final DisplayFeedHomeImagesAdapter.Callback callback) {
+                               final DisplayFeedHomeImagesAdapter.Callback callback, boolean isViewingDetail) {
         String imageUrl = null, restaurantAddress = null, ownerImage = null, userImage = null;
         Spannable title = null, userActivityTitle = null;
         Double rating = null;
@@ -160,8 +167,18 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 case COMMENT_ON_REVIEW:
                 case LIKE_ON_REVIEW:
                 case REVIEW:
+                    //Form Title
+                    if (feedDetail.getStarCount() != null && feedDetail.getStarCount() > 0)
+                        rating = feedDetail.getStarCount();
+
+
+
+
+
+
                     if (feedDetail.getFeedType() != REVIEW && !TextUtils.isEmpty(feedDetail.getUserName()) &&!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         showUserActivity = true;
+
                         userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s review.");
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         userActivityTitle.setSpan(BOLD_SPAN_2, feedDetail.getUserName().length() + feedDetail.getFeedType().getValue().length(), userActivityTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -181,18 +198,47 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             restaurantAddress = feedDetail.getRestaurantAddress();
                     }
 
-                    //Form Title
-                    if (feedDetail.getStarCount() != null && feedDetail.getStarCount() > 0)
-                        rating = feedDetail.getStarCount();
-
 
                     if (!TextUtils.isEmpty(feedDetail.getOwnerName()) && !TextUtils.isEmpty(feedDetail.getRestaurantName())) {
                         String actualTitle = feedDetail.getOwnerName() + REVIEW.getValue() + feedDetail.getRestaurantName() + ".";
-                        title = new SpannableString(actualTitle);
-                        title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                        title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                        title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                        setMovementMethod = true;
+
+                        if(rating!=null){
+                            String  titleWithReview = actualTitle + " ";
+
+                            int starCount = 0;
+                            while(starCount!=5){
+                                if(starCount<rating.intValue()){
+                                    titleWithReview+= activity.getString(R.string.feed_star_selected);
+                                } else{
+                                    titleWithReview+= activity.getString(R.string.feed_star_deselected);
+                                }
+
+                                starCount++;
+                            }
+
+
+                            title = new SpannableString(titleWithReview);
+                            title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+
+                            title.setSpan(new CustomTypeFaceSpan("", FONT_STAR), actualTitle.length(), title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            int ratingStartLength = actualTitle.length()+1;//adding 1 for " " i.e space
+                            title.setSpan(new ForegroundColorSpan(Color.parseColor(feedDetail.getRatingColor())), ratingStartLength, actualTitle.length() + 1 +  rating.intValue(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            title.setSpan(new ForegroundColorSpan(Color.GRAY), ratingStartLength + rating.intValue(), title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            title.setSpan(new RelativeSizeSpan(0.8f), actualTitle.length(), title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                            setMovementMethod = true;
+                        }else{
+                            title = new SpannableString(actualTitle);
+                            title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            setMovementMethod = true;
+                        }
+
+
 
                     }
 
@@ -208,6 +254,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     if (feedDetail.getFeedType() != FeedDetail.FeedType.POST && !TextUtils.isEmpty(feedDetail.getUserName()) &&!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         showUserActivity = true;
+
                         userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s post.");
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         userActivityTitle.setSpan(BOLD_SPAN_2, feedDetail.getUserName().length() + feedDetail.getFeedType().getValue().length(), userActivityTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -262,11 +309,16 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.tvFeedOwnerTitle.setMovementMethod(setMovementMethod ? LinkMovementMethod.getInstance() : null);
 
 
-            //Set Rating
-            holder.tvFeedRating.setVisibility(rating == null ? View.GONE : View.VISIBLE);
-            if (rating != null)
-                activity.setRatingAndGetColor(holder.tvFeedRating, rating, feedDetail.getRatingColor(), true);
 
+        /*    //Set Rating
+            if (rating != null) {
+
+                holder.tvFeedRating.setVisibility(View.VISIBLE)
+                activity.setRatingAndGetColor(holder.tvFeedRating, rating, feedDetail.getRatingColor(), true);
+            }
+            else{
+                holder.tvFeedRating.setVisibility(View.GONE)
+            }*/
 
 
             //set Like Count and comment count
@@ -302,7 +354,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.tvFeedDescription.setText(feedDetail.getContent());
 
             //Show User Activity Layout such as Person A commented on Person B's post
-            if (showUserActivity) {
+            if (showUserActivity && !isViewingDetail) {
                 holder.layoutUserActivity.setVisibility(View.VISIBLE);
                 holder.dividerUserActivity.setVisibility(View.VISIBLE);
                 holder.tvUserActivityTitle.setText(userActivityTitle);
@@ -589,8 +641,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LinearLayout viewActionLike;
         @Bind(R.id.view_action_comment)
         LinearLayout viewActionComment;
-        @Bind(R.id.tv_feed_rating)
-        TextView tvFeedRating;
+    /*    @Bind(R.id.tv_feed_rating)
+        TextView tvFeedRating;*/
         @Bind(R.id.tv_restaurant_feed_address)
         TextView tvFeedAddress;
         @Bind(R.id.layout_user_activity_heading)
