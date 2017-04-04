@@ -60,6 +60,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FBAccountKit;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -114,7 +115,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     private int nextPermissionsRequestCode = 4000;
     private final Map<Integer, AccountActivity.OnCompleteListener> permissionsListeners = new HashMap<>();
-
+    private FBAccountKit fbAccountKit;
     private boolean setJeanieState;
     Bundle bundle = new Bundle();
 
@@ -209,6 +210,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         imageViewFABQuestion = (ImageView)findViewById(R.id.imageViewFABQuestion);
         imageViewFAB = (ImageView)findViewById(R.id.imageViewFAB);
         relativeLayoutFAB.setVisibility(View.GONE);
+        fbAccountKit = new FBAccountKit(AccountActivity.this);
         try {
             if((Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_FAB_SETTING, 0) == 1) &&
                     (Data.userData.getIntegratedJugnooEnabled() == 1) &&
@@ -314,7 +316,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             public void onClick(View v) {
                 Log.v("phone click", "phone click");
                 PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(editTextPhone.getText().toString().trim()), "IND");
-                startFbAccountKit(phoneNumber);
+                //startFbAccountKit(phoneNumber);
+                fbAccountKit.startFbAccountKit(phoneNumber);
             }
         });
 

@@ -120,7 +120,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
                 else{
                     name = OTPConfirmScreen.emailRegisterData.name;
                     email = OTPConfirmScreen.emailRegisterData.emailId;
-                    phone = OTPConfirmScreen.emailRegisterData.phoneNo;
+                    phone = textViewRegisterPhoneValue.getText().toString();
                 }
 
                 submitDuplicateRegistrationRequestAPI(RequestDuplicateRegistrationActivity.this, messageStr, name, email, phone);
@@ -143,7 +143,8 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
             else{
                 textViewRegisterNameValue.setText(OTPConfirmScreen.emailRegisterData.name);
                 textViewRegisterEmailValue.setText(OTPConfirmScreen.emailRegisterData.emailId);
-                textViewRegisterPhoneValue.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
+                //textViewRegisterPhoneValue.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
+				textViewRegisterPhoneValue.setText(Data.kitPhoneNumber);
             }
             editTextMessage.setHint("You have already created " + Data.previousAccountInfoList.size() + " accounts from this device. Please explain the reason for creating a new account.");
         } catch(Exception e){

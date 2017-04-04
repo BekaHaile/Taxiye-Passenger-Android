@@ -119,6 +119,7 @@ public class Data {
 
 
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
+	public static String kitPhoneNumber = "";
 
     public static String deepLinkClassName = "", deepLinkReferralCode = "";
 	public static int deepLinkIndex, deepLinkOrderId, deepLinkProductType;

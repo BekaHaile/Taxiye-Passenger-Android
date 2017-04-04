@@ -1,27 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    android:background="@color/white" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/topRl"
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_height"
-            android:splitMotionEvents="false"
             android:background="@color/white"
-            >
+            android:splitMotionEvents="false">
 
             <TextView
                 android:id="@+id/textViewTitle"
-                android:text="@string/nl_signup_request_registration"
-                style="@style/title" />
+                style="@style/title"
+                android:text="@string/nl_signup_request_registration" />
 
             <ImageView
                 android:id="@+id/imageViewBack"
@@ -31,21 +30,20 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="6px"
-            android:background="@drawable/shadow_down"
-            />
+            android:background="@drawable/shadow_down" />
 
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:splitMotionEvents="false" >
+            android:splitMotionEvents="false">
 
             <LinearLayout
                 android:id="@+id/linearLayoutMain"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:splitMotionEvents="false" >
+                android:splitMotionEvents="false">
 
                 <TextView
                     android:id="@+id/textViewRegistration"
@@ -53,69 +51,69 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="40px"
+                    android:text="@string/nl_signup_request_registration_info"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_32"
-                    android:text="@string/nl_signup_request_registration_info"/>
+                    android:textSize="@dimen/text_size_32" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="30px">
+                    android:layout_marginTop="30px"
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/textViewRegisterName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_28"
                             android:layout_marginLeft="40px"
-                            android:text="Name:"/>
+                            android:text="Name:"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28" />
 
                         <TextView
                             android:id="@+id/textViewRegisterNameValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_28"
-                            android:text="User1"
                             android:layout_marginLeft="180px"
                             android:layout_marginRight="40px"
                             android:singleLine="true"
-                            />
+                            android:text="User1"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28" />
 
-                        </RelativeLayout>
+                    </RelativeLayout>
 
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px">
+                        android:layout_marginTop="10px"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/textViewRegisterEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_28"
                             android:layout_marginLeft="40px"
-                            android:text="Email:"/>
+                            android:text="Email:"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28" />
 
                         <TextView
                             android:id="@+id/textViewRegisterEmailValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_28"
-                            android:text="User1"
                             android:layout_marginLeft="180px"
                             android:layout_marginRight="40px"
                             android:singleLine="true"
-                            />
+                            android:text="User1"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28" />
 
                     </RelativeLayout>
 
@@ -129,46 +127,44 @@
                             android:id="@+id/textViewRegisterPhone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_28"
                             android:layout_marginLeft="40px"
-                            android:text="Phone:"/>
+                            android:text="Phone:"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28" />
 
                         <TextView
                             android:id="@+id/textViewRegisterPhoneValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_28"
-                            android:text="User1"
                             android:layout_marginLeft="180px"
                             android:layout_marginRight="40px"
                             android:singleLine="true"
-                            />
+                            android:text="User1"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28" />
 
                     </RelativeLayout>
 
-                    </LinearLayout>
+                </LinearLayout>
 
 
                 <EditText
                     android:id="@+id/editTextMessage"
                     android:layout_width="match_parent"
                     android:layout_height="310px"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="30px"
                     android:layout_marginRight="30px"
                     android:layout_marginTop="40px"
-                    android:layout_gravity="center_horizontal"
                     android:background="@drawable/dropshadow_in_white"
                     android:gravity="left"
                     android:hint="@string/nl_signup_request_registration_you_have_already_format"
                     android:padding="25px"
                     android:scrollbars="vertical"
-                    android:textSize="@dimen/text_size_26"
                     android:textColor="@color/text_color"
-                    android:textCursorDrawable="@drawable/cursor_black"
                     android:textColorHint="@color/text_color_hint"
-                    />
+                    android:textCursorDrawable="@drawable/cursor_black"
+                    android:textSize="@dimen/text_size_26" />
 
 
                 <TextView
@@ -176,13 +172,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textColor="@color/text_color"
-                    android:gravity="center_horizontal"
-                    android:textSize="@dimen/text_size_28"
-                    android:layout_marginTop="40px"
                     android:layout_marginLeft="40px"
                     android:layout_marginRight="40px"
-                    android:text="@string/nl_signup_request_registration_revert_you"/>
+                    android:layout_marginTop="40px"
+                    android:gravity="center_horizontal"
+                    android:text="@string/nl_signup_request_registration_revert_you"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_28" />
 
 
                 <Button
@@ -190,8 +186,7 @@
                     style="@style/ButtonTheme"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="40px"
-                    android:text="@string/submit"
-                    />
+                    android:text="@string/submit" />
 
                 <TextView
                     android:id="@+id/textViewScroll"

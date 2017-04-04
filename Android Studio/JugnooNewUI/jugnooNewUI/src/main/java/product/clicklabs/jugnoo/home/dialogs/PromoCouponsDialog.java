@@ -111,7 +111,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 								dialog.dismiss();
 							}
 						}, 100);
-						//callback.onCouponApplied();
+						callback.onCouponApplied();
 						GAUtils.event(RIDES, TNC+CLICKED, promoCoupon.getTitle());
 					}
 				}

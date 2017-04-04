@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,14 +73,15 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private View rootView;
     private Activity activity;
-    private TextView tvPaymentPlan, tvPlanAmount;
+    private TextView tvPaymentPlan, tvPlanAmount, tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2,
+            tvDuration1, tvDuration2;
     private Button bPlaceOrder;
-    private LinearLayout linearLayoutOffers, linearLayoutRoot;
+    private LinearLayout linearLayoutOffers, linearLayoutRoot, llStarPurchase;
     private NonScrollListView listViewOffers;
     private PromoCouponsAdapter promoCouponsAdapter;
-    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge;
+    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge, rlPlan1, rlPlan2, rlStarUpgrade;
     private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewRadioMobikwik, imageViewAddMobikwik,
-            imageViewRadioFreeCharge, imageViewAddFreeCharge;
+            imageViewRadioFreeCharge, imageViewAddFreeCharge, ivRadio1, ivRadio2;
     private TextView textViewPaytmValue, textViewMobikwikValue, textViewFreeChargeValue;
     private PaymentOption paymentOption;
     private LinearLayout linearLayoutWalletContainer;
@@ -120,7 +123,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             String plan = bundle.getString("plan", "");
             subscription = new Gson().fromJson(plan, SubscriptionData.Subscription.class);
 
-
+            llStarPurchase = (LinearLayout) rootView.findViewById(R.id.llStarPurchase);
+            rlStarUpgrade = (RelativeLayout) rootView.findViewById(R.id.rlStarUpgrade);
             tvPaymentPlan = (TextView) rootView.findViewById(R.id.tvPaymentPlan); tvPaymentPlan.setTypeface(Fonts.mavenMedium(activity));
             tvPlanAmount = (TextView) rootView.findViewById(R.id.tvPlanAmount); tvPlanAmount.setTypeface(Fonts.mavenMedium(activity));
             bPlaceOrder = (Button) rootView.findViewById(R.id.bPlaceOrder); bPlaceOrder.setTypeface(Fonts.mavenMedium(activity)); bPlaceOrder.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -138,13 +142,34 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             textViewMobikwikValue = (TextView)rootView.findViewById(R.id.textViewMobikwikValue);textViewMobikwikValue.setTypeface(Fonts.mavenMedium(activity));
             textViewFreeChargeValue = (TextView)rootView.findViewById(R.id.textViewFreeChargeValue);textViewFreeChargeValue.setTypeface(Fonts.mavenMedium(activity));
 
+            rlPlan1 = (RelativeLayout) rootView.findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(onClickListenerPaymentOptionSelector); rlPlan1.setVisibility(View.GONE);
+            rlPlan2 = (RelativeLayout) rootView.findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(onClickListenerPaymentOptionSelector); rlPlan2.setVisibility(View.GONE);
+            ivRadio1 = (ImageView) rootView.findViewById(R.id.ivRadio1);
+            ivRadio2 = (ImageView) rootView.findViewById(R.id.ivRadio2);
+            tvActualAmount1 = (TextView) rootView.findViewById(R.id.tvActualAmount1); tvActualAmount1.setTypeface(Fonts.mavenRegular(activity));
+            tvActualAmount2 = (TextView) rootView.findViewById(R.id.tvActualAmount2); tvActualAmount2.setTypeface(Fonts.mavenRegular(activity));
+            tvAmount1 = (TextView) rootView.findViewById(R.id.tvAmount1); tvAmount1.setTypeface(Fonts.mavenMedium(activity));
+            tvAmount2 = (TextView) rootView.findViewById(R.id.tvAmount2); tvAmount2.setTypeface(Fonts.mavenMedium(activity));
+            tvPeriod1 = (TextView) rootView.findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.mavenRegular(activity));
+            tvPeriod2 = (TextView) rootView.findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.mavenRegular(activity));
+            tvDuration1 = (TextView) rootView.findViewById(R.id.tvDuration1);
+            tvDuration2 = (TextView) rootView.findViewById(R.id.tvDuration2);
+
             relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
             relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
             relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
 
-            tvPaymentPlan.setText(subscription.getDescription());
-            tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                    Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
+            if(getActivity() instanceof JugnooStarActivity) {
+                llStarPurchase.setVisibility(View.VISIBLE);
+                rlStarUpgrade.setVisibility(View.GONE);
+                setPlan();
+            } else if(getActivity() instanceof JugnooStarSubscribedActivity){
+                llStarPurchase.setVisibility(View.GONE);
+                rlStarUpgrade.setVisibility(View.VISIBLE);
+                tvPaymentPlan.setText(subscription.getDescription());
+                tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
+                        Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
+            }
 
             linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
             listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
@@ -167,6 +192,38 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         super.onResume();
         orderPaymentModes();
         setPaymentOptionUI();
+    }
+
+    private void setPlan(){
+        if(Data.userData.getSubscriptionData().getSubscriptions() != null){
+            for(int i=0; i<Data.userData.getSubscriptionData().getSubscriptions().size(); i++) {
+                if (i == 0) {
+                    rlPlan1.setVisibility(View.VISIBLE);
+                    tvAmount1.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getAmountText());
+                    tvDuration1.setText("/"+Data.userData.getSubscriptionData().getSubscriptions().get(i).getDurationText());
+                    tvPeriod1.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getDescription()));
+                    if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getIsDefault() == 1) {
+                        selectedPlan(rlPlan1, ivRadio1, i);
+                    }
+                } else if (i == 1) {
+                    rlPlan2.setVisibility(View.VISIBLE);
+                    tvAmount2.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getAmountText());
+                    tvDuration2.setText("/"+Data.userData.getSubscriptionData().getSubscriptions().get(i).getDurationText());
+                    tvPeriod2.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getDescription()));
+                    if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getIsDefault() == 1) {
+                        selectedPlan(rlPlan2, ivRadio2, i);
+                    }
+                }
+            }
+        }
+    }
+
+    private void selectedPlan(RelativeLayout rlPlan, ImageView ivRadio, int subId){
+        ivRadio1.setImageResource(R.drawable.ic_radio_button_normal);
+        ivRadio2.setImageResource(R.drawable.ic_radio_button_normal);
+
+        ivRadio.setImageResource(R.drawable.ic_radio_button_selected);
+        subscription = Data.userData.getSubscriptionData().getSubscriptions().get(subId);
     }
 
     private void updateCouponsDataView(){
@@ -221,6 +278,16 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH,
                                 callbackPaymentOptionSelector);
                         GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+WALLET+SELECTED, CASH);
+                        break;
+
+                    case R.id.rlPlan1:
+                        selectedPlan(rlPlan1, ivRadio1, 0);
+                        try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
+                        break;
+
+                    case R.id.rlPlan2:
+                        selectedPlan(rlPlan2, ivRadio2, 1);
+                        try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
                         break;
                 }
 
