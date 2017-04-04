@@ -1,6 +1,7 @@
 package com.sabkuchfresh.feed.ui.fragments;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -141,7 +142,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                 if (restaurantId > 0) {
                     activity.fetchRestaurantMenuAPI(restaurantId);
                 }
-//                Toast.makeText(activity, "Hey here Comments", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -156,8 +157,19 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
             }
 
             @Override
-            public void onDeleteComment(FeedComment feedComment, int positionInList, View viewClicked) {
-                deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
+            public void onDeleteComment(final FeedComment feedComment, final int positionInList, View viewClicked) {
+             DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Comment", "Are you sure you want to delete your comment?", "Yes", "No", new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                     deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
+                 }
+             }, new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+
+                 }
+             },true,false);
+
             }
         }, submitTextWatcher);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -393,7 +405,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         public void afterTextChanged(Editable s) {
             commentAdded = s.toString();
 //            textViewCharCount.setText(String.valueOf(500-s.toString().trim().length()));
-            btnSubmit.setEnabled(s.length() > 0);
+            btnSubmit.setEnabled(s.toString().trim().length() > 0);
 
 
         }

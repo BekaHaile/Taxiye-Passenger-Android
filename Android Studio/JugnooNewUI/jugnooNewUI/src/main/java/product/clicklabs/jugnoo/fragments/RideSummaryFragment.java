@@ -429,14 +429,14 @@ public class RideSummaryFragment extends Fragment implements Constants {
 					listViewEndRideDiscounts.setVisibility(View.GONE);
 					textViewEndRideDiscount.setText(endRideData.discountTypes.get(0).name);
 					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
-					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.discount)));
+					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
 					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
 				}
 				else{
 					listViewEndRideDiscounts.setVisibility(View.GONE);
 					textViewEndRideDiscount.setText("Discounts");
 					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
-					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.discount)));
+					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
 					if(endRideData.discount > 0){
 						relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
 					} else{

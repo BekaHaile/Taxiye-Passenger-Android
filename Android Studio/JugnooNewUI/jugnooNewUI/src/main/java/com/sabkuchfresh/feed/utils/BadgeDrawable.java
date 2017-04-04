@@ -124,7 +124,6 @@ public class BadgeDrawable extends Drawable {
 		} else {
 			badge = new BadgeDrawable(context);
 		}
-
 		badge.setCount(count);
 		icon.mutate();
 		icon.setDrawableByLayerId(R.id.item_badge, badge);

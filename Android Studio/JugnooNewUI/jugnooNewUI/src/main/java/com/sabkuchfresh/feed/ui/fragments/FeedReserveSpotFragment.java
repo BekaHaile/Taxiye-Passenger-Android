@@ -25,7 +25,7 @@ import com.sabkuchfresh.feed.models.RegisterForFeedResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
-import com.sabkuchfresh.feed.utils.Utils;
+import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.HashMap;
@@ -149,8 +149,8 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
     private TextView createTextView(String textToSet) {
         TextView v = new TextView(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.rightMargin = Utils.dpToPx(4.0f);
-        v.setPadding(Utils.dpToPx(6), Utils.dpToPx(8f), Utils.dpToPx(6), Utils.dpToPx(8f));
+        params.rightMargin = FeedUtils.dpToPx(4.0f);
+        v.setPadding(FeedUtils.dpToPx(6), FeedUtils.dpToPx(8f), FeedUtils.dpToPx(6), FeedUtils.dpToPx(8f));
         v.setGravity(Gravity.CENTER);
         v.setBackgroundResource(R.drawable.background_white_rounded_bordered);
         v.setTypeface(Fonts.mavenRegular(getContext()), Typeface.BOLD);

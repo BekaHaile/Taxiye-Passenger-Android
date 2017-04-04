@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.picker.image.model.ImageEntry;
 import com.sabkuchfresh.feed.ui.adapters.FeedAddPostPagerAdapter;
-import com.sabkuchfresh.feed.utils.Utils;
+import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
@@ -312,7 +312,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
                 if (reviewImages != null && reviewImages.length() > 0) {
                     //send back old images if any exist else send empty array
-                    multipartTypedOutput.addPart(Constants.KEY_IMAGES, new TypedString(Utils.getGson().toJson((Utils.getGson().toJsonTree(reviewImages).getAsJsonObject().get("values")))));
+                    multipartTypedOutput.addPart(Constants.KEY_IMAGES, new TypedString(FeedUtils.getGson().toJson((FeedUtils.getGson().toJsonTree(reviewImages).getAsJsonObject().get("values")))));
                 }
 
                 if (imageSelected == null || imageSelected.size() == 0) {

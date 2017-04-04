@@ -259,7 +259,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public CallbackManager callbackManager;
     public boolean isTimeAutomatic;
-    private CollapsingToolbarLayout collapsingToolbar;
+    public CollapsingToolbarLayout collapsingToolbar;
     private View feedHomeAddPostView;
     private TextView tvAddPost;
     private ImageView ivProfilePic;
@@ -3525,6 +3525,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
        getTransactionUtils().openFeedAddPostFragment(this, getRelativeLayoutContainer(),feedDetail);
 
     }
+
+
 
 
     public interface CityChangeCallback {

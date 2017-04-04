@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -82,6 +84,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private View viewDisabledEditPostPopUp;
     private boolean updateFeedData;
 
+
     private final long UPDATE_NOTIFICATION_COUNT_INTERVAL = 15000;
 
     public FeedHomeFragment() {
@@ -124,6 +127,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         setHasOptionsMenu(true);
         GAUtils.trackScreenView(FEED+HOME);
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
+
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
@@ -478,17 +482,25 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     private MenuItem itemCart;
+    private String lastNotificationCount = "0";
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.feed_home_menu, menu);
         itemCart = menu.findItem(R.id.item_notification);
-        setNotificationCount("0");
+        setNotificationCount(lastNotificationCount);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+
+
+
     private void setNotificationCount(String count){
+        lastNotificationCount = count;
         LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
         BadgeDrawable.setBadgeCount(activity, icon, count);
+        activity.collapsingToolbar.invalidate();
+
+
     }
 
     @Override

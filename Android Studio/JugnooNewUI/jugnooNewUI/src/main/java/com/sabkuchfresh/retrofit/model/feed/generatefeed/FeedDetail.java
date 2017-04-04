@@ -1,6 +1,7 @@
 
 package com.sabkuchfresh.retrofit.model.feed.generatefeed;
 
+import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
@@ -84,6 +85,23 @@ public class FeedDetail implements Serializable {
 
     @SerializedName("is_post_editable")
     private boolean isPostEditable;
+
+
+    @SerializedName("is_anonymous")
+    private int isAnonymousPost;
+
+    @SerializedName("owner_user_id")
+    private long ownerId;
+
+
+    public boolean isAnonymousPost() {
+        return isAnonymousPost==1;
+    }
+
+
+    public long getOwnerId() {
+        return ownerId;
+    }
 
     public boolean isPostEditable() {
         return isPostEditable;

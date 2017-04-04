@@ -26,8 +26,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
+import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -40,6 +43,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -67,7 +71,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int ITEM_ADD_POST = 100;
     private static final int ITEM_FEED = 101;
     public static final int ITEM_FOOTER_BLANK = 122;
-     private static Typeface FONT_STAR;
+    private static Typeface FONT_STAR;
+//    private static HashMap<Long,Drawable> profilePicsMap = new HashMap<>();//mark null when home fragment's on Destroy called
 
 
 
@@ -154,8 +159,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
-    public static void setData(ViewHolderReviewImage holder, final FeedDetail feedDetail, FreshActivity activity, final FeedPostCallback feedPostCallback,
-                               final DisplayFeedHomeImagesAdapter.Callback callback, boolean isViewingDetail) {
+    public static void setData(ViewHolderReviewImage holder, final FeedDetail feedDetail, FreshActivity activity, final FeedPostCallback feedPostCallback, final DisplayFeedHomeImagesAdapter.Callback callback, boolean isViewingDetail) {
         String imageUrl = null, restaurantAddress = null, ownerImage = null, userImage = null;
         Spannable title = null, userActivityTitle = null;
         Double rating = null;
@@ -293,16 +297,40 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
           /*  //SetImageUrl
             holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.GONE);
             if (imageUrl != null)
-                Glide.with(activity).load(imageUrl).override(Utils.convertDpToPx(activity, 310), Utils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
+                Glide.with(activity).load(imageUrl).override(FeedUtils.convertDpToPx(activity, 310), FeedUtils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
             else
                 holder.ivPlaceImage.setImageResource(R.drawable.placeholder_img);
 */
 
             //Set Profile Pic
-          if (ownerImage != null)
-                Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
-            else
+            if(feedDetail.isAnonymousPost()){
+                Picasso.with(activity).load(R.drawable.ic_feed_anonymous).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
+            }
+          else if (ownerImage != null)
+               Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
+            else {
+
                 holder.ivFeedOwnerPic.setImageResource(R.drawable.placeholder_img);
+
+             /*   *
+                 * Circle rounding alphabet logic has been implemented but we can generate different colors on basis of name.
+                 * However there may be two different users named Piyush but should have the images with different color and vice versa should have same Color.
+                 * We would also need the user_id of owner and wil have to store the pics corresponding to it in a map.
+                 * So it will be better to get the pic from backend.
+                 *
+
+                if(!profilePicsMap.containsKey(feedDetail.getOwnerId())){
+
+                        String firstLetter =  feedDetail.getOwnerName().toUpperCase().substring(0,1);
+                        TextDrawable drawable = TextDrawable.builder().buildRound(firstLetter, ColorGenerator.MATERIAL.getRandomColor());
+                       profilePicsMap.put(feedDetail.getOwnerId(),drawable);
+
+
+
+                }
+
+                holder.ivFeedOwnerPic.setImageDrawable(profilePicsMap.get(feedDetail.getOwnerId()));*/
+            }
 
             //set Heading
             holder.tvFeedOwnerTitle.setText(title);
@@ -356,15 +384,24 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             //Show User Activity Layout such as Person A commented on Person B's post
             if (showUserActivity && !isViewingDetail) {
                 holder.layoutUserActivity.setVisibility(View.VISIBLE);
-                holder.dividerUserActivity.setVisibility(View.VISIBLE);
+
                 holder.tvUserActivityTitle.setText(userActivityTitle);
+
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.layoutActualPost.getLayoutParams();
+                layoutParams.setMargins(FeedUtils.dpToPx(12),0,FeedUtils.dpToPx(20),FeedUtils.dpToPx(12));
+                holder.layoutActualPost.setPadding(0,FeedUtils.dpToPx(20),0,0);
+                holder.layoutActualPost.setLayoutParams(layoutParams);
            /* if (userImage != null)
-                Picasso.with(activity).load(userImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivUserProfilePic);*/
+                Picasso.with(activity).load(userImage).resize(FeedUtils.convertDpToPx(activity, 50), FeedUtils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivUserProfilePic);*/
 
             } else {
                 holder.layoutUserActivity.setVisibility(View.GONE);
-                holder.dividerUserActivity.setVisibility(View.GONE);
 
+
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.layoutActualPost.getLayoutParams();
+                layoutParams.setMargins(0,0,0,0);
+                holder.layoutActualPost.setPadding(0,FeedUtils.dpToPx(20),0,0);
+                holder.layoutActualPost.setLayoutParams(layoutParams);
             }
 
             //show posted Time
@@ -604,6 +641,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
+
     public interface FeedPostCallback {
         void onLikeClick(FeedDetail object, int position);
 
@@ -647,8 +685,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView tvFeedAddress;
         @Bind(R.id.layout_user_activity_heading)
         RelativeLayout layoutUserActivity;
-        @Bind(R.id.divider_user_activity)
-        View dividerUserActivity;
+
         @Bind(R.id.iv_user_profile_pic)
         ImageView ivUserProfilePic;
         @Bind(R.id.tv_user_activity_time)
@@ -670,6 +707,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TabLayout tabDots;
         @Bind(R.id.shadow_address)
          View shadowAddress  ;
+        @Bind(R.id.layout_actual_post)
+        RelativeLayout layoutActualPost;
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);

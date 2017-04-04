@@ -779,7 +779,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					}
 
 
-					/*Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+					/*FeedUtils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 					String email = editTextEmail.getText().toString().trim();
 					String password = editTextPassword.getText().toString().trim();
 					if ("".equalsIgnoreCase(email)) {
@@ -790,10 +790,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							editTextPassword.requestFocus();
 							editTextPassword.setError(getResources().getString(R.string.nl_login_empty_password_error));
 						} else {
-							boolean onlyDigits = Utils.checkIfOnlyDigits(email);
+							boolean onlyDigits = FeedUtils.checkIfOnlyDigits(email);
 							if (onlyDigits) {
-								email = Utils.retrievePhoneNumberTenChars(email);
-								if (!Utils.validPhoneNumber(email)) {
+								email = FeedUtils.retrievePhoneNumberTenChars(email);
+								if (!FeedUtils.validPhoneNumber(email)) {
 									editTextEmail.requestFocus();
 									editTextEmail.setError(getResources().getString(R.string.invalid_phone_error));
 								} else {
@@ -802,7 +802,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									phoneNoLogin = true;
 								}
 							} else {
-								if (Utils.isEmailValid(email)) {
+								if (FeedUtils.isEmailValid(email)) {
 									enteredEmail = email;
 									sendLoginValues(SplashNewActivity.this, email, password, false);
 									phoneNoLogin = false;

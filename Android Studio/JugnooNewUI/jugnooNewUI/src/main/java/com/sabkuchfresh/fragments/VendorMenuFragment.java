@@ -100,6 +100,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         activity.setSwipeAvailable(false);
 
         activity.fragmentUISetup(this);
+        activity.appBarLayout.setExpanded(true);
         llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
         try {
             if (llRoot != null) {

@@ -2,6 +2,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+
+
     <item>
         <shape android:shape="oval">
             <solid android:color="@color/feed_grey_text"/>
@@ -18,7 +20,7 @@
 
     <item android:id="@+id/item_badge" android:gravity="top|right" >
         <shape android:shape="oval">
-            <solid android:color="@color/green_delivery_stores"/>
+            <solid android:color="@android:color/transparent"/>
             <size android:height="10dp" android:width="10dp"/>
         </shape>
     </item>

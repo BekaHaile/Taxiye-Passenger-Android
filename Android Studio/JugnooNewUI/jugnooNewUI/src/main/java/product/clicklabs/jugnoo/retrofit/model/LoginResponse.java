@@ -405,7 +405,7 @@ public class LoginResponse {
 		}
 
 		public boolean getFeedActive() {
-			return true;
+			return feedActive==1;
 		}
 
 		public Long getFeedRank() {
