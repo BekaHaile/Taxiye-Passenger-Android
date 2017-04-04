@@ -75,6 +75,7 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 			public void onNotificationClick(int position, NotificationDatum notificationDatum) {
 				if(!notificationDatum.isRead()) {
 					updateFeedNotification(notificationDatum.getNotificationId());
+					notificationDatum.setIsRead(1);
 				}
 				// TODO: 03/04/17 open feed details fragment
 				FeedDetail feedDetail = new FeedDetail();
@@ -95,6 +96,7 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 		super.onHiddenChanged(hidden);
 		if(!hidden){
 			activity.fragmentUISetup(this);
+			notificationsAdapter.notifyDataSetChanged();
 		}
 	}
 
