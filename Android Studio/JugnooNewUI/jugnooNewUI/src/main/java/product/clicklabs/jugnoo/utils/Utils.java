@@ -269,6 +269,16 @@ public class Utils implements GAAction, GACategory{
 			e.printStackTrace();
 		}
 	}
+
+	public static void cancelToast(){
+		try {
+			if(MyApplication.getInstance().getToast() != null){
+				MyApplication.getInstance().getToast().cancel();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 
 

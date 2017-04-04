@@ -1871,12 +1871,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         checkForBackToFeed(true);
 
         if(getFeedSpotReservedSharingFragment() != null && getFeedReserveSpotFragment() != null){
-            finish();
+            finishWithToast();
             return;
         }
 
         if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
-            finish();
+            finishWithToast();
         }
         try {
             Utils.hideSoftKeyboard(this, topBar.etSearch);
@@ -1912,7 +1912,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            finish();
+            finishWithToast();
+            // TODO: 04/04/17 add toast to exit
         } else {
 
             if (getTopFragment() instanceof FreshSearchFragment) {
@@ -1933,6 +1934,25 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         }
     }
+
+    private int backPressedCount = 0;
+    private void finishWithToast(){
+        backPressedCount++;
+        getHandler().removeCallbacks(runnableBackPressReset);
+        getHandler().postDelayed(runnableBackPressReset, 2000);
+        if(backPressedCount == 2){
+            ActivityCompat.finishAffinity(this);
+            Utils.cancelToast();
+        } else {
+            Utils.showToast(this, getString(R.string.press_back_again_to_quit));
+        }
+    }
+    private Runnable runnableBackPressReset = new Runnable() {
+        @Override
+        public void run() {
+            backPressedCount = 0;
+        }
+    };
 
 
     public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;

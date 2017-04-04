@@ -445,7 +445,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
         } else {
             if (anonymousPostingEnabled) {
-                multipartTypedOutput.addPart(Constants.IS_ANONYMOUS, new TypedString(String.valueOf(switchAnonymousPost.isChecked() ? "1" : "0")));
+                multipartTypedOutput.addPart(Constants.IS_ANONYMOUS, new TypedString(String.valueOf(switchAnonymousPost.isChecked() ? "0" : "1")));
             }
 
             RestClient.getFeedApiService().postFeed(multipartTypedOutput, APICallBack);
