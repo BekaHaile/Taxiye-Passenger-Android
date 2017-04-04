@@ -1,6 +1,7 @@
 package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -237,8 +238,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             }
 
-//SetAddress
+         //SetAddress
             holder.tvFeedAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
+            holder.shadowAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
             holder.tvFeedAddress.setText(restaurantAddress);
 
           /*  //SetImageUrl
@@ -614,10 +616,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
         @Bind(R.id.tabDots)
         TabLayout tabDots;
+        @Bind(R.id.shadow_address)
+         View shadowAddress  ;
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
             ButterKnife.bind(this, view);
+            tvFeedAddress.setTypeface(tvFeedAddress.getTypeface(), Typeface.BOLD);
             viewActionLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

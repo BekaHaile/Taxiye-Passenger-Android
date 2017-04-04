@@ -55,6 +55,7 @@ public class DisplayFeedHomeImagesAdapter extends PagerAdapter {
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ivImage.getLayoutParams();
 		params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
 		params.height = (int) (ASSL.minRatio() * 234f);
+		params.setMargins(0,0,0,0);
 		ivImage.setLayoutParams(params);
 
 		RelativeLayout relative = (RelativeLayout) itemView.findViewById(R.id.relative);
@@ -76,16 +77,10 @@ public class DisplayFeedHomeImagesAdapter extends PagerAdapter {
 		});
 
 		FetchFeedbackResponse.ReviewImage reviewImage = reviewImages.get(position);
-//		Picasso.with(activity).load(reviewImage.getThumbnail())
-//				.resize((int) (ASSL.minRatio() * 720f), (int) (ASSL.minRatio() * 234f))
-//				.centerCrop()
-////                        .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
-//				.placeholder(R.drawable.ic_fresh_item_placeholder)
-//				.into(ivImage);
 
 		Glide.with(activity).load(reviewImage.getThumbnail())
-				.override((int) (ASSL.minRatio() * 720f), (int) (ASSL.minRatio() * 234f))
-				.centerCrop()
+//				.override((int) (ASSL.minRatio() * 720f), (int) (ASSL.minRatio() * 234f))
+//				.centerCrop()
 				.placeholder(R.drawable.ic_fresh_item_placeholder)
 				.into(ivImage);
 

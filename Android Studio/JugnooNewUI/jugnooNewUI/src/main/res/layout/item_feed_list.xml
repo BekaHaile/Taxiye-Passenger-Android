@@ -71,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/divider_user_activity"
-        android:layout_marginBottom="@dimen/spacing_tiny"
+        android:layout_marginBottom="@dimen/spacing_extra_tiny"
         android:layout_marginLeft="@dimen/spacing_normal"
         android:layout_marginRight="@dimen/spacing_tiny">
 
@@ -85,33 +85,42 @@
             android:layout_marginRight="@dimen/spacing_small"
             android:src="@drawable/ic_fresh_item_placeholder" />
 
-        <TextView
-            android:id="@+id/tv_feed_owner_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/spacing_small"
+        <LinearLayout
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_owner_profile_pic"
             android:layout_toLeftOf="@+id/tv_feed_rating"
-            android:clickable="true"
-            android:layout_toRightOf="@id/iv_owner_profile_pic"
-            android:text="@string/dummy_text_2"
-            android:textColorHighlight="@color/feed_grey_text_heading"
-            android:textColor="@color/feed_grey_text_heading"
-            android:textSize="@dimen/font_large"
-            app:font="maven" />
-
-        <TextView
-            android:id="@+id/tv_owner_feed_time"
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_feed_owner_title"
-            android:layout_toRightOf="@id/iv_owner_profile_pic"
-            android:drawableLeft="@drawable/ic_clock"
-            android:drawablePadding="2dp"
-            android:gravity="top"
-            android:text="2w"
-            app:font="maven"
-            android:textColor="@color/feed_grey_text_secondary"
-            android:textSize="@dimen/font_extra_small" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_feed_owner_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/spacing_small"
+
+                android:clickable="true"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+
+                android:text="@string/dummy_text_2"
+                android:textColorHighlight="@color/feed_grey_text_heading"
+                android:textColor="@color/feed_grey_text_heading"
+                android:textSize="@dimen/font_large"
+                app:font="maven" />
+
+            <TextView
+                android:id="@+id/tv_owner_feed_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_clock"
+                android:drawablePadding="2dp"
+                android:gravity="top"
+                android:text="2w"
+                app:font="maven"
+                android:textColor="@color/feed_grey_text_secondary"
+                android:textSize="@dimen/font_extra_small" />
+        </LinearLayout>
+
 
         <TextView
             android:id="@id/tv_feed_rating"
@@ -135,6 +144,7 @@
 
         <TextView
             android:id="@id/ib_arrow_more"
+
             android:layout_alignParentRight="true"
             android:paddingLeft="@dimen/spacing_tiny"
             android:paddingRight="@dimen/spacing_tiny"
@@ -199,26 +209,34 @@
         />
 
     <!--android:drawableLeft="@drawable/location_icon"-->
+
+
+    <View
+        android:id="@+id/shadow_address"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:layout_alignTop="@id/vpReviewImages"
+
+        android:background="@drawable/shadow_down_feed"
+        />
+
+
     <TextView
         android:id="@+id/tv_restaurant_feed_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:layout_below="@id/iv_place_image"
-        android:layout_marginRight="@dimen/spacing_extra_huge"
-        android:layout_marginTop="17dp"
-        android:background="@drawable/capsule_black_70"
+        android:layout_marginLeft="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
         android:drawablePadding="@dimen/spacing_tiny"
         android:gravity="center"
+        android:drawableLeft="@drawable/location_icon"
         android:maxLines="1"
-        android:paddingBottom="@dimen/spacing_tiny"
-        android:paddingLeft="@dimen/spacing_small"
-        android:paddingRight="@dimen/spacing_small"
-        android:paddingTop="@dimen/spacing_tiny"
         android:maxWidth="250dp"
         android:textColor="@color/white"
         android:textSize="@dimen/font_tiny"
-        app:font="@string/maven_r" />
+        app:font="maven" />
 
 
 
@@ -242,7 +260,7 @@
     <LinearLayout
         android:id="@+id/view_action_comment"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/line_below_images_pager"
         android:layout_toRightOf="@id/line_divider_like_comment"
         android:background="?attr/selectableItemBackground"
@@ -252,6 +270,8 @@
             android:id="@+id/tv_action_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
             android:drawableLeft="@drawable/ic_comment"
             android:drawablePadding="@dimen/spacing_tiny"
             android:gravity="center"
@@ -263,9 +283,10 @@
     </LinearLayout>
 
     <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/view_action_like"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/line_below_images_pager"
         android:layout_toLeftOf="@id/line_divider_like_comment"
         android:background="?attr/selectableItemBackground"
@@ -276,8 +297,12 @@
             android:id="@+id/tv_action_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
+           android:layout_marginTop="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
             android:drawableLeft="@drawable/ic_like"
             android:drawablePadding="@dimen/spacing_tiny"
+
             android:gravity="center"
             android:text="Like"
             android:textColor="@color/feed_grey_text"
@@ -289,7 +314,7 @@
     <View
         android:id="@+id/line_below_like_comment"
         style="@style/Feed_Line_Horizontal"
-        android:layout_below="@id/line_divider_like_comment" />
+        android:layout_below="@id/view_action_like" />
     <View
         android:id="@+id/vShadowDown"
         android:layout_width="match_parent"

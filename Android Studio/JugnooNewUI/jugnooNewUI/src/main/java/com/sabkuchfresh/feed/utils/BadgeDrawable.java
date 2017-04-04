@@ -30,11 +30,11 @@ public class BadgeDrawable extends Drawable {
 		float mTextSize = context.getResources().getDimension(R.dimen.feed_badge_text_size);
  
 		mBadgePaint = new Paint();
-		mBadgePaint.setColor(ContextCompat.getColor(context,R.color.green_delivery_stores));
+		mBadgePaint.setColor(ContextCompat.getColor(context,R.color.feed_color_orange));
 		mBadgePaint.setAntiAlias(true);
 		mBadgePaint.setStyle(Paint.Style.FILL);
 		mBadgePaint1 = new Paint();
-		mBadgePaint1.setColor(ContextCompat.getColor(context.getApplicationContext(), R.color.green_delivery_stores));
+		mBadgePaint1.setColor(ContextCompat.getColor(context.getApplicationContext(), R.color.white));
 		mBadgePaint1.setAntiAlias(true);
 		mBadgePaint1.setStyle(Paint.Style.FILL);
  
@@ -64,16 +64,17 @@ public class BadgeDrawable extends Drawable {
 	        /*Using Math.max rather than Math.min */
  
 		float radius = ((Math.max(width, height) / 2)) / 2;
-		float centerX = (width - radius - 1) +5;
+//		float centerX = (width - radius - 1) +10;
+		float centerX = width-5;
 		float centerY = radius -5;
 		if(mCount.length() <= 2){
 			// Draw badge circle.
-			canvas.drawCircle(centerX, centerY, (int)(radius+5.0), mBadgePaint1);
-			canvas.drawCircle(centerX, centerY, (int)(radius+3.0), mBadgePaint);
+			canvas.drawCircle(centerX, centerY, (int)(radius+4.5), mBadgePaint1);
+			canvas.drawCircle(centerX, centerY, (int)(radius+2.5), mBadgePaint);
 		}
 		else{
-			canvas.drawCircle(centerX, centerY, (int)(radius+6.0), mBadgePaint1);
-			canvas.drawCircle(centerX, centerY, (int)(radius+4.0), mBadgePaint);
+			canvas.drawCircle(centerX, centerY, (int)(radius+5.5), mBadgePaint1);
+			canvas.drawCircle(centerX, centerY, (int)(radius+3.5), mBadgePaint);
 //	        	canvas.drawRoundRect(radius, radius, radius, radius, 10, 10, mBadgePaint);
 		}
 		// Draw badge count text inside the circle.
