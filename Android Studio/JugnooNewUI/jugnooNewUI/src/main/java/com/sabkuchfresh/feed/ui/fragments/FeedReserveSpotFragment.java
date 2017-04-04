@@ -76,7 +76,9 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
         ButterKnife.bind(this, rootView);
         activity= (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
-        tvPlaceholderFeedIntroudction.setText(Data.getFeedData().getFeedIntroString());
+        if(Data.getFeedData() != null) {
+            tvPlaceholderFeedIntroudction.setText(Data.getFeedData().getFeedIntroString());
+        }
         setFeedUsersData();
 
 		bSubmit.setOnClickListener(new View.OnClickListener() {

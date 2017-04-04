@@ -126,18 +126,21 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void onPageSelected(int position) {
-
-
                 switchAddFeed(position);
 //                ivAccessCamera.setEnabled(getVisibleFragment().canUploadImages());
                 toggleAnonymousPosting(getVisibleFragment().isAnonymousPostingEnabled());
                 btnSubmit.setActivated(getVisibleFragment().submitEnabledState());
 
-                try {
-                    getVisibleFragment().getFocusEditText().requestFocus();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                activity.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            getVisibleFragment().getFocusEditText().requestFocus();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 100);
             }
 
             @Override

@@ -1,6 +1,6 @@
 package com.sabkuchfresh.feed.ui.api;
 
-import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
 import retrofit.RetrofitError;
 

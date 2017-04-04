@@ -30,7 +30,11 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.models.CountNotificationResponse;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
@@ -78,6 +82,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private View viewDisabledEditPostPopUp;
     private boolean updateFeedData;
 
+    private final long UPDATE_NOTIFICATION_COUNT_INTERVAL = 15000;
 
     public FeedHomeFragment() {
         // Required empty public constructor
@@ -105,6 +110,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         super.onDestroyView();
         if (activity != null) {
             activity.unregisterReceiver(broadcastReceiver);
+            activity.getHandler().removeCallbacks(runnableNotificationCount);
         }
     }
 
@@ -209,6 +215,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
 
+        activity.getHandler().removeCallbacks(runnableNotificationCount);
+        activity.getHandler().postDelayed(runnableNotificationCount, 1000);
+
         return rootView;
     }
 
@@ -226,7 +235,24 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     updateFeedData = false;
                 }
             }, 200);
+            activity.getHandler().removeCallbacks(runnableNotificationCount);
+            activity.getHandler().postDelayed(runnableNotificationCount, 1000);
+        } else {
+            activity.getHandler().removeCallbacks(runnableNotificationCount);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        activity.getHandler().removeCallbacks(runnableNotificationCount);
+        activity.getHandler().postDelayed(runnableNotificationCount, 1000);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        activity.getHandler().removeCallbacks(runnableNotificationCount);
     }
 
     public void fetchFeedsApi(boolean loader) {
@@ -261,7 +287,8 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     textViewNothingFound.setText(!TextUtils.isEmpty(feedbackResponse.getMessage()) ? feedbackResponse.getMessage() : activity.getString(R.string.nothing_found_near_you));
                                     feedHomeAdapter.setList(getAdapterList(false,feedbackResponse.getFeeds(),null,feedbackResponse.getCity()));
                                     activity.getFeedHomeAddPostView().setVisibility(View.GONE);
-                                } else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                }
+                                else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     feedHomeAdapter.setList(getAdapterList(true,feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),feedbackResponse.getCity()));
                                     rlNoReviews.setVisibility(feedbackResponse.getFeeds()==null||feedbackResponse.getFeeds().size()==0 ? View.VISIBLE : View.GONE);
                                     if(activity.getTopFragment() instanceof FreshHomeFragment) {
@@ -270,7 +297,10 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     if(activity.getTvAddPost() != null) {
                                         activity.getTvAddPost().setText(feedbackResponse.getAddPostText());
                                     }
-                                    setNotificationCount(String.valueOf(feedbackResponse.getNotificationCount()));
+                                    if(Data.getFeedData() != null){
+                                        Data.getFeedData().setHandleName(feedbackResponse.getHandleName());
+                                    }
+                                    setNotificationCount(String.valueOf(feedbackResponse.getCountNotification()));
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -483,4 +513,58 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     public void setUpdateFeedData(boolean updateFeedData) {
         this.updateFeedData = updateFeedData;
     }
+
+
+    private Runnable runnableNotificationCount = new Runnable() {
+        @Override
+        public void run() {
+            updateFeedNotificationCountAPI();
+            if(runnableNotificationCount != null) {
+                activity.getHandler().postDelayed(runnableNotificationCount, UPDATE_NOTIFICATION_COUNT_INTERVAL);
+            }
+        }
+    };
+
+    private void updateFeedNotificationCountAPI(){
+        try {
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+
+            new ApiCommon<CountNotificationResponse>(activity)
+					.putDefaultParams(true).showLoader(false)
+					.execute(params, ApiName.COUNT_NOTIFICATION, new APICommonCallback<CountNotificationResponse>() {
+						@Override
+						public boolean onNotConnected() {
+							return true;
+						}
+
+						@Override
+						public boolean onException(Exception e) {
+							return true;
+						}
+
+						@Override
+						public void onSuccess(CountNotificationResponse countNotificationResponse, String message, int flag) {
+                            try {
+                                setNotificationCount(String.valueOf(countNotificationResponse.getCountNotification()));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+						@Override
+						public boolean onError(CountNotificationResponse countNotificationResponse, String message, int flag) {
+							return true;
+						}
+
+						@Override
+						public boolean onFailure(RetrofitError error) {
+							return true;
+						}
+					});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

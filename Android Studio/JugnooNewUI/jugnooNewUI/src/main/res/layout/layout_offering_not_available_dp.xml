@@ -4,8 +4,13 @@
                 android:id="@+id/relativeLayoutNoMenus"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/ic_menus_nothing_found"
                 android:visibility="gone">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_menus_nothing_found"
+        android:scaleType="centerCrop"/>
 
     <ImageView
         android:layout_width="match_parent"
@@ -42,17 +47,6 @@
         app:font="maven"
 
         />
-
-    <ImageView
-        android:id="@+id/imageViewArrow"
-        android:layout_width="@dimen/dp_36"
-        android:layout_height="@dimen/dp_44"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="@dimen/dp_40"
-        android:scaleX="-1"
-        android:layout_marginTop="@dimen/dp_25"
-        android:src="@drawable/ic_curved_up_arrow"
-        android:tag="mwar" />
 
 
 </RelativeLayout>

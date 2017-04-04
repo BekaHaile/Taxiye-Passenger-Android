@@ -25,7 +25,7 @@ import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
