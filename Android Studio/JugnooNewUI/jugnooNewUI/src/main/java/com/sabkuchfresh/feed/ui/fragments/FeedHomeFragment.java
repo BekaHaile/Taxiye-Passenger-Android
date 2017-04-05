@@ -505,10 +505,14 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     private void setNotificationCount(long count){
+        currentNotificationCount = count;
         if(currentNotificationCount == 0 || currentNotificationCount != lastNotificationCount) {
-            currentNotificationCount = count;
             LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
             BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(count));
+            activity.collapsingToolbar.invalidate();
+        } else {
+            LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+            BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(0));
             activity.collapsingToolbar.invalidate();
         }
     }
