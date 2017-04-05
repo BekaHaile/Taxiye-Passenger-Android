@@ -108,8 +108,8 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
         tvExpiredTitle = (TextView) findViewById(R.id.tvExpiredTitle); tvExpiredTitle.setTypeface(Fonts.mavenRegular(this));
         rlPlan1 = (RelativeLayout) findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(this); rlPlan1.setVisibility(View.GONE);
         rlPlan2 = (RelativeLayout) findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(this); rlPlan2.setVisibility(View.GONE);
-        ivRadio1 = (ImageView) findViewById(R.id.ivRadio1); ivRadio1.setOnClickListener(this);
-        ivRadio2 = (ImageView) findViewById(R.id.ivRadio2); ivRadio2.setOnClickListener(this);
+        ivRadio1 = (ImageView) findViewById(R.id.ivRadio1); rlPlan1.setOnClickListener(this);
+        ivRadio2 = (ImageView) findViewById(R.id.ivRadio2); rlPlan2.setOnClickListener(this);
         tvActualAmount1 = (TextView) findViewById(R.id.tvActualAmount1); tvActualAmount1.setTypeface(Fonts.mavenRegular(this));
         tvActualAmount2 = (TextView) findViewById(R.id.tvActualAmount2); tvActualAmount2.setTypeface(Fonts.mavenRegular(this));
         tvAmount1 = (TextView) findViewById(R.id.tvAmount1); tvAmount1.setTypeface(Fonts.mavenRegular(this));
@@ -287,7 +287,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
             case R.id.imageViewBack:
                 performBackPressed();
                 break;
-            case R.id.ivRadio1:
+            case R.id.rlPlan1:
                 if(subscriptionSavingsResponse.getRenewalData() != null){
                     if(subscriptionSavingsResponse.getRenewalData().getRenewPlan() != null) {
                         subscription = subscriptionSavingsResponse.getRenewalData().getRenewPlan();
@@ -301,7 +301,7 @@ public class JugnooStarSubscribedActivity extends BaseFragmentActivity implement
                 }
                 selectedPlan(ivRadio1, subscription);
                 break;
-            case R.id.ivRadio2:
+            case R.id.rlPlan2:
                 if(subscriptionSavingsResponse.getRenewalData() != null) {
                     if (subscriptionSavingsResponse.getRenewalData().getUpgradePlan() != null
                             && subscriptionSavingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray() != null) {

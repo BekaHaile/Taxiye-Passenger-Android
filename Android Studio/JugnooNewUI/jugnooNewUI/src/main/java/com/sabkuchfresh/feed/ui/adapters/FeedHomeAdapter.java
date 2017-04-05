@@ -308,11 +308,15 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
             } else {
 
-                String firstLetter =  feedDetail.getOwnerName().toUpperCase().substring(0,1);
-                TextDrawable drawable = TextDrawable.builder()
-                        .beginConfig().bold().endConfig()
-                        .buildRound(firstLetter, activity.getParsedColor(feedDetail.getColor()));
-                holder.ivFeedOwnerPic.setImageDrawable(drawable);
+                if (feedDetail.getDrawable() == null) {
+                    String firstLetter =  feedDetail.getOwnerName().toUpperCase().substring(0,1);
+                    TextDrawable drawable = TextDrawable.builder()
+                            .beginConfig().bold().endConfig()
+                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getColor()));
+                    feedDetail.setDrawable(drawable);
+                }
+
+                holder.ivFeedOwnerPic.setImageDrawable(feedDetail.getDrawable());
 
 //                holder.ivFeedOwnerPic.setImageResource(R.drawable.placeholder_img);
 

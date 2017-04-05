@@ -530,6 +530,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         }, 500);
 
+        backPressedCount = 0;
+
     }
 
     private void setUpAddPostForFeedFragment() {
@@ -1940,7 +1942,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         backPressedCount++;
         getHandler().removeCallbacks(runnableBackPressReset);
         getHandler().postDelayed(runnableBackPressReset, 2000);
-        if(backPressedCount == 2){
+        if(backPressedCount >= 2){
             ActivityCompat.finishAffinity(this);
             Utils.cancelToast();
         } else {

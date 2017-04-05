@@ -659,12 +659,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
             View vDivider = rootView.findViewById(R.id.vDividerPayment);
             if(datum.getWalletDeducted() != null && datum.getWalletDeducted() > 0) {
-                cvPaymentMethod.setVisibility(View.VISIBLE);
                 rlWalletDeducted.setVisibility(View.VISIBLE);
                 tvAmountPayableVal.setText(activity.getString(R.string.rupees_value_format,
                         Utils.getMoneyDecimalFormat().format(datum.getWalletDeducted())));
             } else{
-                cvPaymentMethod.setVisibility(View.GONE);
                 rlWalletDeducted.setVisibility(View.GONE);
             }
 
@@ -708,6 +706,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
             if(vDivider != null){
                 vDivider.setVisibility(View.INVISIBLE);
+            }
+
+            if(llFinalAmount.getChildCount() > 0
+                    || (datum.getWalletDeducted() != null && datum.getWalletDeducted() > 0)){
+                cvPaymentMethod.setVisibility(View.VISIBLE);
+            } else {
+                cvPaymentMethod.setVisibility(View.GONE);
             }
 
             if (orderHistory.getCancellable() == 1) {

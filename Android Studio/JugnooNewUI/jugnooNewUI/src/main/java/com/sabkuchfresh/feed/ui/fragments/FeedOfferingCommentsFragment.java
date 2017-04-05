@@ -260,37 +260,35 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
      * @return
      */
     private boolean setFeedObjectAndRefresh(FeedDetailResponse feedbackResponse) {
-        if (feedbackResponse.getPostDetails() != null) {
-            if(positionInOriginalList == -1) {
-                feedDetail = feedbackResponse.getPostDetails();
-                if(feedbackResponse.getPostDetails() == null){
-                    DialogPopup.alertPopupWithListener(activity, "", "We could not find this post right now", "Back",
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    activity.performBackPressed(false);
-                                }
-                            }, false);
-                    return false;
-                }
-            } else {
-                feedDetail.setLikeCount(feedbackResponse.getPostDetails().getLikeCount());
-                feedDetail.setCommentCount(feedbackResponse.getPostDetails().getCommentCount());
-                feedDetail.setContent(feedbackResponse.getPostDetails().getContent());
-                feedDetail.setPostEditable(feedbackResponse.getPostDetails().isPostEditable());
-                feedDetail.setStarCount(feedbackResponse.getPostDetails().getStarCount());
-                feedDetail.setRestaurantImage(feedbackResponse.getPostDetails().getRestaurantImage());
-                feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
-                feedDetail.setReviewImages(feedbackResponse.getPostDetails().getReviewImages());
-            }
+        if (feedbackResponse.getPostDetails() == null) {
+            DialogPopup.alertPopupWithListener(activity, "", "We could not find this post right now", "Back",
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.performBackPressed(false);
+                        }
+                    }, false);
+            return false;
+        }
+        if (positionInOriginalList == -1) {
+            feedDetail = feedbackResponse.getPostDetails();
+        } else {
+            feedDetail.setLikeCount(feedbackResponse.getPostDetails().getLikeCount());
+            feedDetail.setCommentCount(feedbackResponse.getPostDetails().getCommentCount());
+            feedDetail.setContent(feedbackResponse.getPostDetails().getContent());
+            feedDetail.setPostEditable(feedbackResponse.getPostDetails().isPostEditable());
+            feedDetail.setStarCount(feedbackResponse.getPostDetails().getStarCount());
+            feedDetail.setRestaurantImage(feedbackResponse.getPostDetails().getRestaurantImage());
+            feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
+            feedDetail.setReviewImages(feedbackResponse.getPostDetails().getReviewImages());
+        }
 
 
-            if (activity.getFeedHomeFragment() != null) {
+        if (activity.getFeedHomeFragment() != null) {
 
 
-                //notifies the feed home fragment that user has commented on post so it can refresh accordingly i.e increase comment count
-                activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
-            }
+            //notifies the feed home fragment that user has commented on post so it can refresh accordingly i.e increase comment count
+            activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
         }
         return true;
     }
@@ -325,6 +323,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                 RestClient.getFeedApiService().commentOnFeed(params, new retrofit.Callback<FeedDetailResponse>() {
                     @Override
                     public void success(FeedDetailResponse feedbackResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         DialogPopup.dismissLoadingDialog();
                         try {
                             String message = feedbackResponse.getMessage();
