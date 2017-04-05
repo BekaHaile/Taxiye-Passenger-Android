@@ -308,7 +308,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     if(Data.getFeedData() != null){
                                         Data.getFeedData().setHandleName(feedbackResponse.getHandleName());
                                     }
-                                    setNotificationCount(String.valueOf(feedbackResponse.getCountNotification()));
+                                    setNotificationCount(feedbackResponse.getCountNotification());
 
                                     RelativeLayout.LayoutParams paramsIvNoFeeds = (RelativeLayout.LayoutParams) ivNoFeeds.getLayoutParams();
                                     paramsIvNoFeeds.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_minus_40));
@@ -490,36 +490,36 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     private MenuItem itemCart;
-    private String lastNotificationCount = "0";
+    private long lastNotificationCount = 0, currentNotificationCount = 0;
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.feed_home_menu, menu);
         itemCart = menu.findItem(R.id.item_notification);
-        setNotificationCount(lastNotificationCount);
+        setNotificationCount(currentNotificationCount);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void setLastNotificationCount(String str){
-        lastNotificationCount = str;
+    public void setLastNotificationCountToCurrent(){
+        lastNotificationCount = currentNotificationCount;
     }
 
 
-    private void setNotificationCount(String count){
-        lastNotificationCount = count;
-        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
-        BadgeDrawable.setBadgeCount(activity, icon, count);
-        activity.collapsingToolbar.invalidate();
-
-
+    private void setNotificationCount(long count){
+        if(currentNotificationCount == 0 || currentNotificationCount != lastNotificationCount) {
+            currentNotificationCount = count;
+            LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+            BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(count));
+            activity.collapsingToolbar.invalidate();
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
-            case R.id.item_location:
-                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
-                break;
+//            case R.id.item_location:
+//                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
+//                break;
             case R.id.item_notification:
                 activity.getTransactionUtils().openFeedNotificationsFragment(activity, activity.getRelativeLayoutContainer());
                 break;
@@ -527,14 +527,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public boolean isUpdateFeedData() {
-        return updateFeedData;
-    }
-
-    public void setUpdateFeedData(boolean updateFeedData) {
-        this.updateFeedData = updateFeedData;
     }
 
 
@@ -569,7 +561,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 						@Override
 						public void onSuccess(CountNotificationResponse countNotificationResponse, String message, int flag) {
                             try {
-                                setNotificationCount(String.valueOf(countNotificationResponse.getCountNotification()));
+                                setNotificationCount(countNotificationResponse.getCountNotification());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

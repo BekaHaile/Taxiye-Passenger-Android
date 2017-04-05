@@ -1,7 +1,6 @@
 package com.sabkuchfresh.feed.ui.fragments;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.feed.ui.adapters.FeedOfferingCommentsAdapter;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
@@ -26,7 +26,6 @@ import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -221,8 +220,9 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                             String message = feedbackResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    setFeedObjectAndRefresh(feedbackResponse);
-                                    prepareListAndNotifyAdapter(feedbackResponse);
+                                    if(setFeedObjectAndRefresh(feedbackResponse)) {
+                                        prepareListAndNotifyAdapter(feedbackResponse);
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -254,10 +254,25 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
     }
 
-    private void setFeedObjectAndRefresh(FeedDetailResponse feedbackResponse) {
+    /**
+     * returns true if data all set, else false if null
+     * @param feedbackResponse
+     * @return
+     */
+    private boolean setFeedObjectAndRefresh(FeedDetailResponse feedbackResponse) {
         if (feedbackResponse.getPostDetails() != null) {
             if(positionInOriginalList == -1) {
                 feedDetail = feedbackResponse.getPostDetails();
+                if(feedbackResponse.getPostDetails() == null){
+                    DialogPopup.alertPopupWithListener(activity, "", "We could not find this post right now", "Back",
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    activity.performBackPressed(false);
+                                }
+                            }, false);
+                    return false;
+                }
             } else {
                 feedDetail.setLikeCount(feedbackResponse.getPostDetails().getLikeCount());
                 feedDetail.setCommentCount(feedbackResponse.getPostDetails().getCommentCount());
@@ -277,6 +292,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                 activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
             }
         }
+        return true;
     }
 
     private void prepareListAndNotifyAdapter(FeedDetailResponse feedbackResponse) {
@@ -317,8 +333,9 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                                     Utils.hideKeyboard(getActivity());
                                     commentAdded = null;
                                     edtMyComment.setText(null);
-                                    setFeedObjectAndRefresh(feedbackResponse);
-                                    prepareListAndNotifyAdapter(feedbackResponse);
+                                    if(setFeedObjectAndRefresh(feedbackResponse)) {
+                                        prepareListAndNotifyAdapter(feedbackResponse);
+                                    }
                                     recyclerView.smoothScrollToPosition(feedOfferingCommentsAdapter.getItemCount() - 1);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);

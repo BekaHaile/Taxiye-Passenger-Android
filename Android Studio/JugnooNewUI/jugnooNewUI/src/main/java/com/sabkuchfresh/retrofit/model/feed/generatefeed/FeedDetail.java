@@ -1,9 +1,6 @@
 
 package com.sabkuchfresh.retrofit.model.feed.generatefeed;
 
-import android.graphics.drawable.Drawable;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
@@ -92,6 +89,10 @@ public class FeedDetail implements Serializable {
 
     @SerializedName("owner_user_id")
     private long ownerId;
+
+    @SerializedName("color")
+    @Expose
+    private String color;
 
 
     public boolean isAnonymousPost() {
@@ -262,6 +263,14 @@ public class FeedDetail implements Serializable {
 
     public void setRestaurantId(Integer restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public enum FeedType{

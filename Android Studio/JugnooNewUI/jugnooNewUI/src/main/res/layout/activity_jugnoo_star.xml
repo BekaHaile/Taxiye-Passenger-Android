@@ -249,8 +249,8 @@
                     android:id="@+id/rvBenefits"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="@color/transparent"
-                    android:dividerHeight="@dimen/px_0"
+                    android:divider="@color/stroke_light_grey_alpha"
+                    android:dividerHeight="@dimen/dp_1"
                     android:fadeScrollbars="true"
                     android:paddingTop="@dimen/px_2"
                     android:scrollbars="vertical" />

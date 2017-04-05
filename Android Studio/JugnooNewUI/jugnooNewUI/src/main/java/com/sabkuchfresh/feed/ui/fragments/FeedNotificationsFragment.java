@@ -124,7 +124,7 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 						rvNotifications.setVisibility(View.VISIBLE);
 					}
 					if(activity != null && activity.getFeedHomeFragment() != null){
-						activity.getFeedHomeFragment().setLastNotificationCount("0");
+						activity.getFeedHomeFragment().setLastNotificationCountToCurrent();
 					}
 				}
 

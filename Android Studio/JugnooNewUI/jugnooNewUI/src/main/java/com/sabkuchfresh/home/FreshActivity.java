@@ -3869,6 +3869,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return ratingColor;
     }
 
+    public int getParsedColor(String colorCode){
+        int ratingColor;
+        if (colorCode != null && colorCode.startsWith("#") && colorCode.length() == 7) ratingColor = Color.parseColor(colorCode);
+        else
+            ratingColor = ContextCompat.getColor(this, R.color.text_color_light); //default Green Color
+        return ratingColor;
+    }
+
     public void setTextViewBackgroundDrawableColor(TextView textView, int color) {
         if (textView.getBackground() != null) {
             textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));

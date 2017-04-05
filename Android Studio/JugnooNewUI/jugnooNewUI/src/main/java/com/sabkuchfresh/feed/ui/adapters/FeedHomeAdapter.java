@@ -27,7 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.feed.utils.FeedUtils;
@@ -43,11 +42,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -305,12 +304,17 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             //Set Profile Pic
             if(feedDetail.isAnonymousPost()){
                 Picasso.with(activity).load(R.drawable.ic_feed_anonymous).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
-            }
-          else if (ownerImage != null)
-               Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
-            else {
+            } else if (!TextUtils.isEmpty(ownerImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(ownerImage)) {
+                Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
+            } else {
 
-                holder.ivFeedOwnerPic.setImageResource(R.drawable.placeholder_img);
+                String firstLetter =  feedDetail.getOwnerName().toUpperCase().substring(0,1);
+                TextDrawable drawable = TextDrawable.builder()
+                        .beginConfig().bold().endConfig()
+                        .buildRound(firstLetter, activity.getParsedColor(feedDetail.getColor()));
+                holder.ivFeedOwnerPic.setImageDrawable(drawable);
+
+//                holder.ivFeedOwnerPic.setImageResource(R.drawable.placeholder_img);
 
              /*   *
                  * Circle rounding alphabet logic has been implemented but we can generate different colors on basis of name.
