@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item
+        android:state_pressed="true"
+        >
+        <shape
+            android:shape="rectangle">
+            <corners android:radius="50dp"/> <!-- increasing the value, increases the rounding. And as  TTransmit said, to make it like a capsule make the radius half of your button height -->
+            <solid android:color="@color/yellow_email_dark"/> <!-- the button color -->
+
+        </shape>
+    </item>
+    <item>
+        <shape
+            android:shape="rectangle">
+            <corners android:radius="50dp"/> <!-- increasing the value, increases the rounding. And as  TTransmit said, to make it like a capsule make the radius half of your button height -->
+            <solid android:color="@color/yellow_email"/> <!-- the button color -->
+
+        </shape>
+    </item>
+
+</selector>

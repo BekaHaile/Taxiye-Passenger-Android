@@ -1,9 +1,12 @@
 package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -12,6 +15,8 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +26,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
+import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 import com.sabkuchfresh.utils.DateParser;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -39,16 +46,18 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
+import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 import static com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail.FeedType.REVIEW;
 
 
 /**
  * Created by Shankar on 7/17/15.
  */
-public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
+public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener, DisplayFeedHomeImagesAdapter.Callback {
 
 
     private FreshActivity activity;
@@ -61,6 +70,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int ITEM_ADD_POST = 100;
     private static final int ITEM_FEED = 101;
     public static final int ITEM_FOOTER_BLANK = 122;
+    private static Typeface FONT_STAR;
+//    private static HashMap<Long,Drawable> profilePicsMap = new HashMap<>();//mark null when home fragment's on Destroy called
+
 
 
     public FeedHomeAdapter(Activity activity, List<?> reviewImages, RecyclerView recyclerView, FeedPostCallback feedPostCallback) {
@@ -68,13 +80,14 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.adapterList = reviewImages;
         this.feedPostCallback = feedPostCallback;
         this.recyclerView = recyclerView;
-
+        FONT_STAR = Typeface.createFromAsset(activity.getAssets(), "fonts/font_feed_star.ttf");
 
     }
 
     public void setList(List<?> reviewImages) {
         this.adapterList = reviewImages;
         notifyDataSetChanged();
+
     }
 
     @Override
@@ -112,7 +125,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
-            setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback);
+            setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback, this, false);
             if (position == adapterList.size() - 2) {
                 ((ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
             } else {
@@ -145,7 +158,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
-    public static void setData(ViewHolderReviewImage holder, final FeedDetail feedDetail, FreshActivity activity, final FeedPostCallback feedPostCallback) {
+    public static void setData(ViewHolderReviewImage holder, final FeedDetail feedDetail, FreshActivity activity, final FeedPostCallback feedPostCallback, final DisplayFeedHomeImagesAdapter.Callback callback, boolean isViewingDetail) {
         String imageUrl = null, restaurantAddress = null, ownerImage = null, userImage = null;
         Spannable title = null, userActivityTitle = null;
         Double rating = null;
@@ -157,8 +170,18 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 case COMMENT_ON_REVIEW:
                 case LIKE_ON_REVIEW:
                 case REVIEW:
+                    //Form Title
+                    if (feedDetail.getStarCount() != null && feedDetail.getStarCount() > 0)
+                        rating = feedDetail.getStarCount();
+
+
+
+
+
+
                     if (feedDetail.getFeedType() != REVIEW && !TextUtils.isEmpty(feedDetail.getUserName()) &&!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         showUserActivity = true;
+
                         userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s review.");
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         userActivityTitle.setSpan(BOLD_SPAN_2, feedDetail.getUserName().length() + feedDetail.getFeedType().getValue().length(), userActivityTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -178,18 +201,47 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             restaurantAddress = feedDetail.getRestaurantAddress();
                     }
 
-                    //Form Title
-                    if (feedDetail.getStarCount() != null && feedDetail.getStarCount() > 0)
-                        rating = feedDetail.getStarCount();
-
 
                     if (!TextUtils.isEmpty(feedDetail.getOwnerName()) && !TextUtils.isEmpty(feedDetail.getRestaurantName())) {
                         String actualTitle = feedDetail.getOwnerName() + REVIEW.getValue() + feedDetail.getRestaurantName() + ".";
-                        title = new SpannableString(actualTitle);
-                        title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                        title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                        title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                        setMovementMethod = true;
+
+                        if(rating!=null){
+                            String  titleWithReview = actualTitle + " ";
+
+                            int starCount = 0;
+                            while(starCount!=5){
+                                if(starCount<rating.intValue()){
+                                    titleWithReview+= activity.getString(R.string.feed_star_selected);
+                                } else{
+                                    titleWithReview+= activity.getString(R.string.feed_star_deselected);
+                                }
+
+                                starCount++;
+                            }
+
+
+                            title = new SpannableString(titleWithReview);
+                            title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+
+                            title.setSpan(new CustomTypeFaceSpan("", FONT_STAR), actualTitle.length(), title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            int ratingStartLength = actualTitle.length()+1;//adding 1 for " " i.e space
+                            title.setSpan(new ForegroundColorSpan(Color.parseColor(feedDetail.getRatingColor())), ratingStartLength, actualTitle.length() + 1 +  rating.intValue(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            title.setSpan(new ForegroundColorSpan(Color.GRAY), ratingStartLength + rating.intValue(), title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            title.setSpan(new RelativeSizeSpan(0.8f), actualTitle.length(), title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                            setMovementMethod = true;
+                        }else{
+                            title = new SpannableString(actualTitle);
+                            title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            setMovementMethod = true;
+                        }
+
+
 
                     }
 
@@ -205,6 +257,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     if (feedDetail.getFeedType() != FeedDetail.FeedType.POST && !TextUtils.isEmpty(feedDetail.getUserName()) &&!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         showUserActivity = true;
+
                         userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s post.");
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         userActivityTitle.setSpan(BOLD_SPAN_2, feedDetail.getUserName().length() + feedDetail.getFeedType().getValue().length(), userActivityTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -221,7 +274,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     //Form Title
                     if (!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         title = new SpannableString(feedDetail.getOwnerName());
-                        title.setSpan(BOLD_SPAN, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        title.setSpan(BOLD_SPAN, 0, feedDetail.getOwnerName().length(), SPAN_INCLUSIVE_EXCLUSIVE);
                     }
 
                     //Chooser UsersImage
@@ -235,67 +288,128 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             }
 
-//SetAddress
+         //SetAddress
             holder.tvFeedAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
+            holder.shadowAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
             holder.tvFeedAddress.setText(restaurantAddress);
 
-            //SetImageUrl
-            holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.VISIBLE);
+          /*  //SetImageUrl
+            holder.ivPlaceImage.setVisibility(imageUrl == null ? View.GONE : View.GONE);
             if (imageUrl != null)
-                Glide.with(activity).load(imageUrl).override(Utils.convertDpToPx(activity, 310), Utils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
+                Glide.with(activity).load(imageUrl).override(FeedUtils.convertDpToPx(activity, 310), FeedUtils.convertDpToPx(activity, 110)).centerCrop().into(holder.ivPlaceImage);
             else
                 holder.ivPlaceImage.setImageResource(R.drawable.placeholder_img);
-
+*/
 
             //Set Profile Pic
-            if (ownerImage != null)
+            if(feedDetail.isAnonymousPost()){
+                Picasso.with(activity).load(R.drawable.ic_feed_anonymous).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
+            } else if (!TextUtils.isEmpty(ownerImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(ownerImage)) {
                 Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
-            else
-                holder.ivFeedOwnerPic.setImageResource(R.drawable.placeholder_img);
+            } else {
+
+                if (feedDetail.getDrawable() == null) {
+                    String firstLetter =  feedDetail.getOwnerName().toUpperCase().substring(0,1);
+                    TextDrawable drawable = TextDrawable.builder()
+                            .beginConfig().bold().endConfig()
+                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getColor()));
+                    feedDetail.setDrawable(drawable);
+                }
+
+                holder.ivFeedOwnerPic.setImageDrawable(feedDetail.getDrawable());
+
+//                holder.ivFeedOwnerPic.setImageResource(R.drawable.placeholder_img);
+
+             /*   *
+                 * Circle rounding alphabet logic has been implemented but we can generate different colors on basis of name.
+                 * However there may be two different users named Piyush but should have the images with different color and vice versa should have same Color.
+                 * We would also need the user_id of owner and wil have to store the pics corresponding to it in a map.
+                 * So it will be better to get the pic from backend.
+                 *
+
+                if(!profilePicsMap.containsKey(feedDetail.getOwnerId())){
+
+                        String firstLetter =  feedDetail.getOwnerName().toUpperCase().substring(0,1);
+                        TextDrawable drawable = TextDrawable.builder().buildRound(firstLetter, ColorGenerator.MATERIAL.getRandomColor());
+                       profilePicsMap.put(feedDetail.getOwnerId(),drawable);
+
+
+
+                }
+
+                holder.ivFeedOwnerPic.setImageDrawable(profilePicsMap.get(feedDetail.getOwnerId()));*/
+            }
 
             //set Heading
             holder.tvFeedOwnerTitle.setText(title);
             holder.tvFeedOwnerTitle.setMovementMethod(setMovementMethod ? LinkMovementMethod.getInstance() : null);
 
 
-            //Set Rating
-            holder.tvFeedRating.setVisibility(rating == null ? View.GONE : View.VISIBLE);
-            if (rating != null)
+
+        /*    //Set Rating
+            if (rating != null) {
+
+                holder.tvFeedRating.setVisibility(View.VISIBLE)
                 activity.setRatingAndGetColor(holder.tvFeedRating, rating, feedDetail.getRatingColor(), true);
+            }
+            else{
+                holder.tvFeedRating.setVisibility(View.GONE)
+            }*/
 
-            //Set Likes and Comments
-            String likesCommentString = formLikesComment(feedDetail.getLikeCount(), feedDetail.getCommentCount(), activity);
 
-            holder.tvLikeStatus.setText(String.valueOf(feedDetail.getLikeCount()));
+            //set Like Count and comment count
+            String likeSuffix = feedDetail.getLikeCount() > 1 ? " Likes" : " Like";
+            SpannableString likeText;
+            if(feedDetail.getLikeCount()>0){
+                //bold like Count
+                likeText = new SpannableString(String.valueOf(feedDetail.getLikeCount()) + likeSuffix);
+                likeText.setSpan(BOLD_SPAN,0,String.valueOf(feedDetail.getLikeCount()).length(),SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+            else{
+                likeText = new SpannableString(likeSuffix);
+            }
+            holder.tvLike.setText(likeText);
 
             String commentSuffix = feedDetail.getCommentCount() > 1 ? " Comments" : " Comment";
-            holder.tvCommentStatus.setText(feedDetail.getCommentCount()+commentSuffix);
+            SpannableString commentText;
+            if(feedDetail.getCommentCount()>0){
+                //bold comment Count
+                commentText = new SpannableString(String.valueOf(feedDetail.getCommentCount()) + commentSuffix);
+                commentText.setSpan(BOLD_SPAN,0,String.valueOf(feedDetail.getCommentCount()).length(),SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+            else{
+                commentText = new SpannableString(commentSuffix);
+            }
 
-            holder.tvLikeStatus.setVisibility(feedDetail.getLikeCount()>0?View.VISIBLE:View.INVISIBLE);
-            holder.tvCommentStatus.setVisibility(feedDetail.getCommentCount()>0?View.VISIBLE:View.INVISIBLE);
-        /*if(feedDetail.getLikeCount()>0 && feedDetail.getCommentCount()<1)
-        {
-            holder.tvCommentStatus.setVisibility(View.INVISIBLE);
-            //because the views below are aligned as per tvCommentStatus Visibility
+            holder.tvComment.setText(commentText);
 
-        }*/
+
 
 
             //Set Content
             holder.tvFeedDescription.setText(feedDetail.getContent());
 
-            //Show User Acitivty Layout such as Person A commented on Person B's post
-            if (showUserActivity) {
+            //Show User Activity Layout such as Person A commented on Person B's post
+            if (showUserActivity && !isViewingDetail) {
                 holder.layoutUserActivity.setVisibility(View.VISIBLE);
-                holder.dividerUserActivity.setVisibility(View.VISIBLE);
+
                 holder.tvUserActivityTitle.setText(userActivityTitle);
+
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.layoutActualPost.getLayoutParams();
+                layoutParams.setMargins(FeedUtils.dpToPx(12),0,FeedUtils.dpToPx(20),FeedUtils.dpToPx(12));
+                holder.layoutActualPost.setPadding(0,FeedUtils.dpToPx(20),0,0);
+                holder.layoutActualPost.setLayoutParams(layoutParams);
            /* if (userImage != null)
-                Picasso.with(activity).load(userImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivUserProfilePic);*/
+                Picasso.with(activity).load(userImage).resize(FeedUtils.convertDpToPx(activity, 50), FeedUtils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivUserProfilePic);*/
 
             } else {
                 holder.layoutUserActivity.setVisibility(View.GONE);
-                holder.dividerUserActivity.setVisibility(View.GONE);
 
+
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.layoutActualPost.getLayoutParams();
+                layoutParams.setMargins(0,0,0,0);
+                holder.layoutActualPost.setPadding(0,FeedUtils.dpToPx(20),0,0);
+                holder.layoutActualPost.setLayoutParams(layoutParams);
             }
 
             //show posted Time
@@ -310,28 +424,48 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             else
                 holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_grey_text));
 
-            //Show user Images if greater than 1 in a recycler view
-            if (feedDetail.getReviewImages() != null && feedDetail.getReviewImages().size() > 1) {
-                holder.recyclerViewUserImages.setVisibility(View.VISIBLE);
-                if (holder.displayFeedHomeImagesAdapter == null) {
-                    holder.displayFeedHomeImagesAdapter = new DisplayFeedHomeImagesAdapter(activity, feedDetail.getReviewImages(), holder.recyclerViewUserImages);
-                    holder.recyclerViewUserImages.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
-                    holder.recyclerViewUserImages.setAdapter(holder.displayFeedHomeImagesAdapter);
-                } else {
-                    holder.displayFeedHomeImagesAdapter.setList(feedDetail.getReviewImages());
-                }
+
+
+            // for adding restaurant image in reviewImages list if no images added
+            ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages;
+            if((feedDetail.getReviewImages() == null || feedDetail.getReviewImages().size() == 0)
+                    && !TextUtils.isEmpty(imageUrl)){
+                reviewImages = new ArrayList<>();
+                FetchFeedbackResponse.ReviewImage reviewImage = new FetchFeedbackResponse.ReviewImage(imageUrl, imageUrl);
+                reviewImage.setIsRestaurantImage(true);
+                reviewImages.add(reviewImage);
             } else {
-                holder.recyclerViewUserImages.setVisibility(View.GONE);
+                reviewImages = feedDetail.getReviewImages();
+            }
+
+
+
+            //Show user Images if greater than 1 in a recycler view
+            if (reviewImages != null && reviewImages.size() > 0) {
+                holder.vpReviewImages.setVisibility(View.VISIBLE);
+                if (holder.displayFeedHomeImagesAdapter == null) {
+                    holder.displayFeedHomeImagesAdapter = new DisplayFeedHomeImagesAdapter(activity, reviewImages,
+                            feedDetail.getRestaurantId(),
+                            callback);
+                } else {
+                    holder.displayFeedHomeImagesAdapter.setList(reviewImages, feedDetail.getRestaurantId());
+                }
+                holder.vpReviewImages.setAdapter(holder.displayFeedHomeImagesAdapter);
+                for (int i = 0; i < holder.tabDots.getTabCount(); i++) {
+                    View tab = ((ViewGroup) holder.tabDots.getChildAt(0)).getChildAt(i);
+                    ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+                    p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+                    tab.requestLayout();
+                }
+                holder.tabDots.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);
+            } else {
+                holder.vpReviewImages.setVisibility(View.GONE);
+                holder.tabDots.setVisibility(View.GONE);
             }
 
             //Show Edit post option if available
-            holder.ivMore.setVisibility(feedDetail.isPostEditable()?View.VISIBLE:View.GONE);
-          /*  RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.tvFeedRating.getLayoutParams();
-                 if(feedDetail.isPostEditable())
-                   layoutParams.rightMargin=Utils.convertDpToPx(activity,10);
-                else
-                    layoutParams.rightMargin=0;
-            holder.ivMore.setLayoutParams(layoutParams);*/
+            holder.tvMore.setVisibility(feedDetail.isPostEditable()?View.VISIBLE:View.GONE);
+
 
 
 
@@ -339,6 +473,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
+    }
+
+    @Override
+    public void onRestaurantImageClick(Integer restaurantId) {
+        feedPostCallback.onRestaurantClick(restaurantId);
     }
 
     private static String formLikesComment(int likeCount, int commentCount, FreshActivity activity) {
@@ -365,6 +504,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
             else if (feedDetail.getLikeCount() > 0)
                 feedDetail.setLikeCount(feedDetail.getLikeCount() - 1);
+
             feedDetail.setLiked(isLiked);
             notifyFeedListItem(position);
         }
@@ -407,6 +547,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 diff = currentMonth + (11 - postedMonth);
                 if (postedDate > currentDate) diff--;
             } else {
+
                 diff = currentMonth - postedMonth;
                 if (currentMonth != postedMonth && postedDate > currentDate)
                     diff--;
@@ -423,13 +564,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             long diffT = currentDateCal.getTimeInMillis() - feedPostedCal.getTimeInMillis();
             long diffC = diffT / (24 * 60 * 60 * 1000 * 7);
-            if (diffC >= 1) return diffC + "w";
+            if (diffC >= 1) return diffC + (diffC == 1?" week ago":" weeks ago");
             diffC = diffT / (24 * 60 * 60 * 1000);
-            if (diffC >= 1) return diffC + "d";
+            if (diffC >= 1) return diffC + (diffC == 1?" day ago":" days ago");
             diffC = diffT / (60 * 60 * 1000) % 24;
-            if (diffC >= 1) return diffC + "h";
+            if (diffC >= 1) return diffC + (diffC == 1?" hour ago":" hours ago");
             diffC = diffT / (60 * 1000) % 60;
-            if (diffC >= 1) return diffC + "m";
+            if (diffC >= 1) return diffC + (diffC == 1?" minute ago":" minutes ago");
             diffC = diffT / 1000 % 60;
 
             return " Just now";
@@ -508,6 +649,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
+
     public interface FeedPostCallback {
         void onLikeClick(FeedDetail object, int position);
 
@@ -533,10 +675,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView tvFeedDescription;
         @Bind(R.id.iv_place_image)
         ImageView ivPlaceImage;
-        @Bind(R.id.tv_like_status)
+      /*  @Bind(R.id.tv_like_status)
         TextView tvLikeStatus;
         @Bind(R.id.tv_comment_status)
-        TextView tvCommentStatus;
+        TextView tvCommentStatus;*/
         @Bind(R.id.tv_action_comment)
         TextView tvComment;
         @Bind(R.id.tv_action_like)
@@ -545,14 +687,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LinearLayout viewActionLike;
         @Bind(R.id.view_action_comment)
         LinearLayout viewActionComment;
-        @Bind(R.id.tv_feed_rating)
-        TextView tvFeedRating;
+    /*    @Bind(R.id.tv_feed_rating)
+        TextView tvFeedRating;*/
         @Bind(R.id.tv_restaurant_feed_address)
         TextView tvFeedAddress;
         @Bind(R.id.layout_user_activity_heading)
         RelativeLayout layoutUserActivity;
-        @Bind(R.id.divider_user_activity)
-        View dividerUserActivity;
+
         @Bind(R.id.iv_user_profile_pic)
         ImageView ivUserProfilePic;
         @Bind(R.id.tv_user_activity_time)
@@ -566,14 +707,21 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Bind(R.id.root_layout_item)
         RelativeLayout layoutItem;
         @Bind(R.id.ib_arrow_more)
-        ImageView ivMore;
-        @Bind(R.id.recycler_user_images)
-        RecyclerView recyclerViewUserImages;//feeddetail.getReviewImages field is greater than 1 than we  have to show this recycler view
+        TextView tvMore;
+        @Bind(R.id.vpReviewImages)
+        ViewPager vpReviewImages;
         DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
+        @Bind(R.id.tabDots)
+        TabLayout tabDots;
+        @Bind(R.id.shadow_address)
+         View shadowAddress  ;
+        @Bind(R.id.layout_actual_post)
+        RelativeLayout layoutActualPost;
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
             ButterKnife.bind(this, view);
+            tvFeedAddress.setTypeface(tvFeedAddress.getTypeface(), Typeface.BOLD);
             viewActionLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -608,13 +756,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
-            ivMore.setOnClickListener(new View.OnClickListener() {
+            tvMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickView.onClickItem(ivMore, view);
+                    onClickView.onClickItem(tvMore, view);
                 }
             });
-
+            tabDots.setupWithViewPager(vpReviewImages, true);
         }
     }
 

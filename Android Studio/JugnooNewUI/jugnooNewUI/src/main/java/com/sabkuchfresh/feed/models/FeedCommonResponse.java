@@ -1,10 +1,7 @@
-package com.sabkuchfresh.retrofit.model.feed;
+package com.sabkuchfresh.feed.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
-
-import java.util.List;
 
 /**
  * Created by Parminder Saini on 26/03/17.

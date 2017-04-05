@@ -165,8 +165,8 @@ public class Label extends TextView {
     private void setShadow(FloatingActionButton fab) {
         mShadowColor = fab.getShadowColor();
         mShadowRadius = fab.getShadowRadius();
-        mShadowXOffset = fab.getShadowXOffset();//Utils.dpToPx(getContext(), 0);//fab.getShadowXOffset();
-        mShadowYOffset = fab.getShadowYOffset();//Utils.dpToPx(getContext(), 0);//fab.getShadowYOffset();
+        mShadowXOffset = fab.getShadowXOffset();//FeedUtils.dpToPx(getContext(), 0);//fab.getShadowXOffset();
+        mShadowYOffset = fab.getShadowYOffset();//FeedUtils.dpToPx(getContext(), 0);//fab.getShadowYOffset();
         mShowShadow = fab.hasShadow();
     }
 

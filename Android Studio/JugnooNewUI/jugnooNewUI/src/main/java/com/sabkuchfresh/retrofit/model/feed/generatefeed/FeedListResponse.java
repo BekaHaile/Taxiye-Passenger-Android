@@ -26,6 +26,12 @@ public class FeedListResponse {
     @SerializedName("city_name")
     @Expose
     private String cityName;
+    @SerializedName("count_notification")
+    @Expose
+    private int countNotification;
+    @SerializedName("handle_name")
+    @Expose
+    private String handleName;
 
 
     public int getFlag() {
@@ -67,5 +73,21 @@ public class FeedListResponse {
 
     public String getCity() {
         return cityName;
+    }
+
+    public String getHandleName() {
+        return handleName;
+    }
+
+    public void setHandleName(String handleName) {
+        this.handleName = handleName;
+    }
+
+    public int getCountNotification() {
+        return countNotification;
+    }
+
+    public void setCountNotification(int countNotification) {
+        this.countNotification = countNotification;
     }
 }

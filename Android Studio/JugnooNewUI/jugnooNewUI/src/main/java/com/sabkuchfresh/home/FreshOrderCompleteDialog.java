@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,6 +26,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 3/4/16.
@@ -78,8 +80,13 @@ public class FreshOrderCompleteDialog {
 				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_meals));
 			else if(type == AppConstant.ApplicationType.GROCERY)
 				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_grocery));
-			else if(type == AppConstant.ApplicationType.MENUS)
-				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_menus_format, restaurantName));
+			else if(type == AppConstant.ApplicationType.MENUS) {
+				if(TextUtils.isEmpty(placeOrderResponse.getOrderPlacedMessage())) {
+					textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_menus_format, restaurantName));
+				} else {
+					textView.setText(Utils.trimHTML(Utils.fromHtml(placeOrderResponse.getOrderPlacedMessage())));
+				}
+			}
 
 			TextView textViewOrderId = (TextView) dialog.findViewById(R.id.textViewOrderId);
 			textViewOrderId.setTypeface(Fonts.mavenRegular(activity));

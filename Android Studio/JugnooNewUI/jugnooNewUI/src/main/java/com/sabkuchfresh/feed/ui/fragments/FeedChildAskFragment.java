@@ -45,8 +45,11 @@ public class FeedChildAskFragment extends ImageSelectFragment {
 
         if(feedDetail!=null){
             etContent.setText(feedDetail.getContent());
+            etContent.setSelection(etContent.getText().length());
             setUpImagesAdapter();
+
         }
+
         return rootView;
 
 
@@ -109,5 +112,15 @@ public class FeedChildAskFragment extends ImageSelectFragment {
     @Override
     public boolean submitEnabledState() {
         return etContent.getText().toString().trim().length()>0;
+    }
+
+    @Override
+    public boolean isAnonymousPostingEnabled() {
+        return true;
+    }
+
+    @Override
+    public EditText getFocusEditText() {
+        return etContent;
     }
 }

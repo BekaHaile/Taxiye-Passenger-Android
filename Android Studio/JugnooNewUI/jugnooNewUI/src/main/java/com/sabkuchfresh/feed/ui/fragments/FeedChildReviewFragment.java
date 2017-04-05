@@ -232,9 +232,11 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
         }
 
 
-        if(feedDetail!=null){
+        if(feedDetail != null){
             //If editing
             etContent.setText(feedDetail.getContent());
+            etContent.setSelection(etContent.getText().length());
+            etContent.requestFocus();
             setUpImagesAdapter();
             suggestionSelected = new SuggestRestaurantQueryResp.Suggestion();
             suggestionSelected.setId(feedDetail.getRestaurantId());
@@ -249,6 +251,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
             etContent.setEnabled(false);
             ratingBar.setRatingDisabled(true);
         }
+
 
         return rootView;
 
@@ -288,7 +291,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
 
     @Override
     public boolean canSubmit() {
-        if (suggestionSelected == null || etRestaurantLocation.hasFocus()) {
+        if (feedDetail == null && (suggestionSelected == null || etRestaurantLocation.hasFocus())) {
             Toast.makeText(activity, R.string.error_feed_review_restaurant_not_selected, Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -306,7 +309,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
 
 
     public void onRestaurantChanged(boolean isSelected){
-        if(isSelected){
+        if(isSelected || feedDetail != null){
             layoutContent.setEnabled(true);
             ratingBar.setEnabled(true);
             etContent.setEnabled(true);
@@ -353,5 +356,15 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
     @Override
     public boolean submitEnabledState() {
         return etContent.getText().toString().trim().length()>0;
+    }
+
+    @Override
+    public boolean isAnonymousPostingEnabled() {
+        return false;
+    }
+
+    @Override
+    public EditText getFocusEditText() {
+        return etRestaurantLocation;
     }
 }

@@ -23,6 +23,7 @@ public class CustomTypeFaceSpan extends TypefaceSpan {
 
     @Override
     public void updateDrawState(TextPaint ds) {
+
         applyCustomTypeFace(ds, newType);
     }
 

@@ -1501,6 +1501,8 @@
     <string name="restaurant_name_is_neccessary">Restaurant name is neccessary</string>
 
     <string name="star_icon">&#xe9d9;</string>
+    <string name="feed_star_selected">&#xe900;</string>
+    <string name="feed_star_deselected">&#xe9d7;</string>
     <string name="thanks_for_recommendation">Thanks for your recommendation!</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -1609,7 +1611,7 @@
     <string name="i_want_to_cancel_my_order_because">I want to cancel my Order because</string>
     <string name="please_select_one_reason">Please select one reason</string>
     <string name="error_feed_review_restaurant_not_selected">Select a restaurant to review</string>
-    <string name="write_a_comment">Write a comment...</string>
+    <string name="write_a_comment">Add a comment...</string>
     <string name="label_city">City</string>
     <string name="away_from_free_delivery_value">\u20B9%s away from free delivery</string>
     <string name="no_other_store_available">No other stores available</string>
@@ -1623,6 +1625,16 @@
     <string name="track_delivery">Track Delivery</string>
 
     <string name="feed_delete_popup_message">Do you really want to delete this post? If you delete once it will no longer be available.</string>
+    <string name="people_ahead_of_you_in_queue">people ahead of you in the queue.</string>
+    <string name="want_early_access">Want early access?</string>
+    <string name="tweet">Tweet</string>
+    <string name="whatsapp">Whatsapp</string>
+    <string name="create_a_handle">Create a Handle</string>
+    <string name="no_notifications_yet">No Notificaitons Yet!</string>
+    <string name="horizontal_ellipsis">&#8230;</string>
+    <string name="bullet_three">\u2022\u2022\u2022</string>
+    <string name="press_back_again_to_quit">Press back again to quit</string>
+    <string name="join">Join</string>
 
 
 </resources>

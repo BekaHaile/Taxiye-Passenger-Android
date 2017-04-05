@@ -1,11 +1,13 @@
 package com.sabkuchfresh.feed.ui.fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,24 +19,35 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.models.CountNotificationResponse;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
+import com.sabkuchfresh.feed.utils.BadgeDrawable;
+import com.sabkuchfresh.fragments.FreshHomeFragment;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,7 +81,11 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private RelativeLayout rlNoReviews;
     private TextView tvFeedEmpty;
     private View viewDisabledEditPostPopUp;
+    private boolean updateFeedData;
+    private ImageView ivNoFeeds;
 
+
+    private final long UPDATE_NOTIFICATION_COUNT_INTERVAL = 15000;
 
     public FeedHomeFragment() {
         // Required empty public constructor
@@ -96,6 +113,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         super.onDestroyView();
         if (activity != null) {
             activity.unregisterReceiver(broadcastReceiver);
+            activity.getHandler().removeCallbacks(runnableNotificationCount);
         }
     }
 
@@ -104,11 +122,12 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         activity.fragmentUISetup(this);
-
+        setHasOptionsMenu(true);
         GAUtils.trackScreenView(FEED+HOME);
-
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
+
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
@@ -122,6 +141,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 fetchFeedsApi(false);
             }
         });
+
+        ivNoFeeds = (ImageView) rootView.findViewById(R.id.ivNoFeeds);
+
         feedHomeAdapter = new FeedHomeAdapter(getActivity(), getAdapterList(false,null,null,null), recyclerView, new FeedHomeAdapter.FeedPostCallback() {
             @Override
             public void onLikeClick(FeedDetail feedDetail, final int position) {
@@ -198,6 +220,10 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         tvFeedEmpty.append("\n");
         tvFeedEmpty.append(ssb);
 
+        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
+
+        activity.getHandler().removeCallbacks(runnableNotificationCount);
+        activity.getHandler().postDelayed(runnableNotificationCount, 1000);
 
         return rootView;
     }
@@ -207,15 +233,42 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            activity.getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(updateFeedData){
+                        fetchFeedsApi(true);
+                    }
+                    updateFeedData = false;
+                }
+            }, 200);
+            activity.getHandler().removeCallbacks(runnableNotificationCount);
+            activity.getHandler().postDelayed(runnableNotificationCount, 1000);
+        } else {
+            activity.getHandler().removeCallbacks(runnableNotificationCount);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        activity.getHandler().removeCallbacks(runnableNotificationCount);
+        activity.getHandler().postDelayed(runnableNotificationCount, 1000);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        activity.getHandler().removeCallbacks(runnableNotificationCount);
     }
 
     public void fetchFeedsApi(boolean loader) {
         try {
             if (MyApplication.getInstance().isOnline()) {
 
+                ProgressDialog progressDialog = null;
                 if(loader) {
-                    DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
+                    progressDialog = DialogPopup.showLoadingDialogNewInstance(getActivity(), getActivity().getResources().getString(R.string.loading));
                 }
 
                 HashMap<String, String> params = new HashMap<>();
@@ -223,11 +276,14 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
                 new HomeUtil().putDefaultParams(params);
+                final ProgressDialog finalProgressDialog = progressDialog;
                 RestClient.getFeedApiService().generateFeed(params, new retrofit.Callback<FeedListResponse>() {
                     @Override
                     public void success(FeedListResponse feedbackResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        DialogPopup.dismissLoadingDialog();
+                        if(finalProgressDialog != null) {
+                            finalProgressDialog.dismiss();
+                        }
                         swipeRefreshLayout.setRefreshing(false);
                         try {
                             String message = feedbackResponse.getMessage();
@@ -237,11 +293,27 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     relativeLayoutNotAvailable.setVisibility(View.VISIBLE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(feedbackResponse.getMessage()) ? feedbackResponse.getMessage() : activity.getString(R.string.nothing_found_near_you));
                                     feedHomeAdapter.setList(getAdapterList(false,feedbackResponse.getFeeds(),null,feedbackResponse.getCity()));
-                                    activity.getTopBar().ivAddReview.setVisibility(View.GONE);
+                                    activity.getFeedHomeAddPostView().setVisibility(View.GONE);
+
                                 } else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+
                                     feedHomeAdapter.setList(getAdapterList(true,feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),feedbackResponse.getCity()));
                                     rlNoReviews.setVisibility(feedbackResponse.getFeeds()==null||feedbackResponse.getFeeds().size()==0 ? View.VISIBLE : View.GONE);
-                                    activity.getTopBar().ivAddReview.setVisibility(View.VISIBLE);
+                                    if(activity.getTopFragment() instanceof FreshHomeFragment) {
+                                        activity.getFeedHomeAddPostView().setVisibility(View.VISIBLE);
+                                    }
+                                    if(activity.getTvAddPost() != null) {
+                                        activity.getTvAddPost().setText(feedbackResponse.getAddPostText());
+                                    }
+                                    if(Data.getFeedData() != null){
+                                        Data.getFeedData().setHandleName(feedbackResponse.getHandleName());
+                                    }
+                                    setNotificationCount(feedbackResponse.getCountNotification());
+
+                                    RelativeLayout.LayoutParams paramsIvNoFeeds = (RelativeLayout.LayoutParams) ivNoFeeds.getLayoutParams();
+                                    paramsIvNoFeeds.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_minus_40));
+                                    ivNoFeeds.setLayoutParams(paramsIvNoFeeds);
+
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -254,7 +326,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
                     @Override
                     public void failure(RetrofitError error) {
-                        DialogPopup.dismissLoadingDialog();
+                        if(finalProgressDialog != null) {
+                            finalProgressDialog.dismiss();
+                        }
                         retryDialog(DialogErrorType.CONNECTION_LOST);
                         swipeRefreshLayout.setRefreshing(false);
                     }
@@ -277,9 +351,11 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
         adapterList.clear();
 
-        //Add Location Type
+      /*  //Add Location Type
         String location =!TextUtils.isEmpty(cityName)?cityName:activity.getSelectedAddress();
-        adapterList.add(new FeedHomeAdapter.SelectedLocation(location,!TextUtils.isEmpty(cityName)));
+        adapterList.add(new FeedHomeAdapter.SelectedLocation(location,!TextUtils.isEmpty(cityName)));*/
+
+      /*
 
         //Add AddPostText
         if(showAddPostText)
@@ -291,7 +367,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
             adapterList.add(new FeedHomeAdapter.AddPostData(addPostText,imageUrl));
         }
-
+*/
 
         if(feedDetailList!=null && feedDetailList.size()>0){
 
@@ -339,8 +415,12 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     public void refreshFeedInHomeFragment(int positionItemChangedInCommentsFragment) {
-        if(feedHomeAdapter!=null && adapterList!=null && adapterList.size()>positionItemChangedInCommentsFragment)
-            feedHomeAdapter.notifyFeedListItem(positionItemChangedInCommentsFragment);;
+        if(positionItemChangedInCommentsFragment == -1){
+            updateFeedData = true;
+        } else {
+            if (feedHomeAdapter != null && adapterList != null && adapterList.size() > positionItemChangedInCommentsFragment)
+                feedHomeAdapter.notifyFeedListItem(positionItemChangedInCommentsFragment);
+        }
     }
 
 
@@ -407,4 +487,103 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         onEdit(feedDetail);
 
     }
+
+
+    private MenuItem itemCart;
+    private long lastNotificationCount = 0, currentNotificationCount = 0;
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.feed_home_menu, menu);
+        itemCart = menu.findItem(R.id.item_notification);
+        setNotificationCount(currentNotificationCount);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    public void setLastNotificationCountToCurrent(){
+        lastNotificationCount = currentNotificationCount;
+    }
+
+
+    private void setNotificationCount(long count){
+        currentNotificationCount = count;
+        if(currentNotificationCount == 0 || currentNotificationCount != lastNotificationCount) {
+            LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+            BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(count));
+            activity.collapsingToolbar.invalidate();
+        } else {
+            LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+            BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(0));
+            activity.collapsingToolbar.invalidate();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+//            case R.id.item_location:
+//                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
+//                break;
+            case R.id.item_notification:
+                activity.getTransactionUtils().openFeedNotificationsFragment(activity, activity.getRelativeLayoutContainer());
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private Runnable runnableNotificationCount = new Runnable() {
+        @Override
+        public void run() {
+            updateFeedNotificationCountAPI();
+            if(runnableNotificationCount != null) {
+                activity.getHandler().postDelayed(runnableNotificationCount, UPDATE_NOTIFICATION_COUNT_INTERVAL);
+            }
+        }
+    };
+
+    private void updateFeedNotificationCountAPI(){
+        try {
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+
+            new ApiCommon<CountNotificationResponse>(activity)
+					.putDefaultParams(true).showLoader(false)
+					.execute(params, ApiName.COUNT_NOTIFICATION, new APICommonCallback<CountNotificationResponse>() {
+						@Override
+						public boolean onNotConnected() {
+							return true;
+						}
+
+						@Override
+						public boolean onException(Exception e) {
+							return true;
+						}
+
+						@Override
+						public void onSuccess(CountNotificationResponse countNotificationResponse, String message, int flag) {
+                            try {
+                                setNotificationCount(countNotificationResponse.getCountNotification());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+						@Override
+						public boolean onError(CountNotificationResponse countNotificationResponse, String message, int flag) {
+							return true;
+						}
+
+						@Override
+						public boolean onFailure(RetrofitError error) {
+							return true;
+						}
+					});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -1,6 +1,8 @@
 
 package com.sabkuchfresh.retrofit.model.feed.feeddetail;
 
+import android.graphics.drawable.Drawable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -21,6 +23,12 @@ public class FeedComment {
     @SerializedName("is_comment_editable")
     @Expose
     private boolean canEdit;
+
+    private transient Drawable drawable;
+
+    @SerializedName("color")
+    @Expose
+    private String color;
 
     public boolean canEdit() {
         return canEdit;
@@ -65,4 +73,19 @@ public class FeedComment {
     }
 
 
+    public Drawable getDrawable() {
+        return drawable;
+    }
+
+    public void setDrawable(Drawable drawable) {
+        this.drawable = drawable;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 }

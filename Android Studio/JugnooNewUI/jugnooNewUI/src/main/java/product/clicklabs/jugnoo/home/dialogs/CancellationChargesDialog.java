@@ -119,7 +119,7 @@ public class CancellationChargesDialog {
 
 	private String replaceStringWithAmount(String text){
 		String finalStr = "";
-		//String.format(getString(R.string.rupees_value_format_without_space),"" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().finalFare))
+		//String.format(getString(R.string.rupees_value_format_without_space),"" + FeedUtils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().finalFare))
 		try {
 			if(text.contains("{amount}") && (Data.autoData.getAssignedDriverInfo().getCancellationCharges() > 0)){
                 finalStr = text.replace("{amount}", (String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),

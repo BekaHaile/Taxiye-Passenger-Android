@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 /**
  * Created by froger_mcs on 05.11.14.
  */
-public class Utils {
+public class FeedUtils {
     private static int screenWidth = 0;
     private static int screenHeight = 0;
 

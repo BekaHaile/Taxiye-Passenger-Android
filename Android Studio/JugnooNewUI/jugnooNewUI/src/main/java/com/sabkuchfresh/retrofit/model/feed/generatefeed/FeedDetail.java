@@ -1,7 +1,7 @@
 
 package com.sabkuchfresh.retrofit.model.feed.generatefeed;
 
-import android.os.Parcelable;
+import android.graphics.drawable.Drawable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -75,7 +75,7 @@ public class FeedDetail implements Serializable {
     private int isLiked;
 
     public boolean isLiked() {
-        return isLiked==1;
+        return likeCount > 0 && isLiked==1;
     }
 
     @SerializedName("star_color")
@@ -84,6 +84,29 @@ public class FeedDetail implements Serializable {
 
     @SerializedName("is_post_editable")
     private boolean isPostEditable;
+
+
+    @SerializedName("is_anonymous")
+    private int isAnonymousPost;
+
+    @SerializedName("owner_user_id")
+    private long ownerId;
+
+    @SerializedName("color")
+    @Expose
+    private String color;
+
+    private transient Drawable drawable;
+
+
+    public boolean isAnonymousPost() {
+        return isAnonymousPost==1;
+    }
+
+
+    public long getOwnerId() {
+        return ownerId;
+    }
 
     public boolean isPostEditable() {
         return isPostEditable;
@@ -244,6 +267,22 @@ public class FeedDetail implements Serializable {
 
     public void setRestaurantId(Integer restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Drawable getDrawable() {
+        return drawable;
+    }
+
+    public void setDrawable(Drawable drawable) {
+        this.drawable = drawable;
     }
 
     public enum FeedType{

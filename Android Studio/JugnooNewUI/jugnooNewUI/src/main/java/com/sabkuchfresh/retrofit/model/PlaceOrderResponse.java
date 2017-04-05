@@ -50,6 +50,9 @@ public class PlaceOrderResponse {
 	@SerializedName("subscription_data")
 	@Expose
 	private SubscriptionDataPlaceOrder subscriptionDataPlaceOrder;
+	@SerializedName("order_placed_message")
+	@Expose
+	private String orderPlacedMessage;
 
 	/**
 	 *
@@ -199,6 +202,14 @@ public class PlaceOrderResponse {
 
 	public void setRazorPaymentObject(RazorPaymentObject razorPaymentObject) {
 		this.razorPaymentObject = razorPaymentObject;
+	}
+
+	public String getOrderPlacedMessage() {
+		return orderPlacedMessage;
+	}
+
+	public void setOrderPlacedMessage(String orderPlacedMessage) {
+		this.orderPlacedMessage = orderPlacedMessage;
 	}
 
 	public class SubscriptionMessage {

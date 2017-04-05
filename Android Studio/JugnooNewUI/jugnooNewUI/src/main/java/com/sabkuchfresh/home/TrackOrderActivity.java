@@ -279,6 +279,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 							final double latitude = jObj.optDouble(Constants.KEY_LATITUDE, 0d);
 							final double longitude = jObj.optDouble(Constants.KEY_LONGITUDE, 0d);
+							final double bearing = jObj.optDouble(Constants.KEY_BEARING, 0d);
 							final String eta = jObj.optString(Constants.KEY_ETA, "");
 							final String trackingInfo = jObj.optString(Constants.KEY_TRACKING_INFO, "");
 
@@ -289,6 +290,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										if (markerDriver == null) {
 											markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
 													R.drawable.ic_bike_marker, 49f, 62f, true, 2));
+											markerDriver.setRotation((float) bearing);
 										} else {
 											MarkerAnimation.animateMarkerToICS("-1", markerDriver,
 													new LatLng(latitude, longitude), new LatLngInterpolator.Spherical());

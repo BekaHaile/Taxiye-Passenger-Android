@@ -370,6 +370,29 @@ public class LoginResponse {
 		@Expose
 		private long usersCount;
 
+		@SerializedName("early_access_text")
+		@Expose
+		private String earlyAccessText;
+		@SerializedName("early_access_share_title")
+		@Expose
+		private String earlyAccessShareTitle;
+		@SerializedName("early_access_share_desc")
+		@Expose
+		private String earlyAccessShareDesc;
+		@SerializedName("early_access_share_image")
+		@Expose
+		private String earlyAccessShareImage;
+		@SerializedName("show_create_handle")
+		@Expose
+		private int showCreateHandle;
+
+
+		@SerializedName("anonymous_functionality_enabled")
+		@Expose
+		private int anonymousFunctionalityEnabled = 1;
+
+		private String handleName;
+
 
 
 
@@ -382,7 +405,7 @@ public class LoginResponse {
 		}
 
 		public boolean getFeedActive() {
-			return feedActive ==1;
+			return feedActive==1;
 		}
 
 		public Long getFeedRank() {
@@ -415,6 +438,62 @@ public class LoginResponse {
 
 		public void incrementUserCount(){
 			usersCount++;
+		}
+
+		public String getEarlyAccessText() {
+			return earlyAccessText;
+		}
+
+		public void setEarlyAccessText(String earlyAccessText) {
+			this.earlyAccessText = earlyAccessText;
+		}
+
+		public String getEarlyAccessShareTitle() {
+			return earlyAccessShareTitle;
+		}
+
+		public void setEarlyAccessShareTitle(String earlyAccessShareTitle) {
+			this.earlyAccessShareTitle = earlyAccessShareTitle;
+		}
+
+		public String getEarlyAccessShareDesc() {
+			return earlyAccessShareDesc;
+		}
+
+		public void setEarlyAccessShareDesc(String earlyAccessShareDesc) {
+			this.earlyAccessShareDesc = earlyAccessShareDesc;
+		}
+
+		public String getEarlyAccessShareImage() {
+			return earlyAccessShareImage;
+		}
+
+		public void setEarlyAccessShareImage(String earlyAccessShareImage) {
+			this.earlyAccessShareImage = earlyAccessShareImage;
+		}
+
+		public boolean showCreateHandle() {
+			return showCreateHandle == 1;
+		}
+
+		public void setShowCreateHandle(int showCreateHandle) {
+			this.showCreateHandle = showCreateHandle;
+		}
+
+		public int getAnonymousFunctionalityEnabled() {
+			return anonymousFunctionalityEnabled;
+		}
+
+		public void setAnonymousFunctionalityEnabled(int anonymousFunctionalityEnabled) {
+			this.anonymousFunctionalityEnabled = anonymousFunctionalityEnabled;
+		}
+
+		public String getHandleName() {
+			return handleName;
+		}
+
+		public void setHandleName(String handleName) {
+			this.handleName = handleName;
 		}
 	}
 

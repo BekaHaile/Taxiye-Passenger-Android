@@ -346,6 +346,8 @@ public class FetchFeedbackResponse {
 		@Expose
 		private String id;
 
+		private boolean isRestaurantImage;
+
 		public ReviewImage(String url, String thumbnail) {
 			this.url=url;
 			this.thumbnail=thumbnail;
@@ -374,6 +376,14 @@ public class FetchFeedbackResponse {
 
 		public void setId(String id) {
 			this.id = id;
+		}
+
+		public boolean isRestaurantImage() {
+			return isRestaurantImage;
+		}
+
+		public void setIsRestaurantImage(boolean restaurantImage) {
+			isRestaurantImage = restaurantImage;
 		}
 	}
 }

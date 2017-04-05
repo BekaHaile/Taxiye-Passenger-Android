@@ -88,10 +88,11 @@ public class SupportFAQItemsListFragment extends Fragment implements  Constants 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_support_items_list, container, false);
+		parseArguments();
 
         activity = getActivity();
+
 		setActivityTitle();
-		parseArguments();
 
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {

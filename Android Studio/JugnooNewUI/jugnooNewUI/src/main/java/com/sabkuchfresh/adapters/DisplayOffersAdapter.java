@@ -13,19 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -67,7 +64,7 @@ public class DisplayOffersAdapter extends RecyclerView.Adapter<DisplayOffersAdap
 
 
 
-            holder.tvTerms.setText(trim(Html.fromHtml(TandC)));
+            holder.tvTerms.setText(Utils.trimHTML(Html.fromHtml(TandC)));
 
           } catch (Exception e) {
             e.printStackTrace();
@@ -75,22 +72,6 @@ public class DisplayOffersAdapter extends RecyclerView.Adapter<DisplayOffersAdap
         }
 	}
 
-    public static CharSequence trim(CharSequence s) {
-        if(s.length()==0)
-            return "";
-
-        int start = 0;
-        int end = s.length();
-        while (start < end && Character.isWhitespace(s.charAt(start))) {
-            start++;
-        }
-
-        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
-            end--;
-        }
-
-        return s.subSequence(start, end);
-    }
 
 
     private void setUpOfferTitle(String heading, String subHeading,TextView textView) {
