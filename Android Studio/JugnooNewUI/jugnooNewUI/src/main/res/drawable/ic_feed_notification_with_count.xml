@@ -21,7 +21,7 @@
     <item android:id="@+id/item_badge" android:gravity="top|right" >
         <shape android:shape="oval">
             <solid android:color="@android:color/transparent"/>
-            <size android:height="10dp" android:width="10dp"/>
+            <size android:height="8dp" android:width="8dp"/>
         </shape>
     </item>
 

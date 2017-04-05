@@ -573,5 +573,8 @@
     <dimen name="dp_286">
         286dp
     </dimen>
+    <dimen name="dp_minus_40">
+        -40dp
+    </dimen>
 
 </resources>

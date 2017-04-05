@@ -45,6 +45,7 @@ public class FeedChildAskFragment extends ImageSelectFragment {
 
         if(feedDetail!=null){
             etContent.setText(feedDetail.getContent());
+            etContent.setSelection(etContent.getText().length());
             setUpImagesAdapter();
 
         }

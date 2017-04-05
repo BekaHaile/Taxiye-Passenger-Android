@@ -232,9 +232,10 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
         }
 
 
-        if(feedDetail!=null){
+        if(feedDetail != null){
             //If editing
             etContent.setText(feedDetail.getContent());
+            etContent.setSelection(etContent.getText().length());
             setUpImagesAdapter();
             suggestionSelected = new SuggestRestaurantQueryResp.Suggestion();
             suggestionSelected.setId(feedDetail.getRestaurantId());
@@ -307,7 +308,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
 
 
     public void onRestaurantChanged(boolean isSelected){
-        if(isSelected){
+        if(isSelected || feedDetail != null){
             layoutContent.setEnabled(true);
             ratingBar.setEnabled(true);
             etContent.setEnabled(true);

@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -83,6 +82,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private TextView tvFeedEmpty;
     private View viewDisabledEditPostPopUp;
     private boolean updateFeedData;
+    private ImageView ivNoFeeds;
 
 
     private final long UPDATE_NOTIFICATION_COUNT_INTERVAL = 15000;
@@ -141,6 +141,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 fetchFeedsApi(false);
             }
         });
+
+        ivNoFeeds = (ImageView) rootView.findViewById(R.id.ivNoFeeds);
+
         feedHomeAdapter = new FeedHomeAdapter(getActivity(), getAdapterList(false,null,null,null), recyclerView, new FeedHomeAdapter.FeedPostCallback() {
             @Override
             public void onLikeClick(FeedDetail feedDetail, final int position) {
@@ -306,6 +309,11 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                         Data.getFeedData().setHandleName(feedbackResponse.getHandleName());
                                     }
                                     setNotificationCount(String.valueOf(feedbackResponse.getCountNotification()));
+
+                                    RelativeLayout.LayoutParams paramsIvNoFeeds = (RelativeLayout.LayoutParams) ivNoFeeds.getLayoutParams();
+                                    paramsIvNoFeeds.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_minus_40));
+                                    ivNoFeeds.setLayoutParams(paramsIvNoFeeds);
+
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -491,7 +499,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
+    public void setLastNotificationCount(String str){
+        lastNotificationCount = str;
+    }
 
 
     private void setNotificationCount(String count){

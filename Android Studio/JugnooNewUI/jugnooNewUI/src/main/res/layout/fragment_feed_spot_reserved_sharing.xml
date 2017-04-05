@@ -73,6 +73,7 @@
                     android:textSize="14sp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
+                    android:layout_marginBottom="25dp"
                     app:font="maven"
                     android:layout_alignBottom="@+id/ivBg"
                     />
@@ -85,7 +86,7 @@
                 android:orientation="horizontal"
                 android:layout_marginLeft="18dp"
                 android:layout_marginRight="18dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="0dp"
                 android:layout_marginBottom="8dp"
                 >
 

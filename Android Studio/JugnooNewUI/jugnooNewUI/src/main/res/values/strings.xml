@@ -1634,6 +1634,7 @@
     <string name="horizontal_ellipsis">&#8230;</string>
     <string name="bullet_three">\u2022\u2022\u2022</string>
     <string name="press_back_again_to_quit">Press back again to quit</string>
+    <string name="join">Join</string>
 
 
 </resources>
