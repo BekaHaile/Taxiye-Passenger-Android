@@ -1,7 +1,6 @@
 package com.sabkuchfresh.feed.models;
 
 import com.google.gson.annotations.SerializedName;
-import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
 
 /**
  * Created by Parminder Singh on 3/28/17.

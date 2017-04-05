@@ -4645,7 +4645,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 else{
                     MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
-                    ActivityCompat.finishAffinity(HomeActivity.this);
+                    finishWithToast();
+                    // TODO: 04/04/17 add toast to exit
                 }
             }
         } catch (Exception e) {
@@ -4653,6 +4654,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             ActivityCompat.finishAffinity(this);
         }
     }
+
+
+    private int backPressedCount = 0;
+    private void finishWithToast(){
+        backPressedCount++;
+        getHandler().removeCallbacks(runnableBackPressReset);
+        getHandler().postDelayed(runnableBackPressReset, 2000);
+        if(backPressedCount == 2){
+            ActivityCompat.finishAffinity(HomeActivity.this);
+            Utils.cancelToast();
+        } else {
+            Utils.showToast(this, getString(R.string.press_back_again_to_quit));
+        }
+    }
+    private Runnable runnableBackPressReset = new Runnable() {
+        @Override
+        public void run() {
+            backPressedCount = 0;
+        }
+    };
 
 
 

@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<RelativeLayout
+    android:id="@+id/add_post"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:tag="DontTouchMe"
+    app:layout_scrollFlags="scroll|snap">
 
     <View
+        android:id="@+id/vShadow"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_8"
-        android:background="@drawable/shadow_feed_sep" />
+        android:layout_height="@dimen/dp_7"
+        android:background="@drawable/shadow_up_new"/>
 
-    <ImageView
-        android:id="@+id/iv_profile_pic"
-        android:scaleType="centerCrop"
-        android:src="@drawable/placeholder_img"
-        android:layout_width="40dp"
-        android:layout_marginLeft="@dimen/spacing_large"
-        android:layout_marginRight="@dimen/spacing_tiny"
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_marginTop="@dimen/spacing_normal"
-        android:layout_height="40dp" />
-
-    <TextView
-        android:id="@+id/tvAddPost"
-        android:layout_marginTop="@dimen/spacing_normal"
-        android:layout_toRightOf="@id/iv_profile_pic"
+    <RelativeLayout
+        android:layout_below="@+id/vShadow"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:gravity="center|left"
-        android:paddingLeft="@dimen/spacing_tiny"
-        android:paddingRight="@dimen/dp_36"
-        android:text="@string/whats_on_your_mind"
-        android:textColor="@color/text_color_light"
-        android:textSize="@dimen/sp_14"
-        app:font="@string/maven_r" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_menu_item_selector_color_selector"
+        >
 
-    <View
-        android:layout_marginTop="@dimen/spacing_tiny"
-        android:layout_below="@id/tvAddPost"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_8"
-        android:background="@drawable/shadow_feed_sep"
-        />
+        <ImageView
+            android:id="@+id/iv_profile_pic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/spacing_large"
+            android:layout_marginRight="@dimen/spacing_tiny"
+            android:layout_marginTop="@dimen/dp_10"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_img"/>
+
+        <TextView
+            android:id="@+id/tvAddPost"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_toRightOf="@id/iv_profile_pic"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/spacing_tiny"
+            android:paddingRight="@dimen/dp_36"
+            android:text="@string/whats_on_your_mind"
+            android:textColor="@color/text_color_light"
+            android:textSize="@dimen/sp_15"
+            app:font="@string/maven_r"/>
+
+    </RelativeLayout>
 </RelativeLayout>

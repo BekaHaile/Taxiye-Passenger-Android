@@ -25,8 +25,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.Base64;
@@ -263,6 +265,16 @@ public class Utils implements GAAction, GACategory{
             }
 			MyApplication.getInstance().setToast(Toast.makeText(context, string, Toast.LENGTH_SHORT));
 			MyApplication.getInstance().getToast().show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void cancelToast(){
+		try {
+			if(MyApplication.getInstance().getToast() != null){
+				MyApplication.getInstance().getToast().cancel();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -912,6 +924,18 @@ public class Utils implements GAAction, GACategory{
 
 		return s.subSequence(start, end);
 	}
+
+	@SuppressWarnings("deprecation")
+	public static Spanned fromHtml(String html) {
+		Spanned result;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+			result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+		} else {
+			result = Html.fromHtml(html);
+		}
+		return result;
+	}
+
 
 }
 

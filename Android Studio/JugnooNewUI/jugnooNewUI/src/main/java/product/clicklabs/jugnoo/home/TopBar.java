@@ -53,7 +53,7 @@ public class TopBar implements  GACategory, GAAction {
         textViewTitle = (TextView) drawerLayout.findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(activity));
         textViewTitle.setTextColor(activity.getResources().getColor(R.color.text_color));
-//        textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
+//        textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(activity, textViewTitle));
         buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
         imageViewHelp = (ImageView) drawerLayout.findViewById(R.id.imageViewHelp);
 

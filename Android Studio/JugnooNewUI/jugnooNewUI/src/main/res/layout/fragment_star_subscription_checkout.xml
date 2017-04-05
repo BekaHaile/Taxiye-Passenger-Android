@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/linearLayoutRoot"
+<LinearLayout android:id="@+id/linearLayoutRoot"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/menu_item_selector_color"
     android:orientation="vertical"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -29,9 +28,196 @@
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="4px">
 
-                <RelativeLayout
+                <!-- Star purchase for first time view -->
+                <LinearLayout
+                    android:id="@+id/llStarPurchase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/rlPlan1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/px_20"
+                        android:paddingBottom="@dimen/px_20"
+                        android:background="@color/transparent">
+
+                        <ImageView
+                            android:id="@+id/ivRadio1"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_50"
+                            android:src="@drawable/ic_radio_button_normal"
+                            style="@style/ic_radio_button_style" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_24"
+                            android:layout_toRightOf="@+id/ivRadio1"
+                            android:layout_toLeftOf="@+id/tvAmount1"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/tvPeriod1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="Monthly"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <com.sabkuchfresh.utils.TextViewStrikeThrough
+                                    android:id="@+id/tvActualAmount1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="-10px"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:text="2388"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/text_size_24"
+                                    android:visibility="gone" />
+
+
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvAmount1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0px"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/tvDuration1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text=""
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_30" />
+
+                        <TextView
+                            android:id="@+id/tvDuration1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0px"
+                            android:ellipsize="end"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/px_50"
+                            android:maxLines="1"
+                            android:text=""
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_20"
+                            app:font="@string/maven_r"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlPlan2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/px_20"
+                        android:paddingBottom="@dimen/px_20"
+                        android:background="@color/transparent">
+
+                        <ImageView
+                            android:id="@+id/ivRadio2"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_50"
+                            android:src="@drawable/ic_radio_button_normal"
+                            style="@style/ic_radio_button_style" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_24"
+                            android:layout_toRightOf="@+id/ivRadio2"
+                            android:layout_toLeftOf="@+id/tvAmount2"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/tvPeriod2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="Annual"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <com.sabkuchfresh.utils.TextViewStrikeThrough
+                                    android:id="@+id/tvActualAmount2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="-10px"
+                                    android:ellipsize="end"
+                                    android:visibility="gone"
+                                    android:maxLines="1"
+                                    android:text="2388"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/text_size_24" />
+
+
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvAmount2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0px"
+                            android:ellipsize="end"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/tvDuration2"
+                            android:maxLines="1"
+                            android:text=""
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_30" />
+
+                        <TextView
+                            android:id="@+id/tvDuration2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0px"
+                            android:ellipsize="end"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/px_50"
+                            android:maxLines="1"
+                            android:text=""
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_20"
+                            app:font="@string/maven_r"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!-- Star upgrade view -->
+                <RelativeLayout
+                    android:id="@+id/rlStarUpgrade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
                     android:padding="@dimen/text_size_30">
 
                     <ImageView
@@ -82,7 +268,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="26px"
-                    android:text="@string/payment_mode"
+                    android:text="@string/payment_via"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_26"
@@ -335,6 +521,8 @@
             <Button
                 android:id="@+id/bPlaceOrder"
                 style="@style/ButtonTheme"
+                android:layout_height="@dimen/payment_option_cash_rl_height"
+                android:background="@drawable/capsule_green_selector"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="70px"
                 android:layout_marginTop="32px"

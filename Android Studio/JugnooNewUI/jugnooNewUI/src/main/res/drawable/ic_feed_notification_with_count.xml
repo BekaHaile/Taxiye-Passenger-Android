@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/feed_grey_text"/>
+            <size android:height="32dp" android:width="32dp"/>
+        </shape>
+
+    </item>
+
+    <item android:drawable="@drawable/ic_feed_bell_notification" android:top="9dp" android:bottom="9dp" android:left="9dp" android:right="10.5dp">
+
+
+    </item>
+
+
+    <item android:id="@+id/item_badge" android:gravity="top|right" >
+        <shape android:shape="oval">
+            <solid android:color="@android:color/transparent"/>
+            <size android:height="8dp" android:width="8dp"/>
+        </shape>
+    </item>
+
+</layer-list>

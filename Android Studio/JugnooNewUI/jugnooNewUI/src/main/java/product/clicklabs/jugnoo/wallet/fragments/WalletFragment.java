@@ -127,7 +127,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		textViewPromotion.setVisibility(View.GONE);
 
 		textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_WALLET);
-		//textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
+		//textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(getActivity(), textViewTitle));
 
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {

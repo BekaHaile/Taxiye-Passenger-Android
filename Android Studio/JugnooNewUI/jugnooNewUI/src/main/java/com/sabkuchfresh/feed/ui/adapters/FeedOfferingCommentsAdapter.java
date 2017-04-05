@@ -2,6 +2,7 @@ package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -26,9 +28,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -36,7 +38,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by Shankar on 7/17/15.
  */
-public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
+public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener, DisplayFeedHomeImagesAdapter.Callback {
 
     private FreshActivity activity;
     private FeedHomeAdapter.FeedPostCallback callback;
@@ -46,6 +48,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     public static final int TYPE_USERS_COMMENTS = 2;
     public static final int TYPE_MY_COMMENT = 3;
     private TextWatcher textWatcherMyComment;
+    private Drawable userDrawable;
 
 
     private static final StyleSpan BOLD_SPAN = new StyleSpan(Typeface.BOLD);
@@ -95,7 +98,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         if(holder instanceof FeedHomeAdapter.ViewHolderReviewImage)
         {
 
-            FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback);
+            FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback, this, true);
             ((FeedHomeAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
 
         }
@@ -104,10 +107,18 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
 
             if (Data.userData!=null) {
                 ((MyCommentViewHolder) holder).tvMyUserName.setText(Data.userData.userName);
-                if (!TextUtils.isEmpty(Data.userData.userImage))
+                if (!TextUtils.isEmpty(Data.userData.userImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(Data.userData.userImage))
                     Picasso.with(activity).load(Data.userData.userImage).resize(Utils.convertDpToPx(activity,25), Utils.convertDpToPx(activity,25)).centerCrop().transform(new CircleTransform()).into(((MyCommentViewHolder) holder).ivMyProfilePic);
-                else
-                    ((MyCommentViewHolder) holder).ivMyProfilePic.setImageResource(R.drawable.placeholder_img);
+                else {
+                    if (userDrawable == null) {
+                        String firstLetter =  Data.userData.userName.toUpperCase().substring(0,1);
+                        TextDrawable drawable = TextDrawable.builder()
+                                .beginConfig().bold().endConfig()
+                                .buildRound(firstLetter, activity.getParsedColor(""));
+                        userDrawable = drawable;
+                    }
+                    ((MyCommentViewHolder) holder).ivMyProfilePic.setImageDrawable(userDrawable);
+                }
             }
 
             ((MyCommentViewHolder) holder).edtComment.setText(callback.getEditTextString());
@@ -130,13 +141,28 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
                 userCommentViewHolder.tvUserTimePosted.setText(FeedHomeAdapter.getTimeToDisplay(((FeedComment) feedDetailData.get(position)).getTimeCreated(), activity.isTimeAutomatic));
             }
 
-            if (!TextUtils.isEmpty(feedComment.getUserImage()))
+            if (!TextUtils.isEmpty(feedComment.getUserImage()) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(feedComment.getUserImage()))
                 Picasso.with(activity).load(feedComment.getUserImage()).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(userCommentViewHolder.ivUserCommentPic);
+            else {
+                if (feedComment.getDrawable() == null) {
+                    String firstLetter =  feedComment.getUserName().toUpperCase().substring(0,1);
+                    TextDrawable drawable = TextDrawable.builder()
+                            .beginConfig().bold().endConfig()
+                            .buildRound(firstLetter, activity.getParsedColor(feedComment.getColor()));
+                    feedComment.setDrawable(drawable);
+                }
+                userCommentViewHolder.ivUserCommentPic.setImageDrawable(feedComment.getDrawable());
+            }
 
             ((UserCommentViewHolder) holder).ivDeleteComment.setVisibility(feedComment.canEdit()?View.VISIBLE:View.GONE);
         }
 
 
+    }
+
+    @Override
+    public void onRestaurantImageClick(Integer restaurantId) {
+        callback.onRestaurantClick(restaurantId);
     }
 
 

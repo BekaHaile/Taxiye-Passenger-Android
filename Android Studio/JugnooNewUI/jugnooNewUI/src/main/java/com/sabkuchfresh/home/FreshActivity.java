@@ -73,14 +73,16 @@ import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
+import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedReserveSpotFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
@@ -129,6 +131,8 @@ import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.CircleTransform;
+import com.squareup.picasso.Picasso;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 import org.json.JSONArray;
@@ -255,6 +259,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public CallbackManager callbackManager;
     public boolean isTimeAutomatic;
+    public CollapsingToolbarLayout collapsingToolbar;
+    private View feedHomeAddPostView;
+    private TextView tvAddPost;
+    private ImageView ivProfilePic;
+
+    public View getFeedHomeAddPostView() {
+        return feedHomeAddPostView;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -264,8 +277,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             toolbar.setTitle("");
-
+            setUpAddPostForFeedFragment();
             appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
+            collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
             callbackManager = CallbackManager.Factory.create();
 
@@ -464,9 +478,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
                     if(Data.getFeedData().getFeedActive()) {
                         addFeedFragment();
-                    }
-                    else {
-                        addFeedResrveSpotFragment();
+                    } else {
+                        addFeedReserveSpotFragment();
                     }
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
                     lastClientId = Config.getFeedClientId();
@@ -517,6 +530,26 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         }, 500);
 
+        backPressedCount = 0;
+
+    }
+
+    private void setUpAddPostForFeedFragment() {
+        feedHomeAddPostView = findViewById(R.id.add_post);
+        feedHomeAddPostView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getTopFragment()  instanceof FeedHomeFragment){
+                    openFeedAddPostFragment(null);
+                }
+            }
+        });
+        tvAddPost = (TextView) findViewById(R.id.tvAddPost);
+        ivProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);
+    }
+
+    public TextView getTvAddPost(){
+        return tvAddPost;
     }
 
 
@@ -744,8 +777,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             if (!HomeActivity.checkIfUserDataNull(this)) {
-                menuBar.setUserData();
 
+                menuBar.setUserData();
+                try {
+                    if(getAppType() == AppConstant.ApplicationType.FEED) {
+                        int width = getResources().getDimensionPixelSize(R.dimen.dp_40);
+                        Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform())
+                                .resize(width, width).centerCrop()
+                                .placeholder(R.drawable.placeholder_img)
+                                .into(ivProfilePic);
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
 
 
                 if(getAppType()!= AppConstant.ApplicationType.FEED) {
@@ -761,7 +805,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
                             || (getMenusFragment() != null && !getMenusFragment().isHidden())
                             || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())
-                            || (getFeedReserveSpotFragment() != null && !getFeedReserveSpotFragment().isHidden())) {
+                            || (getFeedReserveSpotFragment() != null && !getFeedReserveSpotFragment().isHidden())
+                            || (getFeedSpotReservedSharingFragment() != null && !getFeedSpotReservedSharingFragment().isHidden())) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
                     }
@@ -824,6 +869,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public FeedReserveSpotFragment getFeedReserveSpotFragment(){
         return (FeedReserveSpotFragment) getSupportFragmentManager().findFragmentByTag(FeedReserveSpotFragment.class.getName());
+    }
+
+    public FeedSpotReservedSharingFragment getFeedSpotReservedSharingFragment(){
+        return (FeedSpotReservedSharingFragment) getSupportFragmentManager().findFragmentByTag(FeedSpotReservedSharingFragment.class.getName());
     }
 
     public FeedOfferingCommentsFragment getOfferingsCommentFragment(){
@@ -1269,7 +1318,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llSearchCartVis = View.GONE;
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment) {
+            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment) {
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -1282,16 +1331,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
-                if(fragment instanceof FeedHomeFragment){
-                    topBar.ivAddReview.setVisibility(View.VISIBLE);
-                }
+
             }
-            else if(fragment instanceof FeedOfferingCommentsFragment){
+            else if(fragment instanceof FeedOfferingCommentsFragment
+                    || fragment instanceof FeedNotificationsFragment){
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(R.string.feed);
+                if(fragment instanceof FeedOfferingCommentsFragment){
+                    topBar.title.setText(R.string.feed);
+                } else if(fragment instanceof FeedNotificationsFragment){
+                    topBar.title.setText(R.string.notifications);
+                }
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
@@ -1320,14 +1372,21 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
             if(topBar.ivAddReview.getVisibility() == View.VISIBLE){
                 titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.ivAddReview.getId());
-            } else if(fragment instanceof FeedReserveSpotFragment){
+            } else if(fragment instanceof FeedReserveSpotFragment
+                    || fragment instanceof FeedSpotReservedSharingFragment
+                    || fragment instanceof FeedNotificationsFragment){
                 topBar.title.setGravity(Gravity.CENTER);
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
-
             setCollapsingToolbar(fragment instanceof VendorMenuFragment, fragment);
+
+
+            if(fragment instanceof FeedHomeFragment)
+                feedHomeAddPostView.setVisibility(View.VISIBLE);
+            else
+                feedHomeAddPostView.setVisibility(View.GONE);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1338,6 +1397,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setCollapsingToolbar(boolean isEnable, Fragment fragment) {
 
 
+        AppBarLayout.LayoutParams collapsingToolBarParams = (AppBarLayout.LayoutParams) collapsingToolbar.getLayoutParams();
         CoordinatorLayout.LayoutParams relativeparams = (CoordinatorLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
         if (fragment instanceof RestaurantImageFragment)
             relativeparams.setBehavior(null);
@@ -1352,6 +1412,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             layoutParams.height = (int) (ASSL.Yscale() * COLLAPSE_TOOLBAR_HEIGHT);
             appBarLayout.setLayoutParams(layoutParams);
             appBarLayout.requestLayout();
+
+            collapsingToolBarParams.setScrollFlags(0);
+            collapsingToolBarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED|AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+            collapsingToolbar.setLayoutParams(collapsingToolBarParams);
+
 
             CollapsingToolbarLayout.LayoutParams toolBarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
             TypedValue tv = new TypedValue();
@@ -1387,9 +1452,26 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 onStateChanged(appBarLayout, State.COLLAPSED);
             }
 
+            if(fragment instanceof FeedHomeFragment) {
+                collapsingToolBarParams.setScrollFlags(0);
+                collapsingToolBarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS| AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+                collapsingToolbar.setLayoutParams(collapsingToolBarParams);
+
+                appBarLayout.addOnOffsetChangedListener(feedHomeAppBarListener);
+            }
+            else{
+                collapsingToolBarParams.setScrollFlags(0);
+                collapsingToolbar.setLayoutParams(collapsingToolBarParams);
+
+                appBarLayout.removeOnOffsetChangedListener(feedHomeAppBarListener);
+                appBarLayout.removeOnOffsetChangedListener(collapseBarController);
+
+            }
+
+
+
+
         }
-
-
 
 
 
@@ -1403,6 +1485,41 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         toolbar.setLayoutParams(collapseParams);
 */
     }
+
+
+    AppBarLayout.OnOffsetChangedListener feedHomeAppBarListener = new AppBarLayout.OnOffsetChangedListener() {
+        @Override
+        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
+
+            if(getTopFragment() instanceof FeedHomeFragment) {
+                feedHomeAddPostView.animate().translationY(feedHomeAddPostView.getHeight() - ((appBarLayout.getTotalScrollRange() + verticalOffset) * 1.0f / appBarLayout.getTotalScrollRange()) * feedHomeAddPostView.getHeight()).start();
+                if(verticalOffset== -appBarLayout.getTotalScrollRange()) {
+                    if (fabViewTest.relativeLayoutFABTest.getVisibility() == View.VISIBLE) {
+                        fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+                    }
+                }
+                else{
+                    if(fabViewTest.relativeLayoutFABTest.getVisibility() == View.GONE){
+                        fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+           /* if(verticalOffset== -appBarLayout.getTotalScrollRange())
+            {
+
+
+
+                if(findViewById(R.id.add_post).getVisibility()==View.VISIBLE)
+                {
+                    findViewById(R.id.add_post).setVisibility(View.GONE);
+                }
+            }
+            else if(findViewById(R.id.add_post).getVisibility()==View.GONE){
+                findViewById(R.id.add_post).setVisibility(View.VISIBLE);
+            }*/
+        }
+    };
 
     public void openRestaurantFragment() {
         if (canExitVendorMenu())
@@ -1693,12 +1810,20 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 .commitAllowingStateLoss();
     }
 
-    private void addFeedResrveSpotFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new FeedReserveSpotFragment(),
-                        FeedReserveSpotFragment.class.getName())
-                .addToBackStack(FeedReserveSpotFragment.class.getName())
-                .commitAllowingStateLoss();
+    private void addFeedReserveSpotFragment() {
+        if(Data.getFeedData().getFeedRank() == null){
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), new FeedReserveSpotFragment(),
+                            FeedReserveSpotFragment.class.getName())
+                    .addToBackStack(FeedReserveSpotFragment.class.getName())
+                    .commitAllowingStateLoss();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), new FeedSpotReservedSharingFragment(),
+                            FeedSpotReservedSharingFragment.class.getName())
+                    .addToBackStack(FeedSpotReservedSharingFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
     }
 
 
@@ -1747,8 +1872,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         checkForBackToFeed(true);
 
+        if(getFeedSpotReservedSharingFragment() != null && getFeedReserveSpotFragment() != null){
+            finishWithToast();
+            return;
+        }
+
         if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
-            finish();
+            finishWithToast();
         }
         try {
             Utils.hideSoftKeyboard(this, topBar.etSearch);
@@ -1784,7 +1914,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            finish();
+            finishWithToast();
+            // TODO: 04/04/17 add toast to exit
         } else {
 
             if (getTopFragment() instanceof FreshSearchFragment) {
@@ -1805,6 +1936,25 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         }
     }
+
+    private int backPressedCount = 0;
+    private void finishWithToast(){
+        backPressedCount++;
+        getHandler().removeCallbacks(runnableBackPressReset);
+        getHandler().postDelayed(runnableBackPressReset, 2000);
+        if(backPressedCount >= 2){
+            ActivityCompat.finishAffinity(this);
+            Utils.cancelToast();
+        } else {
+            Utils.showToast(this, getString(R.string.press_back_again_to_quit));
+        }
+    }
+    private Runnable runnableBackPressReset = new Runnable() {
+        @Override
+        public void run() {
+            backPressedCount = 0;
+        }
+    };
 
 
     public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
@@ -3379,6 +3529,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
+
+
     public interface CityChangeCallback {
         void onYesClick();
 
@@ -3716,6 +3868,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             setTextViewBackgroundDrawableColor(tv, ratingColor);
         }
 
+        return ratingColor;
+    }
+
+    public int getParsedColor(String colorCode){
+        int ratingColor;
+        if (colorCode != null && colorCode.startsWith("#") && colorCode.length() == 7) ratingColor = Color.parseColor(colorCode);
+        else
+            ratingColor = ContextCompat.getColor(this, R.color.text_color_light); //default Green Color
         return ratingColor;
     }
 

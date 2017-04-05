@@ -86,7 +86,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
         recyclerViewNotification.setAdapter(myNotificationAdapter);
 
         textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX);
-        //textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
+        //textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(this, textViewTitle));
 
         mNotificationSettingBtn = (ImageView) findViewById(R.id.imageViewSetting);
         mNotificationSettingBtn.setOnClickListener(this);

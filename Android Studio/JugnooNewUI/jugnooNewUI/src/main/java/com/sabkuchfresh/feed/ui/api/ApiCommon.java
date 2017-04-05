@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
 import java.util.HashMap;
 
@@ -89,12 +89,19 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
                     DialogPopup.dismissLoadingDialog();
-                    if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                        apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
+                    try {
+                        if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+							apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
 
-                    } else {
-                        if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag())) {
-                            DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage());
+						} else {
+							if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag())) {
+								DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage());
+							}
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (!apiCommonCallback.onException(e)) {
+                            retryDialog(DialogErrorType.CONNECTION_LOST);
                         }
                     }
 
@@ -105,7 +112,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 public void failure(RetrofitError error) {
                     DialogPopup.dismissLoadingDialog();
                     error.printStackTrace();
-                    if (!apiCommonCallback.onException(error)) {
+                    if (!apiCommonCallback.onFailure(error)) {
                         retryDialog(DialogErrorType.CONNECTION_LOST);
                     }
 
@@ -127,6 +134,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case REGISTER_FOR_FEED:
                 RestClient.getFeedApiService().registerForFeed(params, callback);
+                break;
+            case COUNT_NOTIFICATION:
+                RestClient.getFeedApiService().countNotification(params, callback);
                 break;
 
             default:

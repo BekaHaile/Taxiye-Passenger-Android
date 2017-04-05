@@ -5,12 +5,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
+import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
@@ -366,7 +368,7 @@ public class TransactionUtils {
 
 
             activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, 0)
+                    .setCustomAnimations(R.anim.bottom_in, 0)
                     .add(container.getId(), feedAddPostFragment,
                             FeedAddPostFragment.class.getName())
                     .addToBackStack(FeedAddPostFragment.class.getName())
@@ -418,5 +420,32 @@ public class TransactionUtils {
                     .commitAllowingStateLoss();
         }
     }
+
+    public void openFeedSpotReservedSharingFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, FeedSpotReservedSharingFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, 0)
+                    .add(container.getId(), new FeedSpotReservedSharingFragment(),
+                            FeedSpotReservedSharingFragment.class.getName())
+                    .addToBackStack(FeedSpotReservedSharingFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openFeedNotificationsFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, FeedNotificationsFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, 0)
+                    .add(container.getId(), new FeedNotificationsFragment(),
+                            FeedNotificationsFragment.class.getName())
+                    .addToBackStack(FeedNotificationsFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
 }
 

@@ -210,4 +210,5 @@ public interface GAAction {
 	String BAR = "Bar ";
 	String JEANIE = "Jeanie ";
 	String AUTOMATIC = "Automatic ";
+	String NOTIFICATIONS = "Notifications ";
 }

@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:id="@+id/root_layout_item"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:paddingTop="@dimen/spacing_large">
+    android:animateLayoutChanges="true"
+    android:background="@android:color/white">
 
 
     <RelativeLayout
@@ -13,9 +13,11 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large"
         android:layout_marginLeft="@dimen/spacing_normal"
         android:layout_marginRight="@dimen/spacing_normal"
-        android:paddingBottom="@dimen/spacing_tiny">
+        android:layout_marginBottom="@dimen/spacing_normal"
+        >
 
         <ImageView
             android:id="@+id/iv_user_profile_pic"
@@ -31,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/spacing_small"
             android:layout_toRightOf="@id/iv_user_profile_pic"
-            android:layout_marginBottom="@dimen/padding_2dp"
+            android:layout_marginBottom="@dimen/spacing_tiny"
             android:text="@string/dummy_text_2"
             android:textColor="@color/feed_grey_text_heading"
             android:textSize="@dimen/font_large"
@@ -47,200 +49,219 @@
             android:drawablePadding="2dp"
             android:gravity="top"
             android:text="2w"
+            app:font="maven"
             android:textColor="@color/feed_grey_text_secondary"
             android:textSize="@dimen/font_extra_small" />
 
 
     </RelativeLayout>
 
-    <View
-        android:visibility="gone"
-        android:id="@+id/divider_user_activity"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/layout_user_activity_heading"
-        android:layout_marginBottom="@dimen/spacing_normal"
-        android:background="@color/stroke_light_grey_alpha" />
 
 
-    <RelativeLayout
-        android:id="@+id/layout_owner_feed_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/divider_user_activity"
-        android:layout_marginBottom="@dimen/spacing_tiny"
-        android:layout_marginLeft="@dimen/spacing_normal"
-        android:layout_marginRight="@dimen/spacing_tiny">
-
-        <!--Any change in margin right of this view or padding right of image arrow
-        may cause the dialog opened on edit popup display at different position-->
-
-        <ImageView
-            android:id="@+id/iv_owner_profile_pic"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="@dimen/spacing_small"
-            android:src="@drawable/ic_fresh_item_placeholder" />
-
-        <TextView
-            android:id="@+id/tv_feed_owner_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/spacing_small"
-            android:layout_toLeftOf="@+id/tv_feed_rating"
-            android:clickable="true"
-            android:layout_toRightOf="@id/iv_owner_profile_pic"
-            android:text="@string/dummy_text_2"
-            android:textColorHighlight="@color/feed_grey_text_heading"
-            android:textColor="@color/feed_grey_text_heading"
-            android:textSize="@dimen/font_large"
-            app:font="maven" />
-
-        <TextView
-            android:id="@+id/tv_owner_feed_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_feed_owner_title"
-            android:layout_toRightOf="@id/iv_owner_profile_pic"
-            android:drawableLeft="@drawable/ic_clock"
-            android:drawablePadding="2dp"
-            android:gravity="top"
-            android:text="2w"
-            android:textColor="@color/feed_grey_text_secondary"
-            android:textSize="@dimen/font_extra_small" />
-
-        <TextView
-            android:id="@id/tv_feed_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/ib_arrow_more"
-            android:background="@drawable/capsule_text_color"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:layout_marginRight="@dimen/spacing_small"
-            android:paddingBottom="@dimen/spacing_tiny"
-            android:paddingLeft="@dimen/spacing_extra_tiny"
-            android:paddingRight="@dimen/spacing_extra_tiny"
-            android:paddingTop="@dimen/spacing_tiny"
-            android:text="Rating 2.1"
-            android:layout_alignWithParentIfMissing="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_tiny"
-            android:visibility="visible"
-            app:font="maven" />
-
-        <ImageView
-            android:id="@id/ib_arrow_more"
-            android:layout_alignParentRight="true"
-            android:background="@null"
-            android:src="@drawable/drawable_arrow_layer_list"
-            android:rotation="90"
-            android:padding="@dimen/spacing_small"
-            android:layout_marginTop="-7dp"
-            android:layout_width="35dp"
-            android:layout_height="35dp" />
-
-    </RelativeLayout>
 
 
-    <TextView
-        android:id="@+id/tv_feed_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layout_owner_feed_layout"
-        android:layout_marginLeft="@dimen/spacing_large"
-        android:layout_marginRight="@dimen/spacing_large"
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
-        android:textColor="@color/feed_grey_text"
-        android:textSize="@dimen/font_small"
-        app:font="maven" />
 
 
+   <RelativeLayout
+
+    android:id="@+id/layout_actual_post"
+    android:background="@drawable/rectangle_grey"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginBottom="12dp"
+    android:paddingTop="@dimen/spacing_large"
+    android:layout_marginTop="@dimen/spacing_large"
+    android:layout_below="@id/layout_user_activity_heading"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+       <RelativeLayout
+           android:id="@+id/layout_owner_feed_layout"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:layout_marginBottom="@dimen/spacing_extra_tiny"
+           android:layout_marginLeft="@dimen/spacing_normal"
+           android:layout_marginRight="@dimen/spacing_tiny">
+
+           <!--Any change in margin right of this view or padding right of image arrow
+           may cause the dialog opened on edit popup display at different position-->
+
+           <ImageView
+               android:id="@+id/iv_owner_profile_pic"
+               android:layout_width="50dp"
+               android:layout_height="50dp"
+               android:layout_marginRight="@dimen/spacing_small"
+
+               android:src="@drawable/ic_fresh_item_placeholder" />
+
+           <LinearLayout
+               android:layout_centerVertical="true"
+               android:layout_toRightOf="@id/iv_owner_profile_pic"
+               android:layout_toLeftOf="@+id/ib_arrow_more"
+               android:orientation="vertical"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content">
+
+               <TextView
+                   android:id="@+id/tv_feed_owner_title"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginRight="@dimen/spacing_small"
+
+                   android:clickable="true"
+                   android:layout_marginBottom="@dimen/spacing_tiny"
+
+                   android:text="@string/dummy_text_2"
+                   android:textColorHighlight="@color/feed_grey_text_heading"
+                   android:textColor="@color/feed_grey_text_heading"
+                   android:textSize="@dimen/font_large"
+                   app:font="maven" />
+
+               <TextView
+                   android:id="@+id/tv_owner_feed_time"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:drawableLeft="@drawable/ic_clock"
+                   android:drawablePadding="2dp"
+                   android:gravity="top"
+                   android:text="2w"
+                   app:font="maven"
+                   android:textColor="@color/feed_grey_text_secondary"
+                   android:textSize="@dimen/font_extra_small" />
+           </LinearLayout>
+
+
+           <!-- <TextView
+                android:id="@id/tv_feed_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/ib_arrow_more"
+                android:background="@drawable/capsule_text_color"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:layout_marginRight="@dimen/spacing_tiny"
+                android:paddingBottom="@dimen/spacing_tiny"
+                android:paddingLeft="@dimen/spacing_extra_tiny"
+                android:paddingRight="@dimen/spacing_extra_tiny"
+                android:paddingTop="@dimen/spacing_tiny"
+                android:text="Rating 2.1"
+                android:layout_alignWithParentIfMissing="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_tiny"
+                android:visibility="visible"
+                app:font="maven" />-->
+
+           <TextView
+               android:id="@id/ib_arrow_more"
+
+               android:layout_alignParentRight="true"
+               android:paddingLeft="@dimen/spacing_tiny"
+               android:paddingRight="@dimen/spacing_tiny"
+               android:layout_marginTop="-3dp"
+               android:textStyle="bold"
+               android:textSize="25sp"
+               android:includeFontPadding="false"
+               android:text="@string/bullet_three"
+               android:textColor="@color/feed_grey_tab"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+
+       </RelativeLayout>
+
+
+       <TextView
+           android:id="@+id/tv_feed_description"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_below="@id/layout_owner_feed_layout"
+           android:layout_marginLeft="@dimen/spacing_large"
+           android:layout_marginRight="@dimen/spacing_large"
+           android:layout_marginBottom="@dimen/spacing_small"
+           android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
+           android:textColor="@color/feed_grey_text"
+           android:textSize="@dimen/font_small"
+           app:font="maven" />
     <ImageView
         android:id="@+id/iv_place_image"
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_height_feed"
         android:layout_below="@id/tv_feed_description"
-
         android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginLeft="@dimen/spacing_large"
         android:layout_marginRight="@dimen/spacing_large"
         android:background="@drawable/ic_fresh_new_placeholder"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_user_images"
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpReviewImages"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/image_height_feed"
         android:layout_below="@+id/iv_place_image"
-        android:layout_marginLeft="@dimen/spacing_large"
-        android:layout_marginRight="@dimen/spacing_large"
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_width="wrap_content"
-        android:visibility="gone"
-        android:layout_height="wrap_content"/>
+        android:layout_marginBottom="@dimen/spacing_small"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabDots"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="-30dp"
+        android:layout_below="@+id/vpReviewImages"
+        app:tabBackground="@drawable/tab_selector_feed"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabMaxWidth="6dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        />
+
+    <!--android:drawableLeft="@drawable/location_icon"-->
+
+
+    <View
+        android:id="@+id/shadow_address"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:layout_alignTop="@id/vpReviewImages"
+
+        android:background="@drawable/shadow_down_feed"
+        />
+
 
     <TextView
         android:id="@+id/tv_restaurant_feed_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/tv_feed_description"
-        android:layout_marginRight="@dimen/spacing_extra_huge"
-        android:layout_marginTop="@dimen/spacing_extra_tiny"
-        android:background="@drawable/capsule_black_70"
-        android:drawableLeft="@drawable/location_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/iv_place_image"
+        android:layout_marginLeft="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
         android:drawablePadding="@dimen/spacing_tiny"
         android:gravity="center"
+        android:drawableLeft="@drawable/location_icon"
         android:maxLines="1"
-        android:paddingBottom="@dimen/spacing_tiny"
-        android:paddingLeft="@dimen/spacing_small"
-        android:paddingRight="@dimen/spacing_small"
-        android:paddingTop="@dimen/spacing_tiny"
         android:maxWidth="250dp"
         android:textColor="@color/white"
         android:textSize="@dimen/font_tiny"
-        app:font="@string/maven_r" />
-
-    <TextView
-        android:id="@+id/tv_like_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recycler_user_images"
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_marginLeft="@dimen/spacing_large"
-        android:layout_marginRight="@dimen/spacing_small"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:text="2 "
-        android:drawablePadding="@dimen/spacing_tiny"
-        android:drawableLeft="@drawable/ic_like_active"
-        android:textColor="@color/feed_grey_text"
         app:font="maven" />
 
-    <TextView
-        android:id="@+id/tv_comment_status"
-        android:layout_width="wrap_content"
-        android:gravity="right"
-        android:layout_toRightOf="@id/tv_like_status"
-        android:layout_alignParentRight="true"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recycler_user_images"
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_marginRight="@dimen/spacing_large"
-        android:text="Comments"
-        android:textColor="@color/feed_grey_text"
-        app:font="maven" />
+
 
     <View
-        android:id="@+id/line_below_like_status"
+        android:id="@+id/line_below_images_pager"
         style="@style/Feed_Line_Horizontal"
-        android:layout_below="@id/tv_comment_status" />
+        android:layout_marginLeft="@dimen/spacing_extra_tiny"
+        android:layout_marginRight="@dimen/spacing_extra_tiny"
+        android:layout_below="@id/vpReviewImages" />
 
     <View
         android:id="@+id/line_divider_like_comment"
         android:layout_width="1dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/line_below_like_status"
+        android:layout_height="24dp"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_below="@id/line_below_images_pager"
         android:layout_centerHorizontal="true"
         android:background="@color/stroke_light_grey_alpha" />
 
@@ -248,8 +269,8 @@
     <LinearLayout
         android:id="@+id/view_action_comment"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@id/line_below_like_status"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line_below_images_pager"
         android:layout_toRightOf="@id/line_divider_like_comment"
         android:background="?attr/selectableItemBackground"
         android:gravity="center">
@@ -258,6 +279,8 @@
             android:id="@+id/tv_action_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
             android:drawableLeft="@drawable/ic_comment"
             android:drawablePadding="@dimen/spacing_tiny"
             android:gravity="center"
@@ -269,10 +292,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/view_action_like"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@id/line_below_like_status"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line_below_images_pager"
         android:layout_toLeftOf="@id/line_divider_like_comment"
         android:background="?attr/selectableItemBackground"
         android:gravity="center">
@@ -282,8 +306,12 @@
             android:id="@+id/tv_action_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
             android:drawableLeft="@drawable/ic_like"
             android:drawablePadding="@dimen/spacing_tiny"
+
             android:gravity="center"
             android:text="Like"
             android:textColor="@color/feed_grey_text"
@@ -291,15 +319,21 @@
             app:font="maven" />
     </LinearLayout>
 
+
     <View
-        android:id="@+id/line_bottom"
+        android:id="@+id/line_below_like_comment"
         style="@style/Feed_Line_Horizontal"
-        android:layout_below="@id/line_divider_like_comment" />
+        android:layout_below="@id/view_action_like" />
+
+
+</RelativeLayout>
+
 
     <View
         android:id="@+id/vShadowDown"
         android:layout_width="match_parent"
         android:layout_height="8dp"
-        android:layout_below="@+id/line_bottom"
-        android:background="@drawable/shadow_feed_sep" />
+        android:clickable="true"
+        android:layout_below="@id/layout_actual_post"
+        android:background="@color/feed_grey_black" />
 </RelativeLayout>

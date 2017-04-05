@@ -86,7 +86,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private ArrayList<HistoryResponse.OrderItem> subItemsOrders = new ArrayList<>();
     private HistoryResponse.Datum orderHistory;
     private FragmentActivity activity;
-    private CardView cvOrderStatus;
+    private CardView cvOrderStatus, cvPaymentMethod;
     public TextView tvStatus0, tvStatus1, tvStatus2, tvStatus3;
     public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
     public View lineStatus1, lineStatus2, lineStatus3;
@@ -172,6 +172,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             ivTopShadow.setVisibility(View.VISIBLE);
         }
 
+        cvPaymentMethod = (CardView) rootView.findViewById(R.id.cvPaymentMethod);
         buttonCancelOrder = (Button) rootView.findViewById(R.id.buttonCancelOrder);
         buttonCancelOrder.setTypeface(Fonts.mavenRegular(activity));
         reorderBtn = (Button) rootView.findViewById(R.id.reorderBtn);
@@ -705,6 +706,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
             if(vDivider != null){
                 vDivider.setVisibility(View.INVISIBLE);
+            }
+
+            if(llFinalAmount.getChildCount() > 0
+                    || (datum.getWalletDeducted() != null && datum.getWalletDeducted() > 0)){
+                cvPaymentMethod.setVisibility(View.VISIBLE);
+            } else {
+                cvPaymentMethod.setVisibility(View.GONE);
             }
 
             if (orderHistory.getCancellable() == 1) {

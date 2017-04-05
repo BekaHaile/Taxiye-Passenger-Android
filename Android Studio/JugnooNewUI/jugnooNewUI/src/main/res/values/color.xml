@@ -324,6 +324,7 @@
 
 
     <color name="feed_grey_text">#595968</color>
+    <color name="feed_color_accent">#ef6692</color>
   <color name="feed_grey_text_heading">#474655</color>
     <color name="feed_grey_hint_color">#a4a4a4</color>
   <color name="feed_grey_text_secondary">#9b9b9b</color>
@@ -331,6 +332,8 @@
   <color name="feed_grey_background_light">#f7f7f7</color>
   <color name="feed_color_orange">#ff834e</color>
     <color name="green_delivery_stores">#8dcf61</color>
+    <color name="feed_grey_black">#d8dbe1</color>
+    <color name="feed_grey_tab">#d8d8d8</color>
 
 
 
@@ -339,5 +342,15 @@
 
     <color name="purple_text_color">#b368a9</color>
     <color name="purple_text_color_aplha">#aab368a9</color>
+
+    <color name="blue_facebook">#5a81d1</color>
+    <color name="blue_facebook_dark">#4a71c1</color>
+    <color name="purple_tweet">#794bc4</color>
+    <color name="purple_tweet_dark">#693bb4</color>
+    <color name="yellow_email">#ffae50</color>
+    <color name="yellow_email_dark">#ef9e40</color>
+    <color name="green_whatsapp">#57bb63</color>
+    <color name="green_whatsapp_dark">#47ab53</color>
+    <color name="pale_orange">#fffcf2</color>
 
 </resources>

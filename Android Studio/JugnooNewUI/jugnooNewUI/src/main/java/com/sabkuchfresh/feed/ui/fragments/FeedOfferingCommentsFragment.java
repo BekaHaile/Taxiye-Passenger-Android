@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.feed.ui.adapters.FeedOfferingCommentsAdapter;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
@@ -25,7 +26,6 @@ import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.feed.FeedCommonResponse;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class FeedOfferingCommentsFragment extends Fragment implements DeletePostDialog.DeleteDialogCallback,EditPostPopup.EditPostDialogCallback {
@@ -140,7 +141,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                 if (restaurantId > 0) {
                     activity.fetchRestaurantMenuAPI(restaurantId);
                 }
-//                Toast.makeText(activity, "Hey here Comments", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -155,8 +156,19 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
             }
 
             @Override
-            public void onDeleteComment(FeedComment feedComment, int positionInList, View viewClicked) {
-                deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
+            public void onDeleteComment(final FeedComment feedComment, final int positionInList, View viewClicked) {
+             DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Comment", "Are you sure you want to delete your comment?", "Yes", "No", new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                     deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
+                 }
+             }, new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+
+                 }
+             },true,false);
+
             }
         }, submitTextWatcher);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -202,13 +214,15 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                 RestClient.getFeedApiService().fetchFeedDetails(params, new retrofit.Callback<FeedDetailResponse>() {
                     @Override
                     public void success(FeedDetailResponse feedbackResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         DialogPopup.dismissLoadingDialog();
                         try {
                             String message = feedbackResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    setFeedObjectAndRefresh(feedbackResponse);
-                                    prepareListAndNotifyAdapter(feedbackResponse);
+                                    if(setFeedObjectAndRefresh(feedbackResponse)) {
+                                        prepareListAndNotifyAdapter(feedbackResponse);
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -240,8 +254,25 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
     }
 
-    private void setFeedObjectAndRefresh(FeedDetailResponse feedbackResponse) {
-        if (feedbackResponse.getPostDetails() != null) {
+    /**
+     * returns true if data all set, else false if null
+     * @param feedbackResponse
+     * @return
+     */
+    private boolean setFeedObjectAndRefresh(FeedDetailResponse feedbackResponse) {
+        if (feedbackResponse.getPostDetails() == null) {
+            DialogPopup.alertPopupWithListener(activity, "", "We could not find this post right now", "Back",
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.performBackPressed(false);
+                        }
+                    }, false);
+            return false;
+        }
+        if (positionInOriginalList == -1) {
+            feedDetail = feedbackResponse.getPostDetails();
+        } else {
             feedDetail.setLikeCount(feedbackResponse.getPostDetails().getLikeCount());
             feedDetail.setCommentCount(feedbackResponse.getPostDetails().getCommentCount());
             feedDetail.setContent(feedbackResponse.getPostDetails().getContent());
@@ -250,15 +281,16 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
             feedDetail.setRestaurantImage(feedbackResponse.getPostDetails().getRestaurantImage());
             feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
             feedDetail.setReviewImages(feedbackResponse.getPostDetails().getReviewImages());
-
-
-            if (activity.getFeedHomeFragment() != null) {
-
-
-                //notifies the feed home fragment that user has commented on post so it can refresh accordingly i.e increase comment count
-                activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
-            }
         }
+
+
+        if (activity.getFeedHomeFragment() != null) {
+
+
+            //notifies the feed home fragment that user has commented on post so it can refresh accordingly i.e increase comment count
+            activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
+        }
+        return true;
     }
 
     private void prepareListAndNotifyAdapter(FeedDetailResponse feedbackResponse) {
@@ -291,6 +323,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                 RestClient.getFeedApiService().commentOnFeed(params, new retrofit.Callback<FeedDetailResponse>() {
                     @Override
                     public void success(FeedDetailResponse feedbackResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         DialogPopup.dismissLoadingDialog();
                         try {
                             String message = feedbackResponse.getMessage();
@@ -299,8 +332,9 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                                     Utils.hideKeyboard(getActivity());
                                     commentAdded = null;
                                     edtMyComment.setText(null);
-                                    setFeedObjectAndRefresh(feedbackResponse);
-                                    prepareListAndNotifyAdapter(feedbackResponse);
+                                    if(setFeedObjectAndRefresh(feedbackResponse)) {
+                                        prepareListAndNotifyAdapter(feedbackResponse);
+                                    }
                                     recyclerView.smoothScrollToPosition(feedOfferingCommentsAdapter.getItemCount() - 1);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -387,7 +421,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         public void afterTextChanged(Editable s) {
             commentAdded = s.toString();
 //            textViewCharCount.setText(String.valueOf(500-s.toString().trim().length()));
-            btnSubmit.setEnabled(s.length() > 0);
+            btnSubmit.setEnabled(s.toString().trim().length() > 0);
 
 
         }

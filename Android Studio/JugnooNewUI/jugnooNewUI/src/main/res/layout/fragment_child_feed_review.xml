@@ -99,12 +99,14 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:gravity="center_vertical"
+                        android:inputType="textCapSentences"
                         android:hint="@string/enter_restaurant_name"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="@dimen/sp_13"
-                        app:font="maven" />
+                        app:font="maven" >
+                        </EditText>
 
 
                     <product.clicklabs.jugnoo.utils.ProgressWheel xmlns:wheel="http://schemas.android.com/apk/res-auto"

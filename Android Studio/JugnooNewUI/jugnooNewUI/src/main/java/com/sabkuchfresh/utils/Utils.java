@@ -128,6 +128,16 @@ public class Utils {
 		}
 	}
 
+	public static void cancelToast(){
+		try {
+			if(MyApplication.getInstance().getToast() != null){
+				MyApplication.getInstance().getToast().cancel();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
     /**
      * This method converts device specific pixels to density independent pixels.
      *

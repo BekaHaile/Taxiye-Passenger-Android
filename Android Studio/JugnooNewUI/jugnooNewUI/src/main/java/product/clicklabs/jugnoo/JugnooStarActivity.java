@@ -34,7 +34,8 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
     private RelativeLayout relative, rlPlan1, rlPlan2;
     private TextView textViewTitle, tvSubTitle;
     private ImageView imageViewBack, ivRadio1, ivRadio2;
-    private TextView tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2;
+    private TextView tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2,
+            tvSubPlanAmount, tvSubPlanDesc;
     private NonScrollListView rvBenefits;
     private StarMembershipAdapter starMembershipAdapter;
     private String selectedSubId;
@@ -75,6 +76,8 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         tvPeriod1 = (TextView) findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.mavenMedium(this));
         tvPeriod2 = (TextView) findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.mavenMedium(this));
         rvBenefits = (NonScrollListView) findViewById(R.id.rvBenefits);
+        tvSubPlanAmount = (TextView) findViewById(R.id.tvSubPlanAmount);
+        tvSubPlanDesc = (TextView) findViewById(R.id.tvSubPlanDesc);
 
         if(getIntent().hasExtra("checkout_fragment")){
             fromFreshCheckout = true;
@@ -85,6 +88,8 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
 
         try {
             tvSubTitle.setText(Data.userData.getSubscriptionData().getSubscriptionTitleNew());
+            tvSubPlanAmount.setText(Data.userData.getSubscriptionData().getSubscriptionScreenTitle());
+            tvSubPlanDesc.setText(Data.userData.getSubscriptionData().getSubscriptionScreenSubtitle());
             if(Data.userData.getSubscriptionData().getSubscriptions() != null){
                 for(int i=0; i<Data.userData.getSubscriptionData().getSubscriptions().size(); i++) {
                     if (i == 0) {

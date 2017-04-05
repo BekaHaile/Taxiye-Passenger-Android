@@ -122,7 +122,7 @@ public class ShareActivity extends BaseFragmentActivity {
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 		textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES);
-		//textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
+		//textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(this, textViewTitle));
 
 		getLeaderboardCall();
 		getLeaderboardActivityCall();

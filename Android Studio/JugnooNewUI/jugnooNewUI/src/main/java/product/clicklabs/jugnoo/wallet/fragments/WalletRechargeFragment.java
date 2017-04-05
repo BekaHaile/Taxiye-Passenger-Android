@@ -171,7 +171,7 @@ public class WalletRechargeFragment extends Fragment {
             buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_freecharge_cash));
         }
 
-		//textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, textViewTitle));
+		//textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(paymentActivity, textViewTitle));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 

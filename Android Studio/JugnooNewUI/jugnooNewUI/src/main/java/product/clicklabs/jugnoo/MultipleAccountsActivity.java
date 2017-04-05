@@ -209,10 +209,10 @@ public class MultipleAccountsActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     holder = (ViewHolderPreviousAccount) v.getTag();
-                    String previousEmail = Data.previousAccountInfoList.get(holder.id).userEmail;
+                    String previousPhone = Data.previousAccountInfoList.get(holder.id).phoneNo;
                     Intent intent = new Intent(MultipleAccountsActivity.this, SplashNewActivity.class);
 					intent.putExtra(Constants.KEY_SPLASH_STATE, SplashNewActivity.State.LOGIN.getOrdinal());
-                    intent.putExtra(Constants.KEY_PREVIOUS_LOGIN_EMAIL, previousEmail);
+                    intent.putExtra(Constants.KEY_PREVIOUS_LOGIN_EMAIL, previousPhone);
                     startActivity(intent);
                     finish();
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);

@@ -128,7 +128,7 @@ public class AccessTokenGenerator {
 			if("".equalsIgnoreCase(freshInstall)){
 				boolean otherAppsInstalled = false;
 				for(String appPackage : OTHER_JUGNOO_APP_PACKAGES){
-//					Log.e("appPackage="+appPackage, "=Utils.appInstalledOrNot(context, "+appPackage+")="+Utils.appInstalledOrNot(context, appPackage));
+//					Log.e("appPackage="+appPackage, "=FeedUtils.appInstalledOrNot(context, "+appPackage+")="+FeedUtils.appInstalledOrNot(context, appPackage));
 					if(Utils.appInstalledOrNot(context, appPackage)){
 						otherAppsInstalled = true;
 						break;

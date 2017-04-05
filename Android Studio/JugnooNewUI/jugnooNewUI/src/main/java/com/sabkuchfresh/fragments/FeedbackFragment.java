@@ -847,7 +847,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
 
                           /*  activity.performBackPressed();
-                            product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));*/
+                            product.clicklabs.jugnoo.utils.FeedUtils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));*/
                         }
                     }
                 });

@@ -124,21 +124,7 @@ public class ReferralActions  {
             BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
-//                    PackageManager pm = activity.getPackageManager();
                     try {
-//                        Intent waIntent = new Intent(Intent.ACTION_SEND);
-//                        waIntent.setType("text/plain");
-//                        String text = Data.referralMessages.referralSharingMessage;
-//
-//                        PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
-//                        Log.d("info", "=" + info);
-//                        waIntent.setPackage("com.whatsapp");
-//
-//                        waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n"
-//                                + link);
-//                        activity.startActivity(Intent.createChooser(waIntent, "Share with"));
-
-
                         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                         intent.setType("text/plain");
                         List<ResolveInfo> activities = activity.getPackageManager().queryIntentActivities(intent, 0);
@@ -151,7 +137,6 @@ public class ReferralActions  {
                                 break;
                             }
                         }
-
                     } catch (Exception e) {
                         Utils.showToast(activity, "WhatsApp not Installed");
                     }
@@ -441,5 +426,69 @@ public class ReferralActions  {
     public static interface ShareDialogCallback{
         void onShareClicked(String appName);
     }
+
+    public static void shareIntent(Activity context, String subject, String message, String appType){
+        try {
+            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            List<ResolveInfo> activities = context.getPackageManager().queryIntentActivities(intent, 0);
+            ResolveInfo resolveInfo = null;
+            for(ResolveInfo info : activities){
+                if(appType.equalsIgnoreCase(EMAIL) && (info.activityInfo.packageName.contains("com.google.android.gm")
+                        || info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
+                        || info.activityInfo.packageName.contains("com.microsoft.office.outlook")
+                        || info.activityInfo.packageName.contains("com.google.android.apps.inbox"))){
+                    resolveInfo = info;
+                    break;
+                } else if(appType.equalsIgnoreCase(TWITTER) && info.activityInfo.packageName.contains("com.twitter.android")){
+                    resolveInfo = info;
+                    break;
+                } else if(appType.equalsIgnoreCase(WHATSAPP) && info.activityInfo.packageName.contains("com.whatsapp")){
+                    resolveInfo = info;
+                    break;
+                }
+            }
+
+            if(resolveInfo != null) {
+                intent.setClassName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);
+                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                intent.putExtra(Intent.EXTRA_TEXT, message);
+                context.startActivity(intent);
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            intent.putExtra(Intent.EXTRA_TEXT, message);
+            context.startActivity(Intent.createChooser(intent, context.getResources().getString(R.string.send_via)));
+        }
+    }
+
+    public static void shareToFacebookDialog(Activity context, String title, String desc, String link, String imageUrl){
+        if(ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareDialog shareDialog = new ShareDialog(context);
+            ShareLinkContent.Builder builder1 = new ShareLinkContent.Builder();
+            if (!TextUtils.isEmpty(title)) {
+                builder1.setContentTitle(title);
+            } else {
+                builder1.setContentTitle("Jugnoo");
+            }
+            builder1.setContentDescription(desc);
+            if (!TextUtils.isEmpty(link)) {
+                builder1.setContentUrl(Uri.parse(link));
+            }
+            if (!TextUtils.isEmpty(imageUrl)) {
+                builder1.setImageUrl(Uri.parse(imageUrl));
+            }
+            ShareLinkContent linkContent = builder1.build();
+            shareDialog.show(linkContent);
+        } else {
+            shareIntent(context, title, desc+"\n"+link, "");
+        }
+    }
+
+    public static final String WHATSAPP = "Whatsapp", TWITTER = "Twitter", EMAIL = "Email";
 
 }
