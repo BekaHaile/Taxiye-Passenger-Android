@@ -17,6 +17,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -68,7 +69,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 	private final String TAG = TrackOrderActivity.class.getSimpleName();
 
-	private String accessToken;
+	private String accessToken, driverPhoneNo;
 	private int orderId, deliveryId, showDeliveryRoute;
 	private LatLng pickupLatLng, deliveryLatLng;
 
@@ -78,6 +79,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	private TextView tvTrackingInfo, tvETA;
 	private ImageView bMyLocation;
 	private ASSL assl;
+	private Button bCallDriver;
 
 	private Marker markerDriver;
 	private Polyline polylinePath;
@@ -101,6 +103,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		deliveryLatLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_DELIVERY_LATITUDE, 0d),
 				getIntent().getDoubleExtra(Constants.KEY_DELIVERY_LONGITUDE, 0d));
 		showDeliveryRoute = getIntent().getIntExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, 0);
+		driverPhoneNo = getIntent().hasExtra(Constants.KEY_DRIVER_PHONE_NO) ? getIntent().getStringExtra(Constants.KEY_DRIVER_PHONE_NO) : "";
 
 
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
@@ -111,6 +114,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		tvETA = (TextView) findViewById(R.id.tvETA);
 		tvETA.setVisibility(View.GONE);
 		bMyLocation = (ImageView) findViewById(R.id.bMyLocation);
+		bCallDriver = (Button) findViewById(R.id.bCallDriver);
 
 		tvTitle.setText(getString(R.string.order_hash_format, String.valueOf(orderId)));
 
@@ -158,6 +162,17 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 				zoomToDriverAndDrop();
 			}
 		});
+
+		if(!TextUtils.isEmpty(driverPhoneNo)){
+			bCallDriver.setVisibility(View.VISIBLE);
+
+			bCallDriver.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Utils.openCallIntent(TrackOrderActivity.this, driverPhoneNo);
+				}
+			});
+		}
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(orderUpdateBroadcast, new IntentFilter(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE));
 

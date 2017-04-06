@@ -997,6 +997,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
                 intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
                 intent.putExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, order.getShowDeliveryRoute());
+                intent.putExtra(Constants.KEY_DRIVER_PHONE_NO, order.getDriverPhoneNo());
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             } catch (Exception e){

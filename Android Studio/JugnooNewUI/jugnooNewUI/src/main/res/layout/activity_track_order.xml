@@ -96,6 +96,24 @@
             />
 
 
+        <Button
+            android:id="@+id/bCallDriver"
+            style="@style/ButtonTheme"
+            android:layout_height="@dimen/payment_option_cash_rl_height"
+            android:background="@drawable/capsule_green_selector"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:drawableLeft="@drawable/ic_track_order_call"
+            android:text="@string/call_driver"
+            android:layout_alignParentBottom="true"
+            android:textSize="@dimen/sp_15"
+            android:visibility="vi"
+
+            />
+
     </RelativeLayout>
 
     <View
