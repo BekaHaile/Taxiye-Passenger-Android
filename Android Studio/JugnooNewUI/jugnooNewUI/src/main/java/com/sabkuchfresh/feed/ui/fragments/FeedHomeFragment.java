@@ -452,8 +452,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             deleteFeed=new DeleteFeed(new DeleteFeed.DeleteApiCallback() {
                 @Override
                 public void onSuccess(int posInOriginalList) {
-                    if(feedHomeAdapter!=null)
-                        feedHomeAdapter.notifyItemRemoved(posInOriginalList);
+                    notifyOnDelete(posInOriginalList);
                 }
             });
         deleteFeed.delete(feedDetail.getPostId(),activity,pos);
