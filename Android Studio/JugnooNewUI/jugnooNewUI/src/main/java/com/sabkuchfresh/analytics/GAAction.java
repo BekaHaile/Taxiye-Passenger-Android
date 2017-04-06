@@ -166,6 +166,7 @@ public interface GAAction {
 	String ABOUT = "About ";
 	String SUPER = "Super ";
 	String SEARCH = "Search ";
+	String NOT_FOUND = "Not Found ";
 	String DATA = "Data ";
 	String TABS_SWIPPED = "Tabs Swipped ";
 

@@ -489,7 +489,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     private MenuItem itemCart;
-    private long lastNotificationCount = 0, currentNotificationCount = 0;
+    private long currentNotificationCount = 0;
+    private boolean isNotificationsViewed;
+
+    public void setNotificationsViewed(boolean notificationsViewed) {
+        isNotificationsViewed = notificationsViewed;
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.feed_home_menu, menu);
@@ -498,22 +504,14 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void setLastNotificationCountToCurrent(){
-        lastNotificationCount = currentNotificationCount;
-    }
+
 
 
     private void setNotificationCount(long count){
+        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+        BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(!isNotificationsViewed || count!=currentNotificationCount?count:0));
+        activity.collapsingToolbar.invalidate();
         currentNotificationCount = count;
-        if(currentNotificationCount == 0 || currentNotificationCount != lastNotificationCount) {
-            LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
-            BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(count));
-            activity.collapsingToolbar.invalidate();
-        } else {
-            LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
-            BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(0));
-            activity.collapsingToolbar.invalidate();
-        }
     }
 
     @Override

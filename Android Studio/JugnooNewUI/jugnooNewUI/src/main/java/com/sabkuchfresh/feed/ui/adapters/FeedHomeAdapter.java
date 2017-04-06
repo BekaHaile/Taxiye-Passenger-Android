@@ -302,9 +302,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 */
 
             //Set Profile Pic
-            if(feedDetail.isAnonymousPost()){
-                Picasso.with(activity).load(R.drawable.ic_feed_anonymous).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
-            } else if (!TextUtils.isEmpty(ownerImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(ownerImage)) {
+//            if(feedDetail.isAnonymousPost()){
+//                Picasso.with(activity).load(R.drawable.ic_feed_anonymous).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
+//            } else
+            if (!TextUtils.isEmpty(ownerImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(ownerImage)) {
                 Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
             } else {
 

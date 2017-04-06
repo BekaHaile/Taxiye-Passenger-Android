@@ -279,7 +279,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
             feedDetail.setPostEditable(feedbackResponse.getPostDetails().isPostEditable());
             feedDetail.setStarCount(feedbackResponse.getPostDetails().getStarCount());
             feedDetail.setRestaurantImage(feedbackResponse.getPostDetails().getRestaurantImage());
-            feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
+//            feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
             feedDetail.setReviewImages(feedbackResponse.getPostDetails().getReviewImages());
         }
 

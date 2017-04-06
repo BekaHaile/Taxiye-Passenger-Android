@@ -431,13 +431,19 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == freshSearchResponse.getFlag()) {
 											//subItemsInSearch.clear();
 											FreshSearchFragment.this.freshSearchResponse = freshSearchResponse;
+											int itemsCount = 0;
 											for(SuperCategoriesData.SuperCategory superCategory : freshSearchResponse.getSuperCategories()){
 												if(!superCategory.getSuperCategoryId().equals(superCategoryId)) {
 													for (Category category : superCategory.getCategories()) {
 														subItemsInSearch.addAll(category.getSubItems());
+														itemsCount++;
 													}
 												}
 											}
+											if(itemsCount == 0 || subItemsInSearch.size() == 0) {
+												GAUtils.event(FRESH, SEARCH + NOT_FOUND, searchText);
+											}
+
 											activity.updateItemListFromDBFMG(subItemsInSearch);
 											notifyAdapter();
 											if(subItemsInSearch.size() > 0){

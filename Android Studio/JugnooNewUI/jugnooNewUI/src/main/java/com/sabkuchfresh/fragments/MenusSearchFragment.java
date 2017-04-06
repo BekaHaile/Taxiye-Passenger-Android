@@ -191,6 +191,8 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 	private HashMap<String, List<Item>> listHashMap = new HashMap<>();
 	private class ItemsSearchAsync extends AsyncTask<String, Integer, String> {
 
+		private String token;
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -201,7 +203,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 			try{
 				if(activity.getMenuProductsResponse() != null
 						&& activity.getMenuProductsResponse().getCategories() != null) {
-					String token = params[0];
+					token = params[0];
 					if(!token.equalsIgnoreCase(tokenSearched)) {
 						itemsInSearch.clear();
 						if(token.length() == 1 && token.length() > tokenSearched.length()) {
@@ -244,6 +246,10 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 					textViewPlaceholder.setVisibility(View.GONE);
 				} else{
 					textViewPlaceholder.setVisibility(View.VISIBLE);
+				}
+
+				if(itemsInSearch.size() == 0) {
+					GAUtils.event(GACategory.MENUS, SEARCH + NOT_FOUND, token);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

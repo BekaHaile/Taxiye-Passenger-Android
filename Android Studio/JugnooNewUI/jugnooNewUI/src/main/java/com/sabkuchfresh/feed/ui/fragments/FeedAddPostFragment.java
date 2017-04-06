@@ -25,6 +25,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.ImageCompression;
+import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONArray;
 
@@ -154,7 +155,11 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
 
-
+                try {
+                    Utils.hideSoftKeyboard(activity, getVisibleFragment().getFocusEditText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 getVisibleFragment().onAddImageClick();
 
 
