@@ -156,7 +156,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     });
 
                 likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(),position);
-
+                GAUtils.event(FEED, HOME, LIKE+CLICKED);
             }
 
             @Override
@@ -164,7 +164,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
                 activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail,positionInOriginalList);
-
+                GAUtils.event(FEED, HOME, COMMENT+CLICKED);
             }
 
 
@@ -520,7 +520,8 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         switch (item.getItemId()){
 //            case R.id.item_location:
 //                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
-//                break;
+//                GAUtils.event(FEED, HOME, LOCATION+CLICKED);
+// break;
             case R.id.item_notification:
                 activity.getTransactionUtils().openFeedNotificationsFragment(activity, activity.getRelativeLayoutContainer());
                 break;

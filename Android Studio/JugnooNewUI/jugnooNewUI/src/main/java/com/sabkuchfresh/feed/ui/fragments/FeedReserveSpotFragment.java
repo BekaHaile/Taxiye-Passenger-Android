@@ -173,6 +173,7 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
 
         if(Data.getFeedData().getFeedRank()==null)
         {
+            GAUtils.event(FEED, WAITLIST, RESERVE_MY_SPOT+CLICKED);
             if(Data.longitude==0||Data.latitude==0){
                 Toast.makeText(activity, "Please turn on your location to register.", Toast.LENGTH_SHORT).show();
                 return;

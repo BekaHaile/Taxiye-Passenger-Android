@@ -541,6 +541,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             public void onClick(View v) {
                 if(getTopFragment()  instanceof FeedHomeFragment){
                     openFeedAddPostFragment(null);
+                    GAUtils.event(FEED, HOME, ADD+POST_BAR+CLICKED);
                 }
             }
         });
@@ -1867,6 +1868,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else {
                     GAUtils.event(FRESH, HOME + SEARCH, BACK + BUTTON + CLICKED);
                 }
+            } else if(getTopFragment() instanceof FeedOfferingCommentsFragment){
+                GAUtils.event(FEED, COMMENT, BACK+BUTTON+CLICKED);
             }
         }
 
