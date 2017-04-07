@@ -26,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -56,8 +57,10 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
+import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.MarkerAnimation;
+import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -86,6 +89,9 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	private Polyline polylinePath;
 	private Location myLocation;
 	private final int MAP_ANIMATE_DURATION = 300;
+	private boolean mapTouchedOnce, zoomSetManually;
+	private float zoomInitial;
+
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +101,10 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		assl = new ASSL(this, 1134, 720, false);
 
 		GAUtils.trackScreenView(TRACK_DELIVERY);
+
+		mapTouchedOnce = false;
+		zoomSetManually = false;
+		zoomInitial = -1;
 
 		accessToken = getIntent().hasExtra(Constants.KEY_ACCESS_TOKEN) ? getIntent().getStringExtra(Constants.KEY_ACCESS_TOKEN) : "";
 		orderId = getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0);
@@ -146,6 +156,40 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					});
 
 					scheduleTimer();
+
+					TouchableMapFragment mapFragment = ((TouchableMapFragment) getSupportFragmentManager().findFragmentById(R.id.googleMap));
+					new MapStateListener(googleMap, mapFragment, TrackOrderActivity.this) {
+
+						@Override
+						public void onMapTouched() {
+							mapTouchedOnce = true;
+						}
+
+						@Override
+						public void onMapReleased() {
+
+						}
+
+						@Override
+						public void onMapUnsettled() {
+
+						}
+
+						@Override
+						public void onMapSettled() {
+
+						}
+
+						@Override
+						public void onCameraPositionChanged(CameraPosition cameraPosition) {
+							// for detecting if zoom is manually changed by user, a boolean zoomSetManually
+							// will be set to stop google directions path zoom
+							if(zoomInitial == -1 && cameraPosition != null) zoomInitial = cameraPosition.zoom;
+							if(mapTouchedOnce && cameraPosition != null && cameraPosition.zoom != zoomInitial){
+								zoomSetManually = true;
+							}
+						}
+					};
 				}
 			}
 		});
@@ -327,6 +371,14 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 											llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(new LatLng(latitude, longitude));
 											LatLngBounds latLngBounds = llbBuilder.build();
 											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+											handler.postDelayed(new Runnable() {
+												@Override
+												public void run() {
+													if(googleMap != null) {
+														zoomInitial = googleMap.getCameraPosition().zoom;
+													}
+												}
+											}, MAP_ANIMATE_DURATION+50);
 										}
 
 										if (!TextUtils.isEmpty(trackingInfo)) {
@@ -391,7 +443,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										if(showDeliveryRoute == 1 && list.size() > 0) {
 											polylinePath = googleMap.addPolyline(polylineOptions);
 										}
-										if (zoomedFirstTime) {
+										if (zoomedFirstTime && !zoomSetManually) {
 											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 										}
 									} catch (Exception e) {
@@ -461,4 +513,6 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		tvETA.append(spannableString);
 		tvETA.setVisibility(View.VISIBLE);
 	}
+
+	private Handler handler = new Handler();
 }
