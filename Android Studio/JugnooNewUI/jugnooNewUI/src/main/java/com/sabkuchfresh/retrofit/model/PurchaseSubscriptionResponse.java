@@ -18,6 +18,9 @@ public class PurchaseSubscriptionResponse {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("order_id")
+    @Expose
+    private Integer orderId;
     @SerializedName("cancellation_charges_popup_text_line1")
     @Expose
     private String cancellationChargesPopupTextLine1;
@@ -27,6 +30,9 @@ public class PurchaseSubscriptionResponse {
     @SerializedName("user_subscriptions")
     @Expose
     private List<SubscriptionData.UserSubscription> userSubscriptions = null;
+    @SerializedName("razorpay_payment_object")
+    @Expose
+    private PlaceOrderResponse.RazorPaymentObject razorPaymentObject;
 
     public Integer getFlag() {
         return flag;
@@ -42,6 +48,14 @@ public class PurchaseSubscriptionResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
     public String getCancellationChargesPopupTextLine1() {
@@ -68,7 +82,13 @@ public class PurchaseSubscriptionResponse {
         this.userSubscriptions = userSubscriptions;
     }
 
+    public PlaceOrderResponse.RazorPaymentObject getRazorPaymentObject() {
+        return razorPaymentObject;
+    }
 
+    public void setRazorPaymentObject(PlaceOrderResponse.RazorPaymentObject razorPaymentObject) {
+        this.razorPaymentObject = razorPaymentObject;
+    }
 }
 
 

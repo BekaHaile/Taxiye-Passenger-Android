@@ -22,6 +22,8 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
+import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
 
 import org.json.JSONObject;
@@ -30,13 +32,16 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.StarBaseActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -72,7 +77,7 @@ import retrofit.mime.TypedByteArray;
 public class StarSubscriptionCheckoutFragment extends Fragment implements PromoCouponsAdapter.Callback, GAAction, GACategory {
 
     private View rootView;
-    private Activity activity;
+    private StarBaseActivity activity;
     private TextView tvPaymentPlan, tvPlanAmount, tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2,
             tvDuration1, tvDuration2;
     private Button bPlaceOrder;
@@ -88,6 +93,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private SubscriptionData.Subscription subscription;
     private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
     private int purchaseType = StarPurchaseType.PURCHARE.getOrdinal();
+    private RelativeLayout rlOtherModesToPay, rlUPI;
+    private ImageView ivOtherModesToPay, ivUPI;
+    private TextView tvOtherModesToPay, tvUPI;
+    private boolean isRazorUPI;
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
         StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
@@ -155,9 +164,18 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             tvDuration1 = (TextView) rootView.findViewById(R.id.tvDuration1);
             tvDuration2 = (TextView) rootView.findViewById(R.id.tvDuration2);
 
+            rlOtherModesToPay = (RelativeLayout) rootView.findViewById(R.id.rlOtherModesToPay);
+            ivOtherModesToPay = (ImageView) rootView.findViewById(R.id.ivOtherModesToPay);
+            tvOtherModesToPay = (TextView) rootView.findViewById(R.id.tvOtherModesToPay);
+            rlUPI = (RelativeLayout) rootView.findViewById(R.id.rlUPI);
+            ivUPI = (ImageView) rootView.findViewById(R.id.ivUPI);
+            tvUPI = (TextView) rootView.findViewById(R.id.tvUPI);
+
             relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
             relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
             relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
+            rlUPI.setOnClickListener(onClickListenerPaymentOptionSelector);
+            rlOtherModesToPay.setOnClickListener(onClickListenerPaymentOptionSelector);
 
             if(getActivity() instanceof JugnooStarActivity) {
                 llStarPurchase.setVisibility(View.VISIBLE);
@@ -243,6 +261,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     }
 
+
     private View.OnClickListener onClickListenerPaymentOptionSelector = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -288,6 +307,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     case R.id.rlPlan2:
                         selectedPlan(rlPlan2, ivRadio2, 1);
                         try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
+                        break;
+
+                    case R.id.rlUPI:
+                        isRazorUPI = true;
+                        callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
+
+                    case R.id.rlOtherModesToPay:
+                        callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
                         break;
                 }
 
@@ -526,6 +553,21 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
                 }
             }
+
+            // for razorPay layout adding
+            ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
+            if(paymentGatewayModeConfigs != null && paymentGatewayModeConfigs.size() > 0){
+                for(PaymentGatewayModeConfig modeConfig : paymentGatewayModeConfigs){
+                    if(modeConfig.getEnabled()!= null && modeConfig.getEnabled() == 1){
+                        linearLayoutWalletContainer.addView(rlUPI);
+                        linearLayoutWalletContainer.addView(rlOtherModesToPay);
+                        if(!TextUtils.isEmpty(modeConfig.getDisplayName()))
+                            tvOtherModesToPay.setText(modeConfig.getDisplayName());
+                        if(!TextUtils.isEmpty(modeConfig.getDisplayNameUpi()))
+                            tvUPI.setText(modeConfig.getDisplayNameUpi());
+                    }
+                }
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -585,25 +627,23 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 imageViewAddFreeCharge.setVisibility(View.VISIBLE);
             }
 
+            imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
+            imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+            imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
+            ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_normal);
+            ivUPI.setImageResource(R.drawable.ic_radio_button_normal);
             if (getPaymentOption() == PaymentOption.PAYTM) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
-                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
-            }
-            else if (getPaymentOption() == PaymentOption.MOBIKWIK) {
-                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
+            } else if (getPaymentOption() == PaymentOption.MOBIKWIK) {
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_selected);
-                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
-            }
-            else if (getPaymentOption() == PaymentOption.FREECHARGE) {
-                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+            } else if (getPaymentOption() == PaymentOption.FREECHARGE) {
                 imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_selected);
-            }
-            else {
-                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
+            } else if(getPaymentOption() == PaymentOption.RAZOR_PAY){
+                if(isRazorUPI){
+                    ivUPI.setImageResource(R.drawable.ic_radio_button_selected);
+                } else {
+                    ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_selected);
+                }
             }
             //updateCartDataView();
         } catch (Exception e) {
@@ -666,19 +706,25 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
                         String message = JSONParser.getServerMessage(jObj);
                         if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                            DialogPopup.alertPopupWithListener(activity, "", message, getResources().getString(R.string.ok), new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Data.userData.getSubscriptionData().setUserSubscriptions(purchaseSubscriptionResponse.getUserSubscriptions());
-                                    Data.autoData.setCancellationChargesPopupTextLine1(purchaseSubscriptionResponse.getCancellationChargesPopupTextLine1());
-                                    Data.autoData.setCancellationChargesPopupTextLine2(purchaseSubscriptionResponse.getCancellationChargesPopupTextLine2());
-                                    activity.finish();
-                                    activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                }
-                            }, false);
-                            Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
-                                    0l);
-                            //DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", message);
+                            if(jObj.has(Constants.KEY_RAZORPAY_PAYMENT_OBJECT)){
+                                // razor pay case send data to RazorPay Checkout page
+                                activity.setPurchaseSubscriptionResponse(purchaseSubscriptionResponse);
+                                activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT), isRazorUPI);
+                            } else {
+                                DialogPopup.alertPopupWithListener(activity, "", message, getResources().getString(R.string.ok), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Data.userData.getSubscriptionData().setUserSubscriptions(purchaseSubscriptionResponse.getUserSubscriptions());
+                                        Data.autoData.setCancellationChargesPopupTextLine1(purchaseSubscriptionResponse.getCancellationChargesPopupTextLine1());
+                                        Data.autoData.setCancellationChargesPopupTextLine2(purchaseSubscriptionResponse.getCancellationChargesPopupTextLine2());
+                                        activity.finish();
+                                        activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                                    }
+                                }, false);
+                                Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
+                                        0l);
+                                //DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", message);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -866,5 +912,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     public void setSelectedPromoCoupon(PromoCoupon selectedPromoCoupon) {
         this.selectedPromoCoupon = selectedPromoCoupon;
     }
+
+
 
 }
