@@ -1324,7 +1324,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(R.string.feed);
+                topBar.title.setText(Data.getFeedName(this));
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
@@ -1341,7 +1341,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
                 if(fragment instanceof FeedOfferingCommentsFragment){
-                    topBar.title.setText(R.string.feed);
+                    topBar.title.setText(Data.getFeedName(this));
                 } else if(fragment instanceof FeedNotificationsFragment){
                     topBar.title.setText(R.string.notifications);
                 }

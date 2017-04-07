@@ -215,11 +215,15 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         rlNoReviews = (RelativeLayout) rootView.findViewById(R.id.rlNoReviews);
         rlNoReviews.setVisibility(View.GONE);
         tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);
-        tvFeedEmpty.setText(activity.getString(R.string.feed_is_empty));
-        SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add));
-        ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvFeedEmpty.append("\n");
-        tvFeedEmpty.append(ssb);
+        try {
+            tvFeedEmpty.setText(Data.getFeedName(activity) + " is empty");
+            SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add));
+            ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tvFeedEmpty.append("\n");
+            tvFeedEmpty.append(ssb);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
 

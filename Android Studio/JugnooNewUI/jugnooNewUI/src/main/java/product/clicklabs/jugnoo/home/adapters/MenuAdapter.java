@@ -757,6 +757,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             linearLayoutSubFeed = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubFeed);
             tvJugnooStar = (TextView) convertView.findViewById(R.id.tvJugnooStar); tvJugnooStar.setTypeface(Fonts.mavenRegular(context));
             viewStarIcon = (View) convertView.findViewById(R.id.viewStarIcon);
+
+            textViewFeed.setText(Data.getFeedName(context));
         }
     }
 

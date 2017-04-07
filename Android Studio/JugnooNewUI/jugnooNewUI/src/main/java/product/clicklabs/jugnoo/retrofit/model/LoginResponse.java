@@ -393,6 +393,12 @@ public class LoginResponse {
 
 		private String handleName;
 
+		@SerializedName("feed_name")
+		@Expose
+		private String feedName;
+		@SerializedName("comment_name")
+		@Expose
+		private String commentName;
 
 
 
@@ -494,6 +500,25 @@ public class LoginResponse {
 
 		public void setHandleName(String handleName) {
 			this.handleName = handleName;
+		}
+
+		public String getFeedName() {
+			if(feedName == null){
+				feedName = "Ask Local";
+			}
+			return feedName;
+		}
+
+		public void setFeedName(String feedName) {
+			this.feedName = feedName;
+		}
+
+		public String getCommentName() {
+			return commentName;
+		}
+
+		public void setCommentName(String commentName) {
+			this.commentName = commentName;
 		}
 	}
 
