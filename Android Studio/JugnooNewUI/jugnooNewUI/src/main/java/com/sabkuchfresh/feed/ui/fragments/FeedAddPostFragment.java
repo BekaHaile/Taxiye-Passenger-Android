@@ -423,14 +423,14 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
                             activity.performBackPressed(false);
                             if (activity.getFeedHomeFragment() != null && activity.getFeedHomeFragment().getView() != null) {
-                                activity.getFeedHomeFragment().fetchFeedsApi(true);
+                                activity.getFeedHomeFragment().fetchFeedsApi(true, true);
                             }
                             if (activity.getTopFragment() instanceof FeedOfferingCommentsFragment) {
                                 activity.getOfferingsCommentFragment().fetchDetailAPI();
                             }
 
-                            if(imagesCount > 0){
-                                GAUtils.event(FEED, ADD+POST, IMAGE+UPLOADED);
+                            if (imagesCount > 0) {
+                                GAUtils.event(FEED, ADD + POST, IMAGE + UPLOADED);
                             }
                         } else {
                             DialogPopup.alertPopup(activity, "", message);

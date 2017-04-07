@@ -233,6 +233,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private LinearLayout llDeliveryFrom;
     private RelativeLayout rlDeliveryFrom;
     private TextView tvRestName, tvRestAddress;
+    private boolean couponManuallySelected;
 
     @Override
     public void onStart() {
@@ -1921,6 +1922,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 linearLayoutOffers.setVisibility(View.GONE);
             }
             PromoCoupon pcOld = selectServerMarkedCouponAndReturnOld();
+
+            // to handle if coupon manually selected and refresh on cart change is 1
+            // but server is not sending any pre selected coupon
+            // so revert back to old coupon
+            if(couponManuallySelected
+                    && activity.getUserCheckoutResponse() != null
+                    && activity.getUserCheckoutResponse().getRefreshOnCartChange() == 1
+                    && pcOld != null && pcOld.getId() > 0
+                    && noSelectionCoupon.matchPromoCoupon(activity.getSelectedPromoCoupon())){
+                activity.setSelectedPromoCoupon(pcOld);
+            }
+
             setPromoAmount();
             promoCouponsAdapter.setList(promoCoupons);
 
@@ -2620,6 +2633,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if(cartChangedRefreshCheckout){
             getCheckoutDataAPI(selectedSubscription);
         }
+        couponManuallySelected = true;
     }
 
     @Override

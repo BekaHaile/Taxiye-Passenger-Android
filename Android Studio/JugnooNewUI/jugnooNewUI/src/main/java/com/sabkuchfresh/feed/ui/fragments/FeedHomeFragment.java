@@ -83,6 +83,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private View viewDisabledEditPostPopUp;
     private boolean updateFeedData;
     private ImageView ivNoFeeds;
+    private RecyclerView recyclerView;
 
 
     private final long UPDATE_NOTIFICATION_COUNT_INTERVAL = 15000;
@@ -128,7 +129,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         GAUtils.trackScreenView(FEED+HOME);
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
@@ -138,7 +139,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchFeedsApi(false);
+                fetchFeedsApi(false, false);
             }
         });
 
@@ -237,7 +238,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 @Override
                 public void run() {
                     if(updateFeedData){
-                        fetchFeedsApi(true);
+                        fetchFeedsApi(true, false);
                     }
                     updateFeedData = false;
                 }
@@ -262,7 +263,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         activity.getHandler().removeCallbacks(runnableNotificationCount);
     }
 
-    public void fetchFeedsApi(boolean loader) {
+    public void fetchFeedsApi(boolean loader, final boolean scrollToTop) {
         try {
             if (MyApplication.getInstance().isOnline()) {
 
@@ -314,6 +315,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     paramsIvNoFeeds.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_minus_40));
                                     ivNoFeeds.setLayoutParams(paramsIvNoFeeds);
 
+                                    if(scrollToTop && feedHomeAdapter.getItemCount() > 0){
+                                        recyclerView.scrollToPosition(0);
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -386,7 +390,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        fetchFeedsApi(true);
+                        fetchFeedsApi(true, false);
                     }
 
                     @Override
@@ -408,7 +412,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             boolean uploaded = intent.getBooleanExtra(Constants.KEY_UPLOADED, false);
             Log.i("FeedHomeFrag onReceive", "uploaded="+uploaded);
             if(uploaded){
-                fetchFeedsApi(false);
+                fetchFeedsApi(false, false);
             }
         }
     };
@@ -469,11 +473,14 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     }
 
     public void notifyOnDelete(int positionInOriginalList) {
-        if(feedHomeAdapter!=null && adapterList!=null && adapterList.size()>positionInOriginalList){
-             adapterList.remove(positionInOriginalList);
-            feedHomeAdapter.notifyItemRemoved(positionInOriginalList);
+        if (feedHomeAdapter != null && adapterList != null && adapterList.size() > positionInOriginalList) {
+            if (positionInOriginalList != -1) {
+                adapterList.remove(positionInOriginalList);
+                feedHomeAdapter.notifyItemRemoved(positionInOriginalList);
+            } else {
+                refreshFeedInHomeFragment(positionInOriginalList);
+            }
         }
-
     }
 
     @Override
