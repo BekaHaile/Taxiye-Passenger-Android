@@ -4103,7 +4103,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         razorpayCallbackIntentService("-1", "-1");
     }
 
-    public void startRazorPayPayment(JSONObject options) {
+    public void startRazorPayPayment(JSONObject options, boolean isUPA) {
         Checkout checkout = new Checkout();
         checkout.setImage(R.drawable.jugnoo_icon);
         try {
@@ -4112,6 +4112,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             options.put(Constants.KEY_RAZORPAY_PREFILL_EMAIL, options.remove(Constants.KEY_USER_EMAIL).toString());
             options.put(Constants.KEY_RAZORPAY_PREFILL_CONTACT, options.remove(Constants.KEY_PHONE_NO).toString());
             options.put(Constants.KEY_RAZORPAY_THEME_COLOR, "#FD7945");
+            if(isUPA){
+                options.put(Constants.KEY_RAZORPAY_PREFILL_METHOD, "upi"); // "upi", ""
+                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo)+"@upi"); // "upi", ""
+            } else{
+                options.put(Constants.KEY_RAZORPAY_PREFILL_METHOD, "");
+                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo)+"@upi");
+            }
 
             Log.i(TAG, "startRazorPayPayment options="+options);
             checkout.setFullScreenDisable(true);

@@ -162,9 +162,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewRadioMobikwik, imageViewAddMobikwik,
             imageViewRadioFreeCharge, imageViewAddFreeCharge, imageViewRadioJugnooPay, imageViewAddJugnooPay, imageViewCashRadio;
     private TextView textViewPaytmValue, textViewMobikwikValue, textViewFreeChargeValue;
-	private RelativeLayout rlOtherModesToPay;
-	private ImageView ivOtherModesToPay;
-	private TextView tvOtherModesToPay;
+	private RelativeLayout rlOtherModesToPay, rlUPI;
+	private ImageView ivOtherModesToPay, ivUPI;
+	private TextView tvOtherModesToPay, tvUPI;
 
     private LinearLayout linearLayoutOffers;
     private NonScrollListView listViewOffers;
@@ -233,6 +233,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private LinearLayout llDeliveryFrom;
     private RelativeLayout rlDeliveryFrom;
     private TextView tvRestName, tvRestAddress;
+    private boolean isRazorUPI;
 
     @Override
     public void onStart() {
@@ -472,6 +473,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 		rlOtherModesToPay = (RelativeLayout) rootView.findViewById(R.id.rlOtherModesToPay);
 		ivOtherModesToPay = (ImageView) rootView.findViewById(R.id.ivOtherModesToPay);
 		tvOtherModesToPay = (TextView) rootView.findViewById(R.id.tvOtherModesToPay);
+        rlUPI = (RelativeLayout) rootView.findViewById(R.id.rlUPI);
+        ivUPI = (ImageView) rootView.findViewById(R.id.ivUPI);
+        tvUPI = (TextView) rootView.findViewById(R.id.tvUPI);
 
         linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
         listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
@@ -536,6 +540,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutJugnooPay.setOnClickListener(onClickListenerPaymentOptionSelector);
+        rlUPI.setOnClickListener(onClickListenerPaymentOptionSelector);
 		rlOtherModesToPay.setOnClickListener(onClickListenerPaymentOptionSelector);
 
         activity.setSelectedPromoCoupon(noSelectionCoupon);
@@ -851,9 +856,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
+
     private View.OnClickListener onClickListenerPaymentOptionSelector = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            isRazorUPI = false;
             try {
                 switch (v.getId()){
                     case R.id.relativeLayoutPaytm:
@@ -880,6 +887,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH,
                                 callbackPaymentOptionSelector);
                         break;
+
+                    case R.id.rlUPI:
+                        isRazorUPI = true;
+                        callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
 
 					case R.id.rlOtherModesToPay:
 						callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
@@ -1090,6 +1101,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 			imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
 			imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
 			ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_normal);
+            ivUPI.setImageResource(R.drawable.ic_radio_button_normal);
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
             } else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
@@ -1099,7 +1111,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             } else if (activity.getPaymentOption() == PaymentOption.JUGNOO_PAY) {
                 imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_selected);
             } else if(activity.getPaymentOption() == PaymentOption.RAZOR_PAY){
-				ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_selected);
+                if(isRazorUPI){
+                    ivUPI.setImageResource(R.drawable.ic_radio_button_selected);
+                } else {
+                    ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_selected);
+                }
 			} else {
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
             }
@@ -1420,7 +1436,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                     } else if(jObj.has(Constants.KEY_RAZORPAY_PAYMENT_OBJECT)){
                                         // razor pay case send data to RazorPay Checkout page
                                         activity.setPlaceOrderResponse(placeOrderResponse);
-                                        activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT));
+                                        activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT), isRazorUPI);
                                         doSlideInitial = false;
                                     } else {
                                         orderPlacedSuccess(placeOrderResponse);
@@ -1858,9 +1874,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 			if(paymentGatewayModeConfigs != null && paymentGatewayModeConfigs.size() > 0){
 				for(PaymentGatewayModeConfig modeConfig : paymentGatewayModeConfigs){
 					if(modeConfig.getEnabled()!= null && modeConfig.getEnabled() == 1){
+                        linearLayoutWalletContainer.addView(rlUPI);
 						linearLayoutWalletContainer.addView(rlOtherModesToPay);
 						if(!TextUtils.isEmpty(modeConfig.getDisplayName()))
 							tvOtherModesToPay.setText(modeConfig.getDisplayName());
+                        if(!TextUtils.isEmpty(modeConfig.getDisplayNameUpi()))
+                            tvUPI.setText(modeConfig.getDisplayNameUpi());
 					}
 				}
 			}
@@ -1877,6 +1896,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 					relativeLayoutFreeCharge.setVisibility(View.GONE);
                     relativeLayoutJugnooPay.setVisibility(View.GONE);
 					rlOtherModesToPay.setVisibility(View.GONE);
+                    rlUPI.setVisibility(View.GONE);
 				} else if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()){
 					relativeLayoutCash.setVisibility(View.GONE);
 				}
