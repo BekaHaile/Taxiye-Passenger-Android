@@ -85,7 +85,7 @@ public class MarkerAnimation {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
+    public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim) {
 
         try {
             if(MapUtils.distance(marker.getPosition(), finalPosition) < 80
@@ -94,7 +94,7 @@ public class MarkerAnimation {
                 animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator);
 			}
 			else{
-                getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator));
+                getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim));
                 if(getDirectionsAsyncs.size() == 1){
                     getDirectionsAsyncs.get(0).execute();
                 }
@@ -121,13 +121,15 @@ public class MarkerAnimation {
         LatLng source, destination;
         Marker marker;
         LatLngInterpolator latLngInterpolator;
+		CallbackAnim callbackAnim;
 
-        public GetDirectionsAsync(String engagementId, Marker marker, LatLng destination, LatLngInterpolator latLngInterpolator){
+        public GetDirectionsAsync(String engagementId, Marker marker, LatLng destination, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.destination = destination;
             this.marker = marker;
             this.latLngInterpolator = latLngInterpolator;
+			this.callbackAnim = callbackAnim;
         }
 
         @Override
@@ -166,6 +168,9 @@ public class MarkerAnimation {
                     if(list.size() > 0) {
                         list.remove(0);
                     }
+                    if(callbackAnim != null) {
+						callbackAnim.onPathFound(list);
+					}
                     animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, true);
                 }
                 getDirectionsAsyncs.remove(0);
@@ -281,6 +286,9 @@ public class MarkerAnimation {
     }
 
 
+    public interface CallbackAnim {
+		void onPathFound(List<LatLng> latLngs);
+	}
 
 
 }

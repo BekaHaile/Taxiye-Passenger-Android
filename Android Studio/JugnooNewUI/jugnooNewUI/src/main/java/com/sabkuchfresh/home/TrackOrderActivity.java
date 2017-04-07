@@ -39,6 +39,7 @@ import com.tsengvn.typekit.TypekitContextWrapper;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
@@ -276,6 +277,15 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 
 	private boolean zoomedFirstTime = false;
+	private List<LatLng> latLngsDriverAnim = new ArrayList<>();
+	private MarkerAnimation.CallbackAnim callbackAnim = new MarkerAnimation.CallbackAnim() {
+		@Override
+		public void onPathFound(List<LatLng> latLngs) {
+			latLngsDriverAnim.clear();
+			latLngsDriverAnim.addAll(latLngs);
+		}
+	};
+
 	TimerTask timerTask;
 	private TimerTask getTimerTask() {
 		timerTask = new TimerTask() {
@@ -302,13 +312,15 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 								@Override
 								public void run() {
 									try {
+										latLngsDriverAnim.clear();
 										if (markerDriver == null) {
 											markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
 													R.drawable.ic_bike_marker, 49f, 62f, true, 2));
 											markerDriver.setRotation((float) bearing);
 										} else {
 											MarkerAnimation.animateMarkerToICS("-1", markerDriver,
-													new LatLng(latitude, longitude), new LatLngInterpolator.Spherical());
+													new LatLng(latitude, longitude), new LatLngInterpolator.Spherical(),
+													callbackAnim);
 										}
 										if(!zoomedFirstTime) {
 											LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
@@ -367,6 +379,11 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 														R.color.google_path_polyline_color)).geodesic(true);
 										LatLngBounds.Builder builder = new LatLngBounds.Builder();
 										builder.include(deliveryLatLng).include(new LatLng(latitude, longitude));
+
+										for(LatLng latLng : latLngsDriverAnim){
+											builder.include(latLng);
+										}
+
 										for (int z = 0; z < list.size(); z++) {
 											polylineOptions.add(list.get(z));
 											builder.include(list.get(z));

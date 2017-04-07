@@ -110,7 +110,7 @@
             android:text="@string/call_driver"
             android:layout_alignParentBottom="true"
             android:textSize="@dimen/sp_15"
-            android:visibility="vi"
+            android:visibility="gone"
 
             />
 
