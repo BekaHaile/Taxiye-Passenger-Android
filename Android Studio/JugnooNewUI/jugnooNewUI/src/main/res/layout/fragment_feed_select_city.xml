@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="@dimen/spacing_small"
+    android:paddingRight="@dimen/spacing_small"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:paddingTop="@dimen/spacing_large"
+    android:layout_height="match_parent">
+
+
+
+    <EditText
+        android:id="@+id/edt_city_name"
+        android:textSize="@dimen/font_large"
+        android:hint="Type City Name"
+        android:drawableEnd="@drawable/ic_feed_city_search"
+        android:textColorHint="@color/feed_grey_text"
+        android:layout_marginRight="@dimen/spacing_normal"
+        android:layout_marginLeft="@dimen/spacing_normal"
+        android:paddingRight="@dimen/spacing_normal"
+        android:paddingLeft="@dimen/spacing_normal"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_gravity="center"
+        app:font="@string/maven_r"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:text="@string/OR"
+        android:gravity="center"
+        android:textColor="@color/feed_grey_text"
+        android:background="@drawable/circle_border_gray"
+        android:layout_width="37dp"
+        android:layout_height="37dp" />
+
+
+    <Button
+        android:id="@+id/btn_use_current_location"
+        style="@style/Feed.Button.Green"
+        android:text="Use Current Location"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/spacing_normal"
+        android:layout_marginRight="@dimen/spacing_normal"
+        android:drawablePadding="-21dp"
+        android:layout_marginBottom="@dimen/spacing_extra_large"
+        android:drawableRight="@drawable/ic_gps_without_border"
+        android:paddingLeft="@dimen/spacing_normal"
+        android:paddingRight="@dimen/spacing_normal"/>
+
+    <TextView
+        app:font="maven"
+        android:text="TRENDING CITIES"
+        android:textSize="@dimen/font_extra_small"
+        android:textColor="@color/text_color_less_light"
+        android:layout_marginLeft="@dimen/spacing_tiny"
+        android:layout_marginBottom="@dimen/spacing_tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rl_trending_cities"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:paddingTop="@dimen/spacing_small"
+        android:paddingBottom="@dimen/spacing_small"
+        android:paddingLeft="@dimen/spacing_large"
+        android:paddingRight="@dimen/spacing_large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+
+    </android.support.v7.widget.RecyclerView>
+
+
+</LinearLayout>

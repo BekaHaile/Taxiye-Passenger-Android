@@ -420,13 +420,18 @@
 
     <style name="ThemeSwitch" >
         <item name="colorControlActivated">@color/yellow_jugnoo</item>
-        <!--<item name="colorControlNormal">@color/white</item>-->
-        <!--<item name="colorPrimary">@color/red</item>
-        <item name="colorPrimaryDark">@color/red</item>
-        <item name="colorAccent">@color/red</item>
-        <item name="colorControlHighlight">@color/red</item>
-        <item name="colorButtonNormal">@color/red</item>
-        <item name="colorSwitchThumbNormal">@color/red</item>-->
         <item name="android:colorForeground">@color/feed_grey_text_secondary</item>
     </style>
+    
+    <style name="Feed.Button.Green" parent="Base.Widget.AppCompat.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="gravity">center</item>
+        <item name="android:background">@drawable/capsule_green_bg</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/font_medium</item>
+        <item name="font">"maven"</item>
+    </style>
+
+
 </resources>

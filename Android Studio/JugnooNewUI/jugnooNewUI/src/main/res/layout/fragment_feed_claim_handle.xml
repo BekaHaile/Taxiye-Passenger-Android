@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/feed_grey_background_light"
+    android:paddingLeft="50dp"
+    android:paddingRight="50dp"
+    android:layout_height="match_parent">
+
+    
+    <ImageView
+        android:layout_marginTop="@dimen/spacing_extra_huge"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_feed_handle_display"
+        android:layout_width="75dp"
+        android:layout_height="91dp" />
+
+    <TextView
+        android:layout_marginTop="@dimen/spacing_small"
+        android:text="@string/feed_claim_handle_description"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textSize="@dimen/font_extra_large"
+       android:textColor="@color/feed_grey_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+        <android.support.design.widget.TextInputLayout
+            app:hintEnabled ="false"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginBottom="@dimen/spacing_huge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <EditText
+                app:font="maven"
+                android:textSize="@dimen/font_large"
+                android:hint="Claim your handle"
+                android:textColorHint="@color/feed_grey_hint_color"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </android.support.design.widget.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/btn_reserve_spot"
+        style="@style/Feed.Button.Green"
+        android:text="Submit"/>
+</LinearLayout>
