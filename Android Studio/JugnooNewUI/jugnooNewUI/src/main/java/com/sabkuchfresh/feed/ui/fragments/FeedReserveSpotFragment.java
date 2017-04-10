@@ -224,6 +224,11 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
                public boolean onFailure(RetrofitError error) {
                    return false;
                }
+
+               @Override
+               public void onNegativeClick() {
+
+               }
            });
         }
 

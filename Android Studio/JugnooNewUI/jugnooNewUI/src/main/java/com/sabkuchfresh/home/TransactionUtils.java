@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
@@ -447,5 +449,17 @@ public class TransactionUtils {
         }
     }
 
+    public void openChangeFeedCityFragment(FreshActivity activity, RelativeLayout relativeLayoutContainer) {
+        if (!checkIfFragmentAdded(activity, FeedChangeCityFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, 0)
+                    .add(relativeLayoutContainer.getId(), new FeedChangeCityFragment(),
+                            FeedNotificationsFragment.class.getName())
+                    .addToBackStack(FeedChangeCityFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
 }
 

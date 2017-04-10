@@ -74,6 +74,7 @@ import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
@@ -1333,8 +1334,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 visMinOrder = setMinOrderAmountText(fragment);
 
             }
-            else if(fragment instanceof FeedOfferingCommentsFragment
-                    || fragment instanceof FeedNotificationsFragment){
+            else if(fragment instanceof FeedOfferingCommentsFragment || fragment instanceof FeedNotificationsFragment  || fragment instanceof FeedChangeCityFragment){
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -1343,7 +1343,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     topBar.title.setText(R.string.feed);
                 } else if(fragment instanceof FeedNotificationsFragment){
                     topBar.title.setText(R.string.notifications);
+                }else if(fragment instanceof FeedChangeCityFragment){
+                    topBar.title.setText(R.string.select_city);
                 }
+
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
@@ -1374,7 +1377,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.ivAddReview.getId());
             } else if(fragment instanceof FeedReserveSpotFragment
                     || fragment instanceof FeedSpotReservedSharingFragment
-                    || fragment instanceof FeedNotificationsFragment){
+                    || fragment instanceof FeedNotificationsFragment || fragment instanceof FeedChangeCityFragment){
                 topBar.title.setGravity(Gravity.CENTER);
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }

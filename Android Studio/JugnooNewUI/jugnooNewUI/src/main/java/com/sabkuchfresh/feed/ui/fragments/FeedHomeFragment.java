@@ -539,9 +539,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
-//            case R.id.item_location:
-//                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
-//                break;
+            case R.id.item_location:
+              activity.getTransactionUtils().openChangeFeedCityFragment(activity, activity.getRelativeLayoutContainer());
+                break;
             case R.id.item_notification:
                 activity.getTransactionUtils().openFeedNotificationsFragment(activity, activity.getRelativeLayoutContainer());
                 break;
@@ -598,7 +598,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 						public boolean onFailure(RetrofitError error) {
 							return true;
 						}
-					});
+
+                        @Override
+                        public void onNegativeClick() {
+
+
+                        }
+                    });
         } catch (Exception e) {
             e.printStackTrace();
         }
