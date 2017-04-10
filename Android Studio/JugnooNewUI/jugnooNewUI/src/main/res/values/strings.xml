@@ -1611,7 +1611,7 @@
     <string name="i_want_to_cancel_my_order_because">I want to cancel my Order because</string>
     <string name="please_select_one_reason">Please select one reason</string>
     <string name="error_feed_review_restaurant_not_selected">Select a restaurant to review</string>
-    <string name="write_a_comment">Add a reply...</string>
+    <string name="add_a_reply">Add a reply...</string>
     <string name="label_city">City</string>
     <string name="away_from_free_delivery_value">\u20B9%s away from free delivery</string>
     <string name="no_other_store_available">No other stores available</string>
