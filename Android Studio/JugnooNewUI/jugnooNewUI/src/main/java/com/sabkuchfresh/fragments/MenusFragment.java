@@ -160,13 +160,21 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                int offset = recyclerView.computeVerticalScrollOffset();
-                int extent = recyclerView.computeVerticalScrollExtent();
-                int range = recyclerView.computeVerticalScrollRange();
+                try {
+                    int offset = recyclerView.computeVerticalScrollOffset();
+                    int extent = recyclerView.computeVerticalScrollExtent();
+                    int range = recyclerView.computeVerticalScrollRange();
 
-                int percentage = (int)(100.0 * offset / (float)(range - extent));
+                    int percentage = (int)(100.0 * offset / (float)(range - extent));
 
-                Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
+                    Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
+                    if(percentage > 0 && percentage % 10 == 0) {
+                        GAUtils.event(MENUS, HOME + LIST_SCROLLED, percentage + "%");
+                        Log.i("GA Logged", "scroll percentage: "+ percentage + "%");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 

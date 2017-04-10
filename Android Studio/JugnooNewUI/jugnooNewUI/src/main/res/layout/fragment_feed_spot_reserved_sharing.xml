@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:text="Skip ahead in the queue by spreading the word about Ask Local. The more friends that join, the sooner you’ll get access."
+                    android:text="Skip ahead in the queue by spreading the word about AskLocal. The more friends that join, the sooner you’ll get access."
                     android:textColor="@color/text_color"
                     android:textSize="14sp"
                     android:layout_marginLeft="30dp"

@@ -501,7 +501,7 @@ public class LoginResponse {
 
 		public String getFeedName() {
 			if(feedName == null){
-				feedName = "Ask Local";
+				feedName = "AskLocal";
 			}
 			return feedName;
 		}

@@ -118,7 +118,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="45dp"
                 android:gravity="center"
-                android:text="What is everyone in the city upto? Find out through your own personalised Ask Local."
+                android:text="What is everyone in the city upto? Find out through your own personalised AskLocal."
                 android:textColor="@color/feed_grey_text_heading"
                 android:textSize="16sp"
                 android:layout_marginTop="-4dp"
