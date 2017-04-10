@@ -98,4 +98,10 @@ public interface FeedApiService {
 	@POST("/feeds/v1/get_city_info")
 	void getCityInfo(@FieldMap Map<String, String> params, Callback<FeedCityResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/feeds/v1/set_user_handle")
+	void setUserHandle(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
+
+
 }

@@ -479,8 +479,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
                     if(Data.getFeedData().getFeedActive()) {
-//                        addFeedFragment();
-                      addClaimHandleFragment();
+                        if(Data.getFeedData().showCreateHandle()){
+                            addClaimHandleFragment();
+
+                        }else{
+                            addFeedFragment();
+
+                        }
 
                     } else {
                         addFeedReserveSpotFragment();
@@ -1322,7 +1327,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llSearchCartVis = View.GONE;
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment) {
+            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment ||
+                    fragment instanceof FeedClaimHandleFragment) {
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -1808,7 +1814,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 .commitAllowingStateLoss();
     }
 
-    private void addFeedFragment() {
+    public void addFeedFragment() {
         getSupportFragmentManager().beginTransaction()
                 .add(relativeLayoutContainer.getId(), new FeedHomeFragment(),
                         FeedHomeFragment.class.getName())
@@ -3541,7 +3547,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     }
 
-
+    public void performSuperBackPress() {
+        super.onBackPressed();
+    }
 
 
     public interface CityChangeCallback {

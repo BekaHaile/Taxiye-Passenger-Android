@@ -1,61 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="@color/feed_grey_background_light"
-    android:paddingLeft="50dp"
-    android:paddingRight="50dp"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
 
-    
+    android:background="@color/feed_grey_background_light"
+    android:orientation="vertical"
+    >
+
     <ImageView
-        android:layout_marginTop="@dimen/spacing_extra_huge"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_feed_claim_handle_vector"
+        android:id="@+id/imageViewShadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/spacing_extra_tiny"
+        android:background="@drawable/shadow_down_new" />
+
+
+
+    <ImageView
         android:layout_width="75dp"
-        android:layout_height="91dp" />
+        android:layout_height="91dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_extra_huge"
+        android:src="@drawable/ic_feed_claim_handle_vector" />
 
     <TextView
-        android:layout_marginTop="@dimen/spacing_small"
-        android:text="@string/feed_claim_handle_description"
-        android:gravity="center"
-        app:font="maven"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:gravity="center"
+        android:text="@string/feed_claim_handle_description"
+        android:textColor="@color/feed_grey_text"
         android:textSize="@dimen/font_extra_large"
-       android:textColor="@color/feed_grey_text"
+        app:font="maven" />
+
+
+    <EditText
+        android:id="@+id/edt_claim_handle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:gravity="center"
+        android:hint="Claim your handle"
+        android:paddingBottom="@dimen/spacing_normal"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:textColor="@color/text_color_grey_red"
+        android:textColorHint="@color/feed_grey_hint_color"
+        android:textCursorDrawable="@drawable/cursor_black"
+        android:textSize="@dimen/font_large"
+        android:inputType="text"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        android:maxLines="1"
+        app:font="maven" />
+
+    <TextView
+        android:id="@+id/tv_error"
+        android:textSize="@dimen/font_small"
+        android:textColor="@color/feed_red"
+        app:font="maven"
+        android:visibility="invisible"
+        android:layout_gravity="center"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="@dimen/spacing_dimin"
+        android:layout_marginBottom="@dimen/spacing_small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_claim_hanlde"
-            app:hintEnabled ="false"
-            app:errorTextAppearance="@style/Text.Input.Layout.Feed"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginBottom="@dimen/spacing_huge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <EditText
-                android:id="@+id/edt_claim_handle"
-                app:font="maven"
-                android:textSize="@dimen/font_large"
-                android:hint="Claim your handle"
-                android:paddingBottom="@dimen/spacing_normal"
-                android:textColorHint="@color/feed_grey_hint_color"
-                android:textColor="@color/text_color"
-                android:textCursorDrawable="@drawable/cursor_black"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </android.support.design.widget.TextInputLayout>
 
 
     <Button
         android:id="@+id/btn_reserve_spot"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         style="@style/Feed.Button.Green"
-        android:text="Submit"/>
+        android:text="Submit" />
 </LinearLayout>

@@ -17,15 +17,17 @@
         android:id="@+id/edt_city_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_large"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/spacing_extra_large"
         android:layout_marginRight="@dimen/spacing_extra_large"
+        android:layout_marginTop="@dimen/spacing_large"
         android:drawableRight="@drawable/ic_feed_city_search"
         android:hint="Type City Name"
         android:paddingBottom="@dimen/spacing_normal"
         android:paddingLeft="@dimen/spacing_normal"
         android:paddingRight="@dimen/spacing_normal"
+        android:inputType="textCapWords"
+        android:maxLines="1"
         android:textColor="@color/text_color"
         android:textColorHint="@color/text_color_hint"
         android:textCursorDrawable="@drawable/cursor_black"
@@ -48,12 +50,12 @@
 
     <LinearLayout
         android:id="@+id/layout_use_current_location"
-        android:layout_marginLeft="@dimen/spacing_small"
-        android:layout_marginRight="@dimen/spacing_small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_label_or"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/spacing_small"
+        android:layout_marginRight="@dimen/spacing_small">
 
         <Button
             android:id="@+id/btn_use_current_location"
@@ -77,10 +79,10 @@
         android:id="@+id/label_trending_cities"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/spacing_normal"
-        android:layout_marginRight="@dimen/spacing_small"
         android:layout_below="@+id/layout_use_current_location"
         android:layout_marginBottom="@dimen/spacing_tiny"
+        android:layout_marginLeft="@dimen/spacing_normal"
+        android:layout_marginRight="@dimen/spacing_small"
 
         android:text="TRENDING CITIES"
         android:textColor="@color/text_color_less_light"
@@ -104,15 +106,14 @@
     </android.support.v7.widget.RecyclerView>
 
 
-
-
     <View
         android:id="@+id/blur_view"
 
 
-        android:layout_below="@id/edt_city_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edt_city_name" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rl_search_results"
         android:layout_width="match_parent"
@@ -120,9 +121,9 @@
         android:layout_below="@id/edt_city_name"
         android:layout_marginLeft="@dimen/spacing_small"
         android:layout_marginRight="@dimen/spacing_small"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:paddingBottom="1dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
-        android:background="@drawable/background_white_rounded_bordered" />
+        android:paddingTop="1dp" />
 </RelativeLayout>

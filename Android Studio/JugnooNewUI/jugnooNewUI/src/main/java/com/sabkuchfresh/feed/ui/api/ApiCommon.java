@@ -155,7 +155,10 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case CITY_INFO_API:
                 RestClient.getFeedApiService().getCityInfo(params, callback);
                 break;
+            case SET_HANDLE_API:
 
+                RestClient.getFeedApiService().setUserHandle(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 
