@@ -192,6 +192,7 @@ import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
+import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -1658,6 +1659,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void run() {
                 try {
                     if(Data.userData.getSignupTutorial() != null) {
+                        if (Data.userData.getSignupTutorial().getDs1() == 1) {
+                            startActivity(new Intent(HomeActivity.this, NewUserFlow.class));
+                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
+
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(Data.userData.getSignupTutorial() != null) {
 						if (Data.userData.getSignupTutorial().getTs1() == 1
 								|| Data.userData.getSignupTutorial().getTs2() == 1) {
 							getTransactionUtils().openSignUpTutorialFragment(HomeActivity.this, relativeLayoutContainer, 2);
@@ -1667,7 +1684,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
             }
-        }, 2000);
+        }, 4000);
 
         getHandler().postDelayed(new Runnable() {
             @Override

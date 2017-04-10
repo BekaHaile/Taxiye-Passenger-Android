@@ -140,8 +140,12 @@ public class NewUserFlow extends BaseFragmentActivity {
         ivLineProfile.setVisibility(View.GONE);
         ivTickWallet.setVisibility(View.GONE);
         if(Data.userData.getSignupTutorial() != null){
-            if(Data.userData.getSignupTutorial().getDs1() != null
-                    && Data.userData.getSignupTutorial().getDs1() == 1){
+            if((Data.userData.getSignupTutorial().getDs1() != null
+            && Data.userData.getSignupTutorial().getDs1() == 1)
+                    && ((Data.userData.getSignupTutorial().getDs2() != null
+            && Data.userData.getSignupTutorial().getDs2() == 1)
+                    || (Data.userData.getSignupTutorial().getDs3() != null
+            && Data.userData.getSignupTutorial().getDs3() == 1))){
                 ivTickReferral.setVisibility(View.VISIBLE);
                 ivLineReferral.setVisibility(View.VISIBLE);
                 ivLineReferralFill.setVisibility(View.VISIBLE);
