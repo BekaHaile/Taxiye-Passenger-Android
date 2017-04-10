@@ -1408,7 +1408,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		imageViewJugnooLogo.requestFocus();
 		llContainer.setVisibility(View.GONE);
 		rlSplashLogo.setVisibility(View.GONE);
-		rlLoginSignupNew.setVisibility(View.GONE);
+		relativeLayoutLS.setVisibility(View.GONE);
 		rlLoginSignupNew.setVisibility(View.GONE);
 		int duration = 500;
 		switch (state) {
@@ -1596,6 +1596,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 			case SPLASH_NO_NET:
 				llContainer.setVisibility(View.VISIBLE);
+				rlLoginSignupNew.setVisibility(View.GONE);
 				imageViewBack.setVisibility(View.GONE);
 				relativeLayoutJugnooLogo.setVisibility(View.GONE);
 				llLoginBtn.setVisibility(View.GONE);
