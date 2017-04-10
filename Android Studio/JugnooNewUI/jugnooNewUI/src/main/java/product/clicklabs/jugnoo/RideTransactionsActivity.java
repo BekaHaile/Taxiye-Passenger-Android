@@ -7,6 +7,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -16,7 +19,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class RideTransactionsActivity extends BaseFragmentActivity  {
+public class RideTransactionsActivity extends BaseFragmentActivity implements GAAction {
 
     private final String TAG = RideTransactionsActivity.class.getSimpleName();
 
@@ -42,6 +45,8 @@ public class RideTransactionsActivity extends BaseFragmentActivity  {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rides_transactions);
+
+		GAUtils.trackScreenView(HISTORY);
 
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);

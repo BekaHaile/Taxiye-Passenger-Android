@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,7 +23,7 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
-public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.ViewHolder> {
+public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.ViewHolder> implements GAAction, GACategory{
 
     private HomeActivity activity;
     private ArrayList<Region> regions = new ArrayList<>();
@@ -83,7 +86,11 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             public void onClick(View v) {
                 int position = (int) v.getTag();
                 activity.setVehicleTypeSelected(position);
-
+                try {
+                    GAUtils.event(RIDES, HOME, regions.get(position).getRegionName()+" "+CLICKED);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 

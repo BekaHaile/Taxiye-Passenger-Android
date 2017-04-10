@@ -49,7 +49,7 @@
 
         <fragment
             android:id="@+id/googleMap"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+            class="product.clicklabs.jugnoo.utils.TouchableMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -95,6 +95,25 @@
             android:layout_marginBottom="10dp"
             />
 
+
+        <Button
+            android:id="@+id/bCallDriver"
+            style="@style/ButtonTheme"
+            android:layout_width="@dimen/dp_200"
+            android:layout_height="@dimen/dp_45"
+            android:background="@drawable/capsule_green_selector"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:drawableLeft="@drawable/ic_track_order_call"
+            android:text="@string/call_driver"
+            android:layout_alignParentBottom="true"
+            android:textSize="@dimen/sp_15"
+            android:visibility="gone"
+
+            />
 
     </RelativeLayout>
 

@@ -96,14 +96,15 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
             //IF not registered
             setMeter(Data.getFeedData().getUsersCount());
             vSpacing.setVisibility(View.GONE);
-            GAUtils.trackScreenView(FEED+HOME+WAITLIST);
 
 			if(Data.getFeedData().showCreateHandle()){
 				btnReserveSpot.setVisibility(View.GONE);
 				rlCreateHandle.setVisibility(View.VISIBLE);
+                GAUtils.trackScreenView(FEED+HOME+WAITLIST+WITH_HANDLE);
 			} else {
 				btnReserveSpot.setVisibility(View.VISIBLE);
 				rlCreateHandle.setVisibility(View.GONE);
+                GAUtils.trackScreenView(FEED+HOME+WAITLIST);
 			}
 
         }else{
@@ -173,6 +174,7 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
 
         if(Data.getFeedData().getFeedRank()==null)
         {
+            GAUtils.event(FEED, WAITLIST, RESERVE_MY_SPOT+CLICKED);
             if(Data.longitude==0||Data.latitude==0){
                 Toast.makeText(activity, "Please turn on your location to register.", Toast.LENGTH_SHORT).show();
                 return;

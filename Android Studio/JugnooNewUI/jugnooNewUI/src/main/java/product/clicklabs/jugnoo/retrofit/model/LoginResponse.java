@@ -393,6 +393,9 @@ public class LoginResponse {
 
 		private String handleName;
 
+		@SerializedName("feed_name")
+		@Expose
+		private String feedName;
 
 
 
@@ -495,6 +498,18 @@ public class LoginResponse {
 		public void setHandleName(String handleName) {
 			this.handleName = handleName;
 		}
+
+		public String getFeedName() {
+			if(feedName == null){
+				feedName = "AskLocal";
+			}
+			return feedName;
+		}
+
+		public void setFeedName(String feedName) {
+			this.feedName = feedName;
+		}
+
 	}
 
 	public class Pay{

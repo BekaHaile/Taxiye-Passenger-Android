@@ -206,10 +206,27 @@ public interface GAAction {
 	String GOOGLE = "Google ";
 	String TRACK_DELIVERY = "Track Delivery ";
 	String WAITLIST = "Waitlist ";
+	String WITH_HANDLE = "With Handle ";
 	String SHARING = "Sharing ";
 	String OFFERS = "Offers ";
 	String BAR = "Bar ";
 	String JEANIE = "Jeanie ";
 	String AUTOMATIC = "Automatic ";
 	String NOTIFICATIONS = "Notifications ";
+
+	String LIKE = "Like ";
+	String POST_BAR = "Post Bar ";
+	String RESTAURANT_NAME = "Restaurant Name ";
+	String RESTAURANT_IMAGE = "Restaurant Image ";
+	String POST = "Post ";
+	String REVIEW = "Review ";
+	String ASK = "Ask ";
+	String IMAGE = "Image ";
+	String UPLOADED = "Uploaded ";
+	String SUBMIT = "Submit ";
+	String RESERVE_MY_SPOT = "Reserve My Spot ";
+	String EMAIL = "Email ";
+	String TWITTER = "Twitter ";
+	String OTHER_SHARING_OPTIONS = "Other Sharing Options ";
+	String LIST_SCROLLED = "List Scrolled ";
 }

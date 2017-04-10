@@ -550,6 +550,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             public void onClick(View v) {
                 if(getTopFragment()  instanceof FeedHomeFragment){
                     openFeedAddPostFragment(null);
+                    GAUtils.event(FEED, HOME, ADD+POST_BAR+CLICKED);
                 }
             }
         });
@@ -1333,7 +1334,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(R.string.feed);
+                topBar.title.setText(Data.getFeedName(this));
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
@@ -1349,7 +1350,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
                 if(fragment instanceof FeedOfferingCommentsFragment){
-                    topBar.title.setText(R.string.feed);
+                    topBar.title.setText(Data.getFeedName(this));
                 } else if(fragment instanceof FeedNotificationsFragment){
                     topBar.title.setText(R.string.notifications);
                 }else if(fragment instanceof FeedChangeCityFragment){
@@ -1887,6 +1888,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else {
                     GAUtils.event(FRESH, HOME + SEARCH, BACK + BUTTON + CLICKED);
                 }
+            } else if(getTopFragment() instanceof FeedOfferingCommentsFragment){
+                GAUtils.event(FEED, COMMENT, BACK+BUTTON+CLICKED);
             }
         }
 
@@ -3200,7 +3203,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (appType == AppConstant.ApplicationType.MENUS && getMenusFragment() != null) {
                     getMenusFragment().getAllMenus(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
-                    getFeedHomeFragment().fetchFeedsApi(true);
+                    getFeedHomeFragment().fetchFeedsApi(true, false);
                 }
             }
         } catch (Exception e) {

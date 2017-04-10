@@ -545,4 +545,12 @@ public class Data {
 	public static void setFeedData(LoginResponse.Feed feedData) {
 		Data.feedData = feedData;
 	}
+
+	public static String getFeedName(Context context){
+		if(Data.getFeedData() != null && !TextUtils.isEmpty(Data.getFeedData().getFeedName())){
+			return Data.getFeedData().getFeedName();
+		} else {
+			return context.getString(R.string.ask_local);
+		}
+	}
 }

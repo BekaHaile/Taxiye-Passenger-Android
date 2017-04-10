@@ -576,5 +576,11 @@
     <dimen name="dp_minus_40">
         -40dp
     </dimen>
+
     <dimen name="feed_gps_icon_height">21dp</dimen>
+    <dimen name="dp_45">
+        45dp
+    </dimen>
+
+
 </resources>

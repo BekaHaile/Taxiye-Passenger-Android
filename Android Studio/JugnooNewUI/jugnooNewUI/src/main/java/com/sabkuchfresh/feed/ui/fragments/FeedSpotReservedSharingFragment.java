@@ -110,21 +110,26 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 											Data.getFeedData().getEarlyAccessShareTitle(),
 											Data.getFeedData().getEarlyAccessShareDesc(), link,
 											Data.getFeedData().getEarlyAccessShareImage());
+									GAUtils.event(FEED, WAITLIST+SHARING, FACEBOOK+CLICKED);
 									return;
 
 								case R.id.tvShareTweet:
 									appType = ReferralActions.TWITTER;
+									GAUtils.event(FEED, WAITLIST+SHARING, TWITTER+CLICKED);
 									break;
 
 								case R.id.tvShareEmail:
 									appType = ReferralActions.EMAIL;
+									GAUtils.event(FEED, WAITLIST+SHARING, EMAIL+CLICKED);
 									break;
 
 								case R.id.tvShareWhatsapp:
 									appType = ReferralActions.WHATSAPP;
+									GAUtils.event(FEED, WAITLIST+SHARING, WHATSAPP+CLICKED);
 									break;
 
 								case R.id.tvMoreSharingOptions:
+									GAUtils.event(FEED, WAITLIST+SHARING, OTHER_SHARING_OPTIONS+CLICKED);
 									break;
 							}
 							ReferralActions.shareIntent(activity,
