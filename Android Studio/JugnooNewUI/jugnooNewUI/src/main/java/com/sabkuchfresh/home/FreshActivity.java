@@ -4114,10 +4114,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             options.put(Constants.KEY_RAZORPAY_THEME_COLOR, "#FD7945");
             if(isUPA){
                 options.put(Constants.KEY_RAZORPAY_PREFILL_METHOD, "upi"); // "upi", ""
-                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo)+"@upi"); // "upi", ""
+                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Data.userData != null ? Data.userData.getUpiHandle() : ""); // "upi", ""
             } else{
                 options.put(Constants.KEY_RAZORPAY_PREFILL_METHOD, "");
-                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo)+"@upi");
+                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Data.userData != null ? Data.userData.getUpiHandle() : "");
             }
 
             Log.i(TAG, "startRazorPayPayment options="+options);

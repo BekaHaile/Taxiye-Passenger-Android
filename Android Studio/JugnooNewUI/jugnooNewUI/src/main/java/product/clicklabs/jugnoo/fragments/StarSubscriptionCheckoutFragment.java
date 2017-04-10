@@ -555,19 +555,25 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             }
 
             // for razorPay layout adding
-            ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
+            /*ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
             if(paymentGatewayModeConfigs != null && paymentGatewayModeConfigs.size() > 0){
                 for(PaymentGatewayModeConfig modeConfig : paymentGatewayModeConfigs){
                     if(modeConfig.getEnabled()!= null && modeConfig.getEnabled() == 1){
-                        linearLayoutWalletContainer.addView(rlUPI);
+                        if(!TextUtils.isEmpty(modeConfig.getName())
+                                && modeConfig.getName().equalsIgnoreCase("upi_razorpay")){
+                            linearLayoutWalletContainer.addView(rlUPI);
+                            if(!TextUtils.isEmpty(modeConfig.getDisplayNameUpi())) {
+                                tvUPI.setText(modeConfig.getDisplayNameUpi());
+                            }
+                        } else{
                         linearLayoutWalletContainer.addView(rlOtherModesToPay);
-                        if(!TextUtils.isEmpty(modeConfig.getDisplayName()))
+                        if(!TextUtils.isEmpty(modeConfig.getDisplayName())) {
                             tvOtherModesToPay.setText(modeConfig.getDisplayName());
-                        if(!TextUtils.isEmpty(modeConfig.getDisplayNameUpi()))
-                            tvUPI.setText(modeConfig.getDisplayNameUpi());
+                        }
+                        }
                     }
                 }
-            }
+            }*/
         } catch (Exception e){
             e.printStackTrace();
         }

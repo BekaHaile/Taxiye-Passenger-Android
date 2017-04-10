@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.wallet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.jugnoo.pay.activities.MainActivity;
@@ -611,6 +612,12 @@ public class WalletCore {
 		this.paymentGatewayModeConfigs = new ArrayList<>();
 		if(paymentGatewayModeConfigs != null) {
 			this.paymentGatewayModeConfigs.addAll(paymentGatewayModeConfigs);
+			for(PaymentGatewayModeConfig config : paymentGatewayModeConfigs){
+				if(Data.userData != null && !TextUtils.isEmpty(config.getUpiHandle())){
+					Data.userData.setUpiHandle(config.getUpiHandle());
+					break;
+				}
+			}
 		}
 	}
 

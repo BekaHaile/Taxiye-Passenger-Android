@@ -87,6 +87,7 @@ public class UserData {
 	private SignupTutorial signupTutorial;
 	private int expandJeanie;
 	private String expandedGenieText;
+	private String upiHandle;
 
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
@@ -985,6 +986,14 @@ public class UserData {
 
 	public void setExpandedGenieText(String expandedGenieText) {
 		this.expandedGenieText = expandedGenieText;
+	}
+
+	public String getUpiHandle() {
+		return upiHandle;
+	}
+
+	public void setUpiHandle(String upiHandle) {
+		this.upiHandle = upiHandle;
 	}
 
 	//	"meals_enabled": 1,

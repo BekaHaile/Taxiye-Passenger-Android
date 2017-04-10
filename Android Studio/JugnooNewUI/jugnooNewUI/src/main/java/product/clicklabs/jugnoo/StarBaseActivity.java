@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Pair;
 
 import com.razorpay.Checkout;
@@ -48,10 +49,10 @@ public class StarBaseActivity extends BaseFragmentActivity implements PaymentRes
             options.put(Constants.KEY_RAZORPAY_THEME_COLOR, "#FD7945");
             if(isUPA){
                 options.put(Constants.KEY_RAZORPAY_PREFILL_METHOD, "upi"); // "upi", ""
-                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo)+"@upi"); // "upi", ""
+                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Data.userData != null ? Data.userData.getUpiHandle() : ""); // "upi", ""
             } else{
                 options.put(Constants.KEY_RAZORPAY_PREFILL_METHOD, "");
-                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo)+"@upi");
+                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Data.userData != null ? Data.userData.getUpiHandle() : "");
             }
 
             Log.i("StarBaseActivity", "startRazorPayPayment options="+options);

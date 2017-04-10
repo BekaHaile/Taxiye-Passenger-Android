@@ -1874,12 +1874,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 			if(paymentGatewayModeConfigs != null && paymentGatewayModeConfigs.size() > 0){
 				for(PaymentGatewayModeConfig modeConfig : paymentGatewayModeConfigs){
 					if(modeConfig.getEnabled()!= null && modeConfig.getEnabled() == 1){
-                        linearLayoutWalletContainer.addView(rlUPI);
-						linearLayoutWalletContainer.addView(rlOtherModesToPay);
-						if(!TextUtils.isEmpty(modeConfig.getDisplayName()))
-							tvOtherModesToPay.setText(modeConfig.getDisplayName());
-                        if(!TextUtils.isEmpty(modeConfig.getDisplayNameUpi()))
-                            tvUPI.setText(modeConfig.getDisplayNameUpi());
+                        if(!TextUtils.isEmpty(modeConfig.getName())
+                                && modeConfig.getName().equalsIgnoreCase("upi_razorpay")){
+                            linearLayoutWalletContainer.addView(rlUPI);
+                            if(!TextUtils.isEmpty(modeConfig.getDisplayName())) {
+                                tvUPI.setText(modeConfig.getDisplayName());
+                            }
+                        } else {
+                            linearLayoutWalletContainer.addView(rlOtherModesToPay);
+                            if (!TextUtils.isEmpty(modeConfig.getDisplayName())) {
+                                tvOtherModesToPay.setText(modeConfig.getDisplayName());
+                            }
+                        }
 					}
 				}
 			}
