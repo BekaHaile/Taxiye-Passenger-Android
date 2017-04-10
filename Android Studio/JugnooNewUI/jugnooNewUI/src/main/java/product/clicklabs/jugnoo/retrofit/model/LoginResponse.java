@@ -396,9 +396,6 @@ public class LoginResponse {
 		@SerializedName("feed_name")
 		@Expose
 		private String feedName;
-		@SerializedName("comment_name")
-		@Expose
-		private String commentName;
 
 
 
@@ -513,13 +510,6 @@ public class LoginResponse {
 			this.feedName = feedName;
 		}
 
-		public String getCommentName() {
-			return commentName;
-		}
-
-		public void setCommentName(String commentName) {
-			this.commentName = commentName;
-		}
 	}
 
 	public class Pay{

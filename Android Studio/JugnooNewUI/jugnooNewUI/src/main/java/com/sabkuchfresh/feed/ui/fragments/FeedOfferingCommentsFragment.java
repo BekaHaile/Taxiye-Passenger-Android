@@ -161,7 +161,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
             @Override
             public void onDeleteComment(final FeedComment feedComment, final int positionInList, View viewClicked) {
-             DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Comment", "Are you sure you want to delete your comment?", "Yes", "No", new View.OnClickListener() {
+             DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Reply", "Are you sure you want to delete?", "Yes", "No", new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {
                      deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());

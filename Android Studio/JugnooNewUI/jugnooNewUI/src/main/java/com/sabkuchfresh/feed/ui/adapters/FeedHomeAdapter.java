@@ -372,7 +372,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             holder.tvLike.setText(likeText);
 
-            String commentSuffix = feedDetail.getCommentCount() > 1 ? " Comments" : " Comment";
+            String commentSuffix = feedDetail.getCommentCount() > 1 ? " Replies" : " Reply";
             SpannableString commentText;
             if(feedDetail.getCommentCount()>0){
                 //bold comment Count
@@ -489,7 +489,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         String likeSuffix = likeCount > 1 ? " Likes " : " Like ";
         likeSuffix=likeCount>0? likeCount+likeSuffix:"";
-        String commentSuffix = commentCount > 1 ? " Comments " : " Comment ";
+        String commentSuffix = commentCount > 1 ? " Replies " : " Reply ";
         commentSuffix=commentCount>0?commentCount+commentSuffix:"";
         String divider = likeCount!=0 && commentCount!=0 ?activity.getString(R.string.bullet) + " ":"";
 
