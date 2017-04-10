@@ -13,8 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
+import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -26,7 +30,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by shankar on 4/8/16.
  */
-public class TopBar {
+public class TopBar implements GAAction, GACategory {
 
     Activity activity;
     DrawerLayout drawerLayout;
@@ -209,6 +213,19 @@ public class TopBar {
                 case R.id.imageViewMenu:
                     drawerLayout.openDrawer(GravityCompat.START);
                     Utils.hideSoftKeyboard(activity, etSearch);
+                    if(activity instanceof FreshActivity){
+                        int appType = ((FreshActivity)activity).getAppType();
+                        if(appType == AppConstant.ApplicationType.FRESH){
+                            GAUtils.event(JUGNOO, FRESH+HOME, LEFT_MENU_ICON+CLICKED);
+                        } else if(appType == AppConstant.ApplicationType.MEALS){
+                            GAUtils.event(JUGNOO, MEALS+HOME, LEFT_MENU_ICON+CLICKED);
+                        } else if(appType == AppConstant.ApplicationType.MENUS){
+                            GAUtils.event(JUGNOO, GAAction.MENUS+HOME, LEFT_MENU_ICON+CLICKED);
+                        } else if(appType == AppConstant.ApplicationType.FEED){
+                            GAUtils.event(JUGNOO, FEED+HOME, LEFT_MENU_ICON+CLICKED);
+                        }
+                    }
+
                     break;
 
                 case R.id.buttonCheckServer:

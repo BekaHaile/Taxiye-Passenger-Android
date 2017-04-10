@@ -66,6 +66,8 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 			e.printStackTrace();
 		}
 
+		GAUtils.trackScreenView(REFERRAL+HOME);
+
 		imageViewLogo = (ImageView) rootView.findViewById(R.id.imageViewLogo);
 		textViewDesc = (TextView)rootView.findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.mavenMedium(activity));
 

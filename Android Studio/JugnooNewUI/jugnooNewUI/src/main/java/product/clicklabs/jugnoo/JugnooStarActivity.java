@@ -53,6 +53,8 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         relative = (RelativeLayout) findViewById(R.id.relative);
         new ASSL(JugnooStarActivity.this, relative, 1134, 720, false);
 
+        GAUtils.trackScreenView(JUGNOO+STAR+HOME);
+
         rlFragment = (RelativeLayout) findViewById(R.id.rlFragment);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);

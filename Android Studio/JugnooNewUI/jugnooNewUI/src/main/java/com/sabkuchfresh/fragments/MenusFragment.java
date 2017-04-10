@@ -150,6 +150,26 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         recyclerViewRestaurant.setAdapter(menusRestaurantAdapter);
 
+        recyclerViewRestaurant.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int offset = recyclerView.computeVerticalScrollOffset();
+                int extent = recyclerView.computeVerticalScrollExtent();
+                int range = recyclerView.computeVerticalScrollRange();
+
+                int percentage = (int)(100.0 * offset / (float)(range - extent));
+
+                Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
+            }
+        });
+
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
 
         try {

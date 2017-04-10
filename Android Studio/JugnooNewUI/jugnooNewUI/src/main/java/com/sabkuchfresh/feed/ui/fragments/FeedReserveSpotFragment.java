@@ -96,14 +96,15 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
             //IF not registered
             setMeter(Data.getFeedData().getUsersCount());
             vSpacing.setVisibility(View.GONE);
-            GAUtils.trackScreenView(FEED+HOME+WAITLIST);
 
 			if(Data.getFeedData().showCreateHandle()){
 				btnReserveSpot.setVisibility(View.GONE);
 				rlCreateHandle.setVisibility(View.VISIBLE);
+                GAUtils.trackScreenView(FEED+HOME+WAITLIST+WITH_HANDLE);
 			} else {
 				btnReserveSpot.setVisibility(View.VISIBLE);
 				rlCreateHandle.setVisibility(View.GONE);
+                GAUtils.trackScreenView(FEED+HOME+WAITLIST);
 			}
 
         }else{

@@ -206,6 +206,7 @@ public interface GAAction {
 	String GOOGLE = "Google ";
 	String TRACK_DELIVERY = "Track Delivery ";
 	String WAITLIST = "Waitlist ";
+	String WITH_HANDLE = "With Handle ";
 	String SHARING = "Sharing ";
 	String OFFERS = "Offers ";
 	String BAR = "Bar ";
