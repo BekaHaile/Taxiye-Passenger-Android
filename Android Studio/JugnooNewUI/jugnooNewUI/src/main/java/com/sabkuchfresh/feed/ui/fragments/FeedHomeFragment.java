@@ -164,7 +164,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             public void onCommentClick(final FeedDetail feedDetail, int positionInOriginalList) {
 
 
-                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList);
+                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList,true);
 
             }
 
@@ -193,6 +193,12 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
             @Override
             public void onDeleteComment(FeedComment feedComment, int position, View viewClicked) {
+
+            }
+
+            @Override
+            public void onFeedLayoutClick(FeedDetail feedDetail, int positionInOriginalList) {
+                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList,false);
 
             }
         });

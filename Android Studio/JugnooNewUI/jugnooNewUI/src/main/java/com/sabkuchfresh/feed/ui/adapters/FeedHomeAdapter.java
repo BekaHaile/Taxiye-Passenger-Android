@@ -439,9 +439,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 reviewImages = feedDetail.getReviewImages();
             }
 
-
-
             //Show user Images if greater than 1 in a recycler view
+
+            RelativeLayout.LayoutParams vpParams = (RelativeLayout.LayoutParams) holder.vpReviewImages.getLayoutParams();
             if (reviewImages != null && reviewImages.size() > 0) {
                 holder.vpReviewImages.setVisibility(View.VISIBLE);
                 if (holder.displayFeedHomeImagesAdapter == null) {
@@ -459,10 +459,18 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     tab.requestLayout();
                 }
                 holder.tabDots.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);
+                holder.lineBelowImagesPager.setVisibility(View.INVISIBLE);
+
+                vpParams.bottomMargin=0;
+
             } else {
+                holder.lineBelowImagesPager.setVisibility(View.VISIBLE);
                 holder.vpReviewImages.setVisibility(View.GONE);
                 holder.tabDots.setVisibility(View.GONE);
+                vpParams.bottomMargin=FeedUtils.dpToPx(10);
             }
+            holder.vpReviewImages.setLayoutParams(vpParams);
+
 
             //Show Edit post option if available
             holder.tvMore.setVisibility(feedDetail.isPostEditable()?View.VISIBLE:View.GONE);
@@ -526,11 +534,6 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             postedMonth = feedPostedCal.get(Calendar.MONTH);
             currentDate = currentDateCal.get(Calendar.DATE);
             postedDate = feedPostedCal.get(Calendar.DATE);
-        /*    postedHour=feedPostedCal.get(Calendar.HOUR_OF_DAY);
-            currentHour=currentDateCal.get(Calendar.HOUR_OF_DAY);
-            postedMin=feedPostedCal.get(Calendar.MINUTE);
-            currentMin=currentDateCal.get(Calendar.MINUTE);*/
-
 
             int diff = yearCurrent - yearPosted;
             if (postedMonth > currentMonth || (postedMonth == currentMonth && postedDate > currentDate)) {
@@ -606,8 +609,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     feedPostCallback.onLikeClick(feedDetail, position);
                     break;
                 case R.id.view_action_comment:
-                case R.id.root_layout_item:
                     feedPostCallback.onCommentClick(feedDetail, position);
+                    break;
+                case R.id.root_layout_item:
+                    feedPostCallback.onFeedLayoutClick(feedDetail, position);
+
                     break;
 
                 case R.id.tv_feed_owner_title:
@@ -664,6 +670,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         void onMoreClick(FeedDetail feedDetail, int positionInOriginalList, View moreItemView);
 
         void onDeleteComment(FeedComment feedComment, int position, View viewClicked);
+
+        void onFeedLayoutClick(FeedDetail feedDetail, int position);
     }
 
 
@@ -676,6 +684,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView tvFeedDescription;
         @Bind(R.id.iv_place_image)
         ImageView ivPlaceImage;
+        @Bind(R.id.line_below_images_pager)
+        View lineBelowImagesPager;
       /*  @Bind(R.id.tv_like_status)
         TextView tvLikeStatus;
         @Bind(R.id.tv_comment_status)

@@ -47,9 +47,9 @@
             android:paddingLeft="@dimen/spacing_tiny"
             android:paddingRight="@dimen/dp_36"
             android:text="@string/whats_on_your_mind"
-            android:textColor="@color/text_color_light"
-            android:textSize="@dimen/sp_15"
-            app:font="@string/maven_r"/>
+            android:textColor="@color/feed_color_orange"
+            android:textSize="@dimen/sp_16"
+            app:font="maven"/>
 
     </RelativeLayout>
 </RelativeLayout>

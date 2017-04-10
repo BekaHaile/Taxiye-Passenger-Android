@@ -10,13 +10,13 @@
 
     <RelativeLayout
         android:id="@+id/layout_user_activity_heading"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_large"
         android:layout_marginLeft="@dimen/spacing_normal"
         android:layout_marginRight="@dimen/spacing_normal"
-        android:layout_marginBottom="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_small"
         >
 
         <ImageView
@@ -28,6 +28,7 @@
             android:src="@drawable/ic_fresh_item_placeholder" />
 
         <TextView
+            android:layout_centerVertical="true"
             android:id="@+id/tv_user_activity_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,6 +41,7 @@
             app:font="maven" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/tv_user_activity_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -154,7 +156,7 @@
 
            <TextView
                android:id="@id/ib_arrow_more"
-
+               android:layout_marginRight="@dimen/spacing_tiny"
                android:layout_alignParentRight="true"
                android:paddingLeft="@dimen/spacing_tiny"
                android:paddingRight="@dimen/spacing_tiny"

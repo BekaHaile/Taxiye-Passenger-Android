@@ -53,6 +53,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
     private static final String FEED_DETAIL = "feed_detail";
     private static final String POSITION_IN_ORIGINAL_LIST = "positionInOriginalList";
+    private static final String OPEN_KEYBOARD_ON_LOAD = "openKeyboardOnLoad";
     private FeedDetail feedDetail;
     private FeedOfferingCommentsAdapter feedOfferingCommentsAdapter;
     private FreshActivity activity;
@@ -65,6 +66,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
     private EditText edtMyComment;
     private RecyclerView recyclerView;
     private DeleteFeed deleteFeed;
+    private boolean openKeyboardOnLoad;
 
 
     public FeedOfferingCommentsFragment() {
@@ -72,11 +74,12 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
     }
 
 
-    public static FeedOfferingCommentsFragment newInstance(FeedDetail feedDetail, int positionInOriginalList) {
+    public static FeedOfferingCommentsFragment newInstance(FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad) {
         FeedOfferingCommentsFragment fragment = new FeedOfferingCommentsFragment();
         Bundle args = new Bundle();
         args.putSerializable(FEED_DETAIL, feedDetail);
         args.putSerializable(POSITION_IN_ORIGINAL_LIST, positionInOriginalList);
+        args.putBoolean(OPEN_KEYBOARD_ON_LOAD, openKeyboardOnLoad);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,6 +91,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         if (getArguments() != null) {
             feedDetail = (FeedDetail) getArguments().getSerializable(FEED_DETAIL);
             positionInOriginalList = getArguments().getInt(POSITION_IN_ORIGINAL_LIST);
+            openKeyboardOnLoad = getArguments().getBoolean(OPEN_KEYBOARD_ON_LOAD);
         }
     }
 
@@ -170,6 +174,11 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
              },true,false);
 
             }
+
+            @Override
+            public void onFeedLayoutClick(FeedDetail feedDetail, int position) {
+
+            }
         }, submitTextWatcher);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,6 +231,16 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     if(setFeedObjectAndRefresh(feedbackResponse)) {
                                         prepareListAndNotifyAdapter(feedbackResponse);
+                                    }
+                                    if((feedbackResponse.getFeedComments()==null || feedbackResponse.getFeedComments().size()==0) && openKeyboardOnLoad){
+
+                                        activity.getHandler().postDelayed(new Runnable() {
+                                          @Override
+                                          public void run() {
+                                              edtMyComment.requestFocus();
+                                              Utils.showKeyboard(activity,edtMyComment);
+                                          }
+                                      },200);
                                     }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);

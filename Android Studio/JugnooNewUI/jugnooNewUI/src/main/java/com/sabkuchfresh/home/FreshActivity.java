@@ -4184,7 +4184,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             FeedDetail feedDetail = new FeedDetail();
             feedDetail.setPostId(postId);
-            getTransactionUtils().openFeedCommentsFragment(this, getRelativeLayoutContainer(), feedDetail, -1);
+            getTransactionUtils().openFeedCommentsFragment(this, getRelativeLayoutContainer(), feedDetail, -1, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
