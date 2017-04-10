@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedClaimHandleFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
@@ -461,5 +462,9 @@ public class TransactionUtils {
                     .commitAllowingStateLoss();
         }
     }
+
+
+
+
 }
 

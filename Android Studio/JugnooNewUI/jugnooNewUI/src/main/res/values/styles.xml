@@ -433,5 +433,11 @@
         <item name="font">"maven"</item>
     </style>
 
+    <style name="Text.Input.Layout.Feed" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/feed_red</item>
+        <item name="android:textSize">12sp</item>
+
+    </style>
+
 
 </resources>

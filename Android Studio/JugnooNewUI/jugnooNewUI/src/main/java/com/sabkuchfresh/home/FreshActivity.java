@@ -75,6 +75,7 @@ import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedClaimHandleFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
@@ -478,7 +479,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
                     if(Data.getFeedData().getFeedActive()) {
-                        addFeedFragment();
+//                        addFeedFragment();
+                      addClaimHandleFragment();
+
                     } else {
                         addFeedReserveSpotFragment();
                     }
@@ -1810,6 +1813,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 .add(relativeLayoutContainer.getId(), new FeedHomeFragment(),
                         FeedHomeFragment.class.getName())
                 .addToBackStack(FeedHomeFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
+    private void addClaimHandleFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new FeedClaimHandleFragment(),
+                        FeedClaimHandleFragment.class.getName())
+                .addToBackStack(FeedClaimHandleFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 

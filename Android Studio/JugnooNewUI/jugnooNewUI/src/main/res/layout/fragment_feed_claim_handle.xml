@@ -12,7 +12,7 @@
     <ImageView
         android:layout_marginTop="@dimen/spacing_extra_huge"
         android:layout_gravity="center"
-        android:src="@drawable/ic_feed_handle_display"
+        android:src="@drawable/ic_feed_claim_handle_vector"
         android:layout_width="75dp"
         android:layout_height="91dp" />
 
@@ -20,6 +20,7 @@
         android:layout_marginTop="@dimen/spacing_small"
         android:text="@string/feed_claim_handle_description"
         android:gravity="center"
+        app:font="maven"
         android:layout_gravity="center"
         android:textSize="@dimen/font_extra_large"
        android:textColor="@color/feed_grey_text"
@@ -27,7 +28,11 @@
         android:layout_height="wrap_content" />
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_claim_hanlde"
             app:hintEnabled ="false"
+            app:errorTextAppearance="@style/Text.Input.Layout.Feed"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:layout_marginTop="@dimen/spacing_large"
             android:layout_marginBottom="@dimen/spacing_huge"
             android:layout_width="match_parent"
@@ -35,10 +40,14 @@
 
 
             <EditText
+                android:id="@+id/edt_claim_handle"
                 app:font="maven"
                 android:textSize="@dimen/font_large"
                 android:hint="Claim your handle"
+                android:paddingBottom="@dimen/spacing_normal"
                 android:textColorHint="@color/feed_grey_hint_color"
+                android:textColor="@color/text_color"
+                android:textCursorDrawable="@drawable/cursor_black"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
