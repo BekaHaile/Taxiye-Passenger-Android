@@ -679,4 +679,6 @@ public interface Constants {
     String IS_ANONYMOUS = "is_anonymous";
     String KEY_IS_READ = "is_read";
     String DEFAULT_IMAGE_URL = "http://tablabar.s3.amazonaws.com/brand_images/user.png";
+
+    String SP_POST_ID_TO_OPEN = "sp_post_id_to_open";
 }

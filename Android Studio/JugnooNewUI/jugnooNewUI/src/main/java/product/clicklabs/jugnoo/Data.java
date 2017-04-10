@@ -305,6 +305,8 @@ public class Data {
 			Log.e("action", "=" + action);
 			Log.e("data", "=" + data);
 
+
+			// Deep linking share.jugnoo.in/review/<review_id> with restaurant feed page
 			boolean dontTryParsingDeeplink = false;
 			if(data != null && !TextUtils.isEmpty(data.getPath()) && data.getPath().contains(Constants.KEY_REVIEW)){
 				try {
@@ -321,23 +323,33 @@ public class Data {
 				Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
 			}
 
+
+			// CAMPAIGN TRACK PUSH
+			// if intent extras has campaign_id it hit /track_push api on server
+			// for that campaign id with status opened
 			if(intent.getIntExtra(Constants.KEY_CAMPAIGN_ID, 0) > 0){
 				int campaignId = intent.getIntExtra(Constants.KEY_CAMPAIGN_ID, 0);
 				new ApiTrackPush().hit(context, campaignId, ApiTrackPush.Status.OPENED);
 			}
 
+			// Referral code cached from intent query param
 			if(data.getQueryParameter(Constants.KEY_REFERRAL_CODE) != null){
 				Data.deepLinkReferralCode = data.getQueryParameter(Constants.KEY_REFERRAL_CODE);
 			}
 
-			if(intent.hasExtra(Constants.KEY_PUSH_CLICKED)){
-			}
 
+			// Parsing deep index value if it is not from restaurant deep link
 			if(!dontTryParsingDeeplink && data.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
 				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter(Constants.KEY_DEEPINDEX));
+
+				// For deep linking with Offering Order Status Fragment
 				if(intent.getIntExtra(Constants.KEY_ORDER_ID, 0) != 0){
 					Data.deepLinkOrderId = intent.getIntExtra(Constants.KEY_ORDER_ID, 0);
 					Data.deepLinkProductType = intent.getIntExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
+				}
+				// For deep linking with Feed particular post_id
+				else if(intent.getIntExtra(Constants.KEY_POST_ID, -1) != -1){
+					Prefs.with(context).save(Constants.SP_POST_ID_TO_OPEN, intent.getIntExtra(Constants.KEY_POST_ID, -1));
 				}
 			}
 

@@ -1915,7 +1915,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finishWithToast();
-            // TODO: 04/04/17 add toast to exit
         } else {
 
             if (getTopFragment() instanceof FreshSearchFragment) {
@@ -4159,5 +4158,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
+    public void openFeedDetailsFragmentWithPostId(int postId){
+        try {
+            FeedDetail feedDetail = new FeedDetail();
+            feedDetail.setPostId(postId);
+            getTransactionUtils().openFeedCommentsFragment(this, getRelativeLayoutContainer(), feedDetail, -1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
