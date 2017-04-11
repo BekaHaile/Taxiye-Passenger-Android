@@ -73,6 +73,9 @@ public class FeedDetail implements Serializable {
     private String activityDoneOn;
     @SerializedName("is_liked_by_user")
     private int isLiked;
+    @SerializedName("is_commented_by_user")
+    @Expose
+    private int isCommentedByUser;
 
     public boolean isLiked() {
         return likeCount > 0 && isLiked==1;
@@ -283,6 +286,14 @@ public class FeedDetail implements Serializable {
 
     public void setDrawable(Drawable drawable) {
         this.drawable = drawable;
+    }
+
+    public int getIsCommentedByUser() {
+        return isCommentedByUser;
+    }
+
+    public void setIsCommentedByUser(int isCommentedByUser) {
+        this.isCommentedByUser = isCommentedByUser;
     }
 
     public enum FeedType{

@@ -249,6 +249,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     if(postIdToOpen != -1){
 						activity.openFeedDetailsFragmentWithPostId(postIdToOpen);
 					}
+                    Prefs.with(activity).save(Constants.SP_POST_ID_TO_OPEN, -1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
