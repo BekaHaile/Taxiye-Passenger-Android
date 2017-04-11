@@ -40,7 +40,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
     private HashMap<String, String> params;
     private MultipartTypedOutput multipartTypedOutput;
     private ApiName apiName;
-    private boolean putAccessToken;
+    private boolean putAccessToken = true;
 
 
     /**
@@ -156,8 +156,8 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 RestClient.getFeedApiService().getCityInfo(params, callback);
                 break;
             case SET_HANDLE_API:
-
                 RestClient.getFeedApiService().setUserHandle(params, callback);
+
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

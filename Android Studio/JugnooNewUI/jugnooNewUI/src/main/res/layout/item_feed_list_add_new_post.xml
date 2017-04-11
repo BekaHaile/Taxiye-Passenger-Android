@@ -47,7 +47,7 @@
             android:paddingLeft="@dimen/spacing_tiny"
             android:paddingRight="@dimen/dp_36"
             android:text="@string/whats_on_your_mind"
-            android:textColor="@color/feed_color_orange"
+            android:textColor="@color/feed_grey_text_secondary"
             android:textSize="@dimen/sp_16"
             app:font="maven"/>
 

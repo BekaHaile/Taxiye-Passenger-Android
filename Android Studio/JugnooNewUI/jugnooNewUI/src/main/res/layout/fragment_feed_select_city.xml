@@ -28,6 +28,7 @@
         android:paddingRight="@dimen/spacing_normal"
         android:inputType="textCapWords"
         android:maxLines="1"
+        app:font="maven"
         android:textColor="@color/text_color"
         android:textColorHint="@color/text_color_hint"
         android:textCursorDrawable="@drawable/cursor_black"
@@ -108,8 +109,10 @@
 
     <View
         android:id="@+id/blur_view"
-
-
+        android:background="@android:color/white"
+        android:alpha="0.8"
+        android:clickable="true"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edt_city_name" />

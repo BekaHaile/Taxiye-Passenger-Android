@@ -31,9 +31,10 @@ public class FeedDisplayCitiesAdapter extends RecyclerView.Adapter<FeedDisplayCi
     private ArrayList<FeedCity> feedCitiesFiltered;
     private Callback callback;
     private RecyclerView recyclerView;
+    private View disabledViewBehindSearchRecycler;
 
 
-    public FeedDisplayCitiesAdapter(FreshActivity activity, ArrayList<FeedCity> feedCitiesList, RecyclerView recyclerView, Callback callback, boolean isTrendingCities) {
+    public FeedDisplayCitiesAdapter(FreshActivity activity, ArrayList<FeedCity> feedCitiesList, RecyclerView recyclerView, Callback callback, boolean isTrendingCities,View disabledView) {
         this.activity = activity;
         this.isTrendingCities = isTrendingCities;
         if (this.isTrendingCities) {
@@ -45,6 +46,7 @@ public class FeedDisplayCitiesAdapter extends RecyclerView.Adapter<FeedDisplayCi
         }
         this.recyclerView = recyclerView;
         this.callback = callback;
+        this.disabledViewBehindSearchRecycler=disabledView;
     }
 
     public void setList(ArrayList<FeedCity> feedCitiesList) {
@@ -85,11 +87,19 @@ public class FeedDisplayCitiesAdapter extends RecyclerView.Adapter<FeedDisplayCi
 
     private void toggleVisibilty() {
         if (feedCitiesFiltered == null || feedCitiesFiltered.size() == 0) {
-            if (recyclerView.getVisibility() == View.VISIBLE)
+            if (recyclerView.getVisibility() == View.VISIBLE){
                 recyclerView.setVisibility(View.GONE);
+                if(!isTrendingCities){
+                    disabledViewBehindSearchRecycler.setVisibility(View.GONE);
+                }
+            }
         } else {
-            if (recyclerView.getVisibility() == View.GONE)
+            if (recyclerView.getVisibility() == View.GONE) {
                 recyclerView.setVisibility(View.VISIBLE);
+                if(!isTrendingCities){
+                    disabledViewBehindSearchRecycler.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 

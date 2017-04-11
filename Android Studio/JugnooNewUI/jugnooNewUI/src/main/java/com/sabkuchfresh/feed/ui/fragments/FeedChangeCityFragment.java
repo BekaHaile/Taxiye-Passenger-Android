@@ -71,7 +71,7 @@ public class FeedChangeCityFragment extends FeedBaseFragment {
             public void onCityClick(int position, FeedCity feedCity) {
                 setCityLatLngAndRefreshFeed(feedCity.getLatitude(),feedCity.getLongitude());
             }
-        }, false);
+        }, false,blurView);
         edtCityName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -100,7 +100,7 @@ public class FeedChangeCityFragment extends FeedBaseFragment {
             public void onCityClick(int position, FeedCity feedCity) {
                 setCityLatLngAndRefreshFeed(feedCity.getLatitude(),feedCity.getLongitude());
             }
-        }, true);
+        }, true,blurView);
 
         rlTrendingCities.setLayoutManager(new LinearLayoutManager(getActivity()));
         rlTrendingCities.setAdapter(trendingCitiesAdapter);
