@@ -26,6 +26,7 @@ import com.sabkuchfresh.feed.ui.adapters.FeedOfferingCommentsAdapter;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
+import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -588,12 +589,26 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
     @Override
     public void onMoreDelete(FeedDetail feedDetail, int positionInList) {
-          getDeletePostDialog().show(feedDetail,positionInList);
+//        getDeletePostDialog().show(feedDetail,positionInList);
+        showDialogPopupTwoButtonCapsule(activity.getString(R.string.delete_post_alert_message), feedDetail, positionInList);
     }
 
     @Override
     public void onMoreEdit(FeedDetail feedDetail, int positionInList) {
             onEdit(feedDetail);
+    }
+
+    public void showDialogPopupTwoButtonCapsule(String message, final FeedDetail feedDetail, final int pos){
+        new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
+            @Override
+            public void onPositiveClick() {
+                onDelete(feedDetail, pos);
+            }
+
+            @Override
+            public void onNegativeClick() {
+            }
+        }, android.R.style.Theme_Translucent_NoTitleBar, activity, message).show();
     }
 
 }

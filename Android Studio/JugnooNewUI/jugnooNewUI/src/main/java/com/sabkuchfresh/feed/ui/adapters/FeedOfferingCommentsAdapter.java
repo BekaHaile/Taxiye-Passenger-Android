@@ -197,9 +197,8 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
                     if(feedDetailData.get(position) instanceof FeedDetail
                             && !((FeedDetail)feedDetailData.get(position)).isLiked()){
                         Animation animation = AnimationUtils.loadAnimation(viewClicked.getContext(), R.anim.bounce_scale_out_in);
-                        animation.setFillAfter(false);
-                        viewClicked.clearAnimation();
-                        viewClicked.startAnimation(animation);
+                        viewClicked.findViewById(R.id.tv_action_like).clearAnimation();
+                        viewClicked.findViewById(R.id.tv_action_like).startAnimation(animation);
                     }
                         callback.onLikeClick(null,position);
                     break;

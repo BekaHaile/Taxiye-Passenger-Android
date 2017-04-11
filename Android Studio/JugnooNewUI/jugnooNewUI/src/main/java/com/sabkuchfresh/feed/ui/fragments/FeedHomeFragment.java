@@ -39,6 +39,7 @@ import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
+import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.feed.utils.BadgeDrawable;
 import com.sabkuchfresh.fragments.FreshHomeFragment;
@@ -468,11 +469,26 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
    private DeletePostDialog deletePostDialog;
 
     public DeletePostDialog getDeletePostDialog(){
-        if(deletePostDialog==null)
-            deletePostDialog=new DeletePostDialog(this,R.style.Feed_Popup_Theme,activity);
+        if(deletePostDialog == null)
+            deletePostDialog = new DeletePostDialog(this,R.style.Feed_Popup_Theme,activity);
 
         return deletePostDialog;
     }
+
+    public void showDialogPopupTwoButtonCapsule(String message, final FeedDetail feedDetail, final int pos){
+        new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
+                @Override
+                public void onPositiveClick() {
+                    onDelete(feedDetail, pos);
+                }
+
+                @Override
+                public void onNegativeClick() {
+                }
+            }, android.R.style.Theme_Translucent_NoTitleBar, activity, message).show();
+    }
+
+
 
     private EditPostPopup editPostDialog;
 
@@ -520,7 +536,8 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
     @Override
     public void onMoreDelete(FeedDetail feedDetail, int positionInList) {
-        getDeletePostDialog().show(feedDetail,positionInList);
+//        getDeletePostDialog().show(feedDetail,positionInList);
+        showDialogPopupTwoButtonCapsule(activity.getString(R.string.delete_post_alert_message), feedDetail, positionInList);
     }
 
     @Override
