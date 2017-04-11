@@ -103,6 +103,7 @@ public class NewUserFlow extends BaseFragmentActivity {
             if (Data.userData.getSignupTutorial() != null) {
                 if (Data.userData.getSignupTutorial().getDs1() != null
                         && Data.userData.getSignupTutorial().getDs1() == 1) {
+                    //Data.userData.getSignupTutorial().setDs1(0);
                     getTransactionUtils().openNewUserReferralFragment(NewUserFlow.this, rlContainer);
                 } else if (Data.userData.getSignupTutorial().getDs2() != null
                         && Data.userData.getSignupTutorial().getDs2() == 1) {

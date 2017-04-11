@@ -74,6 +74,7 @@ public class NewUserReferralFragment extends Fragment {
         activity.getTvTitle().setText(activity.getResources().getString(R.string.add_referral_code));
         activity.getIvBack().setVisibility(View.GONE);
         activity.setTickLineView();
+        Data.userData.getSignupTutorial().setDs1(0);
 
         buttonApplyPromo.setOnClickListener(new View.OnClickListener() {
             @Override

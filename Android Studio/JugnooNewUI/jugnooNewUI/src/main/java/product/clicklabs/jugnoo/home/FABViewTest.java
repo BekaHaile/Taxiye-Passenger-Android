@@ -454,7 +454,7 @@ public class FABViewTest implements GACategory, GAAction {
             animation.setFillAfter(false);
             ivJeanieHelp.setVisibility(View.VISIBLE);
             ivJeanieHelp.startAnimation(animation);
-            Data.userData.setShowTutorial(0);
+            //Data.userData.setShowTutorial(0);
         }
     }
 

@@ -17,7 +17,7 @@
         <TextView
             android:id="@+id/tvTitle"
             style="@style/title"
-            android:text="FATAFAT"
+            android:text=""
             app:font="maven" />
 
         <ImageView

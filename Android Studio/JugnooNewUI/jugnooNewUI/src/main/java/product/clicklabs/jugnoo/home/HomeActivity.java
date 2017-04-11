@@ -4324,19 +4324,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 DialogPopup.showLocationSettingsAlert(HomeActivity.this);
             }
 
-
-//            if ((isAccessibilitySettingsOn(getApplicationContext())
-//                    && (Prefs.with(HomeActivity.this).contains(SPLabels.JUGNOO_JEANIE_STATE) == false))) {
-//                Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-//            } else {
-//                if ((isAccessibilitySettingsOn(getApplicationContext())
-//                        && (Prefs.with(HomeActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == true))) {
-//                    Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-//                } else {
-//                    //Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
-//                }
-//            }
-
             Utils.hideSoftKeyboard(this, editTextRSFeedback);
 
             try {
@@ -4350,19 +4337,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
-            /*if(Prefs.with(HomeActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
-                    Data.userData.getIntegratedJugnooEnabled() == 1) {
-                //imageViewFabFake.setVisibility(View.VISIBLE); // fab existing
-                setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                //fabView.setRelativeLayoutFABVisibility(passengerScreenMode);
-            } else {
-                //imageViewFabFake.setVisibility(View.GONE);
-            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-//        genieLayout.setGenieParams();
     }
 
 
