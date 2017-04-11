@@ -307,7 +307,11 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
                         if (textViewRSWhatImprove.getTag() == null || ((int) textViewRSWhatImprove.getTag()) == 0) {
                             textViewRSWhatImprove.setTag(1);
-                            textViewRSWhatImprove.setText(R.string.feedback_menu_what_amazing);
+                            if(score > 2 && score < 5){
+                                textViewRSWhatImprove.setText(R.string.what_could_we_improve);
+                            } else {
+                                textViewRSWhatImprove.setText(R.string.feedback_menu_what_amazing);
+                            }
                             if (feedbackReasonsAdapter != null)
                                 feedbackReasonsAdapter.resetData(true);
                         } else {

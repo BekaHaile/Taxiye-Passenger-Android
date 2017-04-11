@@ -104,14 +104,8 @@ public class TopBar implements  GACategory, GAAction {
                 case R.id.imageViewMenu:
                     //activity.startActivity(new Intent(activity, FreshActivity.class));
                     drawerLayout.openDrawer(GravityCompat.START);
+                    GAUtils.event(JUGNOO, RIDES+HOME, LEFT_MENU_ICON+CLICKED);
 
-                    try {
-                        if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
-                        } else {
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     break;
 
                 case R.id.buttonCheckServer:

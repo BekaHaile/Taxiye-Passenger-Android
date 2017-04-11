@@ -19,12 +19,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.picker.image.model.ImageEntry;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.ui.adapters.FeedAddPostPagerAdapter;
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.ImageCompression;
+import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONArray;
 
@@ -51,7 +54,7 @@ import retrofit.mime.TypedString;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class FeedAddPostFragment extends Fragment implements View.OnClickListener {
+public class FeedAddPostFragment extends Fragment implements View.OnClickListener, GAAction {
     private FreshActivity activity;
     private TextView tvReview, tvAsk;
     private View vReviewSelected, vAskSelected;
@@ -154,7 +157,11 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
 
-
+                try {
+                    Utils.hideSoftKeyboard(activity, getVisibleFragment().getFocusEditText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 getVisibleFragment().onAddImageClick();
 
 
@@ -170,7 +177,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                     postFeedAPI(postReviewAPIData.getContent(), postReviewAPIData.getImagesSelected(),
                             postReviewAPIData.getRestaurantId(), postReviewAPIData.getScore(),
                             postReviewAPIData.isAnonymousPostingEnabled());
-
+                    GAUtils.event(FEED, ADD+POST, SUBMIT+CLICKED);
                 }
 
             }
@@ -241,11 +248,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         switch (v.getId()) {
             case R.id.rlReview:
                 viewPager.setCurrentItem(1);
-
+                GAUtils.event(FEED, ADD+POST, REVIEW+CLICKED);
                 break;
 
             case R.id.rlAsk:
                 viewPager.setCurrentItem(0);
+                GAUtils.event(FEED, ADD+POST, ASK+CLICKED);
                 break;
 
         }
@@ -288,7 +296,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 DialogPopup.showLoadingDialog(getActivity(), getActivity().getResources().getString(R.string.loading));
 
                 if (images == null || images.size() == 0) {
-                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled);
+                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled, 0);
                     return;
                 }
 
@@ -316,7 +324,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 }
 
                 if (imageSelected == null || imageSelected.size() == 0) {
-                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled);
+                    uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled, 0);
                     return;
                 }
 
@@ -333,7 +341,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
                         }
                         //upload feedback with new Images
-                        uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled);
+                        uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled, output != null ? output.length : 0);
                     }
 
                     @Override
@@ -381,7 +389,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
 
     private void uploadParamsAndPost(final MultipartTypedOutput multipartTypedOutput, final String postText,
-                                     final int restId, final int rating, final boolean anonymousPostingEnabled) {
+                                     final int restId, final int rating, final boolean anonymousPostingEnabled, final int imagesCount) {
 
         multipartTypedOutput.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
         multipartTypedOutput.addPart(Constants.KEY_LATITUDE, new TypedString(String.valueOf(activity.getSelectedLatLng().latitude)));
@@ -415,26 +423,29 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
                             activity.performBackPressed(false);
                             if (activity.getFeedHomeFragment() != null && activity.getFeedHomeFragment().getView() != null) {
-                                activity.getFeedHomeFragment().fetchFeedsApi(true);
+                                activity.getFeedHomeFragment().fetchFeedsApi(true, true);
                             }
                             if (activity.getTopFragment() instanceof FeedOfferingCommentsFragment) {
                                 activity.getOfferingsCommentFragment().fetchDetailAPI();
                             }
 
+                            if (imagesCount > 0) {
+                                GAUtils.event(FEED, ADD + POST, IMAGE + UPLOADED);
+                            }
                         } else {
                             DialogPopup.alertPopup(activity, "", message);
                         }
                     }
                 } catch (Exception exception) {
                     exception.printStackTrace();
-                    retryDialog(DialogErrorType.SERVER_ERROR, multipartTypedOutput, postText, restId, rating, anonymousPostingEnabled);
+                    retryDialog(DialogErrorType.SERVER_ERROR, multipartTypedOutput, postText, restId, rating, anonymousPostingEnabled, imagesCount);
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 DialogPopup.dismissLoadingDialog();
-                retryDialog(DialogErrorType.CONNECTION_LOST, multipartTypedOutput, postText, restId, rating, anonymousPostingEnabled);
+                retryDialog(DialogErrorType.CONNECTION_LOST, multipartTypedOutput, postText, restId, rating, anonymousPostingEnabled, imagesCount);
 
             }
         };
@@ -453,12 +464,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void retryDialog(DialogErrorType dialogErrorType, final MultipartTypedOutput multipartTypedOutput, final String postText, final int restId, final int ratingScore, final boolean anonymousPostingEnabled) {
+    private void retryDialog(DialogErrorType dialogErrorType, final MultipartTypedOutput multipartTypedOutput, final String postText, final int restId, final int ratingScore, final boolean anonymousPostingEnabled, final int imagesCount) {
         DialogPopup.dialogNoInternet(activity, dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled);
+                        uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled, imagesCount);
                     }
 
                     @Override

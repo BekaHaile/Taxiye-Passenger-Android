@@ -89,6 +89,8 @@ public class SupportMainFragment extends Fragment implements  Constants, GAActio
 
 		Data.isSupportRideIssueUpdated = false;
 
+		GAUtils.trackScreenView(SUPPORT);
+
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {
 			if(root != null) {

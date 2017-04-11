@@ -290,8 +290,8 @@ public class FeedDetail implements Serializable {
         REVIEW(" reviewed "),
         LIKE_ON_POST(" liked "),
         LIKE_ON_REVIEW (" liked "),
-        COMMENT_ON_POST(" commented on "),
-        COMMENT_ON_REVIEW(" commented on ");
+        COMMENT_ON_POST(" replied on "),
+        COMMENT_ON_REVIEW(" replied on ");
 
         private String value;
         FeedType(String value) {

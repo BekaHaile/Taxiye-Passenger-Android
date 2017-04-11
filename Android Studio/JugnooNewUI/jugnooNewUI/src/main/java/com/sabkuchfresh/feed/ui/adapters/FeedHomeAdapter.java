@@ -28,6 +28,8 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.sabkuchfresh.adapters.ItemListener;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
@@ -51,13 +53,12 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
-import static com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail.FeedType.REVIEW;
 
 
 /**
  * Created by Shankar on 7/17/15.
  */
-public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener, DisplayFeedHomeImagesAdapter.Callback {
+public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener, DisplayFeedHomeImagesAdapter.Callback, GAAction {
 
 
     private FreshActivity activity;
@@ -179,7 +180,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
-                    if (feedDetail.getFeedType() != REVIEW && !TextUtils.isEmpty(feedDetail.getUserName()) &&!TextUtils.isEmpty(feedDetail.getOwnerName())) {
+                    if (feedDetail.getFeedType() != FeedDetail.FeedType.REVIEW && !TextUtils.isEmpty(feedDetail.getUserName()) &&!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         showUserActivity = true;
 
                         userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s review.");
@@ -203,7 +204,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
                     if (!TextUtils.isEmpty(feedDetail.getOwnerName()) && !TextUtils.isEmpty(feedDetail.getRestaurantName())) {
-                        String actualTitle = feedDetail.getOwnerName() + REVIEW.getValue() + feedDetail.getRestaurantName() + ".";
+                        String actualTitle = feedDetail.getOwnerName() + FeedDetail.FeedType.REVIEW.getValue() + feedDetail.getRestaurantName() + ".";
 
                         if(rating!=null){
                             String  titleWithReview = actualTitle + " ";
@@ -221,8 +222,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
                             title = new SpannableString(titleWithReview);
-                            title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                            title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + FeedDetail.FeedType.REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + FeedDetail.FeedType.REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                             title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
 
@@ -235,8 +236,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             setMovementMethod = true;
                         }else{
                             title = new SpannableString(actualTitle);
-                            title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                            title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(new MyClickableSpan(feedDetail.getRestaurantId(), feedPostCallback), feedDetail.getOwnerName().length() + FeedDetail.FeedType.REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            title.setSpan(BOLD_SPAN, feedDetail.getOwnerName().length() + FeedDetail.FeedType.REVIEW.getValue().length(), actualTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                             title.setSpan(BOLD_SPAN_2, 0, feedDetail.getOwnerName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                             setMovementMethod = true;
                         }
@@ -302,10 +303,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 */
 
             //Set Profile Pic
-            if(feedDetail.isAnonymousPost()){
-                Picasso.with(activity).load(R.drawable.ic_feed_anonymous).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
-            } else if (!TextUtils.isEmpty(ownerImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(ownerImage)) {
-                Picasso.with(activity).load(ownerImage).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
+//            if(feedDetail.isAnonymousPost()){
+//                Picasso.with(activity).load(R.drawable.ic_feed_anonymous).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
+//            } else
+            if (!TextUtils.isEmpty(ownerImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(ownerImage)) {
+                Picasso.with(activity).load(ownerImage).placeholder(R.drawable.placeholder_img).resize(Utils.convertDpToPx(activity, 50), Utils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivFeedOwnerPic);
             } else {
 
                 if (feedDetail.getDrawable() == null) {
@@ -370,7 +372,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             holder.tvLike.setText(likeText);
 
-            String commentSuffix = feedDetail.getCommentCount() > 1 ? " Comments" : " Comment";
+            String commentSuffix = feedDetail.getCommentCount() > 1 ? " Replies" : " Reply";
             SpannableString commentText;
             if(feedDetail.getCommentCount()>0){
                 //bold comment Count
@@ -487,7 +489,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         String likeSuffix = likeCount > 1 ? " Likes " : " Like ";
         likeSuffix=likeCount>0? likeCount+likeSuffix:"";
-        String commentSuffix = commentCount > 1 ? " Comments " : " Comment ";
+        String commentSuffix = commentCount > 1 ? " Replies " : " Reply ";
         commentSuffix=commentCount>0?commentCount+commentSuffix:"";
         String divider = likeCount!=0 && commentCount!=0 ?activity.getString(R.string.bullet) + " ":"";
 
@@ -621,6 +623,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     } else if (!TextUtils.isEmpty(feedDetail.getRestaurantImage())) {
                         //Open the restaurant in menus
                         feedPostCallback.onRestaurantClick(feedDetail.getRestaurantId());
+                        GAUtils.event(FEED, HOME, RESTAURANT_IMAGE+CLICKED);
                         //THis means only one image is being displayed which is restaurant Image
 
                     }
@@ -865,6 +868,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public void onClick(View tv) {
             feedPostCallback.onRestaurantClick(restaurantId);
+            GAUtils.event(FEED, HOME, RESTAURANT_NAME+CLICKED);
         }
 
         public void updateDrawState(TextPaint ds) {// override updateDrawState

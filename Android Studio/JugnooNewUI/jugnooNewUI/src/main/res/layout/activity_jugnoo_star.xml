@@ -252,6 +252,7 @@
                     android:divider="@color/stroke_light_grey_alpha"
                     android:dividerHeight="@dimen/dp_1"
                     android:fadeScrollbars="true"
+                    android:listSelector="@drawable/background_transparent"
                     android:paddingTop="@dimen/px_2"
                     android:scrollbars="vertical" />
             </RelativeLayout>

@@ -90,6 +90,8 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 
 		parseArguments();
 
+		GAUtils.trackScreenView(WALLET);
+
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 		new ASSL(paymentActivity, relative, 1134, 720, false);
 		

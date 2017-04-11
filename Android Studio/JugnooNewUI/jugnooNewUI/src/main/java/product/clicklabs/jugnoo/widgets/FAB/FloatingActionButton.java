@@ -1080,11 +1080,15 @@ public class FloatingActionButton extends ImageButton {
     }
 
     public void setLabelText(String text) {
+        setLabelText(text, 24);
+    }
+
+    public void setLabelText(String text, float sizeSP) {
         mLabelText = text;
         TextView labelView = getLabelView();
         if (labelView != null) {
             labelView.setText(text);
-            labelView.setTextSize(24);
+            labelView.setTextSize(sizeSP);
         }
     }
 

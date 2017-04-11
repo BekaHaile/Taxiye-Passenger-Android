@@ -163,7 +163,7 @@
                android:textSize="25sp"
                android:includeFontPadding="false"
                android:text="@string/bullet_three"
-               android:textColor="@color/feed_grey_tab"
+               android:textColor="@color/feed_grey_tab_selector"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content" />
 
@@ -284,7 +284,7 @@
             android:drawableLeft="@drawable/ic_comment"
             android:drawablePadding="@dimen/spacing_tiny"
             android:gravity="center"
-            android:text="Comment"
+            android:text="Reply"
             android:textColor="@color/feed_grey_text"
             android:textSize="@dimen/font_small"
             app:font="maven" />

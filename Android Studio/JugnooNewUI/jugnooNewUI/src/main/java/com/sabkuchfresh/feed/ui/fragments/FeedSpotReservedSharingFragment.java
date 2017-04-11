@@ -22,9 +22,11 @@ import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -97,6 +99,7 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 		// for sharing actions only, don't add other onCLicks in this switch
 		if (MyApplication.getInstance().isOnline()) {
 			HashMap<String, String> map = new HashMap<String, String>();
+			map.put(Constants.KEY_DEEPINDEX, String.valueOf(AppLinkIndex.FEED_PAGE.getOrdinal()));
 			BranchMetricsUtils.getBranchLink(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
 						@Override
 						public void onBranchLinkCreated(String link) {
@@ -107,21 +110,26 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 											Data.getFeedData().getEarlyAccessShareTitle(),
 											Data.getFeedData().getEarlyAccessShareDesc(), link,
 											Data.getFeedData().getEarlyAccessShareImage());
+									GAUtils.event(FEED, WAITLIST+SHARING, FACEBOOK+CLICKED);
 									return;
 
 								case R.id.tvShareTweet:
 									appType = ReferralActions.TWITTER;
+									GAUtils.event(FEED, WAITLIST+SHARING, TWITTER+CLICKED);
 									break;
 
 								case R.id.tvShareEmail:
 									appType = ReferralActions.EMAIL;
+									GAUtils.event(FEED, WAITLIST+SHARING, EMAIL+CLICKED);
 									break;
 
 								case R.id.tvShareWhatsapp:
 									appType = ReferralActions.WHATSAPP;
+									GAUtils.event(FEED, WAITLIST+SHARING, WHATSAPP+CLICKED);
 									break;
 
 								case R.id.tvMoreSharingOptions:
+									GAUtils.event(FEED, WAITLIST+SHARING, OTHER_SHARING_OPTIONS+CLICKED);
 									break;
 							}
 							ReferralActions.shareIntent(activity,

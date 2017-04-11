@@ -51,6 +51,9 @@ public class RecentOrder {
     @SerializedName("show_delivery_route")
     @Expose
     private int showDeliveryRoute;
+    @SerializedName("driver_phone_no")
+    @Expose
+    private String driverPhoneNo;
 
 
     /**
@@ -203,5 +206,13 @@ public class RecentOrder {
 
     public void setShowDeliveryRoute(int showDeliveryRoute) {
         this.showDeliveryRoute = showDeliveryRoute;
+    }
+
+    public String getDriverPhoneNo() {
+        return driverPhoneNo;
+    }
+
+    public void setDriverPhoneNo(String driverPhoneNo) {
+        this.driverPhoneNo = driverPhoneNo;
     }
 }
