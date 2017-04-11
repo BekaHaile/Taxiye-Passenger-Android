@@ -10,6 +10,8 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -192,6 +194,13 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         if (position!=RecyclerView.NO_POSITION) {
             switch (viewClicked.getId()) {
                 case R.id.view_action_like:
+                    if(feedDetailData.get(position) instanceof FeedDetail
+                            && !((FeedDetail)feedDetailData.get(position)).isLiked()){
+                        Animation animation = AnimationUtils.loadAnimation(viewClicked.getContext(), R.anim.bounce_scale_out_in);
+                        animation.setFillAfter(false);
+                        viewClicked.clearAnimation();
+                        viewClicked.startAnimation(animation);
+                    }
                         callback.onLikeClick(null,position);
                     break;
                 case R.id.view_action_comment:
