@@ -655,6 +655,7 @@
 
     <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
     <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.\\ </string>
+    <string name="digits_alpha_numeric_without_space">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
 
 
     <string name="payment_option_dialog_title">Select preferred payment option</string>
