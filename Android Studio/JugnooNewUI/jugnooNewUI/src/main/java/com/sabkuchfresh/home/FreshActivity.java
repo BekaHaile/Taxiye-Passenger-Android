@@ -176,6 +176,7 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -518,6 +519,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         initCollapseToolBarViews();
+
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(Data.userData.getSignupTutorial() != null) {
+                        if (Data.userData.getSignupTutorial().getDs1() == 1) {
+                            startActivity(new Intent(FreshActivity.this, NewUserFlow.class));
+                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0);
 
         getHandler().postDelayed(new Runnable() {
             @Override

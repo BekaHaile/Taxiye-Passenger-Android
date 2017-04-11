@@ -69,7 +69,14 @@ public class NewUserFlow extends BaseFragmentActivity {
             @Override
             public void onClick(View v) {
                 if (getCurrentFragment() instanceof NewUserReferralFragment) {
-                    getTransactionUtils().openNewUserCompleteProfileFragment(NewUserFlow.this, getRlContainer());
+                    if(((Data.userData.getSignupTutorial().getDs2() != null
+                            && Data.userData.getSignupTutorial().getDs2() == 0)
+                            &&(Data.userData.getSignupTutorial().getDs3() != null
+                            && Data.userData.getSignupTutorial().getDs3() == 0))){
+                        performBackPressed();
+                    } else {
+                        getTransactionUtils().openNewUserCompleteProfileFragment(NewUserFlow.this, getRlContainer());
+                    }
                 } else if (getCurrentFragment() instanceof NewUserCompleteProfileFragment) {
                     if(fromMenu){
                         performBackPressed();
@@ -122,6 +129,10 @@ public class NewUserFlow extends BaseFragmentActivity {
 
     public TextView getTvTitle() {
         return tvTitle;
+    }
+
+    public ImageView getIvBack() {
+        return ivBack;
     }
 
     public ImageView getIvTickWallet() {

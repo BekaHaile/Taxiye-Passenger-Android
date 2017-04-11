@@ -1668,7 +1668,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
             }
-        }, 500);
+        }, 0);
 
         getHandler().postDelayed(new Runnable() {
             @Override
