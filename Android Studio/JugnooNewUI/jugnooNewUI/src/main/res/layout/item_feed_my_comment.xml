@@ -48,7 +48,7 @@
             android:paddingTop="@dimen/spacing_normal"
             android:textSize="@dimen/font_normal"
             android:maxLength="500"
-            android:hint="Tap to add comment"
+            android:hint="Tap to add reply"
             android:textCursorDrawable="@drawable/cursor_black"
             android:textColorHint="@color/feed_grey_hint_color"
             android:textColor="@color/feed_grey_text"

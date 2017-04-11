@@ -41,7 +41,7 @@ import retrofit.client.Response;
 /**
  * Created by socomo on 10/15/15.
  */
-public class NotificationCenterActivity extends BaseFragmentActivity implements DisplayPushHandler, View.OnClickListener {
+public class NotificationCenterActivity extends BaseFragmentActivity implements DisplayPushHandler, View.OnClickListener, GAAction {
 
     private RelativeLayout root;
     private TextView textViewTitle;
@@ -56,6 +56,8 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_center);
+
+        GAUtils.trackScreenView(INBOX);
 
         root = (RelativeLayout) findViewById(R.id.root);
         new ASSL(this, root, 1134, 720, false);

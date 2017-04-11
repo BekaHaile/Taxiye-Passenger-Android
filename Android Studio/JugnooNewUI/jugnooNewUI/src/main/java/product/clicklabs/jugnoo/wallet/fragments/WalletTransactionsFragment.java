@@ -15,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -48,7 +51,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class WalletTransactionsFragment extends Fragment  {
+public class WalletTransactionsFragment extends Fragment implements GAAction {
 
 	private final String TAG = WalletTransactionsFragment.class.getSimpleName();
 
@@ -96,6 +99,8 @@ public class WalletTransactionsFragment extends Fragment  {
         rootView = inflater.inflate(R.layout.fragment_wallet_transactions, container, false);
 
 		parseArguments();
+
+		GAUtils.trackScreenView(WALLET+TRANSACTIONS);
 
         paymentActivity = (PaymentActivity) getActivity();
 

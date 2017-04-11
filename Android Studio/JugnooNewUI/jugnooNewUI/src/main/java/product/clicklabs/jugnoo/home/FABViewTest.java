@@ -100,6 +100,7 @@ public class FABViewTest implements GACategory, GAAction {
             ivJeanieHelp = (ImageView) view.findViewById(R.id.ivJeanieHelp);
             tvGenieExpandMessage = (TextView) view.findViewById(R.id.tvGenieExpandMessage);
 
+            fabFeedTest.setLabelText(Data.getFeedName(activity), 14);
 
             setRlGenieHelpBottomMargin(170f);
         } catch (Exception e) {

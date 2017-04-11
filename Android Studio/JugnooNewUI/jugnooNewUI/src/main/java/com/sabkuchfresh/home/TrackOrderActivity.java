@@ -17,6 +17,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -38,6 +40,7 @@ import com.tsengvn.typekit.TypekitContextWrapper;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
@@ -54,8 +57,10 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
+import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.MarkerAnimation;
+import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -68,7 +73,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 	private final String TAG = TrackOrderActivity.class.getSimpleName();
 
-	private String accessToken;
+	private String accessToken, driverPhoneNo;
 	private int orderId, deliveryId, showDeliveryRoute;
 	private LatLng pickupLatLng, deliveryLatLng;
 
@@ -78,11 +83,15 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	private TextView tvTrackingInfo, tvETA;
 	private ImageView bMyLocation;
 	private ASSL assl;
+	private Button bCallDriver;
 
 	private Marker markerDriver;
 	private Polyline polylinePath;
 	private Location myLocation;
 	private final int MAP_ANIMATE_DURATION = 300;
+	private boolean mapTouchedOnce, zoomSetManually;
+	private float zoomInitial;
+
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,6 +102,10 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 		GAUtils.trackScreenView(TRACK_DELIVERY);
 
+		mapTouchedOnce = false;
+		zoomSetManually = false;
+		zoomInitial = -1;
+
 		accessToken = getIntent().hasExtra(Constants.KEY_ACCESS_TOKEN) ? getIntent().getStringExtra(Constants.KEY_ACCESS_TOKEN) : "";
 		orderId = getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0);
 		deliveryId = getIntent().getIntExtra(Constants.KEY_DELIVERY_ID, 0);
@@ -101,6 +114,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		deliveryLatLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_DELIVERY_LATITUDE, 0d),
 				getIntent().getDoubleExtra(Constants.KEY_DELIVERY_LONGITUDE, 0d));
 		showDeliveryRoute = getIntent().getIntExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, 0);
+		driverPhoneNo = getIntent().hasExtra(Constants.KEY_DRIVER_PHONE_NO) ? getIntent().getStringExtra(Constants.KEY_DRIVER_PHONE_NO) : "";
 
 
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
@@ -111,6 +125,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		tvETA = (TextView) findViewById(R.id.tvETA);
 		tvETA.setVisibility(View.GONE);
 		bMyLocation = (ImageView) findViewById(R.id.bMyLocation);
+		bCallDriver = (Button) findViewById(R.id.bCallDriver);
 
 		tvTitle.setText(getString(R.string.order_hash_format, String.valueOf(orderId)));
 
@@ -141,6 +156,40 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					});
 
 					scheduleTimer();
+
+					TouchableMapFragment mapFragment = ((TouchableMapFragment) getSupportFragmentManager().findFragmentById(R.id.googleMap));
+					new MapStateListener(googleMap, mapFragment, TrackOrderActivity.this) {
+
+						@Override
+						public void onMapTouched() {
+							mapTouchedOnce = true;
+						}
+
+						@Override
+						public void onMapReleased() {
+
+						}
+
+						@Override
+						public void onMapUnsettled() {
+
+						}
+
+						@Override
+						public void onMapSettled() {
+
+						}
+
+						@Override
+						public void onCameraPositionChanged(CameraPosition cameraPosition) {
+							// for detecting if zoom is manually changed by user, a boolean zoomSetManually
+							// will be set to stop google directions path zoom
+							if(zoomInitial == -1 && cameraPosition != null) zoomInitial = cameraPosition.zoom;
+							if(mapTouchedOnce && cameraPosition != null && cameraPosition.zoom != zoomInitial){
+								zoomSetManually = true;
+							}
+						}
+					};
 				}
 			}
 		});
@@ -158,6 +207,17 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 				zoomToDriverAndDrop();
 			}
 		});
+
+		if(!TextUtils.isEmpty(driverPhoneNo)){
+			bCallDriver.setVisibility(View.VISIBLE);
+
+			bCallDriver.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Utils.openCallIntent(TrackOrderActivity.this, driverPhoneNo);
+				}
+			});
+		}
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(orderUpdateBroadcast, new IntentFilter(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE));
 
@@ -261,6 +321,15 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 
 	private boolean zoomedFirstTime = false;
+	private List<LatLng> latLngsDriverAnim = new ArrayList<>();
+	private MarkerAnimation.CallbackAnim callbackAnim = new MarkerAnimation.CallbackAnim() {
+		@Override
+		public void onPathFound(List<LatLng> latLngs) {
+			latLngsDriverAnim.clear();
+			latLngsDriverAnim.addAll(latLngs);
+		}
+	};
+
 	TimerTask timerTask;
 	private TimerTask getTimerTask() {
 		timerTask = new TimerTask() {
@@ -287,19 +356,29 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 								@Override
 								public void run() {
 									try {
+										latLngsDriverAnim.clear();
 										if (markerDriver == null) {
 											markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
 													R.drawable.ic_bike_marker, 49f, 62f, true, 2));
 											markerDriver.setRotation((float) bearing);
 										} else {
 											MarkerAnimation.animateMarkerToICS("-1", markerDriver,
-													new LatLng(latitude, longitude), new LatLngInterpolator.Spherical());
+													new LatLng(latitude, longitude), new LatLngInterpolator.Spherical(),
+													callbackAnim);
 										}
 										if(!zoomedFirstTime) {
 											LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
 											llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(new LatLng(latitude, longitude));
 											LatLngBounds latLngBounds = llbBuilder.build();
 											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+											handler.postDelayed(new Runnable() {
+												@Override
+												public void run() {
+													if(googleMap != null) {
+														zoomInitial = googleMap.getCameraPosition().zoom;
+													}
+												}
+											}, MAP_ANIMATE_DURATION+50);
 										}
 
 										if (!TextUtils.isEmpty(trackingInfo)) {
@@ -352,6 +431,11 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 														R.color.google_path_polyline_color)).geodesic(true);
 										LatLngBounds.Builder builder = new LatLngBounds.Builder();
 										builder.include(deliveryLatLng).include(new LatLng(latitude, longitude));
+
+										for(LatLng latLng : latLngsDriverAnim){
+											builder.include(latLng);
+										}
+
 										for (int z = 0; z < list.size(); z++) {
 											polylineOptions.add(list.get(z));
 											builder.include(list.get(z));
@@ -359,7 +443,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										if(showDeliveryRoute == 1 && list.size() > 0) {
 											polylinePath = googleMap.addPolyline(polylineOptions);
 										}
-										if (zoomedFirstTime) {
+										if (zoomedFirstTime && !zoomSetManually) {
 											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 										}
 									} catch (Exception e) {
@@ -429,4 +513,6 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		tvETA.append(spannableString);
 		tvETA.setVisibility(View.VISIBLE);
 	}
+
+	private Handler handler = new Handler();
 }

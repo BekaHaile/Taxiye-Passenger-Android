@@ -42,7 +42,7 @@
             fab:fab_colorPressed="@color/grey_feed_fab_pressed"
             fab:fab_colorRipple="@color/grey_feed_fab_pressed"
             android:tag="DontTouchMe"
-            fab:fab_label="Feed"/>
+            fab:fab_label="AskLocal"/>
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabPayTest"

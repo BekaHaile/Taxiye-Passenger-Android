@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +106,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         } else if(getActivity() instanceof JugnooStarSubscribedActivity){
             activity = (JugnooStarSubscribedActivity) getActivity();
         }
+
+        GAUtils.trackScreenView(JUGNOO+STAR+CHECKOUT);
 
         linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
         try {

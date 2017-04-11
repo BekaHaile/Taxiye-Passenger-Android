@@ -69,6 +69,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             if (llRoot != null) {
                 new ASSL(activity, llRoot, 1134, 720, false);
             }
+            GAUtils.trackScreenView(FRESH+HOME);
         } catch (Exception e) {
             e.printStackTrace();
         }

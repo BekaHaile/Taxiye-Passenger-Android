@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
@@ -1382,6 +1381,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     DialogPopup.dismissLoadingDialog();
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
+                        String message = JSONParser.getServerMessage(jObj);
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                             int flag = jObj.getInt("flag");
                             if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
@@ -1390,6 +1390,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                 Data.userData.phoneNo = jObj.optString("phone_no");
                                 editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
+                                DialogPopup.alertPopup(activity, "", message);
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
