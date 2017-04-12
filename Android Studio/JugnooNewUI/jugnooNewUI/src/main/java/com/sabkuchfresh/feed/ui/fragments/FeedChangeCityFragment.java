@@ -143,6 +143,7 @@ public class FeedChangeCityFragment extends FeedBaseFragment {
             public void onSuccess(FeedCityResponse feedCityResponse, String message, int flag) {
                 searchCitiesAdapter.setList(feedCityResponse.getTotalCities());
                 trendingCitiesAdapter.setList(feedCityResponse.getTrendingCities());
+                labelTrendingCities.setVisibility(feedCityResponse.getTrendingCities()==null || feedCityResponse.getTrendingCities().size()==0?View.GONE:View.VISIBLE);
             }
 
             @Override
