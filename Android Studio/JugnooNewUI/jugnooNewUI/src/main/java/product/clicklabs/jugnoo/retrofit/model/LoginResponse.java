@@ -401,6 +401,10 @@ public class LoginResponse {
         @SerializedName("has_handle")
         private int hasHandle;
 
+		@SerializedName("count_notification_polling_interval")
+		@Expose
+		private Integer countNotificationPollingInterval;
+
 
 
 
@@ -522,7 +526,18 @@ public class LoginResponse {
         public void setHasHandle(int hasHandle) {
             this.hasHandle = hasHandle;
         }
-    }
+
+		public int getCountNotificationPollingInterval() {
+			if(countNotificationPollingInterval == null){
+				countNotificationPollingInterval = 15;
+			}
+			return countNotificationPollingInterval*1000;
+		}
+
+		public void setCountNotificationPollingInterval(int countNotificationPollingInterval) {
+			this.countNotificationPollingInterval = countNotificationPollingInterval;
+		}
+	}
 
 	public class Pay{
 		@SerializedName("promotions")
