@@ -588,9 +588,15 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
 
     @Override
-    public void onMoreDelete(FeedDetail feedDetail, int positionInList) {
+    public void onMoreDelete(final FeedDetail feedDetail, final int positionInList) {
 //        getDeletePostDialog().show(feedDetail,positionInList);
-        showDialogPopupTwoButtonCapsule(activity.getString(R.string.delete_post_alert_message), feedDetail, positionInList);
+        activity.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showDialogPopupTwoButtonCapsule(activity.getString(R.string.delete_post_alert_message), feedDetail, positionInList);
+
+            }
+        },100);
     }
 
     @Override
@@ -608,7 +614,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
             @Override
             public void onNegativeClick() {
             }
-        }, android.R.style.Theme_Translucent_NoTitleBar, activity, message).show();
+        }, R.style.Feed_Popup_Theme, activity, message).show();
     }
 
 }

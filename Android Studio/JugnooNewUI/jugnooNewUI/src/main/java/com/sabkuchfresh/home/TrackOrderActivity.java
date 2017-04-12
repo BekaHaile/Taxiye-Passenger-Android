@@ -17,8 +17,8 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -83,7 +83,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	private TextView tvTrackingInfo, tvETA;
 	private ImageView bMyLocation;
 	private ASSL assl;
-	private Button bCallDriver;
+	private LinearLayout bCallDriver;
 
 	private Marker markerDriver;
 	private Polyline polylinePath;
@@ -125,7 +125,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		tvETA = (TextView) findViewById(R.id.tvETA);
 		tvETA.setVisibility(View.GONE);
 		bMyLocation = (ImageView) findViewById(R.id.bMyLocation);
-		bCallDriver = (Button) findViewById(R.id.bCallDriver);
+		bCallDriver = (LinearLayout) findViewById(R.id.bCallDriver);
 
 		tvTitle.setText(getString(R.string.order_hash_format, String.valueOf(orderId)));
 

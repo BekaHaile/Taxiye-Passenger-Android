@@ -39,6 +39,8 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment {
     Button btnReserveSpot;
     @Bind(R.id.tv_error)
     TextView tvError;
+    @Bind(R.id.tvClaimHandle)
+    TextView tvClaimHandle;
 
     @Nullable
     @Override
@@ -65,6 +67,9 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment {
 
             }
         });
+
+        tvClaimHandle.setText(activity.getString(R.string.feed_claim_handle_description_format, Data.getFeedName(activity)));
+
 
         return rootView;
 
