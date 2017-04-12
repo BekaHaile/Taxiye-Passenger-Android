@@ -333,6 +333,7 @@
   <color name="feed_grey_background_light">#f7f7f7</color>
   <color name="feed_color_orange">#ff834e</color>
     <color name="green_delivery_stores">#8dcf61</color>
+    <color name="green_delivery_stores_alpha">#B38dcf61</color>
     <color name="feed_grey_black">#d8dbe1</color>
     <color name="feed_grey_tab">#d8d8d8</color>
     <color name="feed_grey_tab_dark">#b8b8b8</color>
