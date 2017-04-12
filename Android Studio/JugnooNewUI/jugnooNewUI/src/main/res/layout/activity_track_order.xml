@@ -96,24 +96,33 @@
             />
 
 
-        <Button
+        <LinearLayout
             android:id="@+id/bCallDriver"
-            style="@style/ButtonTheme"
             android:layout_width="@dimen/dp_200"
             android:layout_height="@dimen/dp_45"
             android:background="@drawable/capsule_green_selector"
             android:layout_marginBottom="@dimen/dp_20"
             android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:drawableLeft="@drawable/ic_track_order_call"
-            android:text="@string/call_driver"
             android:layout_alignParentBottom="true"
-            android:textSize="@dimen/sp_15"
+            android:orientation="horizontal"
+            android:gravity="center"
             android:visibility="gone"
+            >
 
-            />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_track_order_call"
+                android:text="@string/call_driver"
+                android:textSize="@dimen/sp_16"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:drawablePadding="4dp"
+                app:font="maven"
+                />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
