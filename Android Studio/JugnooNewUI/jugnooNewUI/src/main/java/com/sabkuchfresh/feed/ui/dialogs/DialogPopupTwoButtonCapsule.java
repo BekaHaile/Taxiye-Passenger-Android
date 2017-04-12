@@ -2,10 +2,13 @@ package com.sabkuchfresh.feed.ui.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -40,12 +43,22 @@ public class DialogPopupTwoButtonCapsule extends Dialog {
         });
         ((TextView)findViewById(R.id.tvMessage)).setText(message);
 
+
+        Window window = getWindow();
+        WindowManager.LayoutParams wlp = getWindow().getAttributes();
+        wlp.windowAnimations = R.style.Animations_LoadingDialogFade;
+        wlp.gravity=Gravity.LEFT|Gravity.CENTER;
+        wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//to avoid black backgorund during animation
+        window.setAttributes(wlp);
+/*
         getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
         getWindow().getAttributes().dimAmount = 0.6f;
-        getWindow().getAttributes().gravity = Gravity.CENTER;
+        getWindow().getAttributes().gravity = Gravity.LEFT|Gravity.CENTER;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//        setCancelable(true);
-//        setCanceledOnTouchOutside(true);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));*/
+
 
     }
 
