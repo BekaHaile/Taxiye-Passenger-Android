@@ -48,6 +48,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="15dp"
         android:textSize="@dimen/sp_12"
+        android:gravity="center_vertical"
         android:textColor="@color/pf_grey_light"
         app:font="maven"
         android:drawableLeft="@drawable/ic_like_active"
