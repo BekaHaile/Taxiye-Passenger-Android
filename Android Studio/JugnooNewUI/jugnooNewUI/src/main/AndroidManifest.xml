@@ -519,7 +519,7 @@
 
         <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="@string/razorpay_live_api_key"
+            android:value="@string/razorpay_test_api_key"
             />
 
         <service android:name="com.sabkuchfresh.home.RazorpayCallbackService" android:enabled="true" />

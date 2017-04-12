@@ -192,6 +192,7 @@ import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
+import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -1658,6 +1659,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void run() {
                 try {
                     if(Data.userData.getSignupTutorial() != null) {
+                        if (Data.userData.getSignupTutorial().getDs1() == 1) {
+                            startActivity(new Intent(HomeActivity.this, NewUserFlow.class));
+                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0);
+
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(Data.userData.getSignupTutorial() != null) {
 						if (Data.userData.getSignupTutorial().getTs1() == 1
 								|| Data.userData.getSignupTutorial().getTs2() == 1) {
 							getTransactionUtils().openSignUpTutorialFragment(HomeActivity.this, relativeLayoutContainer, 2);
@@ -1667,7 +1684,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
             }
-        }, 2000);
+        }, 4000);
 
         getHandler().postDelayed(new Runnable() {
             @Override
@@ -3341,9 +3358,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
                 try {
-                    fabViewTest.closeMenu();
-                    getViewSlidingExtra().setVisibility(View.GONE);
-                    getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
+//                    fabViewTest.closeMenu();
+//                    getViewSlidingExtra().setVisibility(View.GONE);
+//                    getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
                 } catch (Exception e) {e.printStackTrace();}
             }
         } catch (Exception e) {
@@ -4307,19 +4324,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 DialogPopup.showLocationSettingsAlert(HomeActivity.this);
             }
 
-
-//            if ((isAccessibilitySettingsOn(getApplicationContext())
-//                    && (Prefs.with(HomeActivity.this).contains(SPLabels.JUGNOO_JEANIE_STATE) == false))) {
-//                Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-//            } else {
-//                if ((isAccessibilitySettingsOn(getApplicationContext())
-//                        && (Prefs.with(HomeActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == true))) {
-//                    Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-//                } else {
-//                    //Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
-//                }
-//            }
-
             Utils.hideSoftKeyboard(this, editTextRSFeedback);
 
             try {
@@ -4333,19 +4337,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
-            /*if(Prefs.with(HomeActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
-                    Data.userData.getIntegratedJugnooEnabled() == 1) {
-                //imageViewFabFake.setVisibility(View.VISIBLE); // fab existing
-                setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                //fabView.setRelativeLayoutFABVisibility(passengerScreenMode);
-            } else {
-                //imageViewFabFake.setVisibility(View.GONE);
-            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-//        genieLayout.setGenieParams();
     }
 
 

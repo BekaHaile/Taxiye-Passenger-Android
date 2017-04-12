@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/linearLayoutRoot"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -16,10 +16,9 @@
             android:id="@+id/linearLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/px_150"
             android:descendantFocusability="blocksDescendants"
-            >
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/px_150">
 
             <!-- Delivery Address view -->
             <LinearLayout
@@ -131,65 +130,62 @@
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_26"
                     android:visibility="visible"
-                    app:font="maven"
-                    />
+                    app:font="maven" />
 
 
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_marginBottom="8px"
-                                                    android:layout_marginLeft="20px"
-                                                    android:layout_marginRight="20px"
-                                                    android:layout_marginTop="14px"
-                                                    card_view:cardBackgroundColor="@color/white"
-                                                    card_view:cardCornerRadius="4px">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8px"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="20px"
+                    android:layout_marginTop="14px"
+                    card_view:cardBackgroundColor="@color/white"
+                    card_view:cardCornerRadius="4px">
 
                     <RelativeLayout
                         android:id="@+id/rlDeliveryFrom"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="116px"
-                        android:background="@drawable/bg_transparent_menu_item_selector">
+                        android:background="@drawable/bg_transparent_menu_item_selector"
+                        android:minHeight="116px">
 
                         <ImageView
                             android:layout_width="50px"
                             android:layout_height="50px"
-                            android:layout_marginLeft="20px"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_restaurant"
+                            android:layout_marginLeft="20px"
                             android:padding="10px"
+                            android:src="@drawable/ic_restaurant"
                             android:tag="mwar" />
 
                         <TextView
                             android:id="@+id/tvRestName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/px_80"
+                            android:layout_marginRight="@dimen/px_20"
+                            android:layout_marginTop="@dimen/px_25"
+                            android:maxLines="3"
                             android:text="Res"
                             android:textColor="@color/text_color_light_selector"
                             android:textSize="30px"
-                            android:layout_marginLeft="@dimen/px_80"
-                            android:layout_marginTop="@dimen/px_25"
-                            android:layout_marginRight="@dimen/px_20"
-                            android:maxLines="3"
-                            app:font="maven"
-                            />
+                            app:font="maven" />
 
                         <TextView
                             android:id="@+id/tvRestAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4px"
-                            android:text="Add"
-                            android:textColor="@color/text_color_light"
-                            android:layout_marginLeft="@dimen/px_80"
-                            android:textSize="26px"
                             android:layout_below="@+id/tvRestName"
                             android:layout_marginBottom="@dimen/px_25"
+                            android:layout_marginLeft="@dimen/px_80"
                             android:layout_marginRight="@dimen/px_20"
+                            android:layout_marginTop="4px"
                             android:maxLines="3"
-                            app:font="@string/maven_r"
-                            />
+                            android:text="Add"
+                            android:textColor="@color/text_color_light"
+                            android:textSize="26px"
+                            app:font="@string/maven_r" />
 
                     </RelativeLayout>
 
@@ -464,8 +460,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="80px"
                             android:background="@drawable/bg_transparent_menu_item_selector"
-                            android:visibility="visible"
-                            >
+                            android:visibility="visible">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -547,6 +542,39 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rlUPI"
+                            android:layout_width="match_parent"
+                            android:layout_height="80px"
+                            android:background="@drawable/bg_transparent_menu_item_selector"
+                            android:visibility="visible">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/ivUPI"
+                                    style="@style/ic_radio_button_style"
+                                    android:layout_marginLeft="30px" />
+
+
+                                <TextView
+                                    android:id="@+id/tvUPI"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="16px"
+                                    android:text="@string/other_modes_to_pay"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/text_size_34"
+                                    app:font="maven" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
                             android:id="@+id/rlOtherModesToPay"
                             android:layout_width="match_parent"
                             android:layout_height="80px"
@@ -573,8 +601,7 @@
                                     android:text="@string/other_modes_to_pay"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34"
-                                    app:font="maven"
-                                    />
+                                    app:font="maven" />
 
                             </LinearLayout>
 

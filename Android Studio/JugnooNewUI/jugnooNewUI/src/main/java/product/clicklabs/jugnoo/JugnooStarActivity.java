@@ -29,7 +29,7 @@ import product.clicklabs.jugnoo.utils.NonScrollListView;
  * Created by ankit on 27/12/16.
  */
 
-public class JugnooStarActivity extends BaseFragmentActivity implements View.OnClickListener, GAAction, GACategory{
+public class JugnooStarActivity extends StarBaseActivity implements View.OnClickListener, GAAction, GACategory{
 
     private RelativeLayout relative, rlPlan1, rlPlan2;
     private TextView textViewTitle, tvSubTitle;

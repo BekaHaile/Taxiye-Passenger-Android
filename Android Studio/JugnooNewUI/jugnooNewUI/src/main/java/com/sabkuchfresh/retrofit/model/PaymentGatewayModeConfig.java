@@ -17,6 +17,9 @@ public class PaymentGatewayModeConfig {
 	@SerializedName("display_name")
 	@Expose
 	private String displayName;
+	@SerializedName("upi_handle")
+	@Expose
+	private String upiHandle;
 
 
 	public String getName() {
@@ -41,5 +44,13 @@ public class PaymentGatewayModeConfig {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	public String getUpiHandle() {
+		return upiHandle;
+	}
+
+	public void setUpiHandle(String upiHandle) {
+		this.upiHandle = upiHandle;
 	}
 }

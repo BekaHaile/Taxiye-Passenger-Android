@@ -176,6 +176,7 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -518,6 +519,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         initCollapseToolBarViews();
+
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(Data.userData.getSignupTutorial() != null) {
+                        if (Data.userData.getSignupTutorial().getDs1() == 1) {
+                            startActivity(new Intent(FreshActivity.this, NewUserFlow.class));
+                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0);
 
         getHandler().postDelayed(new Runnable() {
             @Override
@@ -4106,7 +4123,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         razorpayCallbackIntentService("-1", "-1");
     }
 
-    public void startRazorPayPayment(JSONObject options) {
+    public void startRazorPayPayment(JSONObject options, boolean isUPA) {
         Checkout checkout = new Checkout();
         checkout.setImage(R.drawable.jugnoo_icon);
         try {
@@ -4115,6 +4132,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             options.put(Constants.KEY_RAZORPAY_PREFILL_EMAIL, options.remove(Constants.KEY_USER_EMAIL).toString());
             options.put(Constants.KEY_RAZORPAY_PREFILL_CONTACT, options.remove(Constants.KEY_PHONE_NO).toString());
             options.put(Constants.KEY_RAZORPAY_THEME_COLOR, "#FD7945");
+            if(isUPA){
+                options.put(Constants.KEY_RAZORPAY_PREFILL_METHOD, "upi"); // "upi", ""
+                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Data.userData != null ? Data.userData.getUpiHandle() : ""); // "upi", ""
+            } else{
+                options.put(Constants.KEY_RAZORPAY_PREFILL_METHOD, "");
+                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Data.userData != null ? Data.userData.getUpiHandle() : "");
+            }
 
             Log.i(TAG, "startRazorPayPayment options="+options);
             checkout.setFullScreenDisable(true);
