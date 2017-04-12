@@ -39,26 +39,26 @@
         android:splitMotionEvents="false">
 
         <Button
-            android:id="@+id/bNegative"
+            android:id="@+id/bPositive"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_40"
             android:layout_weight="1"
             android:background="@drawable/capsule_white_grey_border_selector"
             android:minWidth="100dp"
-            android:text="No"
+            android:text="Yes"
             android:textColor="@color/text_color_selector"
             android:textSize="@dimen/sp_17"
             app:font="maven"/>
 
         <Button
-            android:id="@+id/bPositive"
+            android:id="@+id/bNegative"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_40"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:background="@drawable/capsule_theme_color_selector"
             android:minWidth="100dp"
-            android:text="Yes"
+            android:text="No"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_17"
             app:font="maven"

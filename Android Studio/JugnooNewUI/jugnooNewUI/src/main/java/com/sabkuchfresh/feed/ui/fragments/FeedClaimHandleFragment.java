@@ -2,6 +2,8 @@ package com.sabkuchfresh.feed.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -15,6 +17,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
@@ -36,7 +40,7 @@ import retrofit.RetrofitError;
  * Created by Parminder Singh on 4/10/17.
  */
 
-public final class FeedClaimHandleFragment extends FeedBaseFragment {
+public final class FeedClaimHandleFragment extends FeedBaseFragment implements GAAction {
 
     @Bind(R.id.edt_claim_handle)
     EditText edtClaimHandle;
@@ -83,16 +87,23 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment {
             @Override
             public void keyboardOpened() {
                 sv.fullScroll(View.FOCUS_DOWN);
+                activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+               activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
             }
 
             @Override
             public void keyBoardClosed() {
+                activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+
+
 
             }
         });
         llMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
-
+        GAUtils.trackScreenView(FEED+HANDLE_INPUT);
         return rootView;
 
     }

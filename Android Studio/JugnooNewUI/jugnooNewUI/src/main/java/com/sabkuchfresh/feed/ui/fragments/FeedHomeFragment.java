@@ -225,7 +225,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);
         try {
             tvFeedEmpty.setText(Data.getFeedName(activity) + " is empty");
-            SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add));
+            SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add_a_post));
             ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tvFeedEmpty.append("\n");
             tvFeedEmpty.append(ssb);

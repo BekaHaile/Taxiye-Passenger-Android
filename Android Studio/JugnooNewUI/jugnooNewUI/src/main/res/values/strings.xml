@@ -1520,6 +1520,7 @@
     <string name="feedback_menu_what_wrong">Oh no,what went wrong?</string>
     <string name="feed_is_empty">Feed is empty!</string>
     <string name="be_first_one_to_add">BE THE FIRST ONE TO ADD...</string>
+    <string name="be_first_one_to_add_a_post">BE THE FIRST ONE TO ADD A POST...</string>
     <string name="items_summary">Item(s) Summary</string>
     <string name="bill_summary">Bill Summary</string>
     <string name="dont_touch_me">DontTouchMe</string>
