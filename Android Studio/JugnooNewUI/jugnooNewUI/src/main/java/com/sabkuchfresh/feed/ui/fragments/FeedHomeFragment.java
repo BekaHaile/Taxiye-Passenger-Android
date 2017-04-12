@@ -334,7 +334,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     relativeLayoutNotAvailable.setVisibility(View.VISIBLE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(feedbackResponse.getMessage()) ? feedbackResponse.getMessage() : activity.getString(R.string.nothing_found_near_you));
                                     feedHomeAdapter.setList(getAdapterList(false,feedbackResponse.getFeeds(),null,feedbackResponse.getCity()));
-                                   
+
 
                                 } else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 
@@ -577,6 +577,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
         BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(!isNotificationsViewed || count!=currentNotificationCount?count:0));
         activity.collapsingToolbar.invalidate();
+        if(count!=currentNotificationCount){
+            isNotificationsViewed=false;
+        }
         currentNotificationCount = count;
     }
 
