@@ -42,6 +42,7 @@ import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.feed.utils.BadgeDrawable;
+import com.sabkuchfresh.fragments.FreshHomeFragment;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -358,7 +359,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
-                                activity.getFeedHomeAddPostView().setVisibility(relativeLayoutNotAvailable.getVisibility()==View.VISIBLE ? View.GONE : View.VISIBLE);
+                                if(activity.getTopFragment() instanceof FreshHomeFragment) {
+                                    activity.getFeedHomeAddPostView().setVisibility(relativeLayoutNotAvailable.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                                }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -384,7 +387,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     }
 
     private ArrayList<Object> adapterList;
-    private ArrayList<Object> getAdapterList(boolean showAddPostText,List<FeedDetail> feedDetailList,String addPostText,String cityName) {
+    private ArrayList<Object> getAdapterList(boolean showAddPostText, List<FeedDetail> feedDetailList, String addPostText, String cityName) {
         if(adapterList ==null) {
             adapterList = new ArrayList<>();
         }
