@@ -121,6 +121,7 @@ public class FeedChangeCityFragment extends FeedBaseFragment {
         activity.setSelectedAddress("");
         activity.setSelectedAddressId(0);
         activity.setSelectedAddressType("");
+        activity.saveOfferingLastAddress(AppConstant.ApplicationType.FEED);
 
         activity.performBackPressed(false);
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
