@@ -2725,6 +2725,18 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 
 	public void apiLoginUsingFbAccountKit(final Activity activity, final String accountCode) {
+		String userName = "", userEmail = "";
+		try {
+			String ownerEmail = UserEmailFetcher.getEmail(SplashNewActivity.this);
+			if (ownerEmail != null && (!ownerEmail.equalsIgnoreCase(""))) {
+				userEmail = ownerEmail;
+				if (new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail) != null) {
+					userName = Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail));
+				}
+			}
+		} catch(Exception e){
+				e.printStackTrace();
+			}
 		if(MyApplication.getInstance().isOnline()) {
 			final ProgressDialog missedCallDialog = DialogPopup.showLoadingDialogNewInstance(SplashNewActivity.this, "Loading...");
 
@@ -2754,6 +2766,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 			params.put("fb_account_code", accountCode);
 			params.put("login_type", "0");
+			params.put("user_name", userName);
+			params.put("user_email", userEmail);
 			params.put(Constants.KEY_ACCOUNT_KIT_VERSION, "4.19.0");
 			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
