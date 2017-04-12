@@ -96,7 +96,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment {
                 @Override
                 public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
                     Utils.hideKeyboard(activity);
-                    Data.getFeedData().setShowCreateHandle(1);
+                    Data.getFeedData().setHasHandle(1);
 
 
                     edtClaimHandle.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_done_green_vector,0);

@@ -398,6 +398,11 @@ public class LoginResponse {
 		private String feedName;
 
 
+        @SerializedName("has_handle")
+        private int hasHandle;
+
+
+
 
 		public String getFeedIntroString() {
 			return feedIntroString;
@@ -510,7 +515,14 @@ public class LoginResponse {
 			this.feedName = feedName;
 		}
 
-	}
+        public boolean getHasHandle() {
+            return hasHandle==1;
+        }
+
+        public void setHasHandle(int hasHandle) {
+            this.hasHandle = hasHandle;
+        }
+    }
 
 	public class Pay{
 		@SerializedName("promotions")
