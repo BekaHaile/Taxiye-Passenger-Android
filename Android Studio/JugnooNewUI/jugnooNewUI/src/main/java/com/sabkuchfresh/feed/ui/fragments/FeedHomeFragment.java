@@ -42,7 +42,6 @@ import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.feed.utils.BadgeDrawable;
-import com.sabkuchfresh.fragments.FreshHomeFragment;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -88,7 +87,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private RecyclerView recyclerView;
 
 
-    private final long UPDATE_NOTIFICATION_COUNT_INTERVAL = 15000;
+    private long UPDATE_NOTIFICATION_COUNT_INTERVAL = 15000;
 
     public FeedHomeFragment() {
         // Required empty public constructor
@@ -608,7 +607,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         public void run() {
             updateFeedNotificationCountAPI();
             if(runnableNotificationCount != null) {
-                activity.getHandler().postDelayed(runnableNotificationCount, UPDATE_NOTIFICATION_COUNT_INTERVAL);
+                activity.getHandler().postDelayed(runnableNotificationCount,
+                        Data.getFeedData() != null ? Data.getFeedData().getCountNotificationPollingInterval() :
+                                UPDATE_NOTIFICATION_COUNT_INTERVAL);
             }
         }
     };
