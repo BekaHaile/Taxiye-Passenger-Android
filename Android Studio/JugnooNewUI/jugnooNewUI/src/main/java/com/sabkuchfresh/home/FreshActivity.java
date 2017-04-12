@@ -161,6 +161,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -725,8 +726,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                     }
                                 } else {
                                     if (flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()) {
-                                        Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
-                                        openPushDialog();
+                                        // for refreshing generate feed api on feed like comment related pushes
+                                        if(intent.getIntExtra(Constants.KEY_DEEPINDEX, -1) == AppLinkIndex.FEED_PAGE.getOrdinal()
+                                                && intent.getIntExtra(Constants.KEY_POST_ID, -1) != -1) {
+                                            if(getTopFragment() instanceof FeedHomeFragment) {
+//                                            getFeedHomeFragment().fetchFeedsApi(false, false);
+                                            }
+                                        } else {
+                                            // else normal case of displaying push dialog
+                                            Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
+                                            openPushDialog();
+                                        }
                                     } else if (PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag) {
                                         String message = intent.getStringExtra(Constants.KEY_MESSAGE);
                                         Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));

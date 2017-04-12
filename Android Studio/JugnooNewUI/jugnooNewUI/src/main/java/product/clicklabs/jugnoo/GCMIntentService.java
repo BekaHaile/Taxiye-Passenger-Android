@@ -628,7 +628,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 							// for sending broadcast to FreshActivity for tab index action
 							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
-							if("".equalsIgnoreCase(url)){
+							// if push content has post_id and deepindex 22(FEED) only then hit this broadcast
+							if(deepindex == AppLinkIndex.FEED_PAGE.getOrdinal() && postId != -1){
+								broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
+								broadcastIntent.putExtra(Constants.KEY_POST_ID, postId);
+							}
+							else if("".equalsIgnoreCase(url)){
 								deepindex = showDialog == 1 ? -1 : deepindex;
 								broadcastIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
 								broadcastIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
