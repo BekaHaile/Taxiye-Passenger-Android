@@ -34,7 +34,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/spacing_small"
         android:gravity="center"
-        android:text="@string/feed_claim_handle_description"
+        android:text="@string/feed_claim_handle_description_format"
         android:textColor="@color/feed_grey_text"
         android:textSize="@dimen/font_extra_large"
         app:font="maven" />
