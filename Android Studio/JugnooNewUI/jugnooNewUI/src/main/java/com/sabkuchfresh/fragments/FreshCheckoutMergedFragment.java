@@ -816,10 +816,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
             if (payableAmount() > 0) {
+//                Utils.getDoubleTwoDigits((double)Math.round(payableAmount()));
                 buttonPlaceOrder.setText("PAY " + activity.getString(R.string.rupees_value_format,
-                        Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
+                        Utils.getDoubleTwoDigits((double)Math.round(payableAmount()))));
                 tvSlide.setText("PAY " + activity.getString(R.string.rupees_value_format,
-                        Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
+                        Utils.getDoubleTwoDigits((double)Math.round(payableAmount()))));
             } else {
                 buttonPlaceOrder.setText(activity.getResources().getString(R.string.place_order));
                 tvSlide.setText(activity.getResources().getString(R.string.place_order));
