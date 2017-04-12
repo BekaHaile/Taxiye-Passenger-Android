@@ -2188,6 +2188,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void onPause() {
         super.onPause();
 
+        try {
+            Utils.hideKeyboard(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
             updateItemListFromDBFMG(null);
         }
