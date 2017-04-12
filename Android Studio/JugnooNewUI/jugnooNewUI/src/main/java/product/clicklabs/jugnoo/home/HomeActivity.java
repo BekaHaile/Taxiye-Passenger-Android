@@ -3358,9 +3358,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
                 try {
-                    fabViewTest.closeMenu();
-                    getViewSlidingExtra().setVisibility(View.GONE);
-                    getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
+//                    fabViewTest.closeMenu();
+//                    getViewSlidingExtra().setVisibility(View.GONE);
+//                    getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
                 } catch (Exception e) {e.printStackTrace();}
             }
         } catch (Exception e) {
