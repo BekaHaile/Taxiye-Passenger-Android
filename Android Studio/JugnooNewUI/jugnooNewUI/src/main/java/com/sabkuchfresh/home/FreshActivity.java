@@ -482,8 +482,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     if(Data.getFeedData().getFeedActive()) {
                         if(Data.getFeedData().getHasHandle()){
 
-//                            addFeedFragment();
-                            addClaimHandleFragment();
+
+                          addFeedFragment();
+
                         }else{
 
                             addClaimHandleFragment();

@@ -456,11 +456,14 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
-        if(!isViewingDetail && (feedDetail.getFeedType()== FeedDetail.FeedType.COMMENT_ON_POST || feedDetail.getFeedType()== FeedDetail.FeedType.COMMENT_ON_REVIEW ) && feedDetail.getCommentContent()!=null){
-            //Show Comment if X Comment on Y Post
+        if(!isViewingDetail && (feedDetail.getFeedType()== FeedDetail.FeedType.COMMENT_ON_POST || feedDetail.getFeedType()== FeedDetail.FeedType.COMMENT_ON_REVIEW ) && feedDetail.getCommentContent()!=null ){
+       /*
+
+        //Show Comment if X Comment on Y Post Done with only one textVIew
             String userCommentName = feedDetail.getUserName() + "\n";
             String newline = "\n"  ;//margin between name and comment
             String keyComment =  feedDetail.getCommentContent();
+
 
 
             SpannableString spannableString = new SpannableString(userCommentName + newline+  keyComment );
@@ -469,6 +472,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             spannableString.setSpan(new RelativeSizeSpan(0.9f),spannableString.length()-keyComment.length(),spannableString.length(),SPAN_INCLUSIVE_EXCLUSIVE);
             spannableString.setSpan(new RelativeSizeSpan(0.2f),userCommentName.length(),spannableString.length()-keyComment.length(),SPAN_INCLUSIVE_EXCLUSIVE);//margin between name and comment reducing size
             holder.tvUserCommentedNameAndComment.setText(spannableString);
+*/
+
+            holder.tvUserCommentedName.setText(feedDetail.getUserName());
+            holder.tvUserCommentedComment.setText(feedDetail.getCommentContent() );
 
 
             //User Image Comment
@@ -711,8 +718,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView ivPlaceImage;
         @Bind(R.id.line_below_images_pager)
         View lineBelowImagesPager;
-        @Bind(R.id.tv_user_commented_name_comment)
-        TextView tvUserCommentedNameAndComment;
+        @Bind(R.id.tv_user_commented_name)
+        TextView tvUserCommentedName;
+        @Bind(R.id.tv_user_commented_comment)
+        TextView tvUserCommentedComment;
         @Bind(R.id.tv_action_comment)
         TextView tvComment;
         @Bind(R.id.tv_action_like)
@@ -760,6 +769,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(view);
             ButterKnife.bind(this, view);
             tvFeedAddress.setTypeface(tvFeedAddress.getTypeface(), Typeface.BOLD);
+            tvUserCommentedName.setTypeface(tvUserCommentedName.getTypeface(), Typeface.BOLD);
             viewActionLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -266,6 +266,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            activity.getFeedHomeAddPostView().setVisibility(relativeLayoutNotAvailable.getVisibility()==View.VISIBLE ? View.GONE : View.VISIBLE);
             activity.getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -333,15 +334,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     relativeLayoutNotAvailable.setVisibility(View.VISIBLE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(feedbackResponse.getMessage()) ? feedbackResponse.getMessage() : activity.getString(R.string.nothing_found_near_you));
                                     feedHomeAdapter.setList(getAdapterList(false,feedbackResponse.getFeeds(),null,feedbackResponse.getCity()));
-                                    activity.getFeedHomeAddPostView().setVisibility(View.GONE);
+                                   
 
                                 } else if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 
                                     feedHomeAdapter.setList(getAdapterList(true,feedbackResponse.getFeeds(),feedbackResponse.getAddPostText(),feedbackResponse.getCity()));
                                     rlNoReviews.setVisibility(feedbackResponse.getFeeds()==null||feedbackResponse.getFeeds().size()==0 ? View.VISIBLE : View.GONE);
-                                    if(activity.getTopFragment() instanceof FreshHomeFragment) {
-                                        activity.getFeedHomeAddPostView().setVisibility(View.VISIBLE);
-                                    }
+
                                     if(activity.getTvAddPost() != null) {
                                         activity.getTvAddPost().setText(feedbackResponse.getAddPostText());
                                     }
@@ -360,6 +359,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
+                                activity.getFeedHomeAddPostView().setVisibility(relativeLayoutNotAvailable.getVisibility()==View.VISIBLE ? View.GONE : View.VISIBLE);
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();

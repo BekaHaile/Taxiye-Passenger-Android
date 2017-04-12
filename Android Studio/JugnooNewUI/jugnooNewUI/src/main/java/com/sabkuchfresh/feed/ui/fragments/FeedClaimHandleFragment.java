@@ -7,9 +7,13 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
@@ -24,6 +28,7 @@ import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 
@@ -41,6 +46,10 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment {
     TextView tvError;
     @Bind(R.id.tvClaimHandle)
     TextView tvClaimHandle;
+    @Bind(R.id.sv)
+    ScrollView sv;
+    @Bind(R.id.llMain)
+    LinearLayout llMain;
 
     @Nullable
     @Override
@@ -70,6 +79,19 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment {
 
         tvClaimHandle.setText(activity.getString(R.string.feed_claim_handle_description_format, Data.getFeedName(activity)));
 
+        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(llMain, null, new KeyboardLayoutListener.KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+                sv.fullScroll(View.FOCUS_DOWN);
+            }
+
+            @Override
+            public void keyBoardClosed() {
+
+            }
+        });
+        llMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
 
         return rootView;
 
@@ -84,7 +106,12 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment {
     @OnClick(R.id.btn_reserve_spot)
     public void onClick() {
 
-        if(edtClaimHandle.getText().toString().trim().length()>0){
+        if(edtClaimHandle.getText().toString().trim().length()<=0){
+            Toast.makeText(activity, "Please enter a handle name.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
             HashMap<String,String> params = new HashMap<>();
             params.put(Constants.KEY_HANDLE,edtClaimHandle.getText().toString().trim());
             new ApiCommon<FeedCommonResponse>(activity).putAccessToken(true).execute(params, ApiName.SET_HANDLE_API, new APICommonCallback<FeedCommonResponse>() {
@@ -141,5 +168,5 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment {
         }
 
 
-    }
+
 }
