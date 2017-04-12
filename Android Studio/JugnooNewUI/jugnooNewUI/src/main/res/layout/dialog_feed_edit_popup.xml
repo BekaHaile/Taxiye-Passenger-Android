@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
 
+
+    android:layout_marginLeft="@dimen/spacing_small"
+    android:layout_marginRight="@dimen/spacing_small"
     android:layout_height="wrap_content">
     <View
         android:background="@drawable/background_popup_edit_feed"
@@ -11,36 +16,50 @@
         android:layout_width="20dp"
         android:layout_height="20dp"/>
 
-    <TextView
-        android:id="@+id/tv_edit_post"
-        android:drawablePadding="@dimen/spacing_normal"
-        android:gravity="center|left"
-        android:textColor="@color/feed_grey_text"
-        android:paddingTop="@dimen/spacing_normal"
-        android:paddingBottom="@dimen/spacing_normal"
-        android:background="@drawable/background_white_grey_light_selector"
-        android:drawableLeft="@drawable/ic_feed_edit_icon"
-        android:text="Edit Post"
-        style="@style/text_feed_popup" />
-
-
-    <View
-        android:paddingRight="@dimen/spacing_extra_tiny"
-        android:paddingLeft="@dimen/spacing_extra_tiny"
+    <LinearLayout
+        android:background="@drawable/background_white_rounded_radius_5"
+        android:orientation="vertical"
+        android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/feed_grey_background_light"/>
-    <TextView
-        android:id="@+id/tv_delete_post"
-        android:drawablePadding="@dimen/spacing_normal"
-        android:gravity="center|left"
-        android:paddingTop="@dimen/spacing_normal"
-        android:paddingBottom="@dimen/spacing_normal"
-        android:background="@drawable/background_white_grey_light_selector"
-        android:textColor="@color/feed_grey_text"
-        android:drawableLeft="@drawable/ic_delete_feed"
-        android:text="Delete Post"
-        style="@style/text_feed_popup" />
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/tv_edit_post"
+            android:drawablePadding="@dimen/spacing_normal"
+            android:gravity="center|left"
+            android:textColor="@color/feed_grey_text"
+            android:paddingTop="@dimen/spacing_normal"
+            android:paddingBottom="@dimen/spacing_normal"
+            app:font="maven"
+            android:background="@drawable/background_white_grey_light_selector"
+            android:drawableLeft="@drawable/ic_feed_edit_icon"
+            android:text="Edit Post"
+            style="@style/text_feed_popup" />
+
+
+        <View
+            android:paddingRight="@dimen/spacing_extra_tiny"
+            android:paddingLeft="@dimen/spacing_extra_tiny"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/feed_grey_background_light"/>
+        <TextView
+            android:id="@+id/tv_delete_post"
+            android:drawablePadding="@dimen/spacing_normal"
+            android:gravity="center|left"
+            android:paddingTop="@dimen/spacing_normal"
+            android:paddingBottom="@dimen/spacing_normal"
+            app:font="maven"
+            android:background="@drawable/background_white_grey_light_selector"
+            android:textColor="@color/feed_grey_text"
+            android:drawableLeft="@drawable/ic_delete_feed"
+            android:text="Delete Post"
+            style="@style/text_feed_popup" />
+
+    </LinearLayout>
+
+
 
 
 </LinearLayout>

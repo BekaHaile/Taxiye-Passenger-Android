@@ -4641,7 +4641,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 else{
                     MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
                     finishWithToast();
-                    // TODO: 04/04/17 add toast to exit
                 }
             }
         } catch (Exception e) {

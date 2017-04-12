@@ -22,5 +22,7 @@ public interface APICommonCallback<T extends FeedCommonResponse> {
     boolean onFailure(RetrofitError error);
 
 
+    void onNegativeClick();
+
 
 }

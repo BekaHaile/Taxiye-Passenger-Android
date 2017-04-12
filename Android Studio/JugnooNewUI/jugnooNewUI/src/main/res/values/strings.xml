@@ -655,6 +655,7 @@
 
     <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
     <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.\\ </string>
+    <string name="digits_alpha_numeric_without_space">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
 
 
     <string name="payment_option_dialog_title">Select preferred payment option</string>
@@ -1635,6 +1636,9 @@
     <string name="bullet_three">\u2022\u2022\u2022</string>
     <string name="press_back_again_to_quit">Press back again to quit</string>
     <string name="join">Join</string>
+    <string name="feed_claim_handle_description">Your handle is your unique name on feed.</string>
+    <string name="select_city">Select City</string>
+    <string name="delete_post_alert_message">Do you really want to delete this post? If you delete once it will no longer be available.</string>
 
 
 </resources>

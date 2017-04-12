@@ -39,6 +39,7 @@ import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
+import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.feed.utils.BadgeDrawable;
 import com.sabkuchfresh.fragments.FreshHomeFragment;
@@ -64,6 +65,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -164,8 +166,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             public void onCommentClick(final FeedDetail feedDetail, int positionInOriginalList) {
 
 
-                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail,positionInOriginalList);
+                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail,positionInOriginalList,true);
                 GAUtils.event(FEED, HOME, COMMENT+CLICKED);
+
             }
 
 
@@ -193,6 +196,12 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
             @Override
             public void onDeleteComment(FeedComment feedComment, int position, View viewClicked) {
+
+            }
+
+            @Override
+            public void onFeedLayoutClick(FeedDetail feedDetail, int positionInOriginalList) {
+                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList,false);
 
             }
         });
@@ -229,6 +238,25 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
         activity.getHandler().removeCallbacks(runnableNotificationCount);
         activity.getHandler().postDelayed(runnableNotificationCount, 1000);
+
+
+
+        // To check if user has clicked on some post id's push notification from sp_post_id_to_open
+        activity.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    int postIdToOpen = Prefs.with(activity).getInt(Constants.SP_POST_ID_TO_OPEN, -1);
+                    if(postIdToOpen != -1){
+						activity.openFeedDetailsFragmentWithPostId(postIdToOpen);
+					}
+                    Prefs.with(activity).save(Constants.SP_POST_ID_TO_OPEN, -1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 50);
+
 
         return rootView;
     }
@@ -267,13 +295,22 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         activity.getHandler().removeCallbacks(runnableNotificationCount);
     }
 
+
+    private ProgressDialog finalProgressDialog;
+    private void dismissFeedLoadingDialog(){
+        if(finalProgressDialog != null) {
+            finalProgressDialog.dismiss();
+            finalProgressDialog = null;
+        }
+    }
+
     public void fetchFeedsApi(boolean loader, final boolean scrollToTop) {
+
         try {
             if (MyApplication.getInstance().isOnline()) {
 
-                ProgressDialog progressDialog = null;
                 if(loader) {
-                    progressDialog = DialogPopup.showLoadingDialogNewInstance(getActivity(), getActivity().getResources().getString(R.string.loading));
+                    finalProgressDialog = DialogPopup.showLoadingDialogNewInstance(getActivity(), getActivity().getResources().getString(R.string.loading));
                 }
 
                 HashMap<String, String> params = new HashMap<>();
@@ -281,14 +318,11 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
                 new HomeUtil().putDefaultParams(params);
-                final ProgressDialog finalProgressDialog = progressDialog;
                 RestClient.getFeedApiService().generateFeed(params, new retrofit.Callback<FeedListResponse>() {
                     @Override
                     public void success(FeedListResponse feedbackResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        if(finalProgressDialog != null) {
-                            finalProgressDialog.dismiss();
-                        }
+                        dismissFeedLoadingDialog();
                         swipeRefreshLayout.setRefreshing(false);
                         try {
                             String message = feedbackResponse.getMessage();
@@ -334,9 +368,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
                     @Override
                     public void failure(RetrofitError error) {
-                        if(finalProgressDialog != null) {
-                            finalProgressDialog.dismiss();
-                        }
+                        dismissFeedLoadingDialog();
                         retryDialog(DialogErrorType.CONNECTION_LOST);
                         swipeRefreshLayout.setRefreshing(false);
                     }
@@ -437,11 +469,26 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
    private DeletePostDialog deletePostDialog;
 
     public DeletePostDialog getDeletePostDialog(){
-        if(deletePostDialog==null)
-            deletePostDialog=new DeletePostDialog(this,R.style.Feed_Popup_Theme,activity);
+        if(deletePostDialog == null)
+            deletePostDialog = new DeletePostDialog(this,R.style.Feed_Popup_Theme,activity);
 
         return deletePostDialog;
     }
+
+    public void showDialogPopupTwoButtonCapsule(String message, final FeedDetail feedDetail, final int pos){
+        new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
+                @Override
+                public void onPositiveClick() {
+                    onDelete(feedDetail, pos);
+                }
+
+                @Override
+                public void onNegativeClick() {
+                }
+            }, android.R.style.Theme_Translucent_NoTitleBar, activity, message).show();
+    }
+
+
 
     private EditPostPopup editPostDialog;
 
@@ -489,7 +536,8 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
     @Override
     public void onMoreDelete(FeedDetail feedDetail, int positionInList) {
-        getDeletePostDialog().show(feedDetail,positionInList);
+//        getDeletePostDialog().show(feedDetail,positionInList);
+        showDialogPopupTwoButtonCapsule(activity.getString(R.string.delete_post_alert_message), feedDetail, positionInList);
     }
 
     @Override
@@ -529,10 +577,12 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
-//            case R.id.item_location:
-//                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
-//                GAUtils.event(FEED, HOME, LOCATION+CLICKED);
-// break;
+
+            case R.id.item_location:
+              activity.getTransactionUtils().openChangeFeedCityFragment(activity, activity.getRelativeLayoutContainer());
+                GAUtils.event(FEED, HOME, LOCATION+CLICKED);
+                break;
+
             case R.id.item_notification:
                 activity.getTransactionUtils().openFeedNotificationsFragment(activity, activity.getRelativeLayoutContainer());
                 break;
@@ -589,7 +639,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 						public boolean onFailure(RetrofitError error) {
 							return true;
 						}
-					});
+
+                        @Override
+                        public void onNegativeClick() {
+
+
+                        }
+                    });
         } catch (Exception e) {
             e.printStackTrace();
         }

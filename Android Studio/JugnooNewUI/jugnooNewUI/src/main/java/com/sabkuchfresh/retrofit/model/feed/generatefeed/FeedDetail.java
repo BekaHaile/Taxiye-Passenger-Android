@@ -73,6 +73,9 @@ public class FeedDetail implements Serializable {
     private String activityDoneOn;
     @SerializedName("is_liked_by_user")
     private int isLiked;
+    @SerializedName("is_commented_by_user")
+    @Expose
+    private int isCommentedByUser;
 
     public boolean isLiked() {
         return likeCount > 0 && isLiked==1;
@@ -96,7 +99,16 @@ public class FeedDetail implements Serializable {
     @Expose
     private String color;
 
-    private transient Drawable drawable;
+    @SerializedName("comment_content")
+    @Expose
+    private String commentContent;
+
+    @SerializedName("user_image_color")
+    @Expose
+    private String userImageColor;
+
+    private transient Drawable owenerImageDrawable;
+    private transient Drawable userImageDrawable;
 
 
     public boolean isAnonymousPost() {
@@ -277,12 +289,40 @@ public class FeedDetail implements Serializable {
         this.color = color;
     }
 
-    public Drawable getDrawable() {
-        return drawable;
+    public Drawable getOwnerImageDrawable() {
+        return owenerImageDrawable;
     }
 
-    public void setDrawable(Drawable drawable) {
-        this.drawable = drawable;
+    public void setOwnerImageDrawable(Drawable owenerImageDrawable) {
+        this.owenerImageDrawable = owenerImageDrawable;
+    }
+
+    public int getIsCommentedByUser() {
+        return isCommentedByUser;
+    }
+
+    public void setIsCommentedByUser(int isCommentedByUser) {
+        this.isCommentedByUser = isCommentedByUser;
+    }
+
+    public Drawable getUserImageDrawable() {
+        return userImageDrawable;
+    }
+
+    public void setUserImageDrawable(Drawable userImageDrawable) {
+        this.userImageDrawable = userImageDrawable;
+    }
+
+    public String getCommentContent() {
+        return commentContent;
+    }
+
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent;
+    }
+
+    public String getUserImageColor() {
+        return userImageColor;
     }
 
     public enum FeedType{

@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import com.sabkuchfresh.feed.utils.FeedUtils;
@@ -94,8 +96,8 @@ public class EditPostPopup extends Dialog {
             getWindow().getDecorView().setPivotX(openingViewLocation[0]+ viewClicked.getMeasuredWidth()/2);
             getWindow().getDecorView().setPivotY(viewClicked.getY());
             getWindow().getDecorView().animate()
-                    .scaleX(0.1f)
-                    .scaleY(0.1f)
+                    .scaleX(0.0f)
+                    .scaleY(0.0f)
                     .setDuration(150)
                     .setInterpolator(new AccelerateInterpolator())
                     .setListener(new AnimatorListenerAdapter() {
@@ -127,15 +129,16 @@ public class EditPostPopup extends Dialog {
             wlp.y = openingViewLocation[1]+ viewClicked.getHeight() - FeedUtils.dpToPx(10);
             getWindow().getDecorView().setPivotX(openingViewLocation[0]+viewClicked.getMeasuredWidth()/2);
             getWindow().getDecorView().setPivotY(viewClicked.getY());
-            getWindow().getDecorView().setScaleX(0.1f);
-            getWindow().getDecorView().setScaleY(0.1f);
+            getWindow().getDecorView().setScaleX(0.0f);
+            getWindow().getDecorView().setScaleY(0.0f);
             getWindow().setAttributes(wlp);
             getWindow().getDecorView().
                     animate().
                     scaleX(1f).
                     scaleY(1f).
-                    setDuration(150).
-                    setInterpolator(new OvershootInterpolator());
+                    setDuration(150);
+//                   .setInterpolator(new AccelerateInterpolator());
+
         }
     }
 
