@@ -69,7 +69,14 @@ public class NewUserFlow extends BaseFragmentActivity {
             @Override
             public void onClick(View v) {
                 if (getCurrentFragment() instanceof NewUserReferralFragment) {
-                    getTransactionUtils().openNewUserCompleteProfileFragment(NewUserFlow.this, getRlContainer());
+                    if(((Data.userData.getSignupTutorial().getDs2() != null
+                            && Data.userData.getSignupTutorial().getDs2() == 0)
+                            &&(Data.userData.getSignupTutorial().getDs3() != null
+                            && Data.userData.getSignupTutorial().getDs3() == 0))){
+                        performBackPressed();
+                    } else {
+                        getTransactionUtils().openNewUserCompleteProfileFragment(NewUserFlow.this, getRlContainer());
+                    }
                 } else if (getCurrentFragment() instanceof NewUserCompleteProfileFragment) {
                     if(fromMenu){
                         performBackPressed();
@@ -96,6 +103,7 @@ public class NewUserFlow extends BaseFragmentActivity {
             if (Data.userData.getSignupTutorial() != null) {
                 if (Data.userData.getSignupTutorial().getDs1() != null
                         && Data.userData.getSignupTutorial().getDs1() == 1) {
+                    //Data.userData.getSignupTutorial().setDs1(0);
                     getTransactionUtils().openNewUserReferralFragment(NewUserFlow.this, rlContainer);
                 } else if (Data.userData.getSignupTutorial().getDs2() != null
                         && Data.userData.getSignupTutorial().getDs2() == 1) {
@@ -124,6 +132,10 @@ public class NewUserFlow extends BaseFragmentActivity {
         return tvTitle;
     }
 
+    public ImageView getIvBack() {
+        return ivBack;
+    }
+
     public ImageView getIvTickWallet() {
         return ivTickWallet;
     }
@@ -140,8 +152,12 @@ public class NewUserFlow extends BaseFragmentActivity {
         ivLineProfile.setVisibility(View.GONE);
         ivTickWallet.setVisibility(View.GONE);
         if(Data.userData.getSignupTutorial() != null){
-            if(Data.userData.getSignupTutorial().getDs1() != null
-                    && Data.userData.getSignupTutorial().getDs1() == 1){
+            if((Data.userData.getSignupTutorial().getDs1() != null
+            && Data.userData.getSignupTutorial().getDs1() == 1)
+                    && ((Data.userData.getSignupTutorial().getDs2() != null
+            && Data.userData.getSignupTutorial().getDs2() == 1)
+                    || (Data.userData.getSignupTutorial().getDs3() != null
+            && Data.userData.getSignupTutorial().getDs3() == 1))){
                 ivTickReferral.setVisibility(View.VISIBLE);
                 ivLineReferral.setVisibility(View.VISIBLE);
                 ivLineReferralFill.setVisibility(View.VISIBLE);

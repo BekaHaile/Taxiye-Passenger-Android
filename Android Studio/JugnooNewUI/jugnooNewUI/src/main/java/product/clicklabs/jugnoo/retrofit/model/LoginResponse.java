@@ -398,6 +398,15 @@ public class LoginResponse {
 		private String feedName;
 
 
+        @SerializedName("has_handle")
+        private int hasHandle;
+
+		@SerializedName("count_notification_polling_interval")
+		@Expose
+		private Integer countNotificationPollingInterval;
+
+
+
 
 		public String getFeedIntroString() {
 			return feedIntroString;
@@ -510,6 +519,24 @@ public class LoginResponse {
 			this.feedName = feedName;
 		}
 
+        public boolean getHasHandle() {
+            return hasHandle==1;
+        }
+
+        public void setHasHandle(int hasHandle) {
+            this.hasHandle = hasHandle;
+        }
+
+		public int getCountNotificationPollingInterval() {
+			if(countNotificationPollingInterval == null){
+				countNotificationPollingInterval = 15;
+			}
+			return countNotificationPollingInterval*1000;
+		}
+
+		public void setCountNotificationPollingInterval(int countNotificationPollingInterval) {
+			this.countNotificationPollingInterval = countNotificationPollingInterval;
+		}
 	}
 
 	public class Pay{

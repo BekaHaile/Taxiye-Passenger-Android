@@ -73,6 +73,9 @@ public class ApiFetchWalletBalance {
 								String message = JSONParser.getServerMessage(jObj);
 								if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
 									Data.userData.updateWalletBalances(jObj, true);
+									if(jObj.has(Constants.KEY_UPI_HANDLE)){
+										Data.userData.setUpiHandle(jObj.getString(Constants.KEY_UPI_HANDLE));
+									}
 									MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(jObj);
 									Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 								} else {

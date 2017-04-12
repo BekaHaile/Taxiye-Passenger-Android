@@ -145,28 +145,15 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 	private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
 											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag){
 		notificationManagerCustomID(context, title, message, notificationId, deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag,
-				0, ProductType.AUTO.getOrdinal(), 0);
+				0, ProductType.AUTO.getOrdinal(), 0, -1);
 	}
 
-	private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
-											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag,
-											 int orderId, int productType){
-		notificationManagerCustomID(context, title, message, notificationId, deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag,
-				orderId, productType, 0);
-	}
 
-	private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
-											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag,
-											 int campaignId) {
-		notificationManagerCustomID(context, title, message, notificationId, deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag,
-				0, ProductType.AUTO.getOrdinal(), campaignId);
-
-	}
-
+	// 0, ProductType.AUTO.getOrdinal(), 0, -1
     @SuppressWarnings("deprecation")
     private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
 											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag,
-											 int orderId, int productType, int campaignId) {
+											 int orderId, int productType, int campaignId, int postId) {
 
         try {
             long when = System.currentTimeMillis();
@@ -185,6 +172,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				notificationIntent.putExtra(Constants.KEY_ORDER_ID, orderId);
 				notificationIntent.putExtra(Constants.KEY_PRODUCT_TYPE, productType);
 				notificationIntent.putExtra(Constants.KEY_CAMPAIGN_ID, campaignId);
+				notificationIntent.putExtra(Constants.KEY_POST_ID, postId);
 			} else{
 				notificationIntent.setData(Uri.parse(url));
 			}
@@ -612,26 +600,40 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						else {
 							String picture = jObj.optString(KEY_PICTURE, "");
 							int campaignId = jObj.optInt(Constants.KEY_CAMPAIGN_ID, 0);
+							int postId = jObj.optInt(Constants.KEY_POST_ID, -1);
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString(KEY_IMAGE, "");
 							}
+
+							// Push dialog content saved if showDialog flag is 1
 							if(showDialog == 1) {
 								Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, message);
 							}
 
+
+							// if picture is not empty first fetch picture via Picasso loading and then
+							// display bitmap along push else display push directly
 							if(!"".equalsIgnoreCase(picture)){
 								deepindex = jObj.optInt(KEY_DEEPINDEX, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
 								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush,
-										tabIndex, flag, campaignId);
+										tabIndex, flag, campaignId, postId);
 							}
 							else{
 								deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
 								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
-										null, url, playSound, showDialog, showPush, tabIndex, flag, campaignId);
+										null, url, playSound, showDialog, showPush, tabIndex, flag,
+										0, ProductType.AUTO.getOrdinal(), campaignId, postId);
 							}
 
+
+							// for sending broadcast to FreshActivity for tab index action
 							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
-							if("".equalsIgnoreCase(url)){
+							// if push content has post_id and deepindex 22(FEED) only then hit this broadcast
+							if(deepindex == AppLinkIndex.FEED_PAGE.getOrdinal() && postId != -1){
+								broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
+								broadcastIntent.putExtra(Constants.KEY_POST_ID, postId);
+							}
+							else if("".equalsIgnoreCase(url)){
 								deepindex = showDialog == 1 ? -1 : deepindex;
 								broadcastIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
 								broadcastIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
@@ -640,19 +642,19 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
 
 
+							// updating last push received time
 							Prefs.with(this).save(SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
 
-							try {
-								if (campaignId > 0) {
+
+							// CAMPAIGN TRACK PUSH
+							// if push content has campaign_id it hit /track_push api on server
+							// for that campaign id with status received
+							try {if (campaignId > 0) {
 									new ApiTrackPush().hit(GCMIntentService.this, campaignId, ApiTrackPush.Status.RECEIVED);
-								}
-							} catch (Exception e) {
-							}
+								}} catch (Exception e) {}
 
 						}
 
-						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
-						}
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						double balance = jObj.getDouble("balance");
 						if (HomeActivity.appInterruptHandler != null) {
@@ -778,7 +780,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						message1 = jObj.optString(KEY_MESSAGE, "");
 						if(!TextUtils.isEmpty(message1)) {
 							notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
-									null, url, playSound, showDialog, showPush, tabIndex, flag, orderId, productType);
+									null, url, playSound, showDialog, showPush, tabIndex, flag,
+									orderId, productType, 0, -1);
 						}
 						Intent intent = new Intent(Data.LOCAL_BROADCAST);
 						intent.putExtra(Constants.KEY_FLAG, flag);
@@ -879,7 +882,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 	public void bigImageNotifAsync(final String title, final String message, final int deepindex,
 								   final String picture, final String url, final int playSound,
 								   final int showDialog, final int showPush, final int tabIndex, final int flag,
-								   final int campaignId){
+								   final int campaignId, final int postId){
 		try {
 			RequestCreator requestCreator = Picasso.with(GCMIntentService.this).load(picture);
 			Target target = new Target() {
@@ -887,11 +890,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
 					try {
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID,
-								deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag, campaignId);
+								deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag,
+								0, ProductType.AUTO.getOrdinal(), campaignId, postId);
 					} catch (Exception e) {
 						e.printStackTrace();
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex,
-								null, url, playSound, showDialog, showPush, tabIndex, flag, campaignId);
+								null, url, playSound, showDialog, showPush, tabIndex, flag,
+								0, ProductType.AUTO.getOrdinal(), campaignId, postId);
 					}
 				}
 

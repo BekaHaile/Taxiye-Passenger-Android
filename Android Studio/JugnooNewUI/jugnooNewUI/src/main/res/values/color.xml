@@ -101,6 +101,7 @@
     <color name="favorite_div">#97989C</color>
 
     <color name="yellow_jugnoo">#FAA31C</color>
+    <color name="yellow_jugnoo_alpha">#8CFAA31C</color>
 
 
     <color name="yellow_pure">#FAF82A</color>
@@ -332,10 +333,13 @@
   <color name="feed_grey_background_light">#f7f7f7</color>
   <color name="feed_color_orange">#ff834e</color>
     <color name="green_delivery_stores">#8dcf61</color>
+    <color name="green_delivery_stores_alpha">#B38dcf61</color>
     <color name="feed_grey_black">#d8dbe1</color>
     <color name="feed_grey_tab">#d8d8d8</color>
     <color name="feed_grey_tab_dark">#b8b8b8</color>
-
+    <color name="feed_grey_border">#CCcdcdcd</color>
+    <color name="feed_red">#d0021b</color>
+    <color name="feed_grey_edt_border">#4D979797</color>
 
     <color name="feed_color_like_active">#ef6692</color>
     <color name="feed_disabled_grey">#f7f7f7</color>

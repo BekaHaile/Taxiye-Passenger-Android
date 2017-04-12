@@ -51,7 +51,7 @@ import retrofit.mime.TypedByteArray;
  * Created by ankit on 27/12/16.
  */
 
-public class JugnooStarSubscribedActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class JugnooStarSubscribedActivity extends StarBaseActivity implements View.OnClickListener {
 
     private RelativeLayout relative, rlAutoRenewal, rlFragment, rlPlan1, rlPlan2, rlExpire, rlWarning;
     private TextView textViewTitle, tvAutoRenewal, tvUpgradingText;

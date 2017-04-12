@@ -720,8 +720,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             editTextEmail.setEnabled(false); editTextEmail.setBackgroundResource(R.drawable.background_white);
             editTextPhone.setEnabled(false); linearLayoutPhone.setBackgroundResource(R.drawable.background_white);
 
-			editTextUserName.setText(Data.userData.userName);
-			editTextEmail.setText(Data.userData.userEmail);
+            if(!Data.userData.userName.equalsIgnoreCase("User")) {
+                editTextUserName.setText(Data.userData.userName);
+            }
+            if(!Data.userData.userEmail.contains("@facebook.com")
+                    && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
+                editTextEmail.setText(Data.userData.userEmail);
+            }
 			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
 
 			try{
@@ -849,8 +854,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 String message = jObj.getString("message");
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
-                                editTextUserName.setText(Data.userData.userName);
-                                editTextEmail.setText(Data.userData.userEmail);
+                                if(!Data.userData.userName.equalsIgnoreCase("User")) {
+                                    editTextUserName.setText(Data.userData.userName);
+                                }
+                                if(!Data.userData.userEmail.contains("@facebook.com")
+                                        && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
+                                    editTextEmail.setText(Data.userData.userEmail);
+                                }
                                 if(phoneUpdated) {
                                     Intent intent = new Intent(activity, PhoneNoOTPConfirmScreen.class);
                                     intent.putExtra("phone_no_verify", updatedPhone);

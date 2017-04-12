@@ -4,6 +4,7 @@ import com.sabkuchfresh.feed.models.CountNotificationResponse;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.models.FeedNotificationsResponse;
 import com.sabkuchfresh.feed.models.RegisterForFeedResponse;
+import com.sabkuchfresh.feed.models.feedcitiesresponse.FeedCityResponse;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
@@ -91,5 +92,16 @@ public interface FeedApiService {
 	@FormUrlEncoded
 	@POST("/feeds/v1/count_notification")
 	void countNotification(@FieldMap Map<String, String> params, Callback<CountNotificationResponse> callback);
+
+
+   @FormUrlEncoded
+	@POST("/feeds/v1/get_city_info")
+	void getCityInfo(@FieldMap Map<String, String> params, Callback<FeedCityResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/feeds/v1/set_user_handle")
+	void setUserHandle(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
+
 
 }

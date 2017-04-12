@@ -21,7 +21,6 @@ import com.sabkuchfresh.feed.models.FeedNotificationsResponse;
 import com.sabkuchfresh.feed.models.NotificationDatum;
 import com.sabkuchfresh.feed.ui.adapters.FeedNotificationsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
 import java.util.ArrayList;
 
@@ -77,10 +76,7 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 					updateFeedNotification(notificationDatum.getNotificationId());
 					notificationDatum.setIsRead(1);
 				}
-				// TODO: 03/04/17 open feed details fragment
-				FeedDetail feedDetail = new FeedDetail();
-				feedDetail.setPostId(notificationDatum.getPostId());
-				activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, -1);
+				activity.openFeedDetailsFragmentWithPostId(notificationDatum.getPostId());
 			}
 		});
 		rvNotifications.setAdapter(notificationsAdapter);

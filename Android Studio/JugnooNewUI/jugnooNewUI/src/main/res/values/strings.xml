@@ -655,6 +655,7 @@
 
     <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
     <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.\\ </string>
+    <string name="digits_alpha_numeric_without_space">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
 
 
     <string name="payment_option_dialog_title">Select preferred payment option</string>
@@ -1519,6 +1520,7 @@
     <string name="feedback_menu_what_wrong">Oh no,what went wrong?</string>
     <string name="feed_is_empty">Feed is empty!</string>
     <string name="be_first_one_to_add">BE THE FIRST ONE TO ADD...</string>
+    <string name="be_first_one_to_add_a_post">BE THE FIRST ONE TO ADD A POST...</string>
     <string name="items_summary">Item(s) Summary</string>
     <string name="bill_summary">Bill Summary</string>
     <string name="dont_touch_me">DontTouchMe</string>
@@ -1635,6 +1637,11 @@
     <string name="bullet_three">\u2022\u2022\u2022</string>
     <string name="press_back_again_to_quit">Press back again to quit</string>
     <string name="join">Join</string>
+    <string name="feed_claim_handle_description_format">Your handle is your unique name on %s.</string>
+    <string name="select_city">Select City</string>
+    <string name="delete_post_alert_message">Do you really want to delete this post? If you delete once it will no longer be available.</string>
+    <string name="enter_your_name">Enter your Name</string>
+    <string name="enter_email_id">Enter Email ID</string>
 
 
 </resources>

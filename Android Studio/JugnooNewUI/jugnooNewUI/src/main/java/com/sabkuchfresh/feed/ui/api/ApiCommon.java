@@ -8,6 +8,8 @@ import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -38,6 +40,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
     private HashMap<String, String> params;
     private MultipartTypedOutput multipartTypedOutput;
     private ApiName apiName;
+    private boolean putAccessToken = true;
 
 
     /**
@@ -55,6 +58,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
     public ApiCommon<T> putDefaultParams(boolean putDefaultParams) {
         this.putDefaultParams = putDefaultParams;
+        return this;
+    }
+
+
+    public ApiCommon<T> putAccessToken(boolean putAccessToken) {
+        this.putAccessToken = putAccessToken;
         return this;
     }
 
@@ -124,6 +133,11 @@ public class ApiCommon<T extends FeedCommonResponse> {
             new HomeUtil().putDefaultParams(params);
         }
 
+        if(putAccessToken){
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+        }
+
+
 
         if(showLoader) {
             DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
@@ -138,7 +152,13 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case COUNT_NOTIFICATION:
                 RestClient.getFeedApiService().countNotification(params, callback);
                 break;
+            case CITY_INFO_API:
+                RestClient.getFeedApiService().getCityInfo(params, callback);
+                break;
+            case SET_HANDLE_API:
+                RestClient.getFeedApiService().setUserHandle(params, callback);
 
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 
@@ -162,7 +182,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
                     @Override
                     public void negativeClick(View view) {
-
+                        apiCommonCallback.onNegativeClick();
                     }
                 });
 

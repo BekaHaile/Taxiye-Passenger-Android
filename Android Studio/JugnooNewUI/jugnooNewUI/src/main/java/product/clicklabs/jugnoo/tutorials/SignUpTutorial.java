@@ -80,6 +80,7 @@ public class SignUpTutorial extends Fragment {
             }
             if (Data.userData.getSignupTutorial().getTs2() == 1) {
                 layouts.add(R.layout.fragment_signup_left_menu_tutorial);
+                //bNext.performClick();
             }
         }
         /*layouts = new int[]{

@@ -74,6 +74,8 @@ import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedClaimHandleFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
@@ -159,6 +161,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -176,6 +179,7 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -477,7 +481,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
                     if(Data.getFeedData().getFeedActive()) {
-                        addFeedFragment();
+                        if(Data.getFeedData().getHasHandle()){
+
+
+
+                            addFeedFragment();
+
+                        }else{
+
+                            addClaimHandleFragment();
+                        }
+
                     } else {
                         addFeedReserveSpotFragment();
                     }
@@ -518,6 +532,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         initCollapseToolBarViews();
+
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(Data.userData.getSignupTutorial() != null) {
+                        if (Data.userData.getSignupTutorial().getDs1() == 1) {
+                            startActivity(new Intent(FreshActivity.this, NewUserFlow.class));
+                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0);
 
         getHandler().postDelayed(new Runnable() {
             @Override
@@ -697,8 +727,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                     }
                                 } else {
                                     if (flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()) {
-                                        Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
-                                        openPushDialog();
+                                        // for refreshing generate feed api on feed like comment related pushes
+                                        if(intent.getIntExtra(Constants.KEY_DEEPINDEX, -1) == AppLinkIndex.FEED_PAGE.getOrdinal()
+                                                && intent.getIntExtra(Constants.KEY_POST_ID, -1) != -1) {
+                                            if(getTopFragment() instanceof FeedHomeFragment) {
+//                                            getFeedHomeFragment().fetchFeedsApi(false, false);
+                                            }
+                                        } else {
+                                            // else normal case of displaying push dialog
+                                            Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
+                                            openPushDialog();
+                                        }
                                     } else if (PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag) {
                                         String message = intent.getStringExtra(Constants.KEY_MESSAGE);
                                         Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
@@ -1319,7 +1358,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llSearchCartVis = View.GONE;
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment) {
+            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment ||
+                    fragment instanceof FeedClaimHandleFragment) {
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -1334,8 +1374,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 visMinOrder = setMinOrderAmountText(fragment);
 
             }
-            else if(fragment instanceof FeedOfferingCommentsFragment
-                    || fragment instanceof FeedNotificationsFragment){
+            else if(fragment instanceof FeedOfferingCommentsFragment || fragment instanceof FeedNotificationsFragment  || fragment instanceof FeedChangeCityFragment){
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -1344,7 +1383,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     topBar.title.setText(Data.getFeedName(this));
                 } else if(fragment instanceof FeedNotificationsFragment){
                     topBar.title.setText(R.string.notifications);
+                }else if(fragment instanceof FeedChangeCityFragment){
+                    topBar.title.setText(R.string.select_city);
                 }
+
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
@@ -1375,7 +1417,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.ivAddReview.getId());
             } else if(fragment instanceof FeedReserveSpotFragment
                     || fragment instanceof FeedSpotReservedSharingFragment
-                    || fragment instanceof FeedNotificationsFragment){
+                    || fragment instanceof FeedNotificationsFragment || fragment instanceof FeedChangeCityFragment){
                 topBar.title.setGravity(Gravity.CENTER);
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
@@ -1803,11 +1845,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 .commitAllowingStateLoss();
     }
 
-    private void addFeedFragment() {
+    public void addFeedFragment() {
         getSupportFragmentManager().beginTransaction()
                 .add(relativeLayoutContainer.getId(), new FeedHomeFragment(),
                         FeedHomeFragment.class.getName())
                 .addToBackStack(FeedHomeFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
+    private void addClaimHandleFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new FeedClaimHandleFragment(),
+                        FeedClaimHandleFragment.class.getName())
+                .addToBackStack(FeedClaimHandleFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 
@@ -1918,7 +1968,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finishWithToast();
-            // TODO: 04/04/17 add toast to exit
         } else {
 
             if (getTopFragment() instanceof FreshSearchFragment) {
@@ -2138,6 +2187,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     @Override
     protected void onPause() {
         super.onPause();
+
+        try {
+            Utils.hideKeyboard(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
             updateItemListFromDBFMG(null);
@@ -3531,7 +3586,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     }
 
-
+    public void performSuperBackPress() {
+        super.onBackPressed();
+    }
 
 
     public interface CityChangeCallback {
@@ -4106,7 +4163,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         razorpayCallbackIntentService("-1", "-1");
     }
 
-    public void startRazorPayPayment(JSONObject options) {
+    public void startRazorPayPayment(JSONObject options, boolean isUPA) {
         Checkout checkout = new Checkout();
         checkout.setImage(R.drawable.jugnoo_icon);
         try {
@@ -4115,6 +4172,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             options.put(Constants.KEY_RAZORPAY_PREFILL_EMAIL, options.remove(Constants.KEY_USER_EMAIL).toString());
             options.put(Constants.KEY_RAZORPAY_PREFILL_CONTACT, options.remove(Constants.KEY_PHONE_NO).toString());
             options.put(Constants.KEY_RAZORPAY_THEME_COLOR, "#FD7945");
+            if(isUPA){
+                options.put(Constants.KEY_RAZORPAY_PREFILL_METHOD, "upi"); // "upi", ""
+                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Data.userData != null ? Data.userData.getUpiHandle() : ""); // "upi", ""
+            } else{
+                options.put(Constants.KEY_RAZORPAY_PREFILL_METHOD, "");
+                options.put(Constants.KEY_RAZORPAY_PREFILL_VPA, Data.userData != null ? Data.userData.getUpiHandle() : "");
+            }
 
             Log.i(TAG, "startRazorPayPayment options="+options);
             checkout.setFullScreenDisable(true);
@@ -4162,5 +4226,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
+    public void openFeedDetailsFragmentWithPostId(int postId){
+        try {
+            FeedDetail feedDetail = new FeedDetail();
+            feedDetail.setPostId(postId);
+            getTransactionUtils().openFeedCommentsFragment(this, getRelativeLayoutContainer(), feedDetail, -1, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

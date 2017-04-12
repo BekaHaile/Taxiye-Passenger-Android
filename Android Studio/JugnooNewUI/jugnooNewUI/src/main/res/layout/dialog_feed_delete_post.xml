@@ -8,7 +8,7 @@
 
     <TextView
         style="@style/text_feed_popup"
-        android:textSize="@dimen/font_small"
+        android:textSize="@dimen/font_medium"
         android:text="@string/feed_delete_popup_message"
         android:textColor="@color/feed_grey_text" />
 
@@ -22,6 +22,7 @@
     <TextView
         android:id="@+id/tv_delete_post"
         android:text="Delete Post"
+        android:textSize="@dimen/font_normal"
         style="@style/text_feed_popup"
          />
 
@@ -35,6 +36,7 @@
     <TextView
         android:id="@+id/tv_edit_post"
         style="@style/text_feed_popup"
+        android:textSize="@dimen/font_normal"
         android:text="Edit Post" />
 
     <View
@@ -47,6 +49,7 @@
     <TextView
         android:id="@+id/tv_cancel"
         style="@style/text_feed_popup"
+        android:textSize="@dimen/font_normal"
         android:text="Cancel" />
 
 

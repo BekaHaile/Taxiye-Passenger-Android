@@ -24,6 +24,7 @@
             android:maxWidth="200dp"
             android:hint="@string/enter_referral_code"
             android:inputType="textCapCharacters"
+            android:gravity="center"
             android:paddingLeft="20px"
             android:paddingRight="20px"
             android:singleLine="true"

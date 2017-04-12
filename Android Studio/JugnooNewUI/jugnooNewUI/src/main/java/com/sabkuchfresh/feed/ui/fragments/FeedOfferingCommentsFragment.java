@@ -26,6 +26,7 @@ import com.sabkuchfresh.feed.ui.adapters.FeedOfferingCommentsAdapter;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
+import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -55,6 +56,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
     private static final String FEED_DETAIL = "feed_detail";
     private static final String POSITION_IN_ORIGINAL_LIST = "positionInOriginalList";
+    private static final String OPEN_KEYBOARD_ON_LOAD = "openKeyboardOnLoad";
     private FeedDetail feedDetail;
     private FeedOfferingCommentsAdapter feedOfferingCommentsAdapter;
     private FreshActivity activity;
@@ -67,6 +69,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
     private EditText edtMyComment;
     private RecyclerView recyclerView;
     private DeleteFeed deleteFeed;
+    private boolean openKeyboardOnLoad;
 
 
     public FeedOfferingCommentsFragment() {
@@ -74,11 +77,12 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
     }
 
 
-    public static FeedOfferingCommentsFragment newInstance(FeedDetail feedDetail, int positionInOriginalList) {
+    public static FeedOfferingCommentsFragment newInstance(FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad) {
         FeedOfferingCommentsFragment fragment = new FeedOfferingCommentsFragment();
         Bundle args = new Bundle();
         args.putSerializable(FEED_DETAIL, feedDetail);
         args.putSerializable(POSITION_IN_ORIGINAL_LIST, positionInOriginalList);
+        args.putBoolean(OPEN_KEYBOARD_ON_LOAD, openKeyboardOnLoad);
         fragment.setArguments(args);
         return fragment;
     }
@@ -90,6 +94,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         if (getArguments() != null) {
             feedDetail = (FeedDetail) getArguments().getSerializable(FEED_DETAIL);
             positionInOriginalList = getArguments().getInt(POSITION_IN_ORIGINAL_LIST);
+            openKeyboardOnLoad = getArguments().getBoolean(OPEN_KEYBOARD_ON_LOAD);
         }
     }
 
@@ -161,7 +166,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
             @Override
             public void onDeleteComment(final FeedComment feedComment, final int positionInList, View viewClicked) {
-             DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Reply", "Are you sure you want to delete?", "Yes", "No", new View.OnClickListener() {
+             DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Reply", "Are you sure?", "Yes", "No", new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {
                      deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
@@ -172,6 +177,11 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
                  }
              },true,false);
+
+            }
+
+            @Override
+            public void onFeedLayoutClick(FeedDetail feedDetail, int position) {
 
             }
         }, submitTextWatcher);
@@ -228,6 +238,16 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     if(setFeedObjectAndRefresh(feedbackResponse)) {
                                         prepareListAndNotifyAdapter(feedbackResponse);
+                                    }
+                                    if((feedbackResponse.getFeedComments()==null || feedbackResponse.getFeedComments().size()==0) && openKeyboardOnLoad){
+
+                                        activity.getHandler().postDelayed(new Runnable() {
+                                          @Override
+                                          public void run() {
+                                              edtMyComment.requestFocus();
+                                              Utils.showKeyboard(activity,edtMyComment);
+                                          }
+                                      },200);
                                     }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -568,13 +588,33 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
 
     @Override
-    public void onMoreDelete(FeedDetail feedDetail, int positionInList) {
-          getDeletePostDialog().show(feedDetail,positionInList);
+    public void onMoreDelete(final FeedDetail feedDetail, final int positionInList) {
+//        getDeletePostDialog().show(feedDetail,positionInList);
+        activity.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showDialogPopupTwoButtonCapsule(activity.getString(R.string.delete_post_alert_message), feedDetail, positionInList);
+
+            }
+        },100);
     }
 
     @Override
     public void onMoreEdit(FeedDetail feedDetail, int positionInList) {
             onEdit(feedDetail);
+    }
+
+    public void showDialogPopupTwoButtonCapsule(String message, final FeedDetail feedDetail, final int pos){
+        new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
+            @Override
+            public void onPositiveClick() {
+                onDelete(feedDetail, pos);
+            }
+
+            @Override
+            public void onNegativeClick() {
+            }
+        }, R.style.Feed_Popup_Theme, activity, message).show();
     }
 
 }

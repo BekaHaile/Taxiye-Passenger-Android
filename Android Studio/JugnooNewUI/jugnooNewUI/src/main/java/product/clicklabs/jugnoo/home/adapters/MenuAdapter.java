@@ -281,7 +281,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     holder.tvJugnooStar.setVisibility(View.GONE);
                     holder.viewStarIcon.setVisibility(View.GONE);
                 }
-                if(Data.userData.userName != null && !Data.userData.userName.equalsIgnoreCase("")) {
+                if(!TextUtils.isEmpty(Data.userData.userName)
+                        && (!Data.userData.userName.equalsIgnoreCase("User"))) {
                     holder.textViewUserName.setVisibility(View.VISIBLE);
                     holder.textViewUserName.setText(Data.userData.userName);
                 } else{

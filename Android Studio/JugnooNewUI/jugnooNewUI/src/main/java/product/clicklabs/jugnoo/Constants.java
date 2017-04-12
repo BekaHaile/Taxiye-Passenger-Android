@@ -661,6 +661,8 @@ public interface Constants {
     String KEY_RESPONSE = "response";
     String KEY_RAZORPAY_PREFILL_EMAIL = "prefill.email";
     String KEY_RAZORPAY_PREFILL_CONTACT = "prefill.contact";
+    String KEY_RAZORPAY_PREFILL_METHOD = "prefill.method";
+    String KEY_RAZORPAY_PREFILL_VPA = "prefill.vpa";
     String KEY_USER_EMAIL = "user_email";
     String KEY_RAZORPAY_THEME_COLOR = "theme.color";
 
@@ -679,5 +681,7 @@ public interface Constants {
     String IS_ANONYMOUS = "is_anonymous";
     String KEY_IS_READ = "is_read";
     String DEFAULT_IMAGE_URL = "http://tablabar.s3.amazonaws.com/brand_images/user.png";
+    String SP_POST_ID_TO_OPEN = "sp_post_id_to_open";
     String KEY_DRIVER_PHONE_NO = "driver_phone_no";
+    String KEY_UPI_HANDLE = "upi_handle";
 }

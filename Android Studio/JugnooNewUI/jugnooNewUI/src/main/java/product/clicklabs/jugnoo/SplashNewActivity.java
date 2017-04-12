@@ -1408,7 +1408,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		imageViewJugnooLogo.requestFocus();
 		llContainer.setVisibility(View.GONE);
 		rlSplashLogo.setVisibility(View.GONE);
-		rlLoginSignupNew.setVisibility(View.GONE);
+		relativeLayoutLS.setVisibility(View.GONE);
 		rlLoginSignupNew.setVisibility(View.GONE);
 		int duration = 500;
 		switch (state) {
@@ -1596,6 +1596,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 			case SPLASH_NO_NET:
 				llContainer.setVisibility(View.VISIBLE);
+				rlLoginSignupNew.setVisibility(View.GONE);
 				imageViewBack.setVisibility(View.GONE);
 				relativeLayoutJugnooLogo.setVisibility(View.GONE);
 				llLoginBtn.setVisibility(View.GONE);
@@ -2724,6 +2725,18 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 
 	public void apiLoginUsingFbAccountKit(final Activity activity, final String accountCode) {
+		String userName = "", userEmail = "";
+		try {
+			String ownerEmail = UserEmailFetcher.getEmail(SplashNewActivity.this);
+			if (ownerEmail != null && (!ownerEmail.equalsIgnoreCase(""))) {
+				userEmail = ownerEmail;
+				if (new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail) != null) {
+					userName = Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail));
+				}
+			}
+		} catch(Exception e){
+				e.printStackTrace();
+			}
 		if(MyApplication.getInstance().isOnline()) {
 			final ProgressDialog missedCallDialog = DialogPopup.showLoadingDialogNewInstance(SplashNewActivity.this, "Loading...");
 
@@ -2753,6 +2766,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 			params.put("fb_account_code", accountCode);
 			params.put("login_type", "0");
+			params.put("user_name", userName);
+			params.put("user_email", userEmail);
 			params.put(Constants.KEY_ACCOUNT_KIT_VERSION, "4.19.0");
 			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
