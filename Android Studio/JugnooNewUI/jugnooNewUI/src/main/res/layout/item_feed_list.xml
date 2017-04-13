@@ -37,7 +37,7 @@
             android:layout_marginBottom="@dimen/spacing_tiny"
             android:text="@string/dummy_text_2"
             android:textColor="@color/feed_grey_text_heading"
-            android:textSize="@dimen/font_large"
+            android:textSize="@dimen/font_normal"
             app:font="maven" />
 
         <TextView
@@ -110,14 +110,12 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:layout_marginRight="@dimen/spacing_small"
-
                    android:clickable="true"
                    android:layout_marginBottom="@dimen/spacing_tiny"
-
                    android:text="@string/dummy_text_2"
                    android:textColorHighlight="@color/feed_grey_text_heading"
                    android:textColor="@color/feed_grey_text_heading"
-                   android:textSize="@dimen/font_large"
+                   android:textSize="@dimen/font_normal"
                    app:font="maven" />
 
                <TextView
@@ -130,7 +128,7 @@
                    android:text="2w"
                    app:font="maven"
                    android:textColor="@color/feed_grey_text_secondary"
-                   android:textSize="@dimen/font_extra_small" />
+                   android:textSize="10sp" />
            </LinearLayout>
 
 
@@ -182,7 +180,7 @@
            android:layout_marginBottom="@dimen/spacing_small"
            android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
            android:textColor="@color/feed_grey_text"
-           android:textSize="@dimen/font_small"
+           android:textSize="@dimen/font_normal"
            app:font="maven" />
     <ImageView
         android:id="@+id/iv_place_image"
@@ -288,7 +286,7 @@
             android:gravity="center"
             android:text="Reply"
             android:textColor="@color/feed_grey_text"
-            android:textSize="@dimen/font_small"
+            android:textSize="12.5sp"
             app:font="maven" />
 
     </LinearLayout>
@@ -317,7 +315,7 @@
             android:gravity="center"
             android:text="Like"
             android:textColor="@color/feed_grey_text"
-            android:textSize="@dimen/font_small"
+            android:textSize="12.5sp"
             app:font="maven" />
     </LinearLayout>
 
@@ -347,35 +345,17 @@
                android:layout_marginRight="@dimen/spacing_small"
                android:src="@drawable/ic_fresh_item_placeholder" />
 
-           <LinearLayout
+           <TextView
                android:layout_gravity="center"
-               android:orientation="vertical"
+               android:id="@+id/tv_user_commented_name"
                android:layout_width="wrap_content"
-               android:layout_height="wrap_content">
-               <TextView
-                   android:id="@+id/tv_user_commented_name"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-
-                   android:textColor="@color/feed_grey_text_heading"
-                   android:layout_marginBottom="2.5dp"
-                   android:textSize="12.5sp"
-                   app:font="@string/maven_r" />
-
-               <TextView
-                   android:layout_gravity="center"
-                   android:id="@+id/tv_user_commented_comment"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-
-                   android:maxLines="2"
-                   android:ellipsize="end"
-                   android:textColor="@color/feed_grey_text"
-                   android:textSize="10.6sp"
-                   app:font="@string/maven_r" />
-
-           </LinearLayout>
-
+               android:layout_height="wrap_content"
+               android:textColor="@color/feed_grey_text_heading"
+               android:layout_marginBottom="2.5dp"
+               android:textSize="12.5sp"
+               android:ellipsize="end"
+               android:maxLines="2"
+               app:font="@string/maven_r" />
 
        </LinearLayout>
 

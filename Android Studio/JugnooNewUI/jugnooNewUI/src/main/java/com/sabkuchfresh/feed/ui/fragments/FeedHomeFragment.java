@@ -365,6 +365,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     activity.getFeedHomeAddPostView().setVisibility(View.GONE);
 
                                 }
+                                else{
+                                    activity.getFeedHomeAddPostView().setVisibility(View.GONE);
+                                }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();

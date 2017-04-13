@@ -477,9 +477,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             spannableString.setSpan(new RelativeSizeSpan(0.2f),userCommentName.length(),spannableString.length()-keyComment.length(),SPAN_INCLUSIVE_EXCLUSIVE);//margin between name and comment reducing size
             holder.tvUserCommentedNameAndComment.setText(spannableString);
 */
-
-            holder.tvUserCommentedName.setText(feedDetail.getUserName());
-            holder.tvUserCommentedComment.setText(feedDetail.getCommentContent() );
+            String keyComment =  ": " + feedDetail.getCommentContent();
+            SpannableString commentNameAndContent = new SpannableString(feedDetail.getUserName() + keyComment);
+            commentNameAndContent.setSpan(BOLD_SPAN,0,feedDetail.getUserName().length(),SPAN_INCLUSIVE_EXCLUSIVE);
+            holder.tvUserCommentedName.setText(commentNameAndContent);
 
 
             //User Image Comment
@@ -724,8 +725,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View lineBelowImagesPager;
         @Bind(R.id.tv_user_commented_name)
         TextView tvUserCommentedName;
-        @Bind(R.id.tv_user_commented_comment)
-        TextView tvUserCommentedComment;
+
         @Bind(R.id.tv_action_comment)
         TextView tvComment;
         @Bind(R.id.tv_action_like)
@@ -773,7 +773,6 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(view);
             ButterKnife.bind(this, view);
             tvFeedAddress.setTypeface(tvFeedAddress.getTypeface(), Typeface.BOLD);
-            tvUserCommentedName.setTypeface(tvUserCommentedName.getTypeface(), Typeface.BOLD);
             viewActionLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
