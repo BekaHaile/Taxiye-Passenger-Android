@@ -204,15 +204,18 @@ public class FeedOfferingCommentsAdapter extends RecyclerSwipeAdapter<RecyclerVi
 
                 }
             });
+            mItemManger.bindView(holder.itemView,position);
+
+
             ((UserCommentViewHolder) holder).ivDeleteComment.setVisibility(feedComment.canEdit()?View.VISIBLE:View.GONE);
-            if(feedComment.canEdit()&& userCommentViewHolder.swipeLayout.getOpenStatus()!= SwipeLayout.Status.Close){
+            if(feedComment.canEdit()&& mItemManger.isOpen(position) ){
                 userCommentViewHolder.rlComment.setBackgroundColor(ContextCompat.getColor(activity,R.color.grey_e7));
 
             }else{
                 userCommentViewHolder.rlComment.setBackgroundColor(ContextCompat.getColor(activity,R.color.feed_comment_background));
 
             }
-            mItemManger.bindView(holder.itemView,position);
+
         }
 
 
