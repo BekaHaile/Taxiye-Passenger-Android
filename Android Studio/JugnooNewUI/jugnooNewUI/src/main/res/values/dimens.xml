@@ -581,6 +581,12 @@
     <dimen name="dp_45">
         45dp
     </dimen>
+    <dimen name="dp_100">
+        100dp
+    </dimen>
+    <dimen name="dp_162">
+        162dp
+    </dimen>
 
 
 </resources>

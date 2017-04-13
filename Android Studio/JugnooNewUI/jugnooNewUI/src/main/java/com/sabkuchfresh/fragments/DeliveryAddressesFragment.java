@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -82,7 +85,8 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private LinearLayout linearLayoutChooseOnMap, linearLayoutCurrentLocation;
     private CardView cardViewSavedPlaces, cardViewRecentAddresses;
     private TextView textViewSavedPlaces, textViewRecentAddresses;
-    private RelativeLayout linearLayoutMain, relativeLayoutAddHome, relativeLayoutAddWork;
+    private CoordinatorLayout linearLayoutMain;
+    private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork;
     private TextView textViewAddHome, textViewAddHomeValue, textViewAddressUsedHome,
             textViewAddWork, textViewAddWorkValue, textViewAddressUsedWork;
     private ImageView imageViewSep, imageViewEditHome, imageViewEditWork;
@@ -93,7 +97,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private CardView cardViewSearch;
     private EditText editTextDeliveryAddress;
     private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
-    private ScrollView scrollViewSuggestions;
+    private NestedScrollView scrollViewSuggestions;
 
 
     public double current_latitude = 0.0;
@@ -104,6 +108,8 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     public String current_city = "";
     public String current_pincode = "";
 
+
+    private BottomSheetBehavior bottomSheetBehavior;
 
     public DeliveryAddressesFragment() {
 
@@ -132,7 +138,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
 
 
-        linearLayoutMain = (RelativeLayout) rootView.findViewById(R.id.linearLayoutMain);
+        linearLayoutMain = (CoordinatorLayout) rootView.findViewById(R.id.linearLayoutMain);
 
         new ASSL(activity, linearLayoutMain, 1134, 720, false);
 
@@ -164,7 +170,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
         textViewSavedPlaces.setVisibility(View.GONE);
         textViewRecentAddresses.setVisibility(View.GONE);
-        scrollViewSuggestions = (ScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
+        scrollViewSuggestions = (NestedScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
 
         listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
         try {
@@ -427,6 +433,9 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
         listViewSearch.setAdapter(searchListAdapter);
 
+
+        bottomSheetBehavior = BottomSheetBehavior.from(scrollViewSuggestions);
+        bottomSheetBehavior.setPeekHeight(activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
 
         return rootView;
     }
