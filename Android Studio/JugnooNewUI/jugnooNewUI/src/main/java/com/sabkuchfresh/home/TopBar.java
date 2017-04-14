@@ -41,6 +41,7 @@ public class TopBar implements GAAction, GACategory {
     public Button buttonCheckServer;
     public ImageView imageViewBack, ivDeliveryAddressCross, imageViewDelete;
     public EditText editTextDeliveryAddress;
+    public TextView tvDeliveryAddress;
     public ProgressWheel progressWheelDeliveryAddressPin;
 
     public LinearLayout llSearchContainer;
@@ -79,6 +80,8 @@ public class TopBar implements GAAction, GACategory {
         imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
         editTextDeliveryAddress = (EditText) drawerLayout.findViewById(R.id.editTextDeliveryAddress);
         editTextDeliveryAddress.setTypeface(Fonts.mavenLight(activity));
+        tvDeliveryAddress = (TextView) drawerLayout.findViewById(R.id.tvDeliveryAddress);
+        tvDeliveryAddress.setVisibility(View.GONE);
         ivDeliveryAddressCross = (ImageView) drawerLayout.findViewById(R.id.ivDeliveryAddressCross);
         imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
         progressWheelDeliveryAddressPin = (ProgressWheel) drawerLayout.findViewById(R.id.progressWheelDeliveryAddressPin);

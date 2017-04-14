@@ -1128,6 +1128,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.ivAddReview.setVisibility(View.GONE);
             topBar.tvNameCap.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
+            topBar.tvDeliveryAddress.setVisibility(View.GONE);
             int padding = (int) (20f * ASSL.minRatio());
             int visMinOrder = -1;
 

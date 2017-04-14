@@ -50,6 +50,7 @@ public class AddPlaceActivity extends BaseFragmentActivity {
     private RelativeLayout relativeLayoutContainer;
 
     private EditText editTextDeliveryAddress;
+    private TextView tvDeliveryAddress;
     private RelativeLayout relativeLayoutSearch;
     private ImageView imageViewSearchCross;
     private ProgressWheel progressWheelDeliveryAddressPin;
@@ -75,6 +76,8 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 
         editTextDeliveryAddress = (EditText) findViewById(R.id.editTextDeliveryAddress);
         editTextDeliveryAddress.setTypeface(Fonts.mavenLight(AddPlaceActivity.this));
+        tvDeliveryAddress = (TextView) findViewById(R.id.tvDeliveryAddress);
+        tvDeliveryAddress.setVisibility(View.GONE);
         relativeLayoutSearch = (RelativeLayout) findViewById(R.id.relativeLayoutSearch);
         imageViewSearchCross = (ImageView) findViewById(R.id.ivDeliveryAddressCross);
         imageViewSearchCross.setVisibility(View.GONE);
@@ -389,5 +392,9 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 
     public ProgressWheel getProgressWheelDeliveryAddressPin() {
         return progressWheelDeliveryAddressPin;
+    }
+
+    public TextView getTvDeliveryAddress(){
+        return tvDeliveryAddress;
     }
 }

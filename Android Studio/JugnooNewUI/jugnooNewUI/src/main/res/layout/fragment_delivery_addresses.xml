@@ -96,48 +96,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/linearLayoutCurrentOption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="2px"
-                        android:src="@color/stroke_light_grey_alpha"/>
-
-                    <LinearLayout
-                        android:id="@+id/linearLayoutChooseOnMap"
-                        android:layout_width="match_parent"
-                        android:layout_height="110px"
-                        android:background="@drawable/bg_white_menu_item_selector_color_selector"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="23px"
-                            android:layout_height="33px"
-                            android:layout_marginLeft="35px"
-                            android:src="@drawable/ic_delivery_address_map_pin"
-                            android:tag="mwar"/>
-
-                        <TextView
-                            android:id="@+id/textViewChooseOnMap"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="40px"
-                            android:text="Choose on map"
-                            android:textColor="@color/text_color_light_selector"
-                            android:textSize="@dimen/text_size_28"/>
-                    </LinearLayout>
-                </LinearLayout>
 
                 <TextView
                     android:id="@+id/textViewSavedPlaces"
                     android:layout_width="wrap_content"
                     android:layout_height="40px"
                     android:layout_marginLeft="40px"
-                    android:layout_marginTop="30px"
+                    android:layout_marginTop="20px"
                     android:gravity="center_vertical"
                     android:text="@string/saved_locations"
                     android:textAllCaps="true"

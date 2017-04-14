@@ -89,7 +89,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private Activity activity;
     protected Bus mBus;
     private NonScrollListView listViewRecentAddresses, listViewSavedLocations;
-    private LinearLayout linearLayoutChooseOnMap;
     private LinearLayout cardViewSavedPlaces;
     private TextView textViewSavedPlaces, textViewRecentAddresses;
     private CoordinatorLayout linearLayoutMain;
@@ -104,6 +103,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private CardView cardViewSearch;
     private EditText editTextDeliveryAddress;
     private ProgressWheel progressWheelDeliveryAddressPin;
+    private TextView tvDeliveryAddress;
     private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
     private NestedScrollView scrollViewSuggestions;
 
@@ -160,9 +160,11 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 editTextDeliveryAddress.setHint(R.string.type_delivery_address);
             }
             progressWheelDeliveryAddressPin = ((FreshActivity)activity).getTopBar().progressWheelDeliveryAddressPin;
+            tvDeliveryAddress = ((FreshActivity)activity).getTopBar().tvDeliveryAddress;
         }else if(activity instanceof AddPlaceActivity){
             editTextDeliveryAddress = ((AddPlaceActivity)activity).getEditTextDeliveryAddress();
             progressWheelDeliveryAddressPin = ((AddPlaceActivity)activity).getProgressWheelDeliveryAddressPin();
+            tvDeliveryAddress = ((AddPlaceActivity)activity).getTvDeliveryAddress();
         }
 
 
@@ -171,9 +173,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
         new ASSL(activity, linearLayoutMain, 1134, 720, false);
 
-        ((TextView)rootView.findViewById(R.id.textViewChooseOnMap)).setTypeface(Fonts.mavenMedium(activity));
         cardViewSavedPlaces = (LinearLayout) rootView.findViewById(R.id.cardViewSavedPlaces);
-        linearLayoutChooseOnMap = (LinearLayout)rootView.findViewById(R.id.linearLayoutChooseOnMap);
         relativeLayoutAddHome = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddHome);
         relativeLayoutAddWork = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddWork);
         relativeLayoutAddHome.setMinimumHeight((int)(ASSL.Yscale() * 110f));
@@ -296,22 +296,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             }
         });
 
-        linearLayoutChooseOnMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(activity instanceof FreshActivity) {
-                    FreshActivity freshActivity = (FreshActivity) activity;
-                    freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-                    freshActivity.setSearchResult(null);
-                    freshActivity.setEditThisAddress(false);
-                    freshActivity.openMapAddress(createAddressBundle(""));
-                    GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, CHOOSE_ON_MAP+SELECTED);
-                }
-                else if(activity instanceof AddPlaceActivity) {
-                    ((AddPlaceActivity)activity).openMapAddress(createAddressBundle(""));
-                }
-            }
-        });
 
         boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
         searchListAdapter = new SearchListAdapter(activity, editTextDeliveryAddress, new LatLng(30.75, 76.78), mGoogleApiClient,
@@ -447,6 +431,17 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         });
 
 
+        tvDeliveryAddress.setVisibility(View.VISIBLE);
+        tvDeliveryAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvDeliveryAddress.setVisibility(View.GONE);
+                editTextDeliveryAddress.setSelection(editTextDeliveryAddress.getText().length());
+                editTextDeliveryAddress.requestFocus();
+                Utils.showSoftKeyboard(activity, editTextDeliveryAddress);
+            }
+        });
+
 
         return rootView;
     }
@@ -477,10 +472,15 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         if(!hidden && (activity instanceof FreshActivity)) {
             ((FreshActivity) activity).fragmentUISetup(this);
             setSavedPlaces();
+            tvDeliveryAddress.setVisibility(View.VISIBLE);
         } else if(!hidden && (activity instanceof AddPlaceActivity)){
             AddPlaceActivity addPlaceActivity = (AddPlaceActivity)activity;
             addPlaceActivity.getTextViewTitle().setVisibility(View.GONE);
             addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.VISIBLE);
+            tvDeliveryAddress.setVisibility(View.VISIBLE);
+        } else if(hidden){
+            progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+            tvDeliveryAddress.setVisibility(View.GONE);
         }
         scrollViewSuggestions.scrollTo(0, 0);
     }
@@ -518,7 +518,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     private void fillAddressDetails(final LatLng latLng) {
         try {
-            DialogPopup.showLoadingDialog(getActivity(), "Loading...");
+            progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
             final Map<String, String> params = new HashMap<String, String>(6);
 
             params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
@@ -539,28 +539,30 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         current_city = geocodeResponse.results.get(0).getCity();
                         current_pincode = geocodeResponse.results.get(0).getCountry();
 
-                        editTextDeliveryAddress.setText(current_street + current_route + geocodeResponse.results.get(0).getAddAddress() + ", " + current_city);
-
+                        tvDeliveryAddress.setText(current_street + (current_street.length()>0?", ":"")
+                                + current_route + (current_route.length()>0?", ":"")
+                                + geocodeResponse.results.get(0).getAddAddress()
+                                + ", " + current_city);
+                        tvDeliveryAddress.setVisibility(View.VISIBLE);
+                        progressWheelDeliveryAddressPin.setVisibility(View.GONE);
                         mapSettledCanForward = true;
 
                     } catch (Exception e) {
                         e.printStackTrace();
                         DialogPopup.alertPopup(getActivity(), "", Data.SERVER_ERROR_MSG);
                     }
-                    DialogPopup.dismissLoadingDialog();
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     Log.e("DeliveryAddressFragment", "error=" + error.toString());
-                    DialogPopup.dismissLoadingDialog();
                     DialogPopup.alertPopup(getActivity(), "", Data.SERVER_ERROR_MSG);
+                    progressWheelDeliveryAddressPin.setVisibility(View.GONE);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 
