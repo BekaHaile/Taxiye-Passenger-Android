@@ -33,6 +33,7 @@ import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
+import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -400,8 +401,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             //Set Like Icons and like text color
-            Drawable drawableToSet = feedDetail.isLiked() ? ContextCompat.getDrawable(activity, R.drawable.ic_like_active) : ContextCompat.getDrawable(activity, R.drawable.ic_like);
-            holder.tvLike.setCompoundDrawablesWithIntrinsicBounds(drawableToSet, null, null, null);
+        //    Drawable drawableToSet = feedDetail.isLiked() ? ContextCompat.getDrawable(activity, R.drawable.ic_like_active) : ContextCompat.getDrawable(activity, R.drawable.ic_like);
+          //  holder.tvLike.setCompoundDrawablesWithIntrinsicBounds(drawableToSet, null, null, null);
+
+            holder.likeButtonAnimate.setLiked(feedDetail.isLiked());
             if (feedDetail.isLiked())
                 holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_color_like_active));
             else
@@ -638,9 +641,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             switch (viewClicked.getId()) {
                 case R.id.view_action_like:
                     if(!feedDetail.isLiked()){
-                        Animation animation = AnimationUtils.loadAnimation(viewClicked.getContext(), R.anim.bounce_scale_out_in);
+                       /* Animation animation = AnimationUtils.loadAnimation(viewClicked.getContext(), R.anim.bounce_scale_out_in);
                         viewClicked.findViewById(R.id.tv_action_like).clearAnimation();
-                        viewClicked.findViewById(R.id.tv_action_like).startAnimation(animation);
+                        viewClicked.findViewById(R.id.tv_action_like).startAnimation(animation);*/
+                       LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
+                        likeButton.onClick(likeButton);
                     }
                     feedPostCallback.onLikeClick(feedDetail, position);
                     break;
@@ -768,6 +773,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         RelativeLayout layoutActualPost;
         @Bind(R.id.layout_comment)
         LinearLayout layoutComment;
+        @Bind(R.id.like_button_animate)
+        LikeButton likeButtonAnimate;
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);

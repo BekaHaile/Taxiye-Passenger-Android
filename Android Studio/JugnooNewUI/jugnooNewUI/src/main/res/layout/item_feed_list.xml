@@ -68,14 +68,12 @@
 
     android:id="@+id/layout_actual_post"
     android:background="@drawable/rectangle_grey"
-    android:layout_marginLeft="12dp"
-    android:layout_marginRight="12dp"
-    android:layout_marginBottom="12dp"
-    android:paddingTop="@dimen/spacing_large"
-    android:layout_marginTop="@dimen/spacing_large"
-    android:layout_below="@id/layout_user_activity_heading"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+       android:paddingTop="@dimen/spacing_large"
+    android:layout_marginTop="20dp"
+       android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+       android:layout_below="@+id/layout_user_activity_heading"
+       android:layout_centerHorizontal="true">
 
        <RelativeLayout
            android:id="@+id/layout_owner_feed_layout"
@@ -269,7 +267,8 @@
     <LinearLayout
         android:id="@+id/view_action_comment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:orientation="vertical"
         android:layout_below="@id/line_below_images_pager"
         android:layout_toRightOf="@id/line_divider_like_comment"
         android:background="?attr/selectableItemBackground"
@@ -279,8 +278,6 @@
             android:id="@+id/tv_action_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_normal"
-            android:layout_marginBottom="@dimen/spacing_normal"
             android:drawableLeft="@drawable/ic_comment"
             android:drawablePadding="@dimen/spacing_tiny"
             android:gravity="center"
@@ -295,41 +292,58 @@
         android:orientation="vertical"
         android:id="@+id/view_action_like"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+
         android:layout_below="@id/line_below_images_pager"
         android:layout_toLeftOf="@id/line_divider_like_comment"
         android:background="?attr/selectableItemBackground"
         android:gravity="center">
 
 
-        <TextView
-            android:id="@+id/tv_action_like"
+
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content">
 
-            android:layout_marginTop="@dimen/spacing_normal"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            android:drawableLeft="@drawable/ic_like"
-            android:drawablePadding="@dimen/spacing_tiny"
+            <com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton
+                android:clickable="false"
+                android:id="@+id/like_button_animate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-20dp"
+                app:anim_scale_factor="3"
+                app:icon_type="heart" />
 
-            android:gravity="center"
-            android:text="Like"
-            android:textColor="@color/feed_grey_text"
-            android:textSize="12.5sp"
-            app:font="maven" />
+
+
+
+            <TextView
+                android:id="@+id/tv_action_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Like"
+                android:textColor="@color/feed_grey_text"
+                android:textSize="12.5sp"
+                app:font="maven" />
+        </LinearLayout>
+
     </LinearLayout>
 
 
-    <View
-        android:id="@+id/line_below_like_comment"
-        style="@style/Feed_Line_Horizontal"
-        android:layout_below="@id/view_action_like" />
+
+
 
        <LinearLayout
            android:id="@+id/layout_comment"
-           android:layout_below="@id/line_below_like_comment"
+           android:layout_below="@id/view_action_like"
            android:orientation="horizontal"
             android:paddingTop="@dimen/spacing_normal"
+           android:visibility="gone"
            android:paddingBottom="@dimen/spacing_normal"
            android:paddingLeft="@dimen/spacing_normal"
            android:paddingRight="@dimen/spacing_normal"
