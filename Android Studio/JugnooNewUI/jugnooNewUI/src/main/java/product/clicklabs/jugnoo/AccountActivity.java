@@ -242,7 +242,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 public void onEditClick(SearchResult searchResult) {
 
                 }
-            }, true, false);
+            }, true, false, false);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
         } catch (Exception e) {
             e.printStackTrace();

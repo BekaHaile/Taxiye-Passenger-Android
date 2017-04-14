@@ -34,12 +34,12 @@ public class SavedPlacesAdapter extends BaseAdapter{
     private LayoutInflater mInflater;
     private ViewHolderSearchItem holder;
     private Callback callback;
-    private boolean showEditIcon, separatorOnTop;
+    private boolean showEditIcon, separatorOnTop, addSepMargins;
 
     private ArrayList<SearchResult> searchResults;
 
     public SavedPlacesAdapter(Context context, ArrayList<SearchResult> searchResults, Callback callback,
-                              boolean showEditIcon, boolean separatorOnTop)
+                              boolean showEditIcon, boolean separatorOnTop, boolean addSepMargins)
             throws IllegalStateException{
         if(context instanceof Activity) {
             this.context = context;
@@ -48,6 +48,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
             this.callback = callback;
             this.showEditIcon = showEditIcon;
             this.separatorOnTop = separatorOnTop;
+            this.addSepMargins = addSepMargins;
         }
         else{
             throw new IllegalStateException("context passed is not of Activity type");
@@ -147,7 +148,8 @@ public class SavedPlacesAdapter extends BaseAdapter{
             if(separatorOnTop){
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.imageViewSep.getLayoutParams();
                 params.addRule(RelativeLayout.BELOW, 0);
-                params.setMargins(0, 0, 0, 0);
+                int margin = addSepMargins ? (int)(ASSL.Xscale() * 35f) : 0;
+                params.setMargins(margin, 0, margin, 0);
                 holder.imageViewSep.setLayoutParams(params);
                 holder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.stroke_light_grey_alpha));
             } else {

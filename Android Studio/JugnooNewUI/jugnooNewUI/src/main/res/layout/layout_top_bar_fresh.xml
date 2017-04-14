@@ -48,13 +48,18 @@
             <EditText
                 android:id="@+id/editTextDeliveryAddress"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="62px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="100px"
-                android:background="@color/transparent"
+                android:layout_marginRight="32px"
+                android:background="@drawable/bg_menu_item_color_f7_r"
                 android:hint="@string/type_delivery_address"
                 android:textColor="@color/text_color"
                 android:textCursorDrawable="@drawable/cursor_black"
+                android:drawableLeft="@drawable/ic_location_marker_grey"
+                android:drawablePadding="8dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="6dp"
                 android:textSize="@dimen/text_size_30" />
 
             <ImageView
