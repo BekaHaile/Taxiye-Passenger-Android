@@ -97,66 +97,70 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        if(holder instanceof FeedHomeAdapter.ViewHolderReviewImage)
-        {
+        try {
+            if(holder instanceof FeedHomeAdapter.ViewHolderReviewImage)
+			{
 
-            FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback, this, true);
-            ((FeedHomeAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
+				FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback, this, true);
+				((FeedHomeAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
 
-        }
-        else if(holder instanceof MyCommentViewHolder){
+			}
+			else if(holder instanceof MyCommentViewHolder){
 
 
-            if (Data.userData!=null) {
-                ((MyCommentViewHolder) holder).tvMyUserName.setText(Data.userData.userName);
-                if (!TextUtils.isEmpty(Data.userData.userImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(Data.userData.userImage))
-                    Picasso.with(activity).load(Data.userData.userImage).resize(Utils.convertDpToPx(activity,25), Utils.convertDpToPx(activity,25)).centerCrop().transform(new CircleTransform()).into(((MyCommentViewHolder) holder).ivMyProfilePic);
-                else {
-                    if (userDrawable == null) {
-                        String firstLetter =  Data.userData.userName.toUpperCase().substring(0,1);
-                        TextDrawable drawable = TextDrawable.builder()
-                                .beginConfig().bold().endConfig()
-                                .buildRound(firstLetter, activity.getParsedColor(""));
-                        userDrawable = drawable;
-                    }
-                    ((MyCommentViewHolder) holder).ivMyProfilePic.setImageDrawable(userDrawable);
-                }
-            }
+				if (Data.userData!=null) {
+					((MyCommentViewHolder) holder).tvMyUserName.setText(Data.userData.userName);
+					if (!TextUtils.isEmpty(Data.userData.userImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(Data.userData.userImage))
+						Picasso.with(activity).load(Data.userData.userImage).resize(Utils.convertDpToPx(activity,25), Utils.convertDpToPx(activity,25)).centerCrop().transform(new CircleTransform()).into(((MyCommentViewHolder) holder).ivMyProfilePic);
+					else {
+						if (userDrawable == null) {
+							String firstLetter =  Data.userData.userName.toUpperCase().substring(0,1);
+							TextDrawable drawable = TextDrawable.builder()
+									.beginConfig().bold().endConfig()
+									.buildRound(firstLetter, activity.getParsedColor(""));
+							userDrawable = drawable;
+						}
+						((MyCommentViewHolder) holder).ivMyProfilePic.setImageDrawable(userDrawable);
+					}
+				}
 
-            ((MyCommentViewHolder) holder).edtComment.setText(callback.getEditTextString());
+				((MyCommentViewHolder) holder).edtComment.setText(callback.getEditTextString());
 
-        }
-        else if(holder instanceof UserCommentViewHolder){
-            FeedComment feedComment = (FeedComment) feedDetailData.get(position);
-            UserCommentViewHolder userCommentViewHolder =     ((UserCommentViewHolder) holder);
-            userCommentViewHolder.tvUserCommentName.setText(feedComment.getUserName());
-            userCommentViewHolder.tvUserCommentDescription.setText(feedComment.getCommentContent());
-            if(position==feedDetailData.size()-1)
-                userCommentViewHolder.lineBottom.setVisibility(View.INVISIBLE);
-            else
-                userCommentViewHolder.lineBottom.setVisibility(View.VISIBLE);
+			}
+			else if(holder instanceof UserCommentViewHolder){
+				FeedComment feedComment = (FeedComment) feedDetailData.get(position);
+				UserCommentViewHolder userCommentViewHolder =     ((UserCommentViewHolder) holder);
+				userCommentViewHolder.tvUserCommentName.setText(feedComment.getUserName());
+				userCommentViewHolder.tvUserCommentDescription.setText(feedComment.getCommentContent());
+				if(position==feedDetailData.size()-1)
+					userCommentViewHolder.lineBottom.setVisibility(View.INVISIBLE);
+				else
+					userCommentViewHolder.lineBottom.setVisibility(View.VISIBLE);
 
-            if(((FeedComment) feedDetailData.get(position)).getTimeCreated()==null)
-                userCommentViewHolder.tvUserTimePosted.setVisibility(View.GONE);
-            else {
-                userCommentViewHolder.tvUserTimePosted.setVisibility(View.VISIBLE);
-                userCommentViewHolder.tvUserTimePosted.setText(FeedHomeAdapter.getTimeToDisplay(((FeedComment) feedDetailData.get(position)).getTimeCreated(), activity.isTimeAutomatic));
-            }
+				if(((FeedComment) feedDetailData.get(position)).getTimeCreated()==null)
+					userCommentViewHolder.tvUserTimePosted.setVisibility(View.GONE);
+				else {
+					userCommentViewHolder.tvUserTimePosted.setVisibility(View.VISIBLE);
+					userCommentViewHolder.tvUserTimePosted.setText(FeedHomeAdapter.getTimeToDisplay(((FeedComment) feedDetailData.get(position)).getTimeCreated(), activity.isTimeAutomatic));
+				}
 
-            if (!TextUtils.isEmpty(feedComment.getUserImage()) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(feedComment.getUserImage()))
-                Picasso.with(activity).load(feedComment.getUserImage()).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(userCommentViewHolder.ivUserCommentPic);
-            else {
-                if (feedComment.getDrawable() == null) {
-                    String firstLetter =  feedComment.getUserName().toUpperCase().substring(0,1);
-                    TextDrawable drawable = TextDrawable.builder()
-                            .beginConfig().bold().endConfig()
-                            .buildRound(firstLetter, activity.getParsedColor(feedComment.getColor()));
-                    feedComment.setDrawable(drawable);
-                }
-                userCommentViewHolder.ivUserCommentPic.setImageDrawable(feedComment.getDrawable());
-            }
+				if (!TextUtils.isEmpty(feedComment.getUserImage()) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(feedComment.getUserImage()))
+					Picasso.with(activity).load(feedComment.getUserImage()).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(userCommentViewHolder.ivUserCommentPic);
+				else {
+					if (feedComment.getDrawable() == null) {
+						String firstLetter =  feedComment.getUserName().toUpperCase().substring(0,1);
+						TextDrawable drawable = TextDrawable.builder()
+								.beginConfig().bold().endConfig()
+								.buildRound(firstLetter, activity.getParsedColor(feedComment.getColor()));
+						feedComment.setDrawable(drawable);
+					}
+					userCommentViewHolder.ivUserCommentPic.setImageDrawable(feedComment.getDrawable());
+				}
 
-            ((UserCommentViewHolder) holder).ivDeleteComment.setVisibility(feedComment.canEdit()?View.VISIBLE:View.GONE);
+				((UserCommentViewHolder) holder).ivDeleteComment.setVisibility(feedComment.canEdit()?View.VISIBLE:View.GONE);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 

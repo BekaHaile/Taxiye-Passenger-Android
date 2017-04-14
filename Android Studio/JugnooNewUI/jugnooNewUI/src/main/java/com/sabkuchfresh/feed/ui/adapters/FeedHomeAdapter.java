@@ -124,38 +124,42 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
 
-        if (holder instanceof ViewHolderReviewImage) {
+        try {
+            if (holder instanceof ViewHolderReviewImage) {
 
 
-            FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
-            setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback, this, false);
-            if (position == adapterList.size() - 2) {
-                ((ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
-            } else {
-                ((ViewHolderReviewImage) holder).shadow.setVisibility(View.VISIBLE);
+				FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
+				setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback, this, false);
+				if (position == adapterList.size() - 2) {
+					((ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
+				} else {
+					((ViewHolderReviewImage) holder).shadow.setVisibility(View.VISIBLE);
 
-            }
+				}
 
-        } else if (holder instanceof AddNewPostViewHolder) {
+			} else if (holder instanceof AddNewPostViewHolder) {
 
-            AddPostData addPostData = (AddPostData) adapterList.get(position);
-            if(addPostData.getAddPostText()!=null)
-            {
-                ((AddNewPostViewHolder) holder).tvAddPost.setText(addPostData.getAddPostText());
-            }
-            if(addPostData.getImageUrl()!=null){
-             Picasso.with(activity).load(addPostData.getImageUrl()).resize(Utils.convertDpToPx(activity, 40), Utils.convertDpToPx(activity, 40)).centerCrop().transform(new CircleTransform()).into(((AddNewPostViewHolder) holder).ivMyProfilePic);
+				AddPostData addPostData = (AddPostData) adapterList.get(position);
+				if(addPostData.getAddPostText()!=null)
+				{
+					((AddNewPostViewHolder) holder).tvAddPost.setText(addPostData.getAddPostText());
+				}
+				if(addPostData.getImageUrl()!=null){
+				 Picasso.with(activity).load(addPostData.getImageUrl()).resize(Utils.convertDpToPx(activity, 40), Utils.convertDpToPx(activity, 40)).centerCrop().transform(new CircleTransform()).into(((AddNewPostViewHolder) holder).ivMyProfilePic);
 
-            }
+				}
 
 
-        }
-        else if(holder instanceof ChangeLocationViewHolder){
+			}
+			else if(holder instanceof ChangeLocationViewHolder){
 
-            SelectedLocation selectedLocation = (SelectedLocation) adapterList.get(position);
-            ((ChangeLocationViewHolder) holder).textViewLocation.setText(selectedLocation.getCityName());
-            ((ChangeLocationViewHolder) holder).tvLabel.setText(selectedLocation.isCity()?"City":"Location");
+				SelectedLocation selectedLocation = (SelectedLocation) adapterList.get(position);
+				((ChangeLocationViewHolder) holder).textViewLocation.setText(selectedLocation.getCityName());
+				((ChangeLocationViewHolder) holder).tvLabel.setText(selectedLocation.isCity()?"City":"Location");
 
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
