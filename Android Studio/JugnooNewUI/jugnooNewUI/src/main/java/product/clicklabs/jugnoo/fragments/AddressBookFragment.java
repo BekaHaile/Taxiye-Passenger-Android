@@ -95,11 +95,7 @@ public class AddressBookFragment extends Fragment {
 					onSavedLocationEdit(searchResult);
 				}
 
-				@Override
-				public void onEditClick(SearchResult searchResult) {
-					onSavedLocationEdit(searchResult);
-				}
-			}, false, false, false);
+			}, false, false);
 			listViewSavedLocations.setAdapter(savedPlacesAdapter);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -118,11 +114,7 @@ public class AddressBookFragment extends Fragment {
 					onSavedLocationEdit(searchResult);
 				}
 
-				@Override
-				public void onEditClick(SearchResult searchResult) {
-					onSavedLocationEdit(searchResult);
-				}
-			}, false, false, false);
+			}, false, false);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 		} catch (Exception e) {
 			e.printStackTrace();

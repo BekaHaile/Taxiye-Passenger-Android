@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.home.TransactionUtils;
+import com.tsengvn.typekit.TypekitContextWrapper;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -49,8 +52,12 @@ public class AddPlaceActivity extends BaseFragmentActivity {
     private EditText editTextDeliveryAddress;
     private RelativeLayout relativeLayoutSearch;
     private ImageView imageViewSearchCross;
+    private ProgressWheel progressWheelDeliveryAddressPin;
 
-
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +78,7 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         relativeLayoutSearch = (RelativeLayout) findViewById(R.id.relativeLayoutSearch);
         imageViewSearchCross = (ImageView) findViewById(R.id.ivDeliveryAddressCross);
         imageViewSearchCross.setVisibility(View.GONE);
+        progressWheelDeliveryAddressPin = (ProgressWheel) findViewById(R.id.progressWheelDeliveryAddressPin);
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
@@ -379,4 +387,7 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         return new Bundle();
     }
 
+    public ProgressWheel getProgressWheelDeliveryAddressPin() {
+        return progressWheelDeliveryAddressPin;
+    }
 }

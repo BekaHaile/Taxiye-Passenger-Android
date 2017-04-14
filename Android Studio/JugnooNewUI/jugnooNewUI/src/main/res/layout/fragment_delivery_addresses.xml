@@ -38,7 +38,6 @@
                 android:layout_height="1dp"
                 android:layout_centerInParent="true"
                 />
-
         </RelativeLayout>
 
 
@@ -102,30 +101,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/linearLayoutCurrentLocation"
-                        android:layout_width="match_parent"
-                        android:layout_height="110px"
-                        android:background="@drawable/bg_white_menu_item_selector_color_selector"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="26px"
-                            android:layout_height="25px"
-                            android:layout_marginLeft="35px"
-                            android:src="@drawable/ic_delivery_addess"
-                            android:tag="mwar"/>
-
-                        <TextView
-                            android:id="@+id/textViewCurrentLocation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="40px"
-                            android:text="Current Location"
-                            android:textColor="@color/text_color_light_selector"
-                            android:textSize="@dimen/text_size_28"/>
-                    </LinearLayout>
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -197,6 +172,7 @@
                             android:layout_marginBottom="20px"
                             android:layout_marginLeft="20px"
                             android:layout_marginTop="20px"
+                            android:layout_marginRight="30px"
                             android:layout_toLeftOf="@+id/imageViewEditHome"
                             android:layout_toRightOf="@+id/imageViewAddHome"
                             android:orientation="vertical">
@@ -214,7 +190,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5px"
-                                android:singleLine="true"
                                 android:text="test"
                                 android:textColor="@color/text_color_light"
                                 android:textSize="@dimen/text_size_26"
@@ -239,18 +214,6 @@
                             android:layout_marginLeft="30px"
                             android:src="@drawable/ic_home"
                             android:tag="mwar"/>
-
-                        <ImageView
-                            android:id="@+id/imageViewEditHome"
-                            android:layout_width="60px"
-                            android:layout_height="60px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20px"
-                            android:padding="15px"
-                            android:src="@drawable/edit_icon_selector"
-                            android:tag="mwar"
-                            android:visibility="gone"/>
 
                     </RelativeLayout>
 
@@ -277,6 +240,7 @@
                             android:layout_marginBottom="20px"
                             android:layout_marginLeft="20px"
                             android:layout_marginTop="20px"
+                            android:layout_marginRight="30px"
                             android:layout_toLeftOf="@+id/imageViewEditWork"
                             android:layout_toRightOf="@+id/imageViewAddWork"
                             android:orientation="vertical">
@@ -294,7 +258,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5px"
-                                android:singleLine="true"
                                 android:text="test"
                                 android:textColor="@color/text_color_light"
                                 android:textSize="@dimen/text_size_26"
@@ -308,6 +271,7 @@
                                 android:text="@string/address_used_multiple_time_format"
                                 android:textColor="@color/text_color_light"
                                 android:textSize="@dimen/text_size_22"/>
+
                         </LinearLayout>
 
                         <ImageView
@@ -320,25 +284,6 @@
                             android:src="@drawable/ic_work"
                             android:tag="mwar"/>
 
-                        <ImageView
-                            android:id="@+id/imageViewEditWork"
-                            android:layout_width="60px"
-                            android:layout_height="60px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20px"
-                            android:padding="15px"
-                            android:src="@drawable/edit_icon_selector"
-                            android:tag="mwar"
-                            android:visibility="visible"/>
-
-                        <ImageView
-                            android:layout_width="660px"
-                            android:layout_height="2px"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
-                            android:src="@color/text_color_hint"
-                            android:visibility="gone"/>
                     </RelativeLayout>
 
                     <product.clicklabs.jugnoo.utils.NonScrollListView

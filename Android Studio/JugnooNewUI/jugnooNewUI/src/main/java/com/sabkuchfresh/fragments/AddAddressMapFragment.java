@@ -103,7 +103,6 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     public GoogleMap googleMap;
     TouchableMapFragment mapFragment;
     public MapStateListener mapStateListener;
-    boolean mapTouched = false;
     private ScrollView scrollViewSearch;
     private LinearLayout linearLayoutSearch;
 
@@ -196,7 +195,6 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             }
         });
         mapFragment = ((TouchableMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView));
-        mapTouched = false;
 
         searchAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSearchBarText);
         searchAddress.setOnClickListener(new View.OnClickListener() {
@@ -494,7 +492,6 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             mapStateListener = new MapStateListener(googleMap, mapFragment, getActivity()) {
                 @Override
                 public void onMapTouched() {
-                    mapTouched = true;
                 }
 
                 @Override
@@ -702,7 +699,6 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 

@@ -446,11 +446,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					clickOnSavedItem(searchResult);
 				}
 
-				@Override
-				public void onEditClick(SearchResult searchResult) {
-					clickOnSavedItem(searchResult);
-				}
-			}, false, false, false);
+			}, false, false);
 			listViewSavedLocations.setAdapter(savedPlacesAdapter);
 			if(searchResults.size() > 0){
 				cardViewSavedPlaces.setVisibility(View.VISIBLE);
@@ -463,12 +459,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				public void onItemClick(SearchResult searchResult) {
 					clickOnSavedItem(searchResult);
 				}
-
-				@Override
-				public void onEditClick(SearchResult searchResult) {
-					clickOnSavedItem(searchResult);
-				}
-			}, false, false, false);
+			}, false, false);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 			if(Data.userData.getSearchResultsRecent().size() > 0){
 				cvRecentAddresses.setVisibility(View.VISIBLE);

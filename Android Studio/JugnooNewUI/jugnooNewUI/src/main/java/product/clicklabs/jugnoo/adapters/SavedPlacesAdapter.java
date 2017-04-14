@@ -25,7 +25,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
 
     private class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress, textViewAddressUsed;
-        ImageView imageViewType, imageViewSep, imageViewEdit;
+        ImageView imageViewType, imageViewSep;
         RelativeLayout relative;
         int id;
     }
@@ -34,19 +34,18 @@ public class SavedPlacesAdapter extends BaseAdapter{
     private LayoutInflater mInflater;
     private ViewHolderSearchItem holder;
     private Callback callback;
-    private boolean showEditIcon, separatorOnTop, addSepMargins;
+    private boolean separatorOnTop, addSepMargins;
 
     private ArrayList<SearchResult> searchResults;
 
     public SavedPlacesAdapter(Context context, ArrayList<SearchResult> searchResults, Callback callback,
-                              boolean showEditIcon, boolean separatorOnTop, boolean addSepMargins)
+                              boolean separatorOnTop, boolean addSepMargins)
             throws IllegalStateException{
         if(context instanceof Activity) {
             this.context = context;
             this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.searchResults = searchResults;
             this.callback = callback;
-            this.showEditIcon = showEditIcon;
             this.separatorOnTop = separatorOnTop;
             this.addSepMargins = addSepMargins;
         }
@@ -85,10 +84,8 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
             holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
-            holder.imageViewEdit = (ImageView) convertView.findViewById(R.id.imageViewEdit);
 
             holder.relative.setTag(holder);
-            holder.imageViewEdit.setTag(holder);
 
             holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ASSL.DoMagic(holder.relative);
@@ -144,7 +141,6 @@ public class SavedPlacesAdapter extends BaseAdapter{
 
             holder.imageViewSep.setVisibility(View.VISIBLE);
 
-            holder.imageViewEdit.setVisibility(showEditIcon ? View.VISIBLE : View.GONE);
             if(separatorOnTop){
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.imageViewSep.getLayoutParams();
                 params.addRule(RelativeLayout.BELOW, 0);
@@ -171,20 +167,6 @@ public class SavedPlacesAdapter extends BaseAdapter{
 					}
 				}
                   });
-
-            holder.imageViewEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        holder = (ViewHolderSearchItem) v.getTag();
-                        final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
-                        callback.onEditClick(autoCompleteSearchResult);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -194,7 +176,6 @@ public class SavedPlacesAdapter extends BaseAdapter{
 
     public interface Callback{
         void onItemClick(SearchResult searchResult);
-        void onEditClick(SearchResult searchResult);
     }
 
 }

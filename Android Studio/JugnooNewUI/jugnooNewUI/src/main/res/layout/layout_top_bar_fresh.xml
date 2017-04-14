@@ -58,9 +58,26 @@
                 android:textCursorDrawable="@drawable/cursor_black"
                 android:drawableLeft="@drawable/ic_location_marker_grey"
                 android:drawablePadding="8dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="6dp"
+                android:paddingLeft="20px"
+                android:paddingRight="12px"
                 android:textSize="@dimen/text_size_30" />
+            <product.clicklabs.jugnoo.utils.ProgressWheel
+                xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/progressWheelDeliveryAddressPin"
+                android:layout_width="54px"
+                android:layout_height="54px"
+                android:layout_centerVertical="true"
+                android:tag="mwar"
+                wheel:matProg_barColor="@color/green_light"
+                wheel:matProg_barWidth="3dp"
+                wheel:matProg_fillRadius="true"
+                wheel:matProg_progressIndeterminate="true"
+                wheel:matProg_barSpinCycleTime="2500"
+                android:layout_alignRight="@+id/editTextDeliveryAddress"
+                android:layout_marginRight="10px"
+                android:visibility="gone"
+                />
+
 
             <ImageView
                 android:id="@+id/ivDeliveryAddressCross"

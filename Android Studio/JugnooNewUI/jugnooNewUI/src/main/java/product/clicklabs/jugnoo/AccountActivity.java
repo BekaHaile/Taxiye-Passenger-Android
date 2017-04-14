@@ -238,11 +238,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 }
 
-                @Override
-                public void onEditClick(SearchResult searchResult) {
-
-                }
-            }, true, false, false);
+            }, false, false);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
         } catch (Exception e) {
             e.printStackTrace();
