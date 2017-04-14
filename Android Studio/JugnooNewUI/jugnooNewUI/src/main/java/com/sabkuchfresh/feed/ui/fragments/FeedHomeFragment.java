@@ -225,7 +225,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         rlNoReviews.setVisibility(View.GONE);
         tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);
         try {
-            tvFeedEmpty.setText(Data.getFeedName(activity) + " is empty");
+            tvFeedEmpty.setText("Feed is empty!");
             SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add_a_post));
             ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tvFeedEmpty.append("\n");
@@ -359,8 +359,11 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
-                                if(activity.getTopFragment() instanceof FreshHomeFragment) {
+                                if(activity.getTopFragment() instanceof FeedHomeFragment) {
                                     activity.getFeedHomeAddPostView().setVisibility(relativeLayoutNotAvailable.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                                }else{
+                                    activity.getFeedHomeAddPostView().setVisibility(View.GONE);
+
                                 }
                             }
                         } catch (Exception exception) {
