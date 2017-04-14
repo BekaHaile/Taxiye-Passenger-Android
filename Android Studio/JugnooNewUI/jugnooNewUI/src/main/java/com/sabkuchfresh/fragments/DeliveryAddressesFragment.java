@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,6 +51,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.AddPlaceActivity;
@@ -106,6 +108,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private TextView tvDeliveryAddress;
     private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
     private NestedScrollView scrollViewSuggestions;
+    @Bind(R.id.rlMarkerPin)
+    RelativeLayout rlMarkerPin;
+    @Bind(R.id.bNext)
+    Button bNext;
 
 
     public double current_latitude = 0.0;
@@ -219,7 +225,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             e.printStackTrace();
         }
 
+        RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
+        RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
         if(activity instanceof FreshActivity) {
+            scrollViewSuggestions.setVisibility(View.VISIBLE);
+            paramsRL.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
+            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
             try {
                 cardViewSavedPlaces.setVisibility(View.VISIBLE);
                 listViewRecentAddresses.setVisibility(View.VISIBLE);
@@ -249,8 +260,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         else if(activity instanceof AddPlaceActivity){
             listViewRecentAddresses.setVisibility(View.GONE);
             cardViewSavedPlaces.setVisibility(View.GONE);
+            scrollViewSuggestions.setVisibility(View.GONE);
+            paramsRL.setMargins(0, 0, 0, 0);
+            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
         }
-
+        rlMarkerPin.setLayoutParams(paramsRL);
+        bNext.setLayoutParams(paramsB);
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(activity)
@@ -395,7 +410,8 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                     googleMap.setMyLocationEnabled(true);
                     googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-                    googleMap.setPadding(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
+                    googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+                            activity.getResources().getDimensionPixelSize(R.dimen.dp_162) : 0);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
 
 
@@ -412,7 +428,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
                         @Override
                         public void onMapUnsettled() {
-                            progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
                             mapSettledCanForward = false;
                         }
 
@@ -518,7 +533,9 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     private void fillAddressDetails(final LatLng latLng) {
         try {
-            progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
+            if(isVisible() && !isRemoving()) {
+                progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
+            }
             final Map<String, String> params = new HashMap<String, String>(6);
 
             params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
@@ -533,31 +550,40 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         current_latitude = latLng.latitude;
                         current_longitude = latLng.longitude;
 
-                        current_street = geocodeResponse.results.get(0).getStreetNumber();
-                        current_route = geocodeResponse.results.get(0).getRoute();
-                        current_area = geocodeResponse.results.get(0).getLocality();
-                        current_city = geocodeResponse.results.get(0).getCity();
-                        current_pincode = geocodeResponse.results.get(0).getCountry();
+                        if(geocodeResponse.results != null && geocodeResponse.results.size() > 0){
+                            current_street = geocodeResponse.results.get(0).getStreetNumber();
+                            current_route = geocodeResponse.results.get(0).getRoute();
+                            current_area = geocodeResponse.results.get(0).getLocality();
+                            current_city = geocodeResponse.results.get(0).getCity();
+                            current_pincode = geocodeResponse.results.get(0).getCountry();
 
-                        tvDeliveryAddress.setText(current_street + (current_street.length()>0?", ":"")
-                                + current_route + (current_route.length()>0?", ":"")
-                                + geocodeResponse.results.get(0).getAddAddress()
-                                + ", " + current_city);
-                        tvDeliveryAddress.setVisibility(View.VISIBLE);
-                        progressWheelDeliveryAddressPin.setVisibility(View.GONE);
-                        mapSettledCanForward = true;
+                            tvDeliveryAddress.setText(current_street + (current_street.length()>0?", ":"")
+                                    + current_route + (current_route.length()>0?", ":"")
+                                    + geocodeResponse.results.get(0).getAddAddress()
+                                    + ", " + current_city);
+                            if(isVisible()) {
+                                tvDeliveryAddress.setVisibility(View.VISIBLE);
+                            }
+                            mapSettledCanForward = true;
+                        } else {
+                            Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+                            tvDeliveryAddress.setText("");
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        DialogPopup.alertPopup(getActivity(), "", Data.SERVER_ERROR_MSG);
+                        Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+                        tvDeliveryAddress.setText("");
                     }
+                    progressWheelDeliveryAddressPin.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     Log.e("DeliveryAddressFragment", "error=" + error.toString());
-                    DialogPopup.alertPopup(getActivity(), "", Data.SERVER_ERROR_MSG);
+                    Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
                     progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+                    tvDeliveryAddress.setText("");
                 }
             });
         } catch (Exception e) {

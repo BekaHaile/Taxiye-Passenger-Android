@@ -1642,6 +1642,8 @@
     <string name="delete_post_alert_message">Do you really want to delete this post? If you delete once it will no longer be available.</string>
     <string name="enter_your_name">Enter your Name</string>
     <string name="enter_email_id">Enter Email ID</string>
+    <string name="unable_to_fetch_address">Unable to fetch current address at the moment</string>
+    <string name="plus_add_new_address">+ Add New Address</string>
 
 
 </resources>

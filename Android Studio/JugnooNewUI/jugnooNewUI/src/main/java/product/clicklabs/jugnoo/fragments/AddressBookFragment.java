@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,7 +47,7 @@ public class AddressBookFragment extends Fragment {
 	private NonScrollListView listViewRecentAddresses;
 	private SavedPlacesAdapter savedPlacesAdapterRecent;
 
-	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutAddNewAddress;
+	private Button bAddNewAddress;
 
 	private View rootView;
     private FragmentActivity activity;
@@ -85,7 +86,7 @@ public class AddressBookFragment extends Fragment {
 		textViewAddressUsedWork = (TextView) rootView.findViewById(R.id.textViewAddressUsedWork); textViewAddressUsedWork.setTypeface(Fonts.mavenRegular(activity));
 		viewHomeSep = rootView.findViewById(R.id.viewHomeSep);
 		viewWorkSep = rootView.findViewById(R.id.viewWorkSep);
-
+		bAddNewAddress = (Button) rootView.findViewById(R.id.bAddNewAddress);
 
 		listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
 		try {
@@ -121,12 +122,6 @@ public class AddressBookFragment extends Fragment {
 		}
 
 
-		relativeLayoutAddHome = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddHome);
-		relativeLayoutAddWork = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddWork);
-		relativeLayoutAddNewAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddNewAddress);
-		((TextView) rootView.findViewById(R.id.textViewAddHome)).setTypeface(Fonts.mavenMedium(activity));
-		((TextView) rootView.findViewById(R.id.textViewAddWork)).setTypeface(Fonts.mavenMedium(activity));
-		((TextView) rootView.findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(activity));
 
 		View.OnClickListener homeClickListener = new View.OnClickListener() {
 			@Override
@@ -139,7 +134,6 @@ public class AddressBookFragment extends Fragment {
 			}
 		};
 		relativeLayoutHome.setOnClickListener(homeClickListener);
-		relativeLayoutAddHome.setOnClickListener(homeClickListener);
 
 		View.OnClickListener workClickListener = new View.OnClickListener() {
 			@Override
@@ -152,9 +146,8 @@ public class AddressBookFragment extends Fragment {
 			}
 		};
 		relativeLayoutWork.setOnClickListener(workClickListener);
-		relativeLayoutAddWork.setOnClickListener(workClickListener);
 
-		relativeLayoutAddNewAddress.setOnClickListener(new View.OnClickListener() {
+		bAddNewAddress.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent=new Intent(activity, AddPlaceActivity.class);
@@ -204,7 +197,6 @@ public class AddressBookFragment extends Fragment {
 			if (!homeString.equalsIgnoreCase("")) {
 				SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
 				relativeLayoutHome.setVisibility(View.VISIBLE);
-				relativeLayoutAddHome.setVisibility(View.GONE);
 				textViewHomeValue.setText(searchResult.getAddress());
 				textViewAddressUsedHome.setVisibility(View.GONE);
 				if (searchResult.getFreq() > 0) {
@@ -219,14 +211,12 @@ public class AddressBookFragment extends Fragment {
 				}
 			} else {
 				relativeLayoutHome.setVisibility(View.GONE);
-				relativeLayoutAddHome.setVisibility(View.VISIBLE);
 			}
 
 			String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
 			if (!workString.equalsIgnoreCase("")) {
 				SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
 				relativeLayoutWork.setVisibility(View.VISIBLE);
-				relativeLayoutAddWork.setVisibility(View.GONE);
 				textViewWorkValue.setText(searchResult.getAddress());
 				textViewAddressUsedWork.setVisibility(View.GONE);
 				if (searchResult.getFreq() > 0) {
@@ -241,7 +231,6 @@ public class AddressBookFragment extends Fragment {
 				}
 			} else {
 				relativeLayoutWork.setVisibility(View.GONE);
-				relativeLayoutAddWork.setVisibility(View.VISIBLE);
 			}
 
 			savedPlacesAdapter.notifyDataSetChanged();

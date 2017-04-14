@@ -20,6 +20,7 @@
             android:layout_height="match_parent"/>
 
         <RelativeLayout
+            android:id="@+id/rlMarkerPin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dp_162"
@@ -49,7 +50,7 @@
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="176dp"
+            android:layout_marginBottom="@dimen/dp_176"
             android:background="@drawable/capsule_green_color_selector"
             android:text="@string/next"
             android:textColor="@color/white"
@@ -66,7 +67,6 @@
             android:src="@drawable/mylocation_btn_selector"
             android:contentDescription="@string/move_to_your_location"
             android:layout_above="@+id/bNext"
-            android:layout_marginBottom="0dp"
             />
 
     </RelativeLayout>
