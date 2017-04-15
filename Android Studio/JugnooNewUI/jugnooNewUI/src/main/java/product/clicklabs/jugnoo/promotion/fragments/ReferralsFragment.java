@@ -196,8 +196,8 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 
 			if(!"".equalsIgnoreCase(Data.userData.getInviteEarnScreenImage())){
 				Picasso.with(activity).load(Data.userData.getInviteEarnScreenImage())
-						.placeholder(R.drawable.ic_fresh_new_placeholder)
-						.error(R.drawable.ic_promotions_friend_refer)
+						.placeholder(R.drawable.ic_logo_white_bg)
+						.error(R.drawable.ic_logo_white_bg)
 						.into(imageViewLogo);
 			}
 

@@ -146,9 +146,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     protected void hideSoftKeyboard() {
-
         try {
-
             InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
         } catch (Exception e) {
@@ -166,7 +164,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     private void broadCastReceiverSetup() {
-
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -177,14 +174,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                     Log.d("BaseA", "Main token" + sentToken);
                 } else {
                     //  textView.setText(getString(R.string.token_error_message));
-
-
                 }
-
             }
         };
-
-
     }
 
     private boolean checkPlayServices() {

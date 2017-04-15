@@ -63,7 +63,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/px_42"
                 android:tag="mwar"
-                android:src="@drawable/ic_promotions_friend_refer"/>
+                android:src="@drawable/ic_logo_white_bg"/>
 
         <LinearLayout
             android:layout_width="match_parent"

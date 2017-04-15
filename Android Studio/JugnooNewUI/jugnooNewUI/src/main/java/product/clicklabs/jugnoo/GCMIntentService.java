@@ -34,6 +34,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -513,6 +514,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
 						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "")));
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_IN_RIDE.getOrdinal());
+
+						Prefs.with(this).save(SP_CHAT_CLOSE, true);
+						Intent intent1 = new Intent(Constants.INTENT_ACTION_CHAT_CLOSE);
+						intent1.putExtra(Constants.KEY_FLAG, flag);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent1);
+
 						if (HomeActivity.appInterruptHandler != null) {
 							PlaceOrderResponse.ReferralPopupContent referralPopupContent = null;
 							try {

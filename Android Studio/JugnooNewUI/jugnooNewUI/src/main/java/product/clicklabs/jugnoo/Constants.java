@@ -221,6 +221,7 @@ public interface Constants {
 
     String KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL = "customer_location_update_interval";
     String SP_CURRENT_STATE = "current_state";
+    String SP_CHAT_CLOSE = "chat_close";
     String ACTION_LOCATION_UPDATE = "jugnoo.ACTION_LOCATION_UPDATE";
     String KEY_ONE_SHOT = "one_shot";
     String KEY_EMERGENCY_LOC = "emergency_loc";
@@ -545,6 +546,7 @@ public interface Constants {
 
     String KEY_VALID_STOCK_COUNT = "valid_stock_count";
     String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
+    String INTENT_ACTION_CHAT_CLOSE = "intent_action_chat_close";
     String KEY_CHAT_COUNT = "chat_count";
 
     String KEY_RESTAURANT_ID = "restaurant_id";

@@ -20,7 +20,7 @@
             android:layout_marginTop="@dimen/px_15"
             android:layout_centerHorizontal="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_promotions_friend_refer"
+            android:src="@drawable/ic_logo_white_bg"
             android:tag="mlar"
             android:visibility="visible" />
 
