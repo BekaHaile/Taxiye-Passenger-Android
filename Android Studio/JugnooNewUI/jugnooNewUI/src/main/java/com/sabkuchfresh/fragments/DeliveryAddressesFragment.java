@@ -159,7 +159,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             }
             progressWheelDeliveryAddressPin = ((FreshActivity)activity).getTopBar().progressWheelDeliveryAddressPin;
             tvDeliveryAddress = ((FreshActivity)activity).getTopBar().tvDeliveryAddress;
-        }else if(activity instanceof AddPlaceActivity){
+        } else if(activity instanceof AddPlaceActivity){
             editTextDeliveryAddress = ((AddPlaceActivity)activity).getEditTextDeliveryAddress();
             progressWheelDeliveryAddressPin = ((AddPlaceActivity)activity).getProgressWheelDeliveryAddressPin();
             tvDeliveryAddress = ((AddPlaceActivity)activity).getTvDeliveryAddress();
@@ -361,7 +361,14 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     googleMap.getUiSettings().setMyLocationButtonEnabled(false);
                     googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
                             activity.getResources().getDimensionPixelSize(R.dimen.dp_162) : 0);
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
+                    if(activity instanceof AddPlaceActivity
+                            && ((AddPlaceActivity)activity).isEditThisAddress()
+                            && ((AddPlaceActivity)activity).getSearchResult() != null){
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((AddPlaceActivity)activity).getSearchResult().getLatLng(), 14));
+                    } else {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
+                    }
+
 
 
                     TouchableMapFragment mapFragment = ((TouchableMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap));

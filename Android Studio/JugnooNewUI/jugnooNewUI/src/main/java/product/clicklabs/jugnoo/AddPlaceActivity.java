@@ -152,11 +152,12 @@ public class AddPlaceActivity extends BaseFragmentActivity {
             }
         }
 
-        if(editThisAddress){
-            openAddToAddressBook(getAddressBundle(searchResult));
-        } else {
-            getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
-        }
+//        if(editThisAddress){
+//            openAddToAddressBook(getAddressBundle(searchResult));
+//        } else {
+//            getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
+//        }
+        getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
 
     }
 
