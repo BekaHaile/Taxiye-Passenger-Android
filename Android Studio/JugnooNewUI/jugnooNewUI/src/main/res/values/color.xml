@@ -357,7 +357,7 @@
     <color name="green_whatsapp_dark">#47ab53</color>
     <color name="pale_orange">#fffcf2</color>
 
-    <color name="green_light">#56e599</color>
-    <color name="green_light_dark">#46d589</color>
+    <color name="green_light">#FD7945</color>
+    <color name="green_light_dark">#ED6935</color>
 
 </resources>
