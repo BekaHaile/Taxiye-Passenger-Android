@@ -543,8 +543,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (adapterList != null && position < adapterList.size()) {
 
             FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
-            if (isLiked)
+            if (isLiked) {
+                LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
+                likeButton.onClick(likeButton);
                 feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
+            }
             else if (feedDetail.getLikeCount() > 0)
                 feedDetail.setLikeCount(feedDetail.getLikeCount() - 1);
 
@@ -644,8 +647,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                        /* Animation animation = AnimationUtils.loadAnimation(viewClicked.getContext(), R.anim.bounce_scale_out_in);
                         viewClicked.findViewById(R.id.tv_action_like).clearAnimation();
                         viewClicked.findViewById(R.id.tv_action_like).startAnimation(animation);*/
-                       LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
-                        likeButton.onClick(likeButton);
+                       /*LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
+                        likeButton.onClick(likeButton);*/
                     }
                     feedPostCallback.onLikeClick(feedDetail, position);
                     break;
