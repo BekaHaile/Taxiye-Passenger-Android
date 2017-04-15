@@ -278,7 +278,7 @@
             android:id="@+id/tv_action_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_comment"
+            android:drawableLeft="@drawable/ic_comment_new"
             android:drawablePadding="@dimen/spacing_tiny"
             android:gravity="center"
             android:text="Reply"
@@ -312,7 +312,7 @@
                 android:id="@+id/like_button_animate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="-20dp"
+                android:layout_marginRight="-29dp"
                 app:anim_scale_factor="3"
                 app:icon_type="heart" />
 

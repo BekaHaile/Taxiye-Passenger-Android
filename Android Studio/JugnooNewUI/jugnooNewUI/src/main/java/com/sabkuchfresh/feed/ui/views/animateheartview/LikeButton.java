@@ -189,26 +189,26 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
             animatorSet = new AnimatorSet();
 
             ObjectAnimator outerCircleAnimator = ObjectAnimator.ofFloat(circleView, CircleView.OUTER_CIRCLE_RADIUS_PROGRESS, 0.1f, 1f);
-            outerCircleAnimator.setDuration(250);
+            outerCircleAnimator.setDuration(100);
             outerCircleAnimator.setInterpolator(DECCELERATE_INTERPOLATOR);
 
             ObjectAnimator innerCircleAnimator = ObjectAnimator.ofFloat(circleView, CircleView.INNER_CIRCLE_RADIUS_PROGRESS, 0.1f, 1f);
-            innerCircleAnimator.setDuration(200);
-            innerCircleAnimator.setStartDelay(200);
+            innerCircleAnimator.setDuration(150);
+            innerCircleAnimator.setStartDelay(50);
             innerCircleAnimator.setInterpolator(DECCELERATE_INTERPOLATOR);
 
             ObjectAnimator starScaleYAnimator = ObjectAnimator.ofFloat(icon, ImageView.SCALE_Y, 0.2f, 1f);
-            starScaleYAnimator.setDuration(350);
-            starScaleYAnimator.setStartDelay(250);
+            starScaleYAnimator.setDuration(300);
+            starScaleYAnimator.setStartDelay(200);
             starScaleYAnimator.setInterpolator(OVERSHOOT_INTERPOLATOR);
 
             ObjectAnimator starScaleXAnimator = ObjectAnimator.ofFloat(icon, ImageView.SCALE_X, 0.2f, 1f);
-            starScaleXAnimator.setDuration(350);
-            starScaleXAnimator.setStartDelay(250);
+            starScaleXAnimator.setDuration(300);
+            starScaleXAnimator.setStartDelay(200);
             starScaleXAnimator.setInterpolator(OVERSHOOT_INTERPOLATOR);
 
             ObjectAnimator dotsAnimator = ObjectAnimator.ofFloat(dotsView, DotsView.DOTS_PROGRESS, 0, 1f);
-            dotsAnimator.setDuration(900);
+            dotsAnimator.setDuration(700);
             dotsAnimator.setStartDelay(50);
             dotsAnimator.setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
 
@@ -245,7 +245,7 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isEnabled || !isClickable())
-            return true;
+            return false;
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:

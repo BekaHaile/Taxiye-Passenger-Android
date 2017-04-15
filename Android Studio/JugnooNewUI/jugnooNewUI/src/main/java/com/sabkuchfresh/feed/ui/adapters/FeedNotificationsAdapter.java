@@ -73,9 +73,9 @@ public class FeedNotificationsAdapter extends RecyclerView.Adapter<FeedNotificat
             }
 
             if(datum.getActivityType() == NotificationDatum.ACTIVITY_TYPE_COMMENT){
-                holder.tvNotificationTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_feed_notification_comment, 0, 0, 0);
+                holder.tvNotificationTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_comment_active_new, 0, 0, 0);
             } else if(datum.getActivityType() == NotificationDatum.ACTIVITY_TYPE_LIKE){
-                holder.tvNotificationTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active, 0, 0, 0);
+                holder.tvNotificationTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active_new, 0, 0, 0);
             }
 
         } catch (Exception e) {

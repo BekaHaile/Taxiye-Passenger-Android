@@ -364,7 +364,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             holder.tvComment.setText(commentText);
             holder.tvComment.setCompoundDrawablesWithIntrinsicBounds(feedDetail.getIsCommentedByUser() == 1
-                    ? R.drawable.ic_comment_active : R.drawable.ic_comment, 0, 0, 0);
+                    ? R.drawable.ic_comment_active_new : R.drawable.ic_comment_new, 0, 0, 0);
 
 
 
