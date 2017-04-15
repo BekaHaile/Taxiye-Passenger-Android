@@ -111,6 +111,7 @@ import android.widget.TextView;
 /*     */
 /*     */   public static void DoMagic(View rootLayout)
 /*     */   {
+				if(rootLayout.getTag() != null && rootLayout.getTag().toString().equals("DontTouchMe")){return;}
 /* 168 */     if ((rootLayout instanceof TextView))
 /*     */     {
 /* 173 */       TextView tv = (TextView)rootLayout;
@@ -185,21 +186,29 @@ import android.widget.TextView;
 /*     */ 
 /*     */       }
 /*     */       else if (!rootLayout.getTag().toString().equals("DontTouchMe"))
-/*     */       {
-/* 244 */         if ((layoutParams.width != -2) &&
+/*     */ {
+/* 244 */
+			if ((layoutParams.width != -2) &&
 /* 245 */           (layoutParams.width != -1) && 
 /* 246 */           (layoutParams.width != -1))
-/*     */         {
-/*     */           ViewGroup.LayoutParams tmp444_443 = layoutParams; tmp444_443.width = ((int)(tmp444_443.width * scaleX));
-/*     */         }
+/*     */ {
+/*     */
+				ViewGroup.LayoutParams tmp444_443 = layoutParams;
+				tmp444_443.width = ((int) (tmp444_443.width * scaleX));
+/*     */
+			}
 /*     */ 
-/* 254 */         if ((layoutParams.height != -2) &&
+/* 254 */
+			if ((layoutParams.height != -2) &&
 /* 255 */           (layoutParams.height != -1) && 
 /* 256 */           (layoutParams.height != -1))
-/*     */         {
-/*     */           ViewGroup.LayoutParams tmp483_482 = layoutParams; tmp483_482.height = ((int)(tmp483_482.height * scaleY));
-/*     */         }
-/*     */       }
+/*     */ {
+/*     */
+				ViewGroup.LayoutParams tmp483_482 = layoutParams;
+				tmp483_482.height = ((int) (tmp483_482.height * scaleY));
+/*     */
+			}
+		}
 /*     */     }
 /*     */     else {
 /* 262 */       if ((layoutParams.width != -2) &&

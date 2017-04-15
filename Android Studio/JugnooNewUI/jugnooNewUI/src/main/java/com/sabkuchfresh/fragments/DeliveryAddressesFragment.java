@@ -183,29 +183,6 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         scrollViewSuggestions.setVisibility(View.VISIBLE);
 
         listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
-        try {
-            savedPlacesAdapter = new SavedPlacesAdapter(activity, homeUtil.getSavedPlacesWithHomeWork(activity), new SavedPlacesAdapter.Callback() {
-                @Override
-                public void onItemClick(SearchResult searchResult) {
-                    if(searchResult.getIsConfirmed() == 1){
-                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                        if(activity instanceof FreshActivity) {
-                            GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
-                        }
-                    } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, searchResult.getPlaceRequestCode(), true);
-                    }
-                }
-
-				@Override
-				public void onDeleteClick(SearchResult searchResult) {
-				}
-			}, true, true, false);
-            listViewSavedLocations.setAdapter(savedPlacesAdapter);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
         RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
@@ -213,6 +190,30 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             scrollViewSuggestions.setVisibility(View.VISIBLE);
             paramsRL.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
             paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+            try {
+                savedPlacesAdapter = new SavedPlacesAdapter(activity, homeUtil.getSavedPlacesWithHomeWork(activity), new SavedPlacesAdapter.Callback() {
+                    @Override
+                    public void onItemClick(SearchResult searchResult) {
+                        if(searchResult.getIsConfirmed() == 1){
+                            onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+                                    searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+                            if(activity instanceof FreshActivity) {
+                                GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
+                            }
+                        } else {
+                            goToPredefinedSearchResultConfirmation(searchResult, searchResult.getPlaceRequestCode(), true);
+                        }
+                    }
+
+                    @Override
+                    public void onDeleteClick(SearchResult searchResult) {
+                    }
+                }, true, true, false);
+                listViewSavedLocations.setAdapter(savedPlacesAdapter);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             try {
                 listViewSavedLocations.setVisibility(View.VISIBLE);
                 listViewRecentAddresses.setVisibility(View.VISIBLE);
@@ -237,6 +238,9 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            setSavedPlaces();
+            getApiFetchUserAddress().hit(true);
         }
         else if(activity instanceof AddPlaceActivity){
             listViewRecentAddresses.setVisibility(View.GONE);
@@ -248,8 +252,6 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         rlMarkerPin.setLayoutParams(paramsRL);
         bNext.setLayoutParams(paramsB);
 
-        setSavedPlaces();
-        getApiFetchUserAddress().hit(true);
 
 
         mGoogleApiClient = new GoogleApiClient

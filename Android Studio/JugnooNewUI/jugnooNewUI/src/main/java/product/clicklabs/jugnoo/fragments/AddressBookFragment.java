@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -46,6 +47,7 @@ public class AddressBookFragment extends Fragment {
 	private SavedPlacesAdapter savedPlacesAdapterRecent;
 
 	private Button bAddNewAddress;
+	private ScrollView scrollView;
 
 	private View rootView;
     private FragmentActivity activity;
@@ -75,6 +77,7 @@ public class AddressBookFragment extends Fragment {
 		textViewSavedAddresses = (TextView) rootView.findViewById(R.id.textViewSavedAddresses); textViewSavedAddresses.setTypeface(Fonts.mavenMedium(activity));
 		cardViewAddresses = (CardView) rootView.findViewById(R.id.cardViewAddresses);
 		bAddNewAddress = (Button) rootView.findViewById(R.id.bAddNewAddress);
+		scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
 
 		listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
 		try {
@@ -147,6 +150,7 @@ public class AddressBookFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		setSavedPlaces();
+		scrollView.scrollTo(0, 0);
 	}
 
 	@Override

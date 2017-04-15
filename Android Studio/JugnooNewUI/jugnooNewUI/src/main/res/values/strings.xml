@@ -1644,6 +1644,10 @@
     <string name="enter_email_id">Enter Email ID</string>
     <string name="unable_to_fetch_address">Unable to fetch current address at the moment</string>
     <string name="plus_add_new_address">+ Add New Address</string>
+    <string name="address_details">Address Details</string>
+    <string name="label_sample">Label e.g. Hospital / Friend’s Home</string>
+    <string name="flat_number_hint">Flat Number/ House No./ Apt Name</string>
+    <string name="landmark">Landmark</string>
 
 
 </resources>

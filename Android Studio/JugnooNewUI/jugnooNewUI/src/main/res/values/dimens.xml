@@ -599,6 +599,9 @@
     <dimen name="dp_14">
         14dp
     </dimen>
+    <dimen name="dp_264">
+        264dp
+    </dimen>
 
 
 </resources>
