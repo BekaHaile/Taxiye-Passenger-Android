@@ -867,7 +867,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     activity.startActivity(intent);
                                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                 } else{
-                                    DialogPopup.alertPopup(activity, "", message);
+                                    Utils.showToast(AccountActivity.this, message);
                                     reloadProfileAPI(activity);
                                 }
                             } else {

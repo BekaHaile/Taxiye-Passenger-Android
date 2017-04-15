@@ -1144,7 +1144,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(getResources().getString(R.string.fresh));
+                topBar.title.setText(getResources().getString(R.string.fatafat));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
 
@@ -1156,7 +1156,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 rlSort.setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(getResources().getString(R.string.fresh));
+                topBar.title.setText(getResources().getString(R.string.fatafat));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
 

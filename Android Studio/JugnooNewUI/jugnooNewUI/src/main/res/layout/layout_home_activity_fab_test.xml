@@ -83,7 +83,7 @@
             fab:fab_colorNormal="@color/green_fresh_fab"
             fab:fab_colorPressed="@color/green_fresh_fab_pressed"
             fab:fab_colorRipple="@color/green_fresh_fab_pressed"
-            fab:fab_label="Fresh"
+            fab:fab_label="@string/fatafat"
             fab:fab_shadowColor="@color/black_50"
             fab:fab_shadowXOffset="1dp"
             fab:fab_shadowYOffset="2dp"
