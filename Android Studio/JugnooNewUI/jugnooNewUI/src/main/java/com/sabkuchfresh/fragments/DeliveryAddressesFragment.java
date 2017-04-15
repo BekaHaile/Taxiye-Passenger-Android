@@ -15,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -34,13 +32,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.sabkuchfresh.adapters.FreshAddressAdapterCallback;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 
@@ -65,6 +61,7 @@ import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -84,20 +81,15 @@ import retrofit.client.Response;
 /**
  * Created by ankit on 14/09/16.
  */
-public class DeliveryAddressesFragment extends Fragment implements FreshAddressAdapterCallback, GAAction,
+public class DeliveryAddressesFragment extends Fragment implements GAAction,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
     private View rootView;
     private Activity activity;
     protected Bus mBus;
     private NonScrollListView listViewRecentAddresses, listViewSavedLocations;
-    private LinearLayout cardViewSavedPlaces;
     private TextView textViewSavedPlaces, textViewRecentAddresses;
     private CoordinatorLayout linearLayoutMain;
-    private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork;
-    private TextView textViewAddHome, textViewAddHomeValue, textViewAddressUsedHome,
-            textViewAddWork, textViewAddWorkValue, textViewAddressUsedWork;
-    private ImageView imageViewSep;
     private GoogleApiClient mGoogleApiClient;
     private SearchListAdapter searchListAdapter;
     private ScrollView scrollViewSearch;
@@ -179,23 +171,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
         new ASSL(activity, linearLayoutMain, 1134, 720, false);
 
-        cardViewSavedPlaces = (LinearLayout) rootView.findViewById(R.id.cardViewSavedPlaces);
-        relativeLayoutAddHome = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddHome);
-        relativeLayoutAddWork = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddWork);
-        relativeLayoutAddHome.setMinimumHeight((int)(ASSL.Yscale() * 110f));
-        relativeLayoutAddWork.setMinimumHeight((int)(ASSL.Yscale() * 110f));
-        textViewAddHome = (TextView)rootView.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
-        textViewAddHomeValue = (TextView)rootView.findViewById(R.id.textViewAddHomeValue); textViewAddHomeValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewAddressUsedHome = (TextView) rootView.findViewById(R.id.textViewAddressUsedHome); textViewAddressUsedHome.setTypeface(Fonts.mavenRegular(activity));
-        textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
-        textViewAddWorkValue = (TextView)rootView.findViewById(R.id.textViewAddWorkValue); textViewAddWorkValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewAddressUsedWork = (TextView) rootView.findViewById(R.id.textViewAddressUsedWork); textViewAddressUsedWork.setTypeface(Fonts.mavenRegular(activity));
-        imageViewSep = (ImageView)rootView.findViewById(R.id.imageViewSep);
         scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
         scrollViewSearch.setVisibility(View.GONE);
         cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
         listViewRecentAddresses = (NonScrollListView) rootView.findViewById(R.id.listViewRecentAddresses);
-        cardViewSavedPlaces.setVisibility(View.GONE);
         textViewSavedPlaces = (TextView) rootView.findViewById(R.id.textViewSavedPlaces); textViewSavedPlaces.setTypeface(Fonts.mavenMedium(activity));
         textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
         textViewSavedPlaces.setVisibility(View.GONE);
@@ -205,7 +184,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
         listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
         try {
-            savedPlacesAdapter = new SavedPlacesAdapter(activity, Data.userData.getSearchResults(), new SavedPlacesAdapter.Callback() {
+            savedPlacesAdapter = new SavedPlacesAdapter(activity, homeUtil.getSavedPlacesWithHomeWork(activity), new SavedPlacesAdapter.Callback() {
                 @Override
                 public void onItemClick(SearchResult searchResult) {
                     if(searchResult.getIsConfirmed() == 1){
@@ -215,7 +194,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                             GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
                         }
                     } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
+                        goToPredefinedSearchResultConfirmation(searchResult, searchResult.getPlaceRequestCode(), true);
                     }
                 }
 
@@ -235,7 +214,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             paramsRL.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
             paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
             try {
-                cardViewSavedPlaces.setVisibility(View.VISIBLE);
+                listViewSavedLocations.setVisibility(View.VISIBLE);
                 listViewRecentAddresses.setVisibility(View.VISIBLE);
                 savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
 					@Override
@@ -255,23 +234,23 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 				}, true, true, false);
 
                 listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
-
-                setSavedPlaces();
-
-                getApiFetchUserAddress().hit(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         else if(activity instanceof AddPlaceActivity){
             listViewRecentAddresses.setVisibility(View.GONE);
-            cardViewSavedPlaces.setVisibility(View.GONE);
+            listViewSavedLocations.setVisibility(View.GONE);
             scrollViewSuggestions.setVisibility(View.GONE);
             paramsRL.setMargins(0, 0, 0, 0);
             paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
         }
         rlMarkerPin.setLayoutParams(paramsRL);
         bNext.setLayoutParams(paramsB);
+
+        setSavedPlaces();
+        getApiFetchUserAddress().hit(true);
+
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(activity)
@@ -280,42 +259,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
-        relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-                    final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-                    if(searchResult.getIsConfirmed() == 1){
-                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                    } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        relativeLayoutAddWork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-                    final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-                    if(searchResult.getIsConfirmed() == 1){
-                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                    } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
 
         boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
@@ -607,13 +550,13 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 freshActivity.setEditThisAddress(editThisAddress);
                 freshActivity.setDeliveryAddressToEdit(null);
 			}
-            setAddressToBundle(searchResult.getAddress(), searchResult.getLatitude(), searchResult.getLongitude(), searchResult.getPlaceId());
+            setAddressToBundleAndOpenAddressForm(searchResult.getAddress(), searchResult.getLatitude(), searchResult.getLongitude(), searchResult.getPlaceId());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setAddressToBundle(String addressRes, double latitude, double longitude, String placeId){
+    private void setAddressToBundleAndOpenAddressForm(String addressRes, double latitude, double longitude, String placeId){
         try {
             current_street = "";
             current_route = "";
@@ -666,69 +609,17 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     private void setSavedPlaces() {
         int savedPlaces = 0;
-        if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
-            String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-            SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-            textViewAddHome.setText(getResources().getString(R.string.home));
-            textViewAddHomeValue.setVisibility(View.VISIBLE);
-            textViewAddHomeValue.setText(searchResult.getAddress());
-            textViewAddressUsedHome.setVisibility(View.GONE);
-            if(searchResult.getFreq() > 0){
-                textViewAddressUsedHome.setVisibility(View.VISIBLE);
-                if(searchResult.getFreq() <= 1){
-                    textViewAddressUsedHome.setText(activity.getString(R.string.address_used_one_time_format,
-                            String.valueOf(searchResult.getFreq())));
-                } else{
-                    textViewAddressUsedHome.setText(activity.getString(R.string.address_used_multiple_time_format,
-                            String.valueOf(searchResult.getFreq())));
-                }
-            }
-            savedPlaces++;
-        } else{
-            relativeLayoutAddHome.setVisibility(View.GONE);
-            textViewAddHome.setText(getResources().getString(R.string.add_home));
-            textViewAddHomeValue.setVisibility(View.GONE);
-            imageViewSep.setVisibility(View.GONE);
-            textViewAddressUsedHome.setVisibility(View.GONE);
-        }
-
-        if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
-            String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-            SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-            textViewAddWork.setText(getResources().getString(R.string.work));
-            textViewAddWorkValue.setVisibility(View.VISIBLE);
-            textViewAddWorkValue.setText(searchResult.getAddress());
-            textViewAddressUsedWork.setVisibility(View.GONE);
-            if(searchResult.getFreq() > 0){
-                textViewAddressUsedWork.setVisibility(View.VISIBLE);
-                if(searchResult.getFreq() <= 1){
-                    textViewAddressUsedWork.setText(activity.getString(R.string.address_used_one_time_format,
-                            String.valueOf(searchResult.getFreq())));
-                } else {
-                    textViewAddressUsedWork.setText(activity.getString(R.string.address_used_multiple_time_format,
-                            String.valueOf(searchResult.getFreq())));
-                }
-            }
-            savedPlaces++;
-        } else{
-            relativeLayoutAddWork.setVisibility(View.GONE);
-            textViewAddWork.setText(getResources().getString(R.string.add_work));
-            textViewAddWorkValue.setVisibility(View.GONE);
-            imageViewSep.setVisibility(View.GONE);
-            textViewAddressUsedWork.setVisibility(View.GONE);
-        }
         if(savedPlacesAdapter != null) {
-            savedPlacesAdapter.notifyDataSetChanged();
-            savedPlaces = savedPlaces + Data.userData.getSearchResults().size();
+            savedPlacesAdapter.setList(homeUtil.getSavedPlacesWithHomeWork(activity));
+            savedPlaces = savedPlacesAdapter.getCount();
         }
         if(savedPlaces > 0) {
             textViewSavedPlaces.setVisibility(View.VISIBLE);
-            cardViewSavedPlaces.setVisibility(View.VISIBLE);
+            listViewSavedLocations.setVisibility(View.VISIBLE);
         } else {
             textViewSavedPlaces.setVisibility(View.GONE);
-            cardViewSavedPlaces.setVisibility(View.GONE);
+            listViewSavedLocations.setVisibility(View.GONE);
         }
-
 
         if(savedPlacesAdapterRecent != null) {
             savedPlacesAdapterRecent.notifyDataSetChanged();
@@ -742,23 +633,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         }
     }
 
-    @Override
-    public void onSlotSelected(int position, DeliveryAddress slot) {
-        onAddressSelected(slot.getDeliveryLatitude(), slot.getDeliveryLongitude(), slot.getLastAddress(), 0, "");
-    }
-
-    @Override
-    public void onEditClick(int position, DeliveryAddress slot) {
-        if(activity instanceof FreshActivity) {
-            FreshActivity freshActivity = (FreshActivity) activity;
-            freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-            freshActivity.setSearchResult(null);
-            freshActivity.setEditThisAddress(false);
-            freshActivity.setDeliveryAddressToEdit(slot);
-            setAddressToBundle(slot.getLastAddress(), Double.parseDouble(slot.getDeliveryLatitude()),
-                    Double.parseDouble(slot.getDeliveryLongitude()), "");
-        }
-    }
 
     private void onAddressSelected(String latitude, String longitude, String address, int addressId, String type){
         if(activity instanceof FreshActivity) {
@@ -882,5 +756,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     }
 
     private boolean mapSettledCanForward = false;
+    private HomeUtil homeUtil = new HomeUtil();
 
 }

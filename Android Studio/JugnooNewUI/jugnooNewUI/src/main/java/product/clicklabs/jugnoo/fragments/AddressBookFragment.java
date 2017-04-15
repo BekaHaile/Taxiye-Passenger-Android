@@ -159,7 +159,7 @@ public class AddressBookFragment extends Fragment {
 
 	private void setSavedPlaces() {
 		try {
-			savedPlacesAdapter.notifyDataSetChanged();
+			savedPlacesAdapter.setList(homeUtil.getSavedPlacesWithHomeWork(activity));
 
 			if (savedPlacesAdapter.getCount() == 0) {
 				textViewSavedAddresses.setVisibility(View.GONE);
@@ -187,9 +187,9 @@ public class AddressBookFragment extends Fragment {
 
 	private void onSavedLocationEdit(SearchResult searchResult){
 		Intent intent = new Intent(activity, AddPlaceActivity.class);
-		intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+		intent.putExtra(Constants.KEY_REQUEST_CODE, searchResult.getPlaceRequestCode());
 		intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
-		startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+		startActivityForResult(intent, searchResult.getPlaceRequestCode());
 		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 
@@ -229,7 +229,7 @@ public class AddressBookFragment extends Fragment {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						hitApiAddHomeWorkAddress(searchResult, true, 0, true, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+						hitApiAddHomeWorkAddress(searchResult, true, 0, true, searchResult.getPlaceRequestCode());
 					}
 				},
 				new View.OnClickListener() {
@@ -247,7 +247,6 @@ public class AddressBookFragment extends Fragment {
 			apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(activity, new ApiAddHomeWorkAddress.Callback() {
 				@Override
 				public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
-					savedPlacesAdapter.setList(homeUtil.getSavedPlacesWithHomeWork(activity));
 					setSavedPlaces();
 				}
 
