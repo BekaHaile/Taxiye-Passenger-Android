@@ -238,7 +238,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 }
 
-            }, false, false);
+                @Override
+                public void onDeleteClick(SearchResult searchResult) {
+                }
+            }, false, false, false);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1180,9 +1183,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     }
 
 
+    private TransactionUtils transactionUtils = new TransactionUtils();
+
     public void openAddressBookFragment(FragmentActivity activity, View container, boolean addFrag) {
         if(addFrag) {
-            if (!new TransactionUtils().checkIfFragmentAdded(activity, AddressBookFragment.class.getName())) {
+            if(transactionUtils.checkIfFragmentAdded(activity, AddressBookFragment.class.getName())){
+                activity.getSupportFragmentManager().popBackStack();
+            }
+            if (!transactionUtils.checkIfFragmentAdded(activity, AddressBookFragment.class.getName())) {
                 FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
                 transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                         .add(container.getId(), new AddressBookFragment(),

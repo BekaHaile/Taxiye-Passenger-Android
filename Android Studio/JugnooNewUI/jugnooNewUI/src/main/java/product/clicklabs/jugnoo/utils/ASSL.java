@@ -184,7 +184,7 @@ import android.widget.TextView;
 /*     */         }
 /*     */ 
 /*     */       }
-/*     */       else
+/*     */       else if (!rootLayout.getTag().toString().equals("DontTouchMe"))
 /*     */       {
 /* 244 */         if ((layoutParams.width != -2) &&
 /* 245 */           (layoutParams.width != -1) && 

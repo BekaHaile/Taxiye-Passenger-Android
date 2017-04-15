@@ -219,7 +219,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     }
                 }
 
-            }, true, true);
+				@Override
+				public void onDeleteClick(SearchResult searchResult) {
+				}
+			}, true, true, false);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -246,7 +249,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 						}
 					}
 
-				}, true, true);
+					@Override
+					public void onDeleteClick(SearchResult searchResult) {
+					}
+				}, true, true, false);
 
                 listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 

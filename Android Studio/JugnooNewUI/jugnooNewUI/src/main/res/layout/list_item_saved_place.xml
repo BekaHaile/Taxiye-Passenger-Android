@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relative"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:tag="mwar"
-    android:splitMotionEvents="false"
+<RelativeLayout android:id="@+id/relative"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_white_menu_item_selector_color_selector"
+                android:paddingRight="20px"
+                android:splitMotionEvents="false"
+                android:tag="mwar"
     >
 
     <ImageView
@@ -15,22 +16,22 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="30px"
         android:src="@drawable/ic_work"
-        android:visibility="visible"
-        android:tag="mwar" />
+        android:tag="mwar"
+        android:visibility="visible"/>
 
     <LinearLayout
         android:id="@+id/linearLayoutContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20px"
-        android:layout_marginRight="30px"
-        android:layout_marginTop="20px"
-        android:layout_marginBottom="20px"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:splitMotionEvents="false"
         android:layout_centerVertical="true"
+        android:layout_marginBottom="20px"
+        android:layout_marginLeft="20px"
+        android:layout_marginTop="20px"
+        android:layout_toLeftOf="@+id/ivDeleteAddress"
         android:layout_toRightOf="@+id/imageViewType"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
         >
 
         <TextView
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="Name"
             android:textColor="@color/text_color_light_selector"
-            android:textSize="@dimen/text_size_32" />
+            android:textSize="@dimen/text_size_32"/>
 
         <TextView
             android:id="@+id/textViewSearchAddress"
@@ -65,13 +66,25 @@
 
 
     <ImageView
+        android:id="@+id/ivDeleteAddress"
+        android:tag="mwar"
+        android:layout_width="@dimen/px_64"
+        android:layout_height="@dimen/px_70"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/px_20"
+        android:src="@drawable/ic_delete_address"
+        android:visibility="visible"
+        />
+
+    <ImageView
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_marginLeft="40px"
-        android:layout_marginRight="40px"
-        android:background="@color/stroke_color_light"
         android:layout_below="@+id/linearLayoutContent"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="20px"
+        android:background="@color/stroke_color_light"
         />
 
 </RelativeLayout>
