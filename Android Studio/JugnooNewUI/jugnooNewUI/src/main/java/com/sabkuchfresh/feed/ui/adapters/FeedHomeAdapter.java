@@ -298,7 +298,6 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
          //SetAddress
             holder.tvFeedAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
-            holder.shadowAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
             holder.tvFeedAddress.setText(restaurantAddress);
 
 
@@ -770,8 +769,6 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
         @Bind(R.id.tabDots)
         TabLayout tabDots;
-        @Bind(R.id.shadow_address)
-         View shadowAddress  ;
         @Bind(R.id.layout_actual_post)
         RelativeLayout layoutActualPost;
         @Bind(R.id.layout_comment)

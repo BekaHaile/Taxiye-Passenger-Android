@@ -23,6 +23,7 @@ import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
+import com.sabkuchfresh.feed.ui.textwatchers.HandleTextWatcher;
 
 import java.util.HashMap;
 
@@ -60,24 +61,19 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed_claim_handle, container, false);
         ButterKnife.bind(this, rootView);
-        edtClaimHandle.addTextChangedListener(new TextWatcher() {
+        edtClaimHandle.setEnabled(false);
+        edtClaimHandle.addTextChangedListener(new HandleTextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            public void enableSubmitButton(boolean isEnable) {
+                btnReserveSpot.setEnabled(isEnable);
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChange() {
                 if (edtClaimHandle.isSelected()) {
                     edtClaimHandle.setSelected(false);
                     tvError.setVisibility(View.INVISIBLE);
                 }
-
             }
         });
 

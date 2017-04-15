@@ -907,6 +907,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (FeedHomeFragment) getSupportFragmentManager().findFragmentByTag(FeedHomeFragment.class.getName());
     }
 
+    public FeedNotificationsFragment getFeedNotificationsFragment(){
+        return (FeedNotificationsFragment) getSupportFragmentManager().findFragmentByTag(FeedNotificationsFragment.class.getName());
+    }
+
     public FeedReserveSpotFragment getFeedReserveSpotFragment(){
         return (FeedReserveSpotFragment) getSupportFragmentManager().findFragmentByTag(FeedReserveSpotFragment.class.getName());
     }

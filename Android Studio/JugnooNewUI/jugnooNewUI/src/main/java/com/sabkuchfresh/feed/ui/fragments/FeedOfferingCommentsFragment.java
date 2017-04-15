@@ -472,7 +472,16 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                     if (activity.getFeedHomeFragment() != null) {
                         //notifies the feed home fragment that user has deleted the post
                         activity.onBackPressed();
-                        activity.getFeedHomeFragment().notifyOnDelete(positionInOriginalList);
+                        if(positionInOriginalList==-1){
+                            activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
+                            if(activity.getFeedNotificationsFragment()!=null){
+                                activity.getFeedNotificationsFragment().fetchFeedNotifications();
+                            }
+
+                        }else{
+                            activity.getFeedHomeFragment().notifyOnDelete(positionInOriginalList);
+                        }
+
 
                     }
                 }

@@ -217,14 +217,14 @@
     <!--android:drawableLeft="@drawable/location_icon"-->
 
 
-    <View
+   <!-- <View
         android:id="@+id/shadow_address"
         android:layout_width="match_parent"
         android:layout_height="22dp"
         android:layout_alignTop="@id/vpReviewImages"
 
         android:background="@drawable/shadow_down_feed"
-        />
+        />-->
 
 
     <TextView
@@ -233,10 +233,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/iv_place_image"
-        android:layout_marginLeft="@dimen/spacing_small"
-        android:layout_marginTop="@dimen/spacing_small"
         android:drawablePadding="@dimen/spacing_tiny"
         android:gravity="center"
+        android:paddingLeft="@dimen/spacing_small"
+        android:paddingTop="8dp"
+        android:paddingBottom="@dimen/spacing_tiny"
+        android:paddingRight="13dp"
+        android:background="@drawable/bg_black_80_botom_right_rounded"
         android:drawableLeft="@drawable/location_icon"
         android:maxLines="1"
         android:maxWidth="250dp"
