@@ -105,6 +105,9 @@ public class PromoCouponsAdapter extends BaseAdapter {
 			} else {
 				holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
 			}
+
+			holder.relative.setBackgroundResource(promoCoupon.getIsValid() == 1 ?
+					R.drawable.bg_transparent_menu_item_selector : R.drawable.bg_menu_item_selector_color);
 		}
 
 		holder.textViewTNC.setOnClickListener(new View.OnClickListener() {

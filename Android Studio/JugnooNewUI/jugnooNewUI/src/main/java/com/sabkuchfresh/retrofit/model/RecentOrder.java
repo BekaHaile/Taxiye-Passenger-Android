@@ -169,6 +169,9 @@ public class RecentOrder {
     }
 
     public Integer getShowLiveTracking() {
+        if(showLiveTracking == null){
+            showLiveTracking = 0;
+        }
         return showLiveTracking;
     }
 
@@ -177,6 +180,9 @@ public class RecentOrder {
     }
 
     public Integer getDeliveryId() {
+        if(deliveryId == null){
+            deliveryId = 0;
+        }
         return deliveryId;
     }
 
