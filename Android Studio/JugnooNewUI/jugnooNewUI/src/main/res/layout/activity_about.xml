@@ -47,11 +47,21 @@
                 android:layout_height="120px"
                 android:background="@drawable/background_white_yellow_selector" >
 
+                <ImageView
+                    android:id="@+id/ivRateUs"
+                    android:layout_width="43px"
+                    android:layout_height="43px"
+                    android:src="@drawable/ic_about_rateus"
+                    android:layout_marginLeft="@dimen/px_36"
+                    android:layout_centerVertical="true"
+                    android:tag="mwar"/>
+
                 <TextView
                     android:id="@+id/textViewRateUs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/ivRateUs"
                     android:layout_marginLeft="30px"
                     android:text="Rate us on Play Store"
                     android:textColor="@color/text_color"
@@ -76,12 +86,22 @@
                 android:layout_height="120px"
                 android:background="@drawable/background_white_yellow_selector" >
 
+                <ImageView
+                    android:id="@+id/ivLikeUs"
+                    android:layout_width="42px"
+                    android:layout_height="40px"
+                    android:src="@drawable/ic_about_like"
+                    android:layout_marginLeft="@dimen/px_36"
+                    android:layout_centerVertical="true"
+                    android:tag="mwar"/>
+
                 <TextView
                     android:id="@+id/textViewLikeUs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
+                    android:layout_toRightOf="@+id/ivLikeUs"
                     android:text="Like us on Facebook"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
@@ -104,12 +124,22 @@
                 android:layout_height="120px"
                 android:background="@drawable/background_white_yellow_selector" >
 
+                <ImageView
+                    android:id="@+id/ivTNC"
+                    android:layout_width="40px"
+                    android:layout_height="43px"
+                    android:src="@drawable/ic_about_tnc"
+                    android:layout_marginLeft="@dimen/px_36"
+                    android:layout_centerVertical="true"
+                    android:tag="mwar"/>
+
                 <TextView
                     android:id="@+id/textViewTNC"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
+                    android:layout_toRightOf="@+id/ivTNC"
                     android:text="Terms and Conditions"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
@@ -132,12 +162,22 @@
                 android:layout_height="120px"
                 android:background="@drawable/background_white_yellow_selector" >
 
+                <ImageView
+                    android:id="@+id/ivPrivacy"
+                    android:layout_width="34px"
+                    android:layout_height="46px"
+                    android:src="@drawable/ic_about_privacy"
+                    android:layout_marginLeft="@dimen/px_36"
+                    android:layout_centerVertical="true"
+                    android:tag="mwar"/>
+
                 <TextView
                     android:id="@+id/textViewPrivacy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
+                    android:layout_toRightOf="@+id/ivPrivacy"
                     android:text="Privacy Policy"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
@@ -160,12 +200,22 @@
                 android:layout_height="120px"
                 android:background="@drawable/background_white_yellow_selector" >
 
+                <ImageView
+                    android:id="@+id/ivAbout"
+                    android:layout_width="43px"
+                    android:layout_height="43px"
+                    android:src="@drawable/ic_about_who_we_are"
+                    android:layout_marginLeft="@dimen/px_36"
+                    android:layout_centerVertical="true"
+                    android:tag="mwar"/>
+
                 <TextView
                     android:id="@+id/textViewAbout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
+                    android:layout_toRightOf="@+id/ivAbout"
                     android:text="@string/who_are_we"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
