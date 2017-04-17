@@ -67,7 +67,7 @@ public class FeedNotificationsAdapter extends RecyclerView.Adapter<FeedNotificat
             holder.tvNotificationTime.setText(FeedHomeAdapter.getTimeToDisplay(datum.getUpdatedAt(), activity.isTimeAutomatic));
 
             if(datum.isRead()){
-                holder.relative.setBackgroundResource(R.drawable.bg_transp_menu_color_selector);
+                holder.relative.setBackgroundResource(R.drawable.bg_white_menu_color_selector);
             } else {
                 holder.relative.setBackgroundResource(R.drawable.bg_pale_orange_menu_color_selector);
             }

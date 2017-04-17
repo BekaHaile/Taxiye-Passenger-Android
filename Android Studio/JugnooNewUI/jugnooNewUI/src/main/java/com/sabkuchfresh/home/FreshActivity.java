@@ -1426,14 +1426,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
 
+            feedHomeAddPostView.setVisibility(View.GONE);
             topBar.title.setLayoutParams(titleLayoutParams);
             setCollapsingToolbar(fragment instanceof VendorMenuFragment, fragment);
 
 
-            if(fragment instanceof FeedHomeFragment)
-                feedHomeAddPostView.setVisibility(View.VISIBLE);
-            else
-                feedHomeAddPostView.setVisibility(View.GONE);
+
 
         } catch (Exception e) {
             e.printStackTrace();
