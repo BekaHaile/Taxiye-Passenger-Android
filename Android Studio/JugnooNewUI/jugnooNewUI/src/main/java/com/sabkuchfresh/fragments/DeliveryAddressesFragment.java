@@ -446,11 +446,13 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             ((FreshActivity) activity).fragmentUISetup(this);
             setSavedPlaces();
             tvDeliveryAddress.setVisibility(View.VISIBLE);
+            ((FreshActivity)activity).getTopBar().imageViewDelete.setVisibility(View.GONE);
         } else if(!hidden && (activity instanceof AddPlaceActivity)){
             AddPlaceActivity addPlaceActivity = (AddPlaceActivity)activity;
             addPlaceActivity.getTextViewTitle().setVisibility(View.GONE);
             addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.VISIBLE);
             tvDeliveryAddress.setVisibility(View.VISIBLE);
+            ((AddPlaceActivity)activity).getImageViewDelete().setVisibility(View.GONE);
         } else if(hidden){
             progressWheelDeliveryAddressPin.setVisibility(View.GONE);
             tvDeliveryAddress.setVisibility(View.GONE);

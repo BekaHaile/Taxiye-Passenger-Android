@@ -248,10 +248,10 @@ public class AddToAddressBookFragment extends Fragment {
 
     private void setDataToUI(){
 
-        textViewAddress.setText(current_street+", "
-                +current_route+", "
-                +current_area+", "
-                +current_city+", "
+        textViewAddress.setText(current_street+(TextUtils.isEmpty(current_street)?"":", ")
+                +current_route+(TextUtils.isEmpty(current_route)?"":", ")
+                +current_area+(TextUtils.isEmpty(current_area)?"":", ")
+                +current_city+(TextUtils.isEmpty(current_city)?"":", ")
                 +current_pincode);
 
         int placeRequestCode = 0;
@@ -369,16 +369,6 @@ public class AddToAddressBookFragment extends Fragment {
             editTextLabel.setError("Required field");
             return false;
         }
-        else if(editTextFlatNumber.getText().toString().trim().length() == 0) {
-            editTextFlatNumber.requestFocus();
-            editTextFlatNumber.setError("Required field");
-            return false;
-        }
-        else if(editTextLandmark.getText().toString().trim().length() == 0) {
-            editTextLandmark.requestFocus();
-            editTextLandmark.setError("Required field");
-            return false;
-        }
         return true;
     }
 
@@ -388,83 +378,72 @@ public class AddToAddressBookFragment extends Fragment {
     public boolean checkFields() {
         try {
             String label = editTextLabel.getText().toString().trim();
-            String flatNo = editTextFlatNumber.getText().toString().trim();
-            String landMark = editTextLandmark.getText().toString().trim();
-
-            if(editTextFlatNumber.length() == 0 && editTextFlatNumber.length() == 0) {
-                Utils.showToast(activity, "Please fill flat/house number");
-                return false;
-            } else if(editTextLandmark.length() == 0 && editTextLandmark.length() == 0) {
-                Utils.showToast(activity, "Please fill nearby landmark");
-                return false;
-            } else {
-                boolean editThisAddress;
-                int selfId = -1;
-                if(activity instanceof AddPlaceActivity){
-                    editThisAddress = ((AddPlaceActivity)activity).isEditThisAddress();
-                    if(editThisAddress){
-                        selfId = ((AddPlaceActivity)activity).getSearchResult().getId();
-                    }
-                } else if(activity instanceof FreshActivity){
-                    editThisAddress = ((FreshActivity)activity).isEditThisAddress();
-                    if(editThisAddress){
-                        selfId = ((FreshActivity)activity).getSearchResult().getId();
-                    }
+            boolean editThisAddress;
+            int selfId = -1;
+            if (activity instanceof AddPlaceActivity) {
+                editThisAddress = ((AddPlaceActivity) activity).isEditThisAddress();
+                if (editThisAddress) {
+                    selfId = ((AddPlaceActivity) activity).getSearchResult().getId();
                 }
-
-                boolean labelMatched = false;
-                int newId = -1;
-                String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-                if(!TextUtils.isEmpty(workString)){
-                    SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-                    if(searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)){
-                        labelMatched = true;
-                        newId = searchResult.getId();
-                    }
+            } else if (activity instanceof FreshActivity) {
+                editThisAddress = ((FreshActivity) activity).isEditThisAddress();
+                if (editThisAddress) {
+                    selfId = ((FreshActivity) activity).getSearchResult().getId();
                 }
-
-                String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-                if(!TextUtils.isEmpty(homeString)){
-                    SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-                    if(searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)){
-                        labelMatched = true;
-                        newId = searchResult.getId();
-                    }
-                }
-
-                if(Data.userData != null) {
-                    for (SearchResult searchResult : Data.userData.getSearchResults()) {
-                        if(searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)){
-                            labelMatched = true;
-                            newId = searchResult.getId();
-                            break;
-                        }
-                    }
-                }
-
-                if(labelMatched){
-                    final int finalSelfId = selfId;
-                    final int finalNewId = newId;
-                    DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-                            activity.getString(R.string.address_label_matched_message_format, label),
-                            activity.getString(R.string.yes), activity.getString(R.string.cancel),
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String localAddress = getAddressFromForm();
-                                    saveAddressFromForm(localAddress, finalSelfId, finalNewId);
-                                }
-                            },
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            }, false, false);
-                    return false;
-                }
-
             }
+
+            boolean labelMatched = false;
+            int newId = -1;
+            String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+            if (!TextUtils.isEmpty(workString)) {
+                SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+                if (searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)) {
+                    labelMatched = true;
+                    newId = searchResult.getId();
+                }
+            }
+
+            String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+            if (!TextUtils.isEmpty(homeString)) {
+                SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+                if (searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)) {
+                    labelMatched = true;
+                    newId = searchResult.getId();
+                }
+            }
+
+            if (Data.userData != null) {
+                for (SearchResult searchResult : Data.userData.getSearchResults()) {
+                    if (searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)) {
+                        labelMatched = true;
+                        newId = searchResult.getId();
+                        break;
+                    }
+                }
+            }
+
+            if (labelMatched) {
+                final int finalSelfId = selfId;
+                final int finalNewId = newId;
+                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+                        activity.getString(R.string.address_label_matched_message_format, label),
+                        activity.getString(R.string.yes), activity.getString(R.string.cancel),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String localAddress = getAddressFromForm();
+                                saveAddressFromForm(localAddress, finalSelfId, finalNewId);
+                            }
+                        },
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }, false, false);
+                return false;
+            }
+
 
             return true;
         } catch (Exception e) {
