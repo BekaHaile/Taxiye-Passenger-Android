@@ -441,6 +441,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			listViewSavedLocations.setAdapter(savedPlacesAdapter);
 			if(searchResults.size() > 0){
 				cardViewSavedPlaces.setVisibility(View.VISIBLE);
+				textViewSavedPlaces.setText(savedPlacesAdapter.getCount() == 1 ? R.string.saved_location : R.string.saved_locations);
 			} else {
 				cardViewSavedPlaces.setVisibility(View.GONE);
 			}
@@ -470,6 +471,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 			if (savedPlacesAdapterRecent.getCount() > 0) {
 				textViewRecentAddresses.setVisibility(View.VISIBLE);
+				textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
 			} else {
 				textViewRecentAddresses.setVisibility(View.GONE);
 			}

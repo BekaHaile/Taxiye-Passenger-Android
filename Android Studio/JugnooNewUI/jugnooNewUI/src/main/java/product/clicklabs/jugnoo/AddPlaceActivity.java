@@ -177,6 +177,10 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 	}
 
     public void performBackPressed(){
+        if(getTopFragment() instanceof DeliveryAddressesFragment && getDeliveryAddressesFragment().backWasConsumed()){
+            return;
+        }
+
         final AddToAddressBookFragment fragment = getAddToAddressBookFragment();
         if(fragment != null && fragment.locationEdited){
             DialogPopup.alertPopupTwoButtonsWithListeners(AddPlaceActivity.this, "",
@@ -397,5 +401,16 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 
     public TextView getTvDeliveryAddress(){
         return tvDeliveryAddress;
+    }
+
+    public Fragment getTopFragment() {
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
+            return fragmentManager.findFragmentByTag(fragmentTag);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

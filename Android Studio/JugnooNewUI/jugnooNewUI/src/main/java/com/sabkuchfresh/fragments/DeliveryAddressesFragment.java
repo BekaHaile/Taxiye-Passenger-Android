@@ -2,6 +2,7 @@ package com.sabkuchfresh.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -364,7 +365,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                             && ((AddPlaceActivity)activity).getSearchResult() != null){
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((AddPlaceActivity)activity).getSearchResult().getLatLng(), 14));
                     } else {
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
+                        if(activity instanceof FreshActivity){
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((FreshActivity)activity).getSelectedLatLng(), 14));
+                        } else {
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
+                        }
                     }
 
 
@@ -767,11 +772,20 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         }
     }
 
+    Handler handler = new Handler();
+
     @OnClick(R.id.bNext)
     void goToAddAddressFragment(){
         if(mapSettledCanForward) {
             if(tvDeliveryAddress.getVisibility() == View.GONE){
-
+                tvDeliveryAddress.setVisibility(View.VISIBLE);
+                Utils.hideSoftKeyboard(activity, editTextDeliveryAddress);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        goToAddAddressFragment();
+                    }
+                }, 600);
             } else {
                 if (activity instanceof FreshActivity) {
                     FreshActivity freshActivity = (FreshActivity) activity;
@@ -790,5 +804,19 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
     private boolean mapSettledCanForward = false;
     private HomeUtil homeUtil = new HomeUtil();
+
+    /**
+     *
+     * @return returns boolean true if back was consumed by fragment or false otherwise
+     */
+    public boolean backWasConsumed(){
+        if(scrollViewSearch.getVisibility() == View.VISIBLE){
+            scrollViewSearch.setVisibility(View.GONE);
+            tvDeliveryAddress.setVisibility(View.VISIBLE);
+            Utils.hideKeyboard(activity);
+            return true;
+        }
+        return false;
+    }
 
 }

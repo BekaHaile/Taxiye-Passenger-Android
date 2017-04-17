@@ -1932,6 +1932,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         }
 
+        if(getTopFragment() instanceof DeliveryAddressesFragment && getDeliveryAddressesFragment().backWasConsumed()){
+            return;
+        }
+
         checkForBackToFeed(true);
 
         if(getFeedSpotReservedSharingFragment() != null && getFeedReserveSpotFragment() != null){
@@ -3287,7 +3291,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {
                 SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
                 if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
                     setSearchResultToActVarsAndFetchData(searchResult, appType);
                 } else {
