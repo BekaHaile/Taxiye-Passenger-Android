@@ -180,6 +180,7 @@ public interface Constants {
     String KEY_NAME = "name";
     String KEY_TRIP_TOTAL = "trip_total";
     String KEY_OFFER_TEXT = "offer_text";
+    String KEY_DISPLAY_NAME = "display_name";
 
 
     String KEY_T20_WC_ENABLE = "t20_wc_enable";
@@ -379,6 +380,8 @@ public interface Constants {
     String KEY_MOBIKWIK_BALANCE = "mobikwik_balance";
     String KEY_PAYTM = "paytm";
     String KEY_MOBIKWIK = "mobikwik";
+    String KEY_RAZORPAY = "razorpay";
+    String KEY_UPI_RAZORPAY = "upi_razorpay";
     String KEY_BALANCE = "balance";
     String KEY_WALLET_TYPE = "wallet_type";
     String KEY_AMOUNT = "amount";

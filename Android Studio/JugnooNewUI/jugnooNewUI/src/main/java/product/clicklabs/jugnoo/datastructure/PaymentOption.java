@@ -9,7 +9,8 @@ public enum PaymentOption {
 
 
 	// payment gateway
-	RAZOR_PAY(6)
+	RAZOR_PAY(6),
+	UPI_RAZOR_PAY(7)
 	;
 
 	private int ordinal;

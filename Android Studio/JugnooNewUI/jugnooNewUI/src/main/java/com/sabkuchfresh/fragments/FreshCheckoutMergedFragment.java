@@ -1118,7 +1118,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 } else {
                     ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_selected);
                 }
-			} else {
+			} else if(activity.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY){
+                ivUPI.setImageResource(R.drawable.ic_radio_button_selected);
+            } else{
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
             }
             updateCartDataView();
@@ -1859,6 +1861,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutCash);
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()){
+                            linearLayoutWalletContainer.addView(rlOtherModesToPay);
+                            tvOtherModesToPay.setText(paymentModeConfigData.getDisplayName());
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()){
+                            linearLayoutWalletContainer.addView(rlUPI);
+                            tvUPI.setText(paymentModeConfigData.getDisplayName());
                         }
                     }
                 }
@@ -1872,7 +1880,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
 
             // for razorPay layout adding
-			ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
+			/*ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
 			if(paymentGatewayModeConfigs != null && paymentGatewayModeConfigs.size() > 0){
 				for(PaymentGatewayModeConfig modeConfig : paymentGatewayModeConfigs){
 					if(modeConfig.getEnabled()!= null && modeConfig.getEnabled() == 1){
@@ -1890,7 +1898,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         }
 					}
 				}
-			}
+			}*/
 
         } catch (Exception e){
             e.printStackTrace();
