@@ -171,6 +171,7 @@ public class AddressBookFragment extends Fragment {
 			} else {
 				textViewSavedAddresses.setVisibility(View.VISIBLE);
 				cardViewAddresses.setVisibility(View.VISIBLE);
+				textViewSavedAddresses.setText(savedPlacesAdapter.getCount() == 1 ? R.string.saved_location : R.string.saved_locations);
 			}
 
 
@@ -178,6 +179,7 @@ public class AddressBookFragment extends Fragment {
 			if (savedPlacesAdapterRecent.getCount() > 0) {
 				textViewRecentAddresses.setVisibility(View.VISIBLE);
 				cardViewRecentAddresses.setVisibility(View.VISIBLE);
+				textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
 			} else {
 				textViewRecentAddresses.setVisibility(View.GONE);
 				cardViewRecentAddresses.setVisibility(View.GONE);

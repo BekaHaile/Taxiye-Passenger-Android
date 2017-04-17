@@ -165,6 +165,9 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             tvDeliveryAddress = ((AddPlaceActivity)activity).getTvDeliveryAddress();
         }
 
+        if(editTextDeliveryAddress != null){
+            editTextDeliveryAddress.setText("");
+        }
 
 
         linearLayoutMain = (CoordinatorLayout) rootView.findViewById(R.id.linearLayoutMain);
@@ -184,12 +187,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
         listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
 
-        RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
-        RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
         if(activity instanceof FreshActivity) {
             scrollViewSuggestions.setVisibility(View.VISIBLE);
-            paramsRL.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
-            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
             try {
                 savedPlacesAdapter = new SavedPlacesAdapter(activity, homeUtil.getSavedPlacesWithHomeWork(activity), new SavedPlacesAdapter.Callback() {
                     @Override
@@ -246,11 +245,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             listViewRecentAddresses.setVisibility(View.GONE);
             listViewSavedLocations.setVisibility(View.GONE);
             scrollViewSuggestions.setVisibility(View.GONE);
-            paramsRL.setMargins(0, 0, 0, 0);
-            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
         }
-        rlMarkerPin.setLayoutParams(paramsRL);
-        bNext.setLayoutParams(paramsB);
+        setupMapAndButtonMargins();
 
 
 
@@ -417,6 +413,24 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
 
         return rootView;
+    }
+
+    private void setupMapAndButtonMargins(){
+        RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
+        RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
+        if(scrollViewSuggestions.getVisibility() == View.VISIBLE){
+            paramsRL.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
+            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+        } else {
+            paramsRL.setMargins(0, 0, 0, 0);
+            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
+        }
+        rlMarkerPin.setLayoutParams(paramsRL);
+        bNext.setLayoutParams(paramsB);
+        if(googleMap != null){
+            googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+                    activity.getResources().getDimensionPixelSize(R.dimen.dp_162) : 0);
+        }
     }
 
     @Override
@@ -619,17 +633,16 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
 
     private void setSavedPlaces() {
-        int savedPlaces = 0;
         if(savedPlacesAdapter != null) {
             savedPlacesAdapter.setList(homeUtil.getSavedPlacesWithHomeWork(activity));
-            savedPlaces = savedPlacesAdapter.getCount();
-        }
-        if(savedPlaces > 0) {
-            textViewSavedPlaces.setVisibility(View.VISIBLE);
-            listViewSavedLocations.setVisibility(View.VISIBLE);
-        } else {
-            textViewSavedPlaces.setVisibility(View.GONE);
-            listViewSavedLocations.setVisibility(View.GONE);
+            if(savedPlacesAdapter.getCount() > 0) {
+                textViewSavedPlaces.setVisibility(View.VISIBLE);
+                listViewSavedLocations.setVisibility(View.VISIBLE);
+                textViewSavedPlaces.setText(savedPlacesAdapter.getCount() == 1 ? R.string.saved_location : R.string.saved_locations);
+            } else {
+                textViewSavedPlaces.setVisibility(View.GONE);
+                listViewSavedLocations.setVisibility(View.GONE);
+            }
         }
 
         if(savedPlacesAdapterRecent != null) {
@@ -637,11 +650,16 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             if (savedPlacesAdapterRecent.getCount() > 0) {
                 textViewRecentAddresses.setVisibility(View.VISIBLE);
                 listViewRecentAddresses.setVisibility(View.VISIBLE);
+                textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
             } else {
                 textViewRecentAddresses.setVisibility(View.GONE);
                 listViewRecentAddresses.setVisibility(View.GONE);
             }
         }
+
+        scrollViewSuggestions.setVisibility((listViewSavedLocations.getVisibility() == View.GONE
+                && listViewRecentAddresses.getVisibility() == View.GONE) ? View.GONE : View.VISIBLE);
+        setupMapAndButtonMargins();
     }
 
 
@@ -752,14 +770,18 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     @OnClick(R.id.bNext)
     void goToAddAddressFragment(){
         if(mapSettledCanForward) {
-            if (activity instanceof FreshActivity) {
-                FreshActivity freshActivity = (FreshActivity) activity;
-                freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-                freshActivity.setSearchResult(null);
-                freshActivity.setEditThisAddress(false);
-                freshActivity.openAddToAddressBook(createAddressBundle(""));
-            } else if (activity instanceof AddPlaceActivity) {
-                ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle(""));
+            if(tvDeliveryAddress.getVisibility() == View.GONE){
+
+            } else {
+                if (activity instanceof FreshActivity) {
+                    FreshActivity freshActivity = (FreshActivity) activity;
+                    freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    freshActivity.setSearchResult(null);
+                    freshActivity.setEditThisAddress(false);
+                    freshActivity.openAddToAddressBook(createAddressBundle(""));
+                } else if (activity instanceof AddPlaceActivity) {
+                    ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle(""));
+                }
             }
         } else {
             Utils.showToast(activity, "Please wait...");

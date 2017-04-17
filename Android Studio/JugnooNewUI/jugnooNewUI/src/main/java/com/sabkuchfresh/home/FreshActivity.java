@@ -854,6 +854,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 }
+
+                SearchResult searchResultLastFMM = gson.fromJson(Prefs.with(this)
+                        .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+                if(searchResultLastFMM.getId() == null || searchResultLastFMM.getId() == 0){
+                    setSelectedAddressId(0);
+                    setSelectedAddressType("");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

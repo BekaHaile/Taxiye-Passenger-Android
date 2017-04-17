@@ -2299,38 +2299,38 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private boolean checkoutApiDoneOnce = false;
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
-        try {
-            if(!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType())) {
-                if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
-                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-                    activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
-                    activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
-                    try {
-                        activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
-                                Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
-                        activity.setRefreshCart(true);
-                        deliveryAddressUpdated = true;
-                        if(!checkoutApiDoneOnce) {
-                            activity.getHandler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getCheckoutDataAPI(selectedSubscription);
-                                }
-                            }, 500);
-                        }
-                        checkoutApiDoneOnce = true;
-                    } catch (Exception e) {
-                    }
-                } else {
-                    activity.setSelectedAddress("");
-                    activity.setSelectedLatLng(null);
-                    activity.setSelectedAddressId(0);
-                    activity.setSelectedAddressType("");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if(!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType())) {
+//                if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
+//                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+//                    activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
+//                    activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+//                    try {
+//                        activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
+//                                Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+//                        activity.setRefreshCart(true);
+//                        deliveryAddressUpdated = true;
+//                        if(!checkoutApiDoneOnce) {
+//                            activity.getHandler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    getCheckoutDataAPI(selectedSubscription);
+//                                }
+//                            }, 500);
+//                        }
+//                        checkoutApiDoneOnce = true;
+//                    } catch (Exception e) {
+//                    }
+//                } else {
+//                    activity.setSelectedAddress("");
+//                    activity.setSelectedLatLng(null);
+//                    activity.setSelectedAddressId(0);
+//                    activity.setSelectedAddressType("");
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {

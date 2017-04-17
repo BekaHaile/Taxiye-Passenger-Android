@@ -1776,6 +1776,9 @@ public class JSONParser implements Constants {
                 Prefs.with(context).save(SPLabels.ADD_WORK, "");
                 boolean homeSaved = false, workSaved = false;
                 Gson gson = new Gson();
+                SearchResult searchResultLastFMM = gson.fromJson(Prefs.with(context)
+                        .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+                boolean addressMatchedWithSaved = false;
                 for (int i = 0; i < addressResponse.getAddresses().size(); i++) {
                     FetchUserAddressResponse.Address address = addressResponse.getAddresses().get(i);
                     SearchResult searchResult = new SearchResult(address.getType(), address.getAddr(), address.getPlaceId(),
@@ -1804,6 +1807,18 @@ public class JSONParser implements Constants {
                         searchResult.setType(SearchResult.Type.RECENT);
                         Data.userData.getSearchResultsRecent().add(searchResult);
                     }
+                    if(searchResultLastFMM.getId() != null && searchResultLastFMM.getId() > 0){
+                        if((searchResult.getId() != null && searchResult.getId() > 0
+                                && searchResult.getId().equals(searchResultLastFMM.getId()))){
+                            addressMatchedWithSaved = true;
+                        }
+                    }
+                }
+
+                if(searchResultLastFMM.getId() != null && searchResultLastFMM.getId() > 0 && !addressMatchedWithSaved){
+                    searchResultLastFMM.setId(0);
+                    searchResultLastFMM.setName("");
+                    Prefs.with(context).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, gson.toJson(searchResultLastFMM, SearchResult.class));
                 }
 
                 if(Data.autoData.getUseRecentLocAtRequest() == 1) {
