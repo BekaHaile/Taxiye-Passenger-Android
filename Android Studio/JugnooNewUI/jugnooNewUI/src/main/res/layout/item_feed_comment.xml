@@ -16,7 +16,7 @@
     <LinearLayout
         android:id="@+id/ll_delete_comment"
         android:background="@color/feed_pink_delete"
-        android:layout_width="50dp"
+        android:layout_width="55dp"
         android:gravity="center"
         android:orientation="vertical"
         android:layout_height="match_parent">
