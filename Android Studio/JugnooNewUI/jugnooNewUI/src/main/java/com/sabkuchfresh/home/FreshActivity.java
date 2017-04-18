@@ -872,7 +872,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
                 // else if selected address is updated by user, updating address related local variables
                 // from SP search result
-                else if(searchResultLastFMM.getId() == getSelectedAddressId()){
+                else if(searchResultLastFMM.getId() > 0 && searchResultLastFMM.getId() == getSelectedAddressId()){
                     setSelectedLatLng(searchResultLastFMM.getLatLng());
                     setSelectedAddress(searchResultLastFMM.getAddress());
                     setSelectedAddressType(searchResultLastFMM.getName());

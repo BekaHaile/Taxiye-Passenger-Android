@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.utils.Utils;
 
 public class SearchResult {
@@ -113,7 +114,7 @@ public class SearchResult {
 		if(latitude != null && longitude != null) {
 			return new LatLng(latitude, longitude);
 		} else{
-			return new LatLng(0, 0);
+			return new LatLng(Data.latitude, Data.longitude);
 		}
 	}
 

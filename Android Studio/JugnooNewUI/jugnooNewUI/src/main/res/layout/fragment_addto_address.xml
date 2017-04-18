@@ -252,6 +252,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
                 app:font="maven"
+                android:textAllCaps="true"
                 />
 
 
