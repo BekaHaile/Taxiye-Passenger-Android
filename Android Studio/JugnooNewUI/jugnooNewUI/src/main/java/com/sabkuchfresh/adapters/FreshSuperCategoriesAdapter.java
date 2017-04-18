@@ -254,10 +254,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && isSingleItem) {
-//			return SINGLE_ITEM;
-            return MAIN_ITEM;
-        } else if (position == 0 && offerList.size() > 0) {
+        if (position == 0 && offerList.size() > 0) {
             return PAGER;
         } else {
             return MAIN_ITEM;

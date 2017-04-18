@@ -284,6 +284,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="110px"
                 android:animateLayoutChanges="true"
+                android:visibility="visible"
                 android:background="@color/white">
 
                 <TextView

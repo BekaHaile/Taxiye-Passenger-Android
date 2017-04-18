@@ -2407,8 +2407,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         new PriorityTipDialog.Callback() {
                             @Override
                             public void onConfirmed(boolean confirmClicked) {
-                                if (confirmClicked) {
-                                }
                                 finalRequestRideTimerStart();
                             }
 
@@ -6226,6 +6224,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 specialPickupScreenOpened = false;
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
+                return true;
             } else {
                 initiateRequestRide(true);
                 return true;

@@ -150,7 +150,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         linearLayoutPasswordSave = (LinearLayout) findViewById(R.id.linearLayoutPasswordSave);
         ivEditPhone = (ImageView) findViewById(R.id.ivEditPhone);
 
-        relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
+        relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword); relativeLayoutChangePassword.setVisibility(View.GONE);
         ((TextView) findViewById(R.id.textViewChangePassword)).setTypeface(Fonts.mavenMedium(this));
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
         textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.mavenMedium(this));
@@ -867,7 +867,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     activity.startActivity(intent);
                                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                 } else{
-                                    DialogPopup.alertPopup(activity, "", message);
+                                    Utils.showToast(AccountActivity.this, message);
                                     reloadProfileAPI(activity);
                                 }
                             } else {

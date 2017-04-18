@@ -1642,6 +1642,7 @@
     <string name="delete_post_alert_message">Do you really want to delete this post? If you delete once it will no longer be available.</string>
     <string name="enter_your_name">Enter your Name</string>
     <string name="enter_email_id">Enter Email ID</string>
+    <string name="fatafat">Fatafat</string>
 
 
 </resources>

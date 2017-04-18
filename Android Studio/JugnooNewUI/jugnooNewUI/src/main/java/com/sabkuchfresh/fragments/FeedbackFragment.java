@@ -122,7 +122,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 dateValue = Data.getFreshData().getFeedbackDeliveryDate();
                 orderAmount = Data.getFreshData().getAmount();
                 orderId = Data.getFreshData().getOrderId();
-                activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
+                activity.getTopBar().title.setText(getResources().getString(R.string.fatafat));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
                 productType = ProductType.FRESH;
                 for (int i = 0; i < Data.getFreshData().getNegativeFeedbackReasons().length(); i++) {
@@ -790,7 +790,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         if (!hidden) {
             activity.fragmentUISetup(this);
             if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
-                activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
+                activity.getTopBar().title.setText(getResources().getString(R.string.fatafat));
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.meals));
             } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
