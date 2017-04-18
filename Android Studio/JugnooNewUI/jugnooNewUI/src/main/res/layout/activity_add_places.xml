@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/root"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -37,16 +38,62 @@
                 <EditText
                     android:id="@+id/editTextDeliveryAddress"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/transparent"
+                    android:layout_marginRight="20px"
+                    android:layout_toLeftOf="@+id/ivDeliveryAddressCross"
+                    android:layout_height="62px"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_menu_item_color_f7_r"
                     android:hint="@string/type_delivery_address"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30"
-                    android:singleLine="true"
-                    android:layout_marginRight="10px"
                     android:textCursorDrawable="@drawable/cursor_black"
-                    android:layout_toLeftOf="@+id/ivDeliveryAddressCross"
+                    android:drawableLeft="@drawable/ic_location_marker_grey"
+                    android:drawablePadding="8dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="6dp"
+                    android:textSize="@dimen/text_size_26"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:gravity="center_vertical"
                     />
+                <TextView
+                    android:id="@+id/tvDeliveryAddress"
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="20px"
+                    android:layout_toLeftOf="@+id/ivDeliveryAddressCross"
+                    android:layout_height="62px"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_menu_item_color_f7_r"
+                    android:hint="@string/type_delivery_address"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@drawable/cursor_black"
+                    android:drawableLeft="@drawable/ic_location_marker_grey"
+                    android:drawablePadding="8dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="6dp"
+                    android:textSize="@dimen/text_size_26"
+                    android:maxLines="1"
+                    android:gravity="center_vertical"
+                    app:font="maven"
+                    />
+
+                <product.clicklabs.jugnoo.utils.ProgressWheel
+                    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/progressWheelDeliveryAddressPin"
+                    android:layout_width="54px"
+                    android:layout_height="54px"
+                    android:layout_centerVertical="true"
+                    android:tag="mwar"
+                    wheel:matProg_barColor="@color/green_light"
+                    wheel:matProg_barWidth="3dp"
+                    wheel:matProg_fillRadius="true"
+                    wheel:matProg_progressIndeterminate="true"
+                    wheel:matProg_barSpinCycleTime="2500"
+                    android:layout_alignRight="@+id/editTextDeliveryAddress"
+                    android:layout_marginRight="10px"
+                    android:visibility="visible"
+                    />
+
 
                 <ImageView
                     android:id="@+id/ivDeliveryAddressCross"

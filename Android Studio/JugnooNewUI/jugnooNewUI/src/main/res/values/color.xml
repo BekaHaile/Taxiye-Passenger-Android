@@ -345,7 +345,7 @@
     <color name="feed_disabled_grey">#f7f7f7</color>
 
     <color name="purple_text_color">#b368a9</color>
-    <color name="purple_text_color_aplha">#aab368a9</color>
+    <color name="purple_text_color_aplha">#88b368a9</color>
 
     <color name="blue_facebook">#5a81d1</color>
     <color name="blue_facebook_dark">#4a71c1</color>
@@ -356,5 +356,8 @@
     <color name="green_whatsapp">#57bb63</color>
     <color name="green_whatsapp_dark">#47ab53</color>
     <color name="pale_orange">#fffcf2</color>
+
+    <color name="green_light">#FD7945</color>
+    <color name="green_light_dark">#ED6935</color>
 
 </resources>

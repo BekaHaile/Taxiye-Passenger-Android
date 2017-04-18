@@ -125,12 +125,7 @@ public class ApiAddHomeWorkAddress {
 									SearchResult searchResultToRemove = new SearchResult(matchedWithOtherId);
 									Data.userData.getSearchResults().remove(searchResultToRemove);
 
-									int placeCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
-									if(searchResult.getName().equalsIgnoreCase(SPLabels.ADD_HOME)){
-										placeCode = Constants.REQUEST_CODE_ADD_HOME;
-									} else if(searchResult.getName().equalsIgnoreCase(SPLabels.ADD_WORK)){
-										placeCode = Constants.REQUEST_CODE_ADD_WORK;
-									}
+									int placeCode = searchResult.getPlaceRequestCode();
 
 									addHomeAndWorkAddress(searchResult, deleteAddress, 0, editThisAddress, placeCode);
 								}

@@ -4722,6 +4722,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             rlSpecialPickup.setVisibility(View.GONE);
                             updateTopBar();
                             progressBarInitialSearch.setVisibility(View.VISIBLE);
+                            progressBarInitialSearch.spin();
                             imageViewRideNow.setEnabled(false);
                             buttonConfirmRequest.setEnabled(false);
                             removeSpecialPickupMarkers();
@@ -4786,6 +4787,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         @Override
                         public void onFinish() {
+                            progressBarInitialSearch.stopSpinning();
                             progressBarInitialSearch.setVisibility(View.GONE);
                             imageViewRideNow.setEnabled(true);
                             buttonConfirmRequest.setEnabled(true);
@@ -8313,7 +8315,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode){
             if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-
+                progressBarInitialSearch.setVisibility(View.VISIBLE);
+                progressBarInitialSearch.spin();
             }
         }
 
@@ -8365,6 +8368,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode
 					|| PassengerScreenMode.P_SEARCH == passengerScreenMode) {
 				if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                    progressBarInitialSearch.stopSpinning();
+                    progressBarInitialSearch.setVisibility(View.GONE);
 					if (map != null && searchResult != null) {
 						try {
 	//                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));

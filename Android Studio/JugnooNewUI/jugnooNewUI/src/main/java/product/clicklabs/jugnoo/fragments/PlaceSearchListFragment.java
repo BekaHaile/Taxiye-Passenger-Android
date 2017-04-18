@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -420,25 +421,12 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		Utils.hideSoftKeyboard(activity, editTextSearch);
 	}
 
+	private HomeUtil homeUtil = new HomeUtil();
 
 	private void updateSavedPlacesLists(){
 		try {
-			ArrayList<SearchResult> searchResults = new ArrayList<>();
-			int savedPlaces = 0;
-			if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
-				String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-				SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-				searchResults.add(searchResult);
-				savedPlaces++;
-			}
-			if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
-				String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-				SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-				searchResults.add(searchResult);
-				savedPlaces++;
-			}
-			searchResults.addAll(Data.userData.getSearchResults());
-			savedPlaces = savedPlaces + Data.userData.getSearchResults().size();
+			ArrayList<SearchResult> searchResults = homeUtil.getSavedPlacesWithHomeWork(activity);
+			int savedPlaces = searchResults.size();
 
 			savedPlacesAdapter = new SavedPlacesAdapter(activity, searchResults, new SavedPlacesAdapter.Callback() {
 				@Override
@@ -447,13 +435,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				}
 
 				@Override
-				public void onEditClick(SearchResult searchResult) {
-					clickOnSavedItem(searchResult);
+				public void onDeleteClick(SearchResult searchResult) {
 				}
-			}, false, false);
+			}, false, false, false);
 			listViewSavedLocations.setAdapter(savedPlacesAdapter);
 			if(searchResults.size() > 0){
 				cardViewSavedPlaces.setVisibility(View.VISIBLE);
+				textViewSavedPlaces.setText(savedPlacesAdapter.getCount() == 1 ? R.string.saved_location : R.string.saved_locations);
 			} else {
 				cardViewSavedPlaces.setVisibility(View.GONE);
 			}
@@ -465,10 +453,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				}
 
 				@Override
-				public void onEditClick(SearchResult searchResult) {
-					clickOnSavedItem(searchResult);
+				public void onDeleteClick(SearchResult searchResult) {
 				}
-			}, false, false);
+			}, false, false, false);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 			if(Data.userData.getSearchResultsRecent().size() > 0){
 				cvRecentAddresses.setVisibility(View.VISIBLE);
@@ -484,6 +471,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 			if (savedPlacesAdapterRecent.getCount() > 0) {
 				textViewRecentAddresses.setVisibility(View.VISIBLE);
+				textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
 			} else {
 				textViewRecentAddresses.setVisibility(View.GONE);
 			}

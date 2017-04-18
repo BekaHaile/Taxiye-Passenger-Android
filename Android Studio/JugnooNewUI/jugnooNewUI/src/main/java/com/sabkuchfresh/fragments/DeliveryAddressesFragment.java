@@ -2,17 +2,20 @@ package com.sabkuchfresh.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -23,15 +26,18 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.sabkuchfresh.adapters.FreshAddressAdapterCallback;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 
@@ -42,6 +48,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -50,50 +59,52 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
-import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 /**
  * Created by ankit on 14/09/16.
  */
-public class DeliveryAddressesFragment extends Fragment implements FreshAddressAdapterCallback, GAAction,
+public class DeliveryAddressesFragment extends Fragment implements GAAction,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
     private View rootView;
     private Activity activity;
     protected Bus mBus;
     private NonScrollListView listViewRecentAddresses, listViewSavedLocations;
-    private LinearLayout linearLayoutChooseOnMap, linearLayoutCurrentLocation;
-    private CardView cardViewSavedPlaces, cardViewRecentAddresses;
     private TextView textViewSavedPlaces, textViewRecentAddresses;
-    private RelativeLayout linearLayoutMain, relativeLayoutAddHome, relativeLayoutAddWork;
-    private TextView textViewAddHome, textViewAddHomeValue, textViewAddressUsedHome,
-            textViewAddWork, textViewAddWorkValue, textViewAddressUsedWork;
-    private ImageView imageViewSep, imageViewEditHome, imageViewEditWork;
+    private CoordinatorLayout linearLayoutMain;
     private GoogleApiClient mGoogleApiClient;
     private SearchListAdapter searchListAdapter;
     private ScrollView scrollViewSearch;
     private NonScrollListView listViewSearch;
     private CardView cardViewSearch;
     private EditText editTextDeliveryAddress;
+    private ProgressWheel progressWheelDeliveryAddressPin;
+    private TextView tvDeliveryAddress;
     private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
-    private ScrollView scrollViewSuggestions;
+    private NestedScrollView scrollViewSuggestions;
+    @Bind(R.id.rlMarkerPin)
+    RelativeLayout rlMarkerPin;
+    @Bind(R.id.bNext)
+    Button bNext;
 
 
     public double current_latitude = 0.0;
@@ -105,6 +116,26 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     public String current_pincode = "";
 
 
+    private BottomSheetBehavior bottomSheetBehavior;
+    private GoogleMap googleMap;
+
+    @OnClick(R.id.bMyLocation)
+    void zoomToCurrentLocation(){
+        try {
+            if(googleMap != null
+                    && MapUtils.distance(googleMap.getCameraPosition().target,
+                    getCurrentLatLng()) > 10){
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14), 300, null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private LatLng getCurrentLatLng(){
+        return new LatLng(Data.latitude, Data.longitude);
+    }
+
     public DeliveryAddressesFragment() {
 
     }
@@ -113,6 +144,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_delivery_addresses, container, false);
+        ButterKnife.bind(this, rootView);
 
         activity = getActivity();
         mBus = MyApplication.getInstance().getBus();
@@ -126,78 +158,65 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             } else {
                 editTextDeliveryAddress.setHint(R.string.type_delivery_address);
             }
-        }else if(activity instanceof AddPlaceActivity){
+            progressWheelDeliveryAddressPin = ((FreshActivity)activity).getTopBar().progressWheelDeliveryAddressPin;
+            tvDeliveryAddress = ((FreshActivity)activity).getTopBar().tvDeliveryAddress;
+        } else if(activity instanceof AddPlaceActivity){
             editTextDeliveryAddress = ((AddPlaceActivity)activity).getEditTextDeliveryAddress();
+            progressWheelDeliveryAddressPin = ((AddPlaceActivity)activity).getProgressWheelDeliveryAddressPin();
+            tvDeliveryAddress = ((AddPlaceActivity)activity).getTvDeliveryAddress();
+        }
+
+        if(editTextDeliveryAddress != null){
+            editTextDeliveryAddress.setText("");
         }
 
 
-
-        linearLayoutMain = (RelativeLayout) rootView.findViewById(R.id.linearLayoutMain);
+        linearLayoutMain = (CoordinatorLayout) rootView.findViewById(R.id.linearLayoutMain);
 
         new ASSL(activity, linearLayoutMain, 1134, 720, false);
 
-        ((TextView)rootView.findViewById(R.id.textViewCurrentLocation)).setTypeface(Fonts.mavenMedium(activity));
-        ((TextView)rootView.findViewById(R.id.textViewChooseOnMap)).setTypeface(Fonts.mavenMedium(activity));
-        cardViewSavedPlaces = (CardView) rootView.findViewById(R.id.cardViewSavedPlaces);
-        linearLayoutCurrentLocation = (LinearLayout)rootView.findViewById(R.id.linearLayoutCurrentLocation);
-        linearLayoutChooseOnMap = (LinearLayout)rootView.findViewById(R.id.linearLayoutChooseOnMap);
-        relativeLayoutAddHome = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddHome);
-        relativeLayoutAddWork = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddWork);
-        relativeLayoutAddHome.setMinimumHeight((int)(ASSL.Yscale() * 110f));
-        relativeLayoutAddWork.setMinimumHeight((int)(ASSL.Yscale() * 110f));
-        imageViewEditHome = (ImageView) rootView.findViewById(R.id.imageViewEditHome);
-        imageViewEditWork = (ImageView) rootView.findViewById(R.id.imageViewEditWork);
-        textViewAddHome = (TextView)rootView.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
-        textViewAddHomeValue = (TextView)rootView.findViewById(R.id.textViewAddHomeValue); textViewAddHomeValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewAddressUsedHome = (TextView) rootView.findViewById(R.id.textViewAddressUsedHome); textViewAddressUsedHome.setTypeface(Fonts.mavenRegular(activity));
-        textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
-        textViewAddWorkValue = (TextView)rootView.findViewById(R.id.textViewAddWorkValue); textViewAddWorkValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewAddressUsedWork = (TextView) rootView.findViewById(R.id.textViewAddressUsedWork); textViewAddressUsedWork.setTypeface(Fonts.mavenRegular(activity));
-        imageViewSep = (ImageView)rootView.findViewById(R.id.imageViewSep);
         scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
         scrollViewSearch.setVisibility(View.GONE);
         cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
-        cardViewRecentAddresses = (CardView) rootView.findViewById(R.id.cardViewRecentAddresses);
         listViewRecentAddresses = (NonScrollListView) rootView.findViewById(R.id.listViewRecentAddresses);
-        cardViewSavedPlaces.setVisibility(View.GONE);
         textViewSavedPlaces = (TextView) rootView.findViewById(R.id.textViewSavedPlaces); textViewSavedPlaces.setTypeface(Fonts.mavenMedium(activity));
         textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
         textViewSavedPlaces.setVisibility(View.GONE);
         textViewRecentAddresses.setVisibility(View.GONE);
-        scrollViewSuggestions = (ScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
+        scrollViewSuggestions = (NestedScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
+        scrollViewSuggestions.setVisibility(View.VISIBLE);
 
         listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
-        try {
-            savedPlacesAdapter = new SavedPlacesAdapter(activity, Data.userData.getSearchResults(), new SavedPlacesAdapter.Callback() {
-                @Override
-                public void onItemClick(SearchResult searchResult) {
-                    if(searchResult.getIsConfirmed() == 1){
-                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                        if(activity instanceof FreshActivity) {
-                            GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
-                        }
-                    } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
-                    }
-                }
-
-                @Override
-                public void onEditClick(SearchResult searchResult) {
-                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
-                }
-            }, false, true);
-            listViewSavedLocations.setAdapter(savedPlacesAdapter);
-            imageViewEditHome.setVisibility(View.GONE);
-            imageViewEditWork.setVisibility(View.GONE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         if(activity instanceof FreshActivity) {
+            scrollViewSuggestions.setVisibility(View.VISIBLE);
             try {
-                cardViewSavedPlaces.setVisibility(View.VISIBLE);
-                cardViewRecentAddresses.setVisibility(View.VISIBLE);
+                savedPlacesAdapter = new SavedPlacesAdapter(activity, homeUtil.getSavedPlacesWithHomeWork(activity), new SavedPlacesAdapter.Callback() {
+                    @Override
+                    public void onItemClick(SearchResult searchResult) {
+                        if(searchResult.getIsConfirmed() == 1){
+                            onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+                                    searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+                            if(activity instanceof FreshActivity) {
+                                GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
+                            }
+                        } else {
+                            goToPredefinedSearchResultConfirmation(searchResult, searchResult.getPlaceRequestCode(), true);
+                        }
+                    }
+
+                    @Override
+                    public void onDeleteClick(SearchResult searchResult) {
+                    }
+                }, true, true, false);
+                listViewSavedLocations.setAdapter(savedPlacesAdapter);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                listViewSavedLocations.setVisibility(View.VISIBLE);
+                listViewRecentAddresses.setVisibility(View.VISIBLE);
                 savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
 					@Override
 					public void onItemClick(SearchResult searchResult) {
@@ -211,26 +230,25 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 					}
 
 					@Override
-					public void onEditClick(SearchResult searchResult) {
-						if(activity instanceof FreshActivity) {
-							goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false);
-						}
+					public void onDeleteClick(SearchResult searchResult) {
 					}
-				}, false, true);
+				}, true, true, false);
 
                 listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
-
-                setSavedPlaces();
-
-                getApiFetchUserAddress().hit(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            setSavedPlaces();
+            getApiFetchUserAddress().hit(true);
         }
         else if(activity instanceof AddPlaceActivity){
-            cardViewRecentAddresses.setVisibility(View.GONE);
-            cardViewSavedPlaces.setVisibility(View.GONE);
+            listViewRecentAddresses.setVisibility(View.GONE);
+            listViewSavedLocations.setVisibility(View.GONE);
+            scrollViewSuggestions.setVisibility(View.GONE);
         }
+        setupMapAndButtonMargins();
+
 
 
         mGoogleApiClient = new GoogleApiClient
@@ -241,100 +259,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-                    final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-                    if(searchResult.getIsConfirmed() == 1){
-                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                    } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        imageViewEditHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-                    final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        relativeLayoutAddWork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-                    final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-                    if(searchResult.getIsConfirmed() == 1){
-                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                    } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        imageViewEditWork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-                    final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        linearLayoutCurrentLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getAddressAsync(new LatLng(Data.latitude, Data.longitude), new GetAddressFromLatLng() {
-                    @Override
-                    public void onAddressReceived(String address) {
-                        if(address != null) {
-                            fillAddressDetails(new LatLng(Data.latitude, Data.longitude));
-                            if(activity instanceof FreshActivity) {
-                                GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, CURRENT_LOCATION+SELECTED);
-                            }
-                        }
-                    }
-                });
-
-            }
-        });
-
-        linearLayoutChooseOnMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(activity instanceof FreshActivity) {
-                    FreshActivity freshActivity = (FreshActivity) activity;
-                    freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-                    freshActivity.setSearchResult(null);
-                    freshActivity.setEditThisAddress(false);
-                    freshActivity.openMapAddress(createAddressBundle(""));
-                    GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, CHOOSE_ON_MAP+SELECTED);
-                }
-                else if(activity instanceof AddPlaceActivity) {
-                    ((AddPlaceActivity)activity).openMapAddress(createAddressBundle(""));
-                }
-            }
-        });
 
         boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
         searchListAdapter = new SearchListAdapter(activity, editTextDeliveryAddress, new LatLng(30.75, 76.78), mGoogleApiClient,
@@ -364,14 +288,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
                     @Override
                     public void onSearchPre() {
-                        //progressBarSearch.setVisibility(View.VISIBLE);
-//                        searchListActionsHandler.onSearchPre();
+                        progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onSearchPost() {
-                        //progressBarSearch.setVisibility(View.GONE);
-//                        searchListActionsHandler.onSearchPost();
+                        progressWheelDeliveryAddressPin.setVisibility(View.GONE);
                         if(activity instanceof FreshActivity) {
                             GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, ADDRESS_BOX + ENTERED);
                         }
@@ -379,13 +301,11 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
                     @Override
                     public void onPlaceClick(SearchResult autoCompleteSearchResult) {
-//                        searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
                     }
 
                     @Override
                     public void onPlaceSearchPre() {
-                        //progressBarSearch.setVisibility(View.VISIBLE);
-//                        searchListActionsHandler.onPlaceSearchPre();
+                        progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
                         DialogPopup.showLoadingDialog(activity, "");
                     }
 
@@ -404,8 +324,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
                     @Override
                     public void onPlaceSearchError() {
-                        //progressBarSearch.setVisibility(View.GONE);
-//                        searchListActionsHandler.onPlaceSearchError();
+                        progressWheelDeliveryAddressPin.setVisibility(View.GONE);
                         Utils.showToast(activity, getString(R.string.could_not_find_address));
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -428,7 +347,95 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         listViewSearch.setAdapter(searchListAdapter);
 
 
+        bottomSheetBehavior = BottomSheetBehavior.from(scrollViewSuggestions);
+        bottomSheetBehavior.setPeekHeight(activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
+
+        ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap)).getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                DeliveryAddressesFragment.this.googleMap = googleMap;
+                if (googleMap != null) {
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    googleMap.setMyLocationEnabled(true);
+                    googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+                            activity.getResources().getDimensionPixelSize(R.dimen.dp_162) : 0);
+                    if(activity instanceof AddPlaceActivity
+                            && ((AddPlaceActivity)activity).isEditThisAddress()
+                            && ((AddPlaceActivity)activity).getSearchResult() != null){
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((AddPlaceActivity)activity).getSearchResult().getLatLng(), 14));
+                    } else {
+                        if(activity instanceof FreshActivity){
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((FreshActivity)activity).getSelectedLatLng(), 14));
+                        } else {
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
+                        }
+                    }
+
+
+
+                    TouchableMapFragment mapFragment = ((TouchableMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap));
+                    new MapStateListener(googleMap, mapFragment, activity) {
+
+                        @Override
+                        public void onMapTouched() {
+                        }
+
+                        @Override
+                        public void onMapReleased() {
+                        }
+
+                        @Override
+                        public void onMapUnsettled() {
+                            mapSettledCanForward = false;
+                        }
+
+                        @Override
+                        public void onMapSettled() {
+                            fillAddressDetails(DeliveryAddressesFragment.this.googleMap.getCameraPosition().target);
+                        }
+
+                        @Override
+                        public void onCameraPositionChanged(CameraPosition cameraPosition) {
+                        }
+                    };
+
+                }
+            }
+        });
+
+
+        tvDeliveryAddress.setVisibility(View.VISIBLE);
+        tvDeliveryAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvDeliveryAddress.setVisibility(View.GONE);
+                editTextDeliveryAddress.setSelection(editTextDeliveryAddress.getText().length());
+                editTextDeliveryAddress.requestFocus();
+                Utils.showSoftKeyboard(activity, editTextDeliveryAddress);
+            }
+        });
+
+
         return rootView;
+    }
+
+    private void setupMapAndButtonMargins(){
+        RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
+        RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
+        if(scrollViewSuggestions.getVisibility() == View.VISIBLE){
+            paramsRL.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
+            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+        } else {
+            paramsRL.setMargins(0, 0, 0, 0);
+            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
+        }
+        rlMarkerPin.setLayoutParams(paramsRL);
+        bNext.setLayoutParams(paramsB);
+        if(googleMap != null){
+            googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+                    activity.getResources().getDimensionPixelSize(R.dimen.dp_162) : 0);
+        }
     }
 
     @Override
@@ -457,10 +464,17 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         if(!hidden && (activity instanceof FreshActivity)) {
             ((FreshActivity) activity).fragmentUISetup(this);
             setSavedPlaces();
+            tvDeliveryAddress.setVisibility(View.VISIBLE);
+            ((FreshActivity)activity).getTopBar().imageViewDelete.setVisibility(View.GONE);
         } else if(!hidden && (activity instanceof AddPlaceActivity)){
             AddPlaceActivity addPlaceActivity = (AddPlaceActivity)activity;
             addPlaceActivity.getTextViewTitle().setVisibility(View.GONE);
             addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.VISIBLE);
+            tvDeliveryAddress.setVisibility(View.VISIBLE);
+            ((AddPlaceActivity)activity).getImageViewDelete().setVisibility(View.GONE);
+        } else if(hidden){
+            progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+            tvDeliveryAddress.setVisibility(View.GONE);
         }
         scrollViewSuggestions.scrollTo(0, 0);
     }
@@ -495,103 +509,65 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 });
     }
 
-    private void getAddressAsync(final LatLng currentLatLng, final GetAddressFromLatLng getAddressFromLatLng){
-        try {
-            DialogPopup.showLoadingDialog(getActivity(), "Loading...");
-            RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                    "en", false, new Callback<SettleUserDebt>() {
-                        @Override
-                        public void success(SettleUserDebt settleUserDebt, Response response) {
-                            try {
-                                String resp = new String(((TypedByteArray) response.getBody()).getBytes());
-                                GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
-                                String address = gapiAddress.getSearchableAddress();
-                                getAddressFromLatLng.onAddressReceived(address);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                getAddressFromLatLng.onAddressReceived(null);
-                            }
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            getAddressFromLatLng.onAddressReceived(null);
-                            DialogPopup.dismissLoadingDialog();
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-            getAddressFromLatLng.onAddressReceived(null);
-            DialogPopup.dismissLoadingDialog();
-        }
-
-    }
 
     private void fillAddressDetails(final LatLng latLng) {
         try {
-            if (MyApplication.getInstance().isOnline()) {
-                DialogPopup.showLoadingDialog(getActivity(), "Loading...");
-                final Map<String, String> params = new HashMap<String, String>(6);
-
-                params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
-                params.put("language", Locale.getDefault().getCountry());
-                params.put("sensor", "false");
-
-                RestClient.getGoogleApiService().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
-                    @Override
-                    public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
-                        try {
-
-                            String addressText = "" + geocodeResponse.results.get(0).getLocality();
-
-                            current_latitude = latLng.latitude;
-                            current_longitude = latLng.longitude;
-
-                            current_street = ""+geocodeResponse.results.get(0).getStreetNumber();
-                            current_route = ""+geocodeResponse.results.get(0).getRoute();
-                            current_area = "" + geocodeResponse.results.get(0).getLocality();
-                            current_city = "" + geocodeResponse.results.get(0).getCity();
-                            current_pincode = "" + geocodeResponse.results.get(0).getCountry();
-                            String streetNum = current_street;
-                            if(current_street.length()>0)
-                                streetNum = geocodeResponse.results.get(0).getStreetNumber()+", ";
-
-                            String route = current_route;
-                            if(route.length()>0)
-                                route = geocodeResponse.results.get(0).getRoute() + ", ";
-
-                            if(activity instanceof FreshActivity) {
-                                FreshActivity freshActivity = (FreshActivity) activity;
-                                freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-                                freshActivity.setSearchResult(null);
-                                freshActivity.setEditThisAddress(false);
-                                freshActivity.openAddToAddressBook(createAddressBundle(""));
-                            }else if(activity instanceof AddPlaceActivity){
-                                ((AddPlaceActivity)activity).openAddToAddressBook(createAddressBundle(""));
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            DialogPopup.alertPopup(getActivity(), "", Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e("DeliveryAddressFragment", "error=" + error.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(getActivity(), "", Data.SERVER_ERROR_MSG);
-                    }
-                });
-            } else {
-
+            if(isVisible() && !isRemoving()) {
+                progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
             }
+            final Map<String, String> params = new HashMap<String, String>(6);
+
+            params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
+            params.put("language", Locale.getDefault().getCountry());
+            params.put("sensor", "false");
+
+            RestClient.getGoogleApiService().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
+                @Override
+                public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
+                    try {
+
+                        current_latitude = latLng.latitude;
+                        current_longitude = latLng.longitude;
+
+                        if(geocodeResponse.results != null && geocodeResponse.results.size() > 0){
+                            current_street = geocodeResponse.results.get(0).getStreetNumber();
+                            current_route = geocodeResponse.results.get(0).getRoute();
+                            current_area = geocodeResponse.results.get(0).getLocality();
+                            current_city = geocodeResponse.results.get(0).getCity();
+                            current_pincode = geocodeResponse.results.get(0).getCountry();
+
+                            tvDeliveryAddress.setText(current_street + (current_street.length()>0?", ":"")
+                                    + current_route + (current_route.length()>0?", ":"")
+                                    + geocodeResponse.results.get(0).getAddAddress()
+                                    + ", " + current_city);
+                            if(isVisible()) {
+                                tvDeliveryAddress.setVisibility(View.VISIBLE);
+                            }
+                            mapSettledCanForward = true;
+                        } else {
+                            Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+                            tvDeliveryAddress.setText("");
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+                        tvDeliveryAddress.setText("");
+                    }
+                    progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("DeliveryAddressFragment", "error=" + error.toString());
+                    Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+                    progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+                    tvDeliveryAddress.setText("");
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 
@@ -604,13 +580,13 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 freshActivity.setEditThisAddress(editThisAddress);
                 freshActivity.setDeliveryAddressToEdit(null);
 			}
-            setAddressToBundle(searchResult.getAddress(), searchResult.getLatitude(), searchResult.getLongitude(), searchResult.getPlaceId());
+            setAddressToBundleAndOpenAddressForm(searchResult.getAddress(), searchResult.getLatitude(), searchResult.getLongitude(), searchResult.getPlaceId());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setAddressToBundle(String addressRes, double latitude, double longitude, String placeId){
+    private void setAddressToBundleAndOpenAddressForm(String addressRes, double latitude, double longitude, String placeId){
         try {
             current_street = "";
             current_route = "";
@@ -662,100 +638,35 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
 
     private void setSavedPlaces() {
-        int savedPlaces = 0;
-        if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
-            String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-            SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-            textViewAddHome.setText(getResources().getString(R.string.home));
-            textViewAddHomeValue.setVisibility(View.VISIBLE);
-            textViewAddHomeValue.setText(searchResult.getAddress());
-            textViewAddressUsedHome.setVisibility(View.GONE);
-            if(searchResult.getFreq() > 0){
-                textViewAddressUsedHome.setVisibility(View.VISIBLE);
-                if(searchResult.getFreq() <= 1){
-                    textViewAddressUsedHome.setText(activity.getString(R.string.address_used_one_time_format,
-                            String.valueOf(searchResult.getFreq())));
-                } else{
-                    textViewAddressUsedHome.setText(activity.getString(R.string.address_used_multiple_time_format,
-                            String.valueOf(searchResult.getFreq())));
-                }
-            }
-            savedPlaces++;
-        } else{
-            relativeLayoutAddHome.setVisibility(View.GONE);
-            textViewAddHome.setText(getResources().getString(R.string.add_home));
-            textViewAddHomeValue.setVisibility(View.GONE);
-            imageViewSep.setVisibility(View.GONE);
-            textViewAddressUsedHome.setVisibility(View.GONE);
-        }
-
-        if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
-            String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-            SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-            textViewAddWork.setText(getResources().getString(R.string.work));
-            textViewAddWorkValue.setVisibility(View.VISIBLE);
-            textViewAddWorkValue.setText(searchResult.getAddress());
-            textViewAddressUsedWork.setVisibility(View.GONE);
-            if(searchResult.getFreq() > 0){
-                textViewAddressUsedWork.setVisibility(View.VISIBLE);
-                if(searchResult.getFreq() <= 1){
-                    textViewAddressUsedWork.setText(activity.getString(R.string.address_used_one_time_format,
-                            String.valueOf(searchResult.getFreq())));
-                } else {
-                    textViewAddressUsedWork.setText(activity.getString(R.string.address_used_multiple_time_format,
-                            String.valueOf(searchResult.getFreq())));
-                }
-            }
-            savedPlaces++;
-        } else{
-            relativeLayoutAddWork.setVisibility(View.GONE);
-            textViewAddWork.setText(getResources().getString(R.string.add_work));
-            textViewAddWorkValue.setVisibility(View.GONE);
-            imageViewSep.setVisibility(View.GONE);
-            textViewAddressUsedWork.setVisibility(View.GONE);
-        }
         if(savedPlacesAdapter != null) {
-            savedPlacesAdapter.notifyDataSetChanged();
-            savedPlaces = savedPlaces + Data.userData.getSearchResults().size();
+            savedPlacesAdapter.setList(homeUtil.getSavedPlacesWithHomeWork(activity));
+            if(savedPlacesAdapter.getCount() > 0) {
+                textViewSavedPlaces.setVisibility(View.VISIBLE);
+                listViewSavedLocations.setVisibility(View.VISIBLE);
+                textViewSavedPlaces.setText(savedPlacesAdapter.getCount() == 1 ? R.string.saved_location : R.string.saved_locations);
+            } else {
+                textViewSavedPlaces.setVisibility(View.GONE);
+                listViewSavedLocations.setVisibility(View.GONE);
+            }
         }
-        if(savedPlaces > 0) {
-            textViewSavedPlaces.setVisibility(View.VISIBLE);
-            cardViewSavedPlaces.setVisibility(View.VISIBLE);
-        } else {
-            textViewSavedPlaces.setVisibility(View.GONE);
-            cardViewSavedPlaces.setVisibility(View.GONE);
-        }
-
 
         if(savedPlacesAdapterRecent != null) {
             savedPlacesAdapterRecent.notifyDataSetChanged();
             if (savedPlacesAdapterRecent.getCount() > 0) {
                 textViewRecentAddresses.setVisibility(View.VISIBLE);
-                cardViewRecentAddresses.setVisibility(View.VISIBLE);
+                listViewRecentAddresses.setVisibility(View.VISIBLE);
+                textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
             } else {
                 textViewRecentAddresses.setVisibility(View.GONE);
-                cardViewRecentAddresses.setVisibility(View.GONE);
+                listViewRecentAddresses.setVisibility(View.GONE);
             }
         }
+
+        scrollViewSuggestions.setVisibility((listViewSavedLocations.getVisibility() == View.GONE
+                && listViewRecentAddresses.getVisibility() == View.GONE) ? View.GONE : View.VISIBLE);
+        setupMapAndButtonMargins();
     }
 
-    @Override
-    public void onSlotSelected(int position, DeliveryAddress slot) {
-        onAddressSelected(slot.getDeliveryLatitude(), slot.getDeliveryLongitude(), slot.getLastAddress(), 0, "");
-    }
-
-    @Override
-    public void onEditClick(int position, DeliveryAddress slot) {
-        if(activity instanceof FreshActivity) {
-            FreshActivity freshActivity = (FreshActivity) activity;
-            freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-            freshActivity.setSearchResult(null);
-            freshActivity.setEditThisAddress(false);
-            freshActivity.setDeliveryAddressToEdit(slot);
-            setAddressToBundle(slot.getLastAddress(), Double.parseDouble(slot.getDeliveryLatitude()),
-                    Double.parseDouble(slot.getDeliveryLongitude()), "");
-        }
-    }
 
     private void onAddressSelected(String latitude, String longitude, String address, int addressId, String type){
         if(activity instanceof FreshActivity) {
@@ -825,6 +736,87 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             });
         }
         return apiFetchUserAddress;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+
+    private void currentLocationTap(){
+        fillAddressDetails(getCurrentLatLng());
+        if(activity instanceof FreshActivity) {
+            GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, CURRENT_LOCATION+SELECTED);
+        }
+    }
+
+    private void editHome(){
+        try {
+            String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+            final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+            goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void editWork(){
+        try {
+            String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+            final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+            goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    Handler handler = new Handler();
+
+    @OnClick(R.id.bNext)
+    void goToAddAddressFragment(){
+        if(mapSettledCanForward) {
+            if(tvDeliveryAddress.getVisibility() == View.GONE){
+                tvDeliveryAddress.setVisibility(View.VISIBLE);
+                Utils.hideSoftKeyboard(activity, editTextDeliveryAddress);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        goToAddAddressFragment();
+                    }
+                }, 600);
+            } else {
+                if (activity instanceof FreshActivity) {
+                    FreshActivity freshActivity = (FreshActivity) activity;
+                    freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    freshActivity.setSearchResult(null);
+                    freshActivity.setEditThisAddress(false);
+                    freshActivity.openAddToAddressBook(createAddressBundle(""));
+                } else if (activity instanceof AddPlaceActivity) {
+                    ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle(""));
+                }
+            }
+        } else {
+            Utils.showToast(activity, "Please wait...");
+        }
+    }
+
+    private boolean mapSettledCanForward = false;
+    private HomeUtil homeUtil = new HomeUtil();
+
+    /**
+     *
+     * @return returns boolean true if back was consumed by fragment or false otherwise
+     */
+    public boolean backWasConsumed(){
+        if(scrollViewSearch.getVisibility() == View.VISIBLE){
+            scrollViewSearch.setVisibility(View.GONE);
+            tvDeliveryAddress.setVisibility(View.VISIBLE);
+            Utils.hideKeyboard(activity);
+            return true;
+        }
+        return false;
     }
 
 }

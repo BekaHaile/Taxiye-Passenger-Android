@@ -262,24 +262,28 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        activity.setSwipeAvailable(true);
-        if (!hidden) {
-            activity.fragmentUISetup(this);
-            menusCategoryFragmentsAdapter.notifyDataSetChanged();
-            tabs.notifyDataSetChanged();
-            activity.resumeMethod();
-            if (activity.isRefreshCart()) {
+        try {
+            activity.setSwipeAvailable(true);
+            if (!hidden) {
+				activity.fragmentUISetup(this);
+				menusCategoryFragmentsAdapter.notifyDataSetChanged();
+				tabs.notifyDataSetChanged();
+				activity.resumeMethod();
+				if (activity.isRefreshCart()) {
 
-            }
-            activity.setRefreshCart(false);
-            activity.setMinOrderAmountText(VendorMenuFragment.this);
+				}
+				activity.setRefreshCart(false);
+				activity.setMinOrderAmountText(VendorMenuFragment.this);
 
-        }
-        else{
-            if(recyclerViewOffers!=null && recyclerViewOffers.getVisibility()==View.VISIBLE)
-            {
-                ibArrow.performClick();
-            }
+			}
+			else{
+				if(recyclerViewOffers!=null && recyclerViewOffers.getVisibility()==View.VISIBLE)
+				{
+					ibArrow.performClick();
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

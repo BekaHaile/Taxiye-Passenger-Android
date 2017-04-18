@@ -304,8 +304,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     statusHolder.tvViewOrder.setOnClickListener(viewOrderOnClickListener);
                     statusHolder.tvTrackOrder.setOnClickListener(trackOrderOnClickListener);
 
-                    statusHolder.rlTrackViewOrder.setVisibility((recentOrder.getShowLiveTracking() == 1
-                            && recentOrder.getDeliveryId() != null && recentOrder.getDeliveryId() > 0) ? View.VISIBLE : View.GONE);
+                    statusHolder.rlTrackViewOrder.setVisibility(View.VISIBLE);
+                    if(recentOrder.getShowLiveTracking() == 1 && recentOrder.getDeliveryId() > 0){
+                        statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColorStateList(activity, R.color.purple_text_color_selector));
+                    } else {
+                        statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColor(activity, R.color.purple_text_color_aplha));
+                    }
+
                     statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
                     statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
                     if(recentOrder.getOrderAmount() != null) {
@@ -988,18 +993,23 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             try {
                 int pos = (int) v.getTag();
                 RecentOrder order = recentOrders.get(pos);
-                Intent intent = new Intent(activity, TrackOrderActivity.class);
-                intent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                intent.putExtra(Constants.KEY_ORDER_ID, order.getOrderId());
-                intent.putExtra(Constants.KEY_DELIVERY_ID, order.getDeliveryId());
-                intent.putExtra(Constants.KEY_PICKUP_LATITUDE, order.getPickupLatitude());
-                intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, order.getPickupLongitude());
-                intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
-                intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
-                intent.putExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, order.getShowDeliveryRoute());
-                intent.putExtra(Constants.KEY_DRIVER_PHONE_NO, order.getDriverPhoneNo());
-                activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                if(order.getShowLiveTracking() == 1 && order.getDeliveryId() > 0) {
+                    Intent intent = new Intent(activity, TrackOrderActivity.class);
+                    intent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                    intent.putExtra(Constants.KEY_ORDER_ID, order.getOrderId());
+                    intent.putExtra(Constants.KEY_DELIVERY_ID, order.getDeliveryId());
+                    intent.putExtra(Constants.KEY_PICKUP_LATITUDE, order.getPickupLatitude());
+                    intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, order.getPickupLongitude());
+                    intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
+                    intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
+                    intent.putExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, order.getShowDeliveryRoute());
+                    intent.putExtra(Constants.KEY_DRIVER_PHONE_NO, order.getDriverPhoneNo());
+                    activity.startActivity(intent);
+                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                } else {
+                    Utils.showToast(activity, !TextUtils.isEmpty(order.getTrackDeliveryMessage()) ?
+                            order.getTrackDeliveryMessage() : activity.getString(R.string.tracking_not_available_message));
+                }
             } catch (Exception e){
                 e.printStackTrace();
             }

@@ -79,7 +79,7 @@ public class AppSwitcher {
 	 * @param latLng
      * @param bundle
      */
-	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle,
+	public void switchApp(final Activity activity, String clientId, final Uri data, final LatLng latLng, final Bundle bundle,
 						  final boolean clearActivityStack, final boolean openHomeSwitcher, final boolean slowTransition){
 		try {
 			if (MyApplication.getInstance().isOnline()) {
@@ -87,16 +87,28 @@ public class AppSwitcher {
 				if(clearActivityStack) {
 					//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				}
+
+
+				// to check id Data.userData's key of <offering>_enabled is 1 for the client_id to open
+				if(Data.userData != null){
+					if((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.userData.getFreshEnabled() != 1)
+							|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.userData.getMealsEnabled() != 1)
+							|| (clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.userData.getMenusEnabled() != 1)
+							|| (clientId.equalsIgnoreCase(Config.getPayClientId()) && Data.userData.getPayEnabled() != 1)
+							|| (clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.userData.getFeedEnabled() != 1)){
+						clientId = Config.getAutosClientId();
+					}
+				}
+
+
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
-	//			if(!(activity instanceof HomeActivity)) {
-					intent.putExtra(Constants.KEY_LATITUDE, latLng.latitude);
-					intent.putExtra(Constants.KEY_LONGITUDE, latLng.longitude);
-	//			}
+				intent.putExtra(Constants.KEY_LATITUDE, latLng.latitude);
+				intent.putExtra(Constants.KEY_LONGITUDE, latLng.longitude);
 				if (data != null) {
 					intent.setData(data);
 				}
-
+				final String finalClientId = clientId;
 				if(openHomeSwitcher){
 					intent.setClass(activity, HomeSwitcherActivity.class);
 					intent.putExtra(Constants.KEY_LATITUDE, latLng.latitude);
@@ -105,6 +117,7 @@ public class AppSwitcher {
 					activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
 					//activity.finish();
 				} else {
+
 					ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
 						@Override
 						public void noNet() {
@@ -130,7 +143,7 @@ public class AppSwitcher {
 
 						@Override
 						public void onRetry(View view) {
-							switchApp(activity, clientId, data, latLng, bundle, clearActivityStack, openHomeSwitcher, slowTransition);
+							switchApp(activity, finalClientId, data, latLng, bundle, clearActivityStack, openHomeSwitcher, slowTransition);
 						}
 
 						@Override
@@ -166,7 +179,7 @@ public class AppSwitcher {
 
 										@Override
 										public void onRetry(View view) {
-											switchApp(activity, clientId, data, latLng, bundle, clearActivityStack, openHomeSwitcher, slowTransition);
+											switchApp(activity, finalClientId, data, latLng, bundle, clearActivityStack, openHomeSwitcher, slowTransition);
 										}
 
 										@Override
@@ -267,7 +280,7 @@ public class AppSwitcher {
 
 									@Override
 									public void onRetry(View view) {
-										switchApp(activity, clientId, data, latLng, bundle);
+										switchApp(activity, finalClientId, data, latLng, bundle);
 									}
 
 									@Override
