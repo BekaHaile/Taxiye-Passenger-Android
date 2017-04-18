@@ -359,7 +359,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										latLngsDriverAnim.clear();
 										if (markerDriver == null) {
 											markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
-													R.drawable.ic_bike_marker, 49f, 62f, 0.5f, 0.5f, 2));
+													R.drawable.ic_bike_track_order_marker, 38f, 94f, 0.5f, 0.5f, 2));
 											markerDriver.setRotation((float) bearing);
 										} else {
 											MarkerAnimation.animateMarkerToICS("-1", markerDriver,

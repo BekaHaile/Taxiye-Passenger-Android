@@ -8,6 +8,7 @@
                                                  android:background="@color/sliding_bottom_bg_color">
 
     <RelativeLayout
+        android:id="@+id/rlMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:tag="@string/dont_touch_me"
