@@ -207,7 +207,7 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
             starScaleXAnimator.setInterpolator(OVERSHOOT_INTERPOLATOR);
 
             ObjectAnimator dotsAnimator = ObjectAnimator.ofFloat(dotsView, DotsView.DOTS_PROGRESS, 0, 1f);
-            dotsAnimator.setDuration(900);
+            dotsAnimator.setDuration(450);
             dotsAnimator.setStartDelay(50);
             dotsAnimator.setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
 

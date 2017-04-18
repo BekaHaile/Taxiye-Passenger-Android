@@ -67,11 +67,11 @@
    <RelativeLayout
 
     android:id="@+id/layout_actual_post"
-    android:background="@drawable/rectangle_grey"
+      android:background="@drawable/rectangle_grey"
        android:paddingTop="@dimen/spacing_large"
     android:layout_marginTop="20dp"
        android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+      android:layout_height="wrap_content"
        android:layout_below="@+id/layout_user_activity_heading"
        android:layout_centerHorizontal="true">
 
@@ -176,6 +176,7 @@
            android:layout_marginLeft="@dimen/spacing_large"
            android:layout_marginRight="@dimen/spacing_large"
            android:layout_marginBottom="@dimen/spacing_small"
+           android:lineSpacingExtra="4dp"
            android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
            android:textColor="@color/feed_grey_text"
            android:textSize="@dimen/font_large"
@@ -281,7 +282,7 @@
             android:id="@+id/tv_action_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_comment_new"
+            android:drawableLeft="@drawable/ic_comment_active_new"
             android:drawablePadding="@dimen/spacing_tiny"
             android:gravity="center"
             android:text="Reply"
@@ -313,11 +314,13 @@
             <com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton
                 android:clickable="false"
                 android:id="@+id/like_button_animate"
+                app:circle_start_color="#ffffff"
+                app:circle_end_color="#cd8fff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon_size="14dp"
-                android:layout_marginRight="-7dp"
-                app:anim_scale_factor="3"
+                android:layout_marginRight="-12dp"
+                app:anim_scale_factor="3.8"
                 app:icon_type="heart" />
 
 
@@ -368,6 +371,7 @@
                android:id="@+id/tv_user_commented_name"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
+               android:lineSpacingExtra="2dp"
                android:textColor="@color/feed_grey_text_heading"
                android:layout_marginBottom="2.5dp"
                android:textSize="14sp"

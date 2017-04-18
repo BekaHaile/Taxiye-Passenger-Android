@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
@@ -156,7 +157,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         int position = (int) v.getTag();
                         /*notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
                         notifyItemUnchecked(position);*/
-                        openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl());
+                        openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl(), notificationList.get(position).getPostId());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -200,7 +201,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return position == notificationList.size();
     }
 
-    private void openDeepLink(int deepInt, String url){
+    private void openDeepLink(int deepInt, String url, int postId){
         try{
             //int deepInt = Integer.parseInt(deepLink);
             Intent intent = new Intent();
@@ -289,6 +290,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 activity.startActivity(intent);
             }
             else if(AppLinkIndex.FEED_PAGE.getOrdinal() == deepInt){
+                if(postId > 0){
+                    Prefs.with(activity).save(Constants.SP_POST_ID_TO_OPEN, postId);
+                }
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFeedClientId(), new LatLng(Data.latitude, Data.longitude), true);
             }
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);

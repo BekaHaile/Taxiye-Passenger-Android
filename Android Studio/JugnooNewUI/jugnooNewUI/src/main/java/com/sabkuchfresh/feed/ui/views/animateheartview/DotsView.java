@@ -15,7 +15,7 @@ import android.view.View;
  * Modified by Joel Dean
  */
 public class DotsView extends View {
-    private static final int DOTS_COUNT = 7;
+    private static final int DOTS_COUNT = 10;
     private static final int OUTER_DOTS_POSITION_ANGLE = 51;
 
    /* private int COLOR_1 = 0xFFFFC107;
@@ -23,10 +23,10 @@ public class DotsView extends View {
     private int COLOR_3 = 0xFFFF5722;
     private int COLOR_4 = 0xFFF44336;
     */
-    private int COLOR_1 = 0xEF6692;
-    private int COLOR_2 = 0xEF6692;
-    private int COLOR_3 = 0xEF6692;
-    private int COLOR_4 = 0xEF6692;
+   private int COLOR_1 = 0xf68fa7;
+    private int COLOR_2 = 0xe9a966;
+    private int COLOR_3 = 0xf68fa7;
+    private int COLOR_4 = 0x7dc2f4;
 
     private int width = 0;
     private int height = 0;

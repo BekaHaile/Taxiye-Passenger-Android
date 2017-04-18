@@ -306,6 +306,8 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
             feedDetail.setPostEditable(feedbackResponse.getPostDetails().isPostEditable());
             feedDetail.setStarCount(feedbackResponse.getPostDetails().getStarCount());
             feedDetail.setRestaurantImage(feedbackResponse.getPostDetails().getRestaurantImage());
+            feedDetail.setIsCommentedByUser(feedbackResponse.getPostDetails().getIsCommentedByUser());
+
 //            feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
             feedDetail.setReviewImages(feedbackResponse.getPostDetails().getReviewImages());
         }
@@ -447,6 +449,8 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         @Override
         public void afterTextChanged(Editable s) {
             commentAdded = s.toString();
+            if(edtMyComment.getText().toString().trim().length()==0 && s.length()>0 && (s.charAt(0)=='\n' || s.charAt(0)==' '))
+                edtMyComment.setText(null);
 //            textViewCharCount.setText(String.valueOf(500-s.toString().trim().length()));
             btnSubmit.setEnabled(s.toString().trim().length() > 0);
 

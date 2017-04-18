@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/iv_profile_pic"
             android:text="Jesse Cennedy"
+            android:lineSpacingExtra="3dp"
             android:textColor="@color/feed_grey_text_heading"
             android:textSize="@dimen/font_normal"
             app:font="@string/maven_r" />
