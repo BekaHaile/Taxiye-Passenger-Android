@@ -105,6 +105,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     RelativeLayout rlMarkerPin;
     @Bind(R.id.bNext)
     Button bNext;
+    @Bind(R.id.rlMain)
+    RelativeLayout rlMain;
 
 
     public double current_latitude = 0.0;
@@ -415,6 +417,21 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 Utils.showSoftKeyboard(activity, editTextDeliveryAddress);
             }
         });
+
+//        rlMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(rlMain, null,
+//                new KeyboardLayoutListener.KeyBoardStateHandler() {
+//            @Override
+//            public void keyboardOpened() {
+//                scrollViewSuggestions.setVisibility(View.GONE);
+//                setupMapAndButtonMargins();
+//            }
+//
+//            @Override
+//            public void keyBoardClosed() {
+//                scrollViewSuggestions.setVisibility(View.VISIBLE);
+//                setupMapAndButtonMargins();
+//            }
+//        }));
 
 
         return rootView;

@@ -145,8 +145,8 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 					googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())));
 
-					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 87f, 147f, false, 0));
-					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 87f, 147f, false, 0));
+					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 40f, 40f, 0.5f, 0.5f, 0));
+					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 64f, 77f, 0.7f, 1.0f, 0));
 
 					googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 						@Override
@@ -359,7 +359,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										latLngsDriverAnim.clear();
 										if (markerDriver == null) {
 											markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
-													R.drawable.ic_bike_marker, 49f, 62f, true, 2));
+													R.drawable.ic_bike_track_order_marker, 38f, 94f, 0.5f, 0.5f, 2));
 											markerDriver.setRotation((float) bearing);
 										} else {
 											MarkerAnimation.animateMarkerToICS("-1", markerDriver,
@@ -393,11 +393,9 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 								}
 							});
 
-							String resultStr = "";
 							response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
 									deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
-							resultStr = new String(((TypedByteArray) response.getBody()).getBytes());
-							final String result = resultStr;
+							final String result = new String(((TypedByteArray) response.getBody()).getBytes());
 							final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
 							runOnUiThread(new Runnable() {
 
@@ -408,14 +406,15 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 											JSONObject jObj1 = new JSONObject(result);
 											double durationInSec = jObj1.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
 											long mins = (long) (durationInSec / 60d);
-											setEtaText(String.valueOf(mins), mins);
+											setEtaText(mins);
 										} else {
-											long etaLong = 2;
+											long etaLong = 10;
 											try {
 												etaLong = Long.getLong(eta);
 											} catch (Exception e) {
+												e.printStackTrace();
 											}
-											setEtaText(eta, etaLong);
+											setEtaText(etaLong);
 										}
 									} catch (Exception e) {
 										e.printStackTrace();
@@ -462,15 +461,14 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		return timerTask;
 	}
 
-	private MarkerOptions getMarkerOptionsForResource(LatLng latLng, int resId, float width, float height, boolean setMidAnchor, int zIndex) {
+	private MarkerOptions getMarkerOptionsForResource(LatLng latLng, int resId, float width, float height,
+													  float xAnchor, float yAnchor, int zIndex) {
 		MarkerOptions markerOptions = new MarkerOptions();
 		markerOptions.title("");
 		markerOptions.snippet("");
 		markerOptions.position(latLng);
 		markerOptions.zIndex(zIndex);
-		if(setMidAnchor) {
-			markerOptions.anchor(0.5f, 0.5f);
-		}
+		markerOptions.anchor(xAnchor, yAnchor);
 		markerOptions.icon(BitmapDescriptorFactory
 				.fromBitmap(CustomMapMarkerCreator
 						.createMarkerBitmapForResource(this, assl, resId, width, height)));
@@ -502,16 +500,12 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	}
 
 
-	private void setEtaText(String etaStr, long etaLong) {
-		if(etaLong == 0){
-			etaLong = 1;
-			etaStr = "1";
-		}
-		tvETA.setText(etaStr + "\n");
+	private void setEtaText(long etaLong) {
+		tvETA.setText(String.valueOf(etaLong) + "\n");
 		SpannableString spannableString = new SpannableString(etaLong > 1 ? "mins" : "min");
 		spannableString.setSpan(new RelativeSizeSpan(0.6f), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvETA.append(spannableString);
-		tvETA.setVisibility(View.VISIBLE);
+		tvETA.setVisibility(etaLong > 0 ? View.VISIBLE : View.GONE);
 	}
 
 	private Handler handler = new Handler();
