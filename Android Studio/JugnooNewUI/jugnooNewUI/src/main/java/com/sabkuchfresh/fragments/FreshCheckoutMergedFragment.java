@@ -1119,6 +1119,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_selected);
                 }
 			} else if(activity.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY){
+                isRazorUPI = true;
                 ivUPI.setImageResource(R.drawable.ic_radio_button_selected);
             } else{
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
@@ -1315,7 +1316,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 chargeDetails.clear();
                 items.clear();
 
-
                 chargeDetails.put("Payment mode", ""+activity.getPaymentOption());
                 chargeDetails.put(TOTAL_AMOUNT, ""+getSubTotalAmount(false));
                 chargeDetails.put(DISCOUNT_AMOUNT, "" + getTotalPromoAmount());
@@ -1336,7 +1336,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 params.put(Constants.DELIVERY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.DELIVERY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
 
-                params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(activity.getPaymentOption().getOrdinal()));
+                if(activity.getPaymentOption().getOrdinal() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()){
+                    params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(PaymentOption.RAZOR_PAY.getOrdinal()));
+                } else {
+                    params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(activity.getPaymentOption().getOrdinal()));
+                }
                 if(!isMenusOpen()) {
                     params.put(Constants.KEY_DELIVERY_SLOT_ID, String.valueOf(activity.getSlotSelected().getDeliverySlotId()));
                 }

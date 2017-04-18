@@ -660,6 +660,12 @@ public class WalletCore {
 							&& Data.getPayData().getPay().getHasVpa() == 1) {
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
+					}  else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()) {
+						paymentModeConfigDataDefault = paymentModeConfigData;
+						break;
+					} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()) {
+						paymentModeConfigDataDefault = paymentModeConfigData;
+						break;
 					}
 				}
 			}
@@ -683,7 +689,9 @@ public class WalletCore {
 			return PaymentOption.JUGNOO_PAY;
 		} else if(PaymentOption.RAZOR_PAY.getOrdinal() == paymentOption){
 			return PaymentOption.RAZOR_PAY;
-		} else{
+		} else if(PaymentOption.UPI_RAZOR_PAY.getOrdinal() == paymentOption){
+			return PaymentOption.UPI_RAZOR_PAY;
+		}else{
 			return PaymentOption.CASH;
 		}
 	}
