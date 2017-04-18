@@ -67,15 +67,13 @@
    <RelativeLayout
 
     android:id="@+id/layout_actual_post"
-    android:background="@drawable/rectangle_grey"
-    android:layout_marginLeft="12dp"
-    android:layout_marginRight="12dp"
-    android:layout_marginBottom="12dp"
-    android:paddingTop="@dimen/spacing_large"
-    android:layout_marginTop="@dimen/spacing_large"
-    android:layout_below="@id/layout_user_activity_heading"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+      android:background="@drawable/rectangle_grey"
+       android:paddingTop="@dimen/spacing_large"
+    android:layout_marginTop="20dp"
+       android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+       android:layout_below="@+id/layout_user_activity_heading"
+       android:layout_centerHorizontal="true">
 
        <RelativeLayout
            android:id="@+id/layout_owner_feed_layout"
@@ -110,10 +108,8 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:layout_marginRight="@dimen/spacing_small"
-
                    android:clickable="true"
                    android:layout_marginBottom="@dimen/spacing_tiny"
-
                    android:text="@string/dummy_text_2"
                    android:textColorHighlight="@color/feed_grey_text_heading"
                    android:textColor="@color/feed_grey_text_heading"
@@ -180,10 +176,11 @@
            android:layout_marginLeft="@dimen/spacing_large"
            android:layout_marginRight="@dimen/spacing_large"
            android:layout_marginBottom="@dimen/spacing_small"
+           android:lineSpacingExtra="4dp"
            android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
            android:textColor="@color/feed_grey_text"
-           android:textSize="@dimen/font_small"
-           app:font="maven" />
+           android:textSize="@dimen/font_large"
+           app:font="@string/maven_r" />
     <ImageView
         android:id="@+id/iv_place_image"
         android:layout_width="match_parent"
@@ -221,14 +218,14 @@
     <!--android:drawableLeft="@drawable/location_icon"-->
 
 
-    <View
+   <!-- <View
         android:id="@+id/shadow_address"
         android:layout_width="match_parent"
         android:layout_height="22dp"
         android:layout_alignTop="@id/vpReviewImages"
 
         android:background="@drawable/shadow_down_feed"
-        />
+        />-->
 
 
     <TextView
@@ -237,10 +234,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/iv_place_image"
-        android:layout_marginLeft="@dimen/spacing_small"
-        android:layout_marginTop="@dimen/spacing_small"
         android:drawablePadding="@dimen/spacing_tiny"
         android:gravity="center"
+        android:paddingLeft="@dimen/spacing_small"
+        android:paddingTop="8dp"
+        android:paddingBottom="@dimen/spacing_tiny"
+        android:paddingRight="13dp"
+        android:background="@drawable/bg_black_80_botom_right_rounded"
         android:drawableLeft="@drawable/location_icon"
         android:maxLines="1"
         android:maxWidth="250dp"
@@ -271,7 +271,8 @@
     <LinearLayout
         android:id="@+id/view_action_comment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:orientation="vertical"
         android:layout_below="@id/line_below_images_pager"
         android:layout_toRightOf="@id/line_divider_like_comment"
         android:background="?attr/selectableItemBackground"
@@ -281,14 +282,12 @@
             android:id="@+id/tv_action_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_normal"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            android:drawableLeft="@drawable/ic_comment"
+            android:drawableLeft="@drawable/ic_comment_active_new"
             android:drawablePadding="@dimen/spacing_tiny"
             android:gravity="center"
             android:text="Reply"
             android:textColor="@color/feed_grey_text"
-            android:textSize="@dimen/font_small"
+            android:textSize="12.5sp"
             app:font="maven" />
 
     </LinearLayout>
@@ -297,41 +296,61 @@
         android:orientation="vertical"
         android:id="@+id/view_action_like"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+
         android:layout_below="@id/line_below_images_pager"
         android:layout_toLeftOf="@id/line_divider_like_comment"
         android:background="?attr/selectableItemBackground"
         android:gravity="center">
 
 
-        <TextView
-            android:id="@+id/tv_action_like"
+
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content">
 
-            android:layout_marginTop="@dimen/spacing_normal"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            android:drawableLeft="@drawable/ic_like"
-            android:drawablePadding="@dimen/spacing_tiny"
+            <com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton
+                android:clickable="false"
+                android:id="@+id/like_button_animate"
+                app:circle_start_color="#ffffff"
+                app:circle_end_color="#cd8fff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon_size="14dp"
+                android:layout_marginRight="-12dp"
+                app:anim_scale_factor="3.8"
+                app:icon_type="heart" />
 
-            android:gravity="center"
-            android:text="Like"
-            android:textColor="@color/feed_grey_text"
-            android:textSize="@dimen/font_small"
-            app:font="maven" />
+
+
+
+            <TextView
+                android:id="@+id/tv_action_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Like"
+                android:textColor="@color/feed_grey_text"
+                android:textSize="12.5sp"
+                app:font="maven" />
+        </LinearLayout>
+
     </LinearLayout>
 
 
-    <View
-        android:id="@+id/line_below_like_comment"
-        style="@style/Feed_Line_Horizontal"
-        android:layout_below="@id/view_action_like" />
+
+
 
        <LinearLayout
            android:id="@+id/layout_comment"
-           android:layout_below="@id/line_below_like_comment"
+           android:layout_below="@id/view_action_like"
            android:orientation="horizontal"
             android:paddingTop="@dimen/spacing_normal"
+           android:visibility="gone"
            android:paddingBottom="@dimen/spacing_normal"
            android:paddingLeft="@dimen/spacing_normal"
            android:paddingRight="@dimen/spacing_normal"
@@ -347,35 +366,18 @@
                android:layout_marginRight="@dimen/spacing_small"
                android:src="@drawable/ic_fresh_item_placeholder" />
 
-           <LinearLayout
+           <TextView
                android:layout_gravity="center"
-               android:orientation="vertical"
+               android:id="@+id/tv_user_commented_name"
                android:layout_width="wrap_content"
-               android:layout_height="wrap_content">
-               <TextView
-                   android:id="@+id/tv_user_commented_name"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-
-                   android:textColor="@color/feed_grey_text_heading"
-                   android:layout_marginBottom="2.5dp"
-                   android:textSize="12.5sp"
-                   app:font="@string/maven_r" />
-
-               <TextView
-                   android:layout_gravity="center"
-                   android:id="@+id/tv_user_commented_comment"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-
-                   android:maxLines="2"
-                   android:ellipsize="end"
-                   android:textColor="@color/feed_grey_text"
-                   android:textSize="10.6sp"
-                   app:font="@string/maven_r" />
-
-           </LinearLayout>
-
+               android:layout_height="wrap_content"
+               android:lineSpacingExtra="2dp"
+               android:textColor="@color/feed_grey_text_heading"
+               android:layout_marginBottom="2.5dp"
+               android:textSize="14sp"
+               android:ellipsize="end"
+               android:maxLines="2"
+               app:font="@string/maven_r" />
 
        </LinearLayout>
 

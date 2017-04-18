@@ -931,6 +931,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (FeedHomeFragment) getSupportFragmentManager().findFragmentByTag(FeedHomeFragment.class.getName());
     }
 
+    public FeedNotificationsFragment getFeedNotificationsFragment(){
+        return (FeedNotificationsFragment) getSupportFragmentManager().findFragmentByTag(FeedNotificationsFragment.class.getName());
+    }
+
     public FeedReserveSpotFragment getFeedReserveSpotFragment(){
         return (FeedReserveSpotFragment) getSupportFragmentManager().findFragmentByTag(FeedReserveSpotFragment.class.getName());
     }
@@ -1447,14 +1451,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
 
+            feedHomeAddPostView.setVisibility(View.GONE);
             topBar.title.setLayoutParams(titleLayoutParams);
             setCollapsingToolbar(fragment instanceof VendorMenuFragment, fragment);
 
 
-            if(fragment instanceof FeedHomeFragment)
-                feedHomeAddPostView.setVisibility(View.VISIBLE);
-            else
-                feedHomeAddPostView.setVisibility(View.GONE);
+
 
         } catch (Exception e) {
             e.printStackTrace();

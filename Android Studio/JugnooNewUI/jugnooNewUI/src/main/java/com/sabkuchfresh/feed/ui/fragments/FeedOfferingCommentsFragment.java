@@ -166,17 +166,18 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
             @Override
             public void onDeleteComment(final FeedComment feedComment, final int positionInList, View viewClicked) {
-             DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Reply", "Are you sure?", "Yes", "No", new View.OnClickListener() {
+                deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
+           /*  DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Reply", "Are you sure?", "Yes", "No", new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {
-                     deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
+
                  }
              }, new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {
 
                  }
-             },true,false);
+             },true,false);*/
 
             }
 
@@ -305,6 +306,8 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
             feedDetail.setPostEditable(feedbackResponse.getPostDetails().isPostEditable());
             feedDetail.setStarCount(feedbackResponse.getPostDetails().getStarCount());
             feedDetail.setRestaurantImage(feedbackResponse.getPostDetails().getRestaurantImage());
+            feedDetail.setIsCommentedByUser(feedbackResponse.getPostDetails().getIsCommentedByUser());
+
 //            feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
             feedDetail.setReviewImages(feedbackResponse.getPostDetails().getReviewImages());
         }
@@ -446,6 +449,8 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         @Override
         public void afterTextChanged(Editable s) {
             commentAdded = s.toString();
+            if(edtMyComment.getText().toString().trim().length()==0 && s.length()>0 && (s.charAt(0)=='\n' || s.charAt(0)==' '))
+                edtMyComment.setText(null);
 //            textViewCharCount.setText(String.valueOf(500-s.toString().trim().length()));
             btnSubmit.setEnabled(s.toString().trim().length() > 0);
 
@@ -471,7 +476,16 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                     if (activity.getFeedHomeFragment() != null) {
                         //notifies the feed home fragment that user has deleted the post
                         activity.onBackPressed();
-                        activity.getFeedHomeFragment().notifyOnDelete(positionInOriginalList);
+                        if(positionInOriginalList==-1){
+                            activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
+                            if(activity.getFeedNotificationsFragment()!=null){
+                                activity.getFeedNotificationsFragment().fetchFeedNotifications();
+                            }
+
+                        }else{
+                            activity.getFeedHomeFragment().notifyOnDelete(positionInOriginalList);
+                        }
+
 
                     }
                 }

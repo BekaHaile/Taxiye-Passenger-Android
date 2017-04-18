@@ -42,7 +42,6 @@ import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.feed.utils.BadgeDrawable;
-import com.sabkuchfresh.fragments.FreshHomeFragment;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -365,6 +364,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                     activity.getFeedHomeAddPostView().setVisibility(View.GONE);
 
                                 }
+
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -560,32 +560,48 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     private MenuItem itemCart;
-    private long currentNotificationCount = 0;
-    private boolean isNotificationsViewed;
 
-    public void setNotificationsViewed(boolean notificationsViewed) {
-        isNotificationsViewed = notificationsViewed;
+    public void setNotificationsSeenCount(long notificationsSeenCount) {
+        this.notificationsSeenCount = notificationsSeenCount;
     }
+
+    private long notificationsSeenCount = 0;
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.feed_home_menu, menu);
         itemCart = menu.findItem(R.id.item_notification);
-        setNotificationCount(currentNotificationCount);
+        setNotificationCount(notificationsSeenCount);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
 
 
 
-    private void setNotificationCount(long count){
+  /*
+  Old logic to view notification count
+  private boolean isNotificationsViewed;
+
+    public void setNotificationsViewed(boolean notificationsViewed) {
+        isNotificationsViewed = notificationsViewed;
+    }
+  private void setNotificationCount(long count){
         LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
-        BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(!isNotificationsViewed || count!=currentNotificationCount?count:0));
+        BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(!isNotificationsViewed || count!=notificationsSeenCount?count:0));
         activity.collapsingToolbar.invalidate();
-        if(count!=currentNotificationCount){
+        if(count!=notificationsSeenCount){
             isNotificationsViewed=false;
         }
-        currentNotificationCount = count;
+        notificationsSeenCount = count;
+    }
+    */
+    private void setNotificationCount(long count){
+        this.notificationsSeenCount = count;
+        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+        BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(count));
+        activity.collapsingToolbar.invalidate();
+
     }
 
     @Override

@@ -3,7 +3,9 @@ package com.sabkuchfresh.feed.ui.adapters;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
@@ -14,9 +16,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.daimajia.swipe.SimpleSwipeListener;
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -35,12 +42,13 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
+import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 
 
 /**
  * Created by Shankar on 7/17/15.
  */
-public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener, DisplayFeedHomeImagesAdapter.Callback {
+public class FeedOfferingCommentsAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> implements ItemListener, DisplayFeedHomeImagesAdapter.Callback {
 
     private FreshActivity activity;
     private FeedHomeAdapter.FeedPostCallback callback;
@@ -95,70 +103,121 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
         try {
             if(holder instanceof FeedHomeAdapter.ViewHolderReviewImage)
-			{
+            {
 
-				FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback, this, true);
-				((FeedHomeAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
+                FeedHomeAdapter.setData((FeedHomeAdapter.ViewHolderReviewImage)holder,(FeedDetail) feedDetailData.get(position),activity, callback, this, true);
+                ((FeedHomeAdapter.ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
 
-			}
-			else if(holder instanceof MyCommentViewHolder){
+            }
+            else if(holder instanceof MyCommentViewHolder){
 
 
-				if (Data.userData!=null) {
-					((MyCommentViewHolder) holder).tvMyUserName.setText(Data.userData.userName);
-					if (!TextUtils.isEmpty(Data.userData.userImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(Data.userData.userImage))
-						Picasso.with(activity).load(Data.userData.userImage).resize(Utils.convertDpToPx(activity,25), Utils.convertDpToPx(activity,25)).centerCrop().transform(new CircleTransform()).into(((MyCommentViewHolder) holder).ivMyProfilePic);
-					else {
-						if (userDrawable == null) {
-							String firstLetter =  Data.userData.userName.toUpperCase().substring(0,1);
-							TextDrawable drawable = TextDrawable.builder()
-									.beginConfig().bold().endConfig()
-									.buildRound(firstLetter, activity.getParsedColor(""));
-							userDrawable = drawable;
-						}
-						((MyCommentViewHolder) holder).ivMyProfilePic.setImageDrawable(userDrawable);
-					}
-				}
+                if (Data.userData!=null) {
+                    ((MyCommentViewHolder) holder).tvMyUserName.setText(Data.userData.userName);
+                    if (!TextUtils.isEmpty(Data.userData.userImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(Data.userData.userImage))
+                        Picasso.with(activity).load(Data.userData.userImage).resize(Utils.convertDpToPx(activity,25), Utils.convertDpToPx(activity,25)).centerCrop().transform(new CircleTransform()).into(((MyCommentViewHolder) holder).ivMyProfilePic);
+                    else {
+                        if (userDrawable == null) {
+                            String firstLetter =  Data.userData.userName.toUpperCase().substring(0,1);
+                            TextDrawable drawable = TextDrawable.builder()
+                                    .beginConfig().bold().endConfig()
+                                    .buildRound(firstLetter, activity.getParsedColor(""));
+                            userDrawable = drawable;
+                        }
+                        ((MyCommentViewHolder) holder).ivMyProfilePic.setImageDrawable(userDrawable);
+                    }
+                }
 
-				((MyCommentViewHolder) holder).edtComment.setText(callback.getEditTextString());
+                ((MyCommentViewHolder) holder).edtComment.setText(callback.getEditTextString());
 
-			}
-			else if(holder instanceof UserCommentViewHolder){
-				FeedComment feedComment = (FeedComment) feedDetailData.get(position);
-				UserCommentViewHolder userCommentViewHolder =     ((UserCommentViewHolder) holder);
-				userCommentViewHolder.tvUserCommentName.setText(feedComment.getUserName());
-				userCommentViewHolder.tvUserCommentDescription.setText(feedComment.getCommentContent());
-				if(position==feedDetailData.size()-1)
-					userCommentViewHolder.lineBottom.setVisibility(View.INVISIBLE);
-				else
-					userCommentViewHolder.lineBottom.setVisibility(View.VISIBLE);
+            }
+            else if(holder instanceof UserCommentViewHolder){
 
-				if(((FeedComment) feedDetailData.get(position)).getTimeCreated()==null)
-					userCommentViewHolder.tvUserTimePosted.setVisibility(View.GONE);
-				else {
-					userCommentViewHolder.tvUserTimePosted.setVisibility(View.VISIBLE);
-					userCommentViewHolder.tvUserTimePosted.setText(FeedHomeAdapter.getTimeToDisplay(((FeedComment) feedDetailData.get(position)).getTimeCreated(), activity.isTimeAutomatic));
-				}
 
-				if (!TextUtils.isEmpty(feedComment.getUserImage()) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(feedComment.getUserImage()))
-					Picasso.with(activity).load(feedComment.getUserImage()).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(userCommentViewHolder.ivUserCommentPic);
-				else {
-					if (feedComment.getDrawable() == null) {
-						String firstLetter =  feedComment.getUserName().toUpperCase().substring(0,1);
-						TextDrawable drawable = TextDrawable.builder()
-								.beginConfig().bold().endConfig()
-								.buildRound(firstLetter, activity.getParsedColor(feedComment.getColor()));
-						feedComment.setDrawable(drawable);
-					}
-					userCommentViewHolder.ivUserCommentPic.setImageDrawable(feedComment.getDrawable());
-				}
 
-				((UserCommentViewHolder) holder).ivDeleteComment.setVisibility(feedComment.canEdit()?View.VISIBLE:View.GONE);
-			}
+                final FeedComment feedComment = (FeedComment) feedDetailData.get(position);
+                final UserCommentViewHolder userCommentViewHolder =  ((UserCommentViewHolder) holder);
+
+
+            //Show Comment if X Comment on Y Post Done with only one textVIew
+
+
+                String keyComment =  ": " + feedComment.getCommentContent();
+                SpannableString spannableString = new SpannableString(feedComment.getUserName() + keyComment);
+                spannableString.setSpan(BOLD_SPAN,0,feedComment.getUserName().length(),SPAN_INCLUSIVE_EXCLUSIVE);
+                userCommentViewHolder.tvUserNameAndComment.setText(spannableString);
+
+
+                if(position==feedDetailData.size()-1)
+                    userCommentViewHolder.lineBottom.setVisibility(View.INVISIBLE);
+                else
+                    userCommentViewHolder.lineBottom.setVisibility(View.VISIBLE);
+
+                if(((FeedComment) feedDetailData.get(position)).getTimeCreated()==null)
+                    userCommentViewHolder.tvUserTimePosted.setVisibility(View.GONE);
+                else {
+                    userCommentViewHolder.tvUserTimePosted.setVisibility(View.VISIBLE);
+                    userCommentViewHolder.tvUserTimePosted.setText(FeedHomeAdapter.getTimeToDisplay(((FeedComment) feedDetailData.get(position)).getTimeCreated(), activity.isTimeAutomatic));
+                }
+
+                if (!TextUtils.isEmpty(feedComment.getUserImage()) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(feedComment.getUserImage()))
+                    Picasso.with(activity).load(feedComment.getUserImage()).resize(Utils.convertDpToPx(activity,50), Utils.convertDpToPx(activity,50)).centerCrop().transform(new CircleTransform()).into(userCommentViewHolder.ivUserCommentPic);
+                else {
+                    if (feedComment.getDrawable() == null) {
+                        String firstLetter =  feedComment.getUserName().toUpperCase().substring(0,1);
+                        TextDrawable drawable = TextDrawable.builder()
+                                .beginConfig().bold().endConfig()
+                                .buildRound(firstLetter, activity.getParsedColor(feedComment.getColor()));
+                        feedComment.setDrawable(drawable);
+                    }
+                    userCommentViewHolder.ivUserCommentPic.setImageDrawable(feedComment.getDrawable());
+                }
+
+
+
+                //Swipe Listener
+
+                userCommentViewHolder.swipeLayout.setSwipeEnabled(feedComment.canEdit());
+                userCommentViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+                userCommentViewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
+                    @Override
+                    public void onOpen(SwipeLayout layout) {
+
+                    }
+
+                    @Override
+                    public void onStartOpen(SwipeLayout layout) {
+                        super.onStartOpen(layout);
+
+
+                        userCommentViewHolder.rlComment.setBackgroundColor(ContextCompat.getColor(activity,R.color.grey_e7));
+
+                    }
+
+                    @Override
+                    public void onClose(SwipeLayout layout) {
+                        super.onClose(layout);
+                        userCommentViewHolder.rlComment.setBackgroundColor(ContextCompat.getColor(activity,R.color.feed_comment_background));
+
+                    }
+                });
+                mItemManger.bindView(holder.itemView,position);
+
+
+                ((UserCommentViewHolder) holder).ivDeleteComment.setVisibility(feedComment.canEdit()?View.VISIBLE:View.GONE);
+                if(feedComment.canEdit()&& mItemManger.isOpen(position) ){
+                    userCommentViewHolder.rlComment.setBackgroundColor(ContextCompat.getColor(activity,R.color.grey_e7));
+
+                }else{
+                    userCommentViewHolder.rlComment.setBackgroundColor(ContextCompat.getColor(activity,R.color.feed_comment_background));
+
+                }
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -169,6 +228,11 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onRestaurantImageClick(Integer restaurantId) {
         callback.onRestaurantClick(restaurantId);
+        try{
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 
@@ -233,7 +297,8 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
                 case R.id.ib_arrow_more:
                     callback.onMoreClick((FeedDetail) feedDetailData.get(position),0,viewClicked);
                     break;
-                case R.id.iv_delete_comment:
+                case R.id.ll_delete_comment:
+                    ((UserCommentViewHolder)recyclerView.findViewHolderForAdapterPosition(position)).swipeLayout.close();
                     callback.onDeleteComment((FeedComment) feedDetailData.get(position),position,viewClicked);
                     break;
                 default:
@@ -265,6 +330,11 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    @Override
+    public int getSwipeLayoutResourceId(int position) {
+        return R.id.swipe;
+    }
+
 
     /*public interface Callback {
         void onLikeClick(int positionOfLayout);
@@ -279,21 +349,25 @@ public class FeedOfferingCommentsAdapter extends RecyclerView.Adapter<RecyclerVi
      static class UserCommentViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.iv_profile_pic)
         ImageView ivUserCommentPic;
-        @Bind(R.id.tv_user_name)
-        TextView tvUserCommentName;
-        @Bind(R.id.tv_comment_description)
-        TextView tvUserCommentDescription;
+        @Bind(R.id.tv_user_name_and_comment)
+        TextView tvUserNameAndComment;
+
         @Bind(R.id.tv_time_posted)
         TextView tvUserTimePosted;
          @Bind(R.id.line_bottom)
          View lineBottom;
-         @Bind(R.id.iv_delete_comment)
-          ImageView ivDeleteComment;
+         @Bind(R.id.ll_delete_comment)
+         LinearLayout ivDeleteComment;
+         @Bind(R.id.swipe)
+         SwipeLayout swipeLayout;
+         @Bind(R.id.rl_comment)
+         RelativeLayout rlComment;
 
          UserCommentViewHolder(final View view, final ItemListener itemListener) {
             super(view);
             ButterKnife.bind(this, view);
-            tvUserCommentName.setTypeface(tvUserCommentName.getTypeface(), Typeface.BOLD);
+
+
              ivDeleteComment.setOnClickListener(new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {

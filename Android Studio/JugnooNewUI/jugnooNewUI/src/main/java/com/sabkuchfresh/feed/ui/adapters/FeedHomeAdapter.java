@@ -2,8 +2,11 @@ package com.sabkuchfresh.feed.ui.adapters;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -19,6 +22,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -33,6 +37,7 @@ import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
+import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -109,8 +114,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return new ViewHolderReviewImage(v, this);
             case ITEM_FOOTER_BLANK:
                  v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
-                 RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, Utils.convertDpToPx(activity,180));
+                 RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, FeedUtils.dpToPx(180));
                  v.setLayoutParams(layoutParams);
+                v.setBackgroundColor(ContextCompat.getColor(activity,R.color.feed_grey_black));
                  return new ViewBlankHolder(v);
             default:
                 throw new IllegalArgumentException();
@@ -297,7 +303,6 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
          //SetAddress
             holder.tvFeedAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
-            holder.shadowAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
             holder.tvFeedAddress.setText(restaurantAddress);
 
 
@@ -362,8 +367,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             holder.tvComment.setText(commentText);
-            holder.tvComment.setCompoundDrawablesWithIntrinsicBounds(feedDetail.getIsCommentedByUser() == 1
-                    ? R.drawable.ic_comment_active : R.drawable.ic_comment, 0, 0, 0);
+            holder.tvComment.setCompoundDrawablesWithIntrinsicBounds(feedDetail.getIsCommentedByUser() == 1 ? R.drawable.ic_comment_active_new : R.drawable.ic_comment_new, 0, 0, 0);
 
 
 
@@ -400,12 +404,14 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             //Set Like Icons and like text color
-            Drawable drawableToSet = feedDetail.isLiked() ? ContextCompat.getDrawable(activity, R.drawable.ic_like_active) : ContextCompat.getDrawable(activity, R.drawable.ic_like);
-            holder.tvLike.setCompoundDrawablesWithIntrinsicBounds(drawableToSet, null, null, null);
-            if (feedDetail.isLiked())
+        //    Drawable drawableToSet = feedDetail.isLiked() ? ContextCompat.getDrawable(activity, R.drawable.ic_like_active) : ContextCompat.getDrawable(activity, R.drawable.ic_like);
+          //  holder.tvLike.setCompoundDrawablesWithIntrinsicBounds(drawableToSet, null, null, null);
+
+            holder.likeButtonAnimate.setLiked(feedDetail.isLiked());
+      /*      if (feedDetail.isLiked())
                 holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_color_like_active));
             else
-                holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_grey_text));
+                holder.tvLike.setTextColor(ContextCompat.getColor(activity, R.color.feed_grey_text));*/
 
 
 
@@ -477,9 +483,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             spannableString.setSpan(new RelativeSizeSpan(0.2f),userCommentName.length(),spannableString.length()-keyComment.length(),SPAN_INCLUSIVE_EXCLUSIVE);//margin between name and comment reducing size
             holder.tvUserCommentedNameAndComment.setText(spannableString);
 */
-
-            holder.tvUserCommentedName.setText(feedDetail.getUserName());
-            holder.tvUserCommentedComment.setText(feedDetail.getCommentContent() );
+            String keyComment =  ": " + feedDetail.getCommentContent();
+            SpannableString commentNameAndContent = new SpannableString(feedDetail.getUserName() + keyComment);
+            commentNameAndContent.setSpan(BOLD_SPAN,0,feedDetail.getUserName().length(),SPAN_INCLUSIVE_EXCLUSIVE);
+            holder.tvUserCommentedName.setText(commentNameAndContent);
 
 
             //User Image Comment
@@ -539,8 +546,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (adapterList != null && position < adapterList.size()) {
 
             FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
-            if (isLiked)
+            if (isLiked) {
+                LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
+                likeButton.onClick(likeButton);
                 feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
+            }
             else if (feedDetail.getLikeCount() > 0)
                 feedDetail.setLikeCount(feedDetail.getLikeCount() - 1);
 
@@ -637,13 +647,16 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             switch (viewClicked.getId()) {
                 case R.id.view_action_like:
                     if(!feedDetail.isLiked()){
-                        Animation animation = AnimationUtils.loadAnimation(viewClicked.getContext(), R.anim.bounce_scale_out_in);
+                       /* Animation animation = AnimationUtils.loadAnimation(viewClicked.getContext(), R.anim.bounce_scale_out_in);
                         viewClicked.findViewById(R.id.tv_action_like).clearAnimation();
-                        viewClicked.findViewById(R.id.tv_action_like).startAnimation(animation);
+                        viewClicked.findViewById(R.id.tv_action_like).startAnimation(animation);*/
+                       /*LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
+                        likeButton.onClick(likeButton);*/
                     }
                     feedPostCallback.onLikeClick(feedDetail, position);
                     break;
                 case R.id.view_action_comment:
+
                     feedPostCallback.onCommentClick(feedDetail, position);
                     break;
                 case R.id.root_layout_item:
@@ -711,7 +724,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-    static class ViewHolderReviewImage extends RecyclerView.ViewHolder {
+    public static class ViewHolderReviewImage extends RecyclerView.ViewHolder {
         @Bind(R.id.iv_owner_profile_pic)
         ImageView ivFeedOwnerPic;
         @Bind(R.id.tv_feed_owner_title)
@@ -724,8 +737,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View lineBelowImagesPager;
         @Bind(R.id.tv_user_commented_name)
         TextView tvUserCommentedName;
-        @Bind(R.id.tv_user_commented_comment)
-        TextView tvUserCommentedComment;
+
         @Bind(R.id.tv_action_comment)
         TextView tvComment;
         @Bind(R.id.tv_action_like)
@@ -762,18 +774,26 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
         @Bind(R.id.tabDots)
         TabLayout tabDots;
-        @Bind(R.id.shadow_address)
-         View shadowAddress  ;
         @Bind(R.id.layout_actual_post)
         RelativeLayout layoutActualPost;
         @Bind(R.id.layout_comment)
         LinearLayout layoutComment;
+        @Bind(R.id.like_button_animate)
+        LikeButton likeButtonAnimate;
+
+        public CommentTouchListener getCommentTouchListener() {
+            if(commentTouchListener==null) {
+                commentTouchListener =   new CommentTouchListener(tvComment);
+            }
+            return commentTouchListener;
+        }
+
+        CommentTouchListener commentTouchListener;
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
             ButterKnife.bind(this, view);
             tvFeedAddress.setTypeface(tvFeedAddress.getTypeface(), Typeface.BOLD);
-            tvUserCommentedName.setTypeface(tvUserCommentedName.getTypeface(), Typeface.BOLD);
             viewActionLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -815,8 +835,44 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
             tabDots.setupWithViewPager(vpReviewImages, true);
+            tvComment.clearAnimation();
+            tvComment.animate().scaleX(1.0f).scaleY(1.0f).start();
+            viewActionComment.setOnTouchListener(getCommentTouchListener());
+        }
+
+
+
+        private   class CommentTouchListener implements View.OnTouchListener{
+
+            private View viewToAnimate;
+            public CommentTouchListener(View viewToAnimate) {
+                this.viewToAnimate = viewToAnimate;
+
+            }
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    viewToAnimate.animate().scaleX(0.9f).scaleY(0.9f).start();
+                    (((TextView)viewToAnimate).getCompoundDrawables()[0]).mutate().setColorFilter(Color.parseColor("#95C55E"), PorterDuff.Mode.SRC_ATOP);
+                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction()==MotionEvent.ACTION_CANCEL ) {
+                    viewToAnimate.clearAnimation();
+                    viewToAnimate.animate().scaleX(1.0f).scaleY(1.0f).start();
+                    ((TextView)viewToAnimate).getCompoundDrawables()[0].mutate().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_ATOP);
+                }
+                return false;
+            }
         }
     }
+
+
+
+
+
+
+
+
 
     private class ChangeLocationViewHolder extends RecyclerView.ViewHolder {
 
