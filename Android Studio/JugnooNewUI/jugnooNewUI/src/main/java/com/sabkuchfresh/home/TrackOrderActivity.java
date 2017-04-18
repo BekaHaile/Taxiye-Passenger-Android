@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -48,7 +47,6 @@ import java.util.TimerTask;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -87,7 +85,6 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 	private Marker markerDriver;
 	private Polyline polylinePath;
-	private Location myLocation;
 	private final int MAP_ANIMATE_DURATION = 300;
 	private boolean mapTouchedOnce, zoomSetManually;
 	private float zoomInitial;
@@ -136,8 +133,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 				TrackOrderActivity.this.googleMap = googleMap;
 				if (googleMap != null) {
 					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-					googleMap.setMyLocationEnabled(true);
-					googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+					googleMap.setMyLocationEnabled(false);
 
 					LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
 					llbBuilder.include(pickupLatLng).include(deliveryLatLng);
@@ -225,9 +221,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 	private void zoomToDriverAndDrop(){
 		try {
-			if(googleMap != null && myLocation != null
-					&& MapUtils.distance(googleMap.getCameraPosition().target,
-					new LatLng(myLocation.getLatitude(), myLocation.getLongitude())) > 10){
+			if (googleMap != null) {
 				LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
 				llbBuilder.include(deliveryLatLng);
 				if(markerDriver != null) {
@@ -254,13 +248,6 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(orderUpdateBroadcast);
 	}
-
-	private LocationUpdate locationUpdate = new LocationUpdate() {
-		@Override
-		public void onLocationChanged(Location location) {
-			myLocation = location;
-		}
-	};
 
 	private BroadcastReceiver orderUpdateBroadcast = new BroadcastReceiver() {
 		@Override
@@ -303,14 +290,12 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		if(googleMap != null){
 			scheduleTimer();
 		}
-		MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 60000L);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		cancelTimer();
-		MyApplication.getInstance().getLocationFetcher().destroy();
 	}
 
 	Timer timer;
