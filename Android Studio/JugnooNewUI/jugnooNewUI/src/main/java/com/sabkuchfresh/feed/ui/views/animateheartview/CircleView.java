@@ -18,8 +18,10 @@ import android.view.View;
  */
 
 public class CircleView extends View {
-    private int START_COLOR = 0xFFFF5722;
-    private int END_COLOR = 0xFFFFC107;
+//    private int START_COLOR = 0xFFFF5722;
+//private int END_COLOR = 0xFFFFC107;
+    private int START_COLOR = 0x7DC2F4;
+    private int END_COLOR = 0x7DC2F4;
 
     private ArgbEvaluator argbEvaluator = new ArgbEvaluator();
 

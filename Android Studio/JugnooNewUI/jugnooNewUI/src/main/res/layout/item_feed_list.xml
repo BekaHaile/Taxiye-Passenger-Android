@@ -37,7 +37,7 @@
             android:layout_marginBottom="@dimen/spacing_tiny"
             android:text="@string/dummy_text_2"
             android:textColor="@color/feed_grey_text_heading"
-            android:textSize="@dimen/font_normal"
+            android:textSize="@dimen/font_large"
             app:font="maven" />
 
         <TextView
@@ -113,7 +113,7 @@
                    android:text="@string/dummy_text_2"
                    android:textColorHighlight="@color/feed_grey_text_heading"
                    android:textColor="@color/feed_grey_text_heading"
-                   android:textSize="@dimen/font_normal"
+                   android:textSize="@dimen/font_large"
                    app:font="maven" />
 
                <TextView
@@ -126,7 +126,7 @@
                    android:text="2w"
                    app:font="maven"
                    android:textColor="@color/feed_grey_text_secondary"
-                   android:textSize="10sp" />
+                   android:textSize="@dimen/font_extra_small" />
            </LinearLayout>
 
 
@@ -178,8 +178,8 @@
            android:layout_marginBottom="@dimen/spacing_small"
            android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
            android:textColor="@color/feed_grey_text"
-           android:textSize="@dimen/font_normal"
-           app:font="maven" />
+           android:textSize="@dimen/font_large"
+           app:font="@string/maven_r" />
     <ImageView
         android:id="@+id/iv_place_image"
         android:layout_width="match_parent"
@@ -315,7 +315,8 @@
                 android:id="@+id/like_button_animate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="-29dp"
+                app:icon_size="14dp"
+                android:layout_marginRight="-7dp"
                 app:anim_scale_factor="3"
                 app:icon_type="heart" />
 
@@ -369,7 +370,7 @@
                android:layout_height="wrap_content"
                android:textColor="@color/feed_grey_text_heading"
                android:layout_marginBottom="2.5dp"
-               android:textSize="12.5sp"
+               android:textSize="14sp"
                android:ellipsize="end"
                android:maxLines="2"
                app:font="@string/maven_r" />

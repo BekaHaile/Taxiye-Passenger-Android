@@ -109,7 +109,6 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
             if (!iconType.isEmpty())
                 currentIcon = parseIconType(iconType);
 
-
         circleStartColor = array.getColor(R.styleable.LikeButton_circle_start_color, 0);
 
         if (circleStartColor != 0)

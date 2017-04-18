@@ -50,7 +50,7 @@
             android:layout_toRightOf="@id/iv_profile_pic"
             android:text="Jesse Cennedy"
             android:textColor="@color/feed_grey_text_heading"
-            android:textSize="@dimen/font_extra_small"
+            android:textSize="@dimen/font_normal"
             app:font="@string/maven_r" />
 
         <!-- <TextView
@@ -78,7 +78,7 @@
             android:drawablePadding="2dp"
             android:text="12m"
             android:textColor="@color/feed_grey_text_secondary"
-            android:textSize="10sp"
+            android:textSize="@dimen/font_extra_small"
             app:font="maven" />
 
         <View
