@@ -1776,9 +1776,12 @@ public class JSONParser implements Constants {
                 Prefs.with(context).save(SPLabels.ADD_WORK, "");
                 boolean homeSaved = false, workSaved = false;
                 Gson gson = new Gson();
+
+                // Fresh last selected address fetched from SP to check if that address is deleted/updated by user recently
+                // hashing searchResult object matched with Fresh selected address in a variable
                 SearchResult searchResultLastFMM = gson.fromJson(Prefs.with(context)
                         .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
-                boolean addressMatchedWithSaved = false;
+                SearchResult searchResultMatched = null;
                 for (int i = 0; i < addressResponse.getAddresses().size(); i++) {
                     FetchUserAddressResponse.Address address = addressResponse.getAddresses().get(i);
                     SearchResult searchResult = new SearchResult(address.getType(), address.getAddr(), address.getPlaceId(),
@@ -1807,17 +1810,30 @@ public class JSONParser implements Constants {
                         searchResult.setType(SearchResult.Type.RECENT);
                         Data.userData.getSearchResultsRecent().add(searchResult);
                     }
+
+                    // to check if Fresh last selected address has valid id and to match with every address from server
+                    // then hashing that searchresult object
                     if(searchResultLastFMM.getId() != null && searchResultLastFMM.getId() > 0){
                         if((searchResult.getId() != null && searchResult.getId() > 0
                                 && searchResult.getId().equals(searchResultLastFMM.getId()))){
-                            addressMatchedWithSaved = true;
+                            searchResultMatched = searchResult;
                         }
                     }
                 }
 
-                if(searchResultLastFMM.getId() != null && searchResultLastFMM.getId() > 0 && !addressMatchedWithSaved){
-                    searchResultLastFMM.setId(0);
-                    searchResultLastFMM.setName("");
+                // check if Fresh selected address has some valid id
+                if(searchResultLastFMM.getId() != null && searchResultLastFMM.getId() > 0){
+                    // if Fresh last selected address is not matched with server's list of updated addresses
+                    // set Fresh selected address id to -10 and saving back for marking this case to update
+                    // address related local variables of FreshActivity
+                    if(searchResultMatched == null) {
+                        searchResultLastFMM.setId(-10);
+                        searchResultLastFMM.setName("");
+                    }
+                    // else if matched update Fresh selected address by server's updated address object
+                    else {
+                        searchResultLastFMM = searchResultMatched;
+                    }
                     Prefs.with(context).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, gson.toJson(searchResultLastFMM, SearchResult.class));
                 }
 

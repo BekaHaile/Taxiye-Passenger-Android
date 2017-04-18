@@ -1007,7 +1007,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     activity.startActivity(intent);
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 } else {
-                    Utils.showToast(activity, "Tracking available once your order is dispatched");
+                    Utils.showToast(activity, !TextUtils.isEmpty(order.getTrackDeliveryMessage()) ?
+                            order.getTrackDeliveryMessage() : activity.getString(R.string.tracking_not_available_message));
                 }
             } catch (Exception e){
                 e.printStackTrace();

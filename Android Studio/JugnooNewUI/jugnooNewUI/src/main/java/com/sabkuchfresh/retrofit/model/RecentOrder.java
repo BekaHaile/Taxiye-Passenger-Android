@@ -54,6 +54,9 @@ public class RecentOrder {
     @SerializedName("driver_phone_no")
     @Expose
     private String driverPhoneNo;
+    @SerializedName("track_delivery_message")
+    @Expose
+    private String trackDeliveryMessage;
 
 
     /**
@@ -220,5 +223,13 @@ public class RecentOrder {
 
     public void setDriverPhoneNo(String driverPhoneNo) {
         this.driverPhoneNo = driverPhoneNo;
+    }
+
+    public String getTrackDeliveryMessage() {
+        return trackDeliveryMessage;
+    }
+
+    public void setTrackDeliveryMessage(String trackDeliveryMessage) {
+        this.trackDeliveryMessage = trackDeliveryMessage;
     }
 }

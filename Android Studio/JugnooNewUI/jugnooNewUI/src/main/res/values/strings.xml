@@ -1650,6 +1650,7 @@
     <string name="label_sample">Label e.g. Hospital / Friend’s Home</string>
     <string name="flat_number_hint">Flat Number/ House No./ Apt Name</string>
     <string name="landmark">Landmark</string>
+    <string name="tracking_not_available_message">Tracking available once your order is dispatched</string>
 
 
 </resources>

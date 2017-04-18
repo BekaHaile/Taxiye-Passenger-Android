@@ -855,11 +855,27 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 }
 
+
+                // to check from Last selected address that if its id is -10(marked for special case of
+                // deleting selected delivery address from address book), if it is the case clear
+                // address related local variables and save empty jsonObject in SP for setting
+                // delivery location to current location.
                 SearchResult searchResultLastFMM = gson.fromJson(Prefs.with(this)
                         .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
-                if(searchResultLastFMM.getId() == null || searchResultLastFMM.getId() == 0){
+                if(searchResultLastFMM.getId() == null || searchResultLastFMM.getId() == -10){
+                    setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
+                    setSelectedAddress("");
                     setSelectedAddressId(0);
                     setSelectedAddressType("");
+
+                    Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
+                }
+                // else if selected address is updated by user, updating address related local variables
+                // from SP search result
+                else if(searchResultLastFMM.getId() == getSelectedAddressId()){
+                    setSelectedLatLng(searchResultLastFMM.getLatLng());
+                    setSelectedAddress(searchResultLastFMM.getAddress());
+                    setSelectedAddressType(searchResultLastFMM.getName());
                 }
             }
         } catch (Exception e) {
@@ -3294,6 +3310,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
                 if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
                     setSearchResultToActVarsAndFetchData(searchResult, appType);
+					saveOfferingLastAddress(appType);
                 } else {
                     getAddressAndFetchOfferingData(getSelectedLatLng(), appType);
                 }
