@@ -9,7 +9,7 @@
     </item>
     <item >
         <shape android:shape="oval">
-            <solid android:color="@color/feed_grey_tab"/>
+            <solid android:color="@color/white"/>
         </shape>
     </item>
 </selector>

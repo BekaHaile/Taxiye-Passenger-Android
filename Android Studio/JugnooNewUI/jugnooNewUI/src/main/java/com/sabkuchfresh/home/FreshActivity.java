@@ -449,13 +449,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
             });
 
-            if(savedInstanceState!=null)
-            {
-                FragmentManager fm = getSupportFragmentManager();
-                for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                    fm.popBackStack();
-                }
-            }
+
 
             try {
                 float marginBottom = 60f;

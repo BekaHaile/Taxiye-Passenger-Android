@@ -21,6 +21,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -544,18 +545,20 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void notifyOnLike(int position, boolean isLiked) {
 
         if (adapterList != null && position < adapterList.size()) {
-
             FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
-            if (isLiked) {
-                LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
-                likeButton.onClick(likeButton);
-                feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
-            }
-            else if (feedDetail.getLikeCount() > 0)
-                feedDetail.setLikeCount(feedDetail.getLikeCount() - 1);
+            if (feedDetail.isLikeAPIInProgress()) {
+                feedDetail.setIsLikeAPIInProgress(false);
+                if (isLiked) {
+                    LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
+                    likeButton.onClick(likeButton);
+                    feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
+                }
+                else if (feedDetail.getLikeCount() > 0)
+                    feedDetail.setLikeCount(feedDetail.getLikeCount() - 1);
 
-            feedDetail.setLiked(isLiked);
-            notifyFeedListItem(position);
+                feedDetail.setLiked(isLiked);
+                notifyFeedListItem(position);
+            }
         }
     }
 
@@ -646,14 +649,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             final FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
             switch (viewClicked.getId()) {
                 case R.id.view_action_like:
-                    if(!feedDetail.isLiked()){
-                       /* Animation animation = AnimationUtils.loadAnimation(viewClicked.getContext(), R.anim.bounce_scale_out_in);
-                        viewClicked.findViewById(R.id.tv_action_like).clearAnimation();
-                        viewClicked.findViewById(R.id.tv_action_like).startAnimation(animation);*/
-                       /*LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
-                        likeButton.onClick(likeButton);*/
+                    if(!feedDetail.isLikeAPIInProgress()){
+                        feedDetail.setIsLikeAPIInProgress(true);
+                        feedPostCallback.onLikeClick(feedDetail, position);
                     }
-                    feedPostCallback.onLikeClick(feedDetail, position);
                     break;
                 case R.id.view_action_comment:
 
@@ -780,15 +779,24 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LinearLayout layoutComment;
         @Bind(R.id.like_button_animate)
         LikeButton likeButtonAnimate;
-
+        @Bind(R.id.view_like)
+        View viewLike;
+        private   CommentTouchListener commentTouchListener;
+        private   CommentTouchListener likeTouchListener;
         public CommentTouchListener getCommentTouchListener() {
             if(commentTouchListener==null) {
                 commentTouchListener =   new CommentTouchListener(tvComment);
             }
             return commentTouchListener;
         }
+      public CommentTouchListener getLikeTouchListener() {
+            if(likeTouchListener==null) {
+                likeTouchListener =   new CommentTouchListener(viewLike,likeButtonAnimate);
+            }
+            return likeTouchListener;
+        }
 
-        CommentTouchListener commentTouchListener;
+
 
         ViewHolderReviewImage(final View view, final ItemListener onClickView) {
             super(view);
@@ -838,16 +846,25 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             tvComment.clearAnimation();
             tvComment.animate().scaleX(1.0f).scaleY(1.0f).start();
             viewActionComment.setOnTouchListener(getCommentTouchListener());
+            viewActionLike.setOnTouchListener(getLikeTouchListener());
+
         }
 
 
 
-        private   class CommentTouchListener implements View.OnTouchListener{
+        private  class CommentTouchListener implements View.OnTouchListener{
 
             private View viewToAnimate;
+            private boolean isLike;
+            private LikeButton heartView;
             public CommentTouchListener(View viewToAnimate) {
                 this.viewToAnimate = viewToAnimate;
+            }
 
+            public CommentTouchListener(View viewToAnimate, LikeButton heartView) {
+                isLike = true;
+                this.viewToAnimate = viewToAnimate;
+                this.heartView = heartView;
             }
 
             @Override
@@ -855,11 +872,19 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if(event.getAction() == MotionEvent.ACTION_DOWN) {
 
                     viewToAnimate.animate().scaleX(0.9f).scaleY(0.9f).start();
-                    (((TextView)viewToAnimate).getCompoundDrawables()[0]).mutate().setColorFilter(Color.parseColor("#95C55E"), PorterDuff.Mode.SRC_ATOP);
+                    if(!isLike)
+                       (((TextView)viewToAnimate).getCompoundDrawables()[0]).mutate().setColorFilter(Color.parseColor("#95C55E"), PorterDuff.Mode.SRC_ATOP);
+                    else
+                        heartView.getCurrentDrawable().mutate().setColorFilter(Color.parseColor("#ef6692"), PorterDuff.Mode.SRC_ATOP);
+
                 } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction()==MotionEvent.ACTION_CANCEL ) {
+
                     viewToAnimate.clearAnimation();
                     viewToAnimate.animate().scaleX(1.0f).scaleY(1.0f).start();
-                    ((TextView)viewToAnimate).getCompoundDrawables()[0].mutate().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_ATOP);
+                    if(!isLike)
+                      ((TextView)viewToAnimate).getCompoundDrawables()[0].mutate().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_ATOP);
+                    else
+                        heartView.getCurrentDrawable().mutate().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_ATOP);
                 }
                 return false;
             }

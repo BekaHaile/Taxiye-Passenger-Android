@@ -61,7 +61,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed_claim_handle, container, false);
         ButterKnife.bind(this, rootView);
-        edtClaimHandle.setEnabled(false);
+        btnReserveSpot.setEnabled(false);
         edtClaimHandle.addTextChangedListener(new HandleTextWatcher() {
             @Override
             public void enableSubmitButton(boolean isEnable) {

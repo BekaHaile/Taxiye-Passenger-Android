@@ -365,6 +365,10 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
         icon.setImageDrawable(this.unLikeDrawable);
     }
 
+
+    public Drawable getCurrentDrawable(){
+        return icon.getDrawable();
+    }
     /**
      * Sets the size of the drawable/icon that's being used. The views that generate
      * the like effect are also updated to reflect the size of the icon.
