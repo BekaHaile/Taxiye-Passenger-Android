@@ -234,6 +234,12 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					llbBuilder.include(markerDriver.getPosition());
 					points++;
 				}
+
+				for(LatLng latLng : latLngsDriverAnim){
+					llbBuilder.include(latLng);
+					points++;
+				}
+
 				if(polylinePath != null) {
 					for (LatLng latLng : polylinePath.getPoints()) {
 						llbBuilder.include(latLng);
