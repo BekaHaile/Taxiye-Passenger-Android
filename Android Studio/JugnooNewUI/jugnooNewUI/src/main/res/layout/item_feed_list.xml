@@ -200,7 +200,12 @@
         android:layout_height="@dimen/image_height_feed"
         android:layout_below="@+id/iv_place_image"
         android:layout_marginBottom="@dimen/spacing_small"/>
-
+<!--       <View
+           android:id="@+id/shadow_tab"
+           android:layout_width="match_parent"
+           android:layout_height="22dp"
+           android:layout_alignBottom="@id/vpReviewImages"
+           android:background="@drawable/shadow_up_new" />-->
     <android.support.design.widget.TabLayout
         android:id="@+id/tabDots"
         android:layout_width="match_parent"
@@ -307,6 +312,7 @@
 
 
         <LinearLayout
+            android:id="@+id/view_like"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
