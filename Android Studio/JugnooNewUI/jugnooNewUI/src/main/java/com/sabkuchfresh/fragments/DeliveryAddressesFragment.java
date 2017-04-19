@@ -272,8 +272,6 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                         try {
                             if(text.length() > 0){
                                 scrollViewSearch.setVisibility(View.VISIBLE);
-                            } else{
-                                scrollViewSearch.setVisibility(View.GONE);
                             }
                             if(activity instanceof AddPlaceActivity) {
                                 AddPlaceActivity addPlaceActivity = ((AddPlaceActivity)activity);
@@ -407,11 +405,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         });
 
 
-        tvDeliveryAddress.setVisibility(View.VISIBLE);
+        tvDeliveryAddressSetVisibility(View.VISIBLE);
         tvDeliveryAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvDeliveryAddress.setVisibility(View.GONE);
+                tvDeliveryAddressSetVisibility(View.GONE);
                 editTextDeliveryAddress.setSelection(editTextDeliveryAddress.getText().length());
                 editTextDeliveryAddress.requestFocus();
                 Utils.showSoftKeyboard(activity, editTextDeliveryAddress);
@@ -481,17 +479,17 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         if(!hidden && (activity instanceof FreshActivity)) {
             ((FreshActivity) activity).fragmentUISetup(this);
             setSavedPlaces();
-            tvDeliveryAddress.setVisibility(View.VISIBLE);
+            tvDeliveryAddressSetVisibility(View.VISIBLE);
             ((FreshActivity)activity).getTopBar().imageViewDelete.setVisibility(View.GONE);
         } else if(!hidden && (activity instanceof AddPlaceActivity)){
             AddPlaceActivity addPlaceActivity = (AddPlaceActivity)activity;
             addPlaceActivity.getTextViewTitle().setVisibility(View.GONE);
             addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.VISIBLE);
-            tvDeliveryAddress.setVisibility(View.VISIBLE);
+            tvDeliveryAddressSetVisibility(View.VISIBLE);
             ((AddPlaceActivity)activity).getImageViewDelete().setVisibility(View.GONE);
         } else if(hidden){
             progressWheelDeliveryAddressPin.setVisibility(View.GONE);
-            tvDeliveryAddress.setVisibility(View.GONE);
+            tvDeliveryAddressSetVisibility(View.GONE);
         }
         scrollViewSuggestions.scrollTo(0, 0);
     }
@@ -558,7 +556,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                                     + geocodeResponse.results.get(0).getAddAddress()
                                     + ", " + current_city);
                             if(isVisible()) {
-                                tvDeliveryAddress.setVisibility(View.VISIBLE);
+                                tvDeliveryAddressSetVisibility(View.VISIBLE);
                             }
                             mapSettledCanForward = true;
                         } else {
@@ -795,7 +793,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     void goToAddAddressFragment(){
         if(mapSettledCanForward) {
             if(tvDeliveryAddress.getVisibility() == View.GONE){
-                tvDeliveryAddress.setVisibility(View.VISIBLE);
+                tvDeliveryAddressSetVisibility(View.VISIBLE);
                 Utils.hideSoftKeyboard(activity, editTextDeliveryAddress);
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -823,17 +821,20 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     private HomeUtil homeUtil = new HomeUtil();
 
     /**
-     *
      * @return returns boolean true if back was consumed by fragment or false otherwise
      */
     public boolean backWasConsumed(){
         if(scrollViewSearch.getVisibility() == View.VISIBLE){
-            scrollViewSearch.setVisibility(View.GONE);
-            tvDeliveryAddress.setVisibility(View.VISIBLE);
+            tvDeliveryAddressSetVisibility(View.VISIBLE);
             Utils.hideKeyboard(activity);
             return true;
         }
         return false;
+    }
+
+    private void tvDeliveryAddressSetVisibility(int visibility){
+        tvDeliveryAddress.setVisibility(visibility);
+        scrollViewSearch.setVisibility(visibility == View.GONE ? View.VISIBLE : View.GONE);
     }
 
 }

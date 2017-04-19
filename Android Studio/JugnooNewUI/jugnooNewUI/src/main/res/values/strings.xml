@@ -1654,6 +1654,7 @@
     <string name="tracking_not_available_message">Tracking available once your order is dispatched</string>
     <string name="some_error_occured_try_again">Some error occured\\nTry again</string>
     <string name="you_are_first_in_queue">You are first in queue</string>
+    <string name="enter_location">Enter location</string>
 
 
 </resources>

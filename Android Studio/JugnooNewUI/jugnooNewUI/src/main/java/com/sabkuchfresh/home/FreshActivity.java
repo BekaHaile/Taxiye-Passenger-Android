@@ -1152,6 +1152,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.tvDeliveryAddress.setVisibility(View.GONE);
             int padding = (int) (20f * ASSL.minRatio());
             int visMinOrder = -1;
+            topBar.progressWheelDeliveryAddressPin.setVisibility(View.GONE);
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);

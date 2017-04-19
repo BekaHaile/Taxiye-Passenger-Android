@@ -405,7 +405,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 	private synchronized void addFavoriteLocations(String searchText){
 		try {
-            if(showSavedPlaces) {
+            if(showSavedPlaces && editTextForSearch.getText().length() > 0) {
 				favLocationsCount = 0;
 				try {
 					for(int i = Data.userData.getSearchResultsRecent().size()-1; i >= 0; i--){

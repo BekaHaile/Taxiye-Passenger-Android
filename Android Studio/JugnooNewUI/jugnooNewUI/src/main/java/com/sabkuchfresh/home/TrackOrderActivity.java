@@ -138,11 +138,13 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 					googleMap.setMyLocationEnabled(false);
 
-					LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
-					llbBuilder.include(pickupLatLng).include(deliveryLatLng);
-					LatLngBounds latLngBounds = llbBuilder.build();
-
-					googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())));
+					if(MapUtils.distance(pickupLatLng, deliveryLatLng) > 10) {
+						LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
+						llbBuilder.include(pickupLatLng).include(deliveryLatLng);
+						googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (120f * ASSL.minRatio())));
+					} else {
+						googleMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLatLng));
+					}
 
 					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 40f, 40f, 0.5f, 0.5f, 0));
 					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 71f, 83f, 0.15f, 1.0f, 0));
@@ -227,16 +229,23 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 			if (googleMap != null) {
 				LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
 				llbBuilder.include(deliveryLatLng);
+				int points = 0;
 				if(markerDriver != null) {
 					llbBuilder.include(markerDriver.getPosition());
+					points++;
 				}
 				if(polylinePath != null) {
 					for (LatLng latLng : polylinePath.getPoints()) {
 						llbBuilder.include(latLng);
+						points++;
 					}
 				}
 
-				googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+				if(points > 0) {
+					googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+				} else {
+					googleMap.animateCamera(CameraUpdateFactory.newLatLng(deliveryLatLng), MAP_ANIMATE_DURATION, null);
+				}
 			} else {
 				Utils.showToast(TrackOrderActivity.this, getString(R.string.waiting_for_location));
 			}
@@ -511,7 +520,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	private Handler handler = new Handler();
 
 	private LatLngBounds getMapLatLngBounds(LatLngBounds.Builder builder){
-		return MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 100);
+		return MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 140);
 	}
 
 }
