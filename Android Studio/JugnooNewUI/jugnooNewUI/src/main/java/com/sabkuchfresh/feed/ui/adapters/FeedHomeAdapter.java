@@ -448,13 +448,18 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     tab.requestLayout();
                 }
                 holder.tabDots.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);
+                holder.shadowTab.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);
                 holder.lineBelowImagesPager.setVisibility(View.INVISIBLE);
-
+                holder.shadowTab.setVisibility(View.VISIBLE);
                 vpParams.bottomMargin=0;
+
+
+
 
             } else {
                 holder.lineBelowImagesPager.setVisibility(View.VISIBLE);
                 holder.vpReviewImages.setVisibility(View.GONE);
+                holder.shadowTab.setVisibility(View.GONE);
                 holder.tabDots.setVisibility(View.GONE);
                 vpParams.bottomMargin=FeedUtils.dpToPx(10);
             }
@@ -781,6 +786,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LikeButton likeButtonAnimate;
         @Bind(R.id.view_like)
         View viewLike;
+        @Bind(R.id.shadow_tab)
+        View shadowTab;
+
+
         private   CommentTouchListener commentTouchListener;
         private   CommentTouchListener likeTouchListener;
         public CommentTouchListener getCommentTouchListener() {
