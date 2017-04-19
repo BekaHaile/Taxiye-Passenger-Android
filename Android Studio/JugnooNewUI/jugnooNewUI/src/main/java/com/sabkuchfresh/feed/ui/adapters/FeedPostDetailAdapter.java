@@ -296,7 +296,10 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
                     callback.onMoreClick((FeedDetail) feedDetailData.get(position),0,viewClicked);
                     break;
                 case R.id.ll_delete_comment:
-                    ((UserCommentViewHolder)recyclerView.findViewHolderForAdapterPosition(position)).swipeLayout.close();
+                    UserCommentViewHolder userCommentViewHolder = ((UserCommentViewHolder)recyclerView.findViewHolderForAdapterPosition(position));
+                    if(userCommentViewHolder!=null) {
+                        userCommentViewHolder.swipeLayout.close();
+                    }
                     callback.onDeleteComment((FeedComment) feedDetailData.get(position),position,viewClicked);
                     break;
                 default:
@@ -312,8 +315,13 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
             if (feedDetail.isLikeAPIInProgress()) {
                 feedDetail.setIsLikeAPIInProgress(false);
                 if(isLikeAPI) {
-                    LikeButton likeButton =   ((FeedHomeAdapter.ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
-                    likeButton.onClick(likeButton);
+
+                    FeedHomeAdapter.ViewHolderReviewImage viewHolderReviewImage = ((FeedHomeAdapter.ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position));
+                    if(viewHolderReviewImage!=null) {
+                        LikeButton likeButton = viewHolderReviewImage.likeButtonAnimate;
+                        likeButton.onClick(likeButton);
+                    }
+
                     feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
                 } else if(feedDetail.getLikeCount()!=0)
                     feedDetail.setLikeCount(feedDetail.getLikeCount()-1);

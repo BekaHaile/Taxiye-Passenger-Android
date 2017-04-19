@@ -554,8 +554,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (feedDetail.isLikeAPIInProgress()) {
                 feedDetail.setIsLikeAPIInProgress(false);
                 if (isLiked) {
-                    LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
-                    likeButton.onClick(likeButton);
+                    ViewHolderReviewImage viewHolderReviewImage = ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position));
+                    if(viewHolderReviewImage!=null) {
+                        LikeButton likeButton = viewHolderReviewImage.likeButtonAnimate;
+                        likeButton.onClick(likeButton);
+                    }
                     feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
                 }
                 else if (feedDetail.getLikeCount() > 0)
@@ -854,6 +857,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             tabDots.setupWithViewPager(vpReviewImages, true);
             tvComment.clearAnimation();
             tvComment.animate().scaleX(1.0f).scaleY(1.0f).start();
+            viewLike.clearAnimation();
+            viewLike.animate().scaleX(1.0f).scaleY(1.0f).start();
             viewActionComment.setOnTouchListener(getCommentTouchListener());
             viewActionLike.setOnTouchListener(getLikeTouchListener());
 
