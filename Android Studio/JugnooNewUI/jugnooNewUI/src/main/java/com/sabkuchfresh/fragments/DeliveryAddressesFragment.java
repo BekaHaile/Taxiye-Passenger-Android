@@ -555,7 +555,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                                     + current_route + (current_route.length()>0?", ":"")
                                     + geocodeResponse.results.get(0).getAddAddress()
                                     + ", " + current_city);
-                            if(isVisible()) {
+                            if(isVisible() && scrollViewSearch.getVisibility() == View.GONE) {
                                 tvDeliveryAddressSetVisibility(View.VISIBLE);
                             }
                             mapSettledCanForward = true;
