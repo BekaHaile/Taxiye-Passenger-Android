@@ -168,7 +168,7 @@
             android:name=".AddPlaceActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".JugnooStarActivity"
             android:label="@string/app_name"
@@ -519,7 +519,7 @@
 
         <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="@string/razorpay_live_api_key"
+            android:value="@string/razorpay_key"
             />
 
         <service android:name="com.sabkuchfresh.home.RazorpayCallbackService" android:enabled="true" />

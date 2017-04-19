@@ -73,7 +73,7 @@ public interface FeedApiService {
 
 	@FormUrlEncoded
 	@POST("/feeds/v1/delete_comment")
-	void deleteComment(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+	void deleteComment(@FieldMap Map<String, String> params, Callback<FeedDetailResponse> callback);
 
 	@FormUrlEncoded
 	@POST("/feeds/v1/register_feeds")

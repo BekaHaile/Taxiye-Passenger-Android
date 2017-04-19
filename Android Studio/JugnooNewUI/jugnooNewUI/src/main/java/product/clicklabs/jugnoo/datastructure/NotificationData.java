@@ -36,6 +36,9 @@ public class NotificationData {
     @Expose
     private String url;
     private boolean expanded;
+    @SerializedName("post_id")
+    @Expose
+    private int postId;
 
     public NotificationData(int notificationId, String timePushArrived, String title, String message, int deepIndex,
                             String timeToDisplay, String timeTillDisplay, String notificationImage, String url) {
@@ -129,5 +132,13 @@ public class NotificationData {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 }

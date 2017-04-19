@@ -1,339 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutMain"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/sliding_bottom_bg_color">
+<android.support.design.widget.CoordinatorLayout android:id="@+id/linearLayoutMain"
+                                                 xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:background="@color/sliding_bottom_bg_color">
 
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/rlMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="@string/dont_touch_me"
+        >
+
+        <fragment
+            android:id="@+id/googleMap"
+            android:name="product.clicklabs.jugnoo.utils.TouchableMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <RelativeLayout
+            android:id="@+id/rlMarkerPin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dp_162"
+            >
+
+            <ImageView
+                android:layout_width="33dp"
+                android:layout_height="54dp"
+                android:layout_above="@+id/ivPivot"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_delivery_address_map"
+                android:layout_marginBottom="-4dp"
+                />
+
+            <ImageView
+                android:id="@+id/ivPivot"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/bNext"
+            android:layout_width="264dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dp_176"
+            android:background="@drawable/capsule_green_color_selector"
+            android:text="@string/next"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:font="maven"
+            android:textAllCaps="true"
+            />
+
+        <ImageView
+            android:id="@+id/bMyLocation"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_above="@+id/bNext"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:contentDescription="@string/move_to_your_location"
+            android:src="@drawable/mylocation_btn_selector"
+            />
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollViewSuggestions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/shadow_up_address_map"
+        android:clipToPadding="true"
+        android:visibility="visible"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="24px"
+            android:layout_marginRight="24px"
+            android:layout_marginTop="24px"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="8px"
 
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/cardViewCart"
+            >
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16px"
-                android:layout_marginRight="16px"
-                android:layout_marginTop="30px"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/linearLayoutCurrentOption"
+                <TextView
+                    android:id="@+id/textViewSavedPlaces"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginTop="20px"
+                    android:gravity="center_vertical"
+                    android:text="@string/saved_locations"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_less_light"
+                    android:textSize="@dimen/text_size_24"
+                    android:visibility="visible"/>
+
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/listViewSavedLocations"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0px"
+                    android:splitMotionEvents="false"
+                    android:layout_marginBottom="20px"/>
 
-                    <LinearLayout
-                        android:id="@+id/linearLayoutCurrentLocation"
-                        android:layout_width="match_parent"
-                        android:layout_height="110px"
-                        android:background="@drawable/bg_white_menu_item_selector_color_selector"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="26px"
-                            android:layout_height="25px"
-                            android:layout_marginLeft="35px"
-                            android:src="@drawable/ic_delivery_addess"
-                            android:tag="mwar" />
-
-                        <TextView
-                            android:id="@+id/textViewCurrentLocation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="40px"
-                            android:text="Current Location"
-                            android:textColor="@color/text_color_light_selector"
-                            android:textSize="@dimen/text_size_28" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="2px"
-                        android:src="@color/stroke_light_grey_alpha" />
-
-                    <LinearLayout
-                        android:id="@+id/linearLayoutChooseOnMap"
-                        android:layout_width="match_parent"
-                        android:layout_height="110px"
-                        android:background="@drawable/bg_white_menu_item_selector_color_selector"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="23px"
-                            android:layout_height="33px"
-                            android:layout_marginLeft="35px"
-                            android:src="@drawable/ic_delivery_address_map_pin"
-                            android:tag="mwar" />
-
-                        <TextView
-                            android:id="@+id/textViewChooseOnMap"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="40px"
-                            android:text="Choose on map"
-                            android:textColor="@color/text_color_light_selector"
-                            android:textSize="@dimen/text_size_28" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <TextView
-                android:id="@+id/textViewSavedPlaces"
-                android:layout_width="wrap_content"
-                android:layout_height="40px"
-                android:layout_marginLeft="30px"
-                android:layout_marginTop="30px"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="@string/saved_places"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color_less_light"
-                android:textSize="@dimen/text_size_24"
-                android:visibility="visible" />
-
-
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/cardViewSavedPlaces"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16px"
-                android:layout_marginRight="16px"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutAddHome"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_white_menu_item_selector_color_selector"
-                        android:minHeight="110px">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginBottom="20px"
-                            android:layout_marginLeft="20px"
-                            android:layout_marginTop="20px"
-                            android:layout_toLeftOf="@+id/imageViewEditHome"
-                            android:layout_toRightOf="@+id/imageViewAddHome"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/textViewAddHome"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/add_home"
-                                android:textColor="@color/text_color_light_selector"
-                                android:textSize="@dimen/text_size_32" />
-
-                            <TextView
-                                android:id="@+id/textViewAddHomeValue"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5px"
-                                android:singleLine="true"
-                                android:text="test"
-                                android:textColor="@color/text_color_light"
-                                android:textSize="@dimen/text_size_26"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:id="@+id/textViewAddressUsedHome"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="7px"
-                                android:text="@string/address_used_multiple_time_format"
-                                android:textColor="@color/text_color_light"
-                                android:textSize="@dimen/text_size_22" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:id="@+id/imageViewAddHome"
-                            android:layout_width="50px"
-                            android:layout_height="50px"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="30px"
-                            android:src="@drawable/ic_home"
-                            android:tag="mwar" />
-
-                        <ImageView
-                            android:id="@+id/imageViewEditHome"
-                            android:layout_width="60px"
-                            android:layout_height="60px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20px"
-                            android:padding="15px"
-                            android:src="@drawable/edit_icon_selector"
-                            android:tag="mwar"
-                            android:visibility="visible" />
-
-                    </RelativeLayout>
-
-                    <ImageView
-                        android:id="@+id/imageViewSep"
-                        android:layout_width="match_parent"
-                        android:layout_height="2px"
-                        android:background="@color/stroke_light_grey_alpha" />
-
-
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutAddWork"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_white_menu_item_selector_color_selector"
-                        android:minHeight="110px">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginBottom="20px"
-                            android:layout_marginLeft="20px"
-                            android:layout_marginTop="20px"
-                            android:layout_toLeftOf="@+id/imageViewEditWork"
-                            android:layout_toRightOf="@+id/imageViewAddWork"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/textViewAddWork"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/add_work"
-                                android:textColor="@color/text_color_light_selector"
-                                android:textSize="@dimen/text_size_32" />
-
-                            <TextView
-                                android:id="@+id/textViewAddWorkValue"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5px"
-                                android:singleLine="true"
-                                android:text="test"
-                                android:textColor="@color/text_color_light"
-                                android:textSize="@dimen/text_size_26"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:id="@+id/textViewAddressUsedWork"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="7px"
-                                android:text="@string/address_used_multiple_time_format"
-                                android:textColor="@color/text_color_light"
-                                android:textSize="@dimen/text_size_22" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:id="@+id/imageViewAddWork"
-                            android:layout_width="50px"
-                            android:layout_height="50px"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="30px"
-                            android:src="@drawable/ic_work"
-                            android:tag="mwar" />
-
-                        <ImageView
-                            android:id="@+id/imageViewEditWork"
-                            android:layout_width="60px"
-                            android:layout_height="60px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20px"
-                            android:padding="15px"
-                            android:src="@drawable/edit_icon_selector"
-                            android:tag="mwar"
-                            android:visibility="visible" />
-
-                        <ImageView
-                            android:layout_width="660px"
-                            android:layout_height="2px"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
-                            android:src="@color/text_color_hint"
-                            android:visibility="gone" />
-                    </RelativeLayout>
-
-                    <product.clicklabs.jugnoo.utils.NonScrollListView
-                        android:id="@+id/listViewSavedLocations"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="@color/transparent"
-                        android:dividerHeight="0px"
-                        android:splitMotionEvents="false" />
-
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-
-            <TextView
-                android:id="@+id/textViewRecentAddresses"
-                android:layout_width="wrap_content"
-                android:layout_height="40px"
-                android:layout_marginLeft="30px"
-                android:layout_marginTop="30px"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="@string/suggested_addresses"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color_less_light"
-                android:textSize="@dimen/text_size_24"
-                android:visibility="visible" />
-
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/cardViewRecentAddresses"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20px"
-                android:layout_marginLeft="16px"
-                android:layout_marginRight="16px"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px">
+                <TextView
+                    android:id="@+id/textViewRecentAddresses"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginTop="20px"
+                    android:gravity="center_vertical"
+                    android:text="@string/recent_locations"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_less_light"
+                    android:textSize="@dimen/text_size_24"
+                    android:visibility="visible"/>
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/listViewRecentAddresses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="20px"
                     android:divider="@color/transparent"
                     android:dividerHeight="0px"
                     android:fadeScrollbars="true"
                     android:scrollbars="vertical"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" />
+                    android:visibility="visible"/>
 
-            </android.support.v7.widget.CardView>
+            </LinearLayout>
 
+        </android.support.v7.widget.CardView>
 
-        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
-    </ScrollView>
 
     <ScrollView
         android:id="@+id/scrollViewSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/sliding_bottom_bg_color"
-        android:visibility="gone">
+        android:visibility="gone"
+        >
 
         <LinearLayout
             android:id="@+id/linearLayoutSearch"
@@ -342,16 +167,16 @@
             android:orientation="vertical"
             android:splitMotionEvents="false">
 
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/cardViewSearch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10px"
-                android:layout_marginLeft="16px"
-                android:layout_marginRight="16px"
-                android:layout_marginTop="20px"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px">
+            <android.support.v7.widget.CardView android:id="@+id/cardViewSearch"
+                                                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginBottom="10px"
+                                                android:layout_marginLeft="16px"
+                                                android:layout_marginRight="16px"
+                                                android:layout_marginTop="20px"
+                                                card_view:cardBackgroundColor="@color/white"
+                                                card_view:cardCornerRadius="4px">
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/listViewSearch"
@@ -362,7 +187,7 @@
                     android:fadeScrollbars="true"
                     android:scrollbars="vertical"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" />
+                    android:visibility="visible"/>
 
             </android.support.v7.widget.CardView>
 
@@ -374,18 +199,16 @@
                 android:layout_marginBottom="16px"
                 android:layout_marginTop="24px"
                 android:src="@drawable/powered_by_google_light"
-                android:tag="mwar" />
+                android:tag="mwar"/>
 
             <TextView
                 android:id="@+id/textViewScrollSearch"
                 android:layout_width="10px"
                 android:layout_height="10px"
-                android:textSize="28px" />
+                android:textSize="28px"/>
         </LinearLayout>
 
     </ScrollView>
-
-
 
     <ImageView
         android:layout_width="match_parent"
@@ -393,4 +216,4 @@
         android:background="@drawable/shadow_down_new"
         />
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

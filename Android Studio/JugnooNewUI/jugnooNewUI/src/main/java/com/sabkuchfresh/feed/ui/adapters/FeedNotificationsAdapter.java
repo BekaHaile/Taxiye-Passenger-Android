@@ -67,15 +67,15 @@ public class FeedNotificationsAdapter extends RecyclerView.Adapter<FeedNotificat
             holder.tvNotificationTime.setText(FeedHomeAdapter.getTimeToDisplay(datum.getUpdatedAt(), activity.isTimeAutomatic));
 
             if(datum.isRead()){
-                holder.relative.setBackgroundResource(R.drawable.bg_transp_menu_color_selector);
+                holder.relative.setBackgroundResource(R.drawable.bg_white_menu_color_selector);
             } else {
                 holder.relative.setBackgroundResource(R.drawable.bg_pale_orange_menu_color_selector);
             }
 
             if(datum.getActivityType() == NotificationDatum.ACTIVITY_TYPE_COMMENT){
-                holder.tvNotificationTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_feed_notification_comment, 0, 0, 0);
+                holder.tvNotificationTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_comment_active_new, 0, 0, 0);
             } else if(datum.getActivityType() == NotificationDatum.ACTIVITY_TYPE_LIKE){
-                holder.tvNotificationTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active, 0, 0, 0);
+                holder.tvNotificationTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active_new, 0, 0, 0);
             }
 
         } catch (Exception e) {

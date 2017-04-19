@@ -39,7 +39,7 @@ public class RestClient {
         setupFeedApiRestClient();
     }
 
-    private static OkHttpClient getOkHttpClient(){
+    private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure){
 
         ArrayList<Protocol> protocolList = new ArrayList<>();
         protocolList.add(Protocol.HTTP_2);
@@ -53,7 +53,7 @@ public class RestClient {
         builder.readTimeout(15, TimeUnit.SECONDS);
         builder.connectTimeout(15, TimeUnit.SECONDS);
         builder.writeTimeout(15, TimeUnit.SECONDS);
-        builder.retryOnConnectionFailure(false);
+        builder.retryOnConnectionFailure(retryOnConnectionFailure);
         builder.protocols(protocolList);
 
         return builder.build();
@@ -75,7 +75,7 @@ public class RestClient {
         if(API_SERVICES == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setClient(new Ok3Client(getOkHttpClient(false)))
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 
@@ -110,7 +110,7 @@ public class RestClient {
     public static StringAPIService getStringRestClient() {
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(Config.getServerUrl())
-                .setClient(new Ok3Client(getOkHttpClient()))
+                .setClient(new Ok3Client(getOkHttpClient(false)))
                 .setConverter(new StringConverter())
                 .setLogLevel(RestAdapter.LogLevel.FULL);
         setLogger(builder);
@@ -131,7 +131,7 @@ public class RestClient {
 
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint("http://maps.googleapis.com/maps/api")
-                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setClient(new Ok3Client(getOkHttpClient(true)))
                     .setLog(fooLog)
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
@@ -150,7 +150,7 @@ public class RestClient {
         if(FRESH_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getFreshServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setClient(new Ok3Client(getOkHttpClient(false)))
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 
@@ -169,7 +169,7 @@ public class RestClient {
         if(CHAT_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getChatServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setClient(new Ok3Client(getOkHttpClient(false)))
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 
@@ -188,7 +188,7 @@ public class RestClient {
         if(MENUS_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getMenusServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setClient(new Ok3Client(getOkHttpClient(false)))
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 
@@ -209,7 +209,7 @@ public class RestClient {
         if(PAY_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getPayServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setClient(new Ok3Client(getOkHttpClient(false)))
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 
@@ -227,7 +227,7 @@ public class RestClient {
         if(FEED_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getFeedServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setClient(new Ok3Client(getOkHttpClient(false)))
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 

@@ -12,12 +12,14 @@ public class PaymentModeConfigData {
 	private int enabled;
 	private int paymentOption;
 	private int priority;
-	private String offerText;
+	private String offerText, displayName, upiHandle;
 
-	public PaymentModeConfigData(String name, int enabled, String offerText){
+	public PaymentModeConfigData(String name, int enabled, String offerText, String displayName, String upiHandle){
 		this.name = name;
 		this.enabled = enabled;
 		this.offerText = offerText;
+		this.displayName = displayName;
+		this.upiHandle = upiHandle;
 		if(Constants.KEY_PAYTM.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.PAYTM.getOrdinal();
 		}
@@ -32,6 +34,12 @@ public class PaymentModeConfigData {
 		}
 		else if(Constants.KEY_JUGNOO_PAY.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.JUGNOO_PAY.getOrdinal();
+		}
+		else if(Constants.KEY_RAZORPAY.equalsIgnoreCase(name)){
+			paymentOption = PaymentOption.RAZOR_PAY.getOrdinal();
+		}
+		else if(Constants.KEY_UPI_RAZORPAY.equalsIgnoreCase(name)){
+			paymentOption = PaymentOption.UPI_RAZOR_PAY.getOrdinal();
 		}
 		this.priority = 0;
 	}
@@ -78,5 +86,21 @@ public class PaymentModeConfigData {
 
 	public void setOfferText(String offerText) {
 		this.offerText = offerText;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public String getUpiHandle() {
+		return upiHandle;
+	}
+
+	public void setUpiHandle(String upiHandle) {
+		this.upiHandle = upiHandle;
 	}
 }

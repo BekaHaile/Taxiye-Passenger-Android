@@ -25,7 +25,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
 
     private class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress, textViewAddressUsed;
-        ImageView imageViewType, imageViewSep, imageViewEdit;
+        ImageView imageViewType, imageViewSep, ivDeleteAddress;
         RelativeLayout relative;
         int id;
     }
@@ -34,24 +34,30 @@ public class SavedPlacesAdapter extends BaseAdapter{
     private LayoutInflater mInflater;
     private ViewHolderSearchItem holder;
     private Callback callback;
-    private boolean showEditIcon, separatorOnTop;
+    private boolean separatorOnTop, addSepMargins, showDelete;
 
     private ArrayList<SearchResult> searchResults;
 
     public SavedPlacesAdapter(Context context, ArrayList<SearchResult> searchResults, Callback callback,
-                              boolean showEditIcon, boolean separatorOnTop)
+                              boolean separatorOnTop, boolean addSepMargins, boolean showDelete)
             throws IllegalStateException{
         if(context instanceof Activity) {
             this.context = context;
             this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.searchResults = searchResults;
             this.callback = callback;
-            this.showEditIcon = showEditIcon;
             this.separatorOnTop = separatorOnTop;
+            this.addSepMargins = addSepMargins;
+            this.showDelete = showDelete;
         }
         else{
             throw new IllegalStateException("context passed is not of Activity type");
         }
+    }
+
+    public void setList(ArrayList<SearchResult> searchResults){
+        this.searchResults = searchResults;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -84,10 +90,10 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
             holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
-            holder.imageViewEdit = (ImageView) convertView.findViewById(R.id.imageViewEdit);
+            holder.ivDeleteAddress = (ImageView) convertView.findViewById(R.id.ivDeleteAddress);
 
             holder.relative.setTag(holder);
-            holder.imageViewEdit.setTag(holder);
+            holder.ivDeleteAddress.setTag(holder);
 
             holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ASSL.DoMagic(holder.relative);
@@ -143,11 +149,11 @@ public class SavedPlacesAdapter extends BaseAdapter{
 
             holder.imageViewSep.setVisibility(View.VISIBLE);
 
-            holder.imageViewEdit.setVisibility(showEditIcon ? View.VISIBLE : View.GONE);
             if(separatorOnTop){
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.imageViewSep.getLayoutParams();
                 params.addRule(RelativeLayout.BELOW, 0);
-                params.setMargins(0, 0, 0, 0);
+                int margin = addSepMargins ? (int)(ASSL.Xscale() * 35f) : 0;
+                params.setMargins(margin, 0, margin, 0);
                 holder.imageViewSep.setLayoutParams(params);
                 holder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.stroke_light_grey_alpha));
             } else {
@@ -155,6 +161,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
                     holder.imageViewSep.setVisibility(View.GONE);
                 }
             }
+            holder.ivDeleteAddress.setVisibility(showDelete ? View.VISIBLE : View.GONE);
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
 
@@ -170,13 +177,13 @@ public class SavedPlacesAdapter extends BaseAdapter{
 				}
                   });
 
-            holder.imageViewEdit.setOnClickListener(new View.OnClickListener() {
+            holder.ivDeleteAddress.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         holder = (ViewHolderSearchItem) v.getTag();
                         final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
-                        callback.onEditClick(autoCompleteSearchResult);
+                        callback.onDeleteClick(autoCompleteSearchResult);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -192,7 +199,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
 
     public interface Callback{
         void onItemClick(SearchResult searchResult);
-        void onEditClick(SearchResult searchResult);
+        void onDeleteClick(SearchResult searchResult);
     }
 
 }

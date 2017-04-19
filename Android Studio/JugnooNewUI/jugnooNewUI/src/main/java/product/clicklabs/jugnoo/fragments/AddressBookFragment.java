@@ -8,7 +8,9 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -18,13 +20,14 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
+import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
-import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
-import product.clicklabs.jugnoo.utils.Prefs;
 
 
 public class AddressBookFragment extends Fragment {
@@ -35,9 +38,6 @@ public class AddressBookFragment extends Fragment {
 
 	private TextView textViewSavedAddresses;
 	private CardView cardViewAddresses;
-	private RelativeLayout relativeLayoutHome, relativeLayoutWork;
-	private TextView textViewHomeValue, textViewAddressUsedHome, textViewWorkValue, textViewAddressUsedWork;
-	private View viewHomeSep, viewWorkSep;
 	private NonScrollListView listViewSavedLocations;
 	private SavedPlacesAdapter savedPlacesAdapter;
 
@@ -46,7 +46,8 @@ public class AddressBookFragment extends Fragment {
 	private NonScrollListView listViewRecentAddresses;
 	private SavedPlacesAdapter savedPlacesAdapterRecent;
 
-	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutAddNewAddress;
+	private Button bAddNewAddress;
+	private ScrollView scrollView;
 
 	private View rootView;
     private FragmentActivity activity;
@@ -75,31 +76,22 @@ public class AddressBookFragment extends Fragment {
 
 		textViewSavedAddresses = (TextView) rootView.findViewById(R.id.textViewSavedAddresses); textViewSavedAddresses.setTypeface(Fonts.mavenMedium(activity));
 		cardViewAddresses = (CardView) rootView.findViewById(R.id.cardViewAddresses);
-		relativeLayoutHome = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutHome);
-		((TextView) rootView.findViewById(R.id.textViewHome)).setTypeface(Fonts.mavenMedium(activity));
-		textViewHomeValue = (TextView) rootView.findViewById(R.id.textViewHomeValue); textViewHomeValue.setTypeface(Fonts.mavenMedium(activity));
-		textViewAddressUsedHome = (TextView) rootView.findViewById(R.id.textViewAddressUsedHome); textViewAddressUsedHome.setTypeface(Fonts.mavenRegular(activity));
-		relativeLayoutWork = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWork);
-		((TextView) rootView.findViewById(R.id.textViewWork)).setTypeface(Fonts.mavenMedium(activity));
-		textViewWorkValue = (TextView) rootView.findViewById(R.id.textViewWorkValue); textViewWorkValue.setTypeface(Fonts.mavenMedium(activity));
-		textViewAddressUsedWork = (TextView) rootView.findViewById(R.id.textViewAddressUsedWork); textViewAddressUsedWork.setTypeface(Fonts.mavenRegular(activity));
-		viewHomeSep = rootView.findViewById(R.id.viewHomeSep);
-		viewWorkSep = rootView.findViewById(R.id.viewWorkSep);
-
+		bAddNewAddress = (Button) rootView.findViewById(R.id.bAddNewAddress);
+		scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
 
 		listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
 		try {
-			savedPlacesAdapter = new SavedPlacesAdapter(activity, Data.userData.getSearchResults(), new SavedPlacesAdapter.Callback() {
+			savedPlacesAdapter = new SavedPlacesAdapter(activity, homeUtil.getSavedPlacesWithHomeWork(activity), new SavedPlacesAdapter.Callback() {
 				@Override
 				public void onItemClick(SearchResult searchResult) {
 					onSavedLocationEdit(searchResult);
 				}
 
 				@Override
-				public void onEditClick(SearchResult searchResult) {
-					onSavedLocationEdit(searchResult);
+				public void onDeleteClick(SearchResult searchResult) {
+					deleteAddressDialog(searchResult);
 				}
-			}, false, false);
+			}, false, false, true);
 			listViewSavedLocations.setAdapter(savedPlacesAdapter);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,52 +111,25 @@ public class AddressBookFragment extends Fragment {
 				}
 
 				@Override
-				public void onEditClick(SearchResult searchResult) {
-					onSavedLocationEdit(searchResult);
+				public void onDeleteClick(SearchResult searchResult) {
+
 				}
-			}, false, false);
+			}, false, false, false);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 
-		relativeLayoutAddHome = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddHome);
-		relativeLayoutAddWork = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddWork);
-		relativeLayoutAddNewAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddNewAddress);
-		((TextView) rootView.findViewById(R.id.textViewAddHome)).setTypeface(Fonts.mavenMedium(activity));
-		((TextView) rootView.findViewById(R.id.textViewAddWork)).setTypeface(Fonts.mavenMedium(activity));
-		((TextView) rootView.findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(activity));
 
-		View.OnClickListener homeClickListener = new View.OnClickListener() {
+		bAddNewAddress.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent(activity, AddPlaceActivity.class);
-				intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_HOME);
-				intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(activity).getString(SPLabels.ADD_HOME, ""));
-				startActivityForResult(intent, Constants.REQUEST_CODE_ADD_HOME);
-				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-			}
-		};
-		relativeLayoutHome.setOnClickListener(homeClickListener);
-		relativeLayoutAddHome.setOnClickListener(homeClickListener);
+//				for specific adddress tag intent
+//				intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_WORK);
+//				intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(activity).getString(SPLabels.ADD_WORK, ""));
+//				startActivityForResult(intent, Constants.REQUEST_CODE_ADD_WORK);
 
-		View.OnClickListener workClickListener = new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent=new Intent(activity, AddPlaceActivity.class);
-				intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_WORK);
-				intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(activity).getString(SPLabels.ADD_WORK, ""));
-				startActivityForResult(intent, Constants.REQUEST_CODE_ADD_WORK);
-				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-			}
-		};
-		relativeLayoutWork.setOnClickListener(workClickListener);
-		relativeLayoutAddWork.setOnClickListener(workClickListener);
-
-		relativeLayoutAddNewAddress.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
 				Intent intent=new Intent(activity, AddPlaceActivity.class);
 				intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
 				intent.putExtra(Constants.KEY_ADDRESS, "");
@@ -185,86 +150,28 @@ public class AddressBookFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		setSavedPlaces();
+		scrollView.scrollTo(0, 0);
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
-        ASSL.closeActivity(relativeLayoutRoot);
+	public void onDestroyView() {
+		super.onDestroyView();
+		ASSL.closeActivity(relativeLayoutRoot);
 		System.gc();
-	}
-
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == FragmentActivity.RESULT_OK) {
-//			setSavedPlaces();
-		} else if (resultCode == FragmentActivity.RESULT_CANCELED) {
-//			setSavedPlaces();
-		}
 	}
 
 
 	private void setSavedPlaces() {
 		try {
-			String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-			if (!homeString.equalsIgnoreCase("")) {
-				SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-				relativeLayoutHome.setVisibility(View.VISIBLE);
-				relativeLayoutAddHome.setVisibility(View.GONE);
-				textViewHomeValue.setText(searchResult.getAddress());
-				textViewAddressUsedHome.setVisibility(View.GONE);
-				if (searchResult.getFreq() > 0) {
-					textViewAddressUsedHome.setVisibility(View.VISIBLE);
-					if(searchResult.getFreq() <= 1){
-						textViewAddressUsedHome.setText(activity.getString(R.string.address_used_one_time_format,
-								String.valueOf(searchResult.getFreq())));
-					} else {
-						textViewAddressUsedHome.setText(activity.getString(R.string.address_used_multiple_time_format,
-								String.valueOf(searchResult.getFreq())));
-					}
-				}
-			} else {
-				relativeLayoutHome.setVisibility(View.GONE);
-				relativeLayoutAddHome.setVisibility(View.VISIBLE);
-			}
+			savedPlacesAdapter.setList(homeUtil.getSavedPlacesWithHomeWork(activity));
 
-			String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-			if (!workString.equalsIgnoreCase("")) {
-				SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-				relativeLayoutWork.setVisibility(View.VISIBLE);
-				relativeLayoutAddWork.setVisibility(View.GONE);
-				textViewWorkValue.setText(searchResult.getAddress());
-				textViewAddressUsedWork.setVisibility(View.GONE);
-				if (searchResult.getFreq() > 0) {
-					textViewAddressUsedWork.setVisibility(View.VISIBLE);
-					if(searchResult.getFreq() <= 1){
-						textViewAddressUsedWork.setText(activity.getString(R.string.address_used_one_time_format,
-								String.valueOf(searchResult.getFreq())));
-					} else {
-						textViewAddressUsedWork.setText(activity.getString(R.string.address_used_multiple_time_format,
-								String.valueOf(searchResult.getFreq())));
-					}
-				}
-			} else {
-				relativeLayoutWork.setVisibility(View.GONE);
-				relativeLayoutAddWork.setVisibility(View.VISIBLE);
-			}
-
-			savedPlacesAdapter.notifyDataSetChanged();
-
-			if (relativeLayoutHome.getVisibility() == View.GONE
-					&& relativeLayoutWork.getVisibility() == View.GONE
-					&& savedPlacesAdapter.getCount() == 0) {
+			if (savedPlacesAdapter.getCount() == 0) {
 				textViewSavedAddresses.setVisibility(View.GONE);
 				cardViewAddresses.setVisibility(View.GONE);
 			} else {
 				textViewSavedAddresses.setVisibility(View.VISIBLE);
 				cardViewAddresses.setVisibility(View.VISIBLE);
-
-				viewHomeSep.setVisibility((relativeLayoutWork.getVisibility() == View.GONE && savedPlacesAdapter.getCount() == 0) ? View.GONE : View.VISIBLE);
-				viewWorkSep.setVisibility(savedPlacesAdapter.getCount() == 0 ? View.GONE : View.VISIBLE);
+				textViewSavedAddresses.setText(savedPlacesAdapter.getCount() == 1 ? R.string.saved_location : R.string.saved_locations);
 			}
 
 
@@ -272,6 +179,7 @@ public class AddressBookFragment extends Fragment {
 			if (savedPlacesAdapterRecent.getCount() > 0) {
 				textViewRecentAddresses.setVisibility(View.VISIBLE);
 				cardViewRecentAddresses.setVisibility(View.VISIBLE);
+				textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
 			} else {
 				textViewRecentAddresses.setVisibility(View.GONE);
 				cardViewRecentAddresses.setVisibility(View.GONE);
@@ -285,9 +193,9 @@ public class AddressBookFragment extends Fragment {
 
 	private void onSavedLocationEdit(SearchResult searchResult){
 		Intent intent = new Intent(activity, AddPlaceActivity.class);
-		intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+		intent.putExtra(Constants.KEY_REQUEST_CODE, searchResult.getPlaceRequestCode());
 		intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
-		startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+		startActivityForResult(intent, searchResult.getPlaceRequestCode());
 		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 
@@ -319,5 +227,54 @@ public class AddressBookFragment extends Fragment {
 		}
 		return apiFetchUserAddress;
 	}
+
+	private void deleteAddressDialog(final SearchResult searchResult){
+		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+				getString(R.string.address_delete_confirm_message),
+				getString(R.string.delete), getString(R.string.cancel),
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						hitApiAddHomeWorkAddress(searchResult, true, 0, true, searchResult.getPlaceRequestCode());
+					}
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+
+					}
+				}, false, false);
+	}
+
+	private ApiAddHomeWorkAddress apiAddHomeWorkAddress;
+	public void hitApiAddHomeWorkAddress(final SearchResult searchResult, final boolean deleteAddress, final int matchedWithOtherId,
+										 final boolean editThisAddress, final int placeRequestCode){
+		if(apiAddHomeWorkAddress == null){
+			apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(activity, new ApiAddHomeWorkAddress.Callback() {
+				@Override
+				public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
+					setSavedPlaces();
+				}
+
+				@Override
+				public void onFailure() {
+
+				}
+
+				@Override
+				public void onRetry(View view) {
+
+				}
+
+				@Override
+				public void onNoRetry(View view) {
+
+				}
+			});
+		}
+		apiAddHomeWorkAddress.addHomeAndWorkAddress(searchResult, deleteAddress, matchedWithOtherId, editThisAddress, placeRequestCode);
+	}
+
+	private HomeUtil homeUtil = new HomeUtil();
 
 }

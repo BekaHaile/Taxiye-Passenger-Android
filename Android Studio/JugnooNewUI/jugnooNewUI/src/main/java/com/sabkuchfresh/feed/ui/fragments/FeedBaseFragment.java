@@ -14,7 +14,7 @@ import com.sabkuchfresh.home.FreshActivity;
  * Created by Parminder Singh on 4/10/17.
  */
 
-public class FeedBaseFragment extends Fragment {
+public  class FeedBaseFragment extends Fragment {
 
     public FreshActivity activity;
 
@@ -24,6 +24,7 @@ public class FeedBaseFragment extends Fragment {
         activity= (FreshActivity) context;
         activity.fragmentUISetup(this);
     }
+
 
 
 }

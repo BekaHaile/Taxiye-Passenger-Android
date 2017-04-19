@@ -1168,7 +1168,9 @@
     <string name="address_used_one_time_format">Used %s time</string>
     <string name="enter_pickup">Enter Pickup Location</string>
     <string name="recent_locations">Recent locations</string>
+    <string name="recent_location">Recent location</string>
     <string name="saved_locations">Saved locations</string>
+    <string name="saved_location">Saved location</string>
     <string name="trying_to_verify">Trying to verify through\nmissed call...</string>
     <string name="we_could_not_verify">Sorry, we could not verify through\nmissed call. Please try again.</string>
     <string name="selecting_a_pickup_spot">Selecting a pickup spot will save you time and make it easier to find your driver.</string>
@@ -1639,9 +1641,20 @@
     <string name="join">Join</string>
     <string name="feed_claim_handle_description_format">Your handle is your unique name on %s.</string>
     <string name="select_city">Select City</string>
-    <string name="delete_post_alert_message">Do you really want to delete this post? If you delete once it will no longer be available.</string>
+    <string name="delete_post_alert_message">Do you want to delete this post? If you delete once it will no longer be available.</string>
     <string name="enter_your_name">Enter your Name</string>
     <string name="enter_email_id">Enter Email ID</string>
+    <string name="fatafat">Fatafat</string>
+    <string name="unable_to_fetch_address">Unable to fetch current address at the moment</string>
+    <string name="plus_add_new_address">+ Add New Address</string>
+    <string name="address_details">Address Details</string>
+    <string name="label_sample">Label e.g. Hospital / Friend’s Home</string>
+    <string name="flat_number_hint">Flat Number/ House No./ Apt Name</string>
+    <string name="landmark">Landmark</string>
+    <string name="tracking_not_available_message">Tracking available once your order is dispatched</string>
+    <string name="some_error_occured_try_again">Some error occured\\nTry again</string>
+    <string name="you_are_first_in_queue">You are first in queue</string>
+    <string name="enter_location">Enter location</string>
 
 
 </resources>

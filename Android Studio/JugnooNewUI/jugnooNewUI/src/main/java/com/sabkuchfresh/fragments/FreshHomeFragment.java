@@ -316,5 +316,13 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         getSuperCategoriesAPI(false);
     }
 
-
+    private boolean resumed = false;
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!isHidden() && resumed) {
+            activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
+        }
+        resumed = true;
+    }
 }

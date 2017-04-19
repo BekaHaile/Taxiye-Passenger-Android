@@ -8,11 +8,9 @@ import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedClaimHandleFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedPostDetailFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
-import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
@@ -220,22 +218,6 @@ public class TransactionUtils {
         }
     }
 
-    public void openMapFragment(FragmentActivity activity, View container, Bundle bundle) {
-        AddAddressMapFragment addAddressMapFragment = new AddAddressMapFragment();
-        if (bundle != null) {
-            addAddressMapFragment.setArguments(bundle);
-        }
-        if (!checkIfFragmentAdded(activity, AddAddressMapFragment.class.getName())) {
-            activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(container.getId(), addAddressMapFragment,
-                            AddAddressMapFragment.class.getName())
-                    .addToBackStack(AddAddressMapFragment.class.getName())
-                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                    .commitAllowingStateLoss();
-        }
-    }
 
     public void openAddToAddressFragment(FragmentActivity activity, View container, Bundle bundle) {
         AddToAddressBookFragment addToAddressBookFragment = new AddToAddressBookFragment();
@@ -412,12 +394,12 @@ public class TransactionUtils {
     }
 
     public void openFeedCommentsFragment(FragmentActivity activity, View container, FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad) {
-        if (!checkIfFragmentAdded(activity, FeedOfferingCommentsFragment.class.getName())) {
+        if (!checkIfFragmentAdded(activity, FeedPostDetailFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, 0)
-                    .add(container.getId(), FeedOfferingCommentsFragment.newInstance(feedDetail,positionInOriginalList,openKeyboardOnLoad),
-                            FeedOfferingCommentsFragment.class.getName())
-                    .addToBackStack(FeedOfferingCommentsFragment.class.getName())
+                    .add(container.getId(), FeedPostDetailFragment.newInstance(feedDetail,positionInOriginalList,openKeyboardOnLoad),
+                            FeedPostDetailFragment.class.getName())
+                    .addToBackStack(FeedPostDetailFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

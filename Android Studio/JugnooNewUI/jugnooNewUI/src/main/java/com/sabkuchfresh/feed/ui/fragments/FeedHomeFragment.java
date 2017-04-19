@@ -42,7 +42,6 @@ import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.feed.utils.BadgeDrawable;
-import com.sabkuchfresh.fragments.FreshHomeFragment;
 import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
@@ -153,12 +152,21 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 if (likeFeed == null)
                         likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
                         @Override
-                        public void onSuccess(boolean isLiked,int position) {
-                            feedHomeAdapter.notifyOnLike(position,isLiked);
-                        }
-                    });
+                        public void onSuccess(boolean isLiked,int position,FeedDetail feedDetail) {
+                            if (getView()!=null && feedHomeAdapter!=null) {
 
-                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(),position);
+                                feedHomeAdapter.notifyOnLike(position,isLiked);
+                            }
+                        }
+
+                            @Override
+                            public void onFailure(boolean isLiked, int posInOriginalList,FeedDetail feedDetail) {
+                                if(feedDetail!=null){
+                                    feedDetail.setIsLikeAPIInProgress(false);
+                                }
+                            }
+                        });
+                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(),position,feedDetail);
                 GAUtils.event(FEED, HOME, LIKE+CLICKED);
             }
 
@@ -225,7 +233,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         rlNoReviews.setVisibility(View.GONE);
         tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);
         try {
-            tvFeedEmpty.setText(Data.getFeedName(activity) + " is empty");
+            tvFeedEmpty.setText("Feed is empty!");
             SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add_a_post));
             ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tvFeedEmpty.append("\n");
@@ -359,9 +367,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
-                                if(activity.getTopFragment() instanceof FreshHomeFragment) {
+                                if(activity.getTopFragment() instanceof FeedHomeFragment) {
                                     activity.getFeedHomeAddPostView().setVisibility(relativeLayoutNotAvailable.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                                }else{
+                                    activity.getFeedHomeAddPostView().setVisibility(View.GONE);
+
                                 }
+
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -415,7 +427,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         if(feedDetailList!=null && feedDetailList.size()>0){
 
             adapterList.addAll(feedDetailList);
-            adapterList.add(FeedHomeAdapter.ITEM_FOOTER_BLANK);
+//            adapterList.add(FeedHomeAdapter.ITEM_FOOTER_BLANK);
 
 
         }
@@ -557,32 +569,48 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     private MenuItem itemCart;
-    private long currentNotificationCount = 0;
-    private boolean isNotificationsViewed;
 
-    public void setNotificationsViewed(boolean notificationsViewed) {
-        isNotificationsViewed = notificationsViewed;
+    public void setNotificationsSeenCount(long notificationsSeenCount) {
+        this.notificationsSeenCount = notificationsSeenCount;
     }
+
+    private long notificationsSeenCount = 0;
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.feed_home_menu, menu);
         itemCart = menu.findItem(R.id.item_notification);
-        setNotificationCount(currentNotificationCount);
+        setNotificationCount(notificationsSeenCount);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
 
 
 
-    private void setNotificationCount(long count){
+  /*
+  Old logic to view notification count
+  private boolean isNotificationsViewed;
+
+    public void setNotificationsViewed(boolean notificationsViewed) {
+        isNotificationsViewed = notificationsViewed;
+    }
+  private void setNotificationCount(long count){
         LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
-        BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(!isNotificationsViewed || count!=currentNotificationCount?count:0));
+        BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(!isNotificationsViewed || count!=notificationsSeenCount?count:0));
         activity.collapsingToolbar.invalidate();
-        if(count!=currentNotificationCount){
+        if(count!=notificationsSeenCount){
             isNotificationsViewed=false;
         }
-        currentNotificationCount = count;
+        notificationsSeenCount = count;
+    }
+    */
+    private void setNotificationCount(long count){
+        this.notificationsSeenCount = count;
+        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+        BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(count));
+        activity.collapsingToolbar.invalidate();
+
     }
 
     @Override

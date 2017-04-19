@@ -78,10 +78,9 @@ import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedClaimHandleFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedPostDetailFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedReserveSpotFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
-import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
@@ -312,6 +311,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             resetAddressFields();
 
             if (getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)) {
+                Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
                 setSelectedLatLng(new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude),
                         getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude)));
             }
@@ -449,13 +449,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
             });
 
-            if(savedInstanceState!=null)
-            {
-                FragmentManager fm = getSupportFragmentManager();
-                for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                    fm.popBackStack();
-                }
-            }
+
 
             try {
                 float marginBottom = 60f;
@@ -853,6 +847,29 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 }
+
+
+                // to check from Last selected address that if its id is -10(marked for special case of
+                // deleting selected delivery address from address book), if it is the case clear
+                // address related local variables and save empty jsonObject in SP for setting
+                // delivery location to current location.
+                SearchResult searchResultLastFMM = gson.fromJson(Prefs.with(this)
+                        .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+                if(searchResultLastFMM.getId() == null || searchResultLastFMM.getId() == -10){
+                    setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
+                    setSelectedAddress("");
+                    setSelectedAddressId(0);
+                    setSelectedAddressType("");
+
+                    Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
+                }
+                // else if selected address is updated by user, updating address related local variables
+                // from SP search result
+                else if(searchResultLastFMM.getId() > 0 && searchResultLastFMM.getId() == getSelectedAddressId()){
+                    setSelectedLatLng(searchResultLastFMM.getLatLng());
+                    setSelectedAddress(searchResultLastFMM.getAddress());
+                    setSelectedAddressType(searchResultLastFMM.getName());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -907,6 +924,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (FeedHomeFragment) getSupportFragmentManager().findFragmentByTag(FeedHomeFragment.class.getName());
     }
 
+    public FeedNotificationsFragment getFeedNotificationsFragment(){
+        return (FeedNotificationsFragment) getSupportFragmentManager().findFragmentByTag(FeedNotificationsFragment.class.getName());
+    }
+
     public FeedReserveSpotFragment getFeedReserveSpotFragment(){
         return (FeedReserveSpotFragment) getSupportFragmentManager().findFragmentByTag(FeedReserveSpotFragment.class.getName());
     }
@@ -915,8 +936,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (FeedSpotReservedSharingFragment) getSupportFragmentManager().findFragmentByTag(FeedSpotReservedSharingFragment.class.getName());
     }
 
-    public FeedOfferingCommentsFragment getOfferingsCommentFragment(){
-        return (FeedOfferingCommentsFragment) getSupportFragmentManager().findFragmentByTag(FeedOfferingCommentsFragment.class.getName());
+    public FeedPostDetailFragment getOfferingsCommentFragment(){
+        return (FeedPostDetailFragment) getSupportFragmentManager().findFragmentByTag(FeedPostDetailFragment.class.getName());
     }
     public FeedAddPostFragment getFeedAddPostFragment(){
         return (FeedAddPostFragment) getSupportFragmentManager().findFragmentByTag(FeedAddPostFragment.class.getName());
@@ -1128,8 +1149,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.ivAddReview.setVisibility(View.GONE);
             topBar.tvNameCap.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
+            topBar.tvDeliveryAddress.setVisibility(View.GONE);
             int padding = (int) (20f * ASSL.minRatio());
             int visMinOrder = -1;
+            topBar.progressWheelDeliveryAddressPin.setVisibility(View.GONE);
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -1144,7 +1167,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(getResources().getString(R.string.fresh));
+                topBar.title.setText(getResources().getString(R.string.fatafat));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
 
@@ -1156,7 +1179,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 rlSort.setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(getResources().getString(R.string.fresh));
+                topBar.title.setText(getResources().getString(R.string.fatafat));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
 
@@ -1265,7 +1288,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 visMinOrder = setMinOrderAmountText(fragment);
 
-            } else if (fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
+            } else if (fragment instanceof AddToAddressBookFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 llSearchCartVis = View.GONE;
@@ -1273,8 +1296,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setVisibility(View.VISIBLE);
                 if (fragment instanceof AddToAddressBookFragment) {
                     topBar.title.setText(getResources().getString(R.string.confirm_address));
-                } else if (fragment instanceof AddAddressMapFragment) {
-                    topBar.title.setText(getResources().getString(R.string.choose_your_address));
                 } else {
                     topBar.title.setText(getResources().getString(R.string.address));
                 }
@@ -1374,12 +1395,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 visMinOrder = setMinOrderAmountText(fragment);
 
             }
-            else if(fragment instanceof FeedOfferingCommentsFragment || fragment instanceof FeedNotificationsFragment  || fragment instanceof FeedChangeCityFragment){
+            else if(fragment instanceof FeedPostDetailFragment || fragment instanceof FeedNotificationsFragment  || fragment instanceof FeedChangeCityFragment){
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
-                if(fragment instanceof FeedOfferingCommentsFragment){
+                if(fragment instanceof FeedPostDetailFragment){
                     topBar.title.setText(Data.getFeedName(this));
                 } else if(fragment instanceof FeedNotificationsFragment){
                     topBar.title.setText(R.string.notifications);
@@ -1422,14 +1443,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
 
+            feedHomeAddPostView.setVisibility(View.GONE);
             topBar.title.setLayoutParams(titleLayoutParams);
             setCollapsingToolbar(fragment instanceof VendorMenuFragment, fragment);
 
 
-            if(fragment instanceof FeedHomeFragment)
-                feedHomeAddPostView.setVisibility(View.VISIBLE);
-            else
-                feedHomeAddPostView.setVisibility(View.GONE);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1885,10 +1904,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer);
     }
 
-    public void openMapAddress(Bundle bundle) {
-        getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer, bundle);
-    }
-
     public void openAddToAddressBook(Bundle bundle) {
         getTransactionUtils().openAddToAddressFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
@@ -1918,9 +1933,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else {
                     GAUtils.event(FRESH, HOME + SEARCH, BACK + BUTTON + CLICKED);
                 }
-            } else if(getTopFragment() instanceof FeedOfferingCommentsFragment){
+            } else if(getTopFragment() instanceof FeedPostDetailFragment){
                 GAUtils.event(FEED, COMMENT, BACK+BUTTON+CLICKED);
             }
+        }
+
+        if(getTopFragment() instanceof DeliveryAddressesFragment && getDeliveryAddressesFragment().backWasConsumed()){
+            return;
         }
 
         checkForBackToFeed(true);
@@ -2626,8 +2645,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         Fragment deliveryAddressesFragment = getDeliveryAddressesFragment();
                         if (deliveryAddressesFragment != null) {
                             getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                        } else {
-                            getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -3278,9 +3295,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {
                 SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
                 if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
                     setSearchResultToActVarsAndFetchData(searchResult, appType);
+					saveOfferingLastAddress(appType);
                 } else {
                     getAddressAndFetchOfferingData(getSelectedLatLng(), appType);
                 }

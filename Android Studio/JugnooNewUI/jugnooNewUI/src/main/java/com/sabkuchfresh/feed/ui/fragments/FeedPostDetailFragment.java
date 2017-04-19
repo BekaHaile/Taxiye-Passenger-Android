@@ -22,7 +22,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
-import com.sabkuchfresh.feed.ui.adapters.FeedOfferingCommentsAdapter;
+import com.sabkuchfresh.feed.ui.adapters.FeedPostDetailAdapter;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
@@ -52,13 +52,13 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class FeedOfferingCommentsFragment extends Fragment implements DeletePostDialog.DeleteDialogCallback,EditPostPopup.EditPostDialogCallback, GAAction {
+public class FeedPostDetailFragment extends Fragment implements DeletePostDialog.DeleteDialogCallback,EditPostPopup.EditPostDialogCallback, GAAction {
 
     private static final String FEED_DETAIL = "feed_detail";
     private static final String POSITION_IN_ORIGINAL_LIST = "positionInOriginalList";
     private static final String OPEN_KEYBOARD_ON_LOAD = "openKeyboardOnLoad";
     private FeedDetail feedDetail;
-    private FeedOfferingCommentsAdapter feedOfferingCommentsAdapter;
+    private FeedPostDetailAdapter feedOfferingCommentsAdapter;
     private FreshActivity activity;
     private ArrayList<Object> dataList;
     private TextView textViewCharCount;
@@ -72,13 +72,13 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
     private boolean openKeyboardOnLoad;
 
 
-    public FeedOfferingCommentsFragment() {
+    public FeedPostDetailFragment() {
         // Required empty public constructor
     }
 
 
-    public static FeedOfferingCommentsFragment newInstance(FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad) {
-        FeedOfferingCommentsFragment fragment = new FeedOfferingCommentsFragment();
+    public static FeedPostDetailFragment newInstance(FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad) {
+        FeedPostDetailFragment fragment = new FeedPostDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable(FEED_DETAIL, feedDetail);
         args.putSerializable(POSITION_IN_ORIGINAL_LIST, positionInOriginalList);
@@ -119,22 +119,35 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         edtMyComment.addTextChangedListener(submitTextWatcher);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        feedOfferingCommentsAdapter = new FeedOfferingCommentsAdapter(getActivity(), null, recyclerView, new FeedHomeAdapter.FeedPostCallback() {
+        feedOfferingCommentsAdapter = new FeedPostDetailAdapter(getActivity(), null, recyclerView, new FeedHomeAdapter.FeedPostCallback() {
             @Override
             public void onLikeClick(FeedDetail object, int position) {
                 if (likeFeed == null)
                     likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
+
+
                         @Override
-                        public void onSuccess(boolean isLikeAPI, int position) {
-                            feedOfferingCommentsAdapter.notifyOnLike(position, isLikeAPI);
-                            if (activity.getFeedHomeFragment() != null) {
-                                //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
-                                activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
+                        public void onFailure(boolean isLiked, int posInOriginalList, FeedDetail feedDetail) {
+                            if(feedDetail!=null){
+                                feedDetail.setIsLikeAPIInProgress(false);
                             }
                         }
 
+                        @Override
+                        public void onSuccess(boolean isLikeAPI, int position,FeedDetail feedDetail) {
+
+                            if(getView()!=null && feedOfferingCommentsAdapter!=null){
+                                feedOfferingCommentsAdapter.notifyOnLike(position, isLikeAPI);
+                                if (activity.getFeedHomeFragment() != null) {
+                                    //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
+                                    activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
+                                }
+                            }
+
+                        }
+
                     });
-                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(), position);
+                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(), position,feedDetail);
                 GAUtils.event(FEED, COMMENT, LIKE+CLICKED);
             }
 
@@ -166,17 +179,18 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
             @Override
             public void onDeleteComment(final FeedComment feedComment, final int positionInList, View viewClicked) {
-             DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Reply", "Are you sure?", "Yes", "No", new View.OnClickListener() {
+                deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
+           /*  DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Reply", "Are you sure?", "Yes", "No", new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {
-                     deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
+
                  }
              }, new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {
 
                  }
-             },true,false);
+             },true,false);*/
 
             }
 
@@ -233,30 +247,18 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         DialogPopup.dismissLoadingDialog();
                         try {
-                            String message = feedbackResponse.getMessage();
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
-                                if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    if(setFeedObjectAndRefresh(feedbackResponse)) {
-                                        prepareListAndNotifyAdapter(feedbackResponse);
-                                    }
-                                    if((feedbackResponse.getFeedComments()==null || feedbackResponse.getFeedComments().size()==0) && openKeyboardOnLoad){
+                          if(onSuccessFeedDetail(feedbackResponse,false)){
+                              if((feedbackResponse.getFeedComments()==null || feedbackResponse.getFeedComments().size()==0) && openKeyboardOnLoad){
 
-                                        activity.getHandler().postDelayed(new Runnable() {
-                                          @Override
-                                          public void run() {
-                                              edtMyComment.requestFocus();
-                                              Utils.showKeyboard(activity,edtMyComment);
-                                          }
-                                      },200);
-                                    }
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", message);
-                                }
-
-
-
-
-                            }
+                                  activity.getHandler().postDelayed(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                          edtMyComment.requestFocus();
+                                          Utils.showKeyboard(activity,edtMyComment);
+                                      }
+                                  },200);
+                              }
+                          }
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             retryDialog(DialogErrorType.SERVER_ERROR);
@@ -305,6 +307,8 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
             feedDetail.setPostEditable(feedbackResponse.getPostDetails().isPostEditable());
             feedDetail.setStarCount(feedbackResponse.getPostDetails().getStarCount());
             feedDetail.setRestaurantImage(feedbackResponse.getPostDetails().getRestaurantImage());
+            feedDetail.setIsCommentedByUser(feedbackResponse.getPostDetails().getIsCommentedByUser());
+
 //            feedDetail.setOwnerImage(feedbackResponse.getPostDetails().getOwnerImage());
             feedDetail.setReviewImages(feedbackResponse.getPostDetails().getReviewImages());
         }
@@ -326,7 +330,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
         dataList.clear();
         dataList.add(feedDetail);
-//        dataList.add(FeedOfferingCommentsAdapter.TYPE_MY_COMMENT);
+//        dataList.add(FeedPostDetailAdapter.TYPE_MY_COMMENT);
 
         if (feedbackResponse.getFeedComments() != null)
             dataList.addAll(feedbackResponse.getFeedComments());
@@ -352,20 +356,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         DialogPopup.dismissLoadingDialog();
                         try {
-                            String message = feedbackResponse.getMessage();
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
-                                if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    Utils.hideKeyboard(getActivity());
-                                    commentAdded = null;
-                                    edtMyComment.setText(null);
-                                    if(setFeedObjectAndRefresh(feedbackResponse)) {
-                                        prepareListAndNotifyAdapter(feedbackResponse);
-                                    }
-                                    recyclerView.smoothScrollToPosition(feedOfferingCommentsAdapter.getItemCount() - 1);
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", message);
-                                }
-                            }
+                            onSuccessFeedDetail(feedbackResponse,true);
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             retryCommentAPIDialog(DialogErrorType.SERVER_ERROR, comments);
@@ -387,6 +378,31 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         }
 
 
+    }
+
+    private boolean onSuccessFeedDetail(FeedDetailResponse feedbackResponse,boolean isAddCommentAPI) {
+        String message = feedbackResponse.getMessage();
+        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
+            if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                Utils.hideKeyboard(getActivity());
+                if(setFeedObjectAndRefresh(feedbackResponse)) {
+                    prepareListAndNotifyAdapter(feedbackResponse);
+                }
+
+
+                if(isAddCommentAPI){
+                     commentAdded = null;
+                     edtMyComment.setText(null);
+                     recyclerView.smoothScrollToPosition(feedOfferingCommentsAdapter.getItemCount() - 1);
+                }
+
+                return true;
+            } else {
+                DialogPopup.alertPopup(activity, "", message);
+                return false;
+            }
+        }
+        return false;
     }
 
     private void retryCommentAPIDialog(DialogErrorType dialogErrorType, final String commentAdded) {
@@ -446,6 +462,8 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         @Override
         public void afterTextChanged(Editable s) {
             commentAdded = s.toString();
+            if(edtMyComment.getText().toString().trim().length()==0 && s.length()>0 && (s.charAt(0)=='\n' || s.charAt(0)==' '))
+                edtMyComment.setText(null);
 //            textViewCharCount.setText(String.valueOf(500-s.toString().trim().length()));
             btnSubmit.setEnabled(s.toString().trim().length() > 0);
 
@@ -471,7 +489,16 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                     if (activity.getFeedHomeFragment() != null) {
                         //notifies the feed home fragment that user has deleted the post
                         activity.onBackPressed();
-                        activity.getFeedHomeFragment().notifyOnDelete(positionInOriginalList);
+                        if(positionInOriginalList==-1){
+                            activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
+                            if(activity.getFeedNotificationsFragment()!=null){
+                                activity.getFeedNotificationsFragment().fetchFeedNotifications();
+                            }
+
+                        }else{
+                            activity.getFeedHomeFragment().notifyOnDelete(positionInOriginalList);
+                        }
+
 
                     }
                 }
@@ -517,12 +544,12 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                 params.put(Constants.KEY_POST_ID, String.valueOf(postId));
                 new HomeUtil().putDefaultParams(params);
 
-            RestClient.getFeedApiService().deleteComment(params, new retrofit.Callback<FeedCommonResponse>() {
+            RestClient.getFeedApiService().deleteComment(params, new retrofit.Callback<FeedDetailResponse>() {
                     @Override
-                    public void success(FeedCommonResponse feedbackResponse, Response response) {
+                    public void success(FeedDetailResponse feedbackResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
                         try {
-                            String message = feedbackResponse.getMessage();
+                           /* String message = feedbackResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     Utils.hideKeyboard(getActivity());
@@ -542,7 +569,8 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
-                            }
+                            }*/
+                           onSuccessFeedDetail(feedbackResponse,false);
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             retryDeleteCommentAPIDialog(DialogErrorType.SERVER_ERROR, activityId,positionOfCommentInList,postId);

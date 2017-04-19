@@ -1118,7 +1118,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 } else {
                     ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_selected);
                 }
-			} else {
+			} else if(activity.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY){
+                isRazorUPI = true;
+                ivUPI.setImageResource(R.drawable.ic_radio_button_selected);
+            } else{
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
             }
             updateCartDataView();
@@ -1313,7 +1316,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 chargeDetails.clear();
                 items.clear();
 
-
                 chargeDetails.put("Payment mode", ""+activity.getPaymentOption());
                 chargeDetails.put(TOTAL_AMOUNT, ""+getSubTotalAmount(false));
                 chargeDetails.put(DISCOUNT_AMOUNT, "" + getTotalPromoAmount());
@@ -1334,7 +1336,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 params.put(Constants.DELIVERY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.DELIVERY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
 
-                params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(activity.getPaymentOption().getOrdinal()));
+                if(activity.getPaymentOption().getOrdinal() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()){
+                    params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(PaymentOption.RAZOR_PAY.getOrdinal()));
+                } else {
+                    params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(activity.getPaymentOption().getOrdinal()));
+                }
                 if(!isMenusOpen()) {
                     params.put(Constants.KEY_DELIVERY_SLOT_ID, String.valueOf(activity.getSlotSelected().getDeliverySlotId()));
                 }
@@ -1859,6 +1865,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutCash);
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()){
+                            linearLayoutWalletContainer.addView(rlOtherModesToPay);
+                            tvOtherModesToPay.setText(paymentModeConfigData.getDisplayName());
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()){
+                            linearLayoutWalletContainer.addView(rlUPI);
+                            tvUPI.setText(paymentModeConfigData.getDisplayName());
                         }
                     }
                 }
@@ -1872,7 +1884,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
 
             // for razorPay layout adding
-			ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
+			/*ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
 			if(paymentGatewayModeConfigs != null && paymentGatewayModeConfigs.size() > 0){
 				for(PaymentGatewayModeConfig modeConfig : paymentGatewayModeConfigs){
 					if(modeConfig.getEnabled()!= null && modeConfig.getEnabled() == 1){
@@ -1890,7 +1902,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         }
 					}
 				}
-			}
+			}*/
 
         } catch (Exception e){
             e.printStackTrace();
@@ -2299,38 +2311,38 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private boolean checkoutApiDoneOnce = false;
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
-        try {
-            if(!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType())) {
-                if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
-                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-                    activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
-                    activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
-                    try {
-                        activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
-                                Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
-                        activity.setRefreshCart(true);
-                        deliveryAddressUpdated = true;
-                        if(!checkoutApiDoneOnce) {
-                            activity.getHandler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getCheckoutDataAPI(selectedSubscription);
-                                }
-                            }, 500);
-                        }
-                        checkoutApiDoneOnce = true;
-                    } catch (Exception e) {
-                    }
-                } else {
-                    activity.setSelectedAddress("");
-                    activity.setSelectedLatLng(null);
-                    activity.setSelectedAddressId(0);
-                    activity.setSelectedAddressType("");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if(!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType())) {
+//                if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
+//                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+//                    activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
+//                    activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+//                    try {
+//                        activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
+//                                Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+//                        activity.setRefreshCart(true);
+//                        deliveryAddressUpdated = true;
+//                        if(!checkoutApiDoneOnce) {
+//                            activity.getHandler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    getCheckoutDataAPI(selectedSubscription);
+//                                }
+//                            }, 500);
+//                        }
+//                        checkoutApiDoneOnce = true;
+//                    } catch (Exception e) {
+//                    }
+//                } else {
+//                    activity.setSelectedAddress("");
+//                    activity.setSelectedLatLng(null);
+//                    activity.setSelectedAddressId(0);
+//                    activity.setSelectedAddressType("");
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {

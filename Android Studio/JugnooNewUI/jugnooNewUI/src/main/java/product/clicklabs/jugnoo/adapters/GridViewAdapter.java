@@ -103,7 +103,7 @@ public class GridViewAdapter extends BaseAdapter
                     if (gridList.get(position).equalsIgnoreCase(Config.getFreshClientId())) {
                         holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_fresh_selector);
                         holder.imageViewGridScreen.setImageResource(R.drawable.ic_fresh_grey);
-                        holder.textViewGridScreen.setText(R.string.fresh);
+                        holder.textViewGridScreen.setText(R.string.fatafat);
                     }
                     if (gridList.get(position).equalsIgnoreCase(Config.getGroceryClientId())) {
                         holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_grocery_selector);
