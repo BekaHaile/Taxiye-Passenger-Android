@@ -21,6 +21,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -544,18 +545,20 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void notifyOnLike(int position, boolean isLiked) {
 
         if (adapterList != null && position < adapterList.size()) {
-
             FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
-            if (isLiked) {
-                LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
-                likeButton.onClick(likeButton);
-                feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
-            }
-            else if (feedDetail.getLikeCount() > 0)
-                feedDetail.setLikeCount(feedDetail.getLikeCount() - 1);
+            if (feedDetail.isLikeAPIInProgress()) {
+                feedDetail.setIsLikeAPIInProgress(false);
+                if (isLiked) {
+                    LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
+                    likeButton.onClick(likeButton);
+                    feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
+                }
+                else if (feedDetail.getLikeCount() > 0)
+                    feedDetail.setLikeCount(feedDetail.getLikeCount() - 1);
 
-            feedDetail.setLiked(isLiked);
-            notifyFeedListItem(position);
+                feedDetail.setLiked(isLiked);
+                notifyFeedListItem(position);
+            }
         }
     }
 
@@ -646,14 +649,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             final FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
             switch (viewClicked.getId()) {
                 case R.id.view_action_like:
-                    if(!feedDetail.isLiked()){
-                       /* Animation animation = AnimationUtils.loadAnimation(viewClicked.getContext(), R.anim.bounce_scale_out_in);
-                        viewClicked.findViewById(R.id.tv_action_like).clearAnimation();
-                        viewClicked.findViewById(R.id.tv_action_like).startAnimation(animation);*/
-                       /*LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
-                        likeButton.onClick(likeButton);*/
+                    if(!feedDetail.isLikeAPIInProgress()){
+                        feedDetail.setIsLikeAPIInProgress(true);
+                        feedPostCallback.onLikeClick(feedDetail, position);
                     }
-                    feedPostCallback.onLikeClick(feedDetail, position);
                     break;
                 case R.id.view_action_comment:
 

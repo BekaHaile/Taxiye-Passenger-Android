@@ -124,17 +124,30 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
             public void onLikeClick(FeedDetail object, int position) {
                 if (likeFeed == null)
                     likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
+
+
                         @Override
-                        public void onSuccess(boolean isLikeAPI, int position) {
-                            feedOfferingCommentsAdapter.notifyOnLike(position, isLikeAPI);
-                            if (activity.getFeedHomeFragment() != null) {
-                                //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
-                                activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
+                        public void onFailure(boolean isLiked, int posInOriginalList, FeedDetail feedDetail) {
+                            if(feedDetail!=null){
+                                feedDetail.setIsLikeAPIInProgress(false);
                             }
                         }
 
+                        @Override
+                        public void onSuccess(boolean isLikeAPI, int position,FeedDetail feedDetail) {
+
+                            if(getView()!=null && feedOfferingCommentsAdapter!=null){
+                                feedOfferingCommentsAdapter.notifyOnLike(position, isLikeAPI);
+                                if (activity.getFeedHomeFragment() != null) {
+                                    //notifies the feed home fragment that user has liked unliked post so it can refresh accordingly
+                                    activity.getFeedHomeFragment().refreshFeedInHomeFragment(positionInOriginalList);
+                                }
+                            }
+
+                        }
+
                     });
-                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(), position);
+                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(), position,feedDetail);
                 GAUtils.event(FEED, COMMENT, LIKE+CLICKED);
             }
 

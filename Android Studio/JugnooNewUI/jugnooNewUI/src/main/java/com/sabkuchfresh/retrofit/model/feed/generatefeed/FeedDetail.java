@@ -77,6 +77,12 @@ public class FeedDetail implements Serializable {
     @Expose
     private int isCommentedByUser;
 
+    public boolean isLikeAPIInProgress() {
+        return isLikeAPIInProgress;
+    }
+
+    private boolean isLikeAPIInProgress;
+
     public boolean isLiked() {
         return likeCount > 0 && isLiked==1;
     }
@@ -323,6 +329,10 @@ public class FeedDetail implements Serializable {
 
     public String getUserImageColor() {
         return userImageColor;
+    }
+
+    public void setIsLikeAPIInProgress(boolean isLikeAPIInProgress) {
+        this.isLikeAPIInProgress = isLikeAPIInProgress;
     }
 
     public enum FeedType{

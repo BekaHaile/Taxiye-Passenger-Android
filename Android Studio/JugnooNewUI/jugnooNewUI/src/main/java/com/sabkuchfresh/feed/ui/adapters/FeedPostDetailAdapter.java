@@ -259,7 +259,14 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
         if (position!=RecyclerView.NO_POSITION) {
             switch (viewClicked.getId()) {
                 case R.id.view_action_like:
-                    callback.onLikeClick(null,position);
+                    if(feedDetailData.get(position) instanceof  FeedDetail){
+                        FeedDetail feedDetail = (FeedDetail) feedDetailData.get(position);
+                        if(!feedDetail.isLikeAPIInProgress()){
+                            feedDetail.setIsLikeAPIInProgress(true);
+                            callback.onLikeClick(null,position);
+                        }
+                    }
+
                     break;
                 case R.id.view_action_comment:
                         callback.onCommentClick(null,position);
@@ -302,15 +309,18 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
         if(feedDetailData!=null && position<feedDetailData.size() && feedDetailData.get(position) instanceof FeedDetail)
         {
             FeedDetail feedDetail = (FeedDetail) feedDetailData.get(position);
-            if(isLikeAPI) {
-                LikeButton likeButton =   ((FeedHomeAdapter.ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
-                likeButton.onClick(likeButton);
-                feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
-            } else if(feedDetail.getLikeCount()!=0)
-                feedDetail.setLikeCount(feedDetail.getLikeCount()-1);
+            if (feedDetail.isLikeAPIInProgress()) {
+                feedDetail.setIsLikeAPIInProgress(false);
+                if(isLikeAPI) {
+                    LikeButton likeButton =   ((FeedHomeAdapter.ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
+                    likeButton.onClick(likeButton);
+                    feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
+                } else if(feedDetail.getLikeCount()!=0)
+                    feedDetail.setLikeCount(feedDetail.getLikeCount()-1);
 
-            ((FeedDetail) feedDetailData.get(position)).setLiked(isLikeAPI);
-            notifyItemChanged(position);
+                ((FeedDetail) feedDetailData.get(position)).setLiked(isLikeAPI);
+                notifyItemChanged(position);
+            }
         }
     }
 

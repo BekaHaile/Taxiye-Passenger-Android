@@ -152,12 +152,21 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 if (likeFeed == null)
                         likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
                         @Override
-                        public void onSuccess(boolean isLiked,int position) {
-                            feedHomeAdapter.notifyOnLike(position,isLiked);
-                        }
-                    });
+                        public void onSuccess(boolean isLiked,int position,FeedDetail feedDetail) {
+                            if (getView()!=null && feedHomeAdapter!=null) {
 
-                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(),position);
+                                feedHomeAdapter.notifyOnLike(position,isLiked);
+                            }
+                        }
+
+                            @Override
+                            public void onFailure(boolean isLiked, int posInOriginalList,FeedDetail feedDetail) {
+                                if(feedDetail!=null){
+                                    feedDetail.setIsLikeAPIInProgress(false);
+                                }
+                            }
+                        });
+                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(),position,feedDetail);
                 GAUtils.event(FEED, HOME, LIKE+CLICKED);
             }
 
@@ -418,7 +427,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         if(feedDetailList!=null && feedDetailList.size()>0){
 
             adapterList.addAll(feedDetailList);
-            adapterList.add(FeedHomeAdapter.ITEM_FOOTER_BLANK);
+//            adapterList.add(FeedHomeAdapter.ITEM_FOOTER_BLANK);
 
 
         }
