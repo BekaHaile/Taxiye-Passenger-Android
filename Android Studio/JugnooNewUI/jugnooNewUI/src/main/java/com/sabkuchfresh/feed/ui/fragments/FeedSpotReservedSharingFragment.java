@@ -63,13 +63,21 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 		activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
 
-		SpannableStringBuilder ssb = new SpannableStringBuilder(String.valueOf(Data.getFeedData().getFeedRank() - 1));
-		ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		tvRankDescription.setText(ssb);
-		tvRankDescription.append(" ");
-		tvRankDescription.append(activity.getString(R.string.people_ahead_of_you_in_queue));
+		long feedRank = 0;
+		if(Data.getFeedData() != null && Data.getFeedData().getFeedRank() != null){
+			feedRank = Data.getFeedData().getFeedRank() - 1;
+		}
+		if(feedRank > 0) {
+			SpannableStringBuilder ssb = new SpannableStringBuilder(String.valueOf(feedRank));
+			ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			tvRankDescription.setText(ssb);
+			tvRankDescription.append(" ");
+			tvRankDescription.append(activity.getString(R.string.people_ahead_of_you_in_queue));
+		} else {
+			tvRankDescription.setText(activity.getString(R.string.you_are_first_in_queue));
+		}
 
-		if(!TextUtils.isEmpty(Data.getFeedData().getEarlyAccessText())) {
+		if(Data.getFeedData() != null && !TextUtils.isEmpty(Data.getFeedData().getEarlyAccessText())) {
 			tvWantEarlyAccessMessage.setText(Utils.trimHTML(Utils.fromHtml(Data.getFeedData().getEarlyAccessText())));
 		}
 
