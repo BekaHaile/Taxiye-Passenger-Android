@@ -247,30 +247,18 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         DialogPopup.dismissLoadingDialog();
                         try {
-                            String message = feedbackResponse.getMessage();
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
-                                if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    if(setFeedObjectAndRefresh(feedbackResponse)) {
-                                        prepareListAndNotifyAdapter(feedbackResponse);
-                                    }
-                                    if((feedbackResponse.getFeedComments()==null || feedbackResponse.getFeedComments().size()==0) && openKeyboardOnLoad){
+                          if(onSuccessFeedDetail(feedbackResponse,false)){
+                              if((feedbackResponse.getFeedComments()==null || feedbackResponse.getFeedComments().size()==0) && openKeyboardOnLoad){
 
-                                        activity.getHandler().postDelayed(new Runnable() {
-                                          @Override
-                                          public void run() {
-                                              edtMyComment.requestFocus();
-                                              Utils.showKeyboard(activity,edtMyComment);
-                                          }
-                                      },200);
-                                    }
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", message);
-                                }
-
-
-
-
-                            }
+                                  activity.getHandler().postDelayed(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                          edtMyComment.requestFocus();
+                                          Utils.showKeyboard(activity,edtMyComment);
+                                      }
+                                  },200);
+                              }
+                          }
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             retryDialog(DialogErrorType.SERVER_ERROR);
@@ -368,20 +356,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         DialogPopup.dismissLoadingDialog();
                         try {
-                            String message = feedbackResponse.getMessage();
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
-                                if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    Utils.hideKeyboard(getActivity());
-                                    commentAdded = null;
-                                    edtMyComment.setText(null);
-                                    if(setFeedObjectAndRefresh(feedbackResponse)) {
-                                        prepareListAndNotifyAdapter(feedbackResponse);
-                                    }
-                                    recyclerView.smoothScrollToPosition(feedOfferingCommentsAdapter.getItemCount() - 1);
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", message);
-                                }
-                            }
+                            onSuccessFeedDetail(feedbackResponse,true);
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             retryCommentAPIDialog(DialogErrorType.SERVER_ERROR, comments);
@@ -403,6 +378,31 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
         }
 
 
+    }
+
+    private boolean onSuccessFeedDetail(FeedDetailResponse feedbackResponse,boolean isAddCommentAPI) {
+        String message = feedbackResponse.getMessage();
+        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
+            if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                Utils.hideKeyboard(getActivity());
+                if(setFeedObjectAndRefresh(feedbackResponse)) {
+                    prepareListAndNotifyAdapter(feedbackResponse);
+                }
+
+
+                if(isAddCommentAPI){
+                     commentAdded = null;
+                     edtMyComment.setText(null);
+                     recyclerView.smoothScrollToPosition(feedOfferingCommentsAdapter.getItemCount() - 1);
+                }
+
+                return true;
+            } else {
+                DialogPopup.alertPopup(activity, "", message);
+                return false;
+            }
+        }
+        return false;
     }
 
     private void retryCommentAPIDialog(DialogErrorType dialogErrorType, final String commentAdded) {
@@ -544,12 +544,12 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
                 params.put(Constants.KEY_POST_ID, String.valueOf(postId));
                 new HomeUtil().putDefaultParams(params);
 
-            RestClient.getFeedApiService().deleteComment(params, new retrofit.Callback<FeedCommonResponse>() {
+            RestClient.getFeedApiService().deleteComment(params, new retrofit.Callback<FeedDetailResponse>() {
                     @Override
-                    public void success(FeedCommonResponse feedbackResponse, Response response) {
+                    public void success(FeedDetailResponse feedbackResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
                         try {
-                            String message = feedbackResponse.getMessage();
+                           /* String message = feedbackResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     Utils.hideKeyboard(getActivity());
@@ -569,7 +569,8 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
-                            }
+                            }*/
+                           onSuccessFeedDetail(feedbackResponse,false);
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             retryDeleteCommentAPIDialog(DialogErrorType.SERVER_ERROR, activityId,positionOfCommentInList,postId);

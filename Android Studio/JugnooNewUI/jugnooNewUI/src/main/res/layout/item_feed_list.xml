@@ -113,7 +113,7 @@
                    android:text="@string/dummy_text_2"
                    android:textColorHighlight="@color/feed_grey_text_heading"
                    android:textColor="@color/feed_grey_text_heading"
-                   android:textSize="@dimen/font_large"
+                   android:textSize="15.4sp"
                    app:font="maven" />
 
                <TextView
@@ -176,19 +176,16 @@
            android:layout_marginLeft="@dimen/spacing_large"
            android:layout_marginRight="@dimen/spacing_large"
            android:layout_marginBottom="@dimen/spacing_small"
-           android:lineSpacingExtra="4dp"
            android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
            android:textColor="@color/feed_grey_text"
-           android:textSize="@dimen/font_large"
-           app:font="@string/maven_r" />
+           android:textSize="@dimen/font_small"
+           app:font="maven" />
     <ImageView
         android:id="@+id/iv_place_image"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/image_height_feed"
+        android:layout_height="wrap_content"
         android:layout_below="@id/tv_feed_description"
         android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_marginLeft="@dimen/spacing_large"
-        android:layout_marginRight="@dimen/spacing_large"
         android:background="@drawable/ic_fresh_new_placeholder"
         android:scaleType="centerCrop"
         android:visibility="gone" />
@@ -198,19 +195,19 @@
         android:id="@+id/vpReviewImages"
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_height_feed"
-        android:layout_below="@+id/iv_place_image"
+        android:layout_below="@id/tv_feed_description"
         android:layout_marginBottom="@dimen/spacing_small"/>
-<!--       <View
+       <View
            android:id="@+id/shadow_tab"
            android:layout_width="match_parent"
            android:layout_height="22dp"
            android:layout_alignBottom="@id/vpReviewImages"
-           android:background="@drawable/shadow_up_new" />-->
+           android:background="@drawable/shadow_up_new" />
     <android.support.design.widget.TabLayout
         android:id="@+id/tabDots"
         android:layout_width="match_parent"
         android:layout_height="6dp"
-        android:layout_marginTop="-30dp"
+        android:layout_marginTop="-16dp"
         android:layout_below="@+id/vpReviewImages"
         app:tabBackground="@drawable/tab_selector_feed"
         app:tabGravity="center"
