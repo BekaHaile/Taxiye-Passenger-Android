@@ -137,7 +137,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 				FeedDetail feedDetail = (FeedDetail) adapterList.get(position);
 				setData((ViewHolderReviewImage) holder, feedDetail, activity, feedPostCallback, this, false);
-				if (position == adapterList.size() - 2) {
+				if (position == adapterList.size() - 1) {
 					((ViewHolderReviewImage) holder).shadow.setVisibility(View.GONE);
 				} else {
 					((ViewHolderReviewImage) holder).shadow.setVisibility(View.VISIBLE);
