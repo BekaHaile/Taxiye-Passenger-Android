@@ -594,8 +594,6 @@ public class AddToAddressBookFragment extends Fragment {
                 } else{
                     if(deliveryAddressesFragment != null) {
                         activity.getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    } else {
-                        activity.getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     }
                 }
             }

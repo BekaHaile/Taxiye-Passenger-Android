@@ -55,6 +55,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
+import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.MarkerAnimation;
@@ -233,8 +234,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					}
 				}
 
-				LatLngBounds latLngBounds = llbBuilder.build();
-				googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+				googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 			} else {
 				Utils.showToast(TrackOrderActivity.this, getString(R.string.waiting_for_location));
 			}
@@ -354,8 +354,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										if(!zoomedFirstTime) {
 											LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
 											llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(new LatLng(latitude, longitude));
-											LatLngBounds latLngBounds = llbBuilder.build();
-											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 											handler.postDelayed(new Runnable() {
 												@Override
 												public void run() {
@@ -428,7 +427,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 											polylinePath = googleMap.addPolyline(polylineOptions);
 										}
 										if (zoomedFirstTime && !zoomSetManually) {
-											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(builder), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 										}
 									} catch (Exception e) {
 										e.printStackTrace();
@@ -494,4 +493,9 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	}
 
 	private Handler handler = new Handler();
+
+	private LatLngBounds getMapLatLngBounds(LatLngBounds.Builder builder){
+		return MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 100);
+	}
+
 }

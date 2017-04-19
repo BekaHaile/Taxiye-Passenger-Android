@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.home.TransactionUtils;
@@ -242,9 +241,6 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         return editTextDeliveryAddress;
     }
 
-    public void openMapAddress(Bundle bundle) {
-        getTransactionUtils().openMapFragment(this, relativeLayoutContainer, bundle);
-    }
     private TransactionUtils transactionUtils;
 
     public TransactionUtils getTransactionUtils() {
@@ -301,8 +297,6 @@ public class AddPlaceActivity extends BaseFragmentActivity {
                         Fragment deliveryAddressesFragment = getDeliveryAddressesFragment();
                         if(deliveryAddressesFragment != null) {
 							getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-						} else {
-							getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 						}
                     } catch (Exception e) {
                         e.printStackTrace();

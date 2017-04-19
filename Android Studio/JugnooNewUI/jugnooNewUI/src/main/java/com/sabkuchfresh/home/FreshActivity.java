@@ -81,7 +81,6 @@ import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedPostDetailFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedReserveSpotFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
-import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
@@ -1294,7 +1293,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 visMinOrder = setMinOrderAmountText(fragment);
 
-            } else if (fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
+            } else if (fragment instanceof AddToAddressBookFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 llSearchCartVis = View.GONE;
@@ -1302,8 +1301,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setVisibility(View.VISIBLE);
                 if (fragment instanceof AddToAddressBookFragment) {
                     topBar.title.setText(getResources().getString(R.string.confirm_address));
-                } else if (fragment instanceof AddAddressMapFragment) {
-                    topBar.title.setText(getResources().getString(R.string.choose_your_address));
                 } else {
                     topBar.title.setText(getResources().getString(R.string.address));
                 }
@@ -1910,10 +1907,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
      */
     public void openFeedback() {
         getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer);
-    }
-
-    public void openMapAddress(Bundle bundle) {
-        getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
     public void openAddToAddressBook(Bundle bundle) {
@@ -2657,8 +2650,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         Fragment deliveryAddressesFragment = getDeliveryAddressesFragment();
                         if (deliveryAddressesFragment != null) {
                             getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                        } else {
-                            getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

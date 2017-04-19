@@ -55,7 +55,8 @@
                     <RelativeLayout
                         android:id="@+id/relativeLayoutDeliveryAddress"
                         android:layout_width="match_parent"
-                        android:layout_height="116px"
+                        android:layout_height="wrap_content"
+                        android:minHeight="58dp"
                         android:background="@drawable/bg_transparent_menu_item_selector">
 
                         <ImageView
@@ -73,6 +74,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="10px"
+                            android:layout_marginTop="25px"
+                            android:layout_marginRight="25px"
                             android:layout_toRightOf="@+id/imageViewAddressType"
                             android:orientation="vertical">
 
@@ -80,8 +83,7 @@
                                 android:id="@+id/textViewAddressName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:singleLine="true"
-                                android:text=""
+                                android:text="Home"
                                 android:textColor="@color/text_color_light_selector"
                                 android:textSize="30px"
                                 android:visibility="gone" />
@@ -91,7 +93,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4px"
-                                android:maxLines="2"
                                 android:text="Add Address"
                                 android:textColor="@color/text_color_light"
                                 android:textSize="26px" />
@@ -166,7 +167,6 @@
                             android:layout_marginLeft="@dimen/px_80"
                             android:layout_marginRight="@dimen/px_20"
                             android:layout_marginTop="@dimen/px_25"
-                            android:maxLines="3"
                             android:text="Res"
                             android:textColor="@color/text_color_light_selector"
                             android:textSize="30px"
@@ -181,7 +181,6 @@
                             android:layout_marginLeft="@dimen/px_80"
                             android:layout_marginRight="@dimen/px_20"
                             android:layout_marginTop="4px"
-                            android:maxLines="3"
                             android:text="Add"
                             android:textColor="@color/text_color_light"
                             android:textSize="26px"
