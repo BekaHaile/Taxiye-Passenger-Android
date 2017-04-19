@@ -145,7 +145,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(120f*ASSL.minRatio())));
 
 					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 40f, 40f, 0.5f, 0.5f, 0));
-					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 64f, 77f, 0.7f, 1.0f, 0));
+					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 71f, 83f, 0.15f, 1.0f, 0));
 
 					googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 						@Override

@@ -427,7 +427,7 @@ public class AddToAddressBookFragment extends Fragment {
                 final int finalNewId = newId;
                 DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
                         activity.getString(R.string.address_label_matched_message_format, label),
-                        activity.getString(R.string.yes), activity.getString(R.string.cancel),
+                        activity.getString(R.string.yes), activity.getString(R.string.no),
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
