@@ -8,9 +8,8 @@ import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedClaimHandleFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedPostDetailFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
@@ -412,12 +411,12 @@ public class TransactionUtils {
     }
 
     public void openFeedCommentsFragment(FragmentActivity activity, View container, FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad) {
-        if (!checkIfFragmentAdded(activity, FeedOfferingCommentsFragment.class.getName())) {
+        if (!checkIfFragmentAdded(activity, FeedPostDetailFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, 0)
-                    .add(container.getId(), FeedOfferingCommentsFragment.newInstance(feedDetail,positionInOriginalList,openKeyboardOnLoad),
-                            FeedOfferingCommentsFragment.class.getName())
-                    .addToBackStack(FeedOfferingCommentsFragment.class.getName())
+                    .add(container.getId(), FeedPostDetailFragment.newInstance(feedDetail,positionInOriginalList,openKeyboardOnLoad),
+                            FeedPostDetailFragment.class.getName())
+                    .addToBackStack(FeedPostDetailFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

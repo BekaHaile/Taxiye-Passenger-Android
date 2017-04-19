@@ -25,6 +25,7 @@ import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.sabkuchfresh.adapters.ItemListener;
+import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -48,7 +49,7 @@ import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 /**
  * Created by Shankar on 7/17/15.
  */
-public class FeedOfferingCommentsAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> implements ItemListener, DisplayFeedHomeImagesAdapter.Callback {
+public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> implements ItemListener, DisplayFeedHomeImagesAdapter.Callback {
 
     private FreshActivity activity;
     private FeedHomeAdapter.FeedPostCallback callback;
@@ -64,7 +65,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerSwipeAdapter<RecyclerVi
     private static final StyleSpan BOLD_SPAN = new StyleSpan(Typeface.BOLD);
     private static final StyleSpan BOLD_SPAN_2 = new StyleSpan(Typeface.BOLD);//since we cant reuse same style span again in a spannable
 
-    public FeedOfferingCommentsAdapter(Activity activity, List<Object> reviewImages, RecyclerView recyclerView, FeedHomeAdapter.FeedPostCallback callback, TextWatcher textWatcherMyComment) {
+    public FeedPostDetailAdapter(Activity activity, List<Object> reviewImages, RecyclerView recyclerView, FeedHomeAdapter.FeedPostCallback callback, TextWatcher textWatcherMyComment) {
         this.activity = (FreshActivity) activity;
         this.feedDetailData = reviewImages;
         this.callback = callback;
@@ -228,11 +229,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerSwipeAdapter<RecyclerVi
     @Override
     public void onRestaurantImageClick(Integer restaurantId) {
         callback.onRestaurantClick(restaurantId);
-        try{
 
-        } catch(Exception e){
-            e.printStackTrace();
-        }
     }
 
 
@@ -262,13 +259,7 @@ public class FeedOfferingCommentsAdapter extends RecyclerSwipeAdapter<RecyclerVi
         if (position!=RecyclerView.NO_POSITION) {
             switch (viewClicked.getId()) {
                 case R.id.view_action_like:
-                    if(feedDetailData.get(position) instanceof FeedDetail
-                            && !((FeedDetail)feedDetailData.get(position)).isLiked()){
-                        Animation animation = AnimationUtils.loadAnimation(viewClicked.getContext(), R.anim.bounce_scale_out_in);
-                        viewClicked.findViewById(R.id.tv_action_like).clearAnimation();
-                        viewClicked.findViewById(R.id.tv_action_like).startAnimation(animation);
-                    }
-                        callback.onLikeClick(null,position);
+                    callback.onLikeClick(null,position);
                     break;
                 case R.id.view_action_comment:
                         callback.onCommentClick(null,position);
@@ -311,9 +302,11 @@ public class FeedOfferingCommentsAdapter extends RecyclerSwipeAdapter<RecyclerVi
         if(feedDetailData!=null && position<feedDetailData.size() && feedDetailData.get(position) instanceof FeedDetail)
         {
             FeedDetail feedDetail = (FeedDetail) feedDetailData.get(position);
-            if(isLikeAPI)
-                feedDetail.setLikeCount(feedDetail.getLikeCount()+1);
-            else if(feedDetail.getLikeCount()!=0)
+            if(isLikeAPI) {
+                LikeButton likeButton =   ((FeedHomeAdapter.ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
+                likeButton.onClick(likeButton);
+                feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
+            } else if(feedDetail.getLikeCount()!=0)
                 feedDetail.setLikeCount(feedDetail.getLikeCount()-1);
 
             ((FeedDetail) feedDetailData.get(position)).setLiked(isLikeAPI);

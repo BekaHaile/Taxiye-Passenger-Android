@@ -78,7 +78,7 @@ import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedClaimHandleFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
-import com.sabkuchfresh.feed.ui.fragments.FeedOfferingCommentsFragment;
+import com.sabkuchfresh.feed.ui.fragments.FeedPostDetailFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedReserveSpotFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
@@ -943,8 +943,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (FeedSpotReservedSharingFragment) getSupportFragmentManager().findFragmentByTag(FeedSpotReservedSharingFragment.class.getName());
     }
 
-    public FeedOfferingCommentsFragment getOfferingsCommentFragment(){
-        return (FeedOfferingCommentsFragment) getSupportFragmentManager().findFragmentByTag(FeedOfferingCommentsFragment.class.getName());
+    public FeedPostDetailFragment getOfferingsCommentFragment(){
+        return (FeedPostDetailFragment) getSupportFragmentManager().findFragmentByTag(FeedPostDetailFragment.class.getName());
     }
     public FeedAddPostFragment getFeedAddPostFragment(){
         return (FeedAddPostFragment) getSupportFragmentManager().findFragmentByTag(FeedAddPostFragment.class.getName());
@@ -1403,12 +1403,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 visMinOrder = setMinOrderAmountText(fragment);
 
             }
-            else if(fragment instanceof FeedOfferingCommentsFragment || fragment instanceof FeedNotificationsFragment  || fragment instanceof FeedChangeCityFragment){
+            else if(fragment instanceof FeedPostDetailFragment || fragment instanceof FeedNotificationsFragment  || fragment instanceof FeedChangeCityFragment){
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
-                if(fragment instanceof FeedOfferingCommentsFragment){
+                if(fragment instanceof FeedPostDetailFragment){
                     topBar.title.setText(Data.getFeedName(this));
                 } else if(fragment instanceof FeedNotificationsFragment){
                     topBar.title.setText(R.string.notifications);
@@ -1945,7 +1945,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else {
                     GAUtils.event(FRESH, HOME + SEARCH, BACK + BUTTON + CLICKED);
                 }
-            } else if(getTopFragment() instanceof FeedOfferingCommentsFragment){
+            } else if(getTopFragment() instanceof FeedPostDetailFragment){
                 GAUtils.event(FEED, COMMENT, BACK+BUTTON+CLICKED);
             }
         }

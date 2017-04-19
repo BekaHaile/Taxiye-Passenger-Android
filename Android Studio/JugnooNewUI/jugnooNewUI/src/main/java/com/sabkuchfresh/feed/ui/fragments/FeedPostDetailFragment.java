@@ -22,7 +22,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
-import com.sabkuchfresh.feed.ui.adapters.FeedOfferingCommentsAdapter;
+import com.sabkuchfresh.feed.ui.adapters.FeedPostDetailAdapter;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
@@ -52,13 +52,13 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class FeedOfferingCommentsFragment extends Fragment implements DeletePostDialog.DeleteDialogCallback,EditPostPopup.EditPostDialogCallback, GAAction {
+public class FeedPostDetailFragment extends Fragment implements DeletePostDialog.DeleteDialogCallback,EditPostPopup.EditPostDialogCallback, GAAction {
 
     private static final String FEED_DETAIL = "feed_detail";
     private static final String POSITION_IN_ORIGINAL_LIST = "positionInOriginalList";
     private static final String OPEN_KEYBOARD_ON_LOAD = "openKeyboardOnLoad";
     private FeedDetail feedDetail;
-    private FeedOfferingCommentsAdapter feedOfferingCommentsAdapter;
+    private FeedPostDetailAdapter feedOfferingCommentsAdapter;
     private FreshActivity activity;
     private ArrayList<Object> dataList;
     private TextView textViewCharCount;
@@ -72,13 +72,13 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
     private boolean openKeyboardOnLoad;
 
 
-    public FeedOfferingCommentsFragment() {
+    public FeedPostDetailFragment() {
         // Required empty public constructor
     }
 
 
-    public static FeedOfferingCommentsFragment newInstance(FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad) {
-        FeedOfferingCommentsFragment fragment = new FeedOfferingCommentsFragment();
+    public static FeedPostDetailFragment newInstance(FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad) {
+        FeedPostDetailFragment fragment = new FeedPostDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable(FEED_DETAIL, feedDetail);
         args.putSerializable(POSITION_IN_ORIGINAL_LIST, positionInOriginalList);
@@ -119,7 +119,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
         edtMyComment.addTextChangedListener(submitTextWatcher);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        feedOfferingCommentsAdapter = new FeedOfferingCommentsAdapter(getActivity(), null, recyclerView, new FeedHomeAdapter.FeedPostCallback() {
+        feedOfferingCommentsAdapter = new FeedPostDetailAdapter(getActivity(), null, recyclerView, new FeedHomeAdapter.FeedPostCallback() {
             @Override
             public void onLikeClick(FeedDetail object, int position) {
                 if (likeFeed == null)
@@ -329,7 +329,7 @@ public class FeedOfferingCommentsFragment extends Fragment implements DeletePost
 
         dataList.clear();
         dataList.add(feedDetail);
-//        dataList.add(FeedOfferingCommentsAdapter.TYPE_MY_COMMENT);
+//        dataList.add(FeedPostDetailAdapter.TYPE_MY_COMMENT);
 
         if (feedbackResponse.getFeedComments() != null)
             dataList.addAll(feedbackResponse.getFeedComments());

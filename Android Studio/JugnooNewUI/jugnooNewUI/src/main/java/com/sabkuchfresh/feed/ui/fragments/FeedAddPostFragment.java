@@ -425,7 +425,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                             if (activity.getFeedHomeFragment() != null && activity.getFeedHomeFragment().getView() != null) {
                                 activity.getFeedHomeFragment().fetchFeedsApi(true, true);
                             }
-                            if (activity.getTopFragment() instanceof FeedOfferingCommentsFragment) {
+                            if (activity.getTopFragment() instanceof FeedPostDetailFragment) {
                                 activity.getOfferingsCommentFragment().fetchDetailAPI();
                             }
 
