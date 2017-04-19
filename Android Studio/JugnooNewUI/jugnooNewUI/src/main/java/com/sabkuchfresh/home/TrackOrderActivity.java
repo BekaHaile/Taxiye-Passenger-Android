@@ -50,10 +50,12 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
@@ -336,40 +338,54 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 							final double bearing = jObj.optDouble(Constants.KEY_BEARING, 0d);
 							final String eta = jObj.optString(Constants.KEY_ETA, "");
 							final String trackingInfo = jObj.optString(Constants.KEY_TRACKING_INFO, "");
+							final int status = jObj.optInt(Constants.KEY_STATUS, EngagementStatus.STARTED.getOrdinal());
+							final String message = jObj.optString(Constants.KEY_MESSAGE, getString(R.string.some_error_occured_try_again));
 
 							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
 									try {
-										latLngsDriverAnim.clear();
-										if (markerDriver == null) {
-											markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
-													R.drawable.ic_bike_track_order_marker, 38f, 94f, 0.5f, 0.5f, 2));
-											markerDriver.setRotation((float) bearing);
-										} else {
-											MarkerAnimation.animateMarkerToICS("-1", markerDriver,
-													new LatLng(latitude, longitude), new LatLngInterpolator.Spherical(),
-													callbackAnim);
-										}
-										if(!zoomedFirstTime) {
-											LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
-											llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(new LatLng(latitude, longitude));
-											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int)(120f*ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
-											handler.postDelayed(new Runnable() {
-												@Override
-												public void run() {
-													if(googleMap != null) {
-														zoomInitial = googleMap.getCameraPosition().zoom;
+										if(status == EngagementStatus.STARTED.getOrdinal()) {
+											latLngsDriverAnim.clear();
+											if (markerDriver == null) {
+												markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
+														R.drawable.ic_bike_track_order_marker, 38f, 94f, 0.5f, 0.5f, 2));
+												markerDriver.setRotation((float) bearing);
+											} else {
+												MarkerAnimation.animateMarkerToICS("-1", markerDriver,
+														new LatLng(latitude, longitude), new LatLngInterpolator.Spherical(),
+														callbackAnim);
+											}
+											if (!zoomedFirstTime) {
+												LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
+												llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(new LatLng(latitude, longitude));
+												googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+												handler.postDelayed(new Runnable() {
+													@Override
+													public void run() {
+														if (googleMap != null) {
+															zoomInitial = googleMap.getCameraPosition().zoom;
+														}
 													}
-												}
-											}, MAP_ANIMATE_DURATION+50);
-										}
+												}, MAP_ANIMATE_DURATION + 50);
+											}
 
-										if (!TextUtils.isEmpty(trackingInfo)) {
-											tvTrackingInfo.setVisibility(View.VISIBLE);
-											tvTrackingInfo.setText(trackingInfo);
+											if (!TextUtils.isEmpty(trackingInfo)) {
+												tvTrackingInfo.setVisibility(View.VISIBLE);
+												tvTrackingInfo.setText(trackingInfo);
+											} else {
+												tvTrackingInfo.setVisibility(View.GONE);
+											}
 										} else {
-											tvTrackingInfo.setVisibility(View.GONE);
+											cancelTimer();
+											DialogPopup.alertPopupWithListener(TrackOrderActivity.this, "", message,
+													new View.OnClickListener() {
+														@Override
+														public void onClick(View v) {
+															finish();
+															overridePendingTransition(R.anim.left_in, R.anim.left_out);
+														}
+													});
 										}
 									} catch (Exception e) {
 										e.printStackTrace();
