@@ -663,8 +663,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     holder.linearLayoutCategories.setVisibility(View.GONE);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 } else {
-                    holder.linearLayoutCategories.setVisibility(View.VISIBLE);
-                    //holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
+                    holder.linearLayoutCategories.setVisibility(View.GONE);
+                   holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
                     if (Data.userData.getFreshEnabled() == 1) {
                         holder.linearLayoutSubFresh.setVisibility(View.VISIBLE);
                     } else {

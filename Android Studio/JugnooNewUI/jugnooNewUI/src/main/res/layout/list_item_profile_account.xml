@@ -39,6 +39,7 @@
                 android:layout_width="126px"
                 android:layout_height="126px"
                 android:visibility="visible"
+                android:layout_marginLeft="@dimen/px_30"
                 android:src="@drawable/ic_profile_img_placeholder"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/px_10"
@@ -46,13 +47,11 @@
 
             <ImageView
                 android:id="@+id/viewStarIcon"
-                android:layout_width="@dimen/px_64"
-                android:layout_height="@dimen/px_64"
-                android:layout_marginLeft="-40px"
-                android:layout_toRightOf="@id/imageViewProfile"
+                android:layout_width="@dimen/px_60"
+                android:layout_height="@dimen/px_60"
+                android:layout_marginRight="-40px"
                 android:layout_alignBottom="@id/imageViewProfile"
-                android:src="@drawable/star"
-                android:layout_marginBottom="5px"
+                android:src="@drawable/jugnoo_star_new"
                 android:tag="mwar"
                 android:visibility="visible" />
         </RelativeLayout>
@@ -109,9 +108,9 @@
         android:id="@+id/stroke"
         android:layout_width="match_parent"
         android:layout_height="2px"
+        android:layout_marginBottom="30px"
         android:layout_below="@+id/rlTopContainer"
         android:src="@color/stroke_color_light"/>
-
 
 
     <LinearLayout
@@ -120,6 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/stroke"
         android:gravity="center_vertical"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <ImageView
@@ -159,6 +159,7 @@
         android:id="@+id/linearLayoutSubCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/px_30"
         android:layout_below="@+id/linearLayoutCategories"
         android:orientation="vertical"
         android:visibility="visible">
@@ -171,9 +172,9 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="40px"
                 android:src="@drawable/ic_menu_category_auto_selector"
                 android:tag="mwar"
                 />
@@ -184,6 +185,7 @@
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
+
                 android:paddingLeft="@dimen/menu_text_margin_offerings"
                 android:text="@string/rides"
                 android:textColor="@color/text_color_white_theme_selector"
@@ -195,13 +197,12 @@
             android:id="@+id/linearLayoutSubMeals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="40px"
                 android:src="@drawable/ic_menu_category_meals_selector"
                 android:tag="mwar"/>
 
@@ -222,13 +223,13 @@
             android:id="@+id/linearLayoutSubFresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="40px"
                 android:src="@drawable/ic_menu_category_fresh_selector"
                 android:tag="mwar"/>
 
@@ -249,13 +250,13 @@
             android:id="@+id/linearLayoutSubGrocery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="40px"
                 android:src="@drawable/ic_menu_category_grocery_selector"
                 android:tag="mwar"/>
 
@@ -277,17 +278,15 @@
             android:id="@+id/linearLayoutSubMenus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="40px"
                 android:src="@drawable/ic_menu_category_menus_selector"
-                android:tag="mwar"
-                android:layout_gravity="center_vertical"
-                />
+                android:tag="mwar" />
 
             <TextView
                 android:id="@+id/textViewMenus"
@@ -306,13 +305,13 @@
             android:id="@+id/linearLayoutSubPay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="40px"
                 android:src="@drawable/ic_menu_category_pay_selector"
                 android:tag="mwar"
                 android:layout_gravity="center_vertical"
@@ -339,9 +338,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="40px"
+                android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_menu_category_feed_selector"
                 android:tag="mwar"/>
 
@@ -359,5 +359,16 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_below="@id/linearLayoutSubCategories"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/px_30"
+        android:layout_marginRight="@dimen/px_30"
+        android:layout_marginBottom="@dimen/px_30"
+        android:background="@color/grey_light_alpha"
+        android:layout_height="2px"/>
+
+
 
 </RelativeLayout>
