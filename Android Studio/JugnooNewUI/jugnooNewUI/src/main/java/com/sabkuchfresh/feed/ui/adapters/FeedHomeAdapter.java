@@ -450,7 +450,6 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.tabDots.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);
                 holder.shadowTab.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);
                 holder.lineBelowImagesPager.setVisibility(View.INVISIBLE);
-                holder.shadowTab.setVisibility(View.VISIBLE);
                 vpParams.bottomMargin=0;
 
 

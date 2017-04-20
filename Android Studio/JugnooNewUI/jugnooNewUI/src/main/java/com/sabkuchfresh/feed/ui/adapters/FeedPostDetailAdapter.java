@@ -298,7 +298,7 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
                 case R.id.ll_delete_comment:
                     UserCommentViewHolder userCommentViewHolder = ((UserCommentViewHolder)recyclerView.findViewHolderForAdapterPosition(position));
                     if(userCommentViewHolder!=null) {
-                        userCommentViewHolder.swipeLayout.close();
+                        userCommentViewHolder.swipeLayout.close(false,true);
                     }
                     callback.onDeleteComment((FeedComment) feedDetailData.get(position),position,viewClicked);
                     break;
