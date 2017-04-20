@@ -178,7 +178,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
             }
 
             @Override
-            public void onDeleteComment(final FeedComment feedComment, final int positionInList, View viewClicked) {
+            public void onDeleteComment(FeedComment feedComment,int positionInList, View viewClicked) {
                 deleteCommentAPI(feedComment.getActivityId(),positionInList,feedDetail.getPostId());
            /*  DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Delete Reply", "Are you sure?", "Yes", "No", new View.OnClickListener() {
                  @Override
