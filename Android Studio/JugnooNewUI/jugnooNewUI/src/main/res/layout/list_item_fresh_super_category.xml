@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/llRoot"
     android:layout_width="@dimen/px_240"
     android:layout_height="@dimen/px_240"
@@ -12,6 +13,17 @@
         android:layout_width="@dimen/px_238"
         android:layout_height="@dimen/px_238"
         android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tvBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/theme_color"
+            android:textColor="@color/white"
+            android:textSize="@dimen/px_20"
+            android:text=""
+            android:gravity="center"
+            app:font="maven"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"

@@ -3949,11 +3949,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return ratingColor;
     }
 
-    public int getParsedColor(String colorCode){
+    public int getParsedColor(String colorCode, Integer defaultColor){
         int ratingColor;
-        if (colorCode != null && colorCode.startsWith("#") && colorCode.length() == 7) ratingColor = Color.parseColor(colorCode);
-        else
-            ratingColor = ContextCompat.getColor(this, R.color.text_color_light); //default Green Color
+        if (colorCode != null && colorCode.startsWith("#") && colorCode.length() == 7){
+            ratingColor = Color.parseColor(colorCode);
+        }
+        else {
+            if(defaultColor != null) {
+                ratingColor = ContextCompat.getColor(this, defaultColor);
+            } else{
+                ratingColor = ContextCompat.getColor(this, R.color.text_color_light);
+            }
+        }
         return ratingColor;
     }
 
