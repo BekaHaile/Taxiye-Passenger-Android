@@ -8,76 +8,71 @@
 
     <RelativeLayout
         android:id="@+id/rlTopContainer"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+       android:background="#ff834e"
         android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/view_account"
-        android:background="@drawable/background_menu_bar_theme"
-        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvJugnooStar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/jugnoo_star"
-            android:textColor="@color/white"
-            android:layout_marginTop="@dimen/px_28"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/text_size_22"/>
+
+
 
         <RelativeLayout
-            android:layout_width="187px"
-            android:layout_height="187px"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/px_20"
+            android:id="@+id/iv_jugnoo_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px_30"
+            android:layout_marginLeft="@dimen/px_50"
+            android:layout_marginRight="@dimen/px_25"
+            android:layout_marginBottom="@dimen/px_30"
             android:tag="mwar">
 
-            <ImageView
+<!--            <ImageView
                 android:id="@+id/imageViewProfileImageBack"
                 android:layout_width="187px"
                 android:layout_height="187px"
+                android:visibility="gone"
                 android:src="@drawable/ic_profile_img_placeholder"
-                android:tag="mwar"/>
+                android:tag="mwar"/>-->
 
             <ImageView
                 android:id="@+id/imageViewProfile"
-                android:layout_width="160px"
-                android:layout_height="160px"
+                android:layout_width="126px"
+                android:layout_height="126px"
+                android:visibility="visible"
+                android:src="@drawable/ic_profile_img_placeholder"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/px_10"
                 android:tag="mwar"/>
 
-            <View
+            <ImageView
                 android:id="@+id/viewStarIcon"
                 android:layout_width="@dimen/px_64"
                 android:layout_height="@dimen/px_64"
-                android:background="@drawable/star"
+                android:layout_marginLeft="-40px"
+                android:layout_toRightOf="@id/imageViewProfile"
+                android:layout_alignBottom="@id/imageViewProfile"
+                android:src="@drawable/star"
                 android:layout_marginBottom="5px"
                 android:tag="mwar"
-                android:visibility="gone"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"/>
+                android:visibility="visible" />
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_jugnoo_image"
+            android:layout_toLeftOf="@+id/iv_arrow"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="10px"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="20px"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textViewUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="GaganDeep"
+                android:text="Garry Gurcharan"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:visibility="visible"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_34"/>
@@ -86,17 +81,18 @@
                 android:id="@+id/textViewViewPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10px"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/px_20"
+                android:layout_marginTop="5px"
                 android:singleLine="true"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="View Account"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_30"/>
+                android:textSize="@dimen/px_27"/>
         </LinearLayout>
-    </LinearLayout>
+
 
         <ImageView
+            android:id="@id/iv_arrow"
             android:layout_width="19px"
             android:layout_height="33px"
             android:layout_alignParentRight="true"
@@ -107,14 +103,10 @@
 
     </RelativeLayout>
 
-    <View
-        android:id="@+id/extraSpace"
-        android:layout_width="match_parent"
-        android:layout_height="30px"
-        android:layout_below="@+id/rlTopContainer"
-        android:background="@color/white"/>
+
 
     <ImageView
+        android:id="@+id/stroke"
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_below="@+id/rlTopContainer"
@@ -126,7 +118,7 @@
         android:id="@+id/linearLayoutCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/extraSpace"
+        android:layout_below="@+id/stroke"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
