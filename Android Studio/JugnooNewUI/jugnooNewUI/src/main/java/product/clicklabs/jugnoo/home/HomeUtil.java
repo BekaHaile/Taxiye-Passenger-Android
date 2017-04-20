@@ -39,6 +39,8 @@ import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
+import retrofit.mime.MultipartTypedOutput;
+import retrofit.mime.TypedString;
 
 /**
  * Created by shankar on 4/3/16.
@@ -162,6 +164,12 @@ public class HomeUtil {
 		params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
 		params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 		params.put(Constants.KEY_LOGIN_TYPE, String.valueOf(0));
+	}
+
+	public void putDefaultParamsMultipart(MultipartTypedOutput multipartTypedOutput){
+		multipartTypedOutput.addPart(Constants.KEY_APP_VERSION, new TypedString(String.valueOf(MyApplication.getInstance().appVersion())));
+		multipartTypedOutput.addPart(Constants.KEY_DEVICE_TYPE, new TypedString(String.valueOf(Data.DEVICE_TYPE)));
+		multipartTypedOutput.addPart(Constants.KEY_LOGIN_TYPE, new TypedString(String.valueOf(0)));
 	}
 
 	public ArrayList<SearchResult> getSavedPlacesWithHomeWork(Activity activity){

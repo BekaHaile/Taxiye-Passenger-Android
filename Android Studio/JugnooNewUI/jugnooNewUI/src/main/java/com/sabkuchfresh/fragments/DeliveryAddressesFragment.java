@@ -410,6 +410,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             @Override
             public void onClick(View v) {
                 tvDeliveryAddressSetVisibility(View.GONE);
+                editTextDeliveryAddress.setText("");
                 editTextDeliveryAddress.setSelection(editTextDeliveryAddress.getText().length());
                 editTextDeliveryAddress.requestFocus();
                 Utils.showSoftKeyboard(activity, editTextDeliveryAddress);

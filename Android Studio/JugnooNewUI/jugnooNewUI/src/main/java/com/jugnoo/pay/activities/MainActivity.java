@@ -532,7 +532,7 @@ public class MainActivity extends BaseActivity {
             params.put(Constants.KEY_USER_NAME, Data.userData.userName);
             params.put(Constants.KEY_VPA, verifyRegisterResponse.getVirtualAddress());
 
-
+            new HomeUtil().putDefaultParams(params);
             RestClient.getPayApiService().verifyUser(params, new Callback<FetchPayDataResponse>() {
                 @Override
                 public void success(FetchPayDataResponse fetchPayDataResponse, Response response) {

@@ -956,6 +956,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onDrawerOpened(View drawerView) {
                 Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
+                // TODO: 20/04/17 remove this
+                Data.deepLinkIndex = 22;
+                deepLinkAction.openDeepLink(menuBar);
             }
 
             @Override

@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -449,7 +450,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             }
         };
-
+        new HomeUtil().putDefaultParamsMultipart(multipartTypedOutput);
         if (isEditingPost) {
             multipartTypedOutput.addPart(Constants.KEY_POST_ID, new TypedString(String.valueOf(feedDetail.getPostId())));
             RestClient.getFeedApiService().editFeed(multipartTypedOutput, APICallBack);

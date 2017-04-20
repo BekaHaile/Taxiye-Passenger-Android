@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -46,6 +47,7 @@ public class RazorpayCallbackService extends IntentService {
 
 
 			Response response = null;
+			new HomeUtil().putDefaultParams(map);
 			if(appType == AppConstant.ApplicationType.MENUS){
 				map.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
 				response = RestClient.getMenusApiService().razorpayPlaceOrderCallback(map);

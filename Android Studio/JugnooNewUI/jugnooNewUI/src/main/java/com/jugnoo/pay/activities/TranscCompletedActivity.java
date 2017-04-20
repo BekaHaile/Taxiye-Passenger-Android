@@ -271,6 +271,7 @@ public class TranscCompletedActivity extends BaseActivity {
                 if (message != null) {
                     params.put("message", message.toString());
                 }
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getPayApiService().sendMoneyCallback(params, new Callback<SendMoneyCallbackResponse>() {
                     @Override
                     public void success(SendMoneyCallbackResponse commonResponse, Response response) {

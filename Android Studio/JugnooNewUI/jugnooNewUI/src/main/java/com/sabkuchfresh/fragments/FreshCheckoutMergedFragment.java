@@ -62,7 +62,6 @@ import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.home.OrderCheckoutFailureDialog;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
-import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SlotViewType;
@@ -2893,6 +2892,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         retryDialogPlaceOrderPayCallbackApi(DialogErrorType.CONNECTION_LOST, message);
                     }
                 };
+                new HomeUtil().putDefaultParams(params);
                 if(isMenusOpen()){
                     RestClient.getMenusApiService().placeOrderCallback(params, callback);
                 } else {
