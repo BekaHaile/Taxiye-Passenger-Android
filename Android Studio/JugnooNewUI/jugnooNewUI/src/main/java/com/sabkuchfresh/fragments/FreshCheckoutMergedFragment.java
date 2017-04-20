@@ -2660,7 +2660,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         } else {
             if (subItemsInCart.size() == 0) {
-                activity.updateTotalAmountPrice(0d);
+                activity.updateTotalAmountPrice(0d, 0);
                 if (activity.isMealAddonItemsAvailable()) {
                     activity.performBackPressed(false);
                 }

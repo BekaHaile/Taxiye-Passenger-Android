@@ -369,10 +369,10 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     if(mealsData.size()+recentOrder.size()>0) {
                                         noMealsView.setVisibility(View.GONE);
                                         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                        activity.getTopBar().getLlCartContainer().setVisibility(View.VISIBLE);
+                                        activity.rlCheckoutBar.setVisibility(View.VISIBLE);
                                     } else {
                                         noMealsView.setVisibility(View.VISIBLE);
-                                        activity.getTopBar().getLlCartContainer().setVisibility(View.GONE);
+                                        activity.rlCheckoutBar.setVisibility(View.GONE);
                                     }
 
                                     if (activity.getProductsResponse() != null

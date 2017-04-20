@@ -92,6 +92,9 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_28"
                 android:visibility="gone" />
+
+            <include layout="@layout/layout_fresh_checkout_bar"/>
+
         </LinearLayout>
 
 
