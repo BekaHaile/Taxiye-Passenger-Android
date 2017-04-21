@@ -62,7 +62,7 @@
             android:gravity="center"
             android:padding="10px"
             android:text="@string/rupee_0"
-            android:textColor="@color/white"
+            android:textColor="@color/theme_color"
             android:textSize="30px"
             android:visibility="visible" />
 
