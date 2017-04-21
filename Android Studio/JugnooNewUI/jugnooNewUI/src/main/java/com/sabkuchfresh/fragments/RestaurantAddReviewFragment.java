@@ -493,13 +493,13 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
                 //upload feedback with new Images
                 imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
                     @Override
-                    public void processFinish(File[] output) {
+                    public void processFinish(ImageCompression.CompressedImageModel[] output) {
 
                         if(output!=null){
-                            for(File file:output)
+                            for(ImageCompression.CompressedImageModel file:output)
                             {
                                 if(file!=null){
-                                    multipartTypedOutput.addPart(Constants.KEY_REVIEW_IMAGES,new TypedFile("image/*",file));
+                                    multipartTypedOutput.addPart(Constants.KEY_REVIEW_IMAGES,new TypedFile("image/*",file.getFile()));
                                 }
                             }
 

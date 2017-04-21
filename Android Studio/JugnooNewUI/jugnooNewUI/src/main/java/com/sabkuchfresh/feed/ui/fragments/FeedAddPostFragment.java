@@ -330,13 +330,21 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
                 ImageCompression imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
                     @Override
-                    public void processFinish(File[] output) {
+                    public void processFinish(ImageCompression.CompressedImageModel[] output) {
 
                         if (output != null) {
-                            for (File file : output) {
+                            JSONArray imageSize = new JSONArray();
+                            for (ImageCompression.CompressedImageModel file : output) {
+
                                 if (file != null) {
-                                    multipartTypedOutput.addPart(Constants.KEY_REVIEW_IMAGES, new TypedFile("image/*", file));
+                                    multipartTypedOutput.addPart(Constants.KEY_REVIEW_IMAGES, new TypedFile("image/*", file.getFile()));
+                                    imageSize.put(new ImageSize(file.getWidth(),file.getSize()));
+
                                 }
+                            }
+                            if(imageSize.length()>0){
+                                multipartTypedOutput.addPart("image_size", new TypedString(FeedUtils.getGson().toJson((FeedUtils.getGson().toJsonTree(imageSize).getAsJsonObject().get("values")))));
+
                             }
 
                         }
@@ -388,6 +396,15 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     }
 
 
+    public class ImageSize{
+        int width;
+        int height;
+
+        public ImageSize(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+    }
     private void uploadParamsAndPost(final MultipartTypedOutput multipartTypedOutput, final String postText,
                                      final int restId, final int rating, final boolean anonymousPostingEnabled, final int imagesCount) {
 
