@@ -362,7 +362,7 @@ public class AddToAddressBookFragment extends Fragment {
     }
 
     private boolean fieldsAreFilled() {
-        if(activity instanceof AddPlaceActivity && editTextLabel.getText().toString().trim().length() == 0){
+        if(editTextLabel.getText().toString().trim().length() == 0){
             editTextLabel.requestFocus();
             if(editTextLabel.getVisibility() == View.GONE){
                 editTextLabel.setVisibility(View.VISIBLE);
