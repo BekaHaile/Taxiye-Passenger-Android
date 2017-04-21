@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -49,6 +50,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiGoogleDirectionWaypoints;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
@@ -408,10 +410,18 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 								}
 							});
 
-							response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
-									deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
-							final String result = new String(((TypedByteArray) response.getBody()).getBytes());
-							final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
+							ArrayList<LatLng> latLngsWayPoints = new ArrayList<>();
+							latLngsWayPoints.add(pickupLatLng);
+							latLngsWayPoints.add(new LatLng(latitude, longitude));
+							latLngsWayPoints.add(deliveryLatLng);
+							Pair<List<LatLng>, String> pair = apiGoogleDirectionWaypoints.setData(latLngsWayPoints, false).syncHit();
+							final List<LatLng> list = pair.first;
+							final String result = pair.second;
+
+//							response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
+//									deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
+//							final String result = new String(((TypedByteArray) response.getBody()).getBytes());
+//							final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
 							runOnUiThread(new Runnable() {
 
 								@Override
@@ -528,5 +538,8 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	private LatLngBounds getMapLatLngBounds(LatLngBounds.Builder builder){
 		return MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 140);
 	}
+
+
+	private ApiGoogleDirectionWaypoints apiGoogleDirectionWaypoints = new ApiGoogleDirectionWaypoints();
 
 }
