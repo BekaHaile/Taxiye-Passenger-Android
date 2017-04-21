@@ -197,6 +197,7 @@
             android:id="@+id/linearLayoutSubMeals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
@@ -221,6 +222,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutSubFresh"
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
@@ -250,7 +252,7 @@
             android:id="@+id/linearLayoutSubGrocery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
@@ -278,7 +280,7 @@
             android:id="@+id/linearLayoutSubMenus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
@@ -305,7 +307,7 @@
             android:id="@+id/linearLayoutSubPay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView

@@ -185,7 +185,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         if(unreadNotificationsCount > 0){
                             holder.textViewValue.setVisibility(View.VISIBLE);
                             holder.textViewValue.setText(String.valueOf(unreadNotificationsCount));
-                            holder.textViewValue.setBackgroundResource(R.drawable.circle_theme);
+                            holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
                             setLayoutParamsForValue(holder.textViewValue);
                         }
                     } catch (Exception e) {
@@ -198,7 +198,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         if(couponsCount > 0) {
                             holder.textViewValue.setVisibility(View.VISIBLE);
                             holder.textViewValue.setText(String.valueOf(couponsCount));
-                            holder.textViewValue.setBackgroundResource(R.drawable.circle_theme);
+                            holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
                             setLayoutParamsForValue(holder.textViewValue);
 						}
                     } catch (Exception e) {

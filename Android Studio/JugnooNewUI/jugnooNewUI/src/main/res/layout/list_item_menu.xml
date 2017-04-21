@@ -32,6 +32,8 @@
         android:textSize="@dimen/text_size_38" />
 
     <LinearLayout
+        android:layout_marginLeft="@dimen/px_12"
+        android:layout_toRightOf="@id/textViewMenu"
         android:id="@+id/linearLayoutNewContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:visibility="visible"
+            android:visibility="gone"
             android:text="@string/str_new"
             android:textColor="@color/theme_color"
             android:textSize="@dimen/text_size_36"
