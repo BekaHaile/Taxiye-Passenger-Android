@@ -1442,6 +1442,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setGravity(Gravity.CENTER);
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
+            if(fragment instanceof FeedbackFragment){
+                topBar.title.setGravity(Gravity.CENTER);
+                titleLayoutParams.addRule(RelativeLayout.LEFT_OF, 0);
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
+            }
+
 
             feedHomeAddPostView.setVisibility(View.GONE);
             topBar.title.setLayoutParams(titleLayoutParams);
