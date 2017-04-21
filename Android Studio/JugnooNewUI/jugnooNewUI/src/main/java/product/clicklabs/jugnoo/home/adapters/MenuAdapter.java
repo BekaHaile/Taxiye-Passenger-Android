@@ -81,18 +81,14 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEADER) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_profile_account, parent, false);
-
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
-
             ASSL.DoMagic(v);
             return new ViewHeaderHolder(v, activity);
         } else{
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menu, parent, false);
-
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
-
             ASSL.DoMagic(v);
             return new ViewHolder(v, activity);
         }
