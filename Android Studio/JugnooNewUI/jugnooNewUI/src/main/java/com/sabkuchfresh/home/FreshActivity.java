@@ -184,7 +184,6 @@ import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -318,7 +317,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
             textViewMinOrder = (TextView) findViewById(R.id.textViewMinOrder);
-            textViewMinOrder.setTypeface(Fonts.mavenRegular(this));
             rlSort = (RelativeLayout) findViewById(R.id.rlSort);
             rlSortBg = (RelativeLayout) findViewById(R.id.rlSortBg);
             viewSortFake = (View) findViewById(R.id.viewSortFake);
@@ -1086,8 +1084,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         saveItemListToSPMenus();
-        if (totalQuantity > 0) {
-        }
         pair = new Pair<>(totalPrice, totalQuantity);
         return pair;
     }
@@ -1095,13 +1091,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void updateTotalAmountPrice(double totalPrice, int quantity) {
         try {
             if (totalPrice > 0) {
-                rlCheckoutBar.setVisibility(View.VISIBLE);
+                if(!(getTopFragment() instanceof FreshCheckoutMergedFragment) && !(getTopFragment() instanceof MealAddonItemsFragment)) {
+                    rlCheckoutBar.setVisibility(View.VISIBLE);
+                } else {
+                    rlCheckoutBar.setVisibility(View.GONE);
+                }
                 tvCartAmount.setText(String.format(getResources().getString(R.string.rupees_value_format),
                         Utils.getMoneyDecimalFormat().format(totalPrice)));
 
-                tvCheckoutItemsCount.setText(getString(quantity == 1 ?
+                tvCheckoutItemsCount.setText(Utils.fromHtml(getString(quantity == 1 ?
                         R.string.checkout_bracket_item : R.string.checkout_bracket_items,
-                        String.valueOf(quantity)));
+                        String.valueOf(quantity))));
             } else {
                 rlCheckoutBar.setVisibility(View.GONE);
             }
@@ -1134,6 +1134,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             int padding = (int) (20f * ASSL.minRatio());
             int visMinOrder = -1;
             topBar.progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+            int freshSortVis = View.GONE;
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -1163,6 +1164,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setText(getResources().getString(R.string.fatafat));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
+                freshSortVis = View.VISIBLE;
 
             } else if(fragment instanceof DeliveryStoresFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1232,7 +1234,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setText(vendorOpened.getName());
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
-
+                if(fragment instanceof VendorMenuFragment) {
+                    freshSortVis = View.VISIBLE;
+                }
 
             } else if (fragment instanceof MenusItemCustomizeFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1429,6 +1433,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
 
+
+            if(fragment instanceof FeedbackFragment){
+                topBar.title.setGravity(Gravity.CENTER);
+                titleLayoutParams.addRule(RelativeLayout.LEFT_OF, 0);
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
+            }
+            topBar.ivFreshSort.setVisibility(freshSortVis);
 
             feedHomeAddPostView.setVisibility(View.GONE);
             topBar.title.setLayoutParams(titleLayoutParams);
@@ -3398,16 +3409,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void openMenusItemCustomizeFragment(final int categoryPos, final int subCategoryPos, final int itemPos) {
 
-       /* topBar.title.setVisibility(View.GONE);
-        rlCheckoutBar.setVisibility(View.GONE);
-        topBar.getIvSearch().setVisibility(View.GONE);
-        appBarLayout.setExpanded(false, false);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getTransactionUtils().openMenusItemCustomizeFragment(FreshActivity.this, getRelativeLayoutContainer(), categoryPos, subCategoryPos, itemPos);
-            }
-        }, 100);*/
         if (canExitVendorMenu()) {
             appBarLayout.setExpanded(false, false);
             getTransactionUtils().openMenusItemCustomizeFragment(FreshActivity.this, getRelativeLayoutContainer(), categoryPos, subCategoryPos, itemPos);

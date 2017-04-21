@@ -8,7 +8,7 @@
     android:tag="@string/dont_touch_me"
     android:background="@drawable/bg_theme_color_selector"
     android:id="@+id/rlCheckoutBar"
-    android:visibility="visible"
+    android:visibility="gone"
     android:animateLayoutChanges="true"
     >
 
@@ -22,7 +22,7 @@
         android:layout_marginTop="@dimen/dp_18"
         android:layout_marginBottom="@dimen/dp_18"
         android:layout_marginLeft="@dimen/dp_14"
-        android:text="CHECKOUT (5 Items)"
+        android:text="CHECKOUT"
         app:font="maven"
         />
 
@@ -35,7 +35,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/dp_12"
         android:layout_centerVertical="true"
-        android:text="Rs 240"
+        android:text=""
         android:gravity="center"
         android:padding="@dimen/dp_8"
         android:textColor="@color/white"

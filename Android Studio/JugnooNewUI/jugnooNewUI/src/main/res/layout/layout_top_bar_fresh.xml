@@ -274,12 +274,11 @@
                     
                     <ImageView
                         android:id="@+id/ivFreshSort"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="@dimen/dp_31"
+                        android:layout_height="@dimen/dp_31"
                         android:src="@drawable/ic_fresh_sort_svg"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/dp_10"
-                        android:layout_marginRight="@dimen/dp_10"
                         android:tag="@string/dont_touch_me"
                         />
 

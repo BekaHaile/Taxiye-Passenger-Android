@@ -367,4 +367,8 @@
     <color name="text_color_20alpha">#33595968</color>
     <color name="text_color_30alpha">#4E595968</color>
 
+    <color name="pink_light">#fff5f5</color>
+    <color name="pink_dark">#ffdede</color>
+    <color name="red_dark_text_color">#dc4b3d</color>
+
 </resources>

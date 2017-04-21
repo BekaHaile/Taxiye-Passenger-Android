@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -623,12 +624,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         checkoutSaveData = activity.getCheckoutSaveData();
         activity.setSplInstr(checkoutSaveData.getSpecialInstructions());
 
-        updateAddressView();
-        updateDeliveryFromView("");
 
-        updateCartDataView();
-
-        fetchWalletBalance();
 
         linearLayoutCartExpansion.setVisibility(View.VISIBLE);
         imageViewDeleteCart.setVisibility(View.GONE);
@@ -716,6 +712,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        activity.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateAddressView();
+                updateDeliveryFromView("");
+                updateCartDataView();
+                fetchWalletBalance();
+            }
+        }, 100);
     }
 
     private void setSlideInitial(){
@@ -928,8 +938,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     public void onResume() {
         super.onResume();
         try {
-            orderPaymentModes();
-            setPaymentOptionUI();
+            activity.getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    orderPaymentModes();
+                    setPaymentOptionUI();
+                }
+            }, 100);
             if(Data.userData != null) {
 				if (Data.userData.isSubscriptionActive()) {
 					cvBecomeStar.setVisibility(View.GONE);
