@@ -567,7 +567,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
                     setSlideInitial();
-                } else if (TextUtils.isEmpty(activity.getSelectedAddress())) {
+                } else if (addressSelectedNotValid() || TextUtils.isEmpty(activity.getSelectedAddress())) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_address));
                     setSlideInitial();
                 } else if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
@@ -2483,6 +2483,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
     }
 
+    public boolean addressSelectedNotValid(){
+        return (!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType()));
+    }
+
     public void updateAddressView(){
         try {
             if (TextUtils.isEmpty(activity.getSelectedAddress())) {
@@ -2495,7 +2499,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
         textViewAddressName.setVisibility(View.GONE);
         textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
-        if(!TextUtils.isEmpty(activity.getSelectedAddress())) {
+        if(!addressSelectedNotValid() && !TextUtils.isEmpty(activity.getSelectedAddress())) {
             textViewAddressValue.setText(activity.getSelectedAddress());
             imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
             if(!TextUtils.isEmpty(activity.getSelectedAddressType())){

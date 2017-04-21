@@ -417,21 +417,6 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             }
         });
 
-//        rlMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(rlMain, null,
-//                new KeyboardLayoutListener.KeyBoardStateHandler() {
-//            @Override
-//            public void keyboardOpened() {
-//                scrollViewSuggestions.setVisibility(View.GONE);
-//                setupMapAndButtonMargins();
-//            }
-//
-//            @Override
-//            public void keyBoardClosed() {
-//                scrollViewSuggestions.setVisibility(View.VISIBLE);
-//                setupMapAndButtonMargins();
-//            }
-//        }));
-
 
         return rootView;
     }

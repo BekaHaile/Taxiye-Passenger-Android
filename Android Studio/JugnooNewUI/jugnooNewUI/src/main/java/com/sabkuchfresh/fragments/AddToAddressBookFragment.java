@@ -248,11 +248,12 @@ public class AddToAddressBookFragment extends Fragment {
 
     private void setDataToUI(){
 
-        textViewAddress.setText(current_street+(TextUtils.isEmpty(current_street)?"":", ")
-                +current_route+(TextUtils.isEmpty(current_route)?"":", ")
-                +current_area+(TextUtils.isEmpty(current_area)?"":", ")
+        textViewAddress.setText(current_area+(TextUtils.isEmpty(current_area)?"":", ")
                 +current_city+(TextUtils.isEmpty(current_city)?"":", ")
                 +current_pincode);
+
+        editTextFlatNumber.setText(current_street+(TextUtils.isEmpty(current_street)?"":", ")
+                +current_route);
 
         int placeRequestCode = 0;
         String label = "";
