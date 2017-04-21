@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -55,10 +56,12 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.GoogleDirectionWayPointsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -89,7 +92,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	private LinearLayout bCallDriver;
 
 	private Marker markerDriver;
-	private Polyline polylinePath;
+	private Polyline polylinePath1, polylinePath2;
 	private final int MAP_ANIMATE_DURATION = 300;
 	private boolean mapTouchedOnce, zoomSetManually;
 	private float zoomInitial;
@@ -242,8 +245,8 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					points++;
 				}
 
-				if(polylinePath != null) {
-					for (LatLng latLng : polylinePath.getPoints()) {
+				if(polylinePath2 != null) {
+					for (LatLng latLng : polylinePath2.getPoints()) {
 						llbBuilder.include(latLng);
 						points++;
 					}
@@ -357,6 +360,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 							final String trackingInfo = jObj.optString(Constants.KEY_TRACKING_INFO, "");
 							final int status = jObj.optInt(Constants.KEY_STATUS, EngagementStatus.STARTED.getOrdinal());
 							final String message = jObj.optString(Constants.KEY_MESSAGE, getString(R.string.some_error_occured_try_again));
+							final LatLng latLngDriver = new LatLng(latitude, longitude);
 
 							runOnUiThread(new Runnable() {
 								@Override
@@ -365,17 +369,17 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										if(status == EngagementStatus.STARTED.getOrdinal()) {
 											latLngsDriverAnim.clear();
 											if (markerDriver == null) {
-												markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
+												markerDriver = googleMap.addMarker(getMarkerOptionsForResource(latLngDriver,
 														R.drawable.ic_bike_track_order_marker, 38f, 94f, 0.5f, 0.5f, 2));
 												markerDriver.setRotation((float) bearing);
 											} else {
 												MarkerAnimation.animateMarkerToICS("-1", markerDriver,
-														new LatLng(latitude, longitude), new LatLngInterpolator.Spherical(),
+														latLngDriver, new LatLngInterpolator.Spherical(),
 														callbackAnim);
 											}
 											if (!zoomedFirstTime) {
 												LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
-												llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(new LatLng(latitude, longitude));
+												llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(latLngDriver);
 												googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 												handler.postDelayed(new Runnable() {
 													@Override
@@ -412,12 +416,11 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 							ArrayList<LatLng> latLngsWayPoints = new ArrayList<>();
 							latLngsWayPoints.add(pickupLatLng);
-							latLngsWayPoints.add(new LatLng(latitude, longitude));
+							latLngsWayPoints.add(latLngDriver);
 							latLngsWayPoints.add(deliveryLatLng);
 							Pair<List<LatLng>, String> pair = apiGoogleDirectionWaypoints.setData(latLngsWayPoints, false).syncHit();
 							final List<LatLng> list = pair.first;
 							final String result = pair.second;
-
 //							response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
 //									deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
 //							final String result = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -427,11 +430,62 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 								@Override
 								public void run() {
 									try {
+										if (polylinePath1 != null) {
+											polylinePath1.remove();
+										}
+										PolylineOptions polylineOptions1 = new PolylineOptions();
+										polylineOptions1.width(ASSL.Xscale() * 7f)
+												.color(ContextCompat.getColor(TrackOrderActivity.this,
+														R.color.theme_color)).geodesic(true);
+
+										if (polylinePath2 != null) {
+											polylinePath2.remove();
+										}
+										PolylineOptions polylineOptions2 = new PolylineOptions();
+										polylineOptions2.width(ASSL.Xscale() * 7f)
+												.color(ContextCompat.getColor(TrackOrderActivity.this,
+														R.color.text_color_20alpha)).geodesic(true);
+
+										LatLngBounds.Builder builder = new LatLngBounds.Builder();
+										builder.include(deliveryLatLng).include(latLngDriver);
+										for(LatLng latLng : latLngsDriverAnim){builder.include(latLng);}
+
+										int positionCentre = 0;
+										double distance = Double.MAX_VALUE;
+										for(int i=0; i<list.size(); i++){
+											double distI = MapUtils.distance(latLngDriver, list.get(i));
+											if(distI < distance){
+												distance = distI;
+												positionCentre = i;
+											}
+										}
+										for(int j=0; j<positionCentre; j++){
+											polylineOptions1.add(list.get(j));
+										}
+										for (int k = positionCentre; k < list.size(); positionCentre++) {
+											polylineOptions2.add(list.get(k));
+											builder.include(list.get(k));
+										}
+										if(showDeliveryRoute == 1 && list.size() > 0) {
+											polylinePath1 = googleMap.addPolyline(polylineOptions1);
+											polylinePath2 = googleMap.addPolyline(polylineOptions2);
+										}
+										if (zoomedFirstTime && !zoomSetManually) {
+											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(builder), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+
+									try {
 										if (TextUtils.isEmpty(eta)) {
-											JSONObject jObj1 = new JSONObject(result);
-											double durationInSec = jObj1.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
-											long mins = (long) (durationInSec / 60d);
-											setEtaText(mins);
+											GoogleDirectionWayPointsResponse googleDirectionWayPointsResponse = gson.fromJson(result, GoogleDirectionWayPointsResponse.class);
+											Log.i("googleDirectionWayPointsResponse","="+googleDirectionWayPointsResponse);
+
+//											JSONObject jObj1 = new JSONObject(result);
+//											double durationInSec = jObj1.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
+//											long mins = (long) (durationInSec / 60d);
+											setEtaText(getEtaFromResponse(latLngDriver, googleDirectionWayPointsResponse));
 										} else {
 											long etaLong = 10;
 											try {
@@ -444,34 +498,6 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 									} catch (Exception e) {
 										e.printStackTrace();
 										tvETA.setVisibility(View.GONE);
-									}
-									try {
-										if (polylinePath != null) {
-											polylinePath.remove();
-										}
-										PolylineOptions polylineOptions = new PolylineOptions();
-										polylineOptions.width(ASSL.Xscale() * 7f)
-												.color(ContextCompat.getColor(TrackOrderActivity.this,
-														R.color.google_path_polyline_color)).geodesic(true);
-										LatLngBounds.Builder builder = new LatLngBounds.Builder();
-										builder.include(deliveryLatLng).include(new LatLng(latitude, longitude));
-
-										for(LatLng latLng : latLngsDriverAnim){
-											builder.include(latLng);
-										}
-
-										for (int z = 0; z < list.size(); z++) {
-											polylineOptions.add(list.get(z));
-											builder.include(list.get(z));
-										}
-										if(showDeliveryRoute == 1 && list.size() > 0) {
-											polylinePath = googleMap.addPolyline(polylineOptions);
-										}
-										if (zoomedFirstTime && !zoomSetManually) {
-											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(builder), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
-										}
-									} catch (Exception e) {
-										e.printStackTrace();
 									}
 									zoomedFirstTime = true;
 								}
@@ -541,5 +567,25 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 
 	private ApiGoogleDirectionWaypoints apiGoogleDirectionWaypoints = new ApiGoogleDirectionWaypoints();
+	private Gson gson = new Gson();
+
+	private long getEtaFromResponse(LatLng latLng, GoogleDirectionWayPointsResponse pointsResponse){
+		long eta = 0L;
+		try {
+			eta = (long) pointsResponse.getRoutes().get(0).getLegs().get(0).getDuration().getValue();
+			double distance = Double.MAX_VALUE;
+			for(GoogleDirectionWayPointsResponse.Step step : pointsResponse.getRoutes().get(0).getLegs().get(0).getSteps()){
+				double distI = MapUtils.distance(latLng, step.getStartLocation().getLatLng());
+				if(distI < distance){
+					eta = eta - (long)step.getDuration().getValue();
+				} else {
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return eta * 1000L;
+	}
 
 }
