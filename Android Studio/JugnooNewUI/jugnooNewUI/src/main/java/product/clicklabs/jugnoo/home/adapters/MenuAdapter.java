@@ -346,7 +346,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 public void onClick(View v) {
                     onClickAction(MenuInfoTags.GET_A_RIDE.getTag());
                     holder.imageViewArrow.setRotation(270);
-                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                  //  holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, RIDES);
                 }
             });
@@ -356,7 +356,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 public void onClick(View v) {
                     onClickAction(MenuInfoTags.FRESH.getTag());
                     holder.imageViewArrow.setRotation(270);
-                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                 //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, FRESH);
                 }
             });
@@ -365,7 +365,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 @Override
                 public void onClick(View v) {
                     onClickAction(MenuInfoTags.MEALS.getTag());
-                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                //    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     holder.imageViewArrow.setRotation(270);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, MEALS);
                 }
@@ -377,7 +377,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 public void onClick(View v) {
                     onClickAction(MenuInfoTags.GROCERY.getTag());
                     holder.imageViewArrow.setRotation(270);
-                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                //    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, FRESH);
                 }
             });
@@ -387,7 +387,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 public void onClick(View v) {
                     onClickAction(MenuInfoTags.MENUS.getTag());
                     holder.imageViewArrow.setRotation(270);
-                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                 //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, GAAction.MENUS);
                 }
             });
@@ -397,7 +397,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 public void onClick(View v) {
                     onClickAction(MenuInfoTags.PAY.getTag());
                     holder.imageViewArrow.setRotation(270);
-                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                  //  holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(JUGNOO, PAY+HOME, LEFT_MENU_ICON+CLICKED);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, PAY);
                 }
@@ -407,7 +407,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 @Override
                 public void onClick(View v) {
                     onClickAction(MenuInfoTags.FEED.getTag());
-                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                 //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     holder.imageViewArrow.setRotation(270);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, FEED);
                 }
