@@ -14,10 +14,10 @@
 
     <ImageView
         android:id="@+id/imageViewMenuIcon"
-        android:layout_width="90px"
-        android:layout_height="81px"
+        android:layout_width="56px"
+        android:layout_height="56px"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="17px"
+        android:layout_marginLeft="40px"
         android:src="@drawable/ic_play_normal"
         android:tag="mwar" />
 

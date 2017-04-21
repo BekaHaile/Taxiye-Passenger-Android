@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px_30"
-            android:layout_marginLeft="@dimen/px_50"
+            android:layout_marginLeft="@dimen/px_20"
             android:layout_marginRight="@dimen/px_25"
             android:layout_marginBottom="@dimen/px_30"
             android:tag="mwar">
@@ -49,11 +49,10 @@
                 android:id="@+id/viewStarIcon"
                 android:layout_width="@dimen/px_60"
                 android:layout_height="@dimen/px_60"
-                android:layout_marginRight="-40px"
                 android:layout_alignBottom="@id/imageViewProfile"
                 android:src="@drawable/jugnoo_star_new"
                 android:tag="mwar"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </RelativeLayout>
 
         <LinearLayout
