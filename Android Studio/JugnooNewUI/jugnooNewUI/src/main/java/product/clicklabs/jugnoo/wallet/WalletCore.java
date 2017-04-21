@@ -678,6 +678,51 @@ public class WalletCore {
 		return paymentOption;
 	}
 
+	/**
+	 * Function to check for Rides offering that is the given payment option is valid or not
+	 * @return payment option with highest order coming from server in case of payment option not known to rides
+	 */
+	public int validatePaymentOptionForRidesOffering(int paymentOptionInt) {
+		if (paymentOptionInt != PaymentOption.CASH.getOrdinal()
+				&& paymentOptionInt != PaymentOption.PAYTM.getOrdinal()
+				&& paymentOptionInt != PaymentOption.MOBIKWIK.getOrdinal()
+				&& paymentOptionInt != PaymentOption.FREECHARGE.getOrdinal()) {
+			try {
+				PaymentModeConfigData paymentModeConfigDataDefault = null;
+				for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas(Data.userData)) {
+					if (paymentModeConfigData.getEnabled() == 1) {
+						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+								&& Data.userData.getPaytmEnabled() == 1
+								&& Data.userData.getPaytmBalance() >= 1) {
+							paymentModeConfigDataDefault = paymentModeConfigData;
+							break;
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+								&& Data.userData.getMobikwikEnabled() == 1
+								&& Data.userData.getMobikwikBalance() >= 1) {
+							paymentModeConfigDataDefault = paymentModeConfigData;
+							break;
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()
+								&& Data.userData.getFreeChargeEnabled() == 1
+								&& Data.userData.getFreeChargeBalance() >= 1) {
+							paymentModeConfigDataDefault = paymentModeConfigData;
+							break;
+						}
+					}
+				}
+				if (paymentModeConfigDataDefault != null) {
+					return paymentModeConfigDataDefault.getPaymentOption();
+				} else {
+					return PaymentOption.CASH.getOrdinal();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return PaymentOption.CASH.getOrdinal();
+			}
+		} else {
+			return paymentOptionInt;
+		}
+	}
+
 	public PaymentOption getPaymentOptionFromInt(int paymentOption){
 		if(PaymentOption.PAYTM.getOrdinal() == paymentOption){
 			return PaymentOption.PAYTM;
