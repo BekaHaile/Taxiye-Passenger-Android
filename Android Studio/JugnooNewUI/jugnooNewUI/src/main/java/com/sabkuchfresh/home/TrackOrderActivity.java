@@ -444,7 +444,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										PolylineOptions polylineOptions2 = new PolylineOptions();
 										polylineOptions2.width(ASSL.Xscale() * 7f)
 												.color(ContextCompat.getColor(TrackOrderActivity.this,
-														R.color.text_color_20alpha)).geodesic(true);
+														R.color.text_color_30alpha)).geodesic(true);
 
 										LatLngBounds.Builder builder = new LatLngBounds.Builder();
 										builder.include(deliveryLatLng).include(latLngDriver);
@@ -462,7 +462,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										for(int j=0; j<positionCentre; j++){
 											polylineOptions1.add(list.get(j));
 										}
-										for (int k = positionCentre; k < list.size(); positionCentre++) {
+										for (int k = positionCentre; k < list.size(); k++) {
 											polylineOptions2.add(list.get(k));
 											builder.include(list.get(k));
 										}

@@ -100,7 +100,7 @@
             android:id="@+id/bCallDriver"
             android:layout_width="@dimen/dp_200"
             android:layout_height="@dimen/dp_45"
-            android:background="@drawable/capsule_green_selector"
+            android:background="@drawable/capsule_theme_color_selector"
             android:layout_marginBottom="@dimen/dp_20"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
