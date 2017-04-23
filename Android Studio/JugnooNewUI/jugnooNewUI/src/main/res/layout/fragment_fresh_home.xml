@@ -64,7 +64,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/rlPager"
-                        android:fadeScrollbars="true" />
+                        android:fadeScrollbars="true"
+                        android:paddingBottom="@dimen/px_100"
+                        />
 
                     <View
                         android:layout_width="match_parent"

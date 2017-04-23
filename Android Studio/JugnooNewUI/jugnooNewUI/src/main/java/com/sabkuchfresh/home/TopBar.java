@@ -253,7 +253,7 @@ public class TopBar implements GAAction, GACategory {
 
                 case R.id.ivFreshSort:
                     if(activity instanceof FreshActivity){
-                        ((FreshActivity)activity).ivFreshSortClick();
+                        ((FreshActivity)activity).openFreshSortDialog();
                     }
                     break;
 

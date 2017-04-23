@@ -112,12 +112,7 @@
         </LinearLayout>
 
 
-        <!-- Sort layout-->
-        <include layout="@layout/layout_fresh_activity_sort" />
-
         <include layout="@layout/layout_home_activity_fab_test" />
-
-
 
 
     </android.support.design.widget.CoordinatorLayout>

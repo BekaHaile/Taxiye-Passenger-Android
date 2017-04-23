@@ -27,9 +27,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Spannable;
@@ -73,6 +70,7 @@ import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
+import com.sabkuchfresh.dialogs.FreshSortDialog;
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedClaimHandleFragment;
@@ -252,11 +250,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private VendorMenuResponse vendorMenuResponse;
 
     public AppBarLayout appBarLayout;
-    private RelativeLayout rlSort, rlSortBg, rlSortContainer;
-    private View viewSortFake, viewSortFake1;
     private Toolbar toolbar;
-    private RecyclerView rvDeliverySlots;
-    private FreshSortingAdapter sortingAdapter;
     private CoordinatorLayout coordinatorLayout;
     private static final float COLLAPSE_TOOLBAR_HEIGHT = 270f;
 
@@ -317,17 +311,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
             textViewMinOrder = (TextView) findViewById(R.id.textViewMinOrder);
-            rlSort = (RelativeLayout) findViewById(R.id.rlSort);
-            rlSortBg = (RelativeLayout) findViewById(R.id.rlSortBg);
-            viewSortFake = (View) findViewById(R.id.viewSortFake);
-            viewSortFake1 = (View) findViewById(R.id.viewSortFake1);
-            rlSortContainer = (RelativeLayout) findViewById(R.id.rlSortContainer);
-            rvDeliverySlots = (RecyclerView) findViewById(R.id.rvDeliverySlots);
-            rvDeliverySlots.setLayoutManager(new LinearLayoutManager(this));
-            rvDeliverySlots.setItemAnimator(new DefaultItemAnimator());
-            rvDeliverySlots.setHasFixedSize(false);
 
-            topView = (View) findViewById(R.id.topBarMain);
+            topView = findViewById(R.id.topBarMain);
 
             menuBar = new MenuBar(this, drawerLayout);
             topBar = new TopBar(this, drawerLayout);
@@ -364,25 +349,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
             });*/
 
-            sortingAdapter = new FreshSortingAdapter(FreshActivity.this, slots, new FreshSortingAdapter.Callback() {
-                @Override
-                public void onSlotSelected(int position, SortResponseModel slot) {
-                    int type = getAppType();
-                    if (type == AppConstant.ApplicationType.MEALS) {
-                        mealSort = position;
-                    } else if (type == AppConstant.ApplicationType.GROCERY) {
-                        freshSort = position;
-                    } else if (type == AppConstant.ApplicationType.MENUS) {
-                        menusSort = position;
-                    } else {
-                        freshSort = position;
-                    }
-                    getBus().post(new SortSelection(position));
-                    topBar.ivFreshSort.performClick();
-                }
-            });
-            rvDeliverySlots.setAdapter(sortingAdapter);
-
 
             View.OnClickListener checkoutOnClickListener = new View.OnClickListener() {
                 @Override
@@ -416,14 +382,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             rlCheckoutBar.setOnClickListener(checkoutOnClickListener);
-
-            rlSortContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    topBar.ivFreshSort.performClick();
-                }
-            });
-
 
 
             try {
@@ -577,7 +535,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             menusSort = slots.get(1).id;
             onSortEvent(new SortSelection(menusSort));
         }
-        sortingAdapter.notifyDataSetChanged();
     }
 
     public void updateSortSelectedFromAPI(Fragment fragment, JSONObject jObj) {
@@ -1091,7 +1048,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void updateTotalAmountPrice(double totalPrice, int quantity) {
         try {
             if (totalPrice > 0) {
-                if(!(getTopFragment() instanceof FreshCheckoutMergedFragment) && !(getTopFragment() instanceof MealAddonItemsFragment)) {
+                if(!(getTopFragment() instanceof FreshCheckoutMergedFragment)
+                        && !(getTopFragment() instanceof MealAddonItemsFragment)) {
                     rlCheckoutBar.setVisibility(View.VISIBLE);
                 } else {
                     rlCheckoutBar.setVisibility(View.GONE);
@@ -1124,7 +1082,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
             topBar.editTextDeliveryAddress.setVisibility(View.GONE);
 
-            rlSort.setVisibility(View.GONE);
             int rlFilterVis = View.GONE;
             topBar.buttonCheckServer.setVisibility(View.GONE);
             topBar.ivAddReview.setVisibility(View.GONE);
@@ -1158,7 +1115,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                rlSort.setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.fatafat));
@@ -1228,8 +1184,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
 
-                rlSort.setVisibility(fragment instanceof VendorMenuFragment ? View.VISIBLE : View.GONE);
-
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(vendorOpened.getName());
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
@@ -1279,11 +1233,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llSearchCartVis = View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
-                if (fragment instanceof AddToAddressBookFragment) {
-                    topBar.title.setText(getResources().getString(R.string.confirm_address));
-                } else {
-                    topBar.title.setText(getResources().getString(R.string.address));
-                }
+                topBar.title.setText(getResources().getString(R.string.confirm_address));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
             } else if (fragment instanceof DeliveryAddressesFragment) {
@@ -1404,6 +1354,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             topBar.getLlSearchCartContainer().setVisibility(llSearchCartContainerVis);
             topBar.getLlSearchCart().setVisibility(llSearchCartVis);
+            if(totalPrice <= 0 || totalQuantity <= 0){
+                llCartContainerVis = View.GONE;
+            }
             rlCheckoutBar.setVisibility(llCartContainerVis);
             topBar.getIvSearch().setVisibility(ivSearchVis);
             topBar.getLlSearchContainer().setVisibility(llSearchContainerVis);
@@ -4245,23 +4198,33 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 	@Bind(R.id.tvCartAmount)
 	TextView tvCartAmount;
 
-    public void ivFreshSortClick(){
-        if (viewSortFake.getVisibility() == View.GONE) {
-
-            if(getAppType()== AppConstant.ApplicationType.MENUS && getTopFragment() instanceof VendorMenuFragment) {
-                GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME, GAAction.SORT_BUTTON + GAAction.CLICKED);
-            } else if(getAppType() == AppConstant.ApplicationType.FRESH && getFreshFragment() != null){
-                if(getFreshFragment().getSuperCategory() != null)
-                    GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), SORT_BUTTON+CLICKED);
+    private FreshSortDialog freshSortDialog;
+    public void openFreshSortDialog() {
+        freshSortDialog = new FreshSortDialog(new FreshSortingAdapter.Callback() {
+            @Override
+            public void onSlotSelected(int position, SortResponseModel sort) {
+                int type = getAppType();
+                if (type == AppConstant.ApplicationType.MEALS) {
+                    mealSort = position;
+                } else if (type == AppConstant.ApplicationType.GROCERY) {
+                    freshSort = position;
+                } else if (type == AppConstant.ApplicationType.MENUS) {
+                    menusSort = position;
+                } else {
+                    freshSort = position;
+                }
+                getBus().post(new SortSelection(position));
+                if(freshSortDialog != null){
+                    freshSortDialog.dismiss();
+                }
             }
-
-            viewSortFake.setVisibility(View.VISIBLE);
-            viewSortFake1.setVisibility(View.VISIBLE);
-            rlSortContainer.setVisibility(View.GONE);
-        } else {
-            viewSortFake.setVisibility(View.GONE);
-            viewSortFake1.setVisibility(View.GONE);
-            rlSortContainer.setVisibility(View.VISIBLE);
+        }, R.style.Feed_Popup_Theme, this, slots);
+        freshSortDialog.show(topBar.ivFreshSort);
+        if (getAppType() == AppConstant.ApplicationType.MENUS && getTopFragment() instanceof VendorMenuFragment) {
+            GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME, GAAction.SORT_BUTTON + GAAction.CLICKED);
+        } else if (getAppType() == AppConstant.ApplicationType.FRESH && getFreshFragment() != null) {
+            if (getFreshFragment().getSuperCategory() != null)
+                GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), SORT_BUTTON + CLICKED);
         }
     }
 

@@ -24,7 +24,6 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -82,7 +81,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private LinearLayout noFreshsView;
     private TextView swipe_text;
 
-    private FreshSortingDialog freshSortingDialog;
     private ArrayList<RecentOrder> recentOrder = new ArrayList<>();
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<SubItem> mealsData = new ArrayList<>();
@@ -240,24 +238,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         slots.add(new SortResponseModel(3, "Price: High to Low", false));
 
 
-    }
-
-    public FreshSortingDialog getFreshSortingDialog() {
-
-        if (freshSortingDialog == null) {
-            freshSortingDialog = new FreshSortingDialog(activity, slots,
-                    new FreshSortingDialog.FreshDeliverySortDialogCallback() {
-                        @Override
-                        public void onOkClicked(int position) {
-                            //setSelectedSlotToView();
-//                            activity.sortArray(position);
-                            activity.mealSort = position;
-                            onSortEvent(position);
-//                            mBus.post(new SortSelection(position));
-                        }
-                    });
-        }
-        return freshSortingDialog;
     }
 
 
