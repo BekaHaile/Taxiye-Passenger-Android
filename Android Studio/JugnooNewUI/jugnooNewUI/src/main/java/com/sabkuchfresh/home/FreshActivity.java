@@ -797,6 +797,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedAddressType("");
 
                     Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
+                    setIsAddressConfirmed(false);
                 }
                 // else if selected address is updated by user, updating address related local variables
                 // from SP search result

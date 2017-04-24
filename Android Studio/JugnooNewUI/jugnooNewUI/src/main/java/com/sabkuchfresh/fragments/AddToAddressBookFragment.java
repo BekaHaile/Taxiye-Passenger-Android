@@ -650,7 +650,11 @@ public class AddToAddressBookFragment extends Fragment {
         if (!TextUtils.isEmpty(flatNo)) {
             flatNo = flatNo + ", ";
         }
-        return flatNo+textViewAddress.getText().toString()+", "+landmark;
+
+        if (!TextUtils.isEmpty(landmark)) {
+            landmark = ", " + landmark;
+        }
+        return flatNo+textViewAddress.getText().toString()+landmark;
     }
 
 }
