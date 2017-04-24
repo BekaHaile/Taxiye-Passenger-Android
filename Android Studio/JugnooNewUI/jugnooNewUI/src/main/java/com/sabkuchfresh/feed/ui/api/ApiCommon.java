@@ -41,6 +41,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
     private MultipartTypedOutput multipartTypedOutput;
     private ApiName apiName;
     private boolean putAccessToken = true;
+    private boolean isCancelled;
+
+
 
 
     /**
@@ -97,6 +100,8 @@ public class ApiCommon<T extends FeedCommonResponse> {
             callback = new Callback<T>() {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
+                    if(isCancelled())
+                        return;
                     DialogPopup.dismissLoadingDialog();
                     try {
                         if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
@@ -119,6 +124,8 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
                 @Override
                 public void failure(RetrofitError error) {
+                    if(isCancelled())
+                        return;
                     DialogPopup.dismissLoadingDialog();
                     error.printStackTrace();
                     if (!apiCommonCallback.onFailure(error)) {
@@ -144,7 +151,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
         }
         switch (apiName) {
             case GENERATE_FEED_API:
-                RestClient.getFeedApiService().testAPI(params, callback);
+                RestClient.getFeedApiService().generateFeed(params, callback);
                 break;
             case REGISTER_FOR_FEED:
                 RestClient.getFeedApiService().registerForFeed(params, callback);
@@ -188,5 +195,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
     }
 
+    public boolean isCancelled() {
+        return isCancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        isCancelled = cancelled;
+    }
 
 }

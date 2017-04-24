@@ -3,20 +3,13 @@ package com.sabkuchfresh.retrofit.model.feed.generatefeed;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
 import java.util.List;
 
-public class FeedListResponse {
+public class FeedListResponse extends FeedCommonResponse {
 
-    @SerializedName("flag")
-    @Expose
-    private int flag;
-    @SerializedName("message")
-    @Expose
-    private String message;
-    @SerializedName("error")
-    @Expose
-    private String error;
+
     @SerializedName("feeds")
     @Expose
     private List<FeedDetail> feeds = null;
