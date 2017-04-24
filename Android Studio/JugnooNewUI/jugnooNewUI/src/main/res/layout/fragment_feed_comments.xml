@@ -14,7 +14,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_feed_detail"
         android:background="@color/feed_grey_background_light"
-        android:layout_above="@+id/rlSubmit"
+        android:layout_above="@+id/ll_anonymous"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -30,20 +30,62 @@
 
     <ImageView
         android:id="@+id/imageViewShadowBelow"
-        android:layout_above="@+id/rlSubmit"
+        android:layout_above="@+id/ll_anonymous"
         android:layout_width="match_parent"
         android:layout_height="@dimen/spacing_extra_tiny"
 
         android:background="@drawable/shadow_up_new" />
 
     <LinearLayout
-        android:id="@id/rlSubmit"
+        android:id="@id/ll_anonymous"
+        android:layout_above="@+id/divider_anonymous"
         android:orientation="horizontal"
-
         android:background="@android:color/white"
-        android:layout_alignParentBottom="true"
+       android:padding="@dimen/spacing_tiny"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_handle"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            android:theme="@style/ThemeSwitch"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+        <TextView
+            android:id="@+id/tv_switch_label"
+            android:text="Handle"
+            android:textColor="@color/feed_grey_text"
+            android:layout_marginLeft="@dimen/spacing_dimin"
+            android:ellipsize="end"
+            android:textSize="@dimen/font_normal"
+            app:font="@string/maven_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@id/divider_anonymous"
+        android:layout_above="@id/rlSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/feed_grey_background"/>
+    <LinearLayout
+        android:id="@id/rlSubmit"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
 
 

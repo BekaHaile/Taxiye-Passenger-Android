@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -70,6 +72,8 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
     private RecyclerView recyclerView;
     private DeleteFeed deleteFeed;
     private boolean openKeyboardOnLoad;
+    private TextView tvSwitchLabel;
+    private SwitchCompat switchCompat;
 
 
     public FeedPostDetailFragment() {
@@ -114,6 +118,8 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
         View rootView = inflater.inflate(R.layout.fragment_feed_comments, container, false);
         btnSubmit = (TextView) rootView.findViewById(R.id.btnSubmit);
         btnSubmit.setEnabled(false);
+        switchCompat = (SwitchCompat) rootView.findViewById(R.id.switch_handle);
+        tvSwitchLabel = (TextView)rootView.findViewById(R.id.tv_switch_label);
         textViewCharCount = (TextView) rootView.findViewById(R.id.tvCharCount);
         edtMyComment = (EditText) rootView.findViewById(R.id.edt_my_comment);
         edtMyComment.addTextChangedListener(submitTextWatcher);
@@ -211,7 +217,21 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         ;
         recyclerView.setAdapter(feedOfferingCommentsAdapter);
+        final String handleName ;
+        if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getHandleName()))
+        {
+            handleName = Data.getFeedData().getHandleName();
+        }
+        else{
+            handleName = "handle";
+        }
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                tvSwitchLabel.setText(isChecked ? handleName : "Anonymous");
+            }
+        });
+        switchCompat.setChecked(true);
         fetchFeedDetail();
         return rootView;
     }
@@ -348,6 +368,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_POST_ID, String.valueOf(feedDetail.getPostId()));
                 params.put(Constants.KEY_COMMENT_CONTENT, String.valueOf(comments));
+                params.put(Constants.IS_ANONYMOUS, String.valueOf(switchCompat.isChecked() ? "0" : "1"));
 
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getFeedApiService().commentOnFeed(params, new retrofit.Callback<FeedDetailResponse>() {
