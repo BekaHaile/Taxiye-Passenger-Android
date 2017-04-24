@@ -1,49 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:id="@+id/llCheckoutBar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:tag="@string/dont_touch_me"
-    android:background="@drawable/bg_theme_color_selector"
-    android:id="@+id/rlCheckoutBar"
-    android:visibility="gone"
-    android:animateLayoutChanges="true"
+    android:visibility="visible"
     >
 
-
-    <TextView
-        android:id="@+id/tvCheckoutItemsCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_16"
-        android:layout_marginTop="@dimen/dp_18"
-        android:layout_marginBottom="@dimen/dp_18"
-        android:layout_marginLeft="@dimen/dp_14"
-        android:text="CHECKOUT"
-        app:font="maven"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_7"
+        android:background="@drawable/shadow_up_new"
         />
 
-
-    <TextView
-        android:id="@+id/tvCartAmount"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/capsule_black_20"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/dp_12"
-        android:layout_centerVertical="true"
-        android:text=""
-        android:gravity="center"
-        android:padding="@dimen/dp_8"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_13"
-        android:drawablePadding="@dimen/dp_4"
-        android:drawableLeft="@drawable/ic_fresh_cart_svg"
-        android:drawableRight="@drawable/ic_fresh_cart_arrow_svg"
-        app:font="maven"
-        />
+        android:background="@drawable/bg_theme_color_selector">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tvCheckoutItemsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_18"
+            android:layout_marginLeft="@dimen/dp_14"
+            android:layout_marginTop="@dimen/dp_18"
+            android:text="CHECKOUT"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:font="maven"
+            />
+
+
+        <TextView
+            android:id="@+id/tvCartAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_12"
+            android:background="@drawable/capsule_black_20"
+            android:drawableLeft="@drawable/ic_fresh_cart_svg"
+            android:drawablePadding="@dimen/dp_4"
+            android:drawableRight="@drawable/ic_fresh_cart_arrow_svg"
+            android:gravity="center"
+            android:padding="@dimen/dp_8"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_13"
+            app:font="maven"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>

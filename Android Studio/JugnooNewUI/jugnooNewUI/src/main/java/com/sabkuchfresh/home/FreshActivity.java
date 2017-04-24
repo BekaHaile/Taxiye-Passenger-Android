@@ -42,6 +42,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -381,7 +384,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             };
 
 
-            rlCheckoutBar.setOnClickListener(checkoutOnClickListener);
+            llCheckoutBar.setOnClickListener(checkoutOnClickListener);
 
 
             try {
@@ -567,10 +570,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         try {
                             if (getAppType() != AppConstant.ApplicationType.MENUS && productsResponse != null && productsResponse.getCategories() != null) {
                                 updateItemListFromSPDB();
-                                rlCheckoutBar.performClick();
+                                llCheckoutBar.performClick();
                             } else if (getAppType() == AppConstant.ApplicationType.MENUS && getMenuProductsResponse() != null && getMenuProductsResponse().getCategories() != null) {
                                 updateItemListFromSPDB();
-                                rlCheckoutBar.performClick();
+                                llCheckoutBar.performClick();
                             } else {
                                 updateCart = true;
                             }
@@ -611,7 +614,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
                                         if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
                                             updateItemListFromSPDB();
-                                            rlCheckoutBar.performClick();
+                                            llCheckoutBar.performClick();
                                         } else {
                                             Bundle bundle = new Bundle();
                                             bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
@@ -627,7 +630,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getGroceryClientId());
                                         if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
                                             updateItemListFromSPDB();
-                                            rlCheckoutBar.performClick();
+                                            llCheckoutBar.performClick();
                                         } else {
                                             Bundle bundle = new Bundle();
                                             bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
@@ -641,7 +644,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
                                         if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
                                             updateItemListFromSPDB();
-                                            rlCheckoutBar.performClick();
+                                            llCheckoutBar.performClick();
                                         } else {
                                             Bundle bundle = new Bundle();
                                             bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
@@ -991,12 +994,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         saveItemListToDBFMG(subItemToUpdate);
         Pair<Double, Integer> pair = getSubItemInCartTotalPrice();
         try {
-            updateTotalAmountPrice(totalPrice, totalQuantity);
             if (getFreshFragment() != null) {
                 setMinOrderAmountText(getFreshFragment());
             } else if (getFreshSearchFragment() != null) {
                 setMinOrderAmountText(getFreshSearchFragment());
             }
+            updateTotalAmountPrice(totalPrice, totalQuantity);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1033,8 +1036,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         }
                     }
                 }
-                updateTotalAmountPrice(totalPrice, totalQuantity);
                 setMinOrderAmountText(getVendorMenuFragment());
+                updateTotalAmountPrice(totalPrice, totalQuantity);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1050,9 +1053,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if (totalPrice > 0) {
                 if(!(getTopFragment() instanceof FreshCheckoutMergedFragment)
                         && !(getTopFragment() instanceof MealAddonItemsFragment)) {
-                    rlCheckoutBar.setVisibility(View.VISIBLE);
+                    llCheckoutBarSetVisibility(View.VISIBLE);
                 } else {
-                    rlCheckoutBar.setVisibility(View.GONE);
+                    llCheckoutBarSetVisibility(View.GONE);
                 }
                 tvCartAmount.setText(String.format(getResources().getString(R.string.rupees_value_format),
                         Utils.getMoneyDecimalFormat().format(totalPrice)));
@@ -1061,7 +1064,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         R.string.checkout_bracket_item : R.string.checkout_bracket_items,
                         String.valueOf(quantity))));
             } else {
-                rlCheckoutBar.setVisibility(View.GONE);
+                llCheckoutBarSetVisibility(View.GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1349,7 +1352,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
             if(visMinOrder != 1) {
-                textViewMinOrder.setVisibility(View.GONE);
+                textViewMinOrderSetVisibility(View.GONE);
             }
 
             topBar.getLlSearchCartContainer().setVisibility(llSearchCartContainerVis);
@@ -1357,7 +1360,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if(totalPrice <= 0 || totalQuantity <= 0){
                 llCartContainerVis = View.GONE;
             }
-            rlCheckoutBar.setVisibility(llCartContainerVis);
+            llCheckoutBarSetVisibility(llCartContainerVis);
             topBar.getIvSearch().setVisibility(ivSearchVis);
             topBar.getLlSearchContainer().setVisibility(llSearchContainerVis);
             topBar.rlFilter.setVisibility(rlFilterVis);
@@ -1564,7 +1567,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     } else {
                         textViewMinOrderVis = View.GONE;
                     }
-                    textViewMinOrder.setVisibility(textViewMinOrderVis);
+                    textViewMinOrderSetVisibility(textViewMinOrderVis);
                     return 1;
                 } else if (fragment instanceof VendorMenuFragment || fragment instanceof MenusSearchFragment) {
                     int textViewMinOrderVis = View.GONE;
@@ -1583,11 +1586,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             textViewMinOrderVis = View.GONE;
                         }
                     }
-                    textViewMinOrder.setVisibility(textViewMinOrderVis);
+                    textViewMinOrderSetVisibility(textViewMinOrderVis);
                     return 1;
                 }
             } else {
-                textViewMinOrder.setVisibility(View.GONE);
+                textViewMinOrderSetVisibility(View.GONE);
                 return 1;
             }
         } catch (Exception e) {
@@ -3911,7 +3914,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void openRestaurantReviewsListFragment() {
         if (getVendorOpened() != null) {
             appBarLayout.setExpanded(false, false);
-            rlCheckoutBar.setVisibility(View.GONE);
+            llCheckoutBarSetVisibility(View.GONE);
             topBar.ivSearch.setVisibility(View.GONE);
             GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.FEED + GAAction.CLICKED);
             getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
@@ -4191,8 +4194,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
-    @Bind(R.id.rlCheckoutBar)
-	public RelativeLayout rlCheckoutBar;
+    @Bind(R.id.llCheckoutBar)
+	public LinearLayout llCheckoutBar;
 	@Bind(R.id.tvCheckoutItemsCount)
 	TextView tvCheckoutItemsCount;
 	@Bind(R.id.tvCartAmount)
@@ -4226,6 +4229,58 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if (getFreshFragment().getSuperCategory() != null)
                 GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), SORT_BUTTON + CLICKED);
         }
+    }
+
+    private void llCheckoutBarSetVisibility(int visibility){
+        if(visibility == View.VISIBLE && llCheckoutBar.getVisibility() != View.VISIBLE){
+            llCheckoutBar.setVisibility(View.VISIBLE);
+
+            if(textViewMinOrder.getVisibility() == View.VISIBLE) {
+                textViewMinOrder.clearAnimation();
+                Animation translateUp = new TranslateAnimation(0, 0, llCheckoutBar.getMeasuredHeight(), 0);
+                translateUp.setDuration(200);
+                translateUp.setFillAfter(false);
+                textViewMinOrder.startAnimation(translateUp);
+            }
+
+            llCheckoutBar.clearAnimation();
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+            llCheckoutBar.startAnimation(animation);
+        } else if(visibility == View.GONE && llCheckoutBar.getVisibility() != View.GONE){
+            llCheckoutBar.clearAnimation();
+
+            if(textViewMinOrder.getVisibility() == View.VISIBLE) {
+                textViewMinOrder.clearAnimation();
+                Animation translateDown = new TranslateAnimation(0, 0, 0, llCheckoutBar.getMeasuredHeight());
+                translateDown.setDuration(200);
+                translateDown.setFillAfter(false);
+                textViewMinOrder.startAnimation(translateDown);
+            }
+
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    llCheckoutBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            llCheckoutBar.startAnimation(animation);
+        }
+    }
+
+    private void textViewMinOrderSetVisibility(int visibility){
+        textViewMinOrder.clearAnimation();
+        textViewMinOrder.setVisibility(visibility);
     }
 
 }
