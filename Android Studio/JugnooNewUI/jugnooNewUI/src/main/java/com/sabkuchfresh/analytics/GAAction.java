@@ -229,5 +229,7 @@ public interface GAAction {
 	String TWITTER = "Twitter ";
 	String OTHER_SHARING_OPTIONS = "Other Sharing Options ";
 	String LIST_SCROLLED = "List Scrolled ";
-	String HANDLE_INPUT = "Handle Input";
+	String HANDLE_INPUT = "Handle Input ";
+	String SELECT_STORE = "Select Store ";
+	String STORE = "Store ";
 }

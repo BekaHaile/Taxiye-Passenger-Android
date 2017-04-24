@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.DeliveryStoresAdapter;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryStore;
 
@@ -25,7 +27,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
  * Created by ankit on 17/03/17.
  */
 
-public class DeliveryStoresFragment extends Fragment {
+public class DeliveryStoresFragment extends Fragment implements GAAction{
 
     private View rootView;
     private FreshActivity activity;
@@ -86,6 +88,7 @@ public class DeliveryStoresFragment extends Fragment {
                                 public void onClick(View v) {
                                     activity.getCart().getSubItemHashMap(activity.getOpenedVendorId()).clear();
                                     selectStore(position, deliveryStore);
+                                    try {GAUtils.event(activity.getGaCategory(), activity.getFreshFragment().getSuperCategory().getSuperCategoryName(), STORE+SELECTED+deliveryStore.getVendorName());} catch (Exception e) {}
                                 }
                             }, true, false);
                 } else if(!deliveryStore.getVendorId().equals(activity.getOpenedVendorId())) {

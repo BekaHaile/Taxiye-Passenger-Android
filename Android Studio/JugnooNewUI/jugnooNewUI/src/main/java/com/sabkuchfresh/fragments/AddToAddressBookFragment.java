@@ -370,6 +370,11 @@ public class AddToAddressBookFragment extends Fragment {
             editTextLabel.setError("Required field");
             return false;
         }
+        if(editTextFlatNumber.getText().toString().trim().length() == 0){
+            editTextFlatNumber.requestFocus();
+            editTextFlatNumber.setError("Required field");
+            return false;
+        }
         return true;
     }
 

@@ -1052,7 +1052,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             if (totalPrice > 0) {
                 if(!(getTopFragment() instanceof FreshCheckoutMergedFragment)
-                        && !(getTopFragment() instanceof MealAddonItemsFragment)) {
+                        && !(getTopFragment() instanceof MealAddonItemsFragment)
+                        && !(getTopFragment() instanceof FeedbackFragment)) {
                     llCheckoutBarSetVisibility(View.VISIBLE);
                 } else {
                     llCheckoutBarSetVisibility(View.GONE);
@@ -1905,6 +1906,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finishWithToast();
+            return;
         }
         try {
             Utils.hideSoftKeyboard(this, topBar.etSearch);
@@ -1941,6 +1943,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finishWithToast();
+            return;
         } else {
 
             if (getTopFragment() instanceof FreshSearchFragment) {
@@ -4246,6 +4249,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             llCheckoutBar.clearAnimation();
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_up);
             llCheckoutBar.startAnimation(animation);
+
+            if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
+                getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.dp_54));
+            }
+
         } else if(visibility == View.GONE && llCheckoutBar.getVisibility() != View.GONE){
             llCheckoutBar.clearAnimation();
 
@@ -4275,6 +4283,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
             });
             llCheckoutBar.startAnimation(animation);
+
+            if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
+                getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, 0);
+            }
         }
     }
 

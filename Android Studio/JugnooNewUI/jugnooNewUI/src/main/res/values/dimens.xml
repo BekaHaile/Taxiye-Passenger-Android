@@ -605,6 +605,9 @@
     <dimen name="dp_31">
         31dp
     </dimen>
+    <dimen name="dp_54">
+        54dp
+    </dimen>
 
 
 </resources>

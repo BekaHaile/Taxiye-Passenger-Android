@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:tag="@string/dont_touch_me"
-    android:visibility="visible"
+    android:visibility="gone"
     >
 
     <View
