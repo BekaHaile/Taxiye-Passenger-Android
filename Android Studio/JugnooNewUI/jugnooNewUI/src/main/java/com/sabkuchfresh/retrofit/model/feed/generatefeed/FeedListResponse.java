@@ -33,6 +33,30 @@ public class FeedListResponse {
     @Expose
     private String handleName;
 
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    @SerializedName("pageCount")
+    @Expose
+    private int pageCount;
+
+    public int getCountRecords() {
+        return countRecords;
+    }
+
+    public void setCountRecords(int countRecords) {
+        this.countRecords = countRecords;
+    }
+
+    @SerializedName("count_records")
+    @Expose
+    private int countRecords;
+
 
     public int getFlag() {
         return flag;
