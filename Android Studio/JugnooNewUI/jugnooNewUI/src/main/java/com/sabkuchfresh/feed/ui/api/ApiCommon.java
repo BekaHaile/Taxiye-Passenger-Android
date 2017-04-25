@@ -136,9 +136,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 }
             };
         }
-        if(putDefaultParams){
+//        if(putDefaultParams){
             new HomeUtil().putDefaultParams(params);
-        }
+//        }
 
         if(putAccessToken){
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);

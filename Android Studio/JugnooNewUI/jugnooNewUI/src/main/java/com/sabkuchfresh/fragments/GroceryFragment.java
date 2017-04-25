@@ -23,7 +23,6 @@ import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshNoDeliveriesDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -76,7 +75,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     private boolean tabClickFlag = false;
 
 
-    private FreshSortingDialog freshSortingDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     private ArrayList<SubItem> freshData = new ArrayList<>();
 	private boolean resumed = false;
@@ -457,23 +455,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
         System.gc();
 	}
 
-
-    public FreshSortingDialog getFreshSortingDialog() {
-
-        if (freshSortingDialog == null) {
-            freshSortingDialog = new FreshSortingDialog(activity, slots,
-                    new FreshSortingDialog.FreshDeliverySortDialogCallback() {
-                        @Override
-                        public void onOkClicked(int position) {
-                            //setSelectedSlotToView();
-//                            activity.sortArray(position);
-							activity.freshSort = position;
-                            activity.getBus().post(new SortSelection(position));
-                        }
-                    });
-        }
-        return freshSortingDialog;
-    }
 
     @Subscribe
     public void onUpdateListEvent(UpdateMainList event) {

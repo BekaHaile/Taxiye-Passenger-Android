@@ -2,7 +2,6 @@ package com.sabkuchfresh.feed.ui.api;
 
 import android.app.Activity;
 import android.view.View;
-import android.widget.Toast;
 
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
@@ -11,7 +10,6 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -92,7 +90,7 @@ public class LikeFeed {
                     }
                 };
 
-
+                new HomeUtil().putDefaultParams(params);
                  if(isLikeAPI) {
                      RestClient.getFeedApiService().likeFeed(params, callBack);
                  }

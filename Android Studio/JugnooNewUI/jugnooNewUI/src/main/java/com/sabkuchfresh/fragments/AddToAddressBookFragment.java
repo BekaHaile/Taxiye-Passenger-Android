@@ -248,11 +248,12 @@ public class AddToAddressBookFragment extends Fragment {
 
     private void setDataToUI(){
 
-        textViewAddress.setText(current_street+(TextUtils.isEmpty(current_street)?"":", ")
-                +current_route+(TextUtils.isEmpty(current_route)?"":", ")
-                +current_area+(TextUtils.isEmpty(current_area)?"":", ")
+        textViewAddress.setText(current_area+(TextUtils.isEmpty(current_area)?"":", ")
                 +current_city+(TextUtils.isEmpty(current_city)?"":", ")
                 +current_pincode);
+
+        editTextFlatNumber.setText(current_street+(TextUtils.isEmpty(current_street)?"":", ")
+                +current_route);
 
         int placeRequestCode = 0;
         String label = "";
@@ -361,12 +362,17 @@ public class AddToAddressBookFragment extends Fragment {
     }
 
     private boolean fieldsAreFilled() {
-        if(activity instanceof AddPlaceActivity && editTextLabel.getText().toString().trim().length() == 0){
+        if(editTextLabel.getText().toString().trim().length() == 0){
             editTextLabel.requestFocus();
             if(editTextLabel.getVisibility() == View.GONE){
                 editTextLabel.setVisibility(View.VISIBLE);
             }
             editTextLabel.setError("Required field");
+            return false;
+        }
+        if(editTextFlatNumber.getText().toString().trim().length() == 0){
+            editTextFlatNumber.requestFocus();
+            editTextFlatNumber.setError("Required field");
             return false;
         }
         return true;
@@ -644,7 +650,11 @@ public class AddToAddressBookFragment extends Fragment {
         if (!TextUtils.isEmpty(flatNo)) {
             flatNo = flatNo + ", ";
         }
-        return flatNo+textViewAddress.getText().toString()+", "+landmark;
+
+        if (!TextUtils.isEmpty(landmark)) {
+            landmark = ", " + landmark;
+        }
+        return flatNo+textViewAddress.getText().toString()+landmark;
     }
 
 }

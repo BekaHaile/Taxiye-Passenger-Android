@@ -271,57 +271,16 @@
                             android:tag="mwar"
                             android:visibility="visible" />
                     </RelativeLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/llCartContainer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/px_62"
-                        android:animateLayoutChanges="true"
-                        android:layout_centerVertical="true"
+                    
+                    <ImageView
+                        android:id="@+id/ivFreshSort"
+                        android:layout_width="@dimen/dp_31"
+                        android:layout_height="@dimen/dp_31"
+                        android:src="@drawable/ic_fresh_sort_svg"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/px_20"
-                        android:background="@drawable/capsule_cart_selector"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:tag="mwar">
-
-
-                        <ImageView
-                            android:layout_width="@dimen/px_26"
-                            android:layout_height="@dimen/px_26"
-                            android:layout_marginLeft="@dimen/px_18"
-                            android:layout_marginRight="@dimen/px_18"
-                            android:src="@drawable/ic_cart_new"
-                            android:tag="mwar" />
-
-                        <LinearLayout
-                            android:id="@+id/llCartAmount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/px_18"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-
-                            <TextView
-                                android:id="@+id/tvCartAmount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/px_18"
-                                android:text=""
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text_size_26" />
-
-                            <ImageView
-                                android:layout_width="13px"
-                                android:layout_height="23px"
-                                android:src="@drawable/back_arrow_white"
-                                android:tag="mwar" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:tag="@string/dont_touch_me"
+                        />
 
                 </LinearLayout>
 

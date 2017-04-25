@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -62,7 +63,6 @@ import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.home.OrderCheckoutFailureDialog;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
-import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SlotViewType;
@@ -568,7 +568,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
                     setSlideInitial();
-                } else if (TextUtils.isEmpty(activity.getSelectedAddress())) {
+                } else if (addressSelectedNotValid() || TextUtils.isEmpty(activity.getSelectedAddress())) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_address));
                     setSlideInitial();
                 } else if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
@@ -624,12 +624,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         checkoutSaveData = activity.getCheckoutSaveData();
         activity.setSplInstr(checkoutSaveData.getSpecialInstructions());
 
-        updateAddressView();
-        updateDeliveryFromView("");
 
-        updateCartDataView();
-
-        fetchWalletBalance();
 
         linearLayoutCartExpansion.setVisibility(View.VISIBLE);
         imageViewDeleteCart.setVisibility(View.GONE);
@@ -717,6 +712,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        activity.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateAddressView();
+                updateDeliveryFromView("");
+                updateCartDataView();
+                fetchWalletBalance();
+            }
+        }, 50);
     }
 
     private void setSlideInitial(){
@@ -929,17 +938,24 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     public void onResume() {
         super.onResume();
         try {
-            orderPaymentModes();
-            setPaymentOptionUI();
+            activity.getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    orderPaymentModes();
+                    setPaymentOptionUI();
+
+                    if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
+                        getCheckoutDataAPI(selectedSubscription);
+                    }
+                }
+            }, 150);
             if(Data.userData != null) {
 				if (Data.userData.isSubscriptionActive()) {
 					cvBecomeStar.setVisibility(View.GONE);
 				}
 			}
 
-            if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
-				getCheckoutDataAPI(selectedSubscription);
-			}
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1969,7 +1985,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     && activity.getUserCheckoutResponse() != null
                     && activity.getUserCheckoutResponse().getRefreshOnCartChange() == 1
                     && pcOld != null && pcOld.getId() > 0
-                    && noSelectionCoupon.matchPromoCoupon(activity.getSelectedPromoCoupon())){
+                    && noSelectionCoupon.matchPromoCoupon(activity.getSelectedPromoCoupon())
+                    && pcOld.getIsValid() == 1){
                 activity.setSelectedPromoCoupon(pcOld);
             }
 
@@ -1998,6 +2015,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 && activity.getUserCheckoutResponse().getRefreshOnCartChange() == 1) {
             PromoCoupon pcOld = activity.getSelectedPromoCoupon();
             activity.setSelectedPromoCoupon(noSelectionCoupon);
+
+            for (PromoCoupon promoCoupon : promoCoupons) {
+                if (pcOld.getId() == promoCoupon.getId()) {
+                    pcOld = promoCoupon;
+                    break;
+                }
+            }
+
             for (PromoCoupon promoCoupon : promoCoupons) {
                 if (promoCoupon.getIsSelected() == 1) {
                     activity.setSelectedPromoCoupon(promoCoupon);
@@ -2484,6 +2509,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
     }
 
+    public boolean addressSelectedNotValid(){
+        return (!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType()));
+    }
+
     public void updateAddressView(){
         try {
             if (TextUtils.isEmpty(activity.getSelectedAddress())) {
@@ -2496,7 +2525,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
         textViewAddressName.setVisibility(View.GONE);
         textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
-        if(!TextUtils.isEmpty(activity.getSelectedAddress())) {
+        if(!addressSelectedNotValid() && !TextUtils.isEmpty(activity.getSelectedAddress())) {
             textViewAddressValue.setText(activity.getSelectedAddress());
             imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
             if(!TextUtils.isEmpty(activity.getSelectedAddressType())){
@@ -2657,7 +2686,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         } else {
             if (subItemsInCart.size() == 0) {
-                activity.updateTotalAmountPrice(0d);
+                activity.updateTotalAmountPrice(0d, 0);
                 if (activity.isMealAddonItemsAvailable()) {
                     activity.performBackPressed(false);
                 }
@@ -2893,6 +2922,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         retryDialogPlaceOrderPayCallbackApi(DialogErrorType.CONNECTION_LOST, message);
                     }
                 };
+                new HomeUtil().putDefaultParams(params);
                 if(isMenusOpen()){
                     RestClient.getMenusApiService().placeOrderCallback(params, callback);
                 } else {

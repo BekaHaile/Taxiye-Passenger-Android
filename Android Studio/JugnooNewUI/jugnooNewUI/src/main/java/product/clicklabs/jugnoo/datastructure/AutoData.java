@@ -5,6 +5,7 @@ import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
@@ -351,7 +352,7 @@ public class AutoData {
     }
 
     public void setPickupPaymentOption(int pickupPaymentOption) {
-        this.pickupPaymentOption = pickupPaymentOption;
+        this.pickupPaymentOption = MyApplication.getInstance().getWalletCore().validatePaymentOptionForRidesOffering(pickupPaymentOption);
     }
 
     public CancelOptionsList getCancelOptionsList() {

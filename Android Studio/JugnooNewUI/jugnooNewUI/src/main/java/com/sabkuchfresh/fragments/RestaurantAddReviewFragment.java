@@ -51,6 +51,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -670,7 +671,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
                 };
 
 
-
+            new HomeUtil().putDefaultParamsMultipart(params);
             if(activity.getCurrentReview()==null) {
                 //Adding A new Review
                 RestClient.getMenusApiService().orderFeedback(params, callback);

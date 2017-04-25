@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
@@ -98,6 +99,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getFeedApiService().suggestRestaurant(params, new retrofit.Callback<SuggestRestaurantQueryResp>() {
                     @Override
                     public void success(SuggestRestaurantQueryResp queryResp, Response response) {

@@ -24,7 +24,6 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -82,7 +81,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private LinearLayout noFreshsView;
     private TextView swipe_text;
 
-    private FreshSortingDialog freshSortingDialog;
     private ArrayList<RecentOrder> recentOrder = new ArrayList<>();
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<SubItem> mealsData = new ArrayList<>();
@@ -242,24 +240,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     }
 
-    public FreshSortingDialog getFreshSortingDialog() {
-
-        if (freshSortingDialog == null) {
-            freshSortingDialog = new FreshSortingDialog(activity, slots,
-                    new FreshSortingDialog.FreshDeliverySortDialogCallback() {
-                        @Override
-                        public void onOkClicked(int position) {
-                            //setSelectedSlotToView();
-//                            activity.sortArray(position);
-                            activity.mealSort = position;
-                            onSortEvent(position);
-//                            mBus.post(new SortSelection(position));
-                        }
-                    });
-        }
-        return freshSortingDialog;
-    }
-
 
     @Override
     public void onDestroy() {
@@ -369,10 +349,10 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     if(mealsData.size()+recentOrder.size()>0) {
                                         noMealsView.setVisibility(View.GONE);
                                         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                        activity.getTopBar().getLlCartContainer().setVisibility(View.VISIBLE);
+                                        activity.llCheckoutBar.setVisibility(View.VISIBLE);
                                     } else {
                                         noMealsView.setVisibility(View.VISIBLE);
-                                        activity.getTopBar().getLlCartContainer().setVisibility(View.GONE);
+                                        activity.llCheckoutBar.setVisibility(View.GONE);
                                     }
 
                                     if (activity.getProductsResponse() != null

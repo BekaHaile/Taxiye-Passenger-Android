@@ -325,4 +325,8 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         }
         resumed = true;
     }
+
+    public RecyclerView getRvFreshSuper(){
+        return rvFreshSuper;
+    }
 }

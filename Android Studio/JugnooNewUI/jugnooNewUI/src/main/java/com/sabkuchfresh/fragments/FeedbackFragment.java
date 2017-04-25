@@ -110,8 +110,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
 
         activity = (FreshActivity) getActivity();
-        activity.fragmentUISetup(this);
-        updateUI();
         try {
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
@@ -307,16 +305,16 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
                         if (textViewRSWhatImprove.getTag() == null || ((int) textViewRSWhatImprove.getTag()) == 0) {
                             textViewRSWhatImprove.setTag(1);
-                            if(score > 2 && score < 5){
-                                textViewRSWhatImprove.setText(R.string.what_could_we_improve);
-                            } else {
-                                textViewRSWhatImprove.setText(R.string.feedback_menu_what_amazing);
-                            }
                             if (feedbackReasonsAdapter != null)
                                 feedbackReasonsAdapter.resetData(true);
                         } else {
                             if (feedbackReasonsAdapter != null)
                                 feedbackReasonsAdapter.resetSelectedStates();
+                        }
+                        if(score > 2 && score < 5){
+                            textViewRSWhatImprove.setText(R.string.what_could_we_improve);
+                        } else {
+                            textViewRSWhatImprove.setText(R.string.feedback_menu_what_amazing);
                         }
 
                     } else {
@@ -490,23 +488,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
                 endRideWithGif();
             }
-        }
-    }
-
-    private void updateUI() {
-        activity.getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                update();
-            }
-        }, 500);
-    }
-
-    private void update() {
-        try {
-            activity.fragmentUISetup(this);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
