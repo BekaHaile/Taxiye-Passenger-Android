@@ -187,10 +187,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 	private RelativeLayout rlClaimGift, rlPromo;
 	private ImageView ivUser;
-	private TextView tvGiftFrom, tvGiftDetail;
-	private Button btnClaimGift;
-	private String refreeUserId = "";
-	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle;
+	private TextView tvGiftFrom, tvGiftDetail, tvReferralTitle, tvSkip;
+	private Button btnClaimGift, bPromoSubmit;
+	private String refreeUserId = "", loginResponseStr;
+	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle, rlSignupOnboarding;
+	private LoginResponse loginResponseData;
 
 
 	public void resetFlags() {
@@ -552,6 +553,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			tvGiftFrom = (TextView) findViewById(R.id.tvGiftFrom); tvGiftFrom.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 			tvGiftDetail = (TextView) findViewById(R.id.tvGiftDetail); tvGiftDetail.setTypeface(Fonts.mavenMedium(this));
 			btnClaimGift = (Button) findViewById(R.id.btnClaimGift); btnClaimGift.setTypeface(Fonts.mavenMedium(this));
+			tvReferralTitle = (TextView) findViewById(R.id.tvReferralTitle);
+			bPromoSubmit = (Button) findViewById(R.id.bPromoSubmit);
+			rlSignupOnboarding = (RelativeLayout) findViewById(R.id.rlSignupOnboarding);
+			tvSkip = (TextView) findViewById(R.id.tvSkip);
 
 			root.setOnClickListener(onClickListenerKeybordHide);
 
@@ -632,6 +637,34 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							linkedWallet = walletFromServer;
 							imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_checked);
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
+			tvSkip.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						loginDataFetched = true;
+						new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
+								loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
+						onWindowFocusChanged(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
+			bPromoSubmit.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						loginDataFetched = true;
+						new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
+								loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
+						onWindowFocusChanged(true);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1410,6 +1443,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		rlSplashLogo.setVisibility(View.GONE);
 		relativeLayoutLS.setVisibility(View.GONE);
 		rlLoginSignupNew.setVisibility(View.GONE);
+		rlSignupOnboarding.setVisibility(View.GONE);
 		int duration = 500;
 		switch (state) {
 			case SPLASH_INIT:
@@ -1515,6 +1549,23 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					rlClaimGift.setVisibility(View.GONE);
 				}
 				GAUtils.trackScreenView(SIGNUP_LOGIN);
+
+				break;
+
+			case SPLASH_ONBOARDING:
+				llContainer.setVisibility(View.VISIBLE);
+				rlSignupOnboarding.setVisibility(View.VISIBLE);
+
+				Animation anim1 = AnimationUtils.loadAnimation(this, R.anim.right_in);
+				anim1.setFillAfter(true);
+				anim1.setDuration(duration);
+				rlSignupOnboarding.startAnimation(anim1);
+
+				Animation anim2 = AnimationUtils.loadAnimation(this, R.anim.right_out);
+				anim2.setFillAfter(false);
+				anim2.setDuration(duration);
+				rlLoginSignupNew.startAnimation(anim2);
+				rlLoginSignupNew.setVisibility(View.GONE);
 
 				break;
 
@@ -2304,7 +2355,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 //						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					}
 				}
-				else if(State.SPLASH_LS_NEW == state || State.LOGIN == state || State.SIGNUP == state){ //else if(State.SIGNUP == state){ //
+				else if(State.SPLASH_LS_NEW == state || State.SPLASH_ONBOARDING == state || State.LOGIN == state || State.SIGNUP == state){ //else if(State.SIGNUP == state){ //
 					if(SplashNewActivity.this.hasWindowFocus() && loginDataFetched){
 						//Map<String, String> articleParams = new HashMap<String, String>();
 						//articleParams.put("username", Data.userData.userName);
@@ -2499,7 +2550,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 
 	public enum State {
-		SPLASH_INIT(0), SPLASH_LS(1), SPLASH_NO_NET(2), LOGIN(3), SIGNUP(4), CLAIM_GIFT(5), SPLASH_LS_NEW(6);
+		SPLASH_INIT(0), SPLASH_LS(1), SPLASH_NO_NET(2), LOGIN(3), SIGNUP(4), CLAIM_GIFT(5), SPLASH_LS_NEW(6),
+		SPLASH_ONBOARDING(7);
 
 		private int ordinal;
 
@@ -2792,6 +2844,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					loginResponseStr = responseStr;
+					loginResponseData = loginResponse;
 					Log.i(TAG, "loginUsingEmailOrPhoneNo response = " + responseStr);
 					try {
 						JSONObject jObj = new JSONObject(responseStr);
@@ -2829,10 +2883,14 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-								loginDataFetched = true;
+//								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+									if(jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 1){
+										changeUIState(State.SPLASH_ONBOARDING);
+									} else{
+										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
+									}
 									MyApplication.getInstance().getDatabase().insertEmail(emailId);
 									missedCallDialog.dismiss();
 								}

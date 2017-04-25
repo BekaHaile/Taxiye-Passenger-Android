@@ -363,5 +363,6 @@
 
     <color name="green_light">#FD7945</color>
     <color name="green_light_dark">#ED6935</color>
+    <color name="grey_969696">#969696</color>
 
 </resources>
