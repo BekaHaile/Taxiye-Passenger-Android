@@ -345,6 +345,12 @@ public class FetchFeedbackResponse {
 		@SerializedName("id")
 		@Expose
 		private String id;
+		@SerializedName("height")
+		private Integer height;
+
+		@SerializedName("width")
+		private Integer width;
+
 
 		private boolean isRestaurantImage;
 
@@ -384,6 +390,22 @@ public class FetchFeedbackResponse {
 
 		public void setIsRestaurantImage(boolean restaurantImage) {
 			isRestaurantImage = restaurantImage;
+		}
+
+		public Integer getWidth() {
+			return width;
+		}
+
+		public void setWidth(Integer width) {
+			this.width = width;
+		}
+
+		public Integer getHeight() {
+			return height;
+		}
+
+		public void setHeight(Integer height) {
+			this.height = height;
 		}
 	}
 }

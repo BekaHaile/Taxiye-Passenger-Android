@@ -83,7 +83,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
     //Pagination variables
     private ApiCommon<FeedListResponse> feedPagingApi;
-    int pastVisiblesItems, visibleItemCount, totalItemCount,pageCount,countRecords,maxPageCount;
+    int pastVisiblesItems, visibleItemCount, totalItemCount, pageCount, countRecords, maxPageCount;
 
     public FeedHomeFragment() {
         // Required empty public constructor
@@ -147,33 +147,39 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         feedHomeAdapter = new FeedHomeAdapter(getActivity(), getAdapterList(false, null, null, null, pageCount), recyclerView, new FeedHomeAdapter.FeedPostCallback() {
             @Override
             public void onLikeClick(FeedDetail feedDetail, final int position) {
-                if (likeFeed == null)
-                    likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
-                        @Override
-                        public void onSuccess(boolean isLiked, int position, FeedDetail feedDetail) {
-                            if (getView() != null && feedHomeAdapter != null) {
+                if (!swipeRefreshLayout.isRefreshing()) {
 
-                                feedHomeAdapter.notifyOnLike(position, isLiked);
-                            }
-                        }
+                    if (likeFeed == null)
+                        likeFeed = new LikeFeed(new LikeFeed.LikeUnLikeCallbackResponse() {
+                            @Override
+                            public void onSuccess(boolean isLiked, int position, FeedDetail feedDetail) {
+                                if (getView() != null && feedHomeAdapter != null) {
 
-                        @Override
-                        public void onFailure(boolean isLiked, int posInOriginalList, FeedDetail feedDetail) {
-                            if (feedDetail != null) {
-                                feedDetail.setIsLikeAPIInProgress(false);
+                                    feedHomeAdapter.notifyOnLike(position, isLiked);
+                                }
                             }
-                        }
-                    });
-                likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(), position, feedDetail);
-                GAUtils.event(FEED, HOME, LIKE + CLICKED);
+
+                            @Override
+                            public void onFailure(boolean isLiked, int posInOriginalList, FeedDetail feedDetail) {
+                                if (feedDetail != null) {
+                                    feedDetail.setIsLikeAPIInProgress(false);
+                                }
+                            }
+                        });
+                    likeFeed.likeFeed(feedDetail.getPostId(), getActivity(), !feedDetail.isLiked(), position, feedDetail);
+                    GAUtils.event(FEED, HOME, LIKE + CLICKED);
+                }
+
             }
 
             @Override
             public void onCommentClick(final FeedDetail feedDetail, int positionInOriginalList) {
 
+                if (!swipeRefreshLayout.isRefreshing()) {
+                    activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList, true);
+                    GAUtils.event(FEED, HOME, COMMENT + CLICKED);
 
-                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList, true);
-                GAUtils.event(FEED, HOME, COMMENT + CLICKED);
+                }
 
             }
 
@@ -193,7 +199,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             @Override
             public void onMoreClick(final FeedDetail feedDetail, int positionInOriginalList, View moreItemView) {
 
-                getEditPostDialog().show(feedDetail, moreItemView, positionInOriginalList);
+                if(!swipeRefreshLayout.isRefreshing()) {
+                    getEditPostDialog().show(feedDetail, moreItemView, positionInOriginalList);
+                }
 //                getEditPostDialog().show(feedDetail,moreItemView,positionInOriginalList);
 
 
@@ -206,7 +214,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
             @Override
             public void onFeedLayoutClick(FeedDetail feedDetail, int positionInOriginalList) {
-                activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList, false);
+                if(!swipeRefreshLayout.isRefreshing()) {
+                    activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList, false);
+                }
 
             }
         });
@@ -266,15 +276,15 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0)
-                {
+                if (dy > 0) {
                     visibleItemCount = layoutManager.getChildCount();
                     totalItemCount = layoutManager.getItemCount();
                     pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
 
-                    if (!isPagingApiInProgress && pageCount< maxPageCount) {
+                    if (!isPagingApiInProgress && pageCount < maxPageCount) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                            fetchNextPage();;
+                            fetchNextPage();
+                            ;
                         }
                     }
                 }
@@ -319,17 +329,14 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     }
 
 
-
-
-
     public void fetchFeedsApi(boolean loader, final boolean scrollToTop) {
         countRecords = 0;
         pageCount = 1;
-        if(feedPagingApi!=null) {
+        if (feedPagingApi != null) {
             feedPagingApi.setCancelled(true);
         }
 //        pBarPagination.setVisibility(View.GONE);
-       toggleProgressBarVisibility(false);
+        toggleProgressBarVisibility(false);
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
         params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
@@ -381,13 +388,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
                 //Set Data for Add Post View
                 activity.getTvAddPost().setText(feedbackResponse.getAddPostText());
-
-
-
-                //set handle name
-                if (Data.getFeedData() != null) {
-                    Data.getFeedData().setHandleName(feedbackResponse.getHandleName());
-                }
 
 
                 if (scrollToTop && feedHomeAdapter.getItemCount() > 0) {
@@ -445,9 +445,10 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     private boolean isPagingApiInProgress;
-    public void fetchNextPage(){
+
+    public void fetchNextPage() {
         toggleProgressBarVisibility(true);
-        isPagingApiInProgress=true;
+        isPagingApiInProgress = true;
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
         params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
@@ -458,21 +459,21 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         feedPagingApi.execute(params, ApiName.GENERATE_FEED_API, new APICommonCallback<FeedListResponse>() {
             @Override
             public boolean onNotConnected() {
-                isPagingApiInProgress=false;
+                isPagingApiInProgress = false;
                 toggleProgressBarVisibility(false);
                 return true;
             }
 
             @Override
             public boolean onException(Exception e) {
-                isPagingApiInProgress=false;
+                isPagingApiInProgress = false;
                 toggleProgressBarVisibility(false);
                 return false;
             }
 
             @Override
             public void onSuccess(FeedListResponse feedbackResponse, String message, int flag) {
-                isPagingApiInProgress=false;
+                isPagingApiInProgress = false;
                 toggleProgressBarVisibility(false);
 
                 //set Variables for pagination
@@ -481,23 +482,24 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 maxPageCount = feedbackResponse.getMaxPageCount();
 
                 //Append data to existing list
-                if(feedHomeAdapter!=null && feedbackResponse.getFeeds()!=null && feedbackResponse.getFeeds().size()>0){
+                if (feedHomeAdapter != null && feedbackResponse.getFeeds() != null && feedbackResponse.getFeeds().size() > 0) {
                     int previousIndex = adapterList.size();
                     adapterList.addAll(feedbackResponse.getFeeds());
                     feedHomeAdapter.notifyItemRangeChanged(previousIndex-1,feedbackResponse.getFeeds().size()-1);
+
                 }
             }
 
             @Override
             public boolean onError(FeedListResponse feedListResponse, String message, int flag) {
-                isPagingApiInProgress=false;
+                isPagingApiInProgress = false;
                 toggleProgressBarVisibility(false);
                 return false;
             }
 
             @Override
             public boolean onFailure(RetrofitError error) {
-                isPagingApiInProgress=false;
+                isPagingApiInProgress = false;
                 toggleProgressBarVisibility(false);
                 return false;
             }
@@ -544,8 +546,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 */
 
     }
-
-
 
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -782,20 +782,20 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     }
 
     FeedHomeAdapter.ProgressBarItem progressBarItem;
-    public void toggleProgressBarVisibility(boolean isVisible){
-        if(isVisible){
-            if(progressBarItem==null){
+
+    public void toggleProgressBarVisibility(boolean isVisible) {
+        if (isVisible) {
+            if (progressBarItem == null) {
                 progressBarItem = new FeedHomeAdapter.ProgressBarItem();
             }
             if (!adapterList.contains(progressBarItem)) {
-                 adapterList.add(progressBarItem);
-                feedHomeAdapter.notifyItemInserted(adapterList.size()-1);
+                adapterList.add(progressBarItem);
+                feedHomeAdapter.notifyItemInserted(adapterList.size() - 1);
             }
-        }
-        else{
-            if (progressBarItem!=null && adapterList.contains(progressBarItem)) {
+        } else {
+            if (progressBarItem != null && adapterList.contains(progressBarItem)) {
                 adapterList.remove(progressBarItem);
-                feedHomeAdapter.notifyItemRemoved(adapterList.size()-1);
+                feedHomeAdapter.notifyItemRemoved(adapterList.size() - 1);
             }
         }
     }

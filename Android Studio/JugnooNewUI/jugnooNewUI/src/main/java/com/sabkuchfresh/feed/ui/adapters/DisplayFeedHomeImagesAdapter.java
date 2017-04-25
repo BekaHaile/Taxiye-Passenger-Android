@@ -54,7 +54,7 @@ public class DisplayFeedHomeImagesAdapter extends PagerAdapter {
 		ivImage.setTag(null);
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ivImage.getLayoutParams();
 		params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-		params.height = (int) (ASSL.minRatio() * 234f);
+		params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
 		params.setMargins(0,0,0,0);
 		ivImage.setLayoutParams(params);
 

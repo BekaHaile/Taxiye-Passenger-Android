@@ -454,6 +454,16 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.lineBelowImagesPager.setVisibility(View.INVISIBLE);
                 vpParams.bottomMargin=0;
 
+                if(reviewImages.size()==1 && reviewImages.get(0).getHeight()!=null && reviewImages.get(0).getHeight()>110){
+
+                    vpParams.height=reviewImages.get(0).getHeight();
+                    if(vpParams.height>300)
+                        vpParams.height = 300;
+
+                }
+                else{
+                    vpParams.height=FeedUtils.dpToPx(110);
+                }
 
 
 

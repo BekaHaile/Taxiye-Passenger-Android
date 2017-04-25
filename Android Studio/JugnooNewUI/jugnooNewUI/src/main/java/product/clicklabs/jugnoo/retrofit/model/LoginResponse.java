@@ -391,6 +391,7 @@ public class LoginResponse {
 		@Expose
 		private int anonymousFunctionalityEnabled = 1;
 
+		@SerializedName("handle_name")
 		private String handleName;
 
 		@SerializedName("feed_name")

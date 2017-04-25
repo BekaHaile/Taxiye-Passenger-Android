@@ -16,14 +16,14 @@ import io.fabric.sdk.android.services.concurrency.AsyncTask;
 /**
  * Created by Parminder Singh on 29/09/16.
  */
-public final class ImageCompression extends AsyncTask<String, Void, File[]> {
+public final class ImageCompression extends AsyncTask<String, Void, ImageCompression.CompressedImageModel[]> {
     private AsyncResponse asyncResponse;
     private Context context;
     private static final float maxHeight = 1280.0f;
     private static final float maxWidth = 1280.0f;
-    private static final int COMPRESSION_QUALITY = 60;
+    private static final int COMPRESSION_QUALITY = 80;
     public interface AsyncResponse {
-        void processFinish(File[] output);
+        void processFinish(CompressedImageModel[] output);
 
         void onError();
     }
@@ -35,19 +35,20 @@ public final class ImageCompression extends AsyncTask<String, Void, File[]> {
         this.context = context;
     }
     @Override
-    protected File[] doInBackground(String... strings) {
+    protected CompressedImageModel[] doInBackground(String... strings) {
         if (strings.length == 0 || strings[0] == null)
             return null;
-        File[] compressedFiles = new File[strings.length];
+        CompressedImageModel[] compressedFiles = new CompressedImageModel[strings.length];
         for (int i = 0; i < strings.length; i++) {
-            String compressImagePath = compressImage(strings[i]);
-            if (compressImagePath != null)
-                compressedFiles[i] = new File(compressImagePath);
+            CompressedImageModel compressImagePath = compressImage(strings[i]);
+            if (compressImagePath != null) {
+                compressedFiles[i] = compressImagePath ;
+            }
         }
         return compressedFiles;
     }
     @Override
-    protected void onPostExecute(File[] files) {
+    protected void onPostExecute(CompressedImageModel[] files) {
         super.onPostExecute(files);
         if (!isCancelled()){
 
@@ -67,7 +68,7 @@ public final class ImageCompression extends AsyncTask<String, Void, File[]> {
         super.onProgressUpdate(values);
     }
     @SuppressWarnings("deprecation")
-    private String compressImage(String imagePath) {
+    private CompressedImageModel compressImage(String imagePath) {
         Bitmap scaledBitmap = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -147,7 +148,13 @@ public final class ImageCompression extends AsyncTask<String, Void, File[]> {
             e.printStackTrace();
             return null;
         }
-        return filepath;
+        try {
+            return new CompressedImageModel(new File(filepath),scaledBitmap.getHeight(),scaledBitmap.getWidth());
+        } catch (Exception|OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+
+        }
     }
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
@@ -194,4 +201,40 @@ public final class ImageCompression extends AsyncTask<String, Void, File[]> {
         }
         return null;
     }*/
+
+   public class CompressedImageModel{
+       public File file ;
+       public  int size;
+       public int width;
+
+       public CompressedImageModel(File file, int size, int width) {
+           this.file = file;
+           this.size = size;
+           this.width = width;
+       }
+
+       public File getFile() {
+           return file;
+       }
+
+       public void setFile(File file) {
+           this.file = file;
+       }
+
+       public int getSize() {
+           return size;
+       }
+
+       public void setSize(int size) {
+           this.size = size;
+       }
+
+       public int getWidth() {
+           return width;
+       }
+
+       public void setWidth(int width) {
+           this.width = width;
+       }
+   }
 }
