@@ -279,9 +279,11 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 				public void run() {
 					try {
 						final int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
-						if(PushFlags.STATUS_CHANGED.getOrdinal() == flag
+						final int orderId = intent.getIntExtra(Constants.KEY_ORDER_ID, -1);
+						if(orderId == TrackOrderActivity.this.orderId
+								&& (PushFlags.STATUS_CHANGED.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS.getOrdinal() == flag
-								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
+								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag)) {
 							finish();
 							new Handler().postDelayed(new Runnable() {
 								@Override
@@ -462,7 +464,9 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										for(int j=0; j<positionCentre; j++){
 											polylineOptions1.add(list.get(j));
 										}
-										for (int k = positionCentre; k < list.size(); k++) {
+										polylineOptions1.add(latLngDriver);
+										polylineOptions2.add(latLngDriver);
+										for (int k = positionCentre+1; k < list.size(); k++) {
 											polylineOptions2.add(list.get(k));
 											builder.include(list.get(k));
 										}
@@ -578,6 +582,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 				double distI = MapUtils.distance(latLng, step.getStartLocation().getLatLng());
 				if(distI < distance){
 					eta = eta - (long)step.getDuration().getValue();
+					distance = distI;
 				} else {
 					break;
 				}
@@ -585,7 +590,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return eta * 1000L;
+		return eta / 60L;
 	}
 
 }

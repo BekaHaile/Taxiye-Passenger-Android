@@ -679,6 +679,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         } else {
                                             Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                             intent1.putExtra(Constants.KEY_FLAG, flag);
+                                            intent1.putExtra(Constants.KEY_ORDER_ID, intent.getIntExtra(Constants.KEY_ORDER_ID, -1));
                                             LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
                                         }
                                     } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
@@ -688,6 +689,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         } else {
                                             Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                             intent1.putExtra(Constants.KEY_FLAG, flag);
+                                            intent1.putExtra(Constants.KEY_ORDER_ID, intent.getIntExtra(Constants.KEY_ORDER_ID, -1));
                                             LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
                                         }
                                     } else if (Constants.OPEN_DEEP_INDEX == flag) {

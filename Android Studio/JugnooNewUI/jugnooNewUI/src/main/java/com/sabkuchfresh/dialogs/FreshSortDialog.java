@@ -97,7 +97,7 @@ public class FreshSortDialog extends Dialog {
 			viewClicked.getLocationOnScreen(openingViewLocation);
 			WindowManager.LayoutParams wlp = getWindow().getAttributes();
 			wlp.x = openingViewLocation[0];
-			wlp.y = openingViewLocation[1] + viewClicked.getHeight() - FeedUtils.dpToPx(10);
+			wlp.y = openingViewLocation[1] + viewClicked.getHeight();
 			getWindow().getDecorView().setPivotX(openingViewLocation[0] + viewClicked.getMeasuredWidth() / 2);
 			getWindow().getDecorView().setPivotY(viewClicked.getY());
 			getWindow().getDecorView().setScaleX(0.0f);
