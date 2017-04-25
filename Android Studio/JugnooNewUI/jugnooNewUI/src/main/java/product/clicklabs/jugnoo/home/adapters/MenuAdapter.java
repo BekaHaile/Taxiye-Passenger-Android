@@ -85,7 +85,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             v.setLayoutParams(layoutParams);
             ASSL.DoMagic(v);
             return new ViewHeaderHolder(v, activity);
-        } else{
+        }
+
+        else{
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menu, parent, false);
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
@@ -99,7 +101,22 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public void onBindViewHolder(RecyclerView.ViewHolder viewholder, int position) {
         if(viewholder instanceof ViewHolder) {
             try {
+
+
+
                 -- position;
+                if(position==menuList.size()-1){
+                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) ((ViewHolder) viewholder).relative.getLayoutParams();
+                    params.bottomMargin = (int)(activity.getResources().getDimensionPixelSize(R.dimen.dp_15));
+                    ((ViewHolder) viewholder).relative.setLayoutParams(params);
+                }else{
+                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) ((ViewHolder) viewholder).relative.getLayoutParams();
+                    params.bottomMargin = 0;
+                    ((ViewHolder) viewholder).relative.setLayoutParams(params);
+                }
+
+
+
                 MenuInfo menuInfo = menuList.get(position);
                 ViewHolder holder = (ViewHolder) viewholder;
                 holder.relative.setTag(position);

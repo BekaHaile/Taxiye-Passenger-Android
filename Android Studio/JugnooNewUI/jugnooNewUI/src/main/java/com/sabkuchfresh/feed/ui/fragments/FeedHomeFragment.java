@@ -484,7 +484,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 if(feedHomeAdapter!=null && feedbackResponse.getFeeds()!=null && feedbackResponse.getFeeds().size()>0){
                     int previousIndex = adapterList.size();
                     adapterList.addAll(feedbackResponse.getFeeds());
-                    feedHomeAdapter.notifyItemRangeInserted(previousIndex-1,feedbackResponse.getFeeds().size()-1);
+                    feedHomeAdapter.notifyItemRangeChanged(previousIndex-1,feedbackResponse.getFeeds().size()-1);
                 }
             }
 
