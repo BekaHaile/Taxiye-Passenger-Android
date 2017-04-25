@@ -2007,6 +2007,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     Utils.showToast(activity, activity.getString(R.string.offer_applied)+": "+activity.getSelectedPromoCoupon().getTitle());
                 }
             }
+        } else {
+            linearLayoutOffers.setVisibility(View.GONE);
         }
     }
 

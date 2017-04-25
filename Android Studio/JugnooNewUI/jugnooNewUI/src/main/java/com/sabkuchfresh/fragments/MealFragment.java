@@ -207,11 +207,13 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                activity.llCheckoutBar.setVisibility(View.GONE);
             }
 
             if(noMealsView.getVisibility() == View.VISIBLE){
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                activity.llCheckoutBar.setVisibility(View.GONE);
             }
         }
 
@@ -290,6 +292,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         relativeLayoutNoMenus.setVisibility(View.GONE);
                         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                         activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
+                        activity.llCheckoutBar.setVisibility(View.VISIBLE);
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
@@ -302,6 +305,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                     activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                                    activity.llCheckoutBar.setVisibility(View.GONE);
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
                                     mSwipeRefreshLayout.setVisibility(View.GONE);
                                     noMealsView.setVisibility(View.GONE);
@@ -311,8 +315,10 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 else {
                                     if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                                        activity.llCheckoutBar.setVisibility(View.GONE);
                                     } else{
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
+                                        activity.llCheckoutBar.setVisibility(View.VISIBLE);
                                     }
                                     int sortedBy = jObj.optInt(Constants.SORTED_BY);
                                     mealsData.clear();

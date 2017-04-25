@@ -61,6 +61,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 
 
@@ -402,6 +403,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     activity.getFeedHomeAddPostView().setVisibility(View.GONE);
 
                 }
+
+                activity.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateToolbarBehaviour();
+                    }
+                }, 100);
 
             }
 
@@ -797,6 +805,19 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 adapterList.remove(progressBarItem);
                 feedHomeAdapter.notifyItemRemoved(adapterList.size() - 1);
             }
+        }
+    }
+
+
+    // TODO: 25/04/17  check this with Parminder 
+    // to check that if all feeds are displayed in Current screen toggle scrolling behavior of collapsing toolbar
+    public void updateToolbarBehaviour(){
+        if (layoutManager.findLastCompletelyVisibleItemPosition() == feedHomeAdapter.getItemCount()-1) {
+//            ((MainActivity) getActivity()).turnOffToolbarScrolling();
+            Utils.showToast(activity, "turnOffToolbarScrolling");
+        } else {
+//            ((MainActivity)getActivity()).turnOnToolbarScrolling();
+            Utils.showToast(activity, "turnOnToolbarScrolling");
         }
     }
 

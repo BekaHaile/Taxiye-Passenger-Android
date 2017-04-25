@@ -777,7 +777,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             || (getMenusFragment() != null && !getMenusFragment().isHidden())
                             || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())
                             || (getFeedReserveSpotFragment() != null && !getFeedReserveSpotFragment().isHidden())
-                            || (getFeedSpotReservedSharingFragment() != null && !getFeedSpotReservedSharingFragment().isHidden())) {
+                            || (getFeedSpotReservedSharingFragment() != null && !getFeedSpotReservedSharingFragment().isHidden())
+							|| (getFeedClaimHandleFragment() != null && !getFeedClaimHandleFragment().isHidden())) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
                     }
@@ -873,6 +874,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public FeedSpotReservedSharingFragment getFeedSpotReservedSharingFragment(){
         return (FeedSpotReservedSharingFragment) getSupportFragmentManager().findFragmentByTag(FeedSpotReservedSharingFragment.class.getName());
     }
+
+	public FeedClaimHandleFragment getFeedClaimHandleFragment(){
+		return (FeedClaimHandleFragment) getSupportFragmentManager().findFragmentByTag(FeedClaimHandleFragment.class.getName());
+	}
 
     public FeedPostDetailFragment getOfferingsCommentFragment(){
         return (FeedPostDetailFragment) getSupportFragmentManager().findFragmentByTag(FeedPostDetailFragment.class.getName());

@@ -350,6 +350,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
                                         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                                        activity.llCheckoutBar.setVisibility(View.GONE);
                                         if (searchOpened) {
                                             openSearch(true);
                                             activity.getHandler().postDelayed(new Runnable() {
@@ -478,6 +479,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 //activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                activity.llCheckoutBar.setVisibility(View.VISIBLE);
             }
             activity.getTopBar().animateSearchBar(false);
         } else {
