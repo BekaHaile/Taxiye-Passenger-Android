@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/tools"
-    android:id="@+id/llRoot"
-    android:layout_width="@dimen/px_240"
-    android:layout_height="@dimen/px_240"
-    android:background="@color/rank_3"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/llRoot"
+              android:layout_width="@dimen/px_240"
+              android:layout_height="@dimen/px_240"
+              android:background="@color/rank_3"
+              android:orientation="vertical">
 
 
     <RelativeLayout
