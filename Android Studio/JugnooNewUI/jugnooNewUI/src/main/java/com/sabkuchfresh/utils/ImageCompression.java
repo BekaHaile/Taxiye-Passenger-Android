@@ -21,7 +21,7 @@ public final class ImageCompression extends AsyncTask<String, Void, ImageCompres
     private Context context;
     private static final float maxHeight = 1280.0f;
     private static final float maxWidth = 1280.0f;
-    private static final int COMPRESSION_QUALITY = 60;
+    private static final int COMPRESSION_QUALITY = 80;
     public interface AsyncResponse {
         void processFinish(CompressedImageModel[] output);
 
@@ -40,9 +40,9 @@ public final class ImageCompression extends AsyncTask<String, Void, ImageCompres
             return null;
         CompressedImageModel[] compressedFiles = new CompressedImageModel[strings.length];
         for (int i = 0; i < strings.length; i++) {
-            String compressImagePath = compressImage(strings[i]);
+            CompressedImageModel compressImagePath = compressImage(strings[i]);
             if (compressImagePath != null) {
-                compressedFiles[i] = new CompressedImageModel(new File(compressImagePath),45,45) ;
+                compressedFiles[i] = compressImagePath ;
             }
         }
         return compressedFiles;
@@ -68,7 +68,7 @@ public final class ImageCompression extends AsyncTask<String, Void, ImageCompres
         super.onProgressUpdate(values);
     }
     @SuppressWarnings("deprecation")
-    private String compressImage(String imagePath) {
+    private CompressedImageModel compressImage(String imagePath) {
         Bitmap scaledBitmap = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -148,7 +148,13 @@ public final class ImageCompression extends AsyncTask<String, Void, ImageCompres
             e.printStackTrace();
             return null;
         }
-        return filepath;
+        try {
+            return new CompressedImageModel(new File(filepath),scaledBitmap.getHeight(),scaledBitmap.getWidth());
+        } catch (Exception|OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+
+        }
     }
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;

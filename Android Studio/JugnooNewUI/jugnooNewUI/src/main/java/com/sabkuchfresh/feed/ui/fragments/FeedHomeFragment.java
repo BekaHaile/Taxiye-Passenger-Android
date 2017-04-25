@@ -329,7 +329,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             feedPagingApi.setCancelled(true);
         }
 //        pBarPagination.setVisibility(View.GONE);
-       toggleProgressBarVisibility(false);
+        toggleProgressBarVisibility(false);
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
         params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
