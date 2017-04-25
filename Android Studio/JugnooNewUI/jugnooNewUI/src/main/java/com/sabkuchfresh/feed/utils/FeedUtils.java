@@ -1,5 +1,6 @@
 package com.sabkuchfresh.feed.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -24,9 +25,16 @@ public class FeedUtils {
     public static int dpToPx(float dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
+
+    public static float pxToDp(float px, Activity activity) {
+        Resources r = activity.getResources();
+       return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, r.getDisplayMetrics());
+    }
     public static int spToPx(float sp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
+
+
     public static int getScreenHeight(Context c) {
         if (screenHeight == 0) {
             WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);

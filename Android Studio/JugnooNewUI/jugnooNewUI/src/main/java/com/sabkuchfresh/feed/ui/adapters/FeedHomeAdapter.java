@@ -457,8 +457,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if(reviewImages.size()==1 && reviewImages.get(0).getHeight()!=null && reviewImages.get(0).getHeight()>110){
 
                     vpParams.height=reviewImages.get(0).getHeight();
-                    if(vpParams.height>300)
-                        vpParams.height = 300;
+                    if(FeedUtils.pxToDp(vpParams.height,activity)>200.0f)
+                        vpParams.height = FeedUtils.dpToPx(200);
 
                 }
                 else{
