@@ -258,6 +258,15 @@ public class SuperCategoriesData {
 		@SerializedName("description")
 		@Expose
 		private Object description;
+		@SerializedName("banner_text")
+		@Expose
+		private String bannerText;
+		@SerializedName("banner_text_color")
+		@Expose
+		private String bannerTextColor;
+		@SerializedName("banner_color")
+		@Expose
+		private String bannerColor;
 
 		public Object getSmallImage() {
 			return smallImage;
@@ -283,6 +292,29 @@ public class SuperCategoriesData {
 			this.description = description;
 		}
 
+		public String getBannerText() {
+			return bannerText;
+		}
+
+		public void setBannerText(String bannerText) {
+			this.bannerText = bannerText;
+		}
+
+		public String getBannerTextColor() {
+			return bannerTextColor;
+		}
+
+		public void setBannerTextColor(String bannerTextColor) {
+			this.bannerTextColor = bannerTextColor;
+		}
+
+		public String getBannerColor() {
+			return bannerColor;
+		}
+
+		public void setBannerColor(String bannerColor) {
+			this.bannerColor = bannerColor;
+		}
 	}
 
 }

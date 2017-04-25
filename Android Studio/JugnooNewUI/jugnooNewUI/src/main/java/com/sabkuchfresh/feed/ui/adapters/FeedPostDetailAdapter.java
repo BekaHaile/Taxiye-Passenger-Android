@@ -12,8 +12,6 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -126,7 +124,7 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
                             String firstLetter =  Data.userData.userName.toUpperCase().substring(0,1);
                             TextDrawable drawable = TextDrawable.builder()
                                     .beginConfig().bold().endConfig()
-                                    .buildRound(firstLetter, activity.getParsedColor(""));
+                                    .buildRound(firstLetter, activity.getParsedColor("", null));
                             userDrawable = drawable;
                         }
                         ((MyCommentViewHolder) holder).ivMyProfilePic.setImageDrawable(userDrawable);
@@ -172,7 +170,7 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
                         String firstLetter =  feedComment.getUserName().toUpperCase().substring(0,1);
                         TextDrawable drawable = TextDrawable.builder()
                                 .beginConfig().bold().endConfig()
-                                .buildRound(firstLetter, activity.getParsedColor(feedComment.getColor()));
+                                .buildRound(firstLetter, activity.getParsedColor(feedComment.getColor(), null));
                         feedComment.setDrawable(drawable);
                     }
                     userCommentViewHolder.ivUserCommentPic.setImageDrawable(feedComment.getDrawable());

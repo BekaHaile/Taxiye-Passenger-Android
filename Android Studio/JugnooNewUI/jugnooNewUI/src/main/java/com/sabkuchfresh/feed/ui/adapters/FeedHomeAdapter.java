@@ -3,10 +3,7 @@ package com.sabkuchfresh.feed.ui.adapters;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -21,13 +18,10 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -316,7 +310,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     String firstLetter =  feedDetail.getOwnerName().toUpperCase().substring(0,1);
                     TextDrawable drawable = TextDrawable.builder()
                             .beginConfig().bold().endConfig()
-                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getColor()));
+                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getColor(), null));
                     feedDetail.setOwnerImageDrawable(drawable);
                 }
 
@@ -504,7 +498,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     String firstLetter =  feedDetail.getUserName().toUpperCase().substring(0,1);
                     TextDrawable drawable = TextDrawable.builder()
                             .beginConfig().bold().endConfig()
-                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getUserImageColor()));
+                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getUserImageColor(), null));
                     feedDetail.setUserImageDrawable(drawable);
                 }
 
