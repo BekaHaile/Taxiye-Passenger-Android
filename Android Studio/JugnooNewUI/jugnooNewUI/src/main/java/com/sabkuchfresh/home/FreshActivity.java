@@ -3688,9 +3688,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                     if (!topBar.getIvSearch().isSelected()) {
                         topBar.getIvSearch().setSelected(true);
-
                     }
                     topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha2);
+                    topBar.ivFreshSort.setAlpha((int) searchAndCapsuleAlpha2);
+                    if (!topBar.ivFreshSort.isSelected()) {
+                        topBar.ivFreshSort.setSelected(true);
+                    }
 /*
                     if (!topBar.llCartContainer.isSelected())
                         topBar.llCartContainer.setSelected(true);
@@ -3705,10 +3708,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                     if (topBar.getIvSearch().isSelected()) {
                         topBar.getIvSearch().setSelected(false);
-
                     }
 
-                   topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha1);
+                    topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha1);
+                    topBar.ivFreshSort.setAlpha((int) searchAndCapsuleAlpha1);
+                    if (topBar.ivFreshSort.isSelected()) {
+                        topBar.ivFreshSort.setSelected(false);
+                    }
+
                    /*  if (topBar.llCartContainer.isSelected())
                         topBar.llCartContainer.setSelected(false);
 
@@ -3785,6 +3792,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llCartContainer.setSelected(true);*/
                 topBar.getIvSearch().setSelected(true);
                 topBar.getIvSearch().setAlpha(255);
+                topBar.ivFreshSort.setSelected(true);
+                topBar.ivFreshSort.setAlpha(255);
 
 
                 //back Button
@@ -3813,6 +3822,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llCartContainer.setSelected(false);*/
                 topBar.getIvSearch().setSelected(false);
                 topBar.getIvSearch().setAlpha(255);
+                topBar.ivFreshSort.setSelected(false);
+                topBar.ivFreshSort.setAlpha(255);
 
                 //back Button
                 topBar.imageViewBack.getDrawable().mutate().setColorFilter(ContextCompat.getColor(this, R.color.lightBlackTxtColor), PorterDuff.Mode.SRC_ATOP);
