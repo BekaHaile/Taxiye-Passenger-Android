@@ -223,7 +223,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
             handleName = Data.getFeedData().getHandleName();
         }
         else{
-            handleName = "handle";
+            handleName = "";
         }
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

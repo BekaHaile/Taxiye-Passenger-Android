@@ -69,7 +69,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     private boolean isEditingPost;
     private SwitchCompat switchAnonymousPost;
     private TextView labelAnonymousSwitch;
-    private String handleName = "Handle";
+    private String handleName = "";
 
 
     public FeedAddPostFragment() {
