@@ -60,6 +60,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
 
 
@@ -78,10 +79,11 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private ImageView ivNoFeeds;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
+    private ProgressWheel pBarPagination;
 
     //Pagination variables
     private ApiCommon<FeedListResponse> feedPagingApi;
-    int pastVisiblesItems, visibleItemCount, totalItemCount,pageCount,countRecords;
+    int pastVisiblesItems, visibleItemCount, totalItemCount,pageCount,countRecords,maxPageCount;
 
     public FeedHomeFragment() {
         // Required empty public constructor
@@ -123,7 +125,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         setHasOptionsMenu(true);
         GAUtils.trackScreenView(FEED + HOME);
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
-
+//        pBarPagination= (ProgressWheel) rootView.findViewById(R.id.pBar_pagination);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -270,7 +272,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     totalItemCount = layoutManager.getItemCount();
                     pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
 
-                    if (!isPagingApiInProgress) {
+                    if (!isPagingApiInProgress && pageCount< maxPageCount) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             fetchNextPage();;
                         }
@@ -326,6 +328,8 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         if(feedPagingApi!=null) {
             feedPagingApi.setCancelled(true);
         }
+//        pBarPagination.setVisibility(View.GONE);
+       toggleProgressBarVisibility(false);
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
         params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
@@ -354,7 +358,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 //set Variables for pagination
                 pageCount = feedbackResponse.getPageCount();
                 countRecords = feedbackResponse.getCountRecords();
-
+                maxPageCount = feedbackResponse.getMaxPageCount();
 
                 //Hide feedNot available view
                 relativeLayoutNotAvailable.setVisibility(View.GONE);
@@ -442,6 +446,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
     private boolean isPagingApiInProgress;
     public void fetchNextPage(){
+        toggleProgressBarVisibility(true);
         isPagingApiInProgress=true;
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -454,22 +459,26 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             @Override
             public boolean onNotConnected() {
                 isPagingApiInProgress=false;
+                toggleProgressBarVisibility(false);
                 return true;
             }
 
             @Override
             public boolean onException(Exception e) {
                 isPagingApiInProgress=false;
+                toggleProgressBarVisibility(false);
                 return false;
             }
 
             @Override
             public void onSuccess(FeedListResponse feedbackResponse, String message, int flag) {
                 isPagingApiInProgress=false;
+                toggleProgressBarVisibility(false);
 
                 //set Variables for pagination
                 pageCount = feedbackResponse.getPageCount();
                 countRecords = feedbackResponse.getCountRecords();
+                maxPageCount = feedbackResponse.getMaxPageCount();
 
                 //Append data to existing list
                 if(feedHomeAdapter!=null && feedbackResponse.getFeeds()!=null && feedbackResponse.getFeeds().size()>0){
@@ -482,12 +491,14 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             @Override
             public boolean onError(FeedListResponse feedListResponse, String message, int flag) {
                 isPagingApiInProgress=false;
+                toggleProgressBarVisibility(false);
                 return false;
             }
 
             @Override
             public boolean onFailure(RetrofitError error) {
                 isPagingApiInProgress=false;
+                toggleProgressBarVisibility(false);
                 return false;
             }
 
@@ -767,6 +778,25 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     });
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    FeedHomeAdapter.ProgressBarItem progressBarItem;
+    public void toggleProgressBarVisibility(boolean isVisible){
+        if(isVisible){
+            if(progressBarItem==null){
+                progressBarItem = new FeedHomeAdapter.ProgressBarItem();
+            }
+            if (!adapterList.contains(progressBarItem)) {
+                 adapterList.add(progressBarItem);
+                feedHomeAdapter.notifyItemInserted(adapterList.size()-1);
+            }
+        }
+        else{
+            if (progressBarItem!=null && adapterList.contains(progressBarItem)) {
+                adapterList.remove(progressBarItem);
+                feedHomeAdapter.notifyItemRemoved(adapterList.size()-1);
+            }
         }
     }
 

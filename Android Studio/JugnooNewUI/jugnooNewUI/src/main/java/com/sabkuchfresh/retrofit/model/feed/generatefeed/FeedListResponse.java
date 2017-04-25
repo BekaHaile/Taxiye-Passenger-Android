@@ -25,6 +25,8 @@ public class FeedListResponse extends FeedCommonResponse {
     @SerializedName("handle_name")
     @Expose
     private String handleName;
+    @SerializedName("max_page_count")
+    private int maxPageCount;
 
     public int getPageCount() {
         return pageCount;
@@ -106,5 +108,9 @@ public class FeedListResponse extends FeedCommonResponse {
 
     public void setCountNotification(int countNotification) {
         this.countNotification = countNotification;
+    }
+
+    public int getMaxPageCount() {
+        return maxPageCount;
     }
 }

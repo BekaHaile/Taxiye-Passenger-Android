@@ -22,6 +22,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -79,6 +80,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int ITEM_ADD_POST = 100;
     private static final int ITEM_FEED = 101;
     public static final int ITEM_FOOTER_BLANK = 122;
+    public static final int ITEM_PROGRESS_BAR = 123;
     private static Typeface FONT_STAR;
 
 
@@ -119,6 +121,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                  v.setLayoutParams(layoutParams);
                 v.setBackgroundColor(ContextCompat.getColor(activity,R.color.feed_grey_black));
                  return new ViewBlankHolder(v);
+
+            case ITEM_PROGRESS_BAR:
+
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progress_bar_feed, parent, false);
+
+
+                return new ProgressBarViewHolder(v);
             default:
                 throw new IllegalArgumentException();
 
@@ -963,6 +972,16 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    private static class ProgressBarViewHolder extends RecyclerView.ViewHolder {
+
+//        public RelativeLayout relative;
+
+        public ProgressBarViewHolder(View itemView) {
+            super(itemView);
+//            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
 
@@ -975,6 +994,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return ITEM_ADD_POST;
         else if (adapterList.get(position) instanceof Integer && ((Integer) adapterList.get(position)) == ITEM_FOOTER_BLANK) {
             return ITEM_FOOTER_BLANK;
+        } else if (adapterList.get(position) instanceof ProgressBarItem) {
+            return ITEM_PROGRESS_BAR;
         }
 
 
@@ -1058,5 +1079,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public String getImageUrl() {
             return imageUrl;
         }
+    }
+
+    public static class ProgressBarItem{
+
     }
 }

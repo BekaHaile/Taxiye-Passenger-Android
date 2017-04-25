@@ -3179,6 +3179,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {
                             try {
+                                DialogPopup.dismissLoadingDialog();
                                 String resp = new String(((TypedByteArray) response.getBody()).getBytes());
                                 GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
                                 String address = gapiAddress.formattedAddress;
@@ -3187,7 +3188,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                 setSelectedAddressId(0);
                                 setSelectedAddressType("");
                                 setAddressAndFetchOfferingData(appType);
-                                DialogPopup.dismissLoadingDialog();
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 retryDialogLocationFetch(DialogErrorType.SERVER_ERROR, currentLatLng, appType);
