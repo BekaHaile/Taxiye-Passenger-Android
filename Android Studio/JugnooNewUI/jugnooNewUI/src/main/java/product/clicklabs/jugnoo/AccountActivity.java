@@ -647,8 +647,17 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         rlJugnooStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, JugnooStarSubscribedActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                try {
+                    if((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
+                            || Data.userData.isSubscriptionActive()){
+                        startActivity(new Intent(AccountActivity.this, JugnooStarSubscribedActivity.class));
+                    } else {
+                        startActivity(new Intent(AccountActivity.this, JugnooStarActivity.class));
+                    }
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -773,13 +782,17 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             HomeActivity.checkForAccessTokenChange(this);
 
             if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
-                rlJugnooStar.setVisibility(View.VISIBLE);
+//                rlJugnooStar.setVisibility(View.VISIBLE);
                 viewStarIcon.setVisibility(View.VISIBLE);
             } else{
-                rlJugnooStar.setVisibility(View.GONE);
+//                rlJugnooStar.setVisibility(View.GONE);
                 viewStarIcon.setVisibility(View.GONE);
             }
-            rlJugnooStar.setVisibility(View.GONE);
+
+            if(Data.userData!=null && Data.userData.getShowJugnooStarInAcccount())
+               rlJugnooStar.setVisibility(View.VISIBLE);
+            else
+                rlJugnooStar.setVisibility(View.GONE);
 
             try {
                 reloadProfileAPI(this);

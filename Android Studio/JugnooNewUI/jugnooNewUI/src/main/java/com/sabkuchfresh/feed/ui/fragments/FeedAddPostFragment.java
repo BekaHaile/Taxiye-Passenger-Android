@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.annotations.SerializedName;
 import com.picker.image.model.ImageEntry;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -398,7 +399,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
 
     public class ImageSize{
+        @SerializedName("width")
         int width;
+        @SerializedName("height")
         int height;
 
         public ImageSize(int width, int height) {

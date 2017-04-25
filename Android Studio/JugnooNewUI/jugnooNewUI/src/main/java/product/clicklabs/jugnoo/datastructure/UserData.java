@@ -88,6 +88,7 @@ public class UserData {
 	private int expandJeanie;
 	private String expandedGenieText;
 	private String upiHandle;
+	private int showJugnooStarInAcccount;
 
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
@@ -994,6 +995,10 @@ public class UserData {
 
 	public void setUpiHandle(String upiHandle) {
 		this.upiHandle = upiHandle;
+	}
+
+	public boolean getShowJugnooStarInAcccount() {
+		return showJugnooStarInAcccount==1;
 	}
 
 	//	"meals_enabled": 1,
