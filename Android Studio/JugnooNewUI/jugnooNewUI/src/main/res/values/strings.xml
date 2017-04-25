@@ -1655,6 +1655,8 @@
     <string name="some_error_occured_try_again">Some error occured\\nTry again</string>
     <string name="you_are_first_in_queue">You are first in queue</string>
     <string name="enter_location">Enter location</string>
+    <string name="checkout_bracket_item"><b>CHECKOUT</b> (%s ITEM)</string>
+    <string name="checkout_bracket_items"><b>CHECKOUT</b> (%s ITEMS)</string>
 
 
 </resources>

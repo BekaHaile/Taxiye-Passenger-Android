@@ -191,6 +191,7 @@
 
     <!-- NEW LOOK COLORS -->
     <color name="theme_color">#FD7945</color>
+    <color name="theme_color_dark">#ED6935</color>
     <color name="theme_color_start">#FC644F</color>
     <color name="theme_color_end">#FF9339</color>
     <color name="theme_color_pressed">#99F17B47</color>
@@ -363,5 +364,11 @@
 
     <color name="green_light">#FD7945</color>
     <color name="green_light_dark">#ED6935</color>
+    <color name="text_color_20alpha">#33595968</color>
+    <color name="text_color_30alpha">#4E595968</color>
+
+    <color name="pink_light">#fff5f5</color>
+    <color name="pink_dark">#ffdede</color>
+    <color name="red_dark_text_color">#dc4b3d</color>
 
 </resources>

@@ -117,9 +117,13 @@ public class HomeUtil {
 			SearchResult selectedNearByAddress = null;
 			for(int i=0; i<searchResults.size(); i++){
 				double fetchedDistance = MapUtils.distance(latLng, searchResults.get(i).getLatLng());
-				if ((fetchedDistance <= compareDistance) && (fetchedDistance < distance)) {
-					distance = fetchedDistance;
-					selectedNearByAddress = searchResults.get(i);
+				if (fetchedDistance <= compareDistance && fetchedDistance < distance) {
+					if (selectedNearByAddress == null
+							|| TextUtils.isEmpty(selectedNearByAddress.getName())
+							|| !TextUtils.isEmpty(searchResults.get(i).getName())) {
+								distance = fetchedDistance;
+								selectedNearByAddress = searchResults.get(i);
+							}
 				}
 			}
 

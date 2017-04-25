@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -623,12 +624,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         checkoutSaveData = activity.getCheckoutSaveData();
         activity.setSplInstr(checkoutSaveData.getSpecialInstructions());
 
-        updateAddressView();
-        updateDeliveryFromView("");
 
-        updateCartDataView();
-
-        fetchWalletBalance();
 
         linearLayoutCartExpansion.setVisibility(View.VISIBLE);
         imageViewDeleteCart.setVisibility(View.GONE);
@@ -716,6 +712,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        activity.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateAddressView();
+                updateDeliveryFromView("");
+                updateCartDataView();
+                fetchWalletBalance();
+            }
+        }, 50);
     }
 
     private void setSlideInitial(){
@@ -928,17 +938,24 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     public void onResume() {
         super.onResume();
         try {
-            orderPaymentModes();
-            setPaymentOptionUI();
+            activity.getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    orderPaymentModes();
+                    setPaymentOptionUI();
+
+                    if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
+                        getCheckoutDataAPI(selectedSubscription);
+                    }
+                }
+            }, 150);
             if(Data.userData != null) {
 				if (Data.userData.isSubscriptionActive()) {
 					cvBecomeStar.setVisibility(View.GONE);
 				}
 			}
 
-            if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
-				getCheckoutDataAPI(selectedSubscription);
-			}
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1968,7 +1985,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     && activity.getUserCheckoutResponse() != null
                     && activity.getUserCheckoutResponse().getRefreshOnCartChange() == 1
                     && pcOld != null && pcOld.getId() > 0
-                    && noSelectionCoupon.matchPromoCoupon(activity.getSelectedPromoCoupon())){
+                    && noSelectionCoupon.matchPromoCoupon(activity.getSelectedPromoCoupon())
+                    && pcOld.getIsValid() == 1){
                 activity.setSelectedPromoCoupon(pcOld);
             }
 
@@ -1997,6 +2015,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 && activity.getUserCheckoutResponse().getRefreshOnCartChange() == 1) {
             PromoCoupon pcOld = activity.getSelectedPromoCoupon();
             activity.setSelectedPromoCoupon(noSelectionCoupon);
+
+            for (PromoCoupon promoCoupon : promoCoupons) {
+                if (pcOld.getId() == promoCoupon.getId()) {
+                    pcOld = promoCoupon;
+                    break;
+                }
+            }
+
             for (PromoCoupon promoCoupon : promoCoupons) {
                 if (promoCoupon.getIsSelected() == 1) {
                     activity.setSelectedPromoCoupon(promoCoupon);
@@ -2660,7 +2686,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         } else {
             if (subItemsInCart.size() == 0) {
-                activity.updateTotalAmountPrice(0d);
+                activity.updateTotalAmountPrice(0d, 0);
                 if (activity.isMealAddonItemsAvailable()) {
                     activity.performBackPressed(false);
                 }

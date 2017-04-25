@@ -362,12 +362,17 @@ public class AddToAddressBookFragment extends Fragment {
     }
 
     private boolean fieldsAreFilled() {
-        if(activity instanceof AddPlaceActivity && editTextLabel.getText().toString().trim().length() == 0){
+        if(editTextLabel.getText().toString().trim().length() == 0){
             editTextLabel.requestFocus();
             if(editTextLabel.getVisibility() == View.GONE){
                 editTextLabel.setVisibility(View.VISIBLE);
             }
             editTextLabel.setError("Required field");
+            return false;
+        }
+        if(editTextFlatNumber.getText().toString().trim().length() == 0){
+            editTextFlatNumber.requestFocus();
+            editTextFlatNumber.setError("Required field");
             return false;
         }
         return true;
@@ -645,7 +650,11 @@ public class AddToAddressBookFragment extends Fragment {
         if (!TextUtils.isEmpty(flatNo)) {
             flatNo = flatNo + ", ";
         }
-        return flatNo+textViewAddress.getText().toString()+", "+landmark;
+
+        if (!TextUtils.isEmpty(landmark)) {
+            landmark = ", " + landmark;
+        }
+        return flatNo+textViewAddress.getText().toString()+landmark;
     }
 
 }

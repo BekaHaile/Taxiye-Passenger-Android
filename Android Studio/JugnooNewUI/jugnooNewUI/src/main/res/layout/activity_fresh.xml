@@ -79,28 +79,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:tag="@string/dont_touch_me"
+            >
 
             <TextView
                 android:id="@+id/textViewMinOrder"
-                android:layout_width="match_parent"
-                android:layout_height="68px"
-                android:background="@color/text_color"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_30"
+                android:background="@drawable/capsule_pink"
                 android:gravity="center"
                 android:text="@string/minimum_order"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_28"
-                android:visibility="gone" />
+                android:textColor="@color/red_dark_text_color"
+                android:textSize="@dimen/sp_12"
+                android:paddingLeft="@dimen/dp_16"
+                android:paddingRight="@dimen/dp_16"
+                android:visibility="gone"
+                app:font="maven"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/dp_18"
+                />
+
+            <include layout="@layout/layout_fresh_checkout_bar"/>
+
         </LinearLayout>
 
 
-        <!-- Sort layout-->
-        <include layout="@layout/layout_fresh_activity_sort" />
-
         <include layout="@layout/layout_home_activity_fab_test" />
-
-
 
 
     </android.support.design.widget.CoordinatorLayout>

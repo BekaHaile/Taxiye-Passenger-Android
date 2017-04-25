@@ -110,8 +110,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
 
         activity = (FreshActivity) getActivity();
-        activity.fragmentUISetup(this);
-        updateUI();
         try {
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
@@ -490,23 +488,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
                 endRideWithGif();
             }
-        }
-    }
-
-    private void updateUI() {
-        activity.getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                update();
-            }
-        }, 500);
-    }
-
-    private void update() {
-        try {
-            activity.fragmentUISetup(this);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
