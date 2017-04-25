@@ -143,14 +143,6 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 					googleMap.setMyLocationEnabled(false);
 
-					if(MapUtils.distance(pickupLatLng, deliveryLatLng) > 10) {
-						LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
-						llbBuilder.include(pickupLatLng).include(deliveryLatLng);
-						googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (120f * ASSL.minRatio())));
-					} else {
-						googleMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLatLng));
-					}
-
 					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 40f, 40f, 0.5f, 0.5f, 0));
 					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 71f, 83f, 0.15f, 1.0f, 0));
 
@@ -196,6 +188,19 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 							}
 						}
 					};
+
+					try {
+						if(MapUtils.distance(pickupLatLng, deliveryLatLng) > 10) {
+							LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
+							llbBuilder.include(pickupLatLng).include(deliveryLatLng);
+							googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (120f * ASSL.minRatio())));
+						} else {
+							googleMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLatLng));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						googleMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLatLng));
+					}
 				}
 			}
 		});
@@ -461,6 +466,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 												positionCentre = i;
 											}
 										}
+										polylineOptions1.add(pickupLatLng);
 										for(int j=0; j<positionCentre; j++){
 											polylineOptions1.add(list.get(j));
 										}
@@ -470,6 +476,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 											polylineOptions2.add(list.get(k));
 											builder.include(list.get(k));
 										}
+										polylineOptions2.add(deliveryLatLng);
 										if(showDeliveryRoute == 1 && list.size() > 0) {
 											polylinePath1 = googleMap.addPolyline(polylineOptions1);
 											polylinePath2 = googleMap.addPolyline(polylineOptions2);
