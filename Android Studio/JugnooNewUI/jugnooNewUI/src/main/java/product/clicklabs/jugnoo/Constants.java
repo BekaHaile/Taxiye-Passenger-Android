@@ -689,4 +689,6 @@ public interface Constants {
     String SP_POST_ID_TO_OPEN = "sp_post_id_to_open";
     String KEY_DRIVER_PHONE_NO = "driver_phone_no";
     String KEY_UPI_HANDLE = "upi_handle";
+    String PAGE_COUNT = "pageCount";
+    String COUNT_RECORDS = "count_records";
 }

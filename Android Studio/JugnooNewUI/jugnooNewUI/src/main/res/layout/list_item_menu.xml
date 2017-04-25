@@ -14,10 +14,10 @@
 
     <ImageView
         android:id="@+id/imageViewMenuIcon"
-        android:layout_width="90px"
-        android:layout_height="81px"
+        android:layout_width="56px"
+        android:layout_height="56px"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="17px"
+        android:layout_marginLeft="40px"
         android:src="@drawable/ic_play_normal"
         android:tag="mwar" />
 
@@ -32,6 +32,8 @@
         android:textSize="@dimen/text_size_38" />
 
     <LinearLayout
+        android:layout_marginLeft="@dimen/px_12"
+        android:layout_toRightOf="@id/textViewMenu"
         android:id="@+id/linearLayoutNewContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:visibility="visible"
+            android:visibility="gone"
             android:text="@string/str_new"
             android:textColor="@color/theme_color"
             android:textSize="@dimen/text_size_36"
@@ -62,7 +64,7 @@
             android:gravity="center"
             android:padding="10px"
             android:text="@string/rupee_0"
-            android:textColor="@color/white"
+            android:textColor="@color/theme_color"
             android:textSize="30px"
             android:visibility="visible" />
 

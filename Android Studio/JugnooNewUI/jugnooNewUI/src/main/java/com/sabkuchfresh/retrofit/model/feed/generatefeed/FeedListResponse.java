@@ -3,20 +3,13 @@ package com.sabkuchfresh.retrofit.model.feed.generatefeed;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
 import java.util.List;
 
-public class FeedListResponse {
+public class FeedListResponse extends FeedCommonResponse {
 
-    @SerializedName("flag")
-    @Expose
-    private int flag;
-    @SerializedName("message")
-    @Expose
-    private String message;
-    @SerializedName("error")
-    @Expose
-    private String error;
+
     @SerializedName("feeds")
     @Expose
     private List<FeedDetail> feeds = null;
@@ -32,6 +25,32 @@ public class FeedListResponse {
     @SerializedName("handle_name")
     @Expose
     private String handleName;
+    @SerializedName("max_page_count")
+    private int maxPageCount;
+
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    @SerializedName("pageCount")
+    @Expose
+    private int pageCount;
+
+    public int getCountRecords() {
+        return countRecords;
+    }
+
+    public void setCountRecords(int countRecords) {
+        this.countRecords = countRecords;
+    }
+
+    @SerializedName("count_records")
+    @Expose
+    private int countRecords;
 
 
     public int getFlag() {
@@ -89,5 +108,9 @@ public class FeedListResponse {
 
     public void setCountNotification(int countNotification) {
         this.countNotification = countNotification;
+    }
+
+    public int getMaxPageCount() {
+        return maxPageCount;
     }
 }
