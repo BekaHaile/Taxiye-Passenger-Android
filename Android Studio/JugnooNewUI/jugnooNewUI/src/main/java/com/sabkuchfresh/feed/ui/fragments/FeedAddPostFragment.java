@@ -215,7 +215,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         switchAnonymousPost.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                labelAnonymousSwitch.setText(isChecked ? handleName : "Anonymous");
+                labelAnonymousSwitch.setText(isChecked ? handleName : activity.getString(R.string.label_anonymous));
             }
         });
         switchAnonymousPost.setChecked(true);

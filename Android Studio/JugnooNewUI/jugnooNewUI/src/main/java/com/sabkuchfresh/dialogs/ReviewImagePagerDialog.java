@@ -2,6 +2,7 @@ package com.sabkuchfresh.dialogs;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -17,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
+import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.DirectionsGestureListener;
@@ -42,6 +45,8 @@ public class ReviewImagePagerDialog extends DialogFragment {
 	private ViewPager vpImages;
 	private TextView tvLikeShareCount;
 	private RelativeLayout rlRoot;
+	private boolean showDynamicImageHeight;
+	private static final String SHOW_DYNAMIC_IMAGE_HEIGHT = "show_dynamic_image_height";
 
 
 
@@ -62,6 +67,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		bundle.putInt(Constants.KEY_POSITION, positionImageClicked);
 		bundle.putBoolean(Constants.KEY_HIDE_LIKE_SHARE, true);
 		bundle.putSerializable(Constants.LIST_IMAGES, imageList);
+		bundle.putBoolean(SHOW_DYNAMIC_IMAGE_HEIGHT, true);
 		dialog.setArguments(bundle);
 		return dialog;
 	}
@@ -93,6 +99,9 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		int likeIsEnabled = getArguments().getInt(Constants.KEY_LIKE_IS_ENABLED, 1);
 		int shareIsEnabled = getArguments().getInt(Constants.KEY_SHARE_IS_ENABLED, 1);
 		boolean hideLikeShareCount = getArguments().getBoolean(Constants.KEY_HIDE_LIKE_SHARE, false);
+		if(getArguments().containsKey(SHOW_DYNAMIC_IMAGE_HEIGHT)) {
+			showDynamicImageHeight = getArguments().getBoolean(SHOW_DYNAMIC_IMAGE_HEIGHT, false);
+		}
 		ArrayList<FetchFeedbackResponse.ReviewImage> imageArrayList =null;
 		if(getArguments().containsKey(Constants.LIST_IMAGES)) {
 			imageArrayList = (ArrayList<FetchFeedbackResponse.ReviewImage>) getArguments().getSerializable(Constants.LIST_IMAGES);
@@ -105,6 +114,31 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		tvLikeShareCount = (TextView) rootView.findViewById(R.id.tvLikeShareCount);
 
 		try {
+			RelativeLayout.LayoutParams vpParams = (RelativeLayout.LayoutParams) vpImages.getLayoutParams();
+			vpParams.height= FeedUtils.dpToPx(270);
+
+			if(showDynamicImageHeight &&  imageArrayList!=null && imageArrayList.size()==1 && imageArrayList.get(0).getHeight()!=null && imageArrayList.get(0).getHeight()>0){
+
+
+				if(imageArrayList.get(0).getHeight()>=(FeedUtils.getScreenHeight(activity) -FeedUtils.dpToPx(40))){
+					vpParams.height = FeedUtils.getScreenHeight(activity)-FeedUtils.dpToPx(40);
+				}
+				else {
+					float imageSizeinDp =  Utils.pxToDp(activity,imageArrayList.get(0).getHeight());
+					if(imageSizeinDp<110)
+						vpParams.height = FeedUtils.dpToPx(110);
+					else
+						vpParams.height = imageArrayList.get(0).getHeight();
+
+				}
+
+
+
+
+
+			}
+
+			vpImages.setLayoutParams(vpParams);
 			vpImages.setAdapter(new ImagePagerAdapter(activity,imageArrayList==null? activity.getCurrentReview().getImages():imageArrayList));
 
 
@@ -193,7 +227,10 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 
 
-			Glide.with(activity).load(reviewImages.get(position).getUrl()).centerCrop().into(ivReviewImage);
+			if(reviewImages!=null && reviewImages.size()==1 && reviewImages.get(0).getHeight()!=null && reviewImages.get(0).getHeight()>0)
+			  Glide.with(activity).load(reviewImages.get(position).getUrl()).override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).into(ivReviewImage);
+			else
+				Glide.with(activity).load(reviewImages.get(position).getUrl()).centerCrop().into(ivReviewImage);
 			/*Picasso.with(context).load(reviewImages.get(position).getUrl())
 					.placeholder(R.drawable.ic_fresh_new_placeholder)
 					.into(ivReviewImage);

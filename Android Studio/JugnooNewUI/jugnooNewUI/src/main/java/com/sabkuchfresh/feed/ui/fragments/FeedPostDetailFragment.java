@@ -228,7 +228,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                tvSwitchLabel.setText(isChecked ? handleName : "Anonymous");
+                tvSwitchLabel.setText(isChecked ? handleName : activity.getString(R.string.label_anonymous));
             }
         });
         switchCompat.setChecked(true);

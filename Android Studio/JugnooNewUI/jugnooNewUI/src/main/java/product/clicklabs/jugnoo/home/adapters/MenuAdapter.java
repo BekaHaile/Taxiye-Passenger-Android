@@ -129,7 +129,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
 
                 holder.textViewValue.setVisibility(View.GONE);
-                holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
+//                holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
                 LinearLayout.LayoutParams paramsP = (LinearLayout.LayoutParams) holder.textViewValue.getLayoutParams();
                 paramsP.width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 holder.textViewValue.setLayoutParams(paramsP);
@@ -198,8 +198,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         if(unreadNotificationsCount > 0){
                             holder.textViewValue.setVisibility(View.VISIBLE);
                             holder.textViewValue.setText(String.valueOf(unreadNotificationsCount));
-                            holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
-                            setLayoutParamsForValue(holder.textViewValue);
+                   /*         holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
+                            setLayoutParamsForValue(holder.textViewValue);*/
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -211,8 +211,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         if(couponsCount > 0) {
                             holder.textViewValue.setVisibility(View.VISIBLE);
                             holder.textViewValue.setText(String.valueOf(couponsCount));
-                            holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
-                            setLayoutParamsForValue(holder.textViewValue);
+                           /* holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
+                            setLayoutParamsForValue(holder.textViewValue);*/
 						}
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -302,7 +302,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else{
                     holder.textViewUserName.setVisibility(View.GONE);
                 }
-                holder.textViewViewPhone.setText(Data.userData.phoneNo);
+                    try {
+                        holder.textViewViewPhone.setText(Data.userData.phoneNo.replaceFirst("\\+91",""));
+
+                    } catch (Exception e){
+                        holder.textViewViewPhone.setText(Data.userData.phoneNo);
+                    }
                 float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                 if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
                     if(!"".equalsIgnoreCase(Data.userData.userImage)) {
@@ -354,6 +359,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
             });
 
+            showLayoutOfferings(holder.linearLayoutSubAutos);
+            showLayoutOfferings(holder.linearLayoutSubFeed);
+            showLayoutOfferings(holder.linearLayoutSubFresh);
+            showLayoutOfferings(holder.linearLayoutSubGrocery);
+            showLayoutOfferings(holder.linearLayoutSubMenus);
+            showLayoutOfferings(holder.linearLayoutSubPay);
+            showLayoutOfferings(holder.linearLayoutSubMeals);
             holder.linearLayoutSubAutos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -449,6 +461,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     private void showLayout(View view){
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+        float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+        params.height = (int)(minRatio * 81f);
+        view.setLayoutParams(params);
+    }
+
+    private void showLayoutOfferings(View view){
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
         params.height = (int)(minRatio * 81f);
         view.setLayoutParams(params);
