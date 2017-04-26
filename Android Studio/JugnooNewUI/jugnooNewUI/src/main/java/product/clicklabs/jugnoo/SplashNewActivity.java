@@ -2897,7 +2897,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 //								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									if(jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 0){
+									if(jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 1){
 										changeUIState(State.SPLASH_ONBOARDING);
 
 										String authKey = jObj.optJSONObject("user_data").optString("auth_key", "");
