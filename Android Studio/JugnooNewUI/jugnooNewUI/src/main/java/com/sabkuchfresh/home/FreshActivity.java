@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -43,7 +44,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -4281,38 +4281,32 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
+    private long checkoutBarAnimDuration = 150L;
     private void llCheckoutBarSetVisibility(int visibility){
         if(visibility == View.VISIBLE && llCheckoutBar.getVisibility() != View.VISIBLE){
             llCheckoutBar.setVisibility(View.VISIBLE);
 
-            if(textViewMinOrder.getVisibility() == View.VISIBLE) {
-                textViewMinOrder.clearAnimation();
-                Animation translateUp = new TranslateAnimation(0, 0, llCheckoutBar.getMeasuredHeight(), 0);
-                translateUp.setDuration(200);
-                translateUp.setFillAfter(false);
-                textViewMinOrder.startAnimation(translateUp);
-            }
-
             llCheckoutBar.clearAnimation();
-            Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+            Animation animation = new TranslateAnimation(0, 0, llCheckoutBar.getMeasuredHeight(), 0);
+            animation.setDuration(checkoutBarAnimDuration);
             llCheckoutBar.startAnimation(animation);
 
             if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
-                getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.dp_54));
+                getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, llCheckoutBar.getMeasuredHeight());
+            }
+
+            if(textViewMinOrder.getVisibility() == View.VISIBLE) {
+                textViewMinOrder.clearAnimation();
+                Animation translateUp = new TranslateAnimation(0, 0, llCheckoutBar.getMeasuredHeight(), 0);
+                translateUp.setDuration(checkoutBarAnimDuration);
+                textViewMinOrder.startAnimation(translateUp);
             }
 
         } else if(visibility == View.GONE && llCheckoutBar.getVisibility() != View.GONE){
             llCheckoutBar.clearAnimation();
 
-            if(textViewMinOrder.getVisibility() == View.VISIBLE) {
-                textViewMinOrder.clearAnimation();
-                Animation translateDown = new TranslateAnimation(0, 0, 0, llCheckoutBar.getMeasuredHeight());
-                translateDown.setDuration(200);
-                translateDown.setFillAfter(false);
-                textViewMinOrder.startAnimation(translateDown);
-            }
-
-            Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+            Animation animation = new TranslateAnimation(0, 0, 0, llCheckoutBar.getMeasuredHeight());
+            animation.setDuration(checkoutBarAnimDuration);
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -4321,6 +4315,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
+                    textViewMinOrder.clearAnimation();
                     llCheckoutBar.setVisibility(View.GONE);
                 }
 
@@ -4334,12 +4329,36 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
                 getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, 0);
             }
+
+            if(textViewMinOrder.getVisibility() == View.VISIBLE) {
+                textViewMinOrder.clearAnimation();
+                Animation translateDown = new TranslateAnimation(0, 0, 0, llCheckoutBar.getMeasuredHeight());
+                translateDown.setDuration(checkoutBarAnimDuration);
+                textViewMinOrder.startAnimation(translateDown);
+            }
         }
     }
 
     private void textViewMinOrderSetVisibility(int visibility){
-        textViewMinOrder.clearAnimation();
-        textViewMinOrder.setVisibility(visibility);
+        if(textViewMinOrder.getVisibility() != visibility) {
+            textViewMinOrder.clearAnimation();
+            textViewMinOrder.setVisibility(visibility);
+        }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if(llCheckoutBar != null) {
+            llCheckoutBar.post(new Runnable() {
+                @Override
+                public void run() {
+                    llCheckoutBar.getMeasuredHeight();
+                    llCheckoutBar.setVisibility(View.GONE);
+                }
+            });
+        }
+
     }
 
 }
