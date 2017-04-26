@@ -86,6 +86,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     //Pagination variables
     private ApiCommon<FeedListResponse> feedPagingApi;
     int pastVisiblesItems, visibleItemCount, totalItemCount, pageCount, countRecords, maxPageCount;
+    private boolean hasMorePages;
 
     public FeedHomeFragment() {
         // Required empty public constructor
@@ -284,7 +285,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     totalItemCount = layoutManager.getItemCount();
                     pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
 
-                    if (!isPagingApiInProgress && pageCount < maxPageCount) {
+                    if (!isPagingApiInProgress && hasMorePages) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             fetchNextPage();
                             ;
@@ -335,6 +336,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     public void fetchFeedsApi(boolean loader, final boolean scrollToTop) {
         countRecords = 0;
         pageCount = 1;
+        hasMorePages=false;
         if (feedPagingApi != null) {
             feedPagingApi.setCancelled(true);
         }
@@ -374,9 +376,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 }
 
                 //set Variables for pagination
+                hasMorePages = pageCount != feedbackResponse.getPageCount();
                 pageCount = feedbackResponse.getPageCount();
                 countRecords = feedbackResponse.getCountRecords();
-                maxPageCount = feedbackResponse.getMaxPageCount();
 
                 //Hide feedNot available view
                 relativeLayoutNotAvailable.setVisibility(View.GONE);
@@ -490,9 +492,10 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 toggleProgressBarVisibility(false);
 
                 //set Variables for pagination
+                hasMorePages = pageCount != feedbackResponse.getPageCount();
                 pageCount = feedbackResponse.getPageCount();
                 countRecords = feedbackResponse.getCountRecords();
-                maxPageCount = feedbackResponse.getMaxPageCount();
+
 
                 //Append data to existing list
                 if (feedHomeAdapter != null && feedbackResponse.getFeeds() != null && feedbackResponse.getFeeds().size() > 0) {
