@@ -365,11 +365,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                             && ((AddPlaceActivity)activity).getSearchResult() != null){
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((AddPlaceActivity)activity).getSearchResult().getLatLng(), 14));
                     } else {
-                        if(activity instanceof FreshActivity){
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((FreshActivity)activity).getSelectedLatLng(), 14));
-                        } else {
+//                        if(activity instanceof FreshActivity){
+//                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((FreshActivity)activity).getSelectedLatLng(), 14));
+//                        } else {
                             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
-                        }
+//                        }
                     }
 
 
