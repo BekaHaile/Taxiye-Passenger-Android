@@ -101,6 +101,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed_add_post, container, false);
+        GAUtils.trackScreenView(GAAction.FEED + GAAction.ADD_POST);
         viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);

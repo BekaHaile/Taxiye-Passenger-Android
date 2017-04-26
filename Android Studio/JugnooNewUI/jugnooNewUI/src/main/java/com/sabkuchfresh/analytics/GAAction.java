@@ -232,4 +232,5 @@ public interface GAAction {
 	String HANDLE_INPUT = "Handle Input ";
 	String SELECT_STORE = "Select Store ";
 	String STORE = "Store ";
+	String ADD_POST = "Add Post";
 }
