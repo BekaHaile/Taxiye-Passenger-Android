@@ -7,14 +7,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:tag="@string/dont_touch_me"
-    android:visibility="gone"
+    android:visibility="invisible"
     >
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_7"
-        android:background="@drawable/shadow_up_new"
-        />
+
 
     <RelativeLayout
         android:layout_width="match_parent"

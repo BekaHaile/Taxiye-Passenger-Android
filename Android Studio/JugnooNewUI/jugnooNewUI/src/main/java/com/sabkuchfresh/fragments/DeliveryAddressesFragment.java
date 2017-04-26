@@ -117,6 +117,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     public String current_city = "";
     public String current_pincode = "";
 
+    private SearchResult searchResultNearPin = null;
+
 
     private BottomSheetBehavior bottomSheetBehavior;
     private GoogleMap googleMap;
@@ -196,15 +198,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 savedPlacesAdapter = new SavedPlacesAdapter(activity, homeUtil.getSavedPlacesWithHomeWork(activity), new SavedPlacesAdapter.Callback() {
                     @Override
                     public void onItemClick(SearchResult searchResult) {
-                        if(searchResult.getIsConfirmed() == 1){
-                            onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                    searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-                            if(activity instanceof FreshActivity) {
-                                GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
-                            }
-                        } else {
-                            goToPredefinedSearchResultConfirmation(searchResult, searchResult.getPlaceRequestCode(), true);
-                        }
+                        savedAddressSelected(searchResult);
                     }
 
                     @Override
@@ -225,7 +219,9 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 						if(searchResult.getIsConfirmed() == 1){
 							onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
 									searchResult.getAddress(), searchResult.getId(), searchResult.getName());
-								GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES+SELECTED);
+                            if(activity instanceof FreshActivity) {
+                                GAUtils.event(((FreshActivity) activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES + SELECTED);
+                            }
 						} else {
 							goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
 						}
@@ -388,6 +384,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                         @Override
                         public void onMapUnsettled() {
                             mapSettledCanForward = false;
+                            searchResultNearPin = null;
                         }
 
                         @Override
@@ -513,6 +510,24 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
     private void fillAddressDetails(final LatLng latLng) {
         try {
+            // This will happen only in FreshActivity case
+            // to check if some saved address is lying near to pin point, So that SearchResult object is hashed
+            // in searchResultNearPin to direct back to offering fragment with address selected same as clicking on
+            // saved addresses list
+            if (activity instanceof FreshActivity) {
+                searchResultNearPin = homeUtil.getNearBySavedAddress(activity, latLng,
+                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                if (searchResultNearPin != null) {
+                    tvDeliveryAddress.setText(searchResultNearPin.getName());
+                    if (isVisible() && scrollViewSearch.getVisibility() == View.GONE) {
+                        tvDeliveryAddressSetVisibility(View.VISIBLE);
+                    }
+                    mapSettledCanForward = true;
+                    return;
+                }
+            }
+
+
             if(isVisible() && !isRemoving()) {
                 progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
             }
@@ -526,11 +541,10 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 @Override
                 public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
                     try {
-
-                        current_latitude = latLng.latitude;
-                        current_longitude = latLng.longitude;
-
                         if(geocodeResponse.results != null && geocodeResponse.results.size() > 0){
+                            current_latitude = latLng.latitude;
+                            current_longitude = latLng.longitude;
+
                             current_street = geocodeResponse.results.get(0).getStreetNumber();
                             current_route = geocodeResponse.results.get(0).getRoute();
                             current_area = geocodeResponse.results.get(0).getLocality();
@@ -789,11 +803,18 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 }, 600);
             } else {
                 if (activity instanceof FreshActivity) {
-                    FreshActivity freshActivity = (FreshActivity) activity;
-                    freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-                    freshActivity.setSearchResult(null);
-                    freshActivity.setEditThisAddress(false);
-                    freshActivity.openAddToAddressBook(createAddressBundle(""));
+                    // If searchResultNearPin is null, directing user to save this location to address book
+                    if(searchResultNearPin == null) {
+                        FreshActivity freshActivity = (FreshActivity) activity;
+                        freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                        freshActivity.setSearchResult(null);
+                        freshActivity.setEditThisAddress(false);
+                        freshActivity.openAddToAddressBook(createAddressBundle(""));
+                    }
+                    // Else use searchResultNearPin and perform saved addresses list click functionality
+                    else {
+                        savedAddressSelected(searchResultNearPin);
+                    }
                 } else if (activity instanceof AddPlaceActivity) {
                     ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle(""));
                 }
@@ -821,6 +842,18 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     private void tvDeliveryAddressSetVisibility(int visibility){
         tvDeliveryAddress.setVisibility(visibility);
         scrollViewSearch.setVisibility(visibility == View.GONE ? View.VISIBLE : View.GONE);
+    }
+
+    private void savedAddressSelected(SearchResult searchResult){
+        if(searchResult.getIsConfirmed() == 1){
+            onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+                    searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+            if(activity instanceof FreshActivity) {
+                GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
+            }
+        } else {
+            goToPredefinedSearchResultConfirmation(searchResult, searchResult.getPlaceRequestCode(), true);
+        }
     }
 
 }
