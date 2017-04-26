@@ -50,6 +50,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -185,14 +186,15 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	private String enteredEmail = "", fbVerifiedNumber = "";
 	public static boolean phoneNoLogin = false;
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
-	private LinearLayout llSignupMain;
+	private LinearLayout llSignupMain, llSignupOnboarding;
+	private ScrollView svSignupOnboarding;
 
 	private RelativeLayout rlClaimGift, rlPromo;
 	private ImageView ivUser;
 	private TextView tvGiftFrom, tvGiftDetail, tvReferralTitle, tvSkip;
 	private Button btnClaimGift, bPromoSubmit;
 	private String refreeUserId = "", loginResponseStr;
-	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle, rlSignupOnboarding;
+	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle;
 	private LoginResponse loginResponseData;
 
 
@@ -560,7 +562,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			etOnboardingEmail = (EditText) findViewById(R.id.etOnboardingEmail);
 			etReferralCode = (EditText) findViewById(R.id.etReferralCode);
 			bPromoSubmit = (Button) findViewById(R.id.bPromoSubmit);
-			rlSignupOnboarding = (RelativeLayout) findViewById(R.id.rlSignupOnboarding);
+			svSignupOnboarding = (ScrollView) findViewById(R.id.svSignupOnboarding);
+			llSignupOnboarding = (LinearLayout) findViewById(R.id.llSignupOnboarding);
 			tvSkip = (TextView) findViewById(R.id.tvSkip);
 
 			root.setOnClickListener(onClickListenerKeybordHide);
@@ -585,6 +588,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	//						if(State.LOGIN == state){
 	//							relativeLayoutJugnooLogo.setVisibility(View.GONE);
 	//						}
+							if(State.SPLASH_ONBOARDING == state){
+										svSignupOnboarding.scrollTo(0, (int)(ASSL.Yscale()*160));
+							}
 						}
 
 						@Override
@@ -1179,7 +1185,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			startService(new Intent(this, PushPendingCallsService.class));
 			showLocationEnableDialog();
 
-			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+			//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 
 			try {
@@ -1455,7 +1461,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		rlSplashLogo.setVisibility(View.GONE);
 		relativeLayoutLS.setVisibility(View.GONE);
 		rlLoginSignupNew.setVisibility(View.GONE);
-		rlSignupOnboarding.setVisibility(View.GONE);
+		llSignupOnboarding.setVisibility(View.GONE);
 		int duration = 500;
 		switch (state) {
 			case SPLASH_INIT:
@@ -1566,12 +1572,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 			case SPLASH_ONBOARDING:
 				llContainer.setVisibility(View.VISIBLE);
-				rlSignupOnboarding.setVisibility(View.VISIBLE);
+				llSignupOnboarding.setVisibility(View.VISIBLE);
 
 				Animation anim1 = AnimationUtils.loadAnimation(this, R.anim.right_in);
 				anim1.setFillAfter(true);
 				anim1.setDuration(duration);
-				rlSignupOnboarding.startAnimation(anim1);
+				llSignupOnboarding.startAnimation(anim1);
 
 				Animation anim2 = AnimationUtils.loadAnimation(this, R.anim.right_out);
 				anim2.setFillAfter(false);
