@@ -1001,6 +1001,11 @@ public class UserData {
 		return showJugnooStarInAcccount==1;
 	}
 
+
+	public void setShowJugnooStarInAcccount(int showJugnooStarInAcccount) {
+		this.showJugnooStarInAcccount = showJugnooStarInAcccount;
+	}
+
 	//	"meals_enabled": 1,
 //			"fresh_enabled": 1,
 //			"delivery_enabled": 1,

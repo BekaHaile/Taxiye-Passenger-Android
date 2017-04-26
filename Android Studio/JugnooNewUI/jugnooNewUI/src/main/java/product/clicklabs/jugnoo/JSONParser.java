@@ -245,6 +245,7 @@ public class JSONParser implements Constants {
                 showOfferDialog, showTutorial);
 
         Data.userData.setSubscriptionData(loginUserData.getSubscriptionData());
+        Data.userData.setShowJugnooStarInAcccount(loginUserData.getShowJugnooStarInAccount());
 
         Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
 

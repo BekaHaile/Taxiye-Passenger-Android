@@ -949,6 +949,12 @@ public class LoginResponse {
 		@Expose
 		private String expandedGenieText;
 
+
+
+		@SerializedName("show_jstar_in_account")
+		@Expose
+		private int showJugnooStarInAccount;
+
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
 		}
@@ -1139,6 +1145,9 @@ public class LoginResponse {
 
 		public void setExpandedGenieText(String expandedGenieText) {
 			this.expandedGenieText = expandedGenieText;
+		}
+		public int getShowJugnooStarInAccount() {
+			return showJugnooStarInAccount;
 		}
 	}
 
