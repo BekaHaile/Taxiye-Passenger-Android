@@ -122,6 +122,7 @@ public class FABViewTest implements GACategory, GAAction {
                         setRlGenieHelpVisibility();
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
                         GAUtils.event(JUGNOO, getOffering()+HOME, GENIE+OPENED);
+                        GAUtils.trackScreenView(GENIE_OPEN_SCREEN);
                     } else {
                         isOpened = false;
                         if(activity instanceof HomeActivity){

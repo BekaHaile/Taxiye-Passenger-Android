@@ -15,5 +15,10 @@ public interface GACategory {
 	String SPLASH = "Splash ";
 	String SCREEN = "Screen ";
 	String REFERRAL_LANDING = "Referral Landing ";
+	String REFERRAL_CODE_SCREEN = "Referral Code Screen";
 	String SIGNUP_LOGIN = "Signup Login ";
+	String PROFILE_SCREEN = "Profile Screen";
+	String GENIE_OPEN_SCREEN = "Genie Open Screen";
+	String ORDER_PLACED = "Order Placed";
+	String REFERRAL = "Referral";
 }

@@ -685,7 +685,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
 								}
 							} else{
-								Utils.showToast(SplashNewActivity.this, getResources().getString(R.string.press_skip_to_continue));
+								Utils.showToast(SplashNewActivity.this, getResources().getString(R.string.press_skip_this_step_to_proceed));
 							}
 						}
 					} catch (Exception e) {
@@ -1589,7 +1589,21 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				anim2.setDuration(duration);
 				rlLoginSignupNew.startAnimation(anim2);
 				rlLoginSignupNew.setVisibility(View.GONE);
-
+				String userName = "", userEmail = "";
+				try {
+					String ownerEmail = UserEmailFetcher.getEmail(SplashNewActivity.this);
+					if (ownerEmail != null && (!ownerEmail.equalsIgnoreCase(""))) {
+						userEmail = ownerEmail;
+						if (new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail) != null) {
+							userName = Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail));
+						}
+						etOnboardingName.setText(userName);
+						etOnboardingEmail.setText(userEmail);
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+				GAUtils.trackScreenView(REFERRAL_CODE_SCREEN);
 				break;
 
 			case SPLASH_LS:
@@ -2009,7 +2023,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 if (authorizationCode != null) {
                     toastMessage = "Success:" + authorizationCode;
                     apiLoginUsingFbAccountKit(SplashNewActivity.this, loginResult.getAuthorizationCode());
-
                 } else {
                     toastMessage = "Unknown response type";
                 }
@@ -4227,18 +4240,19 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								String message = jObj.optString("message", "");
 								Utils.showToast(activity, message);
+								if(!TextUtils.isEmpty(updatedName)) {
+									Data.userData.userName = updatedName;
+								}
+								if(!TextUtils.isEmpty(updatedEmail)) {
+									Data.userData.userEmail = updatedEmail;
+								}
 							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 							loginDataFetched = true;
 							new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
 									loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
-							if(!TextUtils.isEmpty(updatedName)) {
-								Data.userData.userName = updatedName;
-							}
-							if(!TextUtils.isEmpty(updatedEmail)) {
-								Data.userData.userEmail = updatedEmail;
-							}
+
 							onWindowFocusChanged(true);
 						}
 					} catch (Exception exception) {

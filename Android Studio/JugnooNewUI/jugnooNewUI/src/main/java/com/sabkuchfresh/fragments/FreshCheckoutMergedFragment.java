@@ -1688,7 +1688,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 Data.autoData.setCancellationChargesPopupTextLine2(placeOrderResponse.getSubscriptionDataPlaceOrder().getCancellationChargesPopupTextLine2());
             }
         }
-
+        int productType;
+        if(type == AppConstant.ApplicationType.MEALS){
+            productType = ProductType.MEALS.getOrdinal();
+        } else if(type == AppConstant.ApplicationType.MENUS){
+            productType = ProductType.MENUS.getOrdinal();
+        } else {
+            productType = ProductType.FRESH.getOrdinal();
+        }
         if(placeOrderResponse.getReferralPopupContent() == null){
             dialogOrderComplete = new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
                 @Override
@@ -1698,15 +1705,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }).show(String.valueOf(placeOrderResponse.getOrderId()),
                     deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
                     placeOrderResponse);
+            GAUtils.trackScreenView(productType+ORDER_PLACED);
         } else {
-            int productType;
-            if(type == AppConstant.ApplicationType.MEALS){
-                productType = ProductType.MEALS.getOrdinal();
-            } else if(type == AppConstant.ApplicationType.MENUS){
-                productType = ProductType.MENUS.getOrdinal();
-            } else {
-                productType = ProductType.FRESH.getOrdinal();
-            }
             dialogOrderComplete = new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
                 @Override
                 public void onDialogDismiss() {
@@ -1721,6 +1721,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     activity.getResources().getString(R.string.thank_you_for_placing_order_menus_format, restaurantName),
                     placeOrderResponse.getReferralPopupContent(),
                     -1, placeOrderResponse.getOrderId(), productType);
+            GAUtils.trackScreenView(productType+ORDER_PLACED+REFERRAL);
         }
         activity.clearAllCartAtOrderComplete();
         activity.setSelectedPromoCoupon(noSelectionCoupon);

@@ -700,7 +700,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
+        GAUtils.trackScreenView(PROFILE_SCREEN);
 
 	}
 

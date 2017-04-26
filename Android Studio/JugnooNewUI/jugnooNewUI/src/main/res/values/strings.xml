@@ -1667,4 +1667,5 @@
     <string name="enter_referral_code_optional">Enter referral code (optional)</string>
     <string name="label_anonymous">anonymous</string>
     <string name="press_skip_to_continue">Press skip to continue</string>
+    <string name="press_skip_this_step_to_proceed">Press \'Skip this step\' to proceed</string>
 </resources>
