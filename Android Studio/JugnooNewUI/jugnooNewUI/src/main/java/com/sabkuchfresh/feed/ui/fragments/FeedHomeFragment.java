@@ -365,6 +365,14 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             public void onSuccess(FeedListResponse feedbackResponse, String message, int flag) {
                 swipeRefreshLayout.setRefreshing(false);
 
+
+                //setHandleName
+                if(feedbackResponse.getHandleName()!=null)
+                {if(Data.getFeedData()!=null){
+                        Data.getFeedData().setHandleName(feedbackResponse.getHandleName());
+                    }
+                }
+
                 //set Variables for pagination
                 pageCount = feedbackResponse.getPageCount();
                 countRecords = feedbackResponse.getCountRecords();
