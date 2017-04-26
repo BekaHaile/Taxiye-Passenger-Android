@@ -667,12 +667,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				public void onClick(View v) {
 					try {
 						if(!TextUtils.isEmpty(loginResponseStr)) {
-							JSONObject jObj = new JSONObject(loginResponseStr);
-							String authKey = jObj.optJSONObject("user_data").optString("auth_key", "");
-							AccessTokenGenerator.saveAuthKey(SplashNewActivity.this, authKey);
-							String authSecret = authKey + Config.getClientSharedSecret();
 
-							String accessToken = SHA256Convertor.getSHA256String(authSecret);
 							String name = etOnboardingName.getText().toString().trim();
 							String email = etOnboardingEmail.getText().toString().trim();
 							String referralCode = etReferralCode.getText().toString().trim();
@@ -2904,6 +2899,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									if(jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 0){
 										changeUIState(State.SPLASH_ONBOARDING);
+
+										String authKey = jObj.optJSONObject("user_data").optString("auth_key", "");
+										AccessTokenGenerator.saveAuthKey(SplashNewActivity.this, authKey);
+										String authSecret = authKey + Config.getClientSharedSecret();
+										accessToken = SHA256Convertor.getSHA256String(authSecret);
 									} else{
 										loginDataFetched = true;
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
