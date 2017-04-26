@@ -4277,6 +4277,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void llCheckoutBarSetVisibilityDirect(int visibility){
         if(llCheckoutBar != null) {
+			llCheckoutBar.clearAnimation();
+            getHandler().removeCallbacks(runnableLlCheckoutBarGone);
             if (visibility == View.VISIBLE && totalPrice > 0 && totalQuantity > 0) {
                 llCheckoutBar.setVisibility(View.VISIBLE);
             } else {
@@ -4288,9 +4290,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private long checkoutBarAnimDuration = 150L;
     private void llCheckoutBarSetVisibility(int visibility){
         if(visibility == View.VISIBLE && llCheckoutBar.getVisibility() != View.VISIBLE){
-            llCheckoutBar.setVisibility(View.VISIBLE);
+			llCheckoutBar.clearAnimation();
+            getHandler().removeCallbacks(runnableLlCheckoutBarGone);
+			llCheckoutBar.setVisibility(View.VISIBLE);
 
-            llCheckoutBar.clearAnimation();
             Animation animation = new TranslateAnimation(0, 0, llCheckoutBar.getMeasuredHeight(), 0);
             animation.setDuration(checkoutBarAnimDuration);
             llCheckoutBar.startAnimation(animation);
@@ -4311,23 +4314,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             Animation animation = new TranslateAnimation(0, 0, 0, llCheckoutBar.getMeasuredHeight());
             animation.setDuration(checkoutBarAnimDuration);
-            animation.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    textViewMinOrder.clearAnimation();
-                    llCheckoutBar.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
+            getHandler().removeCallbacks(runnableLlCheckoutBarGone);
+            getHandler().postDelayed(runnableLlCheckoutBarGone, checkoutBarAnimDuration);
             llCheckoutBar.startAnimation(animation);
 
             if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
@@ -4342,6 +4330,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         }
     }
+    private Runnable runnableLlCheckoutBarGone = new Runnable() {
+        @Override
+        public void run() {
+            textViewMinOrder.clearAnimation();
+            llCheckoutBar.setVisibility(View.GONE);
+        }
+    };
 
     private void textViewMinOrderSetVisibility(int visibility){
         if(textViewMinOrder.getVisibility() != visibility) {

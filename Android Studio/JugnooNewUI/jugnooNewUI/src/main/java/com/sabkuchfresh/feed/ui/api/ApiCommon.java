@@ -100,9 +100,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
             callback = new Callback<T>() {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
+                    if(showLoader) {
+                        DialogPopup.dismissLoadingDialog();
+                    }
                     if(isCancelled())
                         return;
-                    DialogPopup.dismissLoadingDialog();
+
                     try {
                         if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 							apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
@@ -124,9 +127,11 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
                 @Override
                 public void failure(RetrofitError error) {
+                    if(showLoader) {
+                        DialogPopup.dismissLoadingDialog();
+                    }
                     if(isCancelled())
                         return;
-                    DialogPopup.dismissLoadingDialog();
                     error.printStackTrace();
                     if (!apiCommonCallback.onFailure(error)) {
                         retryDialog(DialogErrorType.CONNECTION_LOST);
