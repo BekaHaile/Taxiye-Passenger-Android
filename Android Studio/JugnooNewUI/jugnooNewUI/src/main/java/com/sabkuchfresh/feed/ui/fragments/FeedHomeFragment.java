@@ -405,7 +405,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     activity.getFeedHomeAddPostView().setVisibility(View.GONE);
 
                 }
-                updateToolbarBehaviour();
+
 
 
             }
@@ -806,16 +806,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     }
 
 
-    // TODO: 25/04/17  check this with Parminder
-    // to check that if all feeds are displayed in Current screen toggle scrolling behavior of collapsing toolbar
-    public void updateToolbarBehaviour(){
-        if (layoutManager.findLastCompletelyVisibleItemPosition() == feedHomeAdapter.getItemCount()-1) {
-//            ((MainActivity) getActivity()).turnOffToolbarScrolling();
-            Utils.showToast(activity, "turnOffToolbarScrolling");
-        } else {
-//            ((MainActivity)getActivity()).turnOnToolbarScrolling();
-            Utils.showToast(activity, "turnOnToolbarScrolling");
-        }
-    }
+
 
 }

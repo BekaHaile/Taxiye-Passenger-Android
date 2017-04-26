@@ -171,9 +171,13 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
+            <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="40px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_auto_selector"
                 android:tag="mwar"
                 />
@@ -198,11 +202,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
+            <ImageView
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="40px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_meals_selector"
                 android:tag="mwar"/>
 
@@ -225,11 +232,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
+            <ImageView
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="40px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_fresh_selector"
                 android:tag="mwar"/>
 
@@ -252,11 +262,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
+            <ImageView
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="40px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_grocery_selector"
                 android:tag="mwar"/>
 
@@ -280,11 +293,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
+            <ImageView
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="40px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_menus_selector"
                 android:tag="mwar" />
 
@@ -307,11 +323,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
+            <ImageView
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="40px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_pay_selector"
                 android:tag="mwar"
                 android:layout_gravity="center_vertical"
@@ -336,11 +355,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
+            <ImageView
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="40px"
+                android:layout_marginLeft="30px"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_menu_category_feed_selector"
                 android:tag="mwar"/>
