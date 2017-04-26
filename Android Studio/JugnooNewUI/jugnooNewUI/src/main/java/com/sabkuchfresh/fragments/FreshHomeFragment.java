@@ -179,7 +179,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
             activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
             activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
-            activity.llCheckoutBar.setVisibility(View.GONE);
+            activity.llCheckoutBarSetVisibilityDirect(View.GONE);
         }
     }
 
@@ -270,7 +270,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         activity.saveDeliveryAddressModel();
         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
         activity.setSuperCategoriesData(superCategoriesData);
-        activity.llCheckoutBar.setVisibility(View.VISIBLE);
+        activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
 
         activity.updateCartValuesGetTotalPrice();
         stopOhSnap();
@@ -305,14 +305,14 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
         relativeLayoutNoMenus.setVisibility(View.VISIBLE);
         textViewNothingFound.setText(!TextUtils.isEmpty(message) ? message : getString(R.string.nothing_found_near_you));
-        activity.llCheckoutBar.setVisibility(View.GONE);
+        activity.llCheckoutBarSetVisibilityDirect(View.GONE);
     }
 
     public void stopOhSnap(){
         relativeLayoutNoMenus.setVisibility(View.GONE);
         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
         activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
-        activity.llCheckoutBar.setVisibility(View.VISIBLE);
+        activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
     }
 
     @Override
