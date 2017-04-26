@@ -3899,6 +3899,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         textView.setText(prefix);
         textView.append(" ");
         textView.append(sb);
+
+        if(!TextUtils.isEmpty(vendor.getDeliveryTimeText())){
+            textView.setText(Utils.trimHTML(Utils.fromHtml(vendor.getDeliveryTimeText())));
+        }
     }
 
     public FABViewTest getFabViewTest() {

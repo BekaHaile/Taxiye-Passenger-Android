@@ -108,9 +108,13 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements GA
 	
 	@Override
 	protected void onDestroy() {
-		Data.isOrderCancelled = false;
-        ASSL.closeActivity(relative);
-        System.gc();
+		try {
+			Data.isOrderCancelled = false;
+			ASSL.closeActivity(relative);
+			System.gc();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		super.onDestroy();
 	}
 

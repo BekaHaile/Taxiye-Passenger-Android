@@ -891,6 +891,10 @@ public class Utils {
 		return result;
 	}
 
+	public static CharSequence trimHTML(CharSequence s){
+		return product.clicklabs.jugnoo.utils.Utils.trimHTML(s);
+	}
+
 }
 
 
