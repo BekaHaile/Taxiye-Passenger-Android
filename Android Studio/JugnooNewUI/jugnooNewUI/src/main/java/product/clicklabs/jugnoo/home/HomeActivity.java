@@ -4593,6 +4593,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(Gravity.START)){
+            drawerLayout.closeDrawer(Gravity.START);
+            return;
+        }
+        if(fabViewTest.menuLabelsRightTest.isOpened()){
+            fabViewTest.menuLabelsRightTest.close(true);
+            return;
+        }
         performBackpressed();
     }
 
