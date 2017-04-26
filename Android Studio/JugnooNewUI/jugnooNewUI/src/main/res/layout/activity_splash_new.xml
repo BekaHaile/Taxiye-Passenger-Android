@@ -42,6 +42,9 @@
             <!-- Login And Signup New-->
             <include layout="@layout/layout_splash_login_signup_new"/>
 
+            <!-- SignUp Onboarding -->
+            <include layout="@layout/layout_splash_onboarding"/>
+
         </LinearLayout>
 
         <TextView

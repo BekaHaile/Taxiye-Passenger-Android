@@ -137,6 +137,7 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SPLabels.SHOW_FAB_SETTING, fabButtonEnable);
         int integratedJugnooEnabled = userData.optInt(KEY_INTEGRATED_JUGNOO_ENABLED, 0);
         int slideCheckoutPayEnabled = userData.optInt(SLIDE_CHECKOUT_PAY_ENABLED, 0);
+        int signupOnboarding = userData.optInt(KEY_SIGNUP_ONBOARDING, 0);
 
 
         String defaultBranchDesktopUrl = Prefs.with(context).getString(SPLabels.BRANCH_DESKTOP_URL, "");
@@ -242,7 +243,7 @@ public class JSONParser implements Constants {
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled, feedEnabled,
                 inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
-                showOfferDialog, showTutorial);
+                showOfferDialog, showTutorial, signupOnboarding);
 
         Data.userData.setSubscriptionData(loginUserData.getSubscriptionData());
         Data.userData.setShowJugnooStarInAcccount(loginUserData.getShowJugnooStarInAccount());

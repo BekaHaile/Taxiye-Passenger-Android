@@ -370,6 +370,7 @@
     <string name="paytm_wallet">Paytm Wallet</string>
     <string name="nl_add_paytm_wallet">Add Paytm Wallet</string>
     <string name="nl_splash_required">Required</string>
+    <string name="nl_splash_optional">Optional</string>
 
 
     <!-- NL Login-->
@@ -1657,6 +1658,10 @@
     <string name="enter_location">Enter location</string>
     <string name="checkout_bracket_item"><b>CHECKOUT</b> (%s ITEM)</string>
     <string name="checkout_bracket_items"><b>CHECKOUT</b> (%s ITEMS)</string>
-
-
+    <string name="do_you_have_a_referral_code">Do you have a <b>referral code</b>?</string>
+    <string name="please_enter_your_personal_info">Please enter your personal information</string>
+    <string name="skip_this_step"><u>Skip this step</u></string>
+    <string name="your_full_name">Your full name</string>
+    <string name="email_address">E-mail address</string>
+    <string name="enter_referral_code_optional">Enter referral code (optional)</string>
 </resources>

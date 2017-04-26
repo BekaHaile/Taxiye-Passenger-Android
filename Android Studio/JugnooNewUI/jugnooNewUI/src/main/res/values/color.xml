@@ -371,5 +371,6 @@
     <color name="pink_light">#fff5f5</color>
     <color name="pink_dark">#ffdede</color>
     <color name="red_dark_text_color">#dc4b3d</color>
+    <color name="grey_969696">#969696</color>
 
 </resources>

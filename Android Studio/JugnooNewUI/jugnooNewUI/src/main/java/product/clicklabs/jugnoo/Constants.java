@@ -615,6 +615,7 @@ public interface Constants {
     String KEY_FEEDBACK_ID = "feedback_id";
     String KEY_ACTION = "action";
     String KEY_POSITION = "position";
+    String KEY_SIGNUP_ONBOARDING = "signup_onboarding";
 
 
 

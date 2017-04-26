@@ -85,7 +85,7 @@ public class UserData {
 	private int showOfferDialog;
 	private int showTutorial;
 	private SignupTutorial signupTutorial;
-	private int expandJeanie;
+	private int expandJeanie, signupOnboarding;
 	private String expandedGenieText;
 	private String upiHandle;
 	private int showJugnooStarInAcccount;
@@ -108,7 +108,7 @@ public class UserData {
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled, int feedEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial){
+					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -187,6 +187,7 @@ public class UserData {
 		this.showJeanieHelpText = showJeanieHelpText;
 		this.showOfferDialog = showOfferDialog;
 		this.showTutorial = showTutorial;
+		this.signupOnboarding = signupOnboarding;
 	}
 
 	private void checkUserImage(){
@@ -1004,6 +1005,13 @@ public class UserData {
 
 	public void setShowJugnooStarInAcccount(int showJugnooStarInAcccount) {
 		this.showJugnooStarInAcccount = showJugnooStarInAcccount;
+	}
+	public int getSignupOnboarding() {
+		return signupOnboarding;
+	}
+
+	public void setSignupOnboarding(int signupOnboarding) {
+		this.signupOnboarding = signupOnboarding;
 	}
 
 	//	"meals_enabled": 1,
