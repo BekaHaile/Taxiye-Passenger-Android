@@ -112,6 +112,7 @@ import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.OwnerInfo;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.UserEmailFetcher;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -149,7 +150,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	Button buttonEmailLogin;
 
 	RelativeLayout relativeLayoutSignup, buttonFacebookLogin, buttonGoogleLogin;
-	EditText editTextSName, editTextSEmail, editTextSPhone, editTextSPassword, editTextSPromo;
+	EditText editTextSName, editTextSEmail, editTextSPhone, editTextSPassword, editTextSPromo,
+			etOnboardingName, etOnboardingEmail, etReferralCode;
 	TextView textViewSNameRequired, textViewSEmailRequired, textViewSPhoneRequired, textViewSPasswordRequired;
 	Button buttonEmailSignup;
 	TextView textViewSTerms, tvSTerms;
@@ -554,6 +556,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			tvGiftDetail = (TextView) findViewById(R.id.tvGiftDetail); tvGiftDetail.setTypeface(Fonts.mavenMedium(this));
 			btnClaimGift = (Button) findViewById(R.id.btnClaimGift); btnClaimGift.setTypeface(Fonts.mavenMedium(this));
 			tvReferralTitle = (TextView) findViewById(R.id.tvReferralTitle);
+			etOnboardingName = (EditText) findViewById(R.id.etOnboardingName);
+			etOnboardingEmail = (EditText) findViewById(R.id.etOnboardingEmail);
+			etReferralCode = (EditText) findViewById(R.id.etReferralCode);
 			bPromoSubmit = (Button) findViewById(R.id.bPromoSubmit);
 			rlSignupOnboarding = (RelativeLayout) findViewById(R.id.rlSignupOnboarding);
 			tvSkip = (TextView) findViewById(R.id.tvSkip);
@@ -661,10 +666,22 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				@Override
 				public void onClick(View v) {
 					try {
-						loginDataFetched = true;
-						new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
-								loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
-						onWindowFocusChanged(true);
+						if(!TextUtils.isEmpty(loginResponseStr)) {
+							JSONObject jObj = new JSONObject(loginResponseStr);
+							String authKey = jObj.optJSONObject("user_data").optString("auth_key", "");
+							AccessTokenGenerator.saveAuthKey(SplashNewActivity.this, authKey);
+							String authSecret = authKey + Config.getClientSharedSecret();
+
+							String accessToken = SHA256Convertor.getSHA256String(authSecret);
+							String name = etOnboardingName.getText().toString().trim();
+							String email = etOnboardingEmail.getText().toString().trim();
+							String referralCode = etReferralCode.getText().toString().trim();
+							if (!TextUtils.isEmpty(name)
+									|| !TextUtils.isEmpty(email)
+									|| !TextUtils.isEmpty(referralCode)) {
+								apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
+							}
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -2885,9 +2902,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 //								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									if(jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 1){
+									if(jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 0){
 										changeUIState(State.SPLASH_ONBOARDING);
 									} else{
+										loginDataFetched = true;
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									}
@@ -4157,6 +4175,77 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
     }
+
+	public void apiUpdateUserProfile(final Activity activity, final String accessToken,
+									 final String updatedName, final String updatedEmail,
+									 final String referralCode) {
+		if(MyApplication.getInstance().isOnline()) {
+			DialogPopup.showLoadingDialog(activity, "Updating...");
+
+			HashMap<String, String> params = new HashMap<>();
+
+			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
+			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
+			params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+			params.put(Constants.KEY_SIGNUP_ONBOARDING, "1");
+			if(!TextUtils.isEmpty(updatedName)) {
+				params.put(Constants.KEY_UPDATED_USER_NAME, updatedName);
+			}
+			if(!TextUtils.isEmpty(updatedEmail)) {
+				params.put(Constants.KEY_UPDATED_USER_EMAIL, updatedEmail);
+			}
+			if(!TextUtils.isEmpty(referralCode)) {
+				params.put(Constants.KEY_REFERRAL_CODE, referralCode);
+			}
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().updateUserProfile(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "updateUserProfile response = " + responseStr);
+					DialogPopup.dismissLoadingDialog();
+					try {
+
+						JSONObject jObj = new JSONObject(responseStr);
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							int flag = jObj.getInt("flag");
+							if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								Utils.showToast(activity, error);
+							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								String message = jObj.optString("message", "");
+								Data.userData.userName = updatedName;
+								Data.userData.userEmail = updatedEmail;
+								Utils.showToast(activity, message);
+								loginDataFetched = true;
+								new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
+										loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
+								onWindowFocusChanged(true);
+							} else {
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+						}
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "updateUserProfile error="+error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
 
 
     private class ReadSMSClickLinkAsync extends AsyncTask<String, Integer, String> {

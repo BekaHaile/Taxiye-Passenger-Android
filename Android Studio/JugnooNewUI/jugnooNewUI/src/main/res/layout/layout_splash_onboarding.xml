@@ -30,10 +30,11 @@
             android:text="@string/do_you_have_a_referral_code"
             android:textSize="@dimen/px_36"
             android:layout_gravity="center"
-            android:textColor="@color/text_color"/>
+            android:textColor="@color/text_color"
+            app:font="@string/maven_r"/>
 
         <EditText
-            android:id="@+id/editTextPromoCode"
+            android:id="@+id/etReferralCode"
             android:layout_width="match_parent"
             android:layout_height="80px"
             android:layout_marginTop="36px"
@@ -55,7 +56,8 @@
             android:textColorHint="@color/black_text_alpha"
             android:textCursorDrawable="@drawable/cursor_black"
             android:textSize="@dimen/text_size_32"
-            android:gravity="center"/>
+            android:gravity="center"
+            app:font="@string/maven_r"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -90,7 +92,7 @@
                 android:tag="mhar" />
 
             <EditText
-                android:id="@+id/editTextSName"
+                android:id="@+id/etOnboardingName"
                 android:layout_width="match_parent"
                 android:layout_height="88px"
                 android:layout_centerVertical="true"
@@ -108,7 +110,8 @@
                 android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color_hint"
                 android:textCursorDrawable="@drawable/cursor_black"
-                android:textSize="@dimen/text_size_34" />
+                android:textSize="@dimen/text_size_34"
+                app:font="@string/maven_r"/>
 
             <TextView
                 android:id="@+id/textViewSNameRequired"
@@ -144,7 +147,7 @@
                 android:tag="mhar" />
 
             <EditText
-                android:id="@+id/editTextSEmail"
+                android:id="@+id/etOnboardingEmail"
                 android:layout_width="match_parent"
                 android:layout_height="88px"
                 android:layout_centerVertical="true"
@@ -160,7 +163,8 @@
                 android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color_hint"
                 android:textCursorDrawable="@drawable/cursor_black"
-                android:textSize="@dimen/text_size_34" />
+                android:textSize="@dimen/text_size_34"
+                app:font="@string/maven_r"/>
 
             <TextView
                 android:id="@+id/textViewSEmailRequired"
@@ -183,7 +187,8 @@
             android:text="@string/submit"
             android:textAllCaps="true"
             android:textColor="@color/text_color_white_grey_selector"
-            android:textSize="@dimen/text_size_34" />
+            android:textSize="@dimen/text_size_34"
+            app:font="maven"/>
 
         <TextView
             android:id="@+id/tvSkip"
@@ -192,7 +197,8 @@
             android:text="@string/skip_this_step"
             android:layout_marginTop="@dimen/px_32"
             android:textSize="@dimen/px_30"
-            android:textColor="@color/grey_969696"/>
+            android:textColor="@color/grey_969696"
+            app:font="@string/maven_r"/>
 
     </LinearLayout>
 
