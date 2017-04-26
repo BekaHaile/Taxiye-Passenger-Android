@@ -662,6 +662,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
 								loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 						onWindowFocusChanged(true);
+						GAUtils.event(JUGNOO, REFERRAL_CODE_SCREEN, SKIP+CLICKED);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -687,6 +688,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							} else{
 								Utils.showToast(SplashNewActivity.this, getResources().getString(R.string.press_skip_this_step_to_proceed));
 							}
+							GAUtils.event(JUGNOO, REFERRAL_CODE_SCREEN, SUBMIT+CLICKED);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1589,20 +1591,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				anim2.setDuration(duration);
 				rlLoginSignupNew.startAnimation(anim2);
 				rlLoginSignupNew.setVisibility(View.GONE);
-				String userName = "", userEmail = "";
-				try {
-					String ownerEmail = UserEmailFetcher.getEmail(SplashNewActivity.this);
-					if (ownerEmail != null && (!ownerEmail.equalsIgnoreCase(""))) {
-						userEmail = ownerEmail;
-						if (new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail) != null) {
-							userName = Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail));
-						}
-						etOnboardingName.setText(userName);
-						etOnboardingEmail.setText(userEmail);
-					}
-				} catch(Exception e){
-					e.printStackTrace();
-				}
+
 				GAUtils.trackScreenView(REFERRAL_CODE_SCREEN);
 				break;
 

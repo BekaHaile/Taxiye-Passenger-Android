@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
@@ -83,7 +84,7 @@ import retrofit.client.Response;
  * Created by ankit on 14/09/16.
  */
 public class DeliveryAddressesFragment extends Fragment implements GAAction,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GACategory{
 
     private View rootView;
     private Activity activity;
@@ -819,6 +820,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle(""));
                 }
             }
+
+            GAUtils.event(JUGNOO, DELIVERY_ADDRESS, NEXT+CLICKED);
         } else {
             Utils.showToast(activity, "Please wait...");
         }
