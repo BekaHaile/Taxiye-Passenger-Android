@@ -3291,7 +3291,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								//sendToOtpScreen = true;
 								googleRegister = true;
 								PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), "IND");
-								//startFbAccountKit(phoneNumber);
 								fbAccountKit.startFbAccountKit(phoneNumber);
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
@@ -4240,19 +4239,23 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								String message = jObj.optString("message", "");
 								Utils.showToast(activity, message);
-								if(!TextUtils.isEmpty(updatedName)) {
-									Data.userData.userName = updatedName;
-								}
-								if(!TextUtils.isEmpty(updatedEmail)) {
-									Data.userData.userEmail = updatedEmail;
-								}
 							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 							loginDataFetched = true;
 							new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
 									loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
+							if((jObj.has("email_correct")) && (jObj.optInt("email_correct", 0) == 1)){
+								if(!TextUtils.isEmpty(updatedEmail)) {
+									Data.userData.userEmail = updatedEmail;
+								}
+							}
 
+							if((jObj.has("username_correct")) && (jObj.optInt("username_correct", 0) == 1)){
+								if(!TextUtils.isEmpty(updatedName)) {
+									Data.userData.userName = updatedName;
+								}
+							}
 							onWindowFocusChanged(true);
 						}
 					} catch (Exception exception) {

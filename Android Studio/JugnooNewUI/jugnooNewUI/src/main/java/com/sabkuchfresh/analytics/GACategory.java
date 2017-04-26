@@ -19,6 +19,4 @@ public interface GACategory {
 	String SIGNUP_LOGIN = "Signup Login ";
 	String PROFILE_SCREEN = "Profile Screen";
 	String GENIE_OPEN_SCREEN = "Genie Open Screen";
-	String ORDER_PLACED = "Order Placed";
-	String REFERRAL = "Referral";
 }
