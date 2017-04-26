@@ -786,6 +786,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
 						String clientId = jObj.optString(KEY_CLIENT_ID, "");
 						int orderId = jObj.optInt(KEY_ORDER_ID, 0);
+						int closeTracking = jObj.optInt(KEY_CLOSE_TRACKING, 0);
 						int productType = jObj.optInt(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
 						message1 = jObj.optString(KEY_MESSAGE, "");
 						if(!TextUtils.isEmpty(message1)) {
@@ -797,6 +798,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						intent.putExtra(Constants.KEY_ORDER_ID, orderId);
+						intent.putExtra(Constants.KEY_CLOSE_TRACKING, closeTracking);
 						intent.putExtra(KEY_CLIENT_ID, clientId);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}

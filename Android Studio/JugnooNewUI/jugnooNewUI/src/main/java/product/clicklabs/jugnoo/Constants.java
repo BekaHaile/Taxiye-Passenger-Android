@@ -692,4 +692,5 @@ public interface Constants {
     String KEY_UPI_HANDLE = "upi_handle";
     String PAGE_COUNT = "pageCount";
     String COUNT_RECORDS = "count_records";
+    String KEY_CLOSE_TRACKING = "close_tracking";
 }

@@ -285,7 +285,9 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					try {
 						final int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
 						final int orderId = intent.getIntExtra(Constants.KEY_ORDER_ID, -1);
+						final int closeTracking = intent.getIntExtra(Constants.KEY_CLOSE_TRACKING, 0);
 						if(orderId == TrackOrderActivity.this.orderId
+								&& closeTracking == 1
 								&& (PushFlags.STATUS_CHANGED.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag)) {
