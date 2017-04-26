@@ -49,7 +49,7 @@
                 android:capitalize="characters"
                 android:digits="@string/digits_characters_caps_numbers"
                 android:gravity="center"
-                android:hint="@string/enter_referral_code_optional"
+                android:hint="@string/enter_promocode_optional"
                 android:inputType="textCapCharacters"
                 android:maxWidth="200dp"
                 android:paddingLeft="20px"

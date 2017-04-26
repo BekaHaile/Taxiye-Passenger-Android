@@ -4221,21 +4221,20 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								Utils.showToast(activity, error);
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								String message = jObj.optString("message", "");
-
 								Utils.showToast(activity, message);
-								loginDataFetched = true;
-								new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
-										loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
-								if(!TextUtils.isEmpty(updatedName)) {
-									Data.userData.userName = updatedName;
-								}
-								if(!TextUtils.isEmpty(updatedEmail)) {
-									Data.userData.userEmail = updatedEmail;
-								}
-								onWindowFocusChanged(true);
 							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
+							loginDataFetched = true;
+							new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
+									loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
+							if(!TextUtils.isEmpty(updatedName)) {
+								Data.userData.userName = updatedName;
+							}
+							if(!TextUtils.isEmpty(updatedEmail)) {
+								Data.userData.userEmail = updatedEmail;
+							}
+							onWindowFocusChanged(true);
 						}
 					} catch (Exception exception) {
 						exception.printStackTrace();
