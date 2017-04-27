@@ -19,9 +19,11 @@ import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -57,16 +59,26 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
     public void onBindViewHolder(MenuItemViewHolder holder, int position) {
         try {
             if(menuList.get(position)!=null) {
+
+                holder.tvValue.setVisibility(View.GONE);
+
                 holder.tvJugnooStar.setText(menuList.get(position).getName());
                 if(menuList.get(position).getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())) {
+                    holder.tvValue.setVisibility(View.VISIBLE);
                     holder.tvValue.setText(String.format(activity.getResources()
                             .getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
+                }else if(menuList.get(position).getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
+                    int unreadNotificationsCount = Prefs.with(activity).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+                    if(unreadNotificationsCount > 0){
+                        holder.tvValue.setVisibility(View.VISIBLE);
+                        holder.tvValue.setText(String.valueOf(unreadNotificationsCount));
+
+                    }
                 }
             }
             else
                 holder.tvJugnooStar.setText(null);
 
-            holder.tvValue.setVisibility(menuList.get(position).getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())?View.VISIBLE:View.GONE);
         } catch (Exception e) {
             e.printStackTrace();
         }

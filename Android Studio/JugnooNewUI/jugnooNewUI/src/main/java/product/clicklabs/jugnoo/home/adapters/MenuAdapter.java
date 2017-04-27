@@ -310,7 +310,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                 if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
                     if(!"".equalsIgnoreCase(Data.userData.userImage)) {
-                        Picasso.with(activity).load(Data.userData.userImage).transform(new CircleTransform())
+                        Picasso.with(activity).load(Data.userData.userImage).transform(new CircleTransform()).error(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder))
                                 .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
                                 .into(holder.imageViewProfile);
                     }else{
@@ -319,7 +319,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
                 else{
                     if(!"".equalsIgnoreCase(Data.userData.userImage)) {
-                        Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform())
+                        Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).error(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder))
                                 .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
                                 .into(holder.imageViewProfile);
                     }

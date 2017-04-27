@@ -301,7 +301,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     public void oSnapNotAvailableCase(String message){
-        activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+        activity.getTopBar().getLlSearchCartContainer().setVisibility(View.GONE);
         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
         relativeLayoutNoMenus.setVisibility(View.VISIBLE);
         textViewNothingFound.setText(!TextUtils.isEmpty(message) ? message : getString(R.string.nothing_found_near_you));

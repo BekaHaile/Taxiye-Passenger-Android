@@ -203,7 +203,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     activity.setRefreshCart(false);
                 }
             }, 300);
-
+            activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
