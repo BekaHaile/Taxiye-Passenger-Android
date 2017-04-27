@@ -1,47 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout android:id="@+id/linearLayoutMain"
-                                                 xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:background="@color/sliding_bottom_bg_color">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayoutMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sliding_bottom_bg_color">
 
     <RelativeLayout
         android:id="@+id/rlMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:tag="@string/dont_touch_me"
-        >
+        android:tag="@string/dont_touch_me">
 
         <fragment
             android:id="@+id/googleMap"
             android:name="product.clicklabs.jugnoo.utils.TouchableMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:id="@+id/rlMarkerPin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dp_162"
-            >
+            android:layout_marginBottom="@dimen/dp_162">
 
             <ImageView
                 android:layout_width="33dp"
                 android:layout_height="54dp"
                 android:layout_above="@+id/ivPivot"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_delivery_address_map"
                 android:layout_marginBottom="-4dp"
-                />
+                android:src="@drawable/ic_delivery_address_map" />
 
             <ImageView
                 android:id="@+id/ivPivot"
                 android:layout_width="1dp"
                 android:layout_height="1dp"
-                android:layout_centerInParent="true"
-                />
+                android:layout_centerInParent="true" />
         </RelativeLayout>
 
 
@@ -54,11 +50,10 @@
             android:layout_marginBottom="@dimen/dp_176"
             android:background="@drawable/capsule_green_color_selector"
             android:text="@string/next"
+            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_16"
-            app:font="maven"
-            android:textAllCaps="true"
-            />
+            app:font="maven" />
 
         <ImageView
             android:id="@+id/bMyLocation"
@@ -68,8 +63,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:contentDescription="@string/move_to_your_location"
-            android:src="@drawable/mylocation_btn_selector"
-            />
+            android:src="@drawable/mylocation_btn_selector" />
 
     </RelativeLayout>
 
@@ -109,16 +103,16 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_less_light"
                     android:textSize="@dimen/text_size_24"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/listViewSavedLocations"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="20px"
                     android:divider="@color/transparent"
                     android:dividerHeight="0px"
-                    android:splitMotionEvents="false"
-                    android:layout_marginBottom="20px"/>
+                    android:splitMotionEvents="false" />
 
                 <TextView
                     android:id="@+id/textViewRecentAddresses"
@@ -131,7 +125,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_less_light"
                     android:textSize="@dimen/text_size_24"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/listViewRecentAddresses"
@@ -143,7 +137,7 @@
                     android:fadeScrollbars="true"
                     android:scrollbars="vertical"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
             </LinearLayout>
 
@@ -157,8 +151,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/sliding_bottom_bg_color"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/linearLayoutSearch"
@@ -167,16 +160,16 @@
             android:orientation="vertical"
             android:splitMotionEvents="false">
 
-            <android.support.v7.widget.CardView android:id="@+id/cardViewSearch"
-                                                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="wrap_content"
-                                                android:layout_marginBottom="10px"
-                                                android:layout_marginLeft="16px"
-                                                android:layout_marginRight="16px"
-                                                android:layout_marginTop="20px"
-                                                card_view:cardBackgroundColor="@color/white"
-                                                card_view:cardCornerRadius="4px">
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cardViewSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10px"
+                android:layout_marginLeft="16px"
+                android:layout_marginRight="16px"
+                android:layout_marginTop="20px"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4px">
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/listViewSearch"
@@ -187,7 +180,7 @@
                     android:fadeScrollbars="true"
                     android:scrollbars="vertical"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
             </android.support.v7.widget.CardView>
 
@@ -199,13 +192,13 @@
                 android:layout_marginBottom="16px"
                 android:layout_marginTop="24px"
                 android:src="@drawable/powered_by_google_light"
-                android:tag="mwar"/>
+                android:tag="mwar" />
 
             <TextView
                 android:id="@+id/textViewScrollSearch"
                 android:layout_width="10px"
                 android:layout_height="10px"
-                android:textSize="28px"/>
+                android:textSize="28px" />
         </LinearLayout>
 
     </ScrollView>
@@ -213,7 +206,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_new_height"
-        android:background="@drawable/shadow_down_new"
-        />
+        android:background="@drawable/shadow_down_new" />
 
 </android.support.design.widget.CoordinatorLayout>

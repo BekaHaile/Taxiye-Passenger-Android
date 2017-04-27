@@ -4299,7 +4299,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             llCheckoutBar.startAnimation(animation);
 
             if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
-                getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, llCheckoutBar.getMeasuredHeight());
+                getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, llCheckoutBar.getMeasuredHeight()+((int)(ASSL.Yscale()*240) - llCheckoutBar.getMeasuredHeight()));
             }
 
             if(textViewMinOrder.getVisibility() == View.VISIBLE) {
@@ -4319,7 +4319,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             llCheckoutBar.startAnimation(animation);
 
             if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
-                getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, 0);
+                getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, (int)(ASSL.Yscale()*240));
             }
 
             if(textViewMinOrder.getVisibility() == View.VISIBLE) {
