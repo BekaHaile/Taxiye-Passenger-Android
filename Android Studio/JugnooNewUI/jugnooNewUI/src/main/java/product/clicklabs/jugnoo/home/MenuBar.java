@@ -1,17 +1,27 @@
 package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.jugnoo.pay.activities.MainActivity;
+import com.sabkuchfresh.analytics.GAUtils;
+import com.squareup.picasso.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -19,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by shankar on 4/8/16.
@@ -37,6 +48,10 @@ public class MenuBar {
 	}
 
 	public MenuAdapter menuAdapter;
+	private ImageView imageViewProfile;
+	private TextView textViewUserName,textViewViewPhone;
+	private View viewStarIcon;
+	private RelativeLayout relativeLayout;
 
 	public MenuBar(Activity activity, DrawerLayout rootView){
 		this.activity = activity;
@@ -54,8 +69,16 @@ public class MenuBar {
 		recyclerViewMenu.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewMenu.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewMenu.setHasFixedSize(false);
+		imageViewProfile = (ImageView) drawerLayout.findViewById(R.id.imageViewProfile);//textViewUserName
 
+		textViewUserName = (TextView) drawerLayout.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.mavenMedium(activity));
+		textViewViewPhone = (TextView) drawerLayout.findViewById(R.id.textViewViewPhone); textViewViewPhone.setTypeface(Fonts.mavenRegular(activity));
+		viewStarIcon = (View) drawerLayout.findViewById(R.id.viewStarIcon);
+		relativeLayout = (RelativeLayout) drawerLayout.findViewById(R.id.rlTopContainer);
 		try {
+
+
+
 			ArrayList<MenuInfo> itemsToShow = new ArrayList<>();
 			for(MenuInfo menuInfo: Data.userData.getMenuInfoList())
 			{
@@ -68,6 +91,7 @@ public class MenuBar {
 
 
 			recyclerViewMenu.setAdapter(menuAdapter);
+			setProfileData();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -84,6 +108,63 @@ public class MenuBar {
 		setupFreshUI();
 	}
 
+	private void setProfileData() {
+
+		if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
+
+            viewStarIcon.setVisibility(View.VISIBLE);
+        } else{
+
+            viewStarIcon.setVisibility(View.GONE);
+        }
+		if(!TextUtils.isEmpty(Data.userData.userName)
+                && (!Data.userData.userName.equalsIgnoreCase("User"))) {
+            textViewUserName.setVisibility(View.VISIBLE);
+            textViewUserName.setText(Data.userData.userName);
+        } else{
+            textViewUserName.setVisibility(View.GONE);
+        }
+		try {
+            textViewViewPhone.setText(Data.userData.phoneNo.replaceFirst("\\+91",""));
+
+        } catch (Exception e){
+            textViewViewPhone.setText(Data.userData.phoneNo);
+        }
+		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+		if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
+            if(!"".equalsIgnoreCase(Data.userData.userImage)) {
+                Picasso.with(activity).load(Data.userData.userImage).placeholder(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder)).transform(new CircleTransform()).error(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder))
+                        .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
+                        .into(imageViewProfile);
+            }else{
+                imageViewProfile.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder));
+            }
+        }
+        else{
+            if(!"".equalsIgnoreCase(Data.userData.userImage)) {
+                Picasso.with(activity).load(Data.userData.userImage).placeholder(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder)).transform(new CircleTransform()).error(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder))
+                        .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
+                        .into(imageViewProfile);
+            }
+            else {
+                imageViewProfile.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder));
+            }
+        }
+
+
+
+		relativeLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				accountClick();
+
+			}
+		});
+	}
+	public void accountClick(){
+		activity.startActivity(new Intent(activity, AccountActivity.class));
+		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+	}
 	public void openChat(){
 		((HomeActivity)activity).openChatScreen();
 	}
