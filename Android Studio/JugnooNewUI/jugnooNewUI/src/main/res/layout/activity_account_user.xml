@@ -380,25 +380,7 @@
             <include layout="@layout/layout_change_password" />
 
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutEmergencyContact"
-                android:layout_width="match_parent"
-                android:layout_height="110px"
-                android:background="@color/white">
 
-                <TextView
-                    android:id="@+id/textViewEmergencyContact"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="40px"
-                    android:gravity="center"
-                    android:text="@string/emergency_contacts"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28" />
-
-            </RelativeLayout>
 
 
             <RelativeLayout
@@ -407,12 +389,7 @@
                 android:layout_height="110px"
                 android:background="@color/white">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginRight="40px"
-                    android:background="@color/stroke_color_light" />
+
 
                 <TextView
                     android:id="@+id/textViewAddressBook"
@@ -426,10 +403,36 @@
                     android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_28" />
 
+
+
             </RelativeLayout>
 
 
+            <RelativeLayout
+                android:id="@+id/relativeLayoutEmergencyContact"
+                android:layout_width="match_parent"
+                android:layout_height="110px"
+                android:background="@color/white">
 
+
+                <View android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="40px"
+                    android:background="@color/stroke_color_light" />
+                <TextView
+                    android:id="@+id/textViewEmergencyContact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40px"
+                    android:gravity="center"
+                    android:text="@string/emergency_contacts"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_light_selector"
+                    android:textSize="@dimen/text_size_28" />
+
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"

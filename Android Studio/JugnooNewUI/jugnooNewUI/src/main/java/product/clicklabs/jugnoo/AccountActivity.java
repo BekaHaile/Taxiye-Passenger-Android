@@ -751,12 +751,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 e.printStackTrace();
                             }
                         }
-                        else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())){
-                            Intent intent = new Intent(AccountActivity.this, RideTransactionsActivity.class);
-                            intent.putExtra(Constants.KEY_ORDER_ID, 0);
-                            intent.putExtra(Constants.KEY_PRODUCT_TYPE, 0);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
+                           startActivity(new Intent(AccountActivity.this, NotificationCenterActivity.class));
+                           overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
                         }
 

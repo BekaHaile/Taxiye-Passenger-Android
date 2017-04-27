@@ -67,7 +67,7 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
                 holder.tvJugnooStar.setText(null);
 
             holder.tvValue.setVisibility(menuList.get(position).getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())?View.VISIBLE:View.GONE);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
