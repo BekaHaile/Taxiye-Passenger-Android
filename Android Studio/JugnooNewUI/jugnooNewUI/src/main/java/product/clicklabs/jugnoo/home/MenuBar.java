@@ -10,11 +10,14 @@ import android.widget.LinearLayout;
 
 import com.jugnoo.pay.activities.MainActivity;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
 
 /**
@@ -53,7 +56,17 @@ public class MenuBar {
 		recyclerViewMenu.setHasFixedSize(false);
 
 		try {
-			menuAdapter = new MenuAdapter(Data.userData.getMenuInfoList(), activity, drawerLayout);
+			ArrayList<MenuInfo> itemsToShow = new ArrayList<>();
+			for(MenuInfo menuInfo: Data.userData.getMenuInfoList())
+			{
+				if(!menuInfo.getShowInAccount()){
+					itemsToShow.add(menuInfo);
+				}
+			}
+
+			menuAdapter = new MenuAdapter(itemsToShow, activity, drawerLayout);
+
+
 			recyclerViewMenu.setAdapter(menuAdapter);
 		} catch (Exception e) {
 			e.printStackTrace();

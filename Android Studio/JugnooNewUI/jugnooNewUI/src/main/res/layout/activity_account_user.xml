@@ -278,33 +278,19 @@
                 android:layout_height="2px"
                 android:layout_marginTop="26px"
                 android:background="@color/stroke_color_light" />
-            <RelativeLayout
-                android:id="@+id/rlJugnooStar"
+
+
+            <android.support.v7.widget.RecyclerView
+                android:visibility="gone"
+                android:id="@+id/recycler_menu_nav_views"
+                android:background="@android:color/white"
                 android:layout_width="match_parent"
-                android:layout_height="110px"
-                android:background="@color/white"
-                android:visibility="gone">
+                android:layout_height="wrap_content">
 
 
-                <TextView
-                    android:id="@+id/tvJugnooStar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="40px"
-                    android:gravity="center"
-                    android:text="@string/jugnoo_star"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28" />
-                <View
-                    android:layout_alignParentBottom="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginRight="40px"
-                    android:background="@color/stroke_color_light" />
-            </RelativeLayout>
+
+            </android.support.v7.widget.RecyclerView>
+
             <RelativeLayout
                 android:id="@+id/relativeLayoutChangePassword"
                 android:layout_width="match_parent"

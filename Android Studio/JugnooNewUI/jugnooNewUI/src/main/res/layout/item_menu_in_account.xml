@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rlJugnooStar"
+    android:layout_width="match_parent"
+    android:layout_height="110px"
+    android:background="@color/white"
+    android:visibility="visible"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <TextView
+        android:id="@+id/tvJugnooStar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="40px"
+        android:gravity="center"
+        android:text="@string/jugnoo_star"
+        android:textAllCaps="true"
+        android:textColor="@color/text_color_light_selector"
+        android:textSize="@dimen/text_size_28" />
+
+    <TextView
+        android:layout_toRightOf="@id/tvJugnooStar"
+        android:id="@+id/textViewValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="40px"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/px_3"
+        android:gravity="right"
+
+        android:text="@string/rupee_0"
+        android:textColor="@color/theme_color"
+        android:textSize="36px"
+        android:visibility="visible" />
+    <View
+
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px"
+        android:background="@color/stroke_color_light" />
+</RelativeLayout>

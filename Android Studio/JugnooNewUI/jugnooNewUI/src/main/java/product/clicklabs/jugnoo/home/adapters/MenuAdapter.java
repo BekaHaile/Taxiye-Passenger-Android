@@ -185,8 +185,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_wallet_selector);
                     try {
                         holder.textViewValue.setText(String.format(activity.getResources()
-                                        .getString(R.string.rupees_value_format_without_space),
-                                Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
+                                        .getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
                         holder.textViewValue.setVisibility(View.VISIBLE);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -502,6 +501,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public void onClickAction(final String tag){
         onClickAction(tag, 0, 0);
     }
+
     public void onClickAction(final String tag, final int orderId, final int productType){
         try {
             if(MenuInfoTags.GAME.getTag().equalsIgnoreCase(tag)){
