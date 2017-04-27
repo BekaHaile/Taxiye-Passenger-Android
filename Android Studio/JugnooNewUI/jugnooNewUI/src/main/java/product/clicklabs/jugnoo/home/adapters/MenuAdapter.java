@@ -285,50 +285,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         else if(viewholder instanceof ViewHeaderHolder){
             final ViewHeaderHolder holder = (ViewHeaderHolder) viewholder;
             holder.textViewCategories.setText(R.string.categories);
-            holder.imageViewArrow.setVisibility(View.VISIBLE);
+
             try {
-                if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
 
-                    holder.viewStarIcon.setVisibility(View.VISIBLE);
-                } else{
-
-                    holder.viewStarIcon.setVisibility(View.GONE);
-                }
-                if(!TextUtils.isEmpty(Data.userData.userName)
-                        && (!Data.userData.userName.equalsIgnoreCase("User"))) {
-                    holder.textViewUserName.setVisibility(View.VISIBLE);
-                    holder.textViewUserName.setText(Data.userData.userName);
-                } else{
-                    holder.textViewUserName.setVisibility(View.GONE);
-                }
-                    try {
-                        holder.textViewViewPhone.setText(Data.userData.phoneNo.replaceFirst("\\+91",""));
-
-                    } catch (Exception e){
-                        holder.textViewViewPhone.setText(Data.userData.phoneNo);
-                    }
-                float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
-                    if(!"".equalsIgnoreCase(Data.userData.userImage)) {
-                        Picasso.with(activity).load(Data.userData.userImage).transform(new CircleTransform()).error(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder))
-                                .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
-                                .into(holder.imageViewProfile);
-                    }else{
-                        holder.imageViewProfile.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder));
-                    }
-                }
-                else{
-                    if(!"".equalsIgnoreCase(Data.userData.userImage)) {
-                        Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).error(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder))
-                                .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
-                                .into(holder.imageViewProfile);
-                    }
-                    else {
-                        holder.imageViewProfile.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder));
-                    }
-                }
                 holder.linearLayoutCategories.setVisibility(View.GONE);
                 holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                holder.imageViewArrow.setVisibility(View.VISIBLE);
                 holder.imageViewArrow.setRotation(270);
                 setSubCategories(holder);
 
@@ -350,13 +312,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
             });
 
-            holder.relative.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    accountClick();
-                    GAUtils.event(SIDE_MENU, USER+PROFILE+CLICKED, "");
-                }
-            });
+
 
             showLayoutOfferings(holder.linearLayoutSubAutos);
             showLayoutOfferings(holder.linearLayoutSubFeed);
@@ -757,19 +713,19 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 
     public class ViewHeaderHolder extends RecyclerView.ViewHolder {
-        public RelativeLayout relative;
-        public ImageView imageViewProfile, imageViewArrow;
-        public TextView textViewUserName, textViewViewPhone, textViewCategories, textViewAutos, textViewFresh, textViewMeals,
+
+        public ImageView imageViewArrow;
+        public TextView  textViewCategories, textViewAutos, textViewFresh, textViewMeals,
                 textViewGrocery, textViewMenus, textViewPay, textViewFeed;
         public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos,
             linearLayoutSubGrocery, linearLayoutSubMenus, linearLayoutSubPay, linearLayoutSubFeed;
-        public View viewStarIcon;
+
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
-            relative = (RelativeLayout) convertView.findViewById(R.id.relative);
-            imageViewProfile = (ImageView) convertView.findViewById(R.id.imageViewProfile);//textViewUserName
-            textViewUserName = (TextView) convertView.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.mavenMedium(context));
-            textViewViewPhone = (TextView) convertView.findViewById(R.id.textViewViewPhone); textViewViewPhone.setTypeface(Fonts.mavenRegular(context));
+
+
+
+            imageViewArrow = (ImageView) convertView.findViewById(R.id.imageViewArrow);
             textViewCategories = (TextView) convertView.findViewById(R.id.textViewCategories); textViewCategories.setTypeface(Fonts.mavenRegular(context));
             textViewAutos = (TextView) convertView.findViewById(R.id.textViewAutos); textViewAutos.setTypeface(Fonts.mavenRegular(context));
             textViewFresh = (TextView) convertView.findViewById(R.id.textViewFresh); textViewFresh.setTypeface(Fonts.mavenRegular(context));
@@ -780,7 +736,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             textViewFeed = (TextView) convertView.findViewById(R.id.textViewFeed); textViewFeed.setTypeface(Fonts.mavenRegular(context));
             linearLayoutCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutCategories);
             linearLayoutSubCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubCategories);
-            imageViewArrow = (ImageView) convertView.findViewById(R.id.imageViewArrow);
             linearLayoutSubAutos = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubAutos);
             linearLayoutSubFresh = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubFresh);
             linearLayoutSubMeals = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubMeals);
@@ -789,7 +744,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             linearLayoutSubPay = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubPay);
             linearLayoutSubFeed = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubFeed);
 
-            viewStarIcon = (View) convertView.findViewById(R.id.viewStarIcon);
+
 
             textViewFeed.setText(Data.getFeedName(context));
         }
