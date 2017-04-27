@@ -614,6 +614,7 @@
     <dimen name="dp_96">
         96dp
     </dimen>
+    <dimen name="dp_51">51dp</dimen>
 
 
 </resources>
