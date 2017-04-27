@@ -51,6 +51,7 @@ public class MenuBar {
 	private ImageView imageViewProfile;
 	private TextView textViewUserName,textViewViewPhone;
 	private View viewStarIcon;
+	private RelativeLayout relativeLayout;
 
 	public MenuBar(Activity activity, DrawerLayout rootView){
 		this.activity = activity;
@@ -73,7 +74,7 @@ public class MenuBar {
 		textViewUserName = (TextView) drawerLayout.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.mavenMedium(activity));
 		textViewViewPhone = (TextView) drawerLayout.findViewById(R.id.textViewViewPhone); textViewViewPhone.setTypeface(Fonts.mavenRegular(activity));
 		viewStarIcon = (View) drawerLayout.findViewById(R.id.viewStarIcon);
-
+		relativeLayout = (RelativeLayout) drawerLayout.findViewById(R.id.rlTopContainer);
 		try {
 
 
@@ -132,7 +133,7 @@ public class MenuBar {
 		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
             if(!"".equalsIgnoreCase(Data.userData.userImage)) {
-                Picasso.with(activity).load(Data.userData.userImage).transform(new CircleTransform()).error(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder))
+                Picasso.with(activity).load(Data.userData.userImage).placeholder(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder)).transform(new CircleTransform()).error(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder))
                         .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
                         .into(imageViewProfile);
             }else{
@@ -141,7 +142,7 @@ public class MenuBar {
         }
         else{
             if(!"".equalsIgnoreCase(Data.userData.userImage)) {
-                Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).error(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder))
+                Picasso.with(activity).load(Data.userData.userImage).placeholder(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder)).transform(new CircleTransform()).error(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder))
                         .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
                         .into(imageViewProfile);
             }
@@ -152,7 +153,7 @@ public class MenuBar {
 
 
 
-		drawerLayout.findViewById(R.id.relative).setOnClickListener(new View.OnClickListener() {
+		relativeLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				accountClick();
