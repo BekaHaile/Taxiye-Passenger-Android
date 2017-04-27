@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.utils;
 /**
  * Created by socomo on 10/23/15.
  */
+
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
@@ -17,6 +18,7 @@ import android.util.Property;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
@@ -34,7 +36,7 @@ import retrofit.mime.TypedByteArray;
 public class MarkerAnimation {
 
     private static final String TAG = MarkerAnimation.class.getSimpleName();
-    public static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
+    private static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
     private static final double ANIMATION_TIME = 14000;
 
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
@@ -86,16 +88,22 @@ public class MarkerAnimation {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim) {
+    public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, boolean animateRoute, GoogleMap googleMap, int pathResolvedColor) {
 
         try {
             if(MapUtils.distance(marker.getPosition(), finalPosition) < 80
 					|| MapUtils.distance(marker.getPosition(), finalPosition) > 2000){
                 //marker.setPosition(finalPosition);
                 animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim);
+                if(animateRoute && googleMap != null){
+                    List<LatLng> list = new ArrayList<>();
+                    list.add(marker.getPosition());
+                    list.add(finalPosition);
+                    MapRouteAnimator.getInstance().animateRoute(googleMap, list, (long) ANIMATION_TIME, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
+                }
 			}
 			else{
-                getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim));
+                getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim, animateRoute, googleMap, pathResolvedColor));
                 if(getDirectionsAsyncs.size() == 1){
                     getDirectionsAsyncs.get(0).execute();
                 }
@@ -131,7 +139,7 @@ public class MarkerAnimation {
         }
     }
 
-    static class GetDirectionsAsync extends AsyncTask<String, String, String>{
+    private static class GetDirectionsAsync extends AsyncTask<String, String, String>{
         String engagementId;
         LatLng source, destination;
         Marker marker;
@@ -139,14 +147,20 @@ public class MarkerAnimation {
 		CallbackAnim callbackAnim;
         List<LatLng> list;
         double totalDistance;
+        boolean animateRoute;
+        GoogleMap googleMap;
+        int pathResolvedColor;
 
-        public GetDirectionsAsync(String engagementId, Marker marker, LatLng destination, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim){
+        GetDirectionsAsync(String engagementId, Marker marker, LatLng destination, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, boolean animateRoute, GoogleMap googleMap, int pathResolvedColor){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.destination = destination;
             this.marker = marker;
             this.latLngInterpolator = latLngInterpolator;
 			this.callbackAnim = callbackAnim;
+            this.animateRoute = animateRoute;
+            this.googleMap = googleMap;
+            this.pathResolvedColor = pathResolvedColor;
         }
 
         public GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, List<LatLng> list){
@@ -214,6 +228,12 @@ public class MarkerAnimation {
                     }
 
                     animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, true, callbackAnim);
+                    if(animateRoute && googleMap != null){
+                        List<LatLng> latLngList = new ArrayList<>();
+                        latLngList.add(source);
+                        latLngList.addAll(list);
+                        MapRouteAnimator.getInstance().animateRoute(googleMap, latLngList, (long) ANIMATION_TIME, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
+                    }
                 } else {
                     throw new Exception();
                 }

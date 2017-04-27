@@ -394,7 +394,9 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 											} else {
 												MarkerAnimation.animateMarkerToICS("-1", markerDriver,
 														latLngDriver, new LatLngInterpolator.Spherical(),
-														callbackAnim);
+														callbackAnim, true, googleMap,
+														ContextCompat.getColor(TrackOrderActivity.this,
+																R.color.theme_color));
 											}
 											if (!zoomedFirstTime) {
 												LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
@@ -469,10 +471,11 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										builder.include(deliveryLatLng).include(latLngDriver);
 										for(LatLng latLng : latLngsDriverAnim){builder.include(latLng);}
 
+										final LatLng latLngDriverLast = markerDriver != null ? markerDriver.getPosition() : latLngDriver;
 										int positionCentre = 0;
 										double distance = Double.MAX_VALUE;
 										for(int i=0; i<list.size(); i++){
-											double distI = MapUtils.distance(latLngDriver, list.get(i));
+											double distI = MapUtils.distance(latLngDriverLast, list.get(i));
 											if(distI < distance){
 												distance = distI;
 												positionCentre = i;
@@ -482,8 +485,8 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										for(int j=0; j<positionCentre; j++){
 											polylineOptions1.add(list.get(j));
 										}
-										polylineOptions1.add(latLngDriver);
-										polylineOptions2.add(latLngDriver);
+										polylineOptions1.add(latLngDriverLast);
+										polylineOptions2.add(latLngDriverLast);
 										for (int k = positionCentre+1; k < list.size(); k++) {
 											polylineOptions2.add(list.get(k));
 											builder.include(list.get(k));
@@ -568,7 +571,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	private boolean timerStarted = false;
 	private void scheduleTimer(){
 		if(!timerStarted) {
-			getTimer().scheduleAtFixedRate(getTimerTask(), 0, 18 * Constants.SECOND_MILLIS);
+			getTimer().scheduleAtFixedRate(getTimerTask(), 0, 20 * Constants.SECOND_MILLIS);
 			timerStarted = true;
 		}
 	}
