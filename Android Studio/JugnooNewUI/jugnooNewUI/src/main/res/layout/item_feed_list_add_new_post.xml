@@ -35,7 +35,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/placeholder_img"/>
 
-        <TextView
+        <com.sabkuchfresh.feed.ui.views.TypeWriterTextView.Typewriter
             android:id="@+id/tvAddPost"
             android:layout_width="match_parent"
             android:layout_height="40dp"

@@ -63,6 +63,8 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+
 
 public class FeedHomeFragment extends Fragment implements GACategory, GAAction, DeletePostDialog.DeleteDialogCallback, EditPostPopup.EditPostDialogCallback {
 
@@ -85,6 +87,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private ApiCommon<FeedListResponse> feedPagingApi;
     int pastVisiblesItems, visibleItemCount, totalItemCount, pageCount, countRecords, maxPageCount;
     private boolean hasMorePages;
+
 
     public FeedHomeFragment() {
         // Required empty public constructor
@@ -279,6 +282,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
+
                     visibleItemCount = layoutManager.getChildCount();
                     totalItemCount = layoutManager.getItemCount();
                     pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
@@ -286,20 +290,49 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     if (!isPagingApiInProgress && hasMorePages) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             fetchNextPage();
-                            ;
                         }
                     }
                 }
             }
+
+
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState==SCROLL_STATE_IDLE){
+
+
+                    if(activity.getFeedHomeAddPostView().getTranslationY()!=0 && (adapterList==null || adapterList.size()<=0 ||  layoutManager.findLastVisibleItemPosition()!=adapterList.size()-1 )  ){
+                        activity.getHandler().postDelayed(showAddPostOnIdleStateOfScroll,2000);
+                    }
+
+                } else {
+
+
+                    activity.getHandler().removeCallbacks(showAddPostOnIdleStateOfScroll);
+                }
+            }
         });
+
+
         return rootView;
     }
+    private Runnable showAddPostOnIdleStateOfScroll = new Runnable() {
+        @Override
+        public void run() {
+
+
+               activity.getFeedHomeAddPostView().animate().translationY(0).start();
+        }
+    };
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+
             activity.getFeedHomeAddPostView().setVisibility(relativeLayoutNotAvailable.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             activity.getHandler().postDelayed(new Runnable() {
                 @Override
@@ -313,7 +346,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             activity.getHandler().removeCallbacks(runnableNotificationCount);
             activity.getHandler().postDelayed(runnableNotificationCount, 1000);
         } else {
+            activity.getTvAddPost().clearAnimAndSetText();
             activity.getHandler().removeCallbacks(runnableNotificationCount);
+            activity.getHandler().removeCallbacks(showAddPostOnIdleStateOfScroll);
         }
     }
 
@@ -328,6 +363,8 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     public void onPause() {
         super.onPause();
         activity.getHandler().removeCallbacks(runnableNotificationCount);
+        activity.getTvAddPost().clearAnimAndSetText();
+        activity.getHandler().removeCallbacks(showAddPostOnIdleStateOfScroll);
     }
 
 
@@ -398,7 +435,15 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
                 //Set Data for Add Post View
-                activity.getTvAddPost().setText(feedbackResponse.getAddPostText());
+                if(Prefs.with(activity).getBoolean(Constants.KEY_ANIMATE_ASK_LOCAL_POST_TEXT,true)){
+                    activity.getTvAddPost().animateText(feedbackResponse.getAddPostText());
+                    Prefs.with(activity).save(Constants.KEY_ANIMATE_ASK_LOCAL_POST_TEXT,false);
+
+                }else{
+                    activity.getTvAddPost().setText(feedbackResponse.getAddPostText());
+
+                }
+
 
 
                 if (scrollToTop && feedHomeAdapter.getItemCount() > 0) {
@@ -816,5 +861,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
 
-
+    public boolean shouldTranslateFeedHomeAddPost() {
+        return recyclerView.getScrollState()!=SCROLL_STATE_IDLE;
+    }
 }

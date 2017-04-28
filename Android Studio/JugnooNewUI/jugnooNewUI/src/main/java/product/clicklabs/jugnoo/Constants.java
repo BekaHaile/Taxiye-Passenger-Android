@@ -697,4 +697,5 @@ public interface Constants {
     String KEY_PROMO_COUPON = "promo_coupon";
     String SP_USE_COUPON_ = "sp_use_coupon_";
     String SP_USE_COUPON_IS_COUPON_ = "sp_use_coupon_is_coupon_";
+    String KEY_ANIMATE_ASK_LOCAL_POST_TEXT = "key_animate_ask_local_post_text";
 }

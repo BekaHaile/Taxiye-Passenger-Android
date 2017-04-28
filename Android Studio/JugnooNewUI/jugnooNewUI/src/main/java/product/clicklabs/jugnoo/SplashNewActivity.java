@@ -1269,7 +1269,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				llLoginContainer.setLayoutParams(params);
 			}
 		}));
-
+		Prefs.with(this).save(Constants.KEY_ANIMATE_ASK_LOCAL_POST_TEXT,true);
 	}
 
 	private void startFbAccountKit(PhoneNumber phoneNumber){
