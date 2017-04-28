@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusItemCustomizeAdapter;
 import com.sabkuchfresh.analytics.GAAction;
@@ -26,7 +25,6 @@ import com.sabkuchfresh.utils.AppConstant;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -37,8 +35,6 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 
 	private RecyclerView rvCustomizeItem;
 	private MenusItemCustomizeAdapter menusItemCustomizeAdapter;
-	private RelativeLayout rlAddToCart;
-	private TextView tvItemTotalValue;
 
 	private View rootView;
 	private FreshActivity activity;
@@ -91,20 +87,12 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 					item = activity.getMenuProductsResponse().getCategories().get(categoryPos).getItems().get(itemPos);
 				}
 				if (item != null) {
-					rlAddToCart = (RelativeLayout) rootView.findViewById(R.id.rlAddToCart);
-					((TextView) rootView.findViewById(R.id.tvAddToCart)).setTypeface(Fonts.mavenMedium(activity));
-					tvItemTotalValue = (TextView) rootView.findViewById(R.id.tvItemTotalValue);
-					tvItemTotalValue.setTypeface(Fonts.mavenMedium(activity));
-
 					menusItemCustomizeAdapter = new MenusItemCustomizeAdapter(activity, item,
 							new MenusItemCustomizeAdapter.Callback() {
 								@Override
 								public void updateItemTotalPrice(ItemSelected itemSelected) {
-									tvItemTotalValue.setText(activity.getString(R.string.rupees_value_format,
+									activity.tvItemTotalValue.setText(activity.getString(R.string.rupees_value_format,
 											Utils.getMoneyDecimalFormat().format(itemSelected.getTotalPriceWithQuantity())));
-
-
-
 								}
 
 								@Override
@@ -127,7 +115,7 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 							});
 					rvCustomizeItem.setAdapter(menusItemCustomizeAdapter);
 
-					rlAddToCart.setOnClickListener(new View.OnClickListener() {
+					activity.rlAddToCart.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							for(int i=0; i<menusItemCustomizeAdapter.getItemSelected().getCustomizeItemSelectedList().size(); i++){
@@ -165,12 +153,15 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 			@Override
 			public void run() {
 				try {
+					rlRoot.setPadding(0, 0, 0, activity.rlAddToCart.getMeasuredHeight());
 					Utils.hideSoftKeyboard(activity, activity.getTopBar().etSearch);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}, 200);
+
+
 
 
 		return rootView;

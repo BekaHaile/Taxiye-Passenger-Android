@@ -45,6 +45,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -93,7 +94,6 @@ import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.GroceryFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MealFragment;
-import com.sabkuchfresh.fragments.MenusCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
@@ -896,9 +896,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (FreshCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutMergedFragment.class.getName());
     }
 
-    private MenusCheckoutMergedFragment getMenusCheckoutMergedFragment() {
-        return (MenusCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(MenusCheckoutMergedFragment.class.getName());
-    }
 
     public RestaurantImageFragment getRestaurantImageFragment() {
         return (RestaurantImageFragment) getSupportFragmentManager().findFragmentByTag(RestaurantImageFragment.class.getName());
@@ -1106,6 +1103,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             int visMinOrder = -1;
             topBar.progressWheelDeliveryAddressPin.setVisibility(View.GONE);
             int freshSortVis = View.GONE;
+			int llAddToCartVis = View.GONE;
+            int llPayViewContainerVis = View.GONE;
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -1210,6 +1209,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 llSearchCartVis = View.GONE;
+				llAddToCartVis = View.VISIBLE;
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getString(R.string.customize_item));
@@ -1230,10 +1230,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.select_cuisines);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FreshCheckoutMergedFragment || fragment instanceof MenusCheckoutMergedFragment) {
+            } else if (fragment instanceof FreshCheckoutMergedFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 llSearchCartVis = View.GONE;
+                llPayViewContainerVis = View.VISIBLE;
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.checkout));
@@ -1371,10 +1372,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if(totalPrice <= 0 || totalQuantity <= 0){
                 llCartContainerVis = View.GONE;
             }
-            llCheckoutBarSetVisibility(llCartContainerVis);
+            llCheckoutBarSetVisibilityDirect(llCartContainerVis);
             topBar.getIvSearch().setVisibility(ivSearchVis);
             topBar.getLlSearchContainer().setVisibility(llSearchContainerVis);
             topBar.rlFilter.setVisibility(rlFilterVis);
+            llAddToCart.setVisibility(llAddToCartVis);
+            llPayViewContainer.setVisibility(llPayViewContainerVis);
 
             RelativeLayout.LayoutParams titleLayoutParams = (RelativeLayout.LayoutParams) topBar.title.getLayoutParams();
             if (topBar.getLlSearchCart().getVisibility() == View.VISIBLE) {
@@ -1676,8 +1679,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         Fragment frag = getFreshCheckoutMergedFragment();
                         if (frag != null) {
                             ((FreshCheckoutMergedFragment) frag).deleteCart();
-                        } else if (getMenusCheckoutMergedFragment() != null) {
-                            getMenusCheckoutMergedFragment().deleteCart();
                         } else {
                             frag = getMealAddonItemsFragment();
                             if (frag != null) {
@@ -2655,8 +2656,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             if (getFreshCheckoutMergedFragment() != null) {
                                 getFreshCheckoutMergedFragment().updateAddressView();
                                 GAUtils.event(getGaCategory(), CHECKOUT, DELIVERY_ADDRESS+MODIFIED);
-                            } else if (getMenusCheckoutMergedFragment() != null) {
-                                getMenusCheckoutMergedFragment().updateAddressView();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -2805,8 +2804,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             Fragment frag = getFreshCheckoutMergedFragment();
             if (frag != null) {
                 ((FreshCheckoutMergedFragment) frag).deleteCart();
-            } else if (getMenusCheckoutMergedFragment() != null) {
-                getMenusCheckoutMergedFragment().deleteCart();
             } else {
                 frag = getMealAddonItemsFragment();
                 if (frag != null) {
@@ -3223,7 +3220,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setAddressAndFetchOfferingData(int appType) {
         try {
             setAddressTextToLocationPlaceHolder();
-            if (getFreshCheckoutMergedFragment() == null && getMenusCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
+            if (getFreshCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
                 if (appType == AppConstant.ApplicationType.FRESH && getFreshHomeFragment() != null) {
                     getFreshHomeFragment().getSuperCategoriesAPI(true);
                 } else if (appType == AppConstant.ApplicationType.MEALS && getMealFragment() != null) {
@@ -3297,7 +3294,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void onAddressUpdated(AddressAdded event) {
         try {
             if (event.flag) {
-                if (getFreshCheckoutMergedFragment() != null || getMenusCheckoutMergedFragment() != null) {
+                if (getFreshCheckoutMergedFragment() != null) {
                     setRefreshCart(true);
                     GAUtils.event(getGaCategory(), DELIVERY_ADDRESS, MODIFIED);
                 }
@@ -4244,6 +4241,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 	TextView tvCheckoutItemsCount;
 	@Bind(R.id.tvCartAmount)
 	TextView tvCartAmount;
+    @Bind(R.id.vCheckoutShadow)
+    View vCheckoutShadow;
 
     private FreshSortDialog freshSortDialog;
     public void openFreshSortDialog() {
@@ -4278,11 +4277,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void llCheckoutBarSetVisibilityDirect(int visibility){
         if(llCheckoutBar != null) {
 			llCheckoutBar.clearAnimation();
+            vCheckoutShadow.clearAnimation();
             getHandler().removeCallbacks(runnableLlCheckoutBarGone);
             if (visibility == View.VISIBLE && totalPrice > 0 && totalQuantity > 0) {
                 llCheckoutBar.setVisibility(View.VISIBLE);
+                vCheckoutShadow.setVisibility(View.VISIBLE);
             } else {
                 llCheckoutBar.setVisibility(View.GONE);
+                if(textViewMinOrder.getVisibility() != View.VISIBLE) {
+                    vCheckoutShadow.setVisibility(View.GONE);
+                }
             }
         }
     }
@@ -4291,12 +4295,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private void llCheckoutBarSetVisibility(int visibility){
         if(visibility == View.VISIBLE && llCheckoutBar.getVisibility() != View.VISIBLE){
 			llCheckoutBar.clearAnimation();
+            vCheckoutShadow.clearAnimation();
             getHandler().removeCallbacks(runnableLlCheckoutBarGone);
 			llCheckoutBar.setVisibility(View.VISIBLE);
+            vCheckoutShadow.setVisibility(View.VISIBLE);
 
             Animation animation = new TranslateAnimation(0, 0, llCheckoutBar.getMeasuredHeight(), 0);
             animation.setDuration(checkoutBarAnimDuration);
             llCheckoutBar.startAnimation(animation);
+            vCheckoutShadow.startAnimation(animation);
 
             if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
                 getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, llCheckoutBar.getMeasuredHeight()+((int)(ASSL.Yscale()*240.0f) - llCheckoutBar.getMeasuredHeight()));
@@ -4304,19 +4311,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             if(textViewMinOrder.getVisibility() == View.VISIBLE) {
                 textViewMinOrder.clearAnimation();
-                Animation translateUp = new TranslateAnimation(0, 0, llCheckoutBar.getMeasuredHeight(), 0);
-                translateUp.setDuration(checkoutBarAnimDuration);
-                textViewMinOrder.startAnimation(translateUp);
+                textViewMinOrder.startAnimation(animation);
             }
 
         } else if(visibility == View.GONE && llCheckoutBar.getVisibility() != View.GONE){
             llCheckoutBar.clearAnimation();
+            vCheckoutShadow.clearAnimation();
 
             Animation animation = new TranslateAnimation(0, 0, 0, llCheckoutBar.getMeasuredHeight());
             animation.setDuration(checkoutBarAnimDuration);
             getHandler().removeCallbacks(runnableLlCheckoutBarGone);
             getHandler().postDelayed(runnableLlCheckoutBarGone, checkoutBarAnimDuration);
             llCheckoutBar.startAnimation(animation);
+            vCheckoutShadow.startAnimation(animation);
 
             if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
                 getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, (int)(ASSL.Yscale()*240.0f));
@@ -4324,9 +4331,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             if(textViewMinOrder.getVisibility() == View.VISIBLE) {
                 textViewMinOrder.clearAnimation();
-                Animation translateDown = new TranslateAnimation(0, 0, 0, llCheckoutBar.getMeasuredHeight());
-                translateDown.setDuration(checkoutBarAnimDuration);
-                textViewMinOrder.startAnimation(translateDown);
+                textViewMinOrder.startAnimation(animation);
             }
         }
     }
@@ -4335,13 +4340,20 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         public void run() {
             textViewMinOrder.clearAnimation();
             llCheckoutBar.setVisibility(View.GONE);
+            if(textViewMinOrder.getVisibility() != View.VISIBLE) {
+                vCheckoutShadow.setVisibility(View.GONE);
+            }
         }
     };
 
     private void textViewMinOrderSetVisibility(int visibility){
         if(textViewMinOrder.getVisibility() != visibility) {
             textViewMinOrder.clearAnimation();
+            vCheckoutShadow.clearAnimation();
             textViewMinOrder.setVisibility(visibility);
+            if(visibility == View.VISIBLE){
+                vCheckoutShadow.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -4349,15 +4361,52 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if(llCheckoutBar != null) {
+            llCheckoutBar.setVisibility(View.VISIBLE);
             llCheckoutBar.post(new Runnable() {
                 @Override
                 public void run() {
                     llCheckoutBar.getMeasuredHeight();
                     llCheckoutBar.setVisibility(View.GONE);
+                    vCheckoutShadow.setVisibility(View.GONE);
+                }
+            });
+        }
+
+        if(llPayViewContainer != null){
+            llPayViewContainer.post(new Runnable() {
+                @Override
+                public void run() {
+                    ViewGroup.LayoutParams layoutParams = llPayViewContainer.getLayoutParams();
+                    layoutParams.height = getResources().getDimensionPixelSize(R.dimen.dp_51);
+                    llPayViewContainer.setLayoutParams(layoutParams);
                 }
             });
         }
 
     }
+
+
+
+    @Bind(R.id.llAddToCart)
+    public LinearLayout llAddToCart;
+    @Bind(R.id.rlAddToCart)
+	public RelativeLayout rlAddToCart;
+	@Bind(R.id.tvItemTotalValue)
+	public TextView tvItemTotalValue;
+
+    @Bind(R.id.llPayViewContainer)
+    public LinearLayout llPayViewContainer;
+    @Bind(R.id.rlSliderContainer)
+    public RelativeLayout rlSliderContainer;
+    @Bind(R.id.viewAlpha)
+    public View viewAlpha;
+    @Bind(R.id.relativeLayoutSlider)
+    public RelativeLayout relativeLayoutSlider;
+    @Bind(R.id.tvSlide)
+    public TextView tvSlide;
+    @Bind(R.id.sliderText)
+    public TextView sliderText;
+    @Bind(R.id.buttonPlaceOrder)
+    public Button buttonPlaceOrder;
 
 }

@@ -171,7 +171,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private PromoCouponsAdapter promoCouponsAdapter;
 
     private EditText editTextDeliveryInstructions;
-    private Button buttonPlaceOrder;
 
     private ScrollView scrollView;
     private LinearLayout linearLayoutMain;
@@ -201,7 +200,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private boolean cartChangedRefreshCheckout = false;
     private MySpinner spin;
     boolean flag = false;
-    TextView sliderText;
     private Dialog dialogOrderComplete;
 
     public FreshCheckoutMergedFragment() {
@@ -216,12 +214,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private Button btnAddStar;
     private String selectedSubId;
     private SwipeButton mSwipeButton;
-    private TextView tvSlide;
     private float xDown = 0f;
     private DisplayMetrics displayMetrics;
-    private RelativeLayout relativeLayoutSlider, rlSliderContainer;
     private RelativeLayout.LayoutParams paramsF;
-    private View viewAlpha;
     private SubscriptionData.Subscription selectedSubscription = null;
 
     public ArrayList<SubItem> subItemsInCart;
@@ -483,7 +478,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this);
         listViewOffers.setAdapter(promoCouponsAdapter);
 
-        buttonPlaceOrder = (Button) rootView.findViewById(R.id.buttonPlaceOrder); buttonPlaceOrder.setTypeface(Fonts.mavenRegular(activity));
 
         scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
         linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
@@ -496,18 +490,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         cvBecomeStar = (CardView) rootView.findViewById(R.id.cvBecomeStar); cvBecomeStar.setVisibility(View.GONE);
         spin = (MySpinner) rootView.findViewById(R.id.simpleSpinner);
         btnAddStar = (Button) rootView.findViewById(R.id.btnAddStar);
-        viewAlpha = (View) rootView.findViewById(R.id.viewAlpha);
 
 
-        sliderText = (TextView) rootView.findViewById(R.id.sliderText); sliderText.setTypeface(Fonts.mavenMedium(activity));
-        sliderText.setText("Swipe to confirm >>");
+        activity.sliderText.setText("Swipe to confirm >>");
 
-        rlSliderContainer = (RelativeLayout) rootView.findViewById(R.id.rlSliderContainer);
-        relativeLayoutSlider = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSlider);
-        tvSlide = (TextView) rootView.findViewById(R.id.tvSlide); tvSlide.setTypeface(Fonts.mavenMedium(activity));
         displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        paramsF = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
+        paramsF = (RelativeLayout.LayoutParams) activity.tvSlide.getLayoutParams();
 
 
 
@@ -520,7 +509,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         });
 
-        rlSliderContainer.setOnClickListener(new View.OnClickListener() {
+        activity.rlSliderContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -556,14 +545,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         });
 
-        buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
+        activity.buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if((type == AppConstant.ApplicationType.MENUS && getSubTotalAmount(false) < activity.getVendorOpened().getMinimumOrderAmount())) {
                     Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
                             Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getVendorOpened().getMinimumOrderAmount())));
                     setSlideInitial();
-                } else if (buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
+                } else if (activity.buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
                     getCheckoutDataAPI(selectedSubscription);
                 } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
@@ -654,7 +643,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         checkoutApiDoneOnce = false;
 
-        tvSlide.setOnTouchListener(new View.OnTouchListener() {
+        activity.tvSlide.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -664,32 +653,32 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         break;
 
                     case MotionEvent.ACTION_MOVE:
-                        if((event.getRawX()-getRelativeSliderLeftMargin()) > (tvSlide.getWidth()/2)
-                                && (event.getRawX()-getRelativeSliderLeftMargin()) < relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2)){
+                        if((event.getRawX()-getRelativeSliderLeftMargin()) > (activity.tvSlide.getWidth()/2)
+                                && (event.getRawX()-getRelativeSliderLeftMargin()) < activity.relativeLayoutSlider.getWidth()-(activity.tvSlide.getWidth()/2)){
                             paramsF.leftMargin = (int) layoutX(event.getRawX()-getRelativeSliderLeftMargin());
-                            relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
-                            sliderText.setVisibility(View.VISIBLE);
-                            float percent = (event.getRawX()-getRelativeSliderLeftMargin()) / (relativeLayoutSlider.getWidth()-tvSlide.getWidth());
-                            viewAlpha.setAlpha(percent);
+                            activity.relativeLayoutSlider.updateViewLayout(activity.tvSlide, paramsF);
+                            activity.sliderText.setVisibility(View.VISIBLE);
+                            float percent = (event.getRawX()-getRelativeSliderLeftMargin()) / (activity.relativeLayoutSlider.getWidth()-activity.tvSlide.getWidth());
+                            activity.viewAlpha.setAlpha(percent);
                             Log.v("slide percent","--> "+percent);
                             if(percent > 0.6f){
-                                sliderText.setVisibility(View.GONE);
+                                activity.sliderText.setVisibility(View.GONE);
                             } else{
-                                sliderText.setVisibility(View.VISIBLE);
+                                activity.sliderText.setVisibility(View.VISIBLE);
                             }
                         }
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        if ((event.getRawX()-getRelativeSliderLeftMargin()) < (relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2))*0.6f) {
+                        if ((event.getRawX()-getRelativeSliderLeftMargin()) < (activity.relativeLayoutSlider.getWidth()-(activity.tvSlide.getWidth()/2))*0.6f) {
                             setSlideInitial();
                         } else{
-                            animateSliderButton(paramsF.leftMargin, relativeLayoutSlider.getWidth()-tvSlide.getWidth());
-                            relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_confirm_color_bg);
-                            rlSliderContainer.setBackgroundResource(R.color.slider_green);
-                            sliderText.setVisibility(View.GONE);
-                            viewAlpha.setAlpha(1.0f);
-                            buttonPlaceOrder.performClick();
+                            animateSliderButton(paramsF.leftMargin, activity.relativeLayoutSlider.getWidth()-activity.tvSlide.getWidth());
+                            activity.relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_confirm_color_bg);
+                            activity.rlSliderContainer.setBackgroundResource(R.color.slider_green);
+                            activity.sliderText.setVisibility(View.GONE);
+                            activity.viewAlpha.setAlpha(1.0f);
+                            activity.buttonPlaceOrder.performClick();
                             GAUtils.event(activity.getGaCategory(), CHECKOUT, PAY_SLIDER+ENDED);
                         }
                         break;
@@ -701,15 +690,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         try {
             if(Data.userData.getSlideCheckoutPayEnabled() == 1){
-				rlSliderContainer.setVisibility(View.VISIBLE);
-				buttonPlaceOrder.setVisibility(View.GONE);
+                activity.rlSliderContainer.setVisibility(View.VISIBLE);
+                activity.buttonPlaceOrder.setVisibility(View.GONE);
 			} else{
-				buttonPlaceOrder.setVisibility(View.VISIBLE);
-				rlSliderContainer.setVisibility(View.GONE);
+                activity.buttonPlaceOrder.setVisibility(View.VISIBLE);
+                activity.rlSliderContainer.setVisibility(View.GONE);
 			}
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
 
         return rootView;
     }
@@ -724,20 +715,21 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 updateDeliveryFromView("");
                 updateCartDataView();
                 fetchWalletBalance();
+                linearLayoutRoot.setPadding(0, 0, 0, activity.llPayViewContainer.getMeasuredHeight());
             }
         }, 50);
     }
 
     private void setSlideInitial(){
         animateSliderButton(paramsF.leftMargin, 0);
-        rlSliderContainer.setBackgroundResource(R.color.theme_color);
-        relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
-        sliderText.setVisibility(View.VISIBLE);
-        viewAlpha.setAlpha(0.0f);
+        activity.rlSliderContainer.setBackgroundResource(R.color.theme_color);
+        activity.relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
+        activity.sliderText.setVisibility(View.VISIBLE);
+        activity.viewAlpha.setAlpha(0.0f);
     }
 
     private float getRelativeSliderLeftMargin(){
-        RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams)relativeLayoutSlider.getLayoutParams();
+        RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams)activity.relativeLayoutSlider.getLayoutParams();
         return relativeParams.leftMargin;
     }
 
@@ -759,10 +751,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                tvSlide.clearAnimation();
+                activity.tvSlide.clearAnimation();
                 paramsF.leftMargin = (int) newMargin;
-                relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
-                tvSlide.setEnabled(true);
+                activity.relativeLayoutSlider.updateViewLayout(activity.tvSlide, paramsF);
+                activity.tvSlide.setEnabled(true);
             }
 
             @Override
@@ -770,9 +762,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
             }
         });
-        tvSlide.clearAnimation();
-        tvSlide.setEnabled(false);
-        tvSlide.startAnimation(translateAnim);
+        activity.tvSlide.clearAnimation();
+        activity.tvSlide.setEnabled(false);
+        activity.tvSlide.startAnimation(translateAnim);
     }
 
     private float layoutX(float rawX){
@@ -780,7 +772,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private float sliderButtonWidth(){
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) activity.tvSlide.getLayoutParams();
         return (float)params.width;
     }
 
@@ -826,13 +818,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
             if (payableAmount() > 0) {
 //                Utils.getDoubleTwoDigits((double)Math.round(payableAmount()));
-                buttonPlaceOrder.setText("PAY " + activity.getString(R.string.rupees_value_format,
+                activity.buttonPlaceOrder.setText("PAY " + activity.getString(R.string.rupees_value_format,
                         Utils.getDoubleTwoDigits((double)Math.round(payableAmount()))));
-                tvSlide.setText("PAY " + activity.getString(R.string.rupees_value_format,
+                activity.tvSlide.setText("PAY " + activity.getString(R.string.rupees_value_format,
                         Utils.getDoubleTwoDigits((double)Math.round(payableAmount()))));
             } else {
-                buttonPlaceOrder.setText(activity.getResources().getString(R.string.place_order));
-                tvSlide.setText(activity.getResources().getString(R.string.place_order));
+                activity.buttonPlaceOrder.setText(activity.getResources().getString(R.string.place_order));
+                activity.tvSlide.setText(activity.getResources().getString(R.string.place_order));
             }
         }
 
@@ -1192,8 +1184,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }
             if (goAhead) {
-                buttonPlaceOrder.setEnabled(false);
-                if(rlSliderContainer.getVisibility() == View.VISIBLE){
+                activity.buttonPlaceOrder.setEnabled(false);
+                if(activity.rlSliderContainer.getVisibility() == View.VISIBLE){
                     placeOrderConfirmation();
                 } else {
                     DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
@@ -1209,7 +1201,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    buttonPlaceOrder.setEnabled(true);
+                                    activity.buttonPlaceOrder.setEnabled(true);
                                     setSlideInitial();
                                 }
                             }, false, false);
@@ -1605,7 +1597,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             setSlideInitial();
             e.printStackTrace();
         }
-        buttonPlaceOrder.setEnabled(true);
+        activity.buttonPlaceOrder.setEnabled(true);
     }
 
     private void fbPurchasedEvent(HashMap<String, String> params, PlaceOrderResponse placeOrderResponse) {
@@ -2194,7 +2186,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             updateCartFromCheckoutData(userCheckoutResponse);
                                         }
 
-                                        buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.place_order));
+                                        activity.buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.place_order));
 
                                         Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
 
@@ -2286,7 +2278,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             }
                                         }
                                     });
-                                    buttonPlaceOrder.setText(activity.getString(R.string.connection_lost_try_again));
+                                    activity.buttonPlaceOrder.setText(activity.getString(R.string.connection_lost_try_again));
                                 }
                             }
                         } catch (Exception exception) {

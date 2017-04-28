@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/px_150">
+            android:paddingBottom="@dimen/px_20"
+            >
 
             <!-- Delivery Address view -->
             <LinearLayout
@@ -728,78 +729,10 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/shadow_height"
-        android:layout_above="@+id/llPayViewContainer"
-        android:background="@drawable/shadow_up" />
-
-    <LinearLayout
-        android:id="@+id/llPayViewContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dp_7"
+        android:background="@drawable/shadow_up_new"
+        android:tag="@string/dont_touch_me"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:id="@+id/rlSliderContainer"
-            android:layout_width="match_parent"
-            android:layout_height="102px"
-            android:background="@color/theme_color"
-            android:visibility="gone">
-
-            <View
-                android:id="@+id/viewAlpha"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="0"
-                android:background="@color/slider_green" />
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutSlider"
-                android:layout_width="match_parent"
-                android:layout_height="72px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="40px"
-                android:layout_marginRight="40px"
-                android:background="@drawable/capsule_slider_color_bg">
-
-                <TextView
-                    android:id="@+id/tvSlide"
-                    android:layout_width="186px"
-                    android:layout_height="72px"
-                    android:background="@drawable/capsule_white_color"
-                    android:gravity="center"
-                    android:text="Pay 300"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_24" />
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/sliderText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="100px"
-                android:text="Swipe to confirm >>"
-                android:textColor="#fff"
-                android:textSize="@dimen/text_size_24" />
-
-        </RelativeLayout>
-
-        <Button
-            android:id="@+id/buttonPlaceOrder"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px_94"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/bg_place_order_selector"
-            android:text="@string/place_order"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"
-            android:visibility="gone" />
-
-    </LinearLayout>
+        />
 
 </RelativeLayout>

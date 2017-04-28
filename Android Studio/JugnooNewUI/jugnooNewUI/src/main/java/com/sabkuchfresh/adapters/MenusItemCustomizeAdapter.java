@@ -197,7 +197,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                             callback.updateItemTotalPrice(itemSelected);
                             callback.onItemPlusClick();
                         } else {
-                            Utils.showToast(context, context.getString(R.string.cannot_add_more_than_50));
+                            Utils.showToast(context, context.getString(R.string.order_quantity_limited));
                         }
 
                     } catch (Exception e){}

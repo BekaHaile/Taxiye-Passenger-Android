@@ -311,7 +311,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 callback.onPlusClicked(pos, item1, isNewItemAdded);
             }
         } else {
-            Utils.showToast(context, context.getString(R.string.cannot_add_more_than_50));
+            Utils.showToast(context, context.getString(R.string.order_quantity_limited));
         }
     }
 

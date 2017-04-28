@@ -615,6 +615,12 @@
         96dp
     </dimen>
     <dimen name="dp_51">51dp</dimen>
+    <dimen name="px_102">
+        102px
+    </dimen>
+    <dimen name="dp_24">
+        24dp
+    </dimen>
 
 
 </resources>

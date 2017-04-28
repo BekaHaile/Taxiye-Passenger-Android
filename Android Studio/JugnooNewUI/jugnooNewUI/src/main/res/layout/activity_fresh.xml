@@ -83,6 +83,14 @@
             android:tag="@string/dont_touch_me"
             >
 
+            <View
+                android:id="@+id/vCheckoutShadow"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_7"
+                android:background="@drawable/shadow_up_new"
+                />
+
+
             <TextView
                 android:id="@+id/textViewMinOrder"
                 android:layout_width="match_parent"
@@ -101,7 +109,10 @@
 
             <include layout="@layout/layout_fresh_checkout_bar"/>
 
+            <include layout="@layout/layout_menus_customize_add_to_cart"/>
         </LinearLayout>
+
+        <include layout="@layout/layout_fresh_pay_action_container"/>
 
 
         <include layout="@layout/layout_home_activity_fab_test" />
