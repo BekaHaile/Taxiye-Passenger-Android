@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -87,6 +88,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private ApiCommon<FeedListResponse> feedPagingApi;
     int pastVisiblesItems, visibleItemCount, totalItemCount, pageCount, countRecords, maxPageCount;
     private boolean hasMorePages;
+    private boolean isFragmentResumed ;
 
 
     public FeedHomeFragment() {
@@ -318,6 +320,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
         return rootView;
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        isFragmentResumed = true;
+    }
+
     private Runnable showAddPostOnIdleStateOfScroll = new Runnable() {
         @Override
         public void run() {
@@ -350,6 +359,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             activity.getHandler().removeCallbacks(runnableNotificationCount);
             activity.getHandler().removeCallbacks(showAddPostOnIdleStateOfScroll);
         }
+        isFragmentResumed = !hidden;
     }
 
     @Override
@@ -862,6 +872,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     public boolean shouldTranslateFeedHomeAddPost() {
-        return recyclerView.getScrollState()!=SCROLL_STATE_IDLE;
+        return recyclerView.getScrollState()!=SCROLL_STATE_IDLE || !isFragmentResumed;
     }
 }

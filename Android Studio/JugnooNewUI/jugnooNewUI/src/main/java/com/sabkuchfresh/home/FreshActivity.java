@@ -1528,6 +1528,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     feedHomeAddPostView.animate().translationY(feedHomeAddPostView.getHeight() - ((appBarLayout.getTotalScrollRange() + verticalOffset) * 1.0f / appBarLayout.getTotalScrollRange()) * feedHomeAddPostView.getHeight()).start();
                 }
 
+
             }
             fabViewTest.getMenuLabelsRightTest().setAlpha((((appBarLayout.getTotalScrollRange() ) - (-verticalOffset)) * 1.0f) / (appBarLayout.getTotalScrollRange()));
             if (verticalOffset == -appBarLayout.getTotalScrollRange()) {
@@ -1538,6 +1539,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (fabViewTest.relativeLayoutFABTest.getVisibility() == View.GONE) {
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
+
             }
 
         }
@@ -3673,7 +3675,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             return type;
         }
     }
-
 
     private State mCurrentState;
     public TextView tvCollapRestaurantName;

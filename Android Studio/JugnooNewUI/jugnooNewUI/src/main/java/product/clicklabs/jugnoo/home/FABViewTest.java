@@ -40,6 +40,11 @@ import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 public class FABViewTest implements GACategory, GAAction {
     Activity activity;
     public RelativeLayout relativeLayoutFABTest;
+
+    public FloatingActionMenu getMenuLabelsRightTest(FloatingActionMenu menuLabelsRightTest) {
+       return menuLabelsRightTest;
+    }
+
     public FloatingActionMenu menuLabelsRightTest;
     public FloatingActionButton fabMealsTest;
     public FloatingActionButton fabFreshTest;
@@ -159,6 +164,7 @@ public class FABViewTest implements GACategory, GAAction {
 
 
     }
+
 
     private void createCustomAnimation() {
         AnimatorSet set = new AnimatorSet();
