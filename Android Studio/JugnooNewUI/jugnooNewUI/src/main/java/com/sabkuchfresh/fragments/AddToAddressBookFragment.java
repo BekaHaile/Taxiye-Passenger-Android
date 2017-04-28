@@ -23,6 +23,8 @@ import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -275,6 +277,9 @@ public class AddToAddressBookFragment extends Fragment {
                     addPlaceActivity.getTextViewTitle().setText(activity.getString(R.string.confirm_address));
                 }
             }
+            if(!editAddress){
+                placeRequestCode = getUpdatedPlaceRequestCode(placeRequestCode);
+            }
 
         } else if(activity instanceof FreshActivity){
             final FreshActivity freshActivity = ((FreshActivity) activity);
@@ -311,6 +316,9 @@ public class AddToAddressBookFragment extends Fragment {
                             }, false, false);
                 }
             });
+            if(!editAddress){
+                placeRequestCode = getUpdatedPlaceRequestCode(placeRequestCode);
+            }
         }
 
         editTextLabel.setEnabled(true);
@@ -335,16 +343,36 @@ public class AddToAddressBookFragment extends Fragment {
         } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
             label = activity.getString(R.string.work);
         } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION){
-            if(!editAddress) {
-                label = activity.getString(R.string.home);
-            } else {
-                editTextLabel.setVisibility(View.VISIBLE);
-            }
+            editTextLabel.setVisibility(View.VISIBLE);
         }
         lastLabel = label;
         setAddressTypeUI(label);
     }
 
+    public int getUpdatedPlaceRequestCode(int placeRequestCode) {
+        ArrayList<SearchResult> searchResults = MyApplication.getInstance().getHomeUtil().getSavedPlacesWithHomeWork(activity);
+        boolean homeSaved = false, workSaved = false;
+        for (SearchResult searchResult : searchResults) {
+            if (!TextUtils.isEmpty(searchResult.getName())) {
+                if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_HOME)){
+                    homeSaved = true;
+                }
+                if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_WORK)){
+                    workSaved = true;
+                }
+                if (homeSaved && workSaved) {
+                    placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
+                    return placeRequestCode;
+                }
+            }
+        }
+        if (!homeSaved) {
+            placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
+        } else {
+            placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
+        }
+        return placeRequestCode;
+    }
 
     public void setNewArgumentsToUI(Bundle bundle){
         double oldLatitude = current_latitude;
@@ -499,7 +527,6 @@ public class AddToAddressBookFragment extends Fragment {
 
                 FreshActivity freshActivity = (FreshActivity) activity;
                 deliveryAddressesFragment = freshActivity.getDeliveryAddressesFragment();
-                placeRequestCode = freshActivity.getPlaceRequestCode();
                 editThisAddress = freshActivity.isEditThisAddress();
 
                 if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.home))){
@@ -529,7 +556,6 @@ public class AddToAddressBookFragment extends Fragment {
             else if(activity instanceof AddPlaceActivity){
                 AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
                 deliveryAddressesFragment = addPlaceActivity.getDeliveryAddressesFragment();
-                placeRequestCode = addPlaceActivity.getPlaceRequestCode();
                 editThisAddress = addPlaceActivity.isEditThisAddress();
                 if (addPlaceActivity.isEditThisAddress() && addPlaceActivity.getSearchResult() != null) {
                     searchResultId = addPlaceActivity.getSearchResult().getId();
