@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,8 +19,6 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
-import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
-import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
 
 import org.json.JSONObject;
@@ -30,14 +27,12 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import io.paperdb.Paper;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.StarBaseActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -728,7 +723,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                     }
                                 }, false);
                                 Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
-                                        0l);
+                                        0L);
                                 //DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", message);
                             }
                         }

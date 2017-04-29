@@ -48,6 +48,7 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.adapters.AccountMenuItemsAdapter;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
+import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
@@ -77,8 +78,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
-
-import static product.clicklabs.jugnoo.R.string.activity;
 
 
 public class AccountActivity extends BaseFragmentActivity implements GAAction, GACategory {
@@ -756,9 +755,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
                         }
-
-
-
                     }
                 },AccountActivity.this));
                 recyclerViewMenuItems.setVisibility(View.VISIBLE);
@@ -836,11 +832,15 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	}
 
 
+    boolean ignoreFetchWalletCheck = true;
 
 	@Override
 	protected void onResume() {
 		super.onResume();
         try {
+            fetchWalletBalance(this, ignoreFetchWalletCheck);
+            ignoreFetchWalletCheck = false;
+
             HomeActivity.checkForAccessTokenChange(this);
 
             if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
@@ -1505,4 +1505,45 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     }
 
+    private ApiFetchWalletBalance apiFetchWalletBalance = null;
+    private void fetchWalletBalance(final Activity activity, boolean ignoreCheck) {
+        try {
+            if(apiFetchWalletBalance == null){
+                apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+                        if(recyclerViewMenuItems != null && recyclerViewMenuItems.getAdapter() != null) {
+                            recyclerViewMenuItems.getAdapter().notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure() {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                    }
+
+                    @Override
+                    public void onRetry(View view) {
+                    }
+
+                    @Override
+                    public void onNoRetry(View view) {
+                    }
+                });
+            }
+            long lastFetchWalletBalanceCall = Prefs.with(activity).getLong(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
+            long lastCallDiff = System.currentTimeMillis() - lastFetchWalletBalanceCall;
+            if(ignoreCheck || lastCallDiff >= FETCH_WALLET_BALANCE_REFRESH_TIME) {
+                apiFetchWalletBalance.getBalance(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 }

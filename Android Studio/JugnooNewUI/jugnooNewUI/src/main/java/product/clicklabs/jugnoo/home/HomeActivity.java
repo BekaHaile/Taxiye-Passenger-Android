@@ -4307,6 +4307,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
+                // to check if selected destination saved address is deleted or not
+                if(passengerScreenMode == PassengerScreenMode.P_INITIAL && Data.autoData.getDropLatLng() != null){
+                    SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
+                            Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                    if(searchResult == null){
+                        imageViewDropCross.performClick();
+                    }
+
+                }
             }
 
 

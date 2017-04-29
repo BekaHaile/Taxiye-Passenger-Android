@@ -203,7 +203,13 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
             }
         });
 
-        updateCartDataView();
+        activity.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateCartDataView();
+            }
+        }, 100);
+
 
         return rootView;
     }
