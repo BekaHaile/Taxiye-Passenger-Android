@@ -1513,9 +1513,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     @Override
                     public void onSuccess() {
                         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
-                        if(recyclerViewMenuItems != null && recyclerViewMenuItems.getAdapter() != null) {
-                            recyclerViewMenuItems.getAdapter().notifyDataSetChanged();
-                        }
+                        updateMenuList();
                     }
 
                     @Override
@@ -1539,6 +1537,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             long lastCallDiff = System.currentTimeMillis() - lastFetchWalletBalanceCall;
             if(ignoreCheck || lastCallDiff >= FETCH_WALLET_BALANCE_REFRESH_TIME) {
                 apiFetchWalletBalance.getBalance(false);
+            } else {
+                updateMenuList();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1546,4 +1546,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     }
 
     public final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
+
+    private void updateMenuList(){
+        if(recyclerViewMenuItems != null && recyclerViewMenuItems.getAdapter() != null) {
+            recyclerViewMenuItems.getAdapter().notifyDataSetChanged();
+        }
+    }
 }

@@ -2873,6 +2873,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         } else {
             checkoutSaveData = new CheckoutSaveData(getPaymentOption().getOrdinal(), getSpecialInst(), getSelectedAddress(),
                     getSelectedLatLng(), getSelectedAddressId(), getSelectedAddressType());
+			if(appType == AppConstant.ApplicationType.MENUS && getVendorOpened() != null){
+				checkoutSaveData.setRestaurantId(getVendorOpened().getRestaurantId());
+			}
         }
         if (appType == AppConstant.ApplicationType.FRESH) {
             Prefs.with(this).save(Constants.SP_FRESH_CHECKOUT_SAVE_DATA, gson.toJson(checkoutSaveData, CheckoutSaveData.class));
@@ -2895,8 +2898,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             return gson.fromJson(Prefs.with(this).getString(Constants.SP_GROCERY_CHECKOUT_SAVE_DATA,
                     gson.toJson(new CheckoutSaveData(), CheckoutSaveData.class)), CheckoutSaveData.class);
         } else if (appType == AppConstant.ApplicationType.MENUS) {
-            return gson.fromJson(Prefs.with(this).getString(Constants.SP_MENUS_CHECKOUT_SAVE_DATA,
-                    gson.toJson(new CheckoutSaveData(), CheckoutSaveData.class)), CheckoutSaveData.class);
+			CheckoutSaveData checkoutSaveData = gson.fromJson(Prefs.with(this).getString(Constants.SP_MENUS_CHECKOUT_SAVE_DATA,
+					gson.toJson(new CheckoutSaveData(), CheckoutSaveData.class)), CheckoutSaveData.class);
+			if(getVendorOpened() != null
+					&& getVendorOpened().getRestaurantId() != null
+					&& checkoutSaveData.getRestaurantId() != getVendorOpened().getRestaurantId()){
+				checkoutSaveData.setSpecialInstructions("");
+			}
+
+            return checkoutSaveData;
         } else {
             return gson.fromJson(Prefs.with(this).getString(Constants.SP_FRESH_CHECKOUT_SAVE_DATA,
                     gson.toJson(new CheckoutSaveData(), CheckoutSaveData.class)), CheckoutSaveData.class);

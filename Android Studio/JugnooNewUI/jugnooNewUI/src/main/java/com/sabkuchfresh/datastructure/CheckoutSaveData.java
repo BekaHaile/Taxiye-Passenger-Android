@@ -37,6 +37,9 @@ public class CheckoutSaveData {
 	@SerializedName("isDefault")
 	@Expose
 	private Boolean isDefault;
+	@SerializedName("restaurant_id")
+	@Expose
+	private int restaurantId;
 
 	public CheckoutSaveData(Integer paymentMode, String specialInstructions, String address,
 							LatLng latLng, Integer addressId, String addressType) {
@@ -123,5 +126,13 @@ public class CheckoutSaveData {
 
 	public void setIsDefault(Boolean aDefault) {
 		isDefault = aDefault;
+	}
+
+	public int getRestaurantId() {
+		return restaurantId;
+	}
+
+	public void setRestaurantId(int restaurantId) {
+		this.restaurantId = restaurantId;
 	}
 }
