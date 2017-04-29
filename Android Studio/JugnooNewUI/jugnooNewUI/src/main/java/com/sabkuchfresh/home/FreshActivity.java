@@ -83,6 +83,7 @@ import com.sabkuchfresh.feed.ui.fragments.FeedNotificationsFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedPostDetailFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedReserveSpotFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
+import com.sabkuchfresh.feed.ui.views.TypeWriterTextView.Typewriter;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
@@ -261,7 +262,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public boolean isTimeAutomatic;
     public CollapsingToolbarLayout collapsingToolbar;
     private View feedHomeAddPostView;
-    private TextView tvAddPost;
+    private Typewriter tvAddPost;
     private ImageView ivProfilePic;
     public int currentOffsetFeedHomeAppBar;
 
@@ -506,11 +507,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
             }
         });
-        tvAddPost = (TextView) findViewById(R.id.tvAddPost);
+        tvAddPost = (Typewriter) findViewById(R.id.tvAddPost);
         ivProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);
     }
 
-    public TextView getTvAddPost(){
+    public Typewriter getTvAddPost(){
         return tvAddPost;
     }
 
@@ -1512,7 +1513,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
-            currentOffsetFeedHomeAppBar=verticalOffset;
+
+            currentOffsetFeedHomeAppBar = verticalOffset;
             if(getTopFragment() instanceof FeedHomeFragment) {
                 if(getFeedHomeFragment().shouldTranslateFeedHomeAddPost()) {
                     feedHomeAddPostView.animate().translationY(feedHomeAddPostView.getHeight() - ((appBarLayout.getTotalScrollRange() + verticalOffset) * 1.0f / appBarLayout.getTotalScrollRange()) * feedHomeAddPostView.getHeight()).start();

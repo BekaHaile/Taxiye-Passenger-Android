@@ -24,6 +24,7 @@ public class FeedHomeLayoutManager extends LinearLayoutManager {
     @Override
     public boolean canScrollVertically() {
         //When 1st pos is visible completely and last position is Visible completely and appBar is visible completely don't allow scroll
+
         if(findFirstCompletelyVisibleItemPosition()==0 && findLastCompletelyVisibleItemPosition()!=-1 && freshActivity.currentOffsetFeedHomeAppBar !=-freshActivity.appBarLayout.getTotalScrollRange()){
 
             View view = getChildAt(findLastCompletelyVisibleItemPosition());
@@ -35,6 +36,7 @@ public class FeedHomeLayoutManager extends LinearLayoutManager {
             } else{
                 return super.canScrollVertically();
             }
+
 
         }
         else
