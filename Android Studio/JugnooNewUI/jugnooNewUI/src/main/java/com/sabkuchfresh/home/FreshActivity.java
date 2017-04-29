@@ -263,6 +263,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private View feedHomeAddPostView;
     private TextView tvAddPost;
     private ImageView ivProfilePic;
+    public int currentOffsetFeedHomeAppBar;
 
     public View getFeedHomeAddPostView() {
         return feedHomeAddPostView;
@@ -1521,33 +1522,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
-
+            currentOffsetFeedHomeAppBar=verticalOffset;
             if(getTopFragment() instanceof FeedHomeFragment) {
                 feedHomeAddPostView.animate().translationY(feedHomeAddPostView.getHeight() - ((appBarLayout.getTotalScrollRange() + verticalOffset) * 1.0f / appBarLayout.getTotalScrollRange()) * feedHomeAddPostView.getHeight()).start();
-                if(verticalOffset== -appBarLayout.getTotalScrollRange()) {
-                    if (fabViewTest.relativeLayoutFABTest.getVisibility() == View.VISIBLE) {
-                        fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
-                    }
-                }
-                else{
-                    if(fabViewTest.relativeLayoutFABTest.getVisibility() == View.GONE){
-                        fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-                    }
-                }
+
             }
-           /* if(verticalOffset== -appBarLayout.getTotalScrollRange())
-            {
+            fabViewTest.getMenuLabelsRightTest().setAlpha((((appBarLayout.getTotalScrollRange() ) - (-verticalOffset)) * 1.0f) / (appBarLayout.getTotalScrollRange()));
 
-
-
-                if(findViewById(R.id.add_post).getVisibility()==View.VISIBLE)
-                {
-                    findViewById(R.id.add_post).setVisibility(View.GONE);
-                }
-            }
-            else if(findViewById(R.id.add_post).getVisibility()==View.GONE){
-                findViewById(R.id.add_post).setVisibility(View.VISIBLE);
-            }*/
         }
     };
 
