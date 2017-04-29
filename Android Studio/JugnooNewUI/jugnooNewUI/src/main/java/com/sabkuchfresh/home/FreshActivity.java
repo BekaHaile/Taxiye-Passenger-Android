@@ -264,7 +264,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private View feedHomeAddPostView;
     private Typewriter tvAddPost;
     private ImageView ivProfilePic;
-    public int currentOffsetFeedHomeAppBar;
+
 
     public View getFeedHomeAddPostView() {
         return feedHomeAddPostView;

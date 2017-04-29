@@ -10,7 +10,8 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/linearLayoutMain"
@@ -582,17 +583,7 @@
             </LinearLayout>
 
 
-            <Button
-                android:id="@+id/bPlaceOrder"
-                style="@style/ButtonTheme"
-                android:layout_height="@dimen/payment_option_cash_rl_height"
-                android:background="@drawable/capsule_green_selector"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="70px"
-                android:layout_marginTop="32px"
-                android:text="@string/pay_now"
-                android:textSize="@dimen/text_size_34"
-                />
+
 
             <TextView
                 android:id="@+id/textViewScroll"
@@ -605,4 +596,19 @@
 
     </ScrollView>
 
+
+    <include
+        layout="@layout/layout_fresh_pay_action_container"/>
+    <Button
+        android:id="@+id/bPlaceOrder"
+        style="@style/ButtonTheme"
+        android:layout_height="@dimen/payment_option_cash_rl_height"
+        android:visibility="gone"
+        android:background="@drawable/capsule_green_selector"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="70px"
+        android:layout_marginTop="32px"
+        android:text="@string/pay_now"
+        android:textSize="@dimen/text_size_34"
+        />
 </LinearLayout>

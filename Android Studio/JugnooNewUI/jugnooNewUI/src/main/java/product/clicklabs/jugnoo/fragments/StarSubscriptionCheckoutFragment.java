@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +31,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -58,9 +64,11 @@ import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
+import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import android.os.Handler;
 
 
 /**
@@ -90,6 +98,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private ImageView ivOtherModesToPay, ivUPI;
     private TextView tvOtherModesToPay, tvUPI;
     private boolean isRazorUPI;
+    private PaySlider paySlider;
+
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
         StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
@@ -104,7 +114,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_star_subscription_checkout, container, false);
-
+        ButterKnife.bind(this,rootView);
         if(getActivity() instanceof JugnooStarActivity) {
             activity = (JugnooStarActivity) getActivity();
         } else if(getActivity() instanceof JugnooStarSubscribedActivity){
@@ -197,6 +207,16 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        paySlider = new PaySlider(rootView.findViewById(R.id.llPayViewContainer)) {
+               @Override
+               public void onPayClick() {
+                  bPlaceOrder.performClick();
+               }
+           };
+
+
         return rootView;
     }
 
@@ -263,6 +283,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             try {
                 switch (v.getId()){
                     case R.id.bPlaceOrder:
+
+
                         if(paymentOption.getOrdinal() != 0 && paymentOption.getOrdinal() != 1) {
                             placeOrder();
                             GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT, PAY_NOW+CLICKED);
@@ -393,6 +415,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 } else{
                     apiPurchaseSubscription();
                 }
+            }else{
+                paySlider.setSlideInitial();
             }
 
         } catch (Exception e) {
@@ -682,6 +706,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private void apiPurchaseSubscription() {
         if (MyApplication.getInstance().isOnline()) {
+            if(paySlider.isSliderInIntialStage())
+                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -703,6 +729,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 @Override
                 public void success(final PurchaseSubscriptionResponse purchaseSubscriptionResponse, Response response) {
                     DialogPopup.dismissLoadingDialog();
+                    paySlider.setSlideInitial();
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                     Log.i("cancel Subscription response = ", "" + responseStr);
                     try {
@@ -740,12 +767,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 @Override
                 public void failure(RetrofitError error) {
                     Log.e("customerFetchUserAddress error=", "" + error.toString());
+                    paySlider.setSlideInitial();
                     DialogPopup.dismissLoadingDialog();
                     retryDialog(DialogErrorType.CONNECTION_LOST);
                 }
             });
 
         } else {
+            paySlider.setSlideInitial();
             retryDialog(DialogErrorType.NO_NET);
         }
     }
@@ -779,6 +808,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private void apiUpgradeSubscription() {
         if (MyApplication.getInstance().isOnline()) {
+            if(paySlider.isSliderInIntialStage())
+                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -799,6 +830,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             RestClient.getApiService().upgradeSubscription(params, new retrofit.Callback<PurchaseSubscriptionResponse>() {
                 @Override
                 public void success(final PurchaseSubscriptionResponse purchaseSubscriptionResponse, Response response) {
+                    paySlider.setSlideInitial();
                     DialogPopup.dismissLoadingDialog();
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                     Log.i("cancel Subscription response = ", "" + responseStr);
@@ -831,6 +863,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                 @Override
                 public void failure(RetrofitError error) {
+                    paySlider.setSlideInitial();
                     Log.e("customerFetchUserAddress error=", "" + error.toString());
                     DialogPopup.dismissLoadingDialog();
                     retryDialog(DialogErrorType.CONNECTION_LOST);
@@ -838,12 +871,15 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             });
 
         } else {
+            paySlider.setSlideInitial();
             retryDialog(DialogErrorType.NO_NET);
         }
     }
 
     private void apiRenewSubscription() {
         if (MyApplication.getInstance().isOnline()) {
+            if(paySlider.isSliderInIntialStage())
+                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -864,6 +900,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             RestClient.getApiService().renewSubscription(params, new retrofit.Callback<PurchaseSubscriptionResponse>() {
                 @Override
                 public void success(final PurchaseSubscriptionResponse purchaseSubscriptionResponse, Response response) {
+                    paySlider.setSlideInitial();
                     DialogPopup.dismissLoadingDialog();
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                     Log.i("cancel Subscription response = ", "" + responseStr);
@@ -896,6 +933,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                 @Override
                 public void failure(RetrofitError error) {
+                    paySlider.setSlideInitial();
                     Log.e("customerFetchUserAddress error=", "" + error.toString());
                     DialogPopup.dismissLoadingDialog();
                     retryDialog(DialogErrorType.CONNECTION_LOST);
@@ -903,6 +941,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             });
 
         } else {
+            paySlider.setSlideInitial();
             retryDialog(DialogErrorType.NO_NET);
         }
     }
