@@ -1768,6 +1768,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
         setSelectedAddressType("");
 
+        resetSlider();
 
         checkForBackToFeed(false);
 
@@ -1785,6 +1786,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         }, 1000);
         clearEtFocus();
+    }
+
+    public void resetSlider(){
+        rlSliderContainer.setBackgroundResource(R.color.theme_color);
+        relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
+        sliderText.setVisibility(View.VISIBLE);
+        viewAlpha.setAlpha(0.0f);
+
+        RelativeLayout.LayoutParams paramsF = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
+        paramsF.leftMargin = 0;
+        relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
     }
 
     private void addFreshHomeFragment() {
