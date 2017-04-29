@@ -244,7 +244,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			}
 		},500);
 
-		showSearchLayout();
 
 		relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -304,6 +303,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		if(home.equalsIgnoreCase("") || work.equalsIgnoreCase("")){
 			linearLayoutAddFav.setVisibility(View.VISIBLE);
+			cardViewSavedPlaces.setVisibility(View.VISIBLE);
 		} else{
 			linearLayoutAddFav.setVisibility(View.GONE);
 		}
@@ -350,6 +350,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		super.onResume();
 		searchListAdapter.addSavedLocationsToList();
 		updateSavedPlacesLists();
+		showSearchLayout();
 	}
 
 	@Override

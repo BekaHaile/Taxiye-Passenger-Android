@@ -350,27 +350,29 @@ public class AddToAddressBookFragment extends Fragment {
     }
 
     public int getUpdatedPlaceRequestCode(int placeRequestCode) {
-        ArrayList<SearchResult> searchResults = MyApplication.getInstance().getHomeUtil().getSavedPlacesWithHomeWork(activity);
-        boolean homeSaved = false, workSaved = false;
-        for (SearchResult searchResult : searchResults) {
-            if (!TextUtils.isEmpty(searchResult.getName())) {
-                if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_HOME)){
-                    homeSaved = true;
-                }
-                if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_WORK)){
-                    workSaved = true;
-                }
-                if (homeSaved && workSaved) {
-                    placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
-                    return placeRequestCode;
-                }
-            }
-        }
-        if (!homeSaved) {
-            placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
-        } else {
-            placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
-        }
+		if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
+			ArrayList<SearchResult> searchResults = MyApplication.getInstance().getHomeUtil().getSavedPlacesWithHomeWork(activity);
+			boolean homeSaved = false, workSaved = false;
+			for (SearchResult searchResult : searchResults) {
+				if (!TextUtils.isEmpty(searchResult.getName())) {
+					if (searchResult.getName().equalsIgnoreCase(Constants.TYPE_HOME)) {
+						homeSaved = true;
+					}
+					if (searchResult.getName().equalsIgnoreCase(Constants.TYPE_WORK)) {
+						workSaved = true;
+					}
+					if (homeSaved && workSaved) {
+						placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
+						return placeRequestCode;
+					}
+				}
+			}
+			if (!homeSaved) {
+				placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
+			} else {
+				placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
+			}
+		}
         return placeRequestCode;
     }
 

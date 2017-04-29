@@ -32,7 +32,6 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.models.CountNotificationResponse;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
-import com.sabkuchfresh.feed.ui.adapters.FeedHomeLayoutManager;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
@@ -62,7 +61,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
-import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 
 
@@ -130,7 +128,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         View rootView = inflater.inflate(R.layout.fragment_feed_offering_list, container, false);
 //        pBarPagination= (ProgressWheel) rootView.findViewById(R.id.pBar_pagination);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_feed);
-        layoutManager = new FeedHomeLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
