@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,7 +58,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
@@ -86,9 +84,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
     //Pagination variables
     private ApiCommon<FeedListResponse> feedPagingApi;
-    int pastVisiblesItems, visibleItemCount, totalItemCount, pageCount, countRecords, maxPageCount;
+    int pastVisiblesItems, visibleItemCount, totalItemCount, pageCount, countRecords;
     private boolean hasMorePages;
-    private boolean isFragmentResumed ;
+
 
 
     public FeedHomeFragment() {
@@ -321,11 +319,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        isFragmentResumed = true;
-    }
 
     private Runnable showAddPostOnIdleStateOfScroll = new Runnable() {
         @Override
@@ -336,10 +329,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         }
     };
 
+    private boolean isFragmentHidden;
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+
         if (!hidden) {
+
             activity.fragmentUISetup(this);
 
             activity.getFeedHomeAddPostView().setVisibility(relativeLayoutNotAvailable.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
@@ -359,7 +355,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             activity.getHandler().removeCallbacks(runnableNotificationCount);
             activity.getHandler().removeCallbacks(showAddPostOnIdleStateOfScroll);
         }
-        isFragmentResumed = !hidden;
+        isFragmentHidden =!hidden;
     }
 
     @Override
@@ -557,6 +553,11 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     feedHomeAdapter.notifyItemRangeChanged(previousIndex-1,feedbackResponse.getFeeds().size()-1);
 
                 }
+
+                //Show AddPost Layout in case recycler view is in idle state
+                if(recyclerView.getScrollState()==SCROLL_STATE_IDLE){
+                    activity.getHandler().postDelayed(showAddPostOnIdleStateOfScroll,2000);
+                }
             }
 
             @Override
@@ -621,7 +622,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean uploaded = intent.getBooleanExtra(Constants.KEY_UPLOADED, false);
-            Log.i("FeedHomeFrag onReceive", "uploaded=" + uploaded);
+
             if (uploaded) {
                 fetchFeedsApi(false, false);
             }
@@ -743,24 +744,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
-    /*
-    Old logic to view notification count
-    private boolean isNotificationsViewed;
-
-      public void setNotificationsViewed(boolean notificationsViewed) {
-          isNotificationsViewed = notificationsViewed;
-      }
-    private void setNotificationCount(long count){
-          LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
-          BadgeDrawable.setBadgeCount(activity, icon, String.valueOf(!isNotificationsViewed || count!=notificationsSeenCount?count:0));
-          activity.collapsingToolbar.invalidate();
-          if(count!=notificationsSeenCount){
-              isNotificationsViewed=false;
-          }
-          notificationsSeenCount = count;
-      }
-      */
     private void setNotificationCount(long count) {
         this.notificationsSeenCount = count;
         LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
@@ -872,6 +855,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
     public boolean shouldTranslateFeedHomeAddPost() {
-        return recyclerView.getScrollState()!=SCROLL_STATE_IDLE || !isFragmentResumed;
+        return recyclerView.getScrollState()!=SCROLL_STATE_IDLE || isFragmentHidden;
     }
 }

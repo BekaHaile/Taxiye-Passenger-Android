@@ -1505,16 +1505,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
 
-
-       /* CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        AppBarLayout.LayoutParams appbar = new AppBarLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        collapsingToolbarLayout.setLayoutParams(appbar);
-
-
-        CollapsingToolbarLayout.LayoutParams collapseParams = (CollapsingToolbarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
-        collapseParams.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN);
-        toolbar.setLayoutParams(collapseParams);
-*/
     }
 
 
@@ -1529,6 +1519,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
 
 
+
             }
             fabViewTest.getMenuLabelsRightTest().setAlpha((((appBarLayout.getTotalScrollRange() ) - (-verticalOffset)) * 1.0f) / (appBarLayout.getTotalScrollRange()));
             if (verticalOffset == -appBarLayout.getTotalScrollRange()) {
@@ -1539,6 +1530,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (fabViewTest.relativeLayoutFABTest.getVisibility() == View.GONE) {
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
+
 
             }
 
