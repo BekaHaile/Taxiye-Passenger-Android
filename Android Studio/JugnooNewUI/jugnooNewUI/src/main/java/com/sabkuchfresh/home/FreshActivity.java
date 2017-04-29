@@ -1509,6 +1509,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
+
     AppBarLayout.OnOffsetChangedListener feedHomeAppBarListener = new AppBarLayout.OnOffsetChangedListener() {
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
