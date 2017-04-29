@@ -1528,6 +1528,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             }
             fabViewTest.getMenuLabelsRightTest().setAlpha((((appBarLayout.getTotalScrollRange() ) - (-verticalOffset)) * 1.0f) / (appBarLayout.getTotalScrollRange()));
+            if (verticalOffset == -appBarLayout.getTotalScrollRange()) {
+                if (fabViewTest.relativeLayoutFABTest.getVisibility() == View.VISIBLE) {
+                    fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+                }
+            } else {
+                if (fabViewTest.relativeLayoutFABTest.getVisibility() == View.GONE) {
+                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                }
+            }
 
         }
     };
