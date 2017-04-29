@@ -2847,6 +2847,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 deliveryCharges = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, getSubTotalAmount(false));
             } else {
                 deliveryCharges = activity.getSuperCategoriesData().getDeliveryInfo().getApplicableDeliveryCharges(type, getSubTotalAmount(false));
+                if(activity.getUserCheckoutResponse() != null
+                        && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() != null){
+                    deliveryCharges = activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges();
+                }
             }
         }
         if(!Data.userData.isSubscriptionActive()
