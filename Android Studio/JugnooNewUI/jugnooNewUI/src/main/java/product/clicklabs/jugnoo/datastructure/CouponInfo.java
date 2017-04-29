@@ -214,4 +214,9 @@ public class CouponInfo extends PromoCoupon{
 	public void setInvalidMessage(String invalidMessage) {
 		this.invalidMessage = invalidMessage;
 	}
+
+	@Override
+	public String getExpiryDate() {
+		return expiryDate;
+	}
 }

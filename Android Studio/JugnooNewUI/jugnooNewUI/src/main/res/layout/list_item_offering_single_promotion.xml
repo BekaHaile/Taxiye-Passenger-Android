@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/relative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_7"
+                android:layout_marginRight="@dimen/dp_7"
+                android:splitMotionEvents="false">
+
+    <View
+        android:id="@+id/vMultipleOffersBg"
+        android:layout_width="@dimen/dp_115"
+        android:layout_height="@dimen/dp_70"
+        android:background="@drawable/bg_coupon_white_dotted_round_border"
+        android:layout_marginTop="@dimen/dp_4"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:visibility="gone"
+        />
+    
+    <TextView
+        android:id="@+id/textViewCouponTitle"
+        android:layout_width="@dimen/dp_115"
+        android:layout_height="@dimen/dp_70"
+        android:gravity="center"
+        android:maxLines="3"
+        android:padding="@dimen/dp_5"
+        android:text="1 Free"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/sp_12"
+        android:background="@drawable/bg_coupon_white_dotted_round_border"
+        app:font="maven"
+        />
+
+
+    <TextView
+        android:id="@+id/tvPromoCount"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/sp_9"
+        android:gravity="center"
+        android:background="@drawable/circle_yellow_orange_stroke"
+        android:layout_alignBottom="@+id/vMultipleOffersBg"
+        android:layout_alignRight="@+id/vMultipleOffersBg"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:layout_marginRight="@dimen/dp_4"
+        android:text="2X"
+        android:visibility="gone"
+        app:font="maven"
+        />
+
+</RelativeLayout>
+

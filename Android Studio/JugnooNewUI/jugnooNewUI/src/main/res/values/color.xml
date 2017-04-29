@@ -274,6 +274,7 @@
     <color name="text_color_red">#DE5B5B</color>
 
     <color name="stroke_light_grey">#979797</color>
+    <color name="stroke_light_grey_50_alpha">#80979797</color>
     <color name="stroke_light_grey_alpha">#33979797</color>
     <color name="stroke_light_grey_alpha_less">#88979797</color>
     <color name="no_internet_text_color">#979797</color>
@@ -372,5 +373,9 @@
     <color name="pink_dark">#ffdede</color>
     <color name="red_dark_text_color">#dc4b3d</color>
     <color name="grey_969696">#969696</color>
+
+    <color name="yellow_promo_count">#fffab0</color>
+    <color name="orange_promo_count_stroke">#f6a623</color>
+    <color name="text_color_87">#878787</color>
 
 </resources>

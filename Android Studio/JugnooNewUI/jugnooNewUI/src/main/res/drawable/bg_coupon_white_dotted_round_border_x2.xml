@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_coupon_white_dotted_round_border">
+    </item>
+    <item
+        android:bottom="@dimen/dp_3"
+        android:drawable="@drawable/bg_coupon_white_dotted_round_border"
+        android:left="0dp"
+        android:right="@dimen/dp_3"
+        android:top="0dp"
+        >
+    </item>
+</layer-list>
+

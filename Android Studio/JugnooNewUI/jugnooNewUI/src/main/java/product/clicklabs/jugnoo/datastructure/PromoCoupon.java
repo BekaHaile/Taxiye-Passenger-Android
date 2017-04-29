@@ -17,6 +17,9 @@ public abstract class PromoCoupon {
 	public abstract Integer getMenus();
 	public abstract Integer getPay();
 	public abstract String getInvalidMessage();
+	public abstract String getExpiryDate();
+
+	private int repeatedCount;
 
 	public boolean matchPromoCoupon(PromoCoupon c2) {
 		try {
@@ -37,4 +40,11 @@ public abstract class PromoCoupon {
 		return false;
 	}
 
+	public int getRepeatedCount() {
+		return repeatedCount;
+	}
+
+	public void setRepeatedCount(int repeatedCount) {
+		this.repeatedCount = repeatedCount;
+	}
 }

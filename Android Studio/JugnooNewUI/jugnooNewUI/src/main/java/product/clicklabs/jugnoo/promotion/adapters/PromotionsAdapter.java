@@ -1,103 +1,138 @@
 package product.clicklabs.jugnoo.promotion.adapters;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Fonts;
 
 
 /**
  * Created by Shankar on 5/14/16.
  */
-public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.ViewHolder> implements GAAction, GACategory {
+public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.ViewHolder> implements GAAction, GACategory, ItemListener {
 
-    private Activity activity;
-    private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
+	private Activity activity;
+	private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
+	private RecyclerView recyclerView;
 
-    public PromotionsAdapter(Activity activity, ArrayList<PromoCoupon> promoCoupons) {
-        this.activity = activity;
-        this.promoCoupons = promoCoupons;
-    }
+	public PromotionsAdapter(Activity activity, ArrayList<PromoCoupon> promoCoupons, RecyclerView recyclerView) {
+		this.activity = activity;
+		this.promoCoupons = promoCoupons;
+		this.recyclerView = recyclerView;
+	}
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_coupon, parent, false);
+	public void setList(ArrayList<PromoCoupon> promoCoupons){
+		this.promoCoupons = promoCoupons;
+		notifyDataSetChanged();
+	}
 
-    /*    RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.bottomMargin = 20;
-        ((RelativeLayout) v).setGravity(Gravity.CENTER);
+	@Override
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_offering_single_promotion, parent, false);
+		return new ViewHolder(v, this);
+	}
 
-        v.setLayoutParams(layoutParams);*/
+	@Override
+	public void onBindViewHolder(ViewHolder holder, int position) {
+		PromoCoupon promoCoupon = promoCoupons.get(position);
+//		activity.getString(R.string.valid_until_format,
+//				DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate())))
 
-        ASSL.DoMagic(v);
-        return new ViewHolder(v, activity);
-    }
+		String expireDate = DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate()));
+		SpannableStringBuilder title = new SpannableStringBuilder(promoCoupon.getTitle());
+		SpannableStringBuilder validUntilDate = new SpannableStringBuilder(activity.getString(R.string.valid_until_format, expireDate));
 
-    @Override
-    public void onBindViewHolder(PromotionsAdapter.ViewHolder holder, int position) {
-        PromoCoupon promoCoupon = promoCoupons.get(position);
-        holder.textViewCouponTitle.setText(promoCoupon.getTitle());
-        if (promoCoupon instanceof CouponInfo) {
-            holder.textViewExpiryDate.setText(String.format(activity.getResources().getString(R.string.valid_until_format),
-                    DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(((CouponInfo) promoCoupon).expiryDate))));
-        } else if (promoCoupon instanceof PromotionInfo) {
-            holder.textViewExpiryDate.setText(String.format(activity.getResources().getString(R.string.valid_until_format),
-                    DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(((PromotionInfo) promoCoupon).endOn))));
-        }
-        holder.relative.setTag(position);
-        holder.relative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int pos = (int) v.getTag();
-                PromoCoupon promoCoupon = promoCoupons.get(pos);
-                if (promoCoupon instanceof CouponInfo) {
-                    DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description, true, true, false, true);
-                } else if (promoCoupon instanceof PromotionInfo) {
-                    DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, false, true, true, true);
-                }
-                GAUtils.event(SIDE_MENU, PROMOTIONS+OFFER+TNC+CLICKED, promoCoupon.getTitle());
-            }
-        });
+		final StyleSpan boldTitleSpan = new StyleSpan(android.graphics.Typeface.BOLD);
+		final StyleSpan boldDateSpan = new StyleSpan(android.graphics.Typeface.BOLD);
+		final RelativeSizeSpan relativeValidDateSpan = new RelativeSizeSpan(0.8f);
+		final ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_87));
 
-    }
+		title.setSpan(boldTitleSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		validUntilDate.setSpan(relativeValidDateSpan, 0, validUntilDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		validUntilDate.setSpan(foregroundColorSpan, 0, validUntilDate.length()-expireDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		validUntilDate.setSpan(boldDateSpan, validUntilDate.length()-expireDate.length(), validUntilDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-    @Override
-    public int getItemCount() {
-        return promoCoupons == null ? 0 : promoCoupons.size();
-    }
+		holder.textViewCouponTitle.setText(title);
+		holder.textViewCouponTitle.append("\n");
+		holder.textViewCouponTitle.append(validUntilDate);
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        public RelativeLayout relative;
-        public TextView textViewCouponTitle, textViewExpiryDate;
-        public ImageView imageViewCut;
+		holder.tvPromoCount.setText(promoCoupon.getRepeatedCount()+"X");
+		holder.vMultipleOffersBg.setVisibility(promoCoupon.getRepeatedCount() > 1 ? View.VISIBLE : View.GONE);
+		holder.tvPromoCount.setVisibility(promoCoupon.getRepeatedCount() > 1 ? View.VISIBLE : View.GONE);
 
-        public ViewHolder(View itemView, Activity activity) {
-            super(itemView);
-            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
-            textViewCouponTitle = (TextView) itemView.findViewById(R.id.textViewCouponTitle);
-            textViewCouponTitle.setTypeface(Fonts.mavenLight(activity));
-            textViewExpiryDate = (TextView) itemView.findViewById(R.id.textViewExpiryDate);
-            textViewExpiryDate.setTypeface(Fonts.mavenLight(activity));
-            imageViewCut = (ImageView) itemView.findViewById(R.id.imageViewCut);
-        }
-    }
+	}
+
+	@Override
+	public int getItemCount() {
+		return promoCoupons == null ? 0 : promoCoupons.size();
+	}
+
+	@Override
+	public void onClickItem(View viewClicked, View parentView) {
+		try {
+			int pos = recyclerView.getChildLayoutPosition(parentView);
+			if(pos != RecyclerView.NO_POSITION) {
+				switch (viewClicked.getId()) {
+					case R.id.relative:
+						PromoCoupon promoCoupon = promoCoupons.get(pos);
+						if (promoCoupon instanceof CouponInfo) {
+							DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description, true, true, false, true);
+						} else if (promoCoupon instanceof PromotionInfo) {
+							DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, false, true, true, true);
+						}
+						GAUtils.event(SIDE_MENU, PROMOTIONS + OFFER + TNC + CLICKED, promoCoupon.getTitle());
+						break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	class ViewHolder extends RecyclerView.ViewHolder {
+		@Bind(R.id.vMultipleOffersBg)
+		View vMultipleOffersBg;
+		@Bind(R.id.textViewCouponTitle)
+		TextView textViewCouponTitle;
+		@Bind(R.id.tvPromoCount)
+		TextView tvPromoCount;
+		@Bind(R.id.relative)
+		RelativeLayout relative;
+
+		ViewHolder(final View view, final ItemListener itemListener) {
+			super(view);
+			ButterKnife.bind(this, view);
+			relative.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					itemListener.onClickItem(relative, view);
+				}
+			});
+		}
+	}
 }

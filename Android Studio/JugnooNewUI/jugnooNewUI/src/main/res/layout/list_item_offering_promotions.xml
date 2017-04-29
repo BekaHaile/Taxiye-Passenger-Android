@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tvOfferingName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/sp_16"
+        android:text="Rides"
+        android:drawableLeft="@drawable/ic_auto_grey"
+        android:drawablePadding="@dimen/dp_4"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_10"
+        app:font="maven"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/stroke_light_grey_50_alpha"
+        android:layout_alignBottom="@+id/tvOfferingName"
+        android:layout_toRightOf="@+id/tvOfferingName"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:layout_marginBottom="@dimen/dp_5"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvPromotions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvOfferingName"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:fadeScrollbars="true"
+        android:scrollbars="horizontal"
+        android:visibility="visible"/>
+
+</RelativeLayout>

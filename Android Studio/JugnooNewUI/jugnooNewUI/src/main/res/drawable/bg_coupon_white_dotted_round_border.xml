@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <padding android:top="0dp" android:right="1dp" android:bottom="1dp" android:left="0dp" />
+            <solid android:color="#02AAAAAA" />
+            <corners android:radius="14.5dp" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding android:top="0dp" android:right="1dp" android:bottom="1dp" android:left="0dp" />
+            <solid android:color="#05AAAAAA" />
+            <corners android:radius="13dp" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding android:top="0dp" android:right="1dp" android:bottom="1dp" android:left="0dp" />
+            <solid android:color="#0FAAAAAA" />
+            <corners android:radius="12.5dp" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding android:top="0dp" android:right="1dp" android:bottom="1dp" android:left="0dp" />
+            <solid android:color="#1CAAAAAA" />
+            <corners android:radius="11.5dp" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding android:top="0dp" android:right="1dp" android:bottom="1dp" android:left="0dp" />
+            <solid android:color="#24AAAAAA" />
+            <corners android:radius="10.5dp" />
+        </shape>
+    </item>
+
+    <!-- content background -->
+    <item
+        android:left="0dp"
+        android:right="@dimen/dropshadow_width_minus"
+        android:top="0dp"
+        android:bottom="@dimen/dropshadow_width_minus"
+        >
+        <selector>
+
+            <item android:state_pressed="true">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/text_color_hint" />
+                    <corners android:radius="@dimen/dp_10" />
+                    <stroke android:width="1dp" android:color="@color/dotted_color" android:dashGap="4dp" android:dashWidth="5dp" />
+                </shape>
+            </item>
+
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/white" />
+                    <corners android:radius="@dimen/dp_10" />
+                    <stroke android:width="1dp" android:color="@color/dotted_color" android:dashGap="4dp" android:dashWidth="5dp" />
+                </shape>
+            </item>
+
+        </selector>
+    </item>
+</layer-list>
+
