@@ -87,6 +87,9 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
 
         relativeLayoutProceed = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutProceed);
         textViewProceed = (TextView) rootView.findViewById(R.id.textViewProceed); textViewProceed.setTypeface(Fonts.mavenMedium(activity));
+        ViewGroup.LayoutParams layoutParams = relativeLayoutProceed.getLayoutParams();
+        layoutParams.height = getResources().getDimensionPixelSize(R.dimen.dp_54);
+        relativeLayoutProceed.setLayoutParams(layoutParams);
 
         updateAddonsListCount();
 

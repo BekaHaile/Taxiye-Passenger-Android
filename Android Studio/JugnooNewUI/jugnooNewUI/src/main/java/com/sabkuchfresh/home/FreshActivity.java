@@ -1768,7 +1768,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
         setSelectedAddressType("");
 
-        resetSlider();
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {resetSlider();} catch (Exception e) {}
+            }
+        }, 100);
+
 
         checkForBackToFeed(false);
 
@@ -4389,7 +4395,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 @Override
                 public void run() {
                     ViewGroup.LayoutParams layoutParams = llPayViewContainer.getLayoutParams();
-                    layoutParams.height = getResources().getDimensionPixelSize(R.dimen.dp_51);
+                    layoutParams.height = getResources().getDimensionPixelSize(R.dimen.dp_54);
                     llPayViewContainer.setLayoutParams(layoutParams);
                 }
             });

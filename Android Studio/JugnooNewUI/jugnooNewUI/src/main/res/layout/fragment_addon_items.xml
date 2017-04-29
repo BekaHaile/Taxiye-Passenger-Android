@@ -58,15 +58,16 @@
     <ImageView
         android:id="@+id/below_shadow_down"
         android:layout_width="match_parent"
-        android:layout_height="6px"
+        android:layout_height="@dimen/dp_7"
         android:layout_above="@+id/relativeLayoutProceed"
-        android:background="@drawable/shadow_up"
+        android:background="@drawable/shadow_up_new"
+        android:tag="@string/dont_touch_me"
         />
 
     <RelativeLayout
         android:id="@+id/relativeLayoutProceed"
         android:layout_width="match_parent"
-        android:layout_height="110px"
+        android:layout_height="108px"
         android:layout_alignParentBottom="true"
         android:background="@drawable/background_white_grey_light_selector"
         >
