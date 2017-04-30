@@ -260,7 +260,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
         //Layout In Case of feed Empty
-        tvFeedEmpty.setText(R.string.label_feed_empty);
+        tvFeedEmpty.setText(R.string. label_feed_empty);
         SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add_a_post));
         ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvFeedEmpty.append("\n");

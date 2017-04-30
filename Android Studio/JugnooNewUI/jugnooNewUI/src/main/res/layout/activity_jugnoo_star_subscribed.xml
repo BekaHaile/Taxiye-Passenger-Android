@@ -27,18 +27,20 @@
 
     <ScrollView
         android:id="@+id/scroll"
+        android:fillViewport="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/topBar">
 
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/llSavingMeter"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/px_90"
                 android:orientation="vertical">
 
@@ -114,7 +116,7 @@
                 android:id="@+id/cvContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/llSavingMeter"
+
                 android:layout_margin="@dimen/px_40">
 
                 <LinearLayout
@@ -143,7 +145,9 @@
                             android:id="@+id/tvCurrentPlanValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_toRightOf="@id/tvCurrentPlan"
                             android:layout_alignParentRight="true"
+                            android:gravity="right"
                             android:text=""
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_30" />
@@ -173,6 +177,8 @@
                         <TextView
                             android:id="@+id/tvExpiresOnValue"
                             android:layout_width="wrap_content"
+                            android:layout_toRightOf="@id/tvExpiresOn"
+                            android:gravity="right"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:text=""
@@ -414,11 +420,10 @@
                 android:id="@+id/llUpgradeContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/cvContainer"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/px_20"
-                android:paddingRight="@dimen/px_20"
+                android:paddingLeft="@dimen/px_40"
+                android:paddingRight="@dimen/px_40"
                 android:visibility="visible">
 
                 <TextView
@@ -426,21 +431,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text=""
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30" />
+                    android:textSize="@dimen/text_size_40" />
 
-                <Button
-                    android:id="@+id/btnUpgradeNow"
-                    style="@style/ButtonTheme"
-                    android:layout_below="@+id/tvUpgradingText"
-                    android:layout_marginTop="@dimen/px_90"
-                    android:text="@string/upgrade_now" />
+                <TextView
+                    android:layout_marginTop="@dimen/px_5"
+                    android:id="@+id/tv_view_benefits"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:textColor="@color/text_color_theme_selector"
+                    android:text="@string/view_benefits"
+                    android:textSize="@dimen/px_40"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
 
-        </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="30px"/>
+
+            <Button
+                android:id="@+id/btnUpgradeNow"
+                style="@style/ButtonTheme"
+                android:textAllCaps="true"
+                android:layout_width="match_parent"
+                android:layout_gravity="bottom"
+                android:text="@string/upgrade_now" />
+        </LinearLayout>
     </ScrollView>
 
     <RelativeLayout

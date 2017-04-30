@@ -3,7 +3,9 @@ package product.clicklabs.jugnoo;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.Spanned;
@@ -32,6 +34,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.StarPurchaseType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
+import product.clicklabs.jugnoo.fragments.ViewJugnooStarBenefitsFragment;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
@@ -54,7 +57,7 @@ import retrofit.mime.TypedByteArray;
 public class JugnooStarSubscribedActivity extends StarBaseActivity implements View.OnClickListener {
 
     private RelativeLayout relative, rlAutoRenewal, rlFragment, rlPlan1, rlPlan2, rlExpire, rlWarning;
-    private TextView textViewTitle, tvAutoRenewal, tvUpgradingText;
+    private TextView textViewTitle, tvAutoRenewal, tvUpgradingText,tvViewBenefits;
     private ImageView imageViewBack, ivAutoRenewalSwitch, ivRadio1, ivRadio2, ivStarInfo;
     private TextView tvCurrentPlanValue, tvExpiresOnValue, tvSavingsMeterRetry, tvBenefits, tvExpiredTitle,
             tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2, tvCurrentPlan;
@@ -124,6 +127,8 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
         tvAutoRenewal = (TextView) findViewById(R.id.tvAutoRenewal); tvAutoRenewal.setTypeface(Fonts.mavenMedium(this));
         ivAutoRenewalSwitch = (ImageView) findViewById(R.id.ivAutoRenewalSwitch);
         tvUpgradingText = (TextView) findViewById(R.id.tvUpgradingText); tvUpgradingText.setTypeface(Fonts.mavenMedium(this));
+        tvViewBenefits = (TextView) findViewById(R.id.tv_view_benefits); tvViewBenefits.setTypeface(Fonts.mavenMedium(this));
+        tvViewBenefits.setOnClickListener(this);
         btnUpgradeNow = (Button) findViewById(R.id.btnUpgradeNow); btnUpgradeNow.setTypeface(Fonts.mavenMedium(this));
         ivStarInfo = (ImageView) findViewById(R.id.ivStarInfo); ivStarInfo.setOnClickListener(this);
         apiFetchTotalSavings();
@@ -270,11 +275,17 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
 
 
     public void performBackPressed() {
+
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+
+
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                setScreenTitle(getString(R.string.jugnoo_star));
                 //rlFragment.setVisibility(View.GONE);
             }
             super.onBackPressed();
+
+
         } else {
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -284,6 +295,9 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tv_view_benefits:
+                openBenefitsFragment(this,rlFragment);
+                break;
             case R.id.imageViewBack:
                 performBackPressed();
                 break;
@@ -602,11 +616,36 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
 
     public void openStarCheckoutFragment(FragmentActivity activity, View container, int purchaseType) {
         rlFragment.setVisibility(View.VISIBLE);
-        activity.getSupportFragmentManager().beginTransaction()
+        textViewTitle.setText(getString(R.string.jugnoo_star));
+        FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
                 .add(container.getId(), StarSubscriptionCheckoutFragment.newInstance(selectedSubId, purchaseType),
                         StarSubscriptionCheckoutFragment.class.getName())
-                .addToBackStack(StarSubscriptionCheckoutFragment.class.getName())
+                .addToBackStack(StarSubscriptionCheckoutFragment.class.getName());
+        Fragment benefitsFragment  = activity.getSupportFragmentManager().findFragmentByTag(ViewJugnooStarBenefitsFragment.class.getName());
+        if(benefitsFragment!=null) {fragmentTransaction.hide(benefitsFragment);}
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+
+    public void openBenefitsFragment(FragmentActivity activity, View container) {
+        rlFragment.setVisibility(View.VISIBLE);
+        textViewTitle.setText(getString(R.string.benefits));
+        activity.getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                .add(container.getId(), new ViewJugnooStarBenefitsFragment(),
+                        ViewJugnooStarBenefitsFragment.class.getName())
+                .addToBackStack(ViewJugnooStarBenefitsFragment.class.getName())
                 .commitAllowingStateLoss();
+    }
+
+    public void openStarCheckoutFragment() {
+        openStarCheckoutFragment(JugnooStarSubscribedActivity.this, rlFragment, StarPurchaseType.UPGRADE.getOrdinal());
+
+
+    }
+
+    public void setScreenTitle(String string) {
+        textViewTitle.setText(string);
     }
 }
