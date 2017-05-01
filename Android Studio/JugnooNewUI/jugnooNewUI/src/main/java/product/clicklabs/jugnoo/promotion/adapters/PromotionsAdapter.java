@@ -37,19 +37,21 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 	private Activity activity;
 	private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 	private RecyclerView recyclerView;
-	private String offeringName;
+	private String offeringName, clientId;
 
-	public PromotionsAdapter(Activity activity, ArrayList<PromoCoupon> promoCoupons, RecyclerView recyclerView, String offeringName) {
+	public PromotionsAdapter(Activity activity, ArrayList<PromoCoupon> promoCoupons, RecyclerView recyclerView, String offeringName, String clientId) {
 		this.activity = activity;
 		this.promoCoupons = promoCoupons;
 		this.recyclerView = recyclerView;
 		this.offeringName = offeringName;
+		this.clientId = clientId;
 	}
 
-	public void setList(ArrayList<PromoCoupon> promoCoupons, String offeringName){
+	public void setList(ArrayList<PromoCoupon> promoCoupons, String offeringName, String clientId){
 		this.promoCoupons = promoCoupons;
 		notifyDataSetChanged();
 		this.offeringName = offeringName;
+		this.clientId = clientId;
 	}
 
 	@Override
@@ -114,7 +116,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 					case R.id.relative:
 						PromoCoupon promoCoupon = promoCoupons.get(pos);
 						if(activity instanceof PromotionActivity){
-							((PromotionActivity)activity).openPromoDescriptionFragment(offeringName, promoCoupon);
+							((PromotionActivity)activity).openPromoDescriptionFragment(offeringName, clientId, promoCoupon);
 						}
 						GAUtils.event(SIDE_MENU, PROMOTIONS + OFFER + TNC + CLICKED, promoCoupon.getTitle());
 						break;

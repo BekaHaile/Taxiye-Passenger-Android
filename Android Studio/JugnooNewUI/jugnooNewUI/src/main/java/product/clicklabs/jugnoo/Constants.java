@@ -695,4 +695,5 @@ public interface Constants {
     String KEY_CLOSE_TRACKING = "close_tracking";
     String KEY_OFFERING_NAME = "offering_name";
     String KEY_PROMO_COUPON = "promo_coupon";
+    String SP_USE_COUPON_ = "sp_use_coupon_";
 }

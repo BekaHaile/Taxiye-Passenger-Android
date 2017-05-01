@@ -16,15 +16,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -44,14 +50,15 @@ public class PromoDescriptionFragment extends Fragment {
 	private View rootView;
 	private Context context;
 
-	private String offeringName;
+	private String offeringName, clientId;
 	private PromoCoupon promoCoupon;
 
 
-	public static PromoDescriptionFragment newInstance(String offeringName, PromoCoupon promoCoupon){
+	public static PromoDescriptionFragment newInstance(String offeringName, String clientId, PromoCoupon promoCoupon){
 		PromoDescriptionFragment fragment = new PromoDescriptionFragment();
 		Bundle bundle = new Bundle();
 		bundle.putString(Constants.KEY_OFFERING_NAME, offeringName);
+		bundle.putString(Constants.KEY_CLIENT_ID, clientId);
 		bundle.putSerializable(Constants.KEY_PROMO_COUPON, promoCoupon);
 		fragment.setArguments(bundle);
 		return fragment;
@@ -60,6 +67,7 @@ public class PromoDescriptionFragment extends Fragment {
 	private void parseArguments(){
 		Bundle bundle = getArguments();
 		offeringName = bundle.getString(Constants.KEY_OFFERING_NAME);
+		clientId = bundle.getString(Constants.KEY_CLIENT_ID);
 		promoCoupon = (PromoCoupon) bundle.getSerializable(Constants.KEY_PROMO_COUPON);
 	}
 
@@ -113,6 +121,10 @@ public class PromoDescriptionFragment extends Fragment {
 
 	@OnClick(R.id.bUseCoupon)
 	public void useCoupon() {
-
+		if(context instanceof PromotionActivity && promoCoupon != null) {
+			Prefs.with(context).save(Constants.SP_USE_COUPON_ + clientId, promoCoupon.getId());
+			MyApplication.getInstance().getAppSwitcher().switchApp((PromotionActivity)context, clientId,
+					new LatLng(Data.latitude, Data.longitude), true);
+		}
 	}
 }

@@ -1964,6 +1964,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             e.printStackTrace();
         }
         if(promoCoupons != null) {
+
             if(promoCoupons.size() > 0){
                 linearLayoutOffers.setVisibility(View.VISIBLE);
             } else {
@@ -1986,23 +1987,61 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             setPromoAmount();
             promoCouponsAdapter.setList(promoCoupons);
 
-            //checks only different coupons
-            if(pcOld != null && activity.getSelectedPromoCoupon() != null
-                    && !pcOld.matchPromoCoupon(activity.getSelectedPromoCoupon())){
-                if(pcOld.matchPromoCoupon(noSelectionCoupon)
-                        && !activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)){  // coupon just applied
-                    Utils.showToast(activity, activity.getString(R.string.offer_applied)+": "+activity.getSelectedPromoCoupon().getTitle());
-                } else if(!pcOld.matchPromoCoupon(noSelectionCoupon)
-                        && activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)){   // coupon just removed
-                    Utils.showToast(activity, activity.getString(R.string.offer_removed_alert));
-                } else if(!pcOld.matchPromoCoupon(noSelectionCoupon)
-                        && !activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)){   // coupon changed
-                    Utils.showToast(activity, activity.getString(R.string.offer_applied)+": "+activity.getSelectedPromoCoupon().getTitle());
+            // to check if user has selected some promo coupon from promotions screen
+            if(!selectAutoSelectedCouponAtCheckout()) {
+                //checks only different coupons
+                if (pcOld != null && activity.getSelectedPromoCoupon() != null
+                        && !pcOld.matchPromoCoupon(activity.getSelectedPromoCoupon())) {
+                    if (pcOld.matchPromoCoupon(noSelectionCoupon)
+                            && !activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)) {  // coupon just applied
+                        Utils.showToast(activity, activity.getString(R.string.offer_applied) + ": " + activity.getSelectedPromoCoupon().getTitle());
+                    } else if (!pcOld.matchPromoCoupon(noSelectionCoupon)
+                            && activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)) {   // coupon just removed
+                        Utils.showToast(activity, activity.getString(R.string.offer_removed_alert));
+                    } else if (!pcOld.matchPromoCoupon(noSelectionCoupon)
+                            && !activity.getSelectedPromoCoupon().matchPromoCoupon(noSelectionCoupon)) {   // coupon changed
+                        Utils.showToast(activity, activity.getString(R.string.offer_applied) + ": " + activity.getSelectedPromoCoupon().getTitle());
+                    }
                 }
             }
         } else {
             linearLayoutOffers.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * To auto apply a selected coupon from Promotions screen
+     * @return returns true if some coupon is selected else false
+     */
+    private boolean selectAutoSelectedCouponAtCheckout(){
+        String clientId = Config.getFreshClientId();
+        if(type == AppConstant.ApplicationType.MEALS){
+            clientId = Config.getMealsClientId();
+        } else if(type == AppConstant.ApplicationType.MENUS){
+            clientId = Config.getMenusClientId();
+        }
+
+        try {
+            int promoCouponId = Prefs.with(activity).getInt(Constants.SP_USE_COUPON_+clientId, -1);
+            if(promoCouponId > 0){
+				for(int i=0; i<promoCoupons.size(); i++){
+                    PromoCoupon pc = promoCoupons.get(i);
+                    if(pc.getId() == promoCouponId && pc.getIsValid() == 1){
+                        setSelectedCoupon(i);
+                        Utils.showToast(activity, activity.getString(R.string.offer_auto_applied)+": "+activity.getSelectedPromoCoupon().getTitle());
+                        Prefs.with(activity).save(Constants.SP_USE_COUPON_+clientId, -1);
+                        return true;
+                    } else {
+                        setSelectedCoupon(i);
+                        activity.setSelectedPromoCoupon(noSelectionCoupon);
+                        return true;
+                    }
+                }
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private PromoCoupon selectServerMarkedCouponAndReturnOld(){

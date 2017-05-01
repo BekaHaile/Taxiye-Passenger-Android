@@ -561,9 +561,9 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
     }
 
     Fragment fragment = null;
-    public void openPromoDescriptionFragment(String offeringName, PromoCoupon promoCoupon){
+    public void openPromoDescriptionFragment(String offeringName, String clientId, PromoCoupon promoCoupon){
         removeFragment();
-        fragment = PromoDescriptionFragment.newInstance(offeringName, promoCoupon);
+        fragment = PromoDescriptionFragment.newInstance(offeringName, clientId, promoCoupon);
         llContainer.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
