@@ -72,11 +72,24 @@
                 />
 
             <TextView
+                android:id="@+id/textViewItemUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10px"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="500gm"
+                android:visibility="visible"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26"
+                />
+
+            <TextView
                 android:id="@+id/textViewItemPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20px"
-                android:layout_marginTop="5px"
+                android:layout_marginTop="10px"
                 android:maxLines="2"
                 android:text="@string/rupee_0"
                 android:textColor="@color/text_color"

@@ -121,6 +121,14 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
+			if(!TextUtils.isEmpty(subItem.getBaseUnit())) {
+				mHolder.textViewItemUnit.setVisibility(View.VISIBLE);
+				mHolder.textViewItemUnit.setText(subItem.getBaseUnit());
+			} else {
+				mHolder.textViewItemUnit.setVisibility(View.GONE);
+			}
+
 			mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
 			mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
 			if(position == getCount()-1){
@@ -276,7 +284,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		public RelativeLayout relative;
 		public LinearLayout linearLayoutContent;
 		private ImageView imageViewItemImage, imageViewSep, imageViewMinus, imageViewPlus, imageViewFoodType;
-		public TextView textViewItemName, textViewItemPrice, textViewQuantity;
+		public TextView textViewItemName, textViewItemPrice, textViewQuantity, textViewItemUnit;
 
 		public MainViewHolder(View itemView, Context context) {
 			super(itemView);
@@ -291,6 +299,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			textViewItemName = (TextView) itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenMedium(context));
 			textViewItemPrice = (TextView) itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenMedium(context));
 			textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
+			textViewItemUnit = (TextView)itemView.findViewById(R.id.textViewItemUnit); textViewItemUnit.setTypeface(Fonts.mavenRegular(context));
 		}
 	}
 
