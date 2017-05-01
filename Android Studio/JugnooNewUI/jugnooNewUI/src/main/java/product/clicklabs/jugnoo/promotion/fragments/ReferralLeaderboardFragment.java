@@ -41,20 +41,6 @@ public class ReferralLeaderboardFragment extends Fragment implements  Constants 
 	private LBTimeType lbTimeType;
 	private ImageView imageViewBack;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-//        FlurryAgent.init(activity, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-//        FlurryAgent.onEvent(ReferralLeaderboardFragment.class.getSimpleName() + " started");
-    }
-
-    @Override
-    public void onStop() {
-		super.onStop();
-//        FlurryAgent.onEndSession(activity);
-    }
-	
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

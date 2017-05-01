@@ -34,76 +34,76 @@
             />
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_4"
-        android:layout_below="@+id/topBar"
-        android:background="@drawable/shadow_down"/>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cvEnterPromo"
+    <RelativeLayout
+        android:id="@+id/rlEnterPromo"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"
-        android:layout_below="@+id/topBar"
-        android:layout_marginLeft="@dimen/dp_12"
-        android:layout_marginRight="@dimen/dp_12"
-        android:layout_marginTop="@dimen/dp_15"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="@dimen/dp_10"
-        >
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topBar">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginLeft="@dimen/dp_12"
+            android:layout_marginRight="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_4"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/dp_10"
+            >
 
-            <EditText
-                android:id="@+id/editTextPromoCode"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.70"
-                android:background="@null"
-                android:digits="@string/digits_characters_caps_numbers"
-                android:hint="@string/enter_promo_code"
-                android:inputType="textCapCharacters"
-                android:maxLines="1"
-                android:paddingLeft="@dimen/dp_15"
-                android:paddingRight="@dimen/dp_15"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color_hint"
-                android:textCursorDrawable="@drawable/cursor_black"
-                android:textSize="@dimen/sp_16"
-                app:font="maven"/>
+                android:orientation="horizontal"
+                android:weightSum="1">
 
-            <Button
-                android:id="@+id/buttonApplyPromo"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.30"
-                android:background="@drawable/button_theme_rtbr_selector"
-                android:text="@string/apply"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_14"
-                app:font="maven"
-                />
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/editTextPromoCode"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.70"
+                    android:background="@null"
+                    android:digits="@string/digits_characters_caps_numbers"
+                    android:hint="@string/enter_promo_code"
+                    android:inputType="textCapCharacters"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/dp_15"
+                    android:paddingRight="@dimen/dp_15"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@drawable/cursor_black"
+                    android:textSize="@dimen/sp_16"
+                    app:font="maven"/>
 
-    </android.support.v7.widget.CardView>
+                <Button
+                    android:id="@+id/buttonApplyPromo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.30"
+                    android:background="@drawable/button_theme_rtbr_selector"
+                    android:text="@string/apply"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    app:font="maven"
+                    />
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewOffers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/textViewFreeRides"
-        android:layout_below="@+id/cvEnterPromo"
+        android:layout_below="@+id/rlEnterPromo"
         android:layout_marginTop="@dimen/dp_10"
         android:fadeScrollbars="true"
         android:scrollbars="vertical"
         android:visibility="visible"/>
-
 
 
     <TextView
@@ -118,6 +118,7 @@
         android:textColor="@color/text_color_selector"
         android:textSize="@dimen/sp_16"
         android:visibility="gone"
+        app:font="maven"
         />
 
     <View
@@ -140,11 +141,12 @@
         android:visibility="gone"
         />
 
+
     <LinearLayout
         android:id="@+id/linearLayoutNoOffers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cvEnterPromo"
+        android:layout_below="@+id/rlEnterPromo"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dp_30"
@@ -165,8 +167,28 @@
             android:layout_marginTop="@dimen/dp_10"
             android:text="@string/no_offers_currently"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/sp_13"/>
+            android:textSize="@dimen/sp_13"
+            app:font="maven"
+            />
 
     </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/llContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topBar"
+        android:orientation="vertical"
+        android:soundEffectsEnabled="true"
+        android:visibility="gone"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_7"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down_new"/>
+
 
 </RelativeLayout>

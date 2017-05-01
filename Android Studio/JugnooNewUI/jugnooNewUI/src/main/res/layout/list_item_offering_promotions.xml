@@ -32,7 +32,6 @@
         android:visibility="visible"
         android:scrollbarFadeDuration="50"
         android:scrollbarSize="1dp"
-
         />
 
 </RelativeLayout>

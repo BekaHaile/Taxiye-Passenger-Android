@@ -1669,4 +1669,6 @@
     <string name="press_skip_to_continue">Press skip to continue</string>
     <string name="press_skip_this_step_to_proceed">Press \'Skip this step\' to proceed</string>
     <string name="order_quantity_limited">Order quantity for this item is limited to 50</string>
+    <string name="use_this_coupon">Use this coupon</string>
+    <string name="terms_of_use">Terms of Use</string>
 </resources>

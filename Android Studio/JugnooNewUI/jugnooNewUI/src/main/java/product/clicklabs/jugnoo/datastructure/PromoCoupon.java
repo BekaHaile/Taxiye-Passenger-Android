@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo.datastructure;
 
-public abstract class PromoCoupon {
+import java.io.Serializable;
+
+public abstract class PromoCoupon implements Serializable {
 
 	public abstract int getId();
 	public abstract String getTitle();

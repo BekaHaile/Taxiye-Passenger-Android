@@ -13,12 +13,13 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 
 public class OfferingPromotion {
 
-	private String name;
+	private String name, clientId;
 	private int leftDrawableResource;
 	private ArrayList<PromoCoupon> promoCoupons;
 
-	public OfferingPromotion(String name, int leftDrawableResource, ArrayList<PromoCoupon> promoCoupons) {
+	public OfferingPromotion(String name, String clientId, int leftDrawableResource, ArrayList<PromoCoupon> promoCoupons) {
 		this.name = name;
+		this.clientId = clientId;
 		this.leftDrawableResource = leftDrawableResource;
 
 		for(PromoCoupon promoCoupon : promoCoupons){
@@ -53,5 +54,13 @@ public class OfferingPromotion {
 
 	public void setPromoCoupons(ArrayList<PromoCoupon> promoCoupons) {
 		this.promoCoupons = promoCoupons;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
 	}
 }

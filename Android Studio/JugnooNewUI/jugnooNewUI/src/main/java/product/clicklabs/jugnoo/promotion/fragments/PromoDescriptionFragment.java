@@ -1,0 +1,118 @@
+package product.clicklabs.jugnoo.promotion.fragments;
+
+import android.content.Context;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.Utils;
+
+/**
+ * Created by shankar on 01/05/17.
+ */
+
+public class PromoDescriptionFragment extends Fragment {
+
+	@Bind(R.id.tvOfferingName)
+	TextView tvOfferingName;
+	@Bind(R.id.tvOfferTitle)
+	TextView tvOfferTitle;
+	@Bind(R.id.tvOfferExpireDate)
+	TextView tvOfferExpireDate;
+	@Bind(R.id.tvOfferTerms)
+	TextView tvOfferTerms;
+	private View rootView;
+	private Context context;
+
+	private String offeringName;
+	private PromoCoupon promoCoupon;
+
+
+	public static PromoDescriptionFragment newInstance(String offeringName, PromoCoupon promoCoupon){
+		PromoDescriptionFragment fragment = new PromoDescriptionFragment();
+		Bundle bundle = new Bundle();
+		bundle.putString(Constants.KEY_OFFERING_NAME, offeringName);
+		bundle.putSerializable(Constants.KEY_PROMO_COUPON, promoCoupon);
+		fragment.setArguments(bundle);
+		return fragment;
+	}
+
+	private void parseArguments(){
+		Bundle bundle = getArguments();
+		offeringName = bundle.getString(Constants.KEY_OFFERING_NAME);
+		promoCoupon = (PromoCoupon) bundle.getSerializable(Constants.KEY_PROMO_COUPON);
+	}
+
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		if (context != null) {
+			this.context = context;
+		}
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		rootView = inflater.inflate(R.layout.fragment_promo_description, container, false);
+		ButterKnife.bind(this, rootView);
+
+		parseArguments();
+
+		tvOfferingName.setText(offeringName);
+
+		SpannableStringBuilder offerTitle = new SpannableStringBuilder(promoCoupon.getTitle());
+		offerTitle.setSpan(new StyleSpan(Typeface.BOLD), 0, offerTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tvOfferTitle.setText(offerTitle);
+
+		String expireDate = DateOperations.convertDateOnlyViaFormatSlash(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate()));
+		SpannableStringBuilder validUntilDate = new SpannableStringBuilder(context.getString(R.string.valid_until_format, expireDate));
+		validUntilDate.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text_color_87)),
+				0, validUntilDate.length()-expireDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		validUntilDate.setSpan(new StyleSpan(android.graphics.Typeface.BOLD),
+				validUntilDate.length()-expireDate.length(), validUntilDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tvOfferExpireDate.setText(validUntilDate);
+
+		if (promoCoupon instanceof CouponInfo) {
+			tvOfferTerms.setText(((CouponInfo) promoCoupon).description);
+			tvOfferTerms.setGravity(Gravity.LEFT);
+		} else if (promoCoupon instanceof PromotionInfo) {
+			tvOfferTerms.setText(Utils.trimHTML(Utils.fromHtml(((PromotionInfo) promoCoupon).terms)));
+			tvOfferTerms.setGravity(Gravity.CENTER);
+		}
+
+
+		return rootView;
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
+	}
+
+	@OnClick(R.id.bUseCoupon)
+	public void useCoupon() {
+
+	}
+}

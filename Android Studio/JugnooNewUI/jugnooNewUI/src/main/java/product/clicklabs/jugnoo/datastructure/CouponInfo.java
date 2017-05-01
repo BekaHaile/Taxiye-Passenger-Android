@@ -3,7 +3,9 @@ package product.clicklabs.jugnoo.datastructure;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CouponInfo extends PromoCoupon{
+import java.io.Serializable;
+
+public class CouponInfo extends PromoCoupon implements Serializable{
 	@SerializedName("account_id")
 	@Expose
 	public Integer id;

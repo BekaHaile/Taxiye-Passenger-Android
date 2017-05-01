@@ -45,9 +45,9 @@ public class OfferingPromotionsAdapter extends RecyclerView.Adapter<OfferingProm
 //		holder.tvOfferingName.setCompoundDrawablesWithIntrinsicBounds(offeringPromotion.getLeftDrawableResource(), 0, 0, 0);
 
 		if(holder.promotionsAdapter == null){
-			holder.promotionsAdapter = new PromotionsAdapter(activity, offeringPromotion.getPromoCoupons(), holder.rvPromotions);
+			holder.promotionsAdapter = new PromotionsAdapter(activity, offeringPromotion.getPromoCoupons(), holder.rvPromotions, offeringPromotion.getName());
 		} else {
-			holder.promotionsAdapter.setList(offeringPromotion.getPromoCoupons());
+			holder.promotionsAdapter.setList(offeringPromotion.getPromoCoupons(), offeringPromotion.getName());
 		}
 		holder.rvPromotions.setAdapter(holder.promotionsAdapter);
 

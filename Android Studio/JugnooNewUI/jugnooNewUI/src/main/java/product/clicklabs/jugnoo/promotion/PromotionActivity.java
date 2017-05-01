@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import product.clicklabs.jugnoo.BaseActivity;
+import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Events;
@@ -41,6 +42,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
@@ -48,6 +50,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.promotion.adapters.OfferingPromotionsAdapter;
+import product.clicklabs.jugnoo.promotion.fragments.PromoDescriptionFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -63,7 +66,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by ankit on 6/8/16.
  */
-public class PromotionActivity extends BaseActivity implements Constants,  GAAction, GACategory {
+public class PromotionActivity extends BaseFragmentActivity implements Constants,  GAAction, GACategory {
 
     private final String TAG = PromotionActivity.class.getSimpleName();
     private Button buttonApplyPromo;
@@ -74,6 +77,7 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
     private RecyclerView recyclerViewOffers;
     private ImageView imageViewBack, imageViewFreeRideAuto;
     private TextView textViewTitle, textViewFreeRides;
+    private LinearLayout llContainer;
 
 
 
@@ -101,6 +105,7 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
 
         GAUtils.trackScreenView(PROMOTIONS);
 
+        llContainer = (LinearLayout) findViewById(R.id.llContainer); llContainer.setVisibility(View.GONE);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
         textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_OFFERS);
@@ -219,11 +224,22 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         getCouponsAndPromotions(PromotionActivity.this);
+
+        llContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
     }
 
     public void performBackPressed(){
+        if(getSupportFragmentManager().findFragmentByTag(PromoDescriptionFragment.class.getName()) != null){
+            removeFragment();
+        } else {
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
     }
 
     @Override
@@ -322,10 +338,14 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
                                             pcMeals.addAll(promCouponResponse.getMealsCoupons());
 
 
-                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.rides), R.drawable.ic_auto_grey, pcRides));
-                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), R.drawable.ic_menus_grey, pcMenus));
-                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.fatafat), R.drawable.ic_fresh_grey, pcFatafat));
-                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.meals), R.drawable.ic_meals_grey, pcMeals));
+                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.rides), Config.getAutosClientId(),
+                                                R.drawable.ic_auto_grey, pcRides));
+                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), Config.getMenusClientId(),
+                                                R.drawable.ic_menus_grey, pcMenus));
+                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.fatafat), Config.getFreshClientId(),
+                                                R.drawable.ic_fresh_grey, pcFatafat));
+                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.meals), Config.getMealsClientId(),
+                                                R.drawable.ic_meals_grey, pcMeals));
 
                                         updateListData();
 
@@ -539,4 +559,27 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
             e.printStackTrace();
         }
     }
+
+    Fragment fragment = null;
+    public void openPromoDescriptionFragment(String offeringName, PromoCoupon promoCoupon){
+        removeFragment();
+        fragment = PromoDescriptionFragment.newInstance(offeringName, promoCoupon);
+        llContainer.setVisibility(View.VISIBLE);
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .replace(llContainer.getId(),
+                        fragment,
+                        PromoDescriptionFragment.class.getName())
+                .commitAllowingStateLoss();
+        textViewTitle.setText(getString(R.string.terms_of_use));
+    }
+
+    public void removeFragment(){
+        if(fragment != null) {
+            llContainer.setVisibility(View.GONE);
+            getSupportFragmentManager().beginTransaction().remove(fragment).commitAllowingStateLoss();
+            textViewTitle.setText(getString(R.string.promotions));
+        }
+    }
+
 }

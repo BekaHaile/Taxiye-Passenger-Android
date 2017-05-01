@@ -24,11 +24,9 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.utils.DateOperations;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 
 
 /**
@@ -39,16 +37,19 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 	private Activity activity;
 	private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 	private RecyclerView recyclerView;
+	private String offeringName;
 
-	public PromotionsAdapter(Activity activity, ArrayList<PromoCoupon> promoCoupons, RecyclerView recyclerView) {
+	public PromotionsAdapter(Activity activity, ArrayList<PromoCoupon> promoCoupons, RecyclerView recyclerView, String offeringName) {
 		this.activity = activity;
 		this.promoCoupons = promoCoupons;
 		this.recyclerView = recyclerView;
+		this.offeringName = offeringName;
 	}
 
-	public void setList(ArrayList<PromoCoupon> promoCoupons){
+	public void setList(ArrayList<PromoCoupon> promoCoupons, String offeringName){
 		this.promoCoupons = promoCoupons;
 		notifyDataSetChanged();
+		this.offeringName = offeringName;
 	}
 
 	@Override
@@ -112,10 +113,8 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 				switch (viewClicked.getId()) {
 					case R.id.relative:
 						PromoCoupon promoCoupon = promoCoupons.get(pos);
-						if (promoCoupon instanceof CouponInfo) {
-							DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description, true, true, false, true);
-						} else if (promoCoupon instanceof PromotionInfo) {
-							DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, false, true, true, true);
+						if(activity instanceof PromotionActivity){
+							((PromotionActivity)activity).openPromoDescriptionFragment(offeringName, promoCoupon);
 						}
 						GAUtils.event(SIDE_MENU, PROMOTIONS + OFFER + TNC + CLICKED, promoCoupon.getTitle());
 						break;
