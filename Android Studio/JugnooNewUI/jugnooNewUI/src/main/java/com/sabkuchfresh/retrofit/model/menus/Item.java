@@ -60,8 +60,8 @@ public class Item {
 
 	private Boolean expanded = false;
 
-	public Integer getIsActive() {
-		return isActive;
+	public boolean isActive() {
+		return isActive == null || isActive == 1;
 	}
 
 	public void setIsActive(Integer isActive) {

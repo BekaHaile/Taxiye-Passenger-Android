@@ -1,6 +1,9 @@
 package product.clicklabs.jugnoo.promotion;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 
@@ -17,7 +20,15 @@ public class OfferingPromotion {
 	public OfferingPromotion(String name, int leftDrawableResource, ArrayList<PromoCoupon> promoCoupons) {
 		this.name = name;
 		this.leftDrawableResource = leftDrawableResource;
-		this.promoCoupons = promoCoupons;
+
+		for(PromoCoupon promoCoupon : promoCoupons){
+			promoCoupon.setRepeatedCount(Collections.frequency(promoCoupons, promoCoupon));
+		}
+		Set<PromoCoupon> unique = new HashSet<>(promoCoupons);
+		this.promoCoupons = new ArrayList<>();
+		for(PromoCoupon promoCoupon : unique){
+			this.promoCoupons.add(promoCoupon);
+		}
 	}
 
 	public String getName() {

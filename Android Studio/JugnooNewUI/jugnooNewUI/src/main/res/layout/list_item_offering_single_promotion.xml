@@ -6,30 +6,45 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_7"
                 android:layout_marginRight="@dimen/dp_7"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
                 android:splitMotionEvents="false">
 
-    <View
-        android:id="@+id/vMultipleOffersBg"
+    <TextView
+        android:id="@+id/tvMultipleOffersBg"
         android:layout_width="@dimen/dp_115"
-        android:layout_height="@dimen/dp_70"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/dp_70"
+        android:gravity="center"
+        android:text="1 Free"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_10"
         android:background="@drawable/bg_coupon_white_dotted_round_border"
-        android:layout_marginTop="@dimen/dp_4"
+        app:font="maven"
         android:layout_marginLeft="@dimen/dp_4"
-        android:visibility="gone"
+        android:layout_marginTop="@dimen/dp_4"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_14"
+        android:paddingBottom="@dimen/dp_14"
         />
-    
+
+
     <TextView
         android:id="@+id/textViewCouponTitle"
         android:layout_width="@dimen/dp_115"
-        android:layout_height="@dimen/dp_70"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/dp_70"
         android:gravity="center"
-        android:maxLines="3"
-        android:padding="@dimen/dp_5"
         android:text="1 Free"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/sp_12"
+        android:textSize="@dimen/sp_10"
         android:background="@drawable/bg_coupon_white_dotted_round_border"
         app:font="maven"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_14"
+        android:paddingBottom="@dimen/dp_14"
         />
 
 
@@ -41,12 +56,12 @@
         android:textSize="@dimen/sp_9"
         android:gravity="center"
         android:background="@drawable/circle_yellow_orange_stroke"
-        android:layout_alignBottom="@+id/vMultipleOffersBg"
-        android:layout_alignRight="@+id/vMultipleOffersBg"
+        android:layout_alignBottom="@+id/tvMultipleOffersBg"
+        android:layout_alignRight="@+id/tvMultipleOffersBg"
         android:layout_marginBottom="@dimen/dp_4"
         android:layout_marginRight="@dimen/dp_4"
         android:text="2X"
-        android:visibility="gone"
+        android:visibility="visible"
         app:font="maven"
         />
 

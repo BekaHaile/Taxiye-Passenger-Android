@@ -938,7 +938,7 @@
     <string name="add_promo_code">Add Promo Code</string>
     <string name="offers_available">Offers Available</string>
     <string name="no_offers_currently">No offers currently</string>
-    <string name="valid_until_format">Valid until\n%s</string>
+    <string name="valid_until_format">Valid until %s</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="save">Save</string>

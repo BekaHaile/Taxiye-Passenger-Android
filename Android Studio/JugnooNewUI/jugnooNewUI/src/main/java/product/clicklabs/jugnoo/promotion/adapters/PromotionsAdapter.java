@@ -63,7 +63,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 //		activity.getString(R.string.valid_until_format,
 //				DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate())))
 
-		String expireDate = DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate()));
+		String expireDate = DateOperations.convertDateOnlyViaFormatSlash(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate()));
 		SpannableStringBuilder title = new SpannableStringBuilder(promoCoupon.getTitle());
 		SpannableStringBuilder validUntilDate = new SpannableStringBuilder(activity.getString(R.string.valid_until_format, expireDate));
 
@@ -78,12 +78,24 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 		validUntilDate.setSpan(boldDateSpan, validUntilDate.length()-expireDate.length(), validUntilDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		holder.textViewCouponTitle.setText(title);
-		holder.textViewCouponTitle.append("\n");
+		holder.textViewCouponTitle.append("\n\n");
 		holder.textViewCouponTitle.append(validUntilDate);
 
 		holder.tvPromoCount.setText(promoCoupon.getRepeatedCount()+"X");
-		holder.vMultipleOffersBg.setVisibility(promoCoupon.getRepeatedCount() > 1 ? View.VISIBLE : View.GONE);
+		holder.tvMultipleOffersBg.setVisibility(promoCoupon.getRepeatedCount() > 1 ? View.VISIBLE : View.GONE);
 		holder.tvPromoCount.setVisibility(promoCoupon.getRepeatedCount() > 1 ? View.VISIBLE : View.GONE);
+		holder.tvMultipleOffersBg.setText(holder.textViewCouponTitle.getText());
+
+		int paddingL = activity.getResources().getDimensionPixelSize(R.dimen.dp_7);
+		int paddingR = activity.getResources().getDimensionPixelSize(R.dimen.dp_7);
+		if(position == 0){
+			paddingL = activity.getResources().getDimensionPixelSize(R.dimen.dp_20);
+		} else if(position == getItemCount()-1) {
+			paddingR = activity.getResources().getDimensionPixelSize(R.dimen.dp_20);
+		}
+		RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.relative.getLayoutParams();
+		layoutParams.setMargins(paddingL, layoutParams.topMargin, paddingR, layoutParams.bottomMargin);
+		holder.relative.setLayoutParams(layoutParams);
 
 	}
 
@@ -115,8 +127,8 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 	}
 
 	class ViewHolder extends RecyclerView.ViewHolder {
-		@Bind(R.id.vMultipleOffersBg)
-		View vMultipleOffersBg;
+		@Bind(R.id.tvMultipleOffersBg)
+		TextView tvMultipleOffersBg;
 		@Bind(R.id.textViewCouponTitle)
 		TextView textViewCouponTitle;
 		@Bind(R.id.tvPromoCount)

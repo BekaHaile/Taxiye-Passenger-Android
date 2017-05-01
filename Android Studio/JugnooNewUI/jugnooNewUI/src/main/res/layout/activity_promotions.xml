@@ -116,13 +116,17 @@
         android:paddingLeft="@dimen/dp_20"
         android:text="@string/want_free_rides"
         android:textColor="@color/text_color_selector"
-        android:textSize="@dimen/sp_16"/>
+        android:textSize="@dimen/sp_16"
+        android:visibility="gone"
+        />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@+id/textViewFreeRides"
-        android:background="@color/stroke_color_light"/>
+        android:background="@color/stroke_color_light"
+        android:visibility="gone"
+        />
 
     <ImageView
         android:id="@+id/imageViewFreeRideAuto"
@@ -133,7 +137,8 @@
         android:layout_marginBottom="-25dp"
         android:layout_marginRight="@dimen/dp_25"
         android:src="@drawable/ic_arrow_up_selector"
-        android:tag="mwar"/>
+        android:visibility="gone"
+        />
 
     <LinearLayout
         android:id="@+id/linearLayoutNoOffers"
