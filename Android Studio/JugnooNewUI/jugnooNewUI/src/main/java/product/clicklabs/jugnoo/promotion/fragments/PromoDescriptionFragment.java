@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.promotion.fragments;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -124,7 +125,12 @@ public class PromoDescriptionFragment extends Fragment {
 			Prefs.with(context).save(Constants.SP_USE_COUPON_ + clientId, promoCoupon.getId());
 			Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, (promoCoupon instanceof CouponInfo));
 			if(!clientId.equals(Config.getAutosClientId())) {
-				Utils.showToast(context, context.getString(R.string.offer_auto_applied_message_format, "order"), Toast.LENGTH_LONG);
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						Utils.showToast(context, context.getString(R.string.offer_auto_applied_message_format, "order"), Toast.LENGTH_LONG);
+					}
+				}, 500);
 			}
 			MyApplication.getInstance().getAppSwitcher().switchApp((PromotionActivity)context, clientId,
 					new LatLng(Data.latitude, Data.longitude), true);

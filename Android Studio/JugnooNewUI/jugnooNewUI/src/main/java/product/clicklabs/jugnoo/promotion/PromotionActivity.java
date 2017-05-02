@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -159,7 +160,15 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                     MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                     GAUtils.event(SIDE_MENU, PROMOTIONS, GAAction.PROMO_CODE+APPLIED);
                 } else {
-                    Utils.showToast(PromotionActivity.this, "Code can't be empty");
+                    Utils.hideKeyboard(PromotionActivity.this);
+                    buttonApplyPromo.setEnabled(false);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Utils.showToast(PromotionActivity.this, "Code can't be empty");
+                            buttonApplyPromo.setEnabled(true);
+                        }
+                    }, 200);
                 }
             }
         });
@@ -574,5 +583,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             textViewTitle.setText(getString(R.string.promotions));
         }
     }
+
+    private Handler handler = new Handler();
 
 }
