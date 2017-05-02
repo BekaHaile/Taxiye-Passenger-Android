@@ -117,14 +117,14 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			mHolder.textViewItemName.setText(subItem.getSubItemName());
 			try {
 				mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
-						Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
+						Utils.getMoneyDecimalFormat().format((subItem.getPrice()*subItem.getSubItemQuantitySelected()))));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 			if(!TextUtils.isEmpty(subItem.getBaseUnit())) {
 				mHolder.textViewItemUnit.setVisibility(View.VISIBLE);
-				mHolder.textViewItemUnit.setText(subItem.getBaseUnit());
+				mHolder.textViewItemUnit.setText(subItem.getBaseUnit()+" x "+subItem.getSubItemQuantitySelected());
 			} else {
 				mHolder.textViewItemUnit.setVisibility(View.GONE);
 			}
