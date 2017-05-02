@@ -29,6 +29,7 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -54,6 +55,7 @@ import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -99,6 +101,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private TextView tvOtherModesToPay, tvUPI;
     private boolean isRazorUPI;
     private PaySlider paySlider;
+    private ArrayList<SubscriptionData.Subscription> subscriptionsActivityList;
 
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
@@ -187,11 +190,72 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 rlStarUpgrade.setVisibility(View.GONE);
                 setPlan();
             } else if(getActivity() instanceof JugnooStarSubscribedActivity){
-                llStarPurchase.setVisibility(View.GONE);
-                rlStarUpgrade.setVisibility(View.VISIBLE);
-                tvPaymentPlan.setText(subscription.getDescription());
-                tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                        Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
+
+                FetchSubscriptionSavingsResponse subscriptionSavingsResponse = ((JugnooStarSubscribedActivity)getActivity()).getStarSubData();
+
+                subscriptionsActivityList = ((JugnooStarSubscribedActivity)getActivity()).getListToShowInCheckout();
+                boolean isUprgradeAndRenewList = false ;
+
+                if(subscriptionsActivityList.size()==1){
+                    llStarPurchase.setVisibility(View.GONE);
+                    rlStarUpgrade.setVisibility(View.VISIBLE);
+                    subscription=subscriptionsActivityList.get(0);
+                    purchaseType =subscriptionsActivityList.get(0).getStarPurchaseType().getOrdinal();
+                    tvPaymentPlan.setText(subscription.getDescription());
+                    tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
+                            Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
+
+            } else{
+
+                    llStarPurchase.setVisibility(View.VISIBLE);
+                    rlStarUpgrade.setVisibility(View.GONE);
+                    if(subscriptionsActivityList.size()>1 && subscriptionsActivityList.get(0).getStarPurchaseType()!=null && subscriptionsActivityList.get(0).getStarPurchaseType()!=StarPurchaseType.PURCHARE) {
+                        Collections.swap(subscriptionsActivityList, 0, 1);
+                        isUprgradeAndRenewList=true;
+                    }
+                    for(int i=0; i<subscriptionsActivityList.size(); i++) {
+                        if (i == 0) {
+                            rlPlan1.setVisibility(View.VISIBLE);
+                            if(subscriptionsActivityList.get(i).getAmountText()!=null)
+                                tvAmount1.setText(subscriptionsActivityList.get(i).getAmountText());
+                            else if(subscription.getAmount()!=null){
+                                tvAmount1.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
+
+                            }
+
+                            tvPeriod1.setText(String.valueOf(subscriptionsActivityList.get(i).getDescription()));
+                            if(subscriptionsActivityList.get(i).getDurationText()!=null){
+                                tvDuration1.setText("/"+subscriptionsActivityList.get(i).getDurationText());
+                            }
+
+                        } else if (i == 1) {
+                            rlPlan2.setVisibility(View.VISIBLE);
+                            if(subscriptionsActivityList.get(i).getAmountText()!=null)
+                                tvAmount2.setText(subscriptionsActivityList.get(i).getAmountText());
+                            else if(subscription.getAmount()!=null){
+                                tvAmount2.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
+
+                            }
+                            tvPeriod2.setText(String.valueOf(subscriptionsActivityList.get(i).getDescription()));
+                            if(subscriptionsActivityList.get(i).getDurationText()!=null){
+                                tvDuration2.setText("/"+subscriptionsActivityList.get(i).getDurationText());
+                            }
+
+                        }
+                    }
+
+                    if(isUprgradeAndRenewList){
+                        selectedPlanUpgradeRenew(rlPlan1,ivRadio1,0);
+                    }else{
+                        selectedPlanUpgradeRenew(rlPlan2,ivRadio2,1);
+
+                    }
+                }
+
+
+
+
+
             }
 
             linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
@@ -259,6 +323,17 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         subscription = Data.userData.getSubscriptionData().getSubscriptions().get(subId);
     }
 
+    private void selectedPlanUpgradeRenew(RelativeLayout rlPlan, ImageView ivRadio, int subId){
+        ivRadio1.setImageResource(R.drawable.ic_radio_button_normal);
+        ivRadio2.setImageResource(R.drawable.ic_radio_button_normal);
+
+        ivRadio.setImageResource(R.drawable.ic_radio_button_selected);
+        subscription = subscriptionsActivityList.get(subId) ;
+        purchaseType = subscriptionsActivityList.get(subId).getStarPurchaseType().getOrdinal();
+    }
+
+
+
     private void updateCouponsDataView(){
         try {
             promoCoupons = Data.userData.getPromoCoupons();
@@ -317,13 +392,27 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         break;
 
                     case R.id.rlPlan1:
-                        selectedPlan(rlPlan1, ivRadio1, 0);
-                        try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
+
+                        if(getActivity() instanceof JugnooStarActivity){
+                            selectedPlan(rlPlan1, ivRadio1, 0);
+                            try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
+                        }
+                        else{
+                            selectedPlanUpgradeRenew(rlPlan1, ivRadio1, 0);
+                        }
                         break;
 
                     case R.id.rlPlan2:
-                        selectedPlan(rlPlan2, ivRadio2, 1);
-                        try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
+                        if(getActivity() instanceof JugnooStarActivity){
+                            selectedPlan(rlPlan2, ivRadio2, 1);
+                            try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
+
+
+                        }
+                        else{
+                            selectedPlanUpgradeRenew(rlPlan1, ivRadio2, 1);
+
+                        }
                         break;
 
                     case R.id.rlUPI:

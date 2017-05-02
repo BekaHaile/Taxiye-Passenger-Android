@@ -332,6 +332,17 @@ public class SubscriptionData {
         @Expose
         private Integer isDefault;
 
+        public StarPurchaseType getStarPurchaseType() {
+            return starPurchaseType;
+        }
+
+        public void setStarPurchaseType(StarPurchaseType starPurchaseType) {
+            this.starPurchaseType = starPurchaseType;
+        }
+
+        private StarPurchaseType starPurchaseType;
+
+
         public Integer getPlanDuration() {
             return planDuration;
         }

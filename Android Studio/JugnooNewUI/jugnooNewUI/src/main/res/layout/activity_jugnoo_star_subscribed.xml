@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/px_30"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/ivExpireWarning"
@@ -443,6 +443,7 @@
                     android:layout_marginTop="@dimen/px_5"
                     android:id="@+id/tv_view_benefits"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     android:clickable="true"
                     android:textColor="@color/text_color_theme_selector"
                     android:text="@string/view_benefits"
