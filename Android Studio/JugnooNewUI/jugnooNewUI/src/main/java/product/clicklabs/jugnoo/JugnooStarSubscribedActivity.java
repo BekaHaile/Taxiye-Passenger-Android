@@ -450,10 +450,13 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
             rlExpire.setVisibility(View.GONE);
             llUpgradeContainer.setVisibility(View.GONE);
             tvViewBenefits.setVisibility(View.GONE);
+            btnUpgradeNow.setVisibility(View.VISIBLE);
 //            llRenew.setVisibility(View.VISIBLE);
 //            cvContainer.setVisibility(View.GONE);
-            setBenfitsView();
-             btnUpgradeNow.setText(R.string.btn_renew_text);
+              setBenfitsView();
+
+
+
             if(savingsResponse.getRenewalData().getWarning() != null && savingsResponse.getRenewalData().getWarning().getText() != null) {
                 rlWarning.setVisibility(View.VISIBLE);
                 tvExpiredTitle.setText(savingsResponse.getRenewalData().getWarning().getText());
@@ -467,6 +470,7 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
                 purchaseType = StarPurchaseType.RENEW.getOrdinal();
                 selectedPlan(ivRadio1, savingsResponse.getRenewalData().getRenewPlan());
                 bConfirm.setText(getResources().getString(R.string.renew));
+                btnUpgradeNow.setText(R.string.renew);
             } else if(savingsResponse.getRenewalData().getRenewPlan() != null){
                 rlPlan1.setVisibility(View.VISIBLE);
                 tvPeriod1.setText(savingsResponse.getRenewalData().getRenewPlan().getPlanString());
@@ -500,6 +504,7 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
                 subscription = savingsResponse.getRenewalData().getRenewPlan();
                 purchaseType = StarPurchaseType.RENEW.getOrdinal();
                 bConfirm.setText(getResources().getString(R.string.confirm));
+                btnUpgradeNow.setText(R.string.renew);
             }
 
             // For Upgrade View
@@ -533,6 +538,9 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
                     tvAmount2.setText(upgradeSubscription.getFinalAmountText());
                 }
 
+
+                btnUpgradeNow.setText(R.string.upgrade_now);
+
                 if(rlPlan1.getVisibility() == View.VISIBLE){
                     bConfirm.setText(getResources().getString(R.string.confirm));
                 } else{
@@ -557,6 +565,8 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
                 tvUpgradingText.setText(savingsResponse.getUpgradeData().get(0).getUpgradingText());
                 subscription = savingsResponse.getUpgradeData().get(0).getUpgradeArray().get(0);
                 selectedSubId = new Gson().toJson(subscription);
+                btnUpgradeNow.setText(R.string.upgrade_now);
+                btnUpgradeNow.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -568,7 +578,8 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
 //            llRenew.setVisibility(View.VISIBLE);
            cvContainer.setVisibility(View.GONE);
             setBenfitsView();
-            btnUpgradeNow.setText(R.string.btn_renew_text);
+            btnUpgradeNow.setText(R.string.renew);
+            btnUpgradeNow.setVisibility(View.VISIBLE);
             tvCurrentPlan.setText(getResources().getString(R.string.previous_plan));
             if (savingsResponse.getExpiredData().getLastSubscription() != null
                     && savingsResponse.getExpiredData().getLastSubscription().getPlanString() != null) {
@@ -714,23 +725,20 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
         }
 
         if(subscriptionSavingsResponse.getRenewalData() != null) {
-            if (subscriptionSavingsResponse.getRenewalData().getUpgradePlan() != null
-                    && subscriptionSavingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray() != null) {
+            if (subscriptionSavingsResponse.getRenewalData().getUpgradePlan() != null && subscriptionSavingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray() != null) {
                 subscription = subscriptionSavingsResponse.getRenewalData().getUpgradePlan().get(0).getUpgradeArray().get(0);
                 purchaseType = StarPurchaseType.UPGRADE.getOrdinal();
-                if(subListCheckout.size()>0) {
                     subListCheckout.add(subscription);
-                    subListCheckout.get(1).setStarPurchaseType(StarPurchaseType.UPGRADE);
-                }
+                    subListCheckout.get(subListCheckout.size()-1).setStarPurchaseType(StarPurchaseType.UPGRADE);
+
             }
         } else if(subscriptionSavingsResponse.getExpiredData() != null){
             if(subscriptionSavingsResponse.getExpiredData().getSubscriptions() != null){
                 subscription = subscriptionSavingsResponse.getExpiredData().getSubscriptions().get(1);
                 purchaseType = StarPurchaseType.PURCHARE.getOrdinal();
-                if(subListCheckout.size()>0) {
-                    subListCheckout.add(subscription);
-                    subListCheckout.get(1).setStarPurchaseType(StarPurchaseType.PURCHARE);
-                }
+                     subListCheckout.add(subscription);
+                    subListCheckout.get(subListCheckout.size()-1).setStarPurchaseType(StarPurchaseType.PURCHARE);
+
 
             }
         }

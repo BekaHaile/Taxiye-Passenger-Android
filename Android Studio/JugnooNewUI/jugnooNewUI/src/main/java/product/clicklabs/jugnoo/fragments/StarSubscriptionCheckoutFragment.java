@@ -202,10 +202,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     subscription=subscriptionsActivityList.get(0);
                     purchaseType =subscriptionsActivityList.get(0).getStarPurchaseType().getOrdinal();
                     tvPaymentPlan.setText(subscription.getDescription());
-                    tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                            Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
+                    tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
 
-            } else{
+                } else{
 
                     llStarPurchase.setVisibility(View.VISIBLE);
                     rlStarUpgrade.setVisibility(View.GONE);
