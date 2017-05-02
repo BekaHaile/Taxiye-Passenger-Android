@@ -168,7 +168,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 	public interface Callback{
 		void onCouponSelected();
 		PromoCoupon getSelectedCoupon();
-		void setSelectedCoupon(int position);
+		boolean setSelectedCoupon(int position);
 	}
 
 }

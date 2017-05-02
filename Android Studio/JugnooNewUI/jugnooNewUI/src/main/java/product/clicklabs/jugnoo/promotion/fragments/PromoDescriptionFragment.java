@@ -10,11 +10,11 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
@@ -103,10 +104,8 @@ public class PromoDescriptionFragment extends Fragment {
 
 		if (promoCoupon instanceof CouponInfo) {
 			tvOfferTerms.setText(((CouponInfo) promoCoupon).description);
-			tvOfferTerms.setGravity(Gravity.LEFT);
 		} else if (promoCoupon instanceof PromotionInfo) {
 			tvOfferTerms.setText(Utils.trimHTML(Utils.fromHtml(((PromotionInfo) promoCoupon).terms)));
-			tvOfferTerms.setGravity(Gravity.CENTER);
 		}
 
 
@@ -124,6 +123,9 @@ public class PromoDescriptionFragment extends Fragment {
 		if(context instanceof PromotionActivity && promoCoupon != null) {
 			Prefs.with(context).save(Constants.SP_USE_COUPON_ + clientId, promoCoupon.getId());
 			Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, (promoCoupon instanceof CouponInfo));
+			if(!clientId.equals(Config.getAutosClientId())) {
+				Utils.showToast(context, context.getString(R.string.offer_auto_applied_message_format, "order"), Toast.LENGTH_LONG);
+			}
 			MyApplication.getInstance().getAppSwitcher().switchApp((PromotionActivity)context, clientId,
 					new LatLng(Data.latitude, Data.longitude), true);
 		}

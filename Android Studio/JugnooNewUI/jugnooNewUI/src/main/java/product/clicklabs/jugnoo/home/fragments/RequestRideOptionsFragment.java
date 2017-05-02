@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
@@ -462,7 +463,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         return recyclerViewVehicles;
     }
 
-    public void setSelectedCoupon(int position) {
+    public boolean setSelectedCoupon(int position) {
         PromoCoupon promoCoupon;
         if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO).size()) {
             promoCoupon = Data.userData.getCoupons(ProductType.AUTO).get(position);
@@ -473,6 +474,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         if(MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
                 Data.autoData.getPickupPaymentOption(), promoCoupon)){
             selectedCoupon = promoCoupon;
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -612,7 +616,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     /**
      * To auto apply a selected coupon from Promotions screen
-     * @return returns true if some coupon is selected else false
+     * @return returns true if some coupon is selected or can't be selected else false
      */
     public boolean selectAutoSelectedCouponAtRequestRide(){
         String clientId = Config.getAutosClientId();
@@ -624,15 +628,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                     PromoCoupon pc = Data.userData.getCoupons(ProductType.AUTO).get(i);
                     if(((isCouponInfo && pc instanceof CouponInfo) || (!isCouponInfo && pc instanceof PromotionInfo))
                             && pc.getId() == promoCouponId) {
-                        if (pc.getIsValid() == 1) {
-                            setSelectedCoupon(i);
-                            Utils.showToast(activity, activity.getString(R.string.offer_auto_applied) + ": " + getSelectedCoupon().getTitle());
-                            Prefs.with(activity).save(Constants.SP_USE_COUPON_ + clientId, -1);
-                            Prefs.with(activity).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
-                            return true;
-                        } else {
-                            return true;
+                        if (pc.getIsValid() == 1 && setSelectedCoupon(i)) {
+                            Utils.showToast(activity, activity.getString(R.string.offer_auto_applied_message_format, "ride"), Toast.LENGTH_LONG);
                         }
+                        Prefs.with(activity).save(Constants.SP_USE_COUPON_ + clientId, -1);
+                        Prefs.with(activity).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
+                        return true;
                     }
                 }
             }

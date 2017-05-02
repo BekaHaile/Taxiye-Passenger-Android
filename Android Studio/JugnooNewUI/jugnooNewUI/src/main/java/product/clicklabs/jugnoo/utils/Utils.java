@@ -259,11 +259,14 @@ public class Utils implements GAAction, GACategory{
     }
 
 	public static void showToast(Context context, String string){
+		showToast(context, string, Toast.LENGTH_SHORT);
+	}
+	public static void showToast(Context context, String string, int duration){
 		try {
 			if(MyApplication.getInstance().getToast() != null){
 				MyApplication.getInstance().getToast().cancel();
             }
-			MyApplication.getInstance().setToast(Toast.makeText(context, string, Toast.LENGTH_SHORT));
+			MyApplication.getInstance().setToast(Toast.makeText(context, string, duration));
 			MyApplication.getInstance().getToast().show();
 		} catch (Exception e) {
 			e.printStackTrace();
