@@ -4,13 +4,13 @@
     android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/menu_item_selector_color_F7">
 
     <RelativeLayout
         android:id="@+id/topBar"
         android:layout_width="@dimen/screen_width"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@color/white">
+        android:background="@color/menu_item_selector_color_F7">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -27,6 +27,7 @@
 
     <ScrollView
         android:id="@+id/scroll"
+        android:layout_above="@+id/btnUpgradeNow"
         android:fillViewport="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,7 +42,7 @@
                 android:id="@+id/llSavingMeter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px_90"
+                android:layout_marginTop="@dimen/px_40"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -70,6 +71,7 @@
 
                 </RelativeLayout>
 
+
                 <LinearLayout
                     android:id="@+id/llSavingsValue"
                     android:layout_width="match_parent"
@@ -88,16 +90,321 @@
                         android:visibility="visible" />
 
                 </LinearLayout>
+                <RelativeLayout
+                    android:id="@+id/rlWarning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/px_30"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/ivExpireWarning"
+                        android:layout_width="@dimen/px_24"
+                        android:layout_height="@dimen/px_24"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_star_warning"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:id="@+id/tvExpiredTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px_10"
+                        android:layout_toRightOf="@+id/ivExpireWarning"
+                        android:gravity="center"
+                        android:text="Your star status has expired."
+                        android:textColor="#d0021b"
+                        android:textSize="@dimen/text_size_30" />
+
+                </RelativeLayout>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cvContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_margin="@dimen/px_40">
+
+                    <LinearLayout
+                        android:id="@+id/llContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/px_100"
+                            android:layout_marginLeft="@dimen/px_28"
+                            android:layout_marginRight="@dimen/px_28"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tvCurrentPlan"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/membership_plan"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30" />
+
+                            <TextView
+                                android:id="@+id/tvCurrentPlanValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/tvCurrentPlan"
+                                android:layout_alignParentRight="true"
+                                android:gravity="right"
+                                android:text=""
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30" />
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:background="@color/menu_item_selector_color" />
+
+                        <RelativeLayout
+                            android:id="@+id/rlExpire"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/px_100"
+                            android:layout_marginLeft="@dimen/px_28"
+                            android:layout_marginRight="@dimen/px_28"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tvExpiresOn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/expires_on"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30" />
+
+                            <TextView
+                                android:id="@+id/tvExpiresOnValue"
+                                android:layout_width="wrap_content"
+                                android:layout_toRightOf="@id/tvExpiresOn"
+                                android:gravity="right"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:text=""
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlAutoRenewal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/px_100"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="@dimen/px_28"
+                            android:layout_marginRight="@dimen/px_28"
+                            android:background="@color/white"
+                            android:visibility="gone">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:background="@color/menu_item_selector_color" />
+
+                            <TextView
+                                android:id="@+id/tvAutoRenewal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:gravity="center"
+                                android:text="@string/auto_renewal"
+                                android:textColor="@color/text_color_light_selector"
+                                android:textSize="@dimen/text_size_30" />
+
+                            <ImageView
+                                android:id="@+id/ivAutoRenewalSwitch"
+                                android:layout_width="77px"
+                                android:layout_height="50px"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/jugnoo_sticky_off"
+                                android:tag="mwar" />
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llRenew"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/px_30"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <RelativeLayout
+                                    android:id="@+id/rlPlan1"
+                                    android:layout_width="@dimen/px_320"
+                                    android:layout_height="@dimen/px_135"
+                                    android:background="@color/transparent"
+                                    android:visibility="visible">
+
+                                    <ImageView
+                                        android:id="@+id/ivRadio1"
+                                        android:layout_width="@dimen/px_50"
+                                        android:layout_height="@dimen/px_50"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginLeft="@dimen/px_50"
+                                        android:src="@drawable/ic_radio_button_normal"
+                                        android:tag="mwar" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginLeft="@dimen/px_24"
+                                        android:layout_toRightOf="@+id/ivRadio1"
+                                        android:orientation="vertical">
+
+
+                                        <TextView
+                                            android:id="@+id/tvPeriod1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:ellipsize="end"
+                                            android:maxLines="1"
+                                            android:text="Monthly"
+                                            android:textColor="@color/text_color"
+                                            android:textSize="@dimen/text_size_36" />
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+
+                                            <com.sabkuchfresh.utils.TextViewStrikeThrough
+                                                android:id="@+id/tvActualAmount1"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginBottom="-10px"
+                                                android:ellipsize="end"
+                                                android:maxLines="1"
+                                                android:text="2388"
+                                                android:textColor="@color/text_color"
+                                                android:textSize="@dimen/text_size_24"
+                                                android:visibility="gone" />
+
+                                            <TextView
+                                                android:id="@+id/tvAmount1"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="0px"
+                                                android:ellipsize="end"
+                                                android:text="199"
+                                                android:textColor="@color/document_layout_bordor_color"
+                                                android:textSize="@dimen/text_size_24" />
+
+                                        </LinearLayout>
+                                    </LinearLayout>
+
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/rlPlan2"
+                                    android:layout_width="@dimen/px_320"
+                                    android:layout_height="@dimen/px_135"
+                                    android:background="@color/transparent"
+                                    android:visibility="visible">
+
+                                    <ImageView
+                                        android:id="@+id/ivRadio2"
+                                        android:layout_width="@dimen/px_50"
+                                        android:layout_height="@dimen/px_50"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginLeft="@dimen/px_25"
+                                        android:src="@drawable/ic_radio_button_normal"
+                                        android:tag="mwar" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginLeft="@dimen/px_24"
+                                        android:layout_toRightOf="@+id/ivRadio2"
+                                        android:orientation="vertical">
+
+
+                                        <TextView
+                                            android:id="@+id/tvPeriod2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:ellipsize="end"
+                                            android:maxLines="1"
+                                            android:text="Annual"
+                                            android:textColor="@color/text_color"
+                                            android:textSize="@dimen/text_size_36" />
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+
+                                            <com.sabkuchfresh.utils.TextViewStrikeThrough
+                                                android:id="@+id/tvActualAmount2"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginBottom="-10px"
+                                                android:ellipsize="end"
+                                                android:maxLines="1"
+                                                android:text="2388"
+                                                android:textColor="@color/text_color"
+                                                android:textSize="@dimen/text_size_24"
+                                                android:visibility="gone" />
+
+                                            <TextView
+                                                android:id="@+id/tvAmount2"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="0px"
+                                                android:ellipsize="end"
+                                                android:text="999"
+                                                android:textColor="@color/document_layout_bordor_color"
+                                                android:textSize="@dimen/text_size_24" />
+
+                                        </LinearLayout>
+                                    </LinearLayout>
+
+                                </RelativeLayout>
+
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/bConfirm"
+                                style="@style/ButtonTheme"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginBottom="@dimen/px_40"
+                                android:layout_marginTop="@dimen/px_46"
+                                android:text="@string/confirm" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
 
                 <TextView
                     android:id="@+id/tvBenefits"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px_40"
-                    android:gravity="center"
-                    android:text="Benefits"
+                    android:layout_marginLeft="@dimen/px_40"
+                    android:text="BENEFITS"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_34"
+                    android:textSize="@dimen/text_size_28"
                     android:visibility="gone" />
 
 
@@ -112,309 +419,7 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cvContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
 
-                android:layout_margin="@dimen/px_40">
-
-                <LinearLayout
-                    android:id="@+id/llContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/px_100"
-                        android:layout_marginLeft="@dimen/px_28"
-                        android:layout_marginRight="@dimen/px_28"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:id="@+id/tvCurrentPlan"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/membership_plan"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30" />
-
-                        <TextView
-                            android:id="@+id/tvCurrentPlanValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/tvCurrentPlan"
-                            android:layout_alignParentRight="true"
-                            android:gravity="right"
-                            android:text=""
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30" />
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2px"
-                        android:background="@color/menu_item_selector_color" />
-
-                    <RelativeLayout
-                        android:id="@+id/rlExpire"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/px_100"
-                        android:layout_marginLeft="@dimen/px_28"
-                        android:layout_marginRight="@dimen/px_28"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:id="@+id/tvExpiresOn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/expires_on"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30" />
-
-                        <TextView
-                            android:id="@+id/tvExpiresOnValue"
-                            android:layout_width="wrap_content"
-                            android:layout_toRightOf="@id/tvExpiresOn"
-                            android:gravity="right"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:text=""
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/rlAutoRenewal"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/px_100"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="@dimen/px_28"
-                        android:layout_marginRight="@dimen/px_28"
-                        android:background="@color/white"
-                        android:visibility="gone">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="2px"
-                            android:background="@color/menu_item_selector_color" />
-
-                        <TextView
-                            android:id="@+id/tvAutoRenewal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerVertical="true"
-                            android:gravity="center"
-                            android:text="@string/auto_renewal"
-                            android:textColor="@color/text_color_light_selector"
-                            android:textSize="@dimen/text_size_30" />
-
-                        <ImageView
-                            android:id="@+id/ivAutoRenewalSwitch"
-                            android:layout_width="77px"
-                            android:layout_height="50px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/jugnoo_sticky_off"
-                            android:tag="mwar" />
-
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:id="@+id/llRenew"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <RelativeLayout
-                            android:id="@+id/rlWarning"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="@dimen/px_30"
-                            android:visibility="gone">
-
-                            <ImageView
-                                android:id="@+id/ivExpireWarning"
-                                android:layout_width="@dimen/px_24"
-                                android:layout_height="@dimen/px_24"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/ic_star_warning"
-                                android:tag="mwar" />
-
-                            <TextView
-                                android:id="@+id/tvExpiredTitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/px_10"
-                                android:layout_toRightOf="@+id/ivExpireWarning"
-                                android:gravity="center"
-                                android:text="Your star status has expired."
-                                android:textColor="#fd4f3a"
-                                android:textSize="@dimen/text_size_30" />
-
-                        </RelativeLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/px_30"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <RelativeLayout
-                                android:id="@+id/rlPlan1"
-                                android:layout_width="@dimen/px_320"
-                                android:layout_height="@dimen/px_135"
-                                android:background="@color/transparent"
-                                android:visibility="visible">
-
-                                <ImageView
-                                    android:id="@+id/ivRadio1"
-                                    android:layout_width="@dimen/px_50"
-                                    android:layout_height="@dimen/px_50"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginLeft="@dimen/px_50"
-                                    android:src="@drawable/ic_radio_button_normal"
-                                    android:tag="mwar" />
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginLeft="@dimen/px_24"
-                                    android:layout_toRightOf="@+id/ivRadio1"
-                                    android:orientation="vertical">
-
-
-                                    <TextView
-                                        android:id="@+id/tvPeriod1"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:ellipsize="end"
-                                        android:maxLines="1"
-                                        android:text="Monthly"
-                                        android:textColor="@color/text_color"
-                                        android:textSize="@dimen/text_size_36" />
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="vertical">
-
-                                        <com.sabkuchfresh.utils.TextViewStrikeThrough
-                                            android:id="@+id/tvActualAmount1"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginBottom="-10px"
-                                            android:ellipsize="end"
-                                            android:maxLines="1"
-                                            android:text="2388"
-                                            android:textColor="@color/text_color"
-                                            android:textSize="@dimen/text_size_24"
-                                            android:visibility="gone" />
-
-                                        <TextView
-                                            android:id="@+id/tvAmount1"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginTop="0px"
-                                            android:ellipsize="end"
-                                            android:text="199"
-                                            android:textColor="@color/document_layout_bordor_color"
-                                            android:textSize="@dimen/text_size_24" />
-
-                                    </LinearLayout>
-                                </LinearLayout>
-
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:id="@+id/rlPlan2"
-                                android:layout_width="@dimen/px_320"
-                                android:layout_height="@dimen/px_135"
-                                android:background="@color/transparent"
-                                android:visibility="visible">
-
-                                <ImageView
-                                    android:id="@+id/ivRadio2"
-                                    android:layout_width="@dimen/px_50"
-                                    android:layout_height="@dimen/px_50"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginLeft="@dimen/px_25"
-                                    android:src="@drawable/ic_radio_button_normal"
-                                    android:tag="mwar" />
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginLeft="@dimen/px_24"
-                                    android:layout_toRightOf="@+id/ivRadio2"
-                                    android:orientation="vertical">
-
-
-                                    <TextView
-                                        android:id="@+id/tvPeriod2"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:ellipsize="end"
-                                        android:maxLines="1"
-                                        android:text="Annual"
-                                        android:textColor="@color/text_color"
-                                        android:textSize="@dimen/text_size_36" />
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="vertical">
-
-                                        <com.sabkuchfresh.utils.TextViewStrikeThrough
-                                            android:id="@+id/tvActualAmount2"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginBottom="-10px"
-                                            android:ellipsize="end"
-                                            android:maxLines="1"
-                                            android:text="2388"
-                                            android:textColor="@color/text_color"
-                                            android:textSize="@dimen/text_size_24"
-                                            android:visibility="gone" />
-
-                                        <TextView
-                                            android:id="@+id/tvAmount2"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginTop="0px"
-                                            android:ellipsize="end"
-                                            android:text="999"
-                                            android:textColor="@color/document_layout_bordor_color"
-                                            android:textSize="@dimen/text_size_24" />
-
-                                    </LinearLayout>
-                                </LinearLayout>
-
-                            </RelativeLayout>
-
-                        </LinearLayout>
-
-                        <Button
-                            android:id="@+id/bConfirm"
-                            style="@style/ButtonTheme"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="@dimen/px_40"
-                            android:layout_marginTop="@dimen/px_46"
-                            android:text="@string/confirm" />
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
 
             <LinearLayout
                 android:id="@+id/llUpgradeContainer"
@@ -455,16 +460,19 @@
                 android:layout_weight="1"
                 android:minHeight="30px"/>
 
-            <Button
-                android:id="@+id/btnUpgradeNow"
-                style="@style/ButtonTheme"
-                android:textAllCaps="true"
-                android:layout_width="match_parent"
-                android:layout_gravity="bottom"
-                android:text="@string/upgrade_now" />
+
         </LinearLayout>
     </ScrollView>
 
+
+    <Button
+        android:id="@id/btnUpgradeNow"
+        style="@style/ButtonTheme"
+        android:layout_alignParentBottom="true"
+        android:textAllCaps="true"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:text="@string/upgrade_now" />
     <RelativeLayout
         android:id="@+id/rlFragment"
         android:layout_width="match_parent"

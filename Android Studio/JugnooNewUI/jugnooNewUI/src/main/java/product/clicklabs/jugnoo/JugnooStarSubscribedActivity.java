@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -72,6 +75,7 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
     private int purchaseType;
     private String crossTextFormatter = "{{{cross_text}}}";
     private static StrikethroughSpan STRIKE_THROUGH_SPAN = new StrikethroughSpan();
+    private CardView cvContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,7 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
         relative = (RelativeLayout) findViewById(R.id.relative);
         new ASSL(JugnooStarSubscribedActivity.this, relative, 1134, 720, false);
 
+        cvContainer = (CardView) findViewById(R.id.cvContainer);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
         //textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(this, textViewTitle));
@@ -97,9 +102,6 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
         tvExpiresOnValue.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
         tvBenefits = (TextView) findViewById(R.id.tvBenefits); tvBenefits.setTypeface(Fonts.mavenMedium(this));
         rvBenefits = (NonScrollListView) findViewById(R.id.rvBenefits);
-        /*rvBenefits.setLayoutManager(new LinearLayoutManager(this));
-        rvBenefits.setItemAnimator(new DefaultItemAnimator());
-        rvBenefits.setHasFixedSize(false);*/
 
         ((TextView) findViewById(R.id.tvSavingsMeter)).setTypeface(Fonts.mavenMedium(this));
         llSavingsValue = (LinearLayout) findViewById(R.id.llSavingsValue);
@@ -163,25 +165,7 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
                 tvExpiresOnValue.setText(DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getValidTill())));
             }
 
-            /*starMembershipAdapter = new StarMembershipAdapter(JugnooStarSubscribedActivity.this, Data.userData.getSubscriptionData().getSubscriptionBenefits()
-                    , new StarMembershipAdapter.Callback() {
-                @Override
-                public void onUnsubscribe() {
-                    DialogPopup.alertPopupTwoButtonsWithListeners(JugnooStarSubscribedActivity.this, "", "Are you sure you want to cancel Subscription?"
-                            , getResources().getString(R.string.yes), getResources().getString(R.string.no), new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    apiCancelSubscription();
-                                }
-                            }, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            }, false, false);
-                }
-            });
-            rvBenefits.setAdapter(starMembershipAdapter);*/
+//            setBenfitsView();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -194,6 +178,30 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setBenfitsView() {
+        tvBenefits.setVisibility(View.VISIBLE);
+        starMembershipAdapter = new StarMembershipAdapter(JugnooStarSubscribedActivity.this, Data.userData.getSubscriptionData().getSubscriptionBenefits()
+                , new StarMembershipAdapter.Callback() {
+            @Override
+            public void onUnsubscribe() {
+             /*   DialogPopup.alertPopupTwoButtonsWithListeners(JugnooStarSubscribedActivity.this, "", "Are you sure you want to cancel Subscription?"
+                        , getResources().getString(R.string.yes), getResources().getString(R.string.no), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                apiCancelSubscription();
+                            }
+                        }, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }, false, false);*/
+            }
+        });
+        rvBenefits.setAdapter(starMembershipAdapter);
+        rvBenefits.setVisibility(View.VISIBLE);
     }
 
     private void apiCancelSubscription() {
@@ -362,10 +370,9 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
     private void setTotalSavingsValueText(LinearLayout llSavingsValue, int savingValue){
         llSavingsValue.removeAllViews();
         char[] digits = String.valueOf(savingValue).toCharArray();
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins((int)(ASSL.Xscale()*3f), 0, (int)(ASSL.Xscale()*3f), 0);
-        llSavingsValue.addView(getDigitTextView(getString(R.string.rupee), true), params);
+        llSavingsValue.addView(getDigitTextView(getString(R.string.rupee), false), params);
         for(char digit : digits){
             llSavingsValue.addView(getDigitTextView(String.valueOf(digit), false), params);
         }
@@ -434,11 +441,16 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
 
 
     private void setRenewView(FetchSubscriptionSavingsResponse savingsResponse) {
-        llRenew.setVisibility(View.GONE);
+//        llRenew.setVisibility(View.GONE);
+        rlWarning.setVisibility(View.GONE);
+
         if(savingsResponse.getRenewalData() != null){
             rlExpire.setVisibility(View.GONE);
             llUpgradeContainer.setVisibility(View.GONE);
-            llRenew.setVisibility(View.VISIBLE);
+//            llRenew.setVisibility(View.VISIBLE);
+//            cvContainer.setVisibility(View.GONE);
+            setBenfitsView();
+             btnUpgradeNow.setText(R.string.btn_renew_text);
             if(savingsResponse.getRenewalData().getWarning() != null && savingsResponse.getRenewalData().getWarning().getText() != null) {
                 rlWarning.setVisibility(View.VISIBLE);
                 tvExpiredTitle.setText(savingsResponse.getRenewalData().getWarning().getText());
@@ -549,7 +561,10 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
 
     private void setExpiredView(FetchSubscriptionSavingsResponse savingsResponse) {
         if(savingsResponse.getExpiredData() != null) {
-            llRenew.setVisibility(View.VISIBLE);
+//            llRenew.setVisibility(View.VISIBLE);
+ cvContainer.setVisibility(View.GONE);
+            setBenfitsView();
+            btnUpgradeNow.setText(R.string.btn_renew_text);
             tvCurrentPlan.setText(getResources().getString(R.string.previous_plan));
             if (savingsResponse.getExpiredData().getLastSubscription() != null
                     && savingsResponse.getExpiredData().getLastSubscription().getPlanString() != null) {
