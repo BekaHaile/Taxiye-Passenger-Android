@@ -123,6 +123,7 @@ public class PromoDescriptionFragment extends Fragment {
 	public void useCoupon() {
 		if(context instanceof PromotionActivity && promoCoupon != null) {
 			Prefs.with(context).save(Constants.SP_USE_COUPON_ + clientId, promoCoupon.getId());
+			Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, (promoCoupon instanceof CouponInfo));
 			MyApplication.getInstance().getAppSwitcher().switchApp((PromotionActivity)context, clientId,
 					new LatLng(Data.latitude, Data.longitude), true);
 		}

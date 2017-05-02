@@ -28,9 +28,11 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
@@ -42,6 +44,7 @@ import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -607,5 +610,36 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         }
     }
 
+    /**
+     * To auto apply a selected coupon from Promotions screen
+     * @return returns true if some coupon is selected else false
+     */
+    public boolean selectAutoSelectedCouponAtRequestRide(){
+        String clientId = Config.getAutosClientId();
+        try {
+            int promoCouponId = Prefs.with(activity).getInt(Constants.SP_USE_COUPON_+clientId, -1);
+            boolean isCouponInfo = Prefs.with(activity).getBoolean(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
+            if(promoCouponId > 0){
+                for(int i=0; i<Data.userData.getCoupons(ProductType.AUTO).size(); i++){
+                    PromoCoupon pc = Data.userData.getCoupons(ProductType.AUTO).get(i);
+                    if(((isCouponInfo && pc instanceof CouponInfo) || (!isCouponInfo && pc instanceof PromotionInfo))
+                            && pc.getId() == promoCouponId) {
+                        if (pc.getIsValid() == 1) {
+                            setSelectedCoupon(i);
+                            Utils.showToast(activity, activity.getString(R.string.offer_auto_applied) + ": " + getSelectedCoupon().getTitle());
+                            Prefs.with(activity).save(Constants.SP_USE_COUPON_ + clientId, -1);
+                            Prefs.with(activity).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
+                            return true;
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }

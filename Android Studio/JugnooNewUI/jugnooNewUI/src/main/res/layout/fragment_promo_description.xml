@@ -91,8 +91,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/dp_16"
                         android:text="Flat Rs.30 Off"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/sp_16"
+                        android:textColor="@color/feed_grey_text_heading"
+                        android:textSize="@dimen/sp_14"
                         app:font="maven"
                         />
                 </LinearLayout>

@@ -15,7 +15,7 @@
         android:drawablePadding="@dimen/dp_4"
         android:gravity="center_vertical"
         android:layout_marginLeft="@dimen/dp_24"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_8"
         app:font="maven"
         />
 
@@ -25,13 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvOfferingName"
-        android:layout_marginTop="@dimen/dp_10"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:fadeScrollbars="true"
-        android:scrollbars="horizontal"
+        android:layout_marginTop="@dimen/dp_5"
         android:visibility="visible"
-        android:scrollbarFadeDuration="50"
-        android:scrollbarSize="1dp"
         />
 
 </RelativeLayout>

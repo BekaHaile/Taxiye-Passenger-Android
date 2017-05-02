@@ -235,7 +235,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
 
     public void performBackPressed(){
         if(getSupportFragmentManager().findFragmentByTag(PromoDescriptionFragment.class.getName()) != null){
-            removeFragment();
+            removeFragment(getSupportFragmentManager().findFragmentByTag(PromoDescriptionFragment.class.getName()));
         } else {
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -338,14 +338,22 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                                             pcMeals.addAll(promCouponResponse.getMealsCoupons());
 
 
-                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.rides), Config.getAutosClientId(),
-                                                R.drawable.ic_auto_grey, pcRides));
-                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), Config.getMenusClientId(),
-                                                R.drawable.ic_menus_grey, pcMenus));
-                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.fatafat), Config.getFreshClientId(),
-                                                R.drawable.ic_fresh_grey, pcFatafat));
-                                        offeringPromotions.add(new OfferingPromotion(getString(R.string.meals), Config.getMealsClientId(),
-                                                R.drawable.ic_meals_grey, pcMeals));
+                                        if(pcRides.size() > 0) {
+                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.rides), Config.getAutosClientId(),
+                                                    R.drawable.ic_auto_grey, pcRides));
+                                        }
+                                        if(pcMenus.size() > 0) {
+                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), Config.getMenusClientId(),
+                                                    R.drawable.ic_menus_grey, pcMenus));
+                                        }
+                                        if(pcFatafat.size() > 0) {
+                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.fatafat), Config.getFreshClientId(),
+                                                    R.drawable.ic_fresh_grey, pcFatafat));
+                                        }
+                                        if(pcMeals.size() > 0) {
+                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.meals), Config.getMealsClientId(),
+                                                    R.drawable.ic_meals_grey, pcMeals));
+                                        }
 
                                         updateListData();
 
@@ -560,10 +568,9 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         }
     }
 
-    Fragment fragment = null;
     public void openPromoDescriptionFragment(String offeringName, String clientId, PromoCoupon promoCoupon){
-        removeFragment();
-        fragment = PromoDescriptionFragment.newInstance(offeringName, clientId, promoCoupon);
+        removeFragment(getSupportFragmentManager().findFragmentByTag(PromoDescriptionFragment.class.getName()));
+        Fragment fragment = PromoDescriptionFragment.newInstance(offeringName, clientId, promoCoupon);
         llContainer.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
@@ -574,7 +581,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         textViewTitle.setText(getString(R.string.terms_of_use));
     }
 
-    public void removeFragment(){
+    public void removeFragment(Fragment fragment){
         if(fragment != null) {
             llContainer.setVisibility(View.GONE);
             getSupportFragmentManager().beginTransaction().remove(fragment).commitAllowingStateLoss();
