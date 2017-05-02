@@ -264,6 +264,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private View feedHomeAddPostView;
     private Typewriter tvAddPost;
     private ImageView ivProfilePic;
+    public int currentOffsetFeedHomeAppBar;
 
 
     public View getFeedHomeAddPostView() {
@@ -2067,8 +2068,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     @Override
     public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(Gravity.START)){
-            drawerLayout.closeDrawer(Gravity.START);
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
             return;
         }
         if(fabViewTest.menuLabelsRightTest.isOpened()){

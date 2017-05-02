@@ -460,8 +460,7 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
             }
 
             // For Renew View
-            if(savingsResponse.getRenewalData().getUpgradePlan() == null
-                    && savingsResponse.getRenewalData().getRenewPlan() != null){
+            if(savingsResponse.getRenewalData().getUpgradePlan() == null && savingsResponse.getRenewalData().getRenewPlan() != null){
                 rlPlan1.setVisibility(View.GONE);
                 rlPlan2.setVisibility(View.GONE);
                 subscription = savingsResponse.getRenewalData().getRenewPlan();
