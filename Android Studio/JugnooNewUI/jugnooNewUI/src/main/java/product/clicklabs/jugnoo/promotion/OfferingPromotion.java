@@ -2,9 +2,11 @@ package product.clicklabs.jugnoo.promotion;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 
 /**
@@ -23,13 +25,23 @@ public class OfferingPromotion {
 		this.leftDrawableResource = leftDrawableResource;
 
 		for(PromoCoupon promoCoupon : promoCoupons){
+			if(promoCoupon instanceof CouponInfo){
+				((CouponInfo)promoCoupon).setCheckWithCouponId(true);
+			}
 			promoCoupon.setRepeatedCount(Collections.frequency(promoCoupons, promoCoupon));
 		}
-		Set<PromoCoupon> unique = new HashSet<>(promoCoupons);
-		this.promoCoupons = new ArrayList<>();
-		for(PromoCoupon promoCoupon : unique){
-			this.promoCoupons.add(promoCoupon);
-		}
+
+		Set set = new TreeSet(new Comparator<PromoCoupon>() {
+			@Override
+			public int compare(PromoCoupon o1, PromoCoupon o2) {
+				if (o1.equals(o2)) {
+					return 0;
+				}
+				return 1;
+			}
+		});
+		set.addAll(promoCoupons);
+		this.promoCoupons = new ArrayList<>(set);
 	}
 
 	public String getName() {

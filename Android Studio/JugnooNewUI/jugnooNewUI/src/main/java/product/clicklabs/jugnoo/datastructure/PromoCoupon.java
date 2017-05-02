@@ -26,7 +26,8 @@ public abstract class PromoCoupon implements Serializable {
 	public boolean matchPromoCoupon(PromoCoupon c2) {
 		try {
 			PromoCoupon c1 = this;
-			if (c1.getId() == c2.getId()
+			if (((c1 instanceof CouponInfo && c2 instanceof CouponInfo) || (c1 instanceof PromotionInfo && c2 instanceof PromotionInfo))
+					&& c1.getId() == c2.getId()
 					&& (c1.getMasterCoupon() != null && c1.getMasterCoupon().equals(c2.getMasterCoupon()))
 					&& (c1.getAutos().equals(c2.getAutos()))
 					&& (c1.getFresh().equals(c2.getFresh()))

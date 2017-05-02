@@ -121,7 +121,6 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         buttonApplyPromo = (Button) findViewById(R.id.buttonApplyPromo);
         buttonApplyPromo.setTypeface(Fonts.mavenRegular(this));
         editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode);
-        editTextPromoCode.setTypeface(Fonts.mavenRegular(this));
         textViewFreeRides = (TextView) findViewById(R.id.textViewFreeRides); textViewFreeRides.setTypeface(Fonts.mavenMedium(this));
         imageViewFreeRideAuto = (ImageView) findViewById(R.id.imageViewFreeRideAuto);
 
@@ -152,7 +151,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
 
             @Override
             public void onClick(View v) {
-                String promoCode = editTextPromoCode.getText().toString().trim();
+                String promoCode = editTextPromoCode.getText().toString().trim().toUpperCase();
                 if (promoCode.length() > 0) {
                     applyPromoCodeAPI(PromotionActivity.this, promoCode);
                     HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
@@ -160,8 +159,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                     MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                     GAUtils.event(SIDE_MENU, PROMOTIONS, GAAction.PROMO_CODE+APPLIED);
                 } else {
-                    editTextPromoCode.requestFocus();
-                    editTextPromoCode.setError("Code can't be empty");
+                    Utils.showToast(PromotionActivity.this, "Code can't be empty");
                 }
             }
         });
@@ -173,13 +171,6 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             }
         });
 
-        editTextPromoCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                editTextPromoCode.setError(null);
-            }
-        });
 
         editTextPromoCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -268,14 +259,6 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             linearLayoutNoOffers.setVisibility(View.GONE);
             offeringPromotionsAdapter.notifyDataSetChanged();
             updateUserCoupons();
-        }
-    }
-
-    public void clearErrorForEditText(){
-        try {
-            editTextPromoCode.setError(null);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

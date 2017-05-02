@@ -66,6 +66,9 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 //		activity.getString(R.string.valid_until_format,
 //				DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate())))
 
+		// TODO: 02/05/17 check for only title in couponInfo
+//		String titleStr = promoCoupon instanceof CouponInfo ? ((CouponInfo)promoCoupon).getTitleOnly() : promoCoupon.getTitle();
+
 		String expireDate = DateOperations.convertDateOnlyViaFormatSlash(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate()));
 		SpannableStringBuilder title = new SpannableStringBuilder(promoCoupon.getTitle());
 		SpannableStringBuilder validUntilDate = new SpannableStringBuilder(activity.getString(R.string.valid_until_format, expireDate));
