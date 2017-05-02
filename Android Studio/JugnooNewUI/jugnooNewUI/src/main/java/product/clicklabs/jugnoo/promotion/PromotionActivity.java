@@ -325,17 +325,17 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                                             offeringPromotions.add(new OfferingPromotion(getString(R.string.rides), Config.getAutosClientId(),
                                                     R.drawable.ic_auto_grey, pcRides));
                                         }
-                                        if(pcMenus.size() > 0) {
-                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), Config.getMenusClientId(),
-                                                    R.drawable.ic_menus_grey, pcMenus));
+                                        if(pcMeals.size() > 0) {
+                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.meals), Config.getMealsClientId(),
+                                                    R.drawable.ic_meals_grey, pcMeals));
                                         }
                                         if(pcFatafat.size() > 0) {
                                             offeringPromotions.add(new OfferingPromotion(getString(R.string.fatafat), Config.getFreshClientId(),
                                                     R.drawable.ic_fresh_grey, pcFatafat));
                                         }
-                                        if(pcMeals.size() > 0) {
-                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.meals), Config.getMealsClientId(),
-                                                    R.drawable.ic_meals_grey, pcMeals));
+                                        if(pcMenus.size() > 0) {
+                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), Config.getMenusClientId(),
+                                                    R.drawable.ic_menus_grey, pcMenus));
                                         }
 
                                         updateListData();
