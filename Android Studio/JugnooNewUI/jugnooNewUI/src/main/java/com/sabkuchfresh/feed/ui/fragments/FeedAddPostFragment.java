@@ -304,29 +304,24 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 }
 
 
-                ArrayList<ImageEntry> imageSelected = null;//New images added these will be first compressed and then sent
-                JSONArray reviewImages = null;//Server images will be sent back as it is in array
+                ArrayList<ImageEntry> imageSelected = new ArrayList<>();//New images added these will be first compressed and then sent
+                JSONArray reviewImages = new JSONArray();//Server images will be sent back as it is in array
 
                 for (Object object : images) {
                     if (object instanceof ImageEntry) {
-                        if (imageSelected == null)
-                            imageSelected = new ArrayList<>();
-
                         imageSelected.add((ImageEntry) object);
                     } else if (object instanceof FetchFeedbackResponse.ReviewImage) {
-                        if (reviewImages == null)
-                            reviewImages = new JSONArray();
 
                         reviewImages.put(object);
                     }
                 }
 
-                if (reviewImages != null && reviewImages.length() > 0) {
+                if (reviewImages.length() > 0) {
                     //send back old images if any exist else send empty array
                     multipartTypedOutput.addPart(Constants.KEY_IMAGES, new TypedString(FeedUtils.getGson().toJson((FeedUtils.getGson().toJsonTree(reviewImages).getAsJsonObject().get("values")))));
                 }
 
-                if (imageSelected == null || imageSelected.size() == 0) {
+                if (imageSelected.size() == 0) {
                     uploadParamsAndPost(multipartTypedOutput, postText, restId, ratingScore, anonymousPostingEnabled, 0);
                     return;
                 }

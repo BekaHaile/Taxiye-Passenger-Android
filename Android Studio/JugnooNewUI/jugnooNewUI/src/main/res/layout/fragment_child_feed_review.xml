@@ -168,7 +168,7 @@
                 android:background="@null"
                 android:gravity="left"
                 android:textColorHighlight="@color/yellow_jugnoo_alpha"
-                android:hint="@string/share_your_experience"
+                android:hint="@string/ask_a_question"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLength="500"
                 android:paddingLeft="@dimen/spacing_large"
