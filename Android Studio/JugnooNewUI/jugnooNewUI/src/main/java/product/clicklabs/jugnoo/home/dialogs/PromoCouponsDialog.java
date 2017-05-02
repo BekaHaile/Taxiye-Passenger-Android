@@ -91,9 +91,9 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 				}
 
 				@Override
-				public void setSelectedCoupon(int position) {
+				public boolean setSelectedCoupon(int position) {
 					if(activity instanceof HomeActivity) {
-						((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);;
+						return ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
 					} else if(activity instanceof FreshActivity) {
 						PromoCoupon promoCoupon;
 						if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
@@ -101,9 +101,11 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 						} else {
 							promoCoupon = noSelectionCoupon;
 						}
+						boolean offerApplied = false;
 						if(MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
 								((FreshActivity)activity).getPaymentOption().getOrdinal(), promoCoupon)){
 							((FreshActivity)activity).setSelectedPromoCoupon(promoCoupon);
+							offerApplied = true;
 						}
 						new Handler().postDelayed(new Runnable() {
 							@Override
@@ -113,6 +115,9 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 						}, 100);
 						callback.onCouponApplied();
 						GAUtils.event(RIDES, TNC+CLICKED, promoCoupon.getTitle());
+						return offerApplied;
+					} else {
+						return false;
 					}
 				}
 			});

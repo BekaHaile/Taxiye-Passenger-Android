@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo.datastructure;
 
-public abstract class PromoCoupon {
+import java.io.Serializable;
+
+public abstract class PromoCoupon implements Serializable {
 
 	public abstract int getId();
 	public abstract String getTitle();
@@ -17,11 +19,15 @@ public abstract class PromoCoupon {
 	public abstract Integer getMenus();
 	public abstract Integer getPay();
 	public abstract String getInvalidMessage();
+	public abstract String getExpiryDate();
+
+	private int repeatedCount;
 
 	public boolean matchPromoCoupon(PromoCoupon c2) {
 		try {
 			PromoCoupon c1 = this;
-			if (c1.getId() == c2.getId()
+			if (((c1 instanceof CouponInfo && c2 instanceof CouponInfo) || (c1 instanceof PromotionInfo && c2 instanceof PromotionInfo))
+					&& c1.getId() == c2.getId()
 					&& (c1.getMasterCoupon() != null && c1.getMasterCoupon().equals(c2.getMasterCoupon()))
 					&& (c1.getAutos().equals(c2.getAutos()))
 					&& (c1.getFresh().equals(c2.getFresh()))
@@ -37,4 +43,11 @@ public abstract class PromoCoupon {
 		return false;
 	}
 
+	public int getRepeatedCount() {
+		return repeatedCount;
+	}
+
+	public void setRepeatedCount(int repeatedCount) {
+		this.repeatedCount = repeatedCount;
+	}
 }

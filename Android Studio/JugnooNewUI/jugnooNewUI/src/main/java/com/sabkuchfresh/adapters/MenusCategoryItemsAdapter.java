@@ -1,6 +1,7 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
@@ -220,6 +221,11 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
             }
 
+            mHolder.relativeLayoutItem.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+            if(!item.isActive()){
+                mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
+                mHolder.relativeLayoutItem.setBackgroundColor(ContextCompat.getColor(context, R.color.menu_item_selector_color_F7));
+            }
 
 
             mHolder.imageViewMinus.setTag(position);

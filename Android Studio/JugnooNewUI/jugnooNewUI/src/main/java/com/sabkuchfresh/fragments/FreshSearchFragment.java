@@ -141,17 +141,22 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 				new FreshCategoryItemsAdapter.Callback() {
 					@Override
 					public void onPlusClicked(int position, SubItem subItem) {
-						activity.saveSubItemToDeliveryStoreCart(subItem);
-						activity.updateItemListFromDBFMG(null);
-						activity.updateCartValuesGetTotalPriceFMG(subItem);
 						if(freshSearchResponse != null && freshSearchResponse.getDeliveryStores() != null){
 							for(DeliveryStore deliveryStore : freshSearchResponse.getDeliveryStores()){
 								if(deliveryStore.getVendorId().equals(subItem.getVendorId())){
 									activity.getSuperCategoriesData().setDeliveryInfo(deliveryStore);
+									if(activity.getLastCartVendorId() == 0) {
+										activity.setOpenedVendorIdName(deliveryStore.getVendorId(), deliveryStore);
+									}
 									break;
 								}
 							}
 						}
+
+						activity.saveSubItemToDeliveryStoreCart(subItem);
+						activity.updateItemListFromDBFMG(null);
+						activity.updateCartValuesGetTotalPriceFMG(subItem);
+
 					}
 
 					@Override

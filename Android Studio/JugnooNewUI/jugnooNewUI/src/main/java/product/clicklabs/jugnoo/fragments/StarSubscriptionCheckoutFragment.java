@@ -664,7 +664,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     }
 
     @Override
-    public void setSelectedCoupon(int position) {
+    public boolean setSelectedCoupon(int position) {
         PromoCoupon promoCoupon;
         if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
             promoCoupon = promoCoupons.get(position);
@@ -673,8 +673,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
         if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, getPaymentOption().getOrdinal(), promoCoupon)) {
             setSelectedPromoCoupon(promoCoupon);
+            GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+OFFER+SELECTED, promoCoupon.getTitle());
+            return true;
+        } else {
+            return false;
         }
-        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+OFFER+SELECTED, promoCoupon.getTitle());
     }
 
     private void apiPurchaseSubscription() {

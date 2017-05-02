@@ -4,13 +4,10 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.LayoutInflater;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.promotion.fragments.PromotionsFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
-import product.clicklabs.jugnoo.promotion.fragments.ReferralLeaderboardFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralsFragment;
 
 /**
@@ -35,9 +32,6 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter{
 				return new ReferralsFragment();
 
 			case 1:
-				return new PromotionsFragment();
-
-			case 2:
 				if(Data.userData != null && Data.userData.getReferralActivityEnabled() == 1) {
 					return new ReferralActivityFragment();
 				}

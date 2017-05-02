@@ -934,11 +934,11 @@
     <string name="referrals_tab">REFER &amp; WIN</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="activity">Activity</string>
-    <string name="enter_promo_code">Enter Promo code</string>
+    <string name="enter_promo_code">Enter Promocode</string>
     <string name="add_promo_code">Add Promo Code</string>
     <string name="offers_available">Offers Available</string>
     <string name="no_offers_currently">No offers currently</string>
-    <string name="valid_until_format">Valid until\n%s</string>
+    <string name="valid_until_format">Valid until %s</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="save">Save</string>
@@ -1669,4 +1669,7 @@
     <string name="press_skip_to_continue">Press skip to continue</string>
     <string name="press_skip_this_step_to_proceed">Press \'Skip this step\' to proceed</string>
     <string name="order_quantity_limited">Order quantity for this item is limited to 50</string>
+    <string name="use_this_coupon">Use this coupon</string>
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="offer_auto_applied_message_format">Coupon Selected. It will be auto-applied on %s.</string>
 </resources>

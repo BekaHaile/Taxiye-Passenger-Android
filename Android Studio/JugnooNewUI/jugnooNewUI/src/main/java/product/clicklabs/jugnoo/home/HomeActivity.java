@@ -1025,7 +1025,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutOfferConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
+                if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() <= 0){
+                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
+                }
                 slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
                         Data.userData.getCoupons(ProductType.AUTO));
             }
@@ -2030,6 +2032,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                try {
+                    // to check if user has selected some promo coupon from promotions screen
+                    slidingBottomPanel.getRequestRideOptionsFragment().selectAutoSelectedCouponAtRequestRide();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }, 500);
 
@@ -2900,6 +2908,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             setGoogleMapPadding(0f);
                             showPoolInforBar();
                         }
+
 
                         if(confirmedScreenOpened){
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);

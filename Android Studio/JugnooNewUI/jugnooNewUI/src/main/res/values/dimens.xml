@@ -621,6 +621,37 @@
     <dimen name="dp_24">
         24dp
     </dimen>
+    <dimen name="dp_38">
+        38dp
+    </dimen>
+    <dimen name="sp_10">
+        10sp
+    </dimen>
+    <dimen name="dp_115">
+        115dp
+    </dimen>
+    <dimen name="dp_64">
+        64dp
+    </dimen>
+    <dimen name="dp_90">
+        90dp
+    </dimen>
+    <dimen name="dp_68">
+        68dp
+    </dimen>
+    <dimen name="dp_70">70dp</dimen>
+    <dimen name="sp_9">
+        9sp
+    </dimen>
+    <dimen name="dp_120">
+        120dp
+    </dimen>
+    <dimen name="dp_170">
+        170dp
+    </dimen>
+    <dimen name="dp_58">
+        58dp
+    </dimen>
 
 
 </resources>

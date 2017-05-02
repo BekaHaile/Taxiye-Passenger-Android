@@ -416,7 +416,13 @@ public class FABViewTest implements GACategory, GAAction {
     };
 
     public void setRelativeLayoutFABTestVisibility(int visibility){
-        relativeLayoutFABTest.setVisibility(visibility);
+        if(visibility == View.VISIBLE
+                && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1
+                && Data.userData.getIntegratedJugnooEnabled() == 1){
+            relativeLayoutFABTest.setVisibility(View.VISIBLE);
+        } else {
+            relativeLayoutFABTest.setVisibility(View.GONE);
+        }
         if(visibility != View.VISIBLE){
 //            hideJeanieHelpInSession();
         }

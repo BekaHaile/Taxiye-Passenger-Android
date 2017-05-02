@@ -693,4 +693,8 @@ public interface Constants {
     String PAGE_COUNT = "pageCount";
     String COUNT_RECORDS = "count_records";
     String KEY_CLOSE_TRACKING = "close_tracking";
+    String KEY_OFFERING_NAME = "offering_name";
+    String KEY_PROMO_COUPON = "promo_coupon";
+    String SP_USE_COUPON_ = "sp_use_coupon_";
+    String SP_USE_COUPON_IS_COUPON_ = "sp_use_coupon_is_coupon_";
 }
