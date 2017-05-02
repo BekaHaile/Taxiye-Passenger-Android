@@ -2031,7 +2031,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     if(((isCouponInfo && pc instanceof CouponInfo) || (!isCouponInfo && pc instanceof PromotionInfo))
                             && pc.getId() == promoCouponId) {
                         if (pc.getIsValid() == 1 && setSelectedCoupon(i)) {
-                            Utils.showToast(activity, activity.getString(R.string.offer_auto_applied_message_format, "order"), Toast.LENGTH_LONG);
+                            Utils.showToast(activity, activity.getString(R.string.offer_applied), Toast.LENGTH_LONG);
                         }
                         Prefs.with(activity).save(Constants.SP_USE_COUPON_ + clientId, -1);
                         Prefs.with(activity).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
