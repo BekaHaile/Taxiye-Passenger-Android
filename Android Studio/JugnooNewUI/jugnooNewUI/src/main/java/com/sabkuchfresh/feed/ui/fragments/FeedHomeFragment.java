@@ -89,6 +89,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private MenuItem itemCart;
     private long notificationsSeenCount = 0;
     private int UPDATE_NOTIFICATION_COUNT_INTERVAL = 15 * 1000;
+    private boolean animateAddPostText  ;
 
 
     public FeedHomeFragment() {
@@ -136,6 +137,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         rlNoReviews = (RelativeLayout) rootView.findViewById(R.id.rlNoReviews);
         rlNoReviews.setVisibility(View.GONE);
         relativeLayoutNotAvailable.setVisibility(View.GONE);
+
+        //TypeWriter animation to be shown everytime screen is opened
+        animateAddPostText=true;
 
         //SetUpRecyclerView
         layoutManager = new LinearLayoutManager(getActivity());
@@ -342,12 +346,14 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
         if (!hidden) {
 
+            isFragmentHidden = true;
             activity.fragmentUISetup(this);
 
             activity.getFeedHomeAddPostView().setVisibility(relativeLayoutNotAvailable.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             activity.getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    isFragmentHidden = false;
                     if (updateFeedData) {
                         fetchFeedsApi(true, false);
                     }
@@ -359,8 +365,9 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             activity.getTvAddPost().clearAnimAndSetText();
             activity.getHandler().removeCallbacks(runnableNotificationCount);
             activity.getHandler().removeCallbacks(showAddPostOnIdleStateOfScroll);
+            isFragmentHidden=true;
         }
-        isFragmentHidden =!hidden;
+
     }
 
     @Override
@@ -447,12 +454,12 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
                 //Set Data for Add Post View
-                if(Prefs.with(activity).getBoolean(Constants.KEY_ANIMATE_ASK_LOCAL_POST_TEXT,true)){
+                if(animateAddPostText){
                     activity.getTvAddPost().animateText(feedbackResponse.getAddPostText());
-                    Prefs.with(activity).save(Constants.KEY_ANIMATE_ASK_LOCAL_POST_TEXT,false);
 
                 }else{
-                    activity.getTvAddPost().setText(feedbackResponse.getAddPostText());
+                    animateAddPostText=false;
+                    activity.getTvAddPost().setmText(feedbackResponse.getAddPostText());
 
                 }
 

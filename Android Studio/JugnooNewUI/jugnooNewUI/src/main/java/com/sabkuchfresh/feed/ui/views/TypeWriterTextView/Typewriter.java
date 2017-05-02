@@ -33,7 +33,6 @@ public class Typewriter extends android.support.v7.widget.AppCompatTextView {
     public void animateText(CharSequence text) {
         mText = text;
         mIndex = 0;
-
         setText("");
         mHandler.removeCallbacks(characterAdder);
         mHandler.postDelayed(characterAdder, mDelay);
@@ -48,5 +47,10 @@ public class Typewriter extends android.support.v7.widget.AppCompatTextView {
             mHandler.removeCallbacksAndMessages(null);
             setText(mText);
         }
+    }
+
+    public void setmText(CharSequence text){
+        mText = text;
+        setText(mText);
     }
 }
