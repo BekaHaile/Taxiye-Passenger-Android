@@ -383,11 +383,14 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             for(PromoCoupon promoCoupon : promoCoupons){
                 if(promoCoupon.getAutos() == 1){
                     pcRides.add(promoCoupon);
-                } else if(promoCoupon.getMenus() == 1){
+                }
+                if(promoCoupon.getMenus() == 1){
                     pcMenus.add(promoCoupon);
-                } else if(promoCoupon.getFresh() == 1 || promoCoupon.getGrocery() == 1){
+                }
+                if(promoCoupon.getFresh() == 1 || promoCoupon.getGrocery() == 1){
                     pcFatafat.add(promoCoupon);
-                } else if(promoCoupon.getMeals() == 1){
+                }
+                if(promoCoupon.getMeals() == 1){
                     pcMeals.add(promoCoupon);
                 }
             }
