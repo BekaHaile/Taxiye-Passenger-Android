@@ -363,6 +363,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             placeOrder();
                             GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT, PAY_NOW+CLICKED);
                         } else{
+
                             Utils.showToast(activity, "Please select payment option");
                         }
                         break;
