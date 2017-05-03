@@ -2029,6 +2029,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             clientId = Config.getMenusClientId();
         }
 
+        boolean couponSelected = false;
         try {
             int promoCouponId = Prefs.with(activity).getInt(Constants.SP_USE_COUPON_+clientId, -1);
             boolean isCouponInfo = Prefs.with(activity).getBoolean(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
@@ -2039,17 +2040,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             && pc.getId() == promoCouponId) {
                         if (pc.getIsValid() == 1 && setSelectedCoupon(i)) {
                             Utils.showToast(activity, activity.getString(R.string.offer_applied), Toast.LENGTH_LONG);
-                            Prefs.with(activity).save(Constants.SP_USE_COUPON_ + clientId, -1);
-                            Prefs.with(activity).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
                         }
-                        return true;
+                        couponSelected = true;
+                        break;
                     }
                 }
 			}
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        Prefs.with(activity).save(Constants.SP_USE_COUPON_ + clientId, -1);
+        Prefs.with(activity).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
+        return couponSelected;
     }
 
     private PromoCoupon selectServerMarkedCouponAndReturnOld(){

@@ -706,6 +706,19 @@ public class JSONParser implements Constants {
 
         resetMenusFilters(context);
 
+
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getAutosClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getAutosClientId(), false);
+
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getFreshClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getFreshClientId(), false);
+
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMealsClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMealsClientId(), false);
+
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMenusClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMenusClientId(), false);
+
         return resp;
     }
 

@@ -620,6 +620,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
      */
     public boolean selectAutoSelectedCouponAtRequestRide(){
         String clientId = Config.getAutosClientId();
+        boolean couponSelected = false;
         try {
             int promoCouponId = Prefs.with(activity).getInt(Constants.SP_USE_COUPON_+clientId, -1);
             boolean isCouponInfo = Prefs.with(activity).getBoolean(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
@@ -631,16 +632,17 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                         if (pc.getIsValid() == 1 && setSelectedCoupon(i)) {
                             Utils.showToast(activity, activity.getString(R.string.offer_auto_applied_message_format, "ride"), Toast.LENGTH_LONG);
                         }
-                        Prefs.with(activity).save(Constants.SP_USE_COUPON_ + clientId, -1);
-                        Prefs.with(activity).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
-                        return true;
+                        couponSelected = true;
+                        break;
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        Prefs.with(activity).save(Constants.SP_USE_COUPON_ + clientId, -1);
+        Prefs.with(activity).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
+        return couponSelected;
     }
 
 }
