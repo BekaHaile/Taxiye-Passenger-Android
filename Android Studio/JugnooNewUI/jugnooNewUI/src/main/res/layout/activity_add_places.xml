@@ -73,6 +73,7 @@
                     android:paddingRight="6dp"
                     android:textSize="@dimen/text_size_26"
                     android:maxLines="1"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
                     app:font="maven"
                     />

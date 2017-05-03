@@ -1,8 +1,11 @@
 package product.clicklabs.jugnoo.promotion;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +14,6 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,14 +25,16 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.tsengvn.typekit.TypekitContextWrapper;
 
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import product.clicklabs.jugnoo.BaseActivity;
+import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Events;
@@ -40,13 +43,15 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.promotion.adapters.PromotionsAdapter;
+import product.clicklabs.jugnoo.promotion.adapters.OfferingPromotionsAdapter;
+import product.clicklabs.jugnoo.promotion.fragments.PromoDescriptionFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -62,24 +67,23 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by ankit on 6/8/16.
  */
-public class PromotionActivity extends BaseActivity implements Constants,  GAAction, GACategory {
+public class PromotionActivity extends BaseFragmentActivity implements Constants,  GAAction, GACategory {
 
     private final String TAG = PromotionActivity.class.getSimpleName();
-    private Button buttonAddPromoCode, buttonApplyPromo;
-    private RelativeLayout relativeLayoutPromocode;
+    private Button buttonApplyPromo;
     private EditText editTextPromoCode;
-    private ImageView imageViewClose;
 
-    private RelativeLayout relativeLayoutListTitle, relative;
+    private RelativeLayout relative;
     private LinearLayout linearLayoutNoOffers;
     private RecyclerView recyclerViewOffers;
-    private PromotionsAdapter promotionsAdapter;
     private ImageView imageViewBack, imageViewFreeRideAuto;
     private TextView textViewTitle, textViewFreeRides;
+    private LinearLayout llContainer;
 
 
-    private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 
+    private ArrayList<OfferingPromotion> offeringPromotions = new ArrayList<>();
+    private OfferingPromotionsAdapter offeringPromotionsAdapter;
 
     @Override
     protected void onResume() {
@@ -87,17 +91,22 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
         HomeActivity.checkForAccessTokenChange(this);
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+    }
+
     private boolean codeEntered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_promotions);
+        setContentView(R.layout.activity_promotions);
         relative = (RelativeLayout) findViewById(R.id.linearLayoutRoot);
-        new ASSL(PromotionActivity.this, relative, 1134, 720, false);
 
         GAUtils.trackScreenView(PROMOTIONS);
 
+        llContainer = (LinearLayout) findViewById(R.id.llContainer); llContainer.setVisibility(View.GONE);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
         textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_OFFERS);
@@ -110,19 +119,12 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
             }
         });
 
-        buttonAddPromoCode = (Button) findViewById(R.id.buttonAddPromoCode);
-        buttonAddPromoCode.setTypeface(Fonts.mavenRegular(this));
         buttonApplyPromo = (Button) findViewById(R.id.buttonApplyPromo);
         buttonApplyPromo.setTypeface(Fonts.mavenRegular(this));
-        relativeLayoutPromocode = (RelativeLayout) findViewById(R.id.relativeLayoutPromocode);
         editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode);
-        editTextPromoCode.setTypeface(Fonts.mavenRegular(this));
-        imageViewClose = (ImageView) findViewById(R.id.imageViewClose);
         textViewFreeRides = (TextView) findViewById(R.id.textViewFreeRides); textViewFreeRides.setTypeface(Fonts.mavenMedium(this));
         imageViewFreeRideAuto = (ImageView) findViewById(R.id.imageViewFreeRideAuto);
 
-        relativeLayoutListTitle = (RelativeLayout) findViewById(R.id.relativeLayoutListTitle);
-        ((TextView) findViewById(R.id.textViewOffersAvailable)).setTypeface(Fonts.mavenRegular(this));
         linearLayoutNoOffers = (LinearLayout) findViewById(R.id.linearLayoutNoOffers);
         ((TextView) findViewById(R.id.textViewNoOffers)).setTypeface(Fonts.mavenRegular(this));
 
@@ -131,8 +133,8 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
         recyclerViewOffers.setItemAnimator(new DefaultItemAnimator());
         recyclerViewOffers.setHasFixedSize(false);
 
-        promotionsAdapter = new PromotionsAdapter(PromotionActivity.this, promoCoupons);
-        recyclerViewOffers.setAdapter(promotionsAdapter);
+        offeringPromotionsAdapter = new OfferingPromotionsAdapter(this, offeringPromotions);
+        recyclerViewOffers.setAdapter(offeringPromotionsAdapter);
 
         textViewFreeRides.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,21 +148,11 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
         });
 
 
-        buttonAddPromoCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Animation animation = AnimationUtils.loadAnimation(PromotionActivity.this, R.anim.scale_in);
-                buttonAddPromoCode.setVisibility(View.GONE);
-                relativeLayoutPromocode.setVisibility(View.VISIBLE);
-                relativeLayoutPromocode.startAnimation(animation);
-            }
-        });
-
         buttonApplyPromo.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                String promoCode = editTextPromoCode.getText().toString().trim();
+                String promoCode = editTextPromoCode.getText().toString().trim().toUpperCase();
                 if (promoCode.length() > 0) {
                     applyPromoCodeAPI(PromotionActivity.this, promoCode);
                     HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
@@ -168,8 +160,15 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
                     MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                     GAUtils.event(SIDE_MENU, PROMOTIONS, GAAction.PROMO_CODE+APPLIED);
                 } else {
-                    editTextPromoCode.requestFocus();
-                    editTextPromoCode.setError("Code can't be empty");
+                    Utils.hideKeyboard(PromotionActivity.this);
+                    buttonApplyPromo.setEnabled(false);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Utils.showToast(PromotionActivity.this, "Code can't be empty");
+                            buttonApplyPromo.setEnabled(true);
+                        }
+                    }, 200);
                 }
             }
         });
@@ -181,13 +180,6 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
             }
         });
 
-        editTextPromoCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                editTextPromoCode.setError(null);
-            }
-        });
 
         editTextPromoCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -228,40 +220,26 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
             }
         });
 
-        imageViewClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Animation animation = AnimationUtils.loadAnimation(PromotionActivity.this, R.anim.scale_out);
-                relativeLayoutPromocode.clearAnimation();
-                animation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        buttonAddPromoCode.setVisibility(View.VISIBLE);
-                        relativeLayoutPromocode.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                relativeLayoutPromocode.startAnimation(animation);
-            }
-        });
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         getCouponsAndPromotions(PromotionActivity.this);
+
+        llContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
     }
 
     public void performBackPressed(){
+        if(getSupportFragmentManager().findFragmentByTag(PromoDescriptionFragment.class.getName()) != null){
+            removeFragment(getSupportFragmentManager().findFragmentByTag(PromoDescriptionFragment.class.getName()));
+        } else {
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
     }
 
     @Override
@@ -282,24 +260,14 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
     }
 
     public void updateListData() {
-        if (promoCoupons.size() == 0) {
-            relativeLayoutListTitle.setVisibility(View.GONE);
+        if (offeringPromotions.size() == 0) {
             recyclerViewOffers.setVisibility(View.GONE);
             linearLayoutNoOffers.setVisibility(View.VISIBLE);
         } else{
-            relativeLayoutListTitle.setVisibility(View.VISIBLE);
             recyclerViewOffers.setVisibility(View.VISIBLE);
             linearLayoutNoOffers.setVisibility(View.GONE);
-            promotionsAdapter.notifyDataSetChanged();
+            offeringPromotionsAdapter.notifyDataSetChanged();
             updateUserCoupons();
-        }
-    }
-
-    public void clearErrorForEditText(){
-        try {
-            editTextPromoCode.setError(null);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -327,46 +295,57 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
                                     int flag = jObj.getInt("flag");
                                     String message = JSONParser.getServerMessage(jObj);
                                     if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
-                                        promoCoupons.clear();
-                                        if(promCouponResponse.getCommonPromotions() != null)
-                                            promoCoupons.addAll(promCouponResponse.getCommonPromotions());
-                                        if(promCouponResponse.getCommonCoupons() != null)
-                                            promoCoupons.addAll(promCouponResponse.getCommonCoupons());
+                                        offeringPromotions.clear();
+
+                                        ArrayList<PromoCoupon> pcRides = new ArrayList<PromoCoupon>();
+                                        ArrayList<PromoCoupon> pcMenus = new ArrayList<PromoCoupon>();
+                                        ArrayList<PromoCoupon> pcFatafat = new ArrayList<PromoCoupon>();
+                                        ArrayList<PromoCoupon> pcMeals = new ArrayList<PromoCoupon>();
+
+                                        fillMasterPromoCoupons(promCouponResponse.getCommonPromotions(), pcRides, pcMenus, pcFatafat, pcMeals);
+                                        fillMasterPromoCoupons(promCouponResponse.getCommonCoupons(), pcRides, pcMenus, pcFatafat, pcMeals);
 
                                         if(promCouponResponse.getAutosPromotions() != null)
-                                            promoCoupons.addAll(promCouponResponse.getAutosPromotions());
+                                            pcRides.addAll(promCouponResponse.getAutosPromotions());
                                         if(promCouponResponse.getAutosCoupons() != null)
-                                            promoCoupons.addAll(promCouponResponse.getAutosCoupons());
-
-                                        if(promCouponResponse.getFreshPromotions() != null)
-                                            promoCoupons.addAll(promCouponResponse.getFreshPromotions());
-                                        if(promCouponResponse.getFreshCoupons() != null)
-                                            promoCoupons.addAll(promCouponResponse.getFreshCoupons());
-
-                                        if(promCouponResponse.getMealsPromotions() != null)
-                                            promoCoupons.addAll(promCouponResponse.getMealsPromotions());
-                                        if(promCouponResponse.getMealsCoupons() != null)
-                                            promoCoupons.addAll(promCouponResponse.getMealsCoupons());
-
-                                        if(promCouponResponse.getDeliveryPromotions() != null)
-                                            promoCoupons.addAll(promCouponResponse.getDeliveryPromotions());
-                                        if(promCouponResponse.getDeliveryCoupons() != null)
-                                            promoCoupons.addAll(promCouponResponse.getDeliveryCoupons());
-
-                                        if(promCouponResponse.getGroceryPromotions() != null)
-                                            promoCoupons.addAll(promCouponResponse.getGroceryPromotions());
-                                        if(promCouponResponse.getGroceryCoupons() != null)
-                                            promoCoupons.addAll(promCouponResponse.getGroceryCoupons());
+                                            pcRides.addAll(promCouponResponse.getAutosCoupons());
 
                                         if(promCouponResponse.getMenusPromotions() != null)
-                                            promoCoupons.addAll(promCouponResponse.getMenusPromotions());
+                                            pcMenus.addAll(promCouponResponse.getMenusPromotions());
                                         if(promCouponResponse.getMenusCoupons() != null)
-                                            promoCoupons.addAll(promCouponResponse.getMenusCoupons());
+                                            pcMenus.addAll(promCouponResponse.getMenusCoupons());
 
-                                        if(promCouponResponse.getPayPromotions() != null)
-                                            promoCoupons.addAll(promCouponResponse.getPayPromotions());
-                                        if(promCouponResponse.getPayCoupons() != null)
-                                            promoCoupons.addAll(promCouponResponse.getPayCoupons());
+                                        if(promCouponResponse.getFreshPromotions() != null)
+                                            pcFatafat.addAll(promCouponResponse.getFreshPromotions());
+                                        if(promCouponResponse.getFreshCoupons() != null)
+                                            pcFatafat.addAll(promCouponResponse.getFreshCoupons());
+                                        if(promCouponResponse.getGroceryPromotions() != null)
+                                            pcFatafat.addAll(promCouponResponse.getGroceryPromotions());
+                                        if(promCouponResponse.getGroceryCoupons() != null)
+                                            pcFatafat.addAll(promCouponResponse.getGroceryCoupons());
+
+                                        if(promCouponResponse.getMealsPromotions() != null)
+                                            pcMeals.addAll(promCouponResponse.getMealsPromotions());
+                                        if(promCouponResponse.getMealsCoupons() != null)
+                                            pcMeals.addAll(promCouponResponse.getMealsCoupons());
+
+
+                                        if(pcRides.size() > 0) {
+                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.rides), Config.getAutosClientId(),
+                                                    R.drawable.ic_auto_grey, pcRides));
+                                        }
+                                        if(pcMeals.size() > 0) {
+                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.meals), Config.getMealsClientId(),
+                                                    R.drawable.ic_meals_grey, pcMeals));
+                                        }
+                                        if(pcFatafat.size() > 0) {
+                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.fatafat), Config.getFreshClientId(),
+                                                    R.drawable.ic_fresh_grey, pcFatafat));
+                                        }
+                                        if(pcMenus.size() > 0) {
+                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), Config.getMenusClientId(),
+                                                    R.drawable.ic_menus_grey, pcMenus));
+                                        }
 
                                         updateListData();
 
@@ -403,17 +382,43 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
         }
     }
 
+    private void fillMasterPromoCoupons(List promoCouponsMaster,
+                                        ArrayList<PromoCoupon> pcRides,
+                                        ArrayList<PromoCoupon> pcMenus,
+                                        ArrayList<PromoCoupon> pcFatafat,
+                                        ArrayList<PromoCoupon> pcMeals){
+        if(promoCouponsMaster != null) {
+            List<PromoCoupon> promoCoupons = promoCouponsMaster;
+            for(PromoCoupon promoCoupon : promoCoupons){
+                if(promoCoupon.getAutos() == 1){
+                    pcRides.add(promoCoupon);
+                }
+                if(promoCoupon.getMenus() == 1){
+                    pcMenus.add(promoCoupon);
+                }
+                if(promoCoupon.getFresh() == 1 || promoCoupon.getGrocery() == 1){
+                    pcFatafat.add(promoCoupon);
+                }
+                if(promoCoupon.getMeals() == 1){
+                    pcMeals.add(promoCoupon);
+                }
+            }
+        }
+    }
+
     private void updateUserCoupons() {
         try{
             ArrayList<String> coupons = new ArrayList<>();
             double maxValue = 0.0;
-            if(promoCoupons != null) {
-                for(int i=0;i<promoCoupons.size();i++) {
-                    coupons.add(promoCoupons.get(i).getTitle());
-                    String value = MyApplication.getInstance().getCleverTapUtils().getCouponValue(promoCoupons.get(i).getTitle());
-                    if(value.length()>0) {
-                        coupons.add(value);
-                        maxValue = MyApplication.getInstance().getCleverTapUtils().getCouponMaxValue(maxValue, value);
+            if(offeringPromotions != null) {
+                for(OfferingPromotion offeringPromotion : offeringPromotions){
+                    for(PromoCoupon promoCoupon : offeringPromotion.getPromoCoupons()){
+                        coupons.add(promoCoupon.getTitle());
+                        String value = MyApplication.getInstance().getCleverTapUtils().getCouponValue(promoCoupon.getTitle());
+                        if(value.length()>0) {
+                            coupons.add(value);
+                            maxValue = MyApplication.getInstance().getCleverTapUtils().getCouponMaxValue(maxValue, value);
+                        }
                     }
                 }
             }
@@ -557,4 +562,28 @@ public class PromotionActivity extends BaseActivity implements Constants,  GAAct
             e.printStackTrace();
         }
     }
+
+    public void openPromoDescriptionFragment(String offeringName, String clientId, PromoCoupon promoCoupon){
+        removeFragment(getSupportFragmentManager().findFragmentByTag(PromoDescriptionFragment.class.getName()));
+        Fragment fragment = PromoDescriptionFragment.newInstance(offeringName, clientId, promoCoupon);
+        llContainer.setVisibility(View.VISIBLE);
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .replace(llContainer.getId(),
+                        fragment,
+                        PromoDescriptionFragment.class.getName())
+                .commitAllowingStateLoss();
+        textViewTitle.setText(getString(R.string.terms_of_use));
+    }
+
+    public void removeFragment(Fragment fragment){
+        if(fragment != null) {
+            llContainer.setVisibility(View.GONE);
+            getSupportFragmentManager().beginTransaction().remove(fragment).commitAllowingStateLoss();
+            textViewTitle.setText(getString(R.string.promotions));
+        }
+    }
+
+    private Handler handler = new Handler();
+
 }

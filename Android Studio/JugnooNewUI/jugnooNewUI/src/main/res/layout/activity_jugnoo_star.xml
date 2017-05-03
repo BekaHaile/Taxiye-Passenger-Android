@@ -229,7 +229,7 @@
                     android:id="@+id/bJoinNow"
                     style="@style/ButtonTheme"
                     android:layout_height="@dimen/payment_option_cash_rl_height"
-                    android:background="@drawable/capsule_green_selector"
+                    android:background="@drawable/capsule_theme_color_selector"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/px_46"
                     android:text="@string/join" />
@@ -252,7 +252,7 @@
                     android:divider="@color/stroke_light_grey_alpha"
                     android:dividerHeight="@dimen/dp_1"
                     android:fadeScrollbars="true"
-                    android:listSelector="@drawable/background_transparent"
+                    android:listSelector="@color/menu_item_selector_color_F7"
                     android:paddingTop="@dimen/px_2"
                     android:scrollbars="vertical" />
             </RelativeLayout>

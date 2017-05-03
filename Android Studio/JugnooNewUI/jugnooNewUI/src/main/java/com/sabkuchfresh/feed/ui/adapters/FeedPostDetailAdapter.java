@@ -12,8 +12,6 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -126,7 +124,7 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
                             String firstLetter =  Data.userData.userName.toUpperCase().substring(0,1);
                             TextDrawable drawable = TextDrawable.builder()
                                     .beginConfig().bold().endConfig()
-                                    .buildRound(firstLetter, activity.getParsedColor(""));
+                                    .buildRound(firstLetter, activity.getParsedColor("", null));
                             userDrawable = drawable;
                         }
                         ((MyCommentViewHolder) holder).ivMyProfilePic.setImageDrawable(userDrawable);
@@ -172,7 +170,7 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
                         String firstLetter =  feedComment.getUserName().toUpperCase().substring(0,1);
                         TextDrawable drawable = TextDrawable.builder()
                                 .beginConfig().bold().endConfig()
-                                .buildRound(firstLetter, activity.getParsedColor(feedComment.getColor()));
+                                .buildRound(firstLetter, activity.getParsedColor(feedComment.getColor(), null));
                         feedComment.setDrawable(drawable);
                     }
                     userCommentViewHolder.ivUserCommentPic.setImageDrawable(feedComment.getDrawable());
@@ -296,7 +294,10 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
                     callback.onMoreClick((FeedDetail) feedDetailData.get(position),0,viewClicked);
                     break;
                 case R.id.ll_delete_comment:
-                    ((UserCommentViewHolder)recyclerView.findViewHolderForAdapterPosition(position)).swipeLayout.close();
+                    UserCommentViewHolder userCommentViewHolder = ((UserCommentViewHolder)recyclerView.findViewHolderForAdapterPosition(position));
+                    if(userCommentViewHolder!=null) {
+                        userCommentViewHolder.swipeLayout.close(false,true);
+                    }
                     callback.onDeleteComment((FeedComment) feedDetailData.get(position),position,viewClicked);
                     break;
                 default:
@@ -312,8 +313,13 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
             if (feedDetail.isLikeAPIInProgress()) {
                 feedDetail.setIsLikeAPIInProgress(false);
                 if(isLikeAPI) {
-                    LikeButton likeButton =   ((FeedHomeAdapter.ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
-                    likeButton.onClick(likeButton);
+
+                    FeedHomeAdapter.ViewHolderReviewImage viewHolderReviewImage = ((FeedHomeAdapter.ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position));
+                    if(viewHolderReviewImage!=null) {
+                        LikeButton likeButton = viewHolderReviewImage.likeButtonAnimate;
+                        likeButton.onClick(likeButton);
+                    }
+
                     feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
                 } else if(feedDetail.getLikeCount()!=0)
                     feedDetail.setLikeCount(feedDetail.getLikeCount()-1);

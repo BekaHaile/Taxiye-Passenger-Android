@@ -3,7 +3,9 @@ package product.clicklabs.jugnoo.datastructure;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PromotionInfo extends PromoCoupon{
+import java.io.Serializable;
+
+public class PromotionInfo extends PromoCoupon implements Serializable{
 	@SerializedName("promo_id")
 	@Expose
 	public Integer id;
@@ -212,5 +214,10 @@ public class PromotionInfo extends PromoCoupon{
 
 	public void setInvalidMessage(String invalidMessage) {
 		this.invalidMessage = invalidMessage;
+	}
+
+	@Override
+	public String getExpiryDate() {
+		return endOn;
 	}
 }

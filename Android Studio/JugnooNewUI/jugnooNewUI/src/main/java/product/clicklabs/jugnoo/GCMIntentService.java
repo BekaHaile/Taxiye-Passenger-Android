@@ -34,7 +34,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -608,6 +607,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							String picture = jObj.optString(KEY_PICTURE, "");
 							int campaignId = jObj.optInt(Constants.KEY_CAMPAIGN_ID, 0);
 							int postId = jObj.optInt(Constants.KEY_POST_ID, -1);
+
+							// deep link to restaurant page
+							Prefs.with(this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, jObj.optString(KEY_RESTAURANT_ID, ""));
+
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString(KEY_IMAGE, "");
 							}
@@ -783,6 +786,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
 						String clientId = jObj.optString(KEY_CLIENT_ID, "");
 						int orderId = jObj.optInt(KEY_ORDER_ID, 0);
+						int closeTracking = jObj.optInt(KEY_CLOSE_TRACKING, 0);
 						int productType = jObj.optInt(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
 						message1 = jObj.optString(KEY_MESSAGE, "");
 						if(!TextUtils.isEmpty(message1)) {
@@ -793,6 +797,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Intent intent = new Intent(Data.LOCAL_BROADCAST);
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_MESSAGE, message);
+						intent.putExtra(Constants.KEY_ORDER_ID, orderId);
+						intent.putExtra(Constants.KEY_CLOSE_TRACKING, closeTracking);
 						intent.putExtra(KEY_CLIENT_ID, clientId);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}

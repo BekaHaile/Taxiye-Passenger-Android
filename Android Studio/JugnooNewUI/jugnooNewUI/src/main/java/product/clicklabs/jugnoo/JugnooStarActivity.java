@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.adapters.StarMembershipAdapter;
 import product.clicklabs.jugnoo.datastructure.StarPurchaseType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
+import product.clicklabs.jugnoo.fragments.ViewJugnooStarBenefitsFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -207,4 +208,7 @@ public class JugnooStarActivity extends StarBaseActivity implements View.OnClick
                     .addToBackStack(StarSubscriptionCheckoutFragment.class.getName())
                     .commitAllowingStateLoss();
         }
+
+
+
 }

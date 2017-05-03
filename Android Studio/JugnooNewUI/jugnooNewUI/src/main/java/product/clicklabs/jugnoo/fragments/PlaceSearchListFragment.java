@@ -122,8 +122,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		cardViewSavedPlaces = (CardView) rootView.findViewById(R.id.cardViewSavedPlaces);
 		cvRecentAddresses = (CardView) rootView.findViewById(R.id.cardViewRecentAddresses);
 
-		updateSavedPlacesLists();
-
 		imageViewSearchGPSIcon = (ImageView) rootView.findViewById(R.id.imageViewSearchGPSIcon);
 
 		editTextSearch.setOnClickListener(new View.OnClickListener() {
@@ -246,7 +244,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			}
 		},500);
 
-		showSearchLayout();
 
 		relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -306,6 +303,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		if(home.equalsIgnoreCase("") || work.equalsIgnoreCase("")){
 			linearLayoutAddFav.setVisibility(View.VISIBLE);
+			cardViewSavedPlaces.setVisibility(View.VISIBLE);
 		} else{
 			linearLayoutAddFav.setVisibility(View.GONE);
 		}
@@ -351,6 +349,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	public void onResume() {
 		super.onResume();
 		searchListAdapter.addSavedLocationsToList();
+		updateSavedPlacesLists();
+		showSearchLayout();
 	}
 
 	@Override

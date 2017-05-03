@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -117,11 +119,14 @@ public class Utils {
     }
 
 	public static void showToast(Context context, String string){
+		showToast(context, string, Toast.LENGTH_SHORT);
+	}
+	public static void showToast(Context context, String string, int duration){
 		try {
 			if(MyApplication.getInstance().getToast() != null){
 				MyApplication.getInstance().getToast().cancel();
 			}
-			MyApplication.getInstance().setToast(Toast.makeText(context, string, Toast.LENGTH_SHORT));
+			MyApplication.getInstance().setToast(Toast.makeText(context, string, duration));
 			MyApplication.getInstance().getToast().show();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -876,6 +881,21 @@ public class Utils {
 			InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	public static Spanned fromHtml(String html) {
+		Spanned result;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+			result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+		} else {
+			result = Html.fromHtml(html);
+		}
+		return result;
+	}
+
+	public static CharSequence trimHTML(CharSequence s){
+		return product.clicklabs.jugnoo.utils.Utils.trimHTML(s);
 	}
 
 }

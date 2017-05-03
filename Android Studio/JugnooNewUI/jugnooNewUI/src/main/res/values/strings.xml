@@ -370,6 +370,7 @@
     <string name="paytm_wallet">Paytm Wallet</string>
     <string name="nl_add_paytm_wallet">Add Paytm Wallet</string>
     <string name="nl_splash_required">Required</string>
+    <string name="nl_splash_optional">Optional</string>
 
 
     <!-- NL Login-->
@@ -665,8 +666,8 @@
     <string name="add_cash">ADD CASH</string>
     <string name="payment_option_dialog_jugnoo_cash_deduction">Jugnoo Cash will be deducted first</string>
 
-    <string name="paytm_coupon_selected_but_paytm_not_added">You need to add Paytm Wallet to avail this coupon</string>
-    <string name="paytm_coupon_selected_but_paytm_option_not_selected">You need to select Paytm as preferred payment option to avail this coupon</string>
+    <string name="paytm_coupon_selected_but_paytm_not_added">Please add Paytm Wallet to avail the selected coupon</string>
+    <string name="paytm_coupon_selected_but_paytm_option_not_selected">Please select Paytm as preferred payment option to avail the selected coupon</string>
     <string name="paytm_low_cash">Your Paytm cash is low</string>
     <string name="paytm_no_cash">You do not have money in your\nPaytm Account</string>
     <string name="paytm_no_cash_when_selecting_coupon">You do not have enough Paytm cash</string>
@@ -886,7 +887,7 @@
     <string name="got_any_queries">Got any queries/concerns/feedback?</string>
     <string name="please_contact_the_helpline">Please contact the helpline</string>
     <string name="place_order_confirmation">Are you sure you want to place your order?</string>
-    <string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
+    <string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fatafat!</string>
     <string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith Jugnoo Meals!</string>
     <string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith Jugnoo Grocery!</string>
     <string name="thank_you_for_placing_order_menus_format">Order placed with %s.\nWe will send you the confirmation once your order is accepted.</string>
@@ -933,11 +934,11 @@
     <string name="referrals_tab">REFER &amp; WIN</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="activity">Activity</string>
-    <string name="enter_promo_code">Enter Promo code</string>
+    <string name="enter_promo_code">Enter Promocode</string>
     <string name="add_promo_code">Add Promo Code</string>
     <string name="offers_available">Offers Available</string>
     <string name="no_offers_currently">No offers currently</string>
-    <string name="valid_until_format">Valid until\n%s</string>
+    <string name="valid_until_format">Valid until %s</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="save">Save</string>
@@ -991,8 +992,8 @@
     <string name="transaction_successful">Transaction Successful</string>
     <string name="transaction_failed">Transaction failed</string>
     <string name="mobikwik">MobiKwik</string>
-    <string name="mobikwik_coupon_selected_but_mobikwik_option_not_selected">You need to select MobiKwik as preferred payment option to avail this coupon</string>
-    <string name="mobikwik_coupon_selected_but_mobikwik_not_added">You need to add MobiKwik Wallet to avail this coupon</string>
+    <string name="mobikwik_coupon_selected_but_mobikwik_option_not_selected">Please select MobiKwik as preferred payment option to avail the selected coupon</string>
+    <string name="mobikwik_coupon_selected_but_mobikwik_not_added">Please add MobiKwik Wallet to avail the selected coupon</string>
     <string name="link_mobile_wallet_message">Link Mobile Wallet for ease of payments</string>
     <string name="use_mobile_wallet_powered_by_format">Use mobile wallet powered by %s</string>
     <string name="none">None</string>
@@ -1088,8 +1089,8 @@
     <string name="please_swipe_down_to_reload">Please swipe down to reload</string>
 
 
-    <string name="freecharge_coupon_selected_but_freecharge_option_not_selected">You need to select FreeCharge as preferred payment option to avail this coupon</string>
-    <string name="freecharge_coupon_selected_but_freecharge_not_added">You need to add FreeCharge Wallet to avail this coupon</string>
+    <string name="freecharge_coupon_selected_but_freecharge_option_not_selected">Please select FreeCharge as preferred payment option to avail the selected coupon</string>
+    <string name="freecharge_coupon_selected_but_freecharge_not_added">Please add FreeCharge Wallet to avail the selected coupon</string>
 
     <string name="freecharge">FreeCharge</string>
     <string name="add_freecharge_cash">Add FreeCharge Cash</string>
@@ -1457,7 +1458,7 @@
     <string name="click_to_find">Click to find out how…</string>
     <string name="away_from_free_delivery_value_format">Just \u20B9%s away from FREE delivery</string>
     <string name="jugnoo_star_details">Jugnoo star details</string>
-    <string name="membership_plan">Membership plan</string>
+    <string name="membership_plan">Current plan</string>
     <string name="expires_on">Expires on</string>
     <string name="savings_meter">Savings Meter</string>
     <string name="savings_from">Savings from</string>
@@ -1601,7 +1602,7 @@
     <string name="looking_for_something">Looking for something?</string>
     <string name="whats_on_your_mind">What\'s on your mind?</string>
     <string name="contacts_synced_successfully">Contacts synced successfully</string>
-    <string name="please_enter_something">Please enter text</string>
+    <string name="please_enter_something">Please add something.</string>
     <string name="label_location_feed">Location</string>
     <string name="selected_store">Selected Store</string>
     <string name="delivery_stores">Delivery Stores</string>
@@ -1648,13 +1649,39 @@
     <string name="unable_to_fetch_address">Unable to fetch current address at the moment</string>
     <string name="plus_add_new_address">+ Add New Address</string>
     <string name="address_details">Address Details</string>
-    <string name="label_sample">Label e.g. Hospital / Friend’s Home</string>
+    <string name="label_sample">Label e.g. Friend’s Home</string>
     <string name="flat_number_hint">Flat Number/ House No./ Apt Name</string>
     <string name="landmark">Landmark</string>
     <string name="tracking_not_available_message">Tracking available once your order is dispatched</string>
     <string name="some_error_occured_try_again">Some error occured\\nTry again</string>
     <string name="you_are_first_in_queue">You are first in queue</string>
     <string name="enter_location">Enter location</string>
+    <string name="checkout_bracket_item"><b>CHECKOUT</b> (%s ITEM)</string>
+    <string name="checkout_bracket_items"><b>CHECKOUT</b> (%s ITEMS)</string>
+    <string name="do_you_have_a_referral_code">Do you have a <b>promocode</b>?</string>
+    <string name="please_enter_your_personal_info">Please enter your personal information</string>
+    <string name="skip_this_step"><u>Skip this step</u></string>
+    <string name="your_full_name">Your full name</string>
+    <string name="email_address">E-mail address</string>
+    <string name="enter_promocode_optional">Enter promocode (optional)</string>
+    <string name="enter_referral_code_optional">Enter referral code (optional)</string>
+    <string name="label_anonymous">anonymous</string>
+    <string name="press_skip_to_continue">Press skip to continue</string>
+    <string name="press_skip_this_step_to_proceed">Press \'Skip this step\' to proceed</string>
+
+    <string name="order_quantity_limited">Order quantity for this item is limited to 50</string>
+
+    <string name="use_this_coupon">Use this coupon</string>
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="offer_auto_applied_message_format">Coupon Selected. It will be auto-applied on %s.</string>
+
+
+    <string name="label_feed_empty">Feed is empty!</string>
+    <string name="view_benefits"><u>View Benefits</u></string>
+    <string name="benefits">BENEFITS</string>
+    <string name="btn_renew_text">Renew for \u20B9 42/month </string>
+    <string name="ask_a_question">Ask a question</string>
+    <string name="email_was_incorrect">Email ID was incorrect</string>
 
 
 </resources>

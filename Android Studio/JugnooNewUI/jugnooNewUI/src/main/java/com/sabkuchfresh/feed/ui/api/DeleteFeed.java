@@ -80,7 +80,7 @@ public class DeleteFeed {
                 };
 
 
-
+                new HomeUtil().putDefaultParams(params);
                      RestClient.getFeedApiService().deleteFeed(params, callBack);
 
             }

@@ -19,7 +19,6 @@ import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
-import com.sabkuchfresh.fragments.MenusCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
@@ -76,19 +75,6 @@ public class TransactionUtils {
                     .add(container.getId(), new FreshCheckoutMergedFragment(),
                             FreshCheckoutMergedFragment.class.getName())
                     .addToBackStack(FreshCheckoutMergedFragment.class.getName())
-                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                    .commitAllowingStateLoss();
-        }
-    }
-
-    public void openMenusCheckoutMergedFragment(FragmentActivity activity, View container) {
-        if (!checkIfFragmentAdded(activity, MenusCheckoutMergedFragment.class.getName())) {
-            activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(container.getId(), new MenusCheckoutMergedFragment(),
-                            MenusCheckoutMergedFragment.class.getName())
-                    .addToBackStack(MenusCheckoutMergedFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

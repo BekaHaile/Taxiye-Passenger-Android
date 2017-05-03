@@ -12,6 +12,8 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
@@ -40,12 +42,16 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import product.clicklabs.jugnoo.adapters.AccountMenuItemsAdapter;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
+import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
@@ -53,6 +59,7 @@ import product.clicklabs.jugnoo.fragments.AddressBookFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.JeanieIntroDialog;
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -65,6 +72,8 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -105,11 +114,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
-    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer, rlJugnooStar;
+    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer;
     NonScrollListView listViewSavedLocations;
     RelativeLayout relativeLayoutAddNewAddress;
     View viewStarIcon;
     SavedPlacesAdapter savedPlacesAdapter;
+    private RecyclerView recyclerViewMenuItems;
     private static final int FRAMEWORK_REQUEST_CODE = 1;
 
     private int nextPermissionsRequestCode = 4000;
@@ -125,7 +135,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
-
+        recyclerViewMenuItems= (RecyclerView) findViewById(R.id.recycler_menu_nav_views);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
         textViewSave = (TextView) findViewById(R.id.textViewSave); textViewSave.setTypeface(Fonts.mavenMedium(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
@@ -253,8 +263,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         relativeLayoutAddressBook = (RelativeLayout) findViewById(R.id.relativeLayoutAddressBook);
         ((TextView)findViewById(R.id.textViewAddressBook)).setTypeface(Fonts.mavenMedium(this));
 
-        rlJugnooStar = (RelativeLayout) findViewById(R.id.rlJugnooStar);
-        ((TextView)findViewById(R.id.tvJugnooStar)).setTypeface(Fonts.mavenMedium(this));
+//        rlJugnooStar = (RelativeLayout) findViewById(R.id.rlJugnooStar);
+      //  ((TextView)findViewById(R.id.tvJugnooStar)).setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
@@ -644,14 +654,23 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
         });
 
-        rlJugnooStar.setOnClickListener(new View.OnClickListener() {
+       /* rlJugnooStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, JugnooStarSubscribedActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                try {
+                    if((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
+                            || Data.userData.isSubscriptionActive()){
+                        startActivity(new Intent(AccountActivity.this, JugnooStarSubscribedActivity.class));
+                    } else {
+                        startActivity(new Intent(AccountActivity.this, JugnooStarActivity.class));
+                    }
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
-
+*/
 
 
 		linearLayoutLogout.setOnClickListener(new View.OnClickListener() {
@@ -691,9 +710,60 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        GAUtils.trackScreenView(PROFILE_SCREEN);
 
+        setMenuItemsAdapter();
 
 	}
+
+    private void setMenuItemsAdapter() {
+        if(Data.userData !=null && Data.userData.getMenuInfoList()!=null && Data.userData.getMenuInfoList().size()>0){
+            ArrayList<MenuInfo> itemsToShowInAccountScreen = new ArrayList<>();
+            for(MenuInfo menuInfo: Data.userData.getMenuInfoList())
+            {
+                if(menuInfo.getShowInAccount()){
+                    itemsToShowInAccountScreen.add(menuInfo);
+                }
+            }
+
+            if(itemsToShowInAccountScreen.size()>0){
+                recyclerViewMenuItems.setNestedScrollingEnabled(false);
+                recyclerViewMenuItems.setLayoutManager(new LinearLayoutManager(this));
+                recyclerViewMenuItems.setAdapter(new AccountMenuItemsAdapter(itemsToShowInAccountScreen, recyclerViewMenuItems, new AccountMenuItemsAdapter.AccountMenuItemsCallback() {
+                    @Override
+                    public void onMenuItemClick(MenuInfo menuInfo) {
+                        if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())){
+
+                            Intent intent = new Intent(AccountActivity.this, PaymentActivity.class);
+                            intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            GAUtils.event(SIDE_MENU, USER+PROFILE,WALLET);
+                        }else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())){
+                            try {
+                                if((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
+                                        || Data.userData.isSubscriptionActive()){
+                                    startActivity(new Intent(AccountActivity.this, JugnooStarSubscribedActivity.class));
+                                } else {
+                                    startActivity(new Intent(AccountActivity.this, JugnooStarActivity.class));
+                                }
+                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                GAUtils.event(SIDE_MENU, USER+PROFILE,INBOX);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
+                           startActivity(new Intent(AccountActivity.this, NotificationCenterActivity.class));
+                           overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            GAUtils.event(SIDE_MENU, USER+PROFILE,JUGNOO + STAR);
+                        }
+                    }
+                },AccountActivity.this));
+                recyclerViewMenuItems.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
     private void setPasswordVisibility(EditText editText, ImageView imageView){
         if(editText.length() > 0) {
@@ -765,21 +835,29 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	}
 
 
+    boolean ignoreFetchWalletCheck = true;
 
 	@Override
 	protected void onResume() {
 		super.onResume();
         try {
+            fetchWalletBalance(this, ignoreFetchWalletCheck);
+            ignoreFetchWalletCheck = false;
+
             HomeActivity.checkForAccessTokenChange(this);
 
             if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
-                rlJugnooStar.setVisibility(View.VISIBLE);
+//                rlJugnooStar.setVisibility(View.VISIBLE);
                 viewStarIcon.setVisibility(View.VISIBLE);
             } else{
-                rlJugnooStar.setVisibility(View.GONE);
+//                rlJugnooStar.setVisibility(View.GONE);
                 viewStarIcon.setVisibility(View.GONE);
             }
-            rlJugnooStar.setVisibility(View.GONE);
+
+         /*   if(Data.userData!=null && Data.userData.getShowJugnooStarInAcccount())
+               rlJugnooStar.setVisibility(View.VISIBLE);
+            else
+                rlJugnooStar.setVisibility(View.GONE);*/
 
             try {
                 reloadProfileAPI(this);
@@ -1430,4 +1508,51 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     }
 
+    private ApiFetchWalletBalance apiFetchWalletBalance = null;
+    private void fetchWalletBalance(final Activity activity, boolean ignoreCheck) {
+        try {
+            if(apiFetchWalletBalance == null){
+                apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+                        updateMenuList();
+                    }
+
+                    @Override
+                    public void onFailure() {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                    }
+
+                    @Override
+                    public void onRetry(View view) {
+                    }
+
+                    @Override
+                    public void onNoRetry(View view) {
+                    }
+                });
+            }
+            long lastFetchWalletBalanceCall = Prefs.with(activity).getLong(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
+            long lastCallDiff = System.currentTimeMillis() - lastFetchWalletBalanceCall;
+            if(ignoreCheck || lastCallDiff >= FETCH_WALLET_BALANCE_REFRESH_TIME) {
+                apiFetchWalletBalance.getBalance(false);
+            } else {
+                updateMenuList();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
+
+    private void updateMenuList(){
+        if(recyclerViewMenuItems != null && recyclerViewMenuItems.getAdapter() != null) {
+            recyclerViewMenuItems.getAdapter().notifyDataSetChanged();
+        }
+    }
 }

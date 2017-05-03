@@ -145,7 +145,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 						if (item.getTotalQuantity() < 50) {
 							itemSelected.setQuantity(itemSelected.getQuantity() + 1);
 						} else {
-							Utils.showToast(context, context.getString(R.string.cannot_add_more_than_50));
+							Utils.showToast(context, context.getString(R.string.order_quantity_limited));
 						}
 					} else {
 						if(item.getTotalQuantity() > 0) {

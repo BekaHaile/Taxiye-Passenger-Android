@@ -79,28 +79,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:tag="@string/dont_touch_me"
+            >
+
+            <View
+                android:id="@+id/vCheckoutShadow"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_7"
+                android:background="@drawable/shadow_up_new"
+                />
+
 
             <TextView
                 android:id="@+id/textViewMinOrder"
                 android:layout_width="match_parent"
-                android:layout_height="68px"
+                android:layout_height="@dimen/dp_35"
                 android:background="@color/text_color"
                 android:gravity="center"
                 android:text="@string/minimum_order"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_28"
-                android:visibility="gone" />
+                android:textSize="@dimen/sp_13"
+                android:paddingLeft="@dimen/dp_7"
+                android:paddingRight="@dimen/dp_7"
+                android:visibility="gone"
+                app:font="maven"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <include layout="@layout/layout_fresh_checkout_bar"/>
+
+            <include layout="@layout/layout_menus_customize_add_to_cart"/>
         </LinearLayout>
 
+        <include layout="@layout/layout_fresh_pay_action_container"/>
 
-        <!-- Sort layout-->
-        <include layout="@layout/layout_fresh_activity_sort" />
 
         <include layout="@layout/layout_home_activity_fab_test" />
-
-
 
 
     </android.support.design.widget.CoordinatorLayout>

@@ -51,10 +51,11 @@ public class TopBar implements GAAction, GACategory {
     public RelativeLayout rlFilter;
 
     public RelativeLayout llSearchCartContainer;
-    public TextView textViewReset, tvCartAmount, tvNameCap;
-    public LinearLayout llCartAmount, llCartContainer, llSearchCart;
+    public TextView textViewReset, tvNameCap;
+    public LinearLayout llSearchCart;
     private Animation searchBarAnimation;
     private Animation searchBarCloseAnimation;
+    public ImageView ivFreshSort;
 
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
@@ -70,10 +71,6 @@ public class TopBar implements GAAction, GACategory {
         title.setTypeface(Fonts.avenirNext(activity));
 
         buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
-        llCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llCartContainer);
-        llCartAmount = (LinearLayout) drawerLayout.findViewById(R.id.llCartAmount);
-        tvCartAmount = (TextView) drawerLayout.findViewById(R.id.tvCartAmount);
-        tvCartAmount.setTypeface(Fonts.mavenRegular(activity));
         llSearchCartContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
         llSearchCart = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCart);
 
@@ -101,6 +98,7 @@ public class TopBar implements GAAction, GACategory {
         ivFilterApplied.setVisibility(View.GONE);
         ivAddReview = (ImageView) drawerLayout.findViewById(R.id.ivAddReview);
         tvNameCap = (TextView) drawerLayout.findViewById(R.id.tvNameCap);
+        ivFreshSort = (ImageView) drawerLayout.findViewById(R.id.ivFreshSort);
         //setSearchVisibility(View.GONE);
 
         topRl.setOnClickListener(topBarOnClickListener);
@@ -110,6 +108,7 @@ public class TopBar implements GAAction, GACategory {
         rlFilter.setOnClickListener(topBarOnClickListener);
         imageViewBack.setOnClickListener(topBarOnClickListener);
         ivAddReview.setOnClickListener(topBarOnClickListener);
+        ivFreshSort.setOnClickListener(topBarOnClickListener);
 
         buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -195,20 +194,8 @@ public class TopBar implements GAAction, GACategory {
         return ivSearch;
     }
 
-    public LinearLayout getLlCartAmount() {
-        return llCartAmount;
-    }
-
-    public TextView getTvCartAmount() {
-        return tvCartAmount;
-    }
-
     public RelativeLayout getLlSearchCartContainer() {
         return llSearchCartContainer;
-    }
-
-    public LinearLayout getLlCartContainer() {
-        return llCartContainer;
     }
 
     public View.OnClickListener topBarOnClickListener = new View.OnClickListener() {
@@ -261,6 +248,12 @@ public class TopBar implements GAAction, GACategory {
                             ((FreshActivity) activity).openFeedAddPostFragment(null);
                         } else
                             ((FreshActivity) activity).openRestaurantAddReviewFragment(true);
+                    }
+                    break;
+
+                case R.id.ivFreshSort:
+                    if(activity instanceof FreshActivity){
+                        ((FreshActivity)activity).openFreshSortDialog();
                     }
                     break;
 

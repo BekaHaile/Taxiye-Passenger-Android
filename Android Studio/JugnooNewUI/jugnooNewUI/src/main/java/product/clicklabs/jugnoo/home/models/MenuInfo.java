@@ -27,6 +27,17 @@ public class MenuInfo {
     @Expose
     private String iconNormal;
 
+    public boolean getShowInAccount() {
+        return showInAccount==1;
+    }
+
+    public void setShowInAccount(int showInAccount) {
+        this.showInAccount = showInAccount;
+    }
+
+    @SerializedName("show_in_account")
+    private int showInAccount;
+
     public MenuInfo(String tag, String name, int isNew, String icon, String iconHighlighted, String iconNormal){
         this.tag = tag;
         this.name = name;

@@ -40,6 +40,11 @@ import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 public class FABViewTest implements GACategory, GAAction {
     Activity activity;
     public RelativeLayout relativeLayoutFABTest;
+
+    public FloatingActionMenu getMenuLabelsRightTest(FloatingActionMenu menuLabelsRightTest) {
+       return menuLabelsRightTest;
+    }
+
     public FloatingActionMenu menuLabelsRightTest;
     public FloatingActionButton fabMealsTest;
     public FloatingActionButton fabFreshTest;
@@ -122,6 +127,7 @@ public class FABViewTest implements GACategory, GAAction {
                         setRlGenieHelpVisibility();
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
                         GAUtils.event(JUGNOO, getOffering()+HOME, GENIE+OPENED);
+                        GAUtils.trackScreenView(GENIE_OPEN_SCREEN);
                     } else {
                         isOpened = false;
                         if(activity instanceof HomeActivity){
@@ -158,6 +164,7 @@ public class FABViewTest implements GACategory, GAAction {
 
 
     }
+
 
     private void createCustomAnimation() {
         AnimatorSet set = new AnimatorSet();
@@ -415,7 +422,13 @@ public class FABViewTest implements GACategory, GAAction {
     };
 
     public void setRelativeLayoutFABTestVisibility(int visibility){
-        relativeLayoutFABTest.setVisibility(visibility);
+        if(visibility == View.VISIBLE
+                && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1
+                && Data.userData.getIntegratedJugnooEnabled() == 1){
+            relativeLayoutFABTest.setVisibility(View.VISIBLE);
+        } else {
+            relativeLayoutFABTest.setVisibility(View.GONE);
+        }
         if(visibility != View.VISIBLE){
 //            hideJeanieHelpInSession();
         }

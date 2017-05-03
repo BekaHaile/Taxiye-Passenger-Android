@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -49,14 +51,17 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiGoogleDirectionWaypoints;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.GoogleDirectionWayPointsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -87,7 +92,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 	private LinearLayout bCallDriver;
 
 	private Marker markerDriver;
-	private Polyline polylinePath;
+	private Polyline polylinePath1, polylinePath2;
 	private final int MAP_ANIMATE_DURATION = 300;
 	private boolean mapTouchedOnce, zoomSetManually;
 	private float zoomInitial;
@@ -138,14 +143,6 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 					googleMap.setMyLocationEnabled(false);
 
-					if(MapUtils.distance(pickupLatLng, deliveryLatLng) > 10) {
-						LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
-						llbBuilder.include(pickupLatLng).include(deliveryLatLng);
-						googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (120f * ASSL.minRatio())));
-					} else {
-						googleMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLatLng));
-					}
-
 					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 40f, 40f, 0.5f, 0.5f, 0));
 					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 71f, 83f, 0.15f, 1.0f, 0));
 
@@ -191,6 +188,19 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 							}
 						}
 					};
+
+					try {
+						if(MapUtils.distance(pickupLatLng, deliveryLatLng) > 10) {
+							LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
+							llbBuilder.include(pickupLatLng).include(deliveryLatLng);
+							googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (120f * ASSL.minRatio())));
+						} else {
+							googleMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLatLng));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						googleMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLatLng));
+					}
 				}
 			}
 		});
@@ -240,8 +250,8 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 					points++;
 				}
 
-				if(polylinePath != null) {
-					for (LatLng latLng : polylinePath.getPoints()) {
+				if(polylinePath2 != null) {
+					for (LatLng latLng : polylinePath2.getPoints()) {
 						llbBuilder.include(latLng);
 						points++;
 					}
@@ -274,9 +284,13 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 				public void run() {
 					try {
 						final int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
-						if(PushFlags.STATUS_CHANGED.getOrdinal() == flag
+						final int orderId = intent.getIntExtra(Constants.KEY_ORDER_ID, -1);
+						final int closeTracking = intent.getIntExtra(Constants.KEY_CLOSE_TRACKING, 0);
+						if(orderId == TrackOrderActivity.this.orderId
+								&& closeTracking == 1
+								&& (PushFlags.STATUS_CHANGED.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS.getOrdinal() == flag
-								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
+								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag)) {
 							finish();
 							new Handler().postDelayed(new Runnable() {
 								@Override
@@ -355,6 +369,7 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 							final String trackingInfo = jObj.optString(Constants.KEY_TRACKING_INFO, "");
 							final int status = jObj.optInt(Constants.KEY_STATUS, EngagementStatus.STARTED.getOrdinal());
 							final String message = jObj.optString(Constants.KEY_MESSAGE, getString(R.string.some_error_occured_try_again));
+							final LatLng latLngDriver = new LatLng(latitude, longitude);
 
 							runOnUiThread(new Runnable() {
 								@Override
@@ -363,17 +378,17 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 										if(status == EngagementStatus.STARTED.getOrdinal()) {
 											latLngsDriverAnim.clear();
 											if (markerDriver == null) {
-												markerDriver = googleMap.addMarker(getMarkerOptionsForResource(new LatLng(latitude, longitude),
+												markerDriver = googleMap.addMarker(getMarkerOptionsForResource(latLngDriver,
 														R.drawable.ic_bike_track_order_marker, 38f, 94f, 0.5f, 0.5f, 2));
 												markerDriver.setRotation((float) bearing);
 											} else {
 												MarkerAnimation.animateMarkerToICS("-1", markerDriver,
-														new LatLng(latitude, longitude), new LatLngInterpolator.Spherical(),
+														latLngDriver, new LatLngInterpolator.Spherical(),
 														callbackAnim);
 											}
 											if (!zoomedFirstTime) {
 												LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
-												llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(new LatLng(latitude, longitude));
+												llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(latLngDriver);
 												googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 												handler.postDelayed(new Runnable() {
 													@Override
@@ -408,20 +423,82 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 								}
 							});
 
-							response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
-									deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
-							final String result = new String(((TypedByteArray) response.getBody()).getBytes());
-							final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
+							ArrayList<LatLng> latLngsWayPoints = new ArrayList<>();
+							latLngsWayPoints.add(pickupLatLng);
+							latLngsWayPoints.add(latLngDriver);
+							latLngsWayPoints.add(deliveryLatLng);
+							Pair<List<LatLng>, String> pair = apiGoogleDirectionWaypoints.setData(latLngsWayPoints, false).syncHit();
+							final List<LatLng> list = pair.first;
+							final String result = pair.second;
+//							response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
+//									deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
+//							final String result = new String(((TypedByteArray) response.getBody()).getBytes());
+//							final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
 							runOnUiThread(new Runnable() {
 
 								@Override
 								public void run() {
 									try {
+										if (polylinePath1 != null) {
+											polylinePath1.remove();
+										}
+										PolylineOptions polylineOptions1 = new PolylineOptions();
+										polylineOptions1.width(ASSL.Xscale() * 7f)
+												.color(ContextCompat.getColor(TrackOrderActivity.this,
+														R.color.theme_color)).geodesic(true);
+
+										if (polylinePath2 != null) {
+											polylinePath2.remove();
+										}
+										PolylineOptions polylineOptions2 = new PolylineOptions();
+										polylineOptions2.width(ASSL.Xscale() * 7f)
+												.color(ContextCompat.getColor(TrackOrderActivity.this,
+														R.color.text_color_30alpha)).geodesic(true);
+
+										LatLngBounds.Builder builder = new LatLngBounds.Builder();
+										builder.include(deliveryLatLng).include(latLngDriver);
+										for(LatLng latLng : latLngsDriverAnim){builder.include(latLng);}
+
+										int positionCentre = 0;
+										double distance = Double.MAX_VALUE;
+										for(int i=0; i<list.size(); i++){
+											double distI = MapUtils.distance(latLngDriver, list.get(i));
+											if(distI < distance){
+												distance = distI;
+												positionCentre = i;
+											}
+										}
+										polylineOptions1.add(pickupLatLng);
+										for(int j=0; j<positionCentre; j++){
+											polylineOptions1.add(list.get(j));
+										}
+										polylineOptions1.add(latLngDriver);
+										polylineOptions2.add(latLngDriver);
+										for (int k = positionCentre+1; k < list.size(); k++) {
+											polylineOptions2.add(list.get(k));
+											builder.include(list.get(k));
+										}
+										polylineOptions2.add(deliveryLatLng);
+										if(showDeliveryRoute == 1 && list.size() > 0) {
+											polylinePath1 = googleMap.addPolyline(polylineOptions1);
+											polylinePath2 = googleMap.addPolyline(polylineOptions2);
+										}
+										if (zoomedFirstTime && !zoomSetManually) {
+											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(builder), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+
+									try {
 										if (TextUtils.isEmpty(eta)) {
-											JSONObject jObj1 = new JSONObject(result);
-											double durationInSec = jObj1.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
-											long mins = (long) (durationInSec / 60d);
-											setEtaText(mins);
+											GoogleDirectionWayPointsResponse googleDirectionWayPointsResponse = gson.fromJson(result, GoogleDirectionWayPointsResponse.class);
+											Log.i("googleDirectionWayPointsResponse","="+googleDirectionWayPointsResponse);
+
+//											JSONObject jObj1 = new JSONObject(result);
+//											double durationInSec = jObj1.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
+//											long mins = (long) (durationInSec / 60d);
+											setEtaText(getEtaFromResponse(latLngDriver, googleDirectionWayPointsResponse));
 										} else {
 											long etaLong = 10;
 											try {
@@ -434,34 +511,6 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 									} catch (Exception e) {
 										e.printStackTrace();
 										tvETA.setVisibility(View.GONE);
-									}
-									try {
-										if (polylinePath != null) {
-											polylinePath.remove();
-										}
-										PolylineOptions polylineOptions = new PolylineOptions();
-										polylineOptions.width(ASSL.Xscale() * 7f)
-												.color(ContextCompat.getColor(TrackOrderActivity.this,
-														R.color.google_path_polyline_color)).geodesic(true);
-										LatLngBounds.Builder builder = new LatLngBounds.Builder();
-										builder.include(deliveryLatLng).include(new LatLng(latitude, longitude));
-
-										for(LatLng latLng : latLngsDriverAnim){
-											builder.include(latLng);
-										}
-
-										for (int z = 0; z < list.size(); z++) {
-											polylineOptions.add(list.get(z));
-											builder.include(list.get(z));
-										}
-										if(showDeliveryRoute == 1 && list.size() > 0) {
-											polylinePath = googleMap.addPolyline(polylineOptions);
-										}
-										if (zoomedFirstTime && !zoomSetManually) {
-											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(builder), (int) (120f * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
-										}
-									} catch (Exception e) {
-										e.printStackTrace();
 									}
 									zoomedFirstTime = true;
 								}
@@ -527,6 +576,30 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 
 	private LatLngBounds getMapLatLngBounds(LatLngBounds.Builder builder){
 		return MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 140);
+	}
+
+
+	private ApiGoogleDirectionWaypoints apiGoogleDirectionWaypoints = new ApiGoogleDirectionWaypoints();
+	private Gson gson = new Gson();
+
+	private long getEtaFromResponse(LatLng latLng, GoogleDirectionWayPointsResponse pointsResponse){
+		long eta = 0L;
+		try {
+			eta = (long) pointsResponse.getRoutes().get(0).getLegs().get(0).getDuration().getValue();
+			double distance = Double.MAX_VALUE;
+			for(GoogleDirectionWayPointsResponse.Step step : pointsResponse.getRoutes().get(0).getLegs().get(0).getSteps()){
+				double distI = MapUtils.distance(latLng, step.getStartLocation().getLatLng());
+				if(distI < distance){
+					eta = eta - (long)step.getDuration().getValue();
+					distance = distI;
+				} else {
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return eta / 60L;
 	}
 
 }

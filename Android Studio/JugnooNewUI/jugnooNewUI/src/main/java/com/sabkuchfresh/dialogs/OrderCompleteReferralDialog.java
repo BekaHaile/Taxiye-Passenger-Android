@@ -40,6 +40,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+import static com.sabkuchfresh.analytics.GAAction.ORDER_PLACED;
+
 
 public class OrderCompleteReferralDialog implements GAAction, GACategory {
 

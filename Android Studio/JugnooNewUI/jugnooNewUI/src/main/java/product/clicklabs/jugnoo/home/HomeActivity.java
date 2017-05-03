@@ -1025,7 +1025,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutOfferConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
+                if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() <= 0){
+                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
+                }
                 slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
                         Data.userData.getCoupons(ProductType.AUTO));
             }
@@ -2030,6 +2032,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                try {
+                    // to check if user has selected some promo coupon from promotions screen
+                    slidingBottomPanel.getRequestRideOptionsFragment().selectAutoSelectedCouponAtRequestRide();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }, 500);
 
@@ -2900,6 +2908,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             setGoogleMapPadding(0f);
                             showPoolInforBar();
                         }
+
 
                         if(confirmedScreenOpened){
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -4307,6 +4316,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
+                // to check if selected destination saved address is deleted or not
+                if(passengerScreenMode == PassengerScreenMode.P_INITIAL && Data.autoData.getDropLatLng() != null){
+                    SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
+                            Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                    if(searchResult == null){
+                        imageViewDropCross.performClick();
+                    }
+
+                }
             }
 
 
@@ -4593,6 +4613,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(Gravity.START)){
+            drawerLayout.closeDrawer(Gravity.START);
+            return;
+        }
+        if(fabViewTest.menuLabelsRightTest.isOpened()){
+            fabViewTest.menuLabelsRightTest.close(true);
+            return;
+        }
         performBackpressed();
     }
 

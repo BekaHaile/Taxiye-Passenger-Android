@@ -28,7 +28,6 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.promotion.adapters.PromotionsFragmentAdapter;
-import product.clicklabs.jugnoo.promotion.fragments.PromotionsFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralLeaderboardFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -142,13 +141,7 @@ public class ShareActivity extends BaseFragmentActivity {
 
 			@Override
 			public void onPageSelected(int position) {
-				if (position == 0) {
-				} else if (position == 1) {
-				} else if (position == 2) {
-				} else if (position == 3) {
-				}
 				Utils.hideSoftKeyboard(ShareActivity.this, imageViewBack);
-				clearError();
 			}
 
 			@Override
@@ -276,14 +269,6 @@ public class ShareActivity extends BaseFragmentActivity {
 		}
 	}
 
-	public void clearError(){
-		try {
-			Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
-			((PromotionsFragment)page).clearErrorForEditText();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public void retryLeaderboardDialog(String message){
 		DialogPopup.alertPopupTwoButtonsWithListeners(this, "", message,

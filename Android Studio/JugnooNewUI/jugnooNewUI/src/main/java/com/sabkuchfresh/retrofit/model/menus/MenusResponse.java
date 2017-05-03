@@ -249,6 +249,9 @@ public class MenusResponse implements Serializable {
 
 		@SerializedName("review_count")
 		private long reviewCount;
+		@SerializedName("delivery_time_text")
+		@Expose
+		private String deliveryTimeText;
 
 		public Double getRating() {
 			return rating==null?null:Math.round(rating * 10.0) / 10.0;
@@ -593,6 +596,14 @@ public class MenusResponse implements Serializable {
 
 		public void setShowFreeDeliveryText(Integer showFreeDeliveryText) {
 			this.showFreeDeliveryText = showFreeDeliveryText;
+		}
+
+		public String getDeliveryTimeText() {
+			return deliveryTimeText;
+		}
+
+		public void setDeliveryTimeText(String deliveryTimeText) {
+			this.deliveryTimeText = deliveryTimeText;
 		}
 	}
 

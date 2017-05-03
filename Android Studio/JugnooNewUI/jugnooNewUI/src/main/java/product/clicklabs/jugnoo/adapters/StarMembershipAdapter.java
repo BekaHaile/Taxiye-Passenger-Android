@@ -46,15 +46,15 @@ public class StarMembershipAdapter extends BaseAdapter {
 
 			if(benefits.get(position).getProductType() == ProductType.AUTO.getOrdinal()){
 				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_theme);
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_autos);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_rides);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.FRESH.getOrdinal()){
 				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_green_fresh_fab);
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_fresh);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fresh);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.MEALS.getOrdinal()){
 				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_pink_meals_fab);
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_meals);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_meals);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.GROCERY.getOrdinal()){
 				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_purple_menu_fab);
@@ -62,7 +62,7 @@ public class StarMembershipAdapter extends BaseAdapter {
 			}
 			else if(benefits.get(position).getProductType() == ProductType.MENUS.getOrdinal()){
 				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_purple_menu_fab);
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fab_menus);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_menus);
 			}
 
 		}

@@ -44,7 +44,7 @@ public abstract class ImageSelectFragment extends Fragment {
     protected EditReviewImagesAdapter editReviewImagesAdapter;
     protected RecyclerView displayImagesRecycler;
     protected ScrollView scrollView;
-    protected ArrayList<Object> imageSelected;
+    public ArrayList<Object> imageSelected;
     protected FreshActivity activity;
     protected int maxNoImages;
 

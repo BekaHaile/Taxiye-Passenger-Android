@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.fragments.FreshHomeFragment;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.squareup.picasso.Picasso;
 
@@ -72,7 +73,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
     public class ViewHolderCategory extends RecyclerView.ViewHolder {
         public LinearLayout llRoot;
         public ImageView ivSuperCategoryImage;
-        public TextView tvSuperCategoryName;
+        public TextView tvSuperCategoryName, tvBanner;
         public View viewBG;
 
         public ViewHolderCategory(View view, Context context) {
@@ -81,6 +82,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
             ivSuperCategoryImage = (ImageView) view.findViewById(R.id.ivSuperCategoryImage);
             tvSuperCategoryName = (TextView) view.findViewById(R.id.tvSuperCategoryName);
             tvSuperCategoryName.setTypeface(Fonts.mavenMedium(context));
+            tvBanner = (TextView) view.findViewById(R.id.tvBanner);
             viewBG = (View) view.findViewById(R.id.viewBG);
         }
     }
@@ -154,6 +156,19 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
             SuperCategoriesData.SuperCategory superCategory = superCategories.get(position);
             ViewHolderCategory holder = ((ViewHolderCategory) mholder);
             holder.tvSuperCategoryName.setText(superCategory.getSuperCategoryName());
+            if(superCategory.getSuperCategoryBanner() != null
+                    && !TextUtils.isEmpty(superCategory.getSuperCategoryBanner().getBannerText())){
+                holder.tvBanner.setVisibility(View.VISIBLE);
+                holder.tvBanner.setText(superCategory.getSuperCategoryBanner().getBannerText());
+                if(!TextUtils.isEmpty(superCategory.getSuperCategoryBanner().getBannerColor())) {
+                    holder.tvBanner.setBackgroundColor(((FreshActivity) context).getParsedColor(superCategory.getSuperCategoryBanner().getBannerColor(), R.color.theme_color));
+                }
+                if(!TextUtils.isEmpty(superCategory.getSuperCategoryBanner().getBannerTextColor())){
+                    holder.tvBanner.setTextColor(((FreshActivity) context).getParsedColor(superCategory.getSuperCategoryBanner().getBannerTextColor(), R.color.white));
+                }
+            } else{
+                holder.tvBanner.setVisibility(View.GONE);
+            }
             holder.llRoot.setTag(position);
             holder.llRoot.setOnClickListener(new View.OnClickListener() {
                 @Override

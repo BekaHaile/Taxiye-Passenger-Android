@@ -6,128 +6,25 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/rlTopContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/view_account"
-        android:background="@drawable/background_menu_bar_theme"
-        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvJugnooStar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/jugnoo_star"
-            android:textColor="@color/white"
-            android:layout_marginTop="@dimen/px_28"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/text_size_22"/>
-
-        <RelativeLayout
-            android:layout_width="187px"
-            android:layout_height="187px"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/px_20"
-            android:tag="mwar">
-
-            <ImageView
-                android:id="@+id/imageViewProfileImageBack"
-                android:layout_width="187px"
-                android:layout_height="187px"
-                android:src="@drawable/ic_profile_img_placeholder"
-                android:tag="mwar"/>
-
-            <ImageView
-                android:id="@+id/imageViewProfile"
-                android:layout_width="160px"
-                android:layout_height="160px"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/px_10"
-                android:tag="mwar"/>
-
-            <View
-                android:id="@+id/viewStarIcon"
-                android:layout_width="@dimen/px_64"
-                android:layout_height="@dimen/px_64"
-                android:background="@drawable/star"
-                android:layout_marginBottom="5px"
-                android:tag="mwar"
-                android:visibility="gone"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"/>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="20px"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textViewUserName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="GaganDeep"
-                android:visibility="visible"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_34"/>
-
-            <TextView
-                android:id="@+id/textViewViewPhone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10px"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/px_20"
-                android:singleLine="true"
-                android:text="View Account"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_30"/>
-        </LinearLayout>
-    </LinearLayout>
-
-        <ImageView
-            android:layout_width="19px"
-            android:layout_height="33px"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30px"
-            android:layout_centerVertical="true"
-            android:src="@drawable/back_arrow_white"
-            android:tag="mwar"/>
-
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/extraSpace"
-        android:layout_width="match_parent"
-        android:layout_height="30px"
-        android:layout_below="@+id/rlTopContainer"
-        android:background="@color/white"/>
 
     <ImageView
+        android:id="@+id/stroke"
         android:layout_width="match_parent"
         android:layout_height="2px"
+        android:layout_marginBottom="30px"
         android:layout_below="@+id/rlTopContainer"
         android:src="@color/stroke_color_light"/>
-
 
 
     <LinearLayout
         android:id="@+id/linearLayoutCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/extraSpace"
+        android:layout_below="@+id/stroke"
         android:gravity="center_vertical"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <ImageView
@@ -167,6 +64,7 @@
         android:id="@+id/linearLayoutSubCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/px_30"
         android:layout_below="@+id/linearLayoutCategories"
         android:orientation="vertical"
         android:visibility="visible">
@@ -179,9 +77,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
+            <ImageView
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_auto_selector"
                 android:tag="mwar"
                 />
@@ -192,6 +94,7 @@
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
+
                 android:paddingLeft="@dimen/menu_text_margin_offerings"
                 android:text="@string/rides"
                 android:textColor="@color/text_color_white_theme_selector"
@@ -205,11 +108,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
+            <ImageView
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_meals_selector"
                 android:tag="mwar"/>
 
@@ -228,15 +134,18 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutSubFresh"
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
-
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
+            <ImageView
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_fresh_selector"
                 android:tag="mwar"/>
 
@@ -259,11 +168,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
+            <ImageView
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_grocery_selector"
                 android:tag="mwar"/>
 
@@ -287,15 +199,16 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
+            <ImageView
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_menus_selector"
-                android:tag="mwar"
-                android:layout_gravity="center_vertical"
-                />
+                android:tag="mwar" />
 
             <TextView
                 android:id="@+id/textViewMenus"
@@ -316,11 +229,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
+            <ImageView
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/ic_menu_category_pay_selector"
                 android:tag="mwar"
                 android:layout_gravity="center_vertical"
@@ -345,11 +261,15 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
             <ImageView
-                android:layout_width="53px"
-                android:layout_height="53px"
-                android:layout_marginLeft="110px"
+                android:layout_width="10px"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_white_theme_selector"/>
+            <ImageView
+                android:layout_width="56px"
+                android:layout_height="56px"
+                android:layout_marginLeft="30px"
+                android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_menu_category_feed_selector"
                 android:tag="mwar"/>
 
@@ -366,6 +286,17 @@
 
         </LinearLayout>
 
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/px_30"
+            android:layout_marginRight="@dimen/px_30"
+            android:layout_marginTop="@dimen/px_30"
+            android:background="@color/grey_light_alpha"
+            android:layout_height="2px"/>
     </LinearLayout>
+
+
+
 
 </RelativeLayout>

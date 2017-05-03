@@ -3,10 +3,7 @@ package com.sabkuchfresh.feed.ui.adapters;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -21,13 +18,10 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -79,6 +73,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int ITEM_ADD_POST = 100;
     private static final int ITEM_FEED = 101;
     public static final int ITEM_FOOTER_BLANK = 122;
+    public static final int ITEM_PROGRESS_BAR = 123;
     private static Typeface FONT_STAR;
 
 
@@ -119,6 +114,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                  v.setLayoutParams(layoutParams);
                 v.setBackgroundColor(ContextCompat.getColor(activity,R.color.feed_grey_black));
                  return new ViewBlankHolder(v);
+
+            case ITEM_PROGRESS_BAR:
+
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progress_bar_feed, parent, false);
+
+
+                return new ProgressBarViewHolder(v);
             default:
                 throw new IllegalArgumentException();
 
@@ -316,7 +318,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     String firstLetter =  feedDetail.getOwnerName().toUpperCase().substring(0,1);
                     TextDrawable drawable = TextDrawable.builder()
                             .beginConfig().bold().endConfig()
-                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getColor()));
+                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getColor(), null));
                     feedDetail.setOwnerImageDrawable(drawable);
                 }
 
@@ -450,9 +452,18 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.tabDots.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);
                 holder.shadowTab.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);
                 holder.lineBelowImagesPager.setVisibility(View.INVISIBLE);
-                holder.shadowTab.setVisibility(View.VISIBLE);
                 vpParams.bottomMargin=0;
 
+                if(reviewImages.size()==1 && reviewImages.get(0).getHeight()!=null && reviewImages.get(0).getHeight()>0 && Utils.pxToDp(activity,reviewImages.get(0).getHeight())>110){
+
+                    //if greater than 110dp then wrap content till ceiling of 300dp
+                    vpParams.height=reviewImages.get(0).getHeight();
+                    if(Utils.pxToDp(activity,vpParams.height)>300)
+                        vpParams.height = FeedUtils.dpToPx(300);
+
+                } else{
+                    vpParams.height=FeedUtils.dpToPx(110);
+                }
 
 
 
@@ -505,7 +516,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     String firstLetter =  feedDetail.getUserName().toUpperCase().substring(0,1);
                     TextDrawable drawable = TextDrawable.builder()
                             .beginConfig().bold().endConfig()
-                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getUserImageColor()));
+                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getUserImageColor(), null));
                     feedDetail.setUserImageDrawable(drawable);
                 }
 
@@ -554,8 +565,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (feedDetail.isLikeAPIInProgress()) {
                 feedDetail.setIsLikeAPIInProgress(false);
                 if (isLiked) {
-                    LikeButton likeButton =   ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position)).likeButtonAnimate;
-                    likeButton.onClick(likeButton);
+                    ViewHolderReviewImage viewHolderReviewImage = ((ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position));
+                    if(viewHolderReviewImage!=null) {
+                        LikeButton likeButton = viewHolderReviewImage.likeButtonAnimate;
+                        likeButton.onClick(likeButton);
+                    }
                     feedDetail.setLikeCount(feedDetail.getLikeCount() + 1);
                 }
                 else if (feedDetail.getLikeCount() > 0)
@@ -854,6 +868,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             tabDots.setupWithViewPager(vpReviewImages, true);
             tvComment.clearAnimation();
             tvComment.animate().scaleX(1.0f).scaleY(1.0f).start();
+            viewLike.clearAnimation();
+            viewLike.animate().scaleX(1.0f).scaleY(1.0f).start();
             viewActionComment.setOnTouchListener(getCommentTouchListener());
             viewActionLike.setOnTouchListener(getLikeTouchListener());
 
@@ -959,6 +975,16 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    private static class ProgressBarViewHolder extends RecyclerView.ViewHolder {
+
+//        public RelativeLayout relative;
+
+        public ProgressBarViewHolder(View itemView) {
+            super(itemView);
+//            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
 
@@ -971,6 +997,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return ITEM_ADD_POST;
         else if (adapterList.get(position) instanceof Integer && ((Integer) adapterList.get(position)) == ITEM_FOOTER_BLANK) {
             return ITEM_FOOTER_BLANK;
+        } else if (adapterList.get(position) instanceof ProgressBarItem) {
+            return ITEM_PROGRESS_BAR;
         }
 
 
@@ -1054,5 +1082,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public String getImageUrl() {
             return imageUrl;
         }
+    }
+
+    public static class ProgressBarItem{
+
     }
 }

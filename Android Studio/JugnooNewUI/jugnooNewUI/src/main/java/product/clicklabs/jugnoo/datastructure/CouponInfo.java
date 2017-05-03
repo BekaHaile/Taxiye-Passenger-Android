@@ -3,7 +3,9 @@ package product.clicklabs.jugnoo.datastructure;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CouponInfo extends PromoCoupon{
+import java.io.Serializable;
+
+public class CouponInfo extends PromoCoupon implements Serializable{
 	@SerializedName("account_id")
 	@Expose
 	public Integer id;
@@ -56,6 +58,11 @@ public class CouponInfo extends PromoCoupon{
 	@Expose
 	private String invalidMessage;
 
+	@SerializedName("coupon_id")
+	@Expose
+	private Integer couponId;
+	private boolean checkWithCouponId = false;
+
 	public CouponInfo(int id, String title, String subtitle, String description, String expiryDate){
 		this.id = id;
 		this.title = title;
@@ -79,10 +86,18 @@ public class CouponInfo extends PromoCoupon{
 		return title+" "+subtitle;
 	}
 
+	public String getTitleOnly() {
+		return title;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		try{
-			return matchPromoCoupon((PromoCoupon) o);
+			if(isCheckWithCouponId()){
+				return o instanceof CouponInfo && ((CouponInfo)o).getCouponId().equals(getCouponId());
+			} else {
+				return matchPromoCoupon((PromoCoupon) o);
+			}
 		} catch(Exception e){
 			return false;
 		}
@@ -213,5 +228,29 @@ public class CouponInfo extends PromoCoupon{
 
 	public void setInvalidMessage(String invalidMessage) {
 		this.invalidMessage = invalidMessage;
+	}
+
+	@Override
+	public String getExpiryDate() {
+		return expiryDate;
+	}
+
+	public Integer getCouponId() {
+		if(couponId == null){
+			couponId = Integer.valueOf(id);
+		}
+		return couponId;
+	}
+
+	public void setCouponId(Integer couponId) {
+		this.couponId = couponId;
+	}
+
+	public boolean isCheckWithCouponId() {
+		return checkWithCouponId;
+	}
+
+	public void setCheckWithCouponId(boolean checkWithCouponId) {
+		this.checkWithCouponId = checkWithCouponId;
 	}
 }

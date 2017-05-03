@@ -615,6 +615,7 @@ public interface Constants {
     String KEY_FEEDBACK_ID = "feedback_id";
     String KEY_ACTION = "action";
     String KEY_POSITION = "position";
+    String KEY_SIGNUP_ONBOARDING = "signup_onboarding";
 
 
 
@@ -689,4 +690,12 @@ public interface Constants {
     String SP_POST_ID_TO_OPEN = "sp_post_id_to_open";
     String KEY_DRIVER_PHONE_NO = "driver_phone_no";
     String KEY_UPI_HANDLE = "upi_handle";
+    String PAGE_COUNT = "pageCount";
+    String COUNT_RECORDS = "count_records";
+    String KEY_CLOSE_TRACKING = "close_tracking";
+    String KEY_OFFERING_NAME = "offering_name";
+    String KEY_PROMO_COUPON = "promo_coupon";
+    String SP_USE_COUPON_ = "sp_use_coupon_";
+    String SP_USE_COUPON_IS_COUPON_ = "sp_use_coupon_is_coupon_";
+    String KEY_ANIMATE_ASK_LOCAL_POST_TEXT = "key_animate_ask_local_post_text";
 }

@@ -1,13 +1,16 @@
 package product.clicklabs.jugnoo.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,24 +23,23 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
-import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
-import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
 
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
-import io.paperdb.Paper;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.StarBaseActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -53,6 +55,7 @@ import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -63,9 +66,11 @@ import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
+import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import android.os.Handler;
 
 
 /**
@@ -95,6 +100,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private ImageView ivOtherModesToPay, ivUPI;
     private TextView tvOtherModesToPay, tvUPI;
     private boolean isRazorUPI;
+    private PaySlider paySlider;
+    private ArrayList<SubscriptionData.Subscription> subscriptionsActivityList;
+
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
         StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
@@ -109,7 +117,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_star_subscription_checkout, container, false);
-
+        ButterKnife.bind(this,rootView);
         if(getActivity() instanceof JugnooStarActivity) {
             activity = (JugnooStarActivity) getActivity();
         } else if(getActivity() instanceof JugnooStarSubscribedActivity){
@@ -182,11 +190,71 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 rlStarUpgrade.setVisibility(View.GONE);
                 setPlan();
             } else if(getActivity() instanceof JugnooStarSubscribedActivity){
-                llStarPurchase.setVisibility(View.GONE);
-                rlStarUpgrade.setVisibility(View.VISIBLE);
-                tvPaymentPlan.setText(subscription.getDescription());
-                tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                        Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
+
+                FetchSubscriptionSavingsResponse subscriptionSavingsResponse = ((JugnooStarSubscribedActivity)getActivity()).getStarSubData();
+
+                subscriptionsActivityList = ((JugnooStarSubscribedActivity)getActivity()).getListToShowInCheckout();
+                boolean isUprgradeAndRenewList = false ;
+
+                if(subscriptionsActivityList.size()==1){
+                    llStarPurchase.setVisibility(View.GONE);
+                    rlStarUpgrade.setVisibility(View.VISIBLE);
+                    subscription=subscriptionsActivityList.get(0);
+                    purchaseType =subscriptionsActivityList.get(0).getStarPurchaseType().getOrdinal();
+                    tvPaymentPlan.setText(subscription.getDescription());
+                    tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
+
+                } else{
+
+                    llStarPurchase.setVisibility(View.VISIBLE);
+                    rlStarUpgrade.setVisibility(View.GONE);
+                    if(subscriptionsActivityList.size()>1 && subscriptionsActivityList.get(0).getStarPurchaseType()!=null && subscriptionsActivityList.get(0).getStarPurchaseType()!=StarPurchaseType.PURCHARE) {
+                        Collections.swap(subscriptionsActivityList, 0, 1);
+                        isUprgradeAndRenewList=true;
+                    }
+                    for(int i=0; i<subscriptionsActivityList.size(); i++) {
+                        if (i == 0) {
+                            rlPlan1.setVisibility(View.VISIBLE);
+                            if(subscriptionsActivityList.get(i).getAmountText()!=null)
+                                tvAmount1.setText(subscriptionsActivityList.get(i).getAmountText());
+                            else if(subscription.getAmount()!=null){
+                                tvAmount1.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
+
+                            }
+
+                            tvPeriod1.setText(String.valueOf(subscriptionsActivityList.get(i).getDescription()));
+                            if(subscriptionsActivityList.get(i).getDurationText()!=null){
+                                tvDuration1.setText("/"+subscriptionsActivityList.get(i).getDurationText());
+                            }
+
+                        } else if (i == 1) {
+                            rlPlan2.setVisibility(View.VISIBLE);
+                            if(subscriptionsActivityList.get(i).getAmountText()!=null)
+                                tvAmount2.setText(subscriptionsActivityList.get(i).getAmountText());
+                            else if(subscription.getAmount()!=null){
+                                tvAmount2.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
+
+                            }
+                            tvPeriod2.setText(String.valueOf(subscriptionsActivityList.get(i).getDescription()));
+                            if(subscriptionsActivityList.get(i).getDurationText()!=null){
+                                tvDuration2.setText("/"+subscriptionsActivityList.get(i).getDurationText());
+                            }
+
+                        }
+                    }
+
+                    if(isUprgradeAndRenewList){
+                        selectedPlanUpgradeRenew(rlPlan1,ivRadio1,0);
+                    }else{
+                        selectedPlanUpgradeRenew(rlPlan2,ivRadio2,1);
+
+                    }
+                }
+
+
+
+
+
             }
 
             linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
@@ -202,6 +270,16 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        paySlider = new PaySlider(rootView.findViewById(R.id.llPayViewContainer)) {
+               @Override
+               public void onPayClick() {
+                  bPlaceOrder.performClick();
+               }
+           };
+
+
         return rootView;
     }
 
@@ -244,6 +322,17 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         subscription = Data.userData.getSubscriptionData().getSubscriptions().get(subId);
     }
 
+    private void selectedPlanUpgradeRenew(RelativeLayout rlPlan, ImageView ivRadio, int subId){
+        ivRadio1.setImageResource(R.drawable.ic_radio_button_normal);
+        ivRadio2.setImageResource(R.drawable.ic_radio_button_normal);
+
+        ivRadio.setImageResource(R.drawable.ic_radio_button_selected);
+        subscription = subscriptionsActivityList.get(subId) ;
+        purchaseType = subscriptionsActivityList.get(subId).getStarPurchaseType().getOrdinal();
+    }
+
+
+
     private void updateCouponsDataView(){
         try {
             promoCoupons = Data.userData.getPromoCoupons();
@@ -268,10 +357,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             try {
                 switch (v.getId()){
                     case R.id.bPlaceOrder:
+
+
                         if(paymentOption.getOrdinal() != 0 && paymentOption.getOrdinal() != 1) {
                             placeOrder();
                             GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT, PAY_NOW+CLICKED);
                         } else{
+                            if(paySlider.isSliderInIntialStage())
+                                paySlider.fullAnimate();
                             Utils.showToast(activity, "Please select payment option");
                         }
                         break;
@@ -300,13 +393,27 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         break;
 
                     case R.id.rlPlan1:
-                        selectedPlan(rlPlan1, ivRadio1, 0);
-                        try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
+
+                        if(getActivity() instanceof JugnooStarActivity){
+                            selectedPlan(rlPlan1, ivRadio1, 0);
+                            try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
+                        }
+                        else{
+                            selectedPlanUpgradeRenew(rlPlan1, ivRadio1, 0);
+                        }
                         break;
 
                     case R.id.rlPlan2:
-                        selectedPlan(rlPlan2, ivRadio2, 1);
-                        try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
+                        if(getActivity() instanceof JugnooStarActivity){
+                            selectedPlan(rlPlan2, ivRadio2, 1);
+                            try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
+
+
+                        }
+                        else{
+                            selectedPlanUpgradeRenew(rlPlan1, ivRadio2, 1);
+
+                        }
                         break;
 
                     case R.id.rlUPI:
@@ -398,6 +505,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 } else{
                     apiPurchaseSubscription();
                 }
+            }else{
+                paySlider.setSlideInitial();
             }
 
         } catch (Exception e) {
@@ -669,7 +778,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     }
 
     @Override
-    public void setSelectedCoupon(int position) {
+    public boolean setSelectedCoupon(int position) {
         PromoCoupon promoCoupon;
         if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
             promoCoupon = promoCoupons.get(position);
@@ -678,12 +787,17 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
         if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, getPaymentOption().getOrdinal(), promoCoupon)) {
             setSelectedPromoCoupon(promoCoupon);
+            GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+OFFER+SELECTED, promoCoupon.getTitle());
+            return true;
+        } else {
+            return false;
         }
-        GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT+OFFER+SELECTED, promoCoupon.getTitle());
     }
 
     private void apiPurchaseSubscription() {
         if (MyApplication.getInstance().isOnline()) {
+            if(paySlider.isSliderInIntialStage())
+                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -728,12 +842,17 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                     }
                                 }, false);
                                 Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
-                                        0l);
+                                        0L);
                                 //DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", message);
                             }
                         }
+                        else{
+                            paySlider.setSlideInitial();
+
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        paySlider.setSlideInitial();
                         retryDialog(DialogErrorType.SERVER_ERROR);
                     }
                     DialogPopup.dismissLoadingDialog();
@@ -742,12 +861,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 @Override
                 public void failure(RetrofitError error) {
                     Log.e("customerFetchUserAddress error=", "" + error.toString());
+                    paySlider.setSlideInitial();
                     DialogPopup.dismissLoadingDialog();
                     retryDialog(DialogErrorType.CONNECTION_LOST);
                 }
             });
 
         } else {
+            paySlider.setSlideInitial();
             retryDialog(DialogErrorType.NO_NET);
         }
     }
@@ -781,6 +902,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private void apiUpgradeSubscription() {
         if (MyApplication.getInstance().isOnline()) {
+            if(paySlider.isSliderInIntialStage())
+                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -809,6 +932,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
                         String message = JSONParser.getServerMessage(jObj);
                         if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+
                             DialogPopup.alertPopupWithListener(activity, "", message, getResources().getString(R.string.ok), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -822,9 +946,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
                                     0l);
                         } else{
+                            paySlider.setSlideInitial();
+
                             DialogPopup.alertPopup(activity, "", message);
                         }
                     } catch (Exception e) {
+                        paySlider.setSlideInitial();
+
                         e.printStackTrace();
                         retryDialog(DialogErrorType.SERVER_ERROR);
                     }
@@ -833,6 +961,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                 @Override
                 public void failure(RetrofitError error) {
+                    paySlider.setSlideInitial();
                     Log.e("customerFetchUserAddress error=", "" + error.toString());
                     DialogPopup.dismissLoadingDialog();
                     retryDialog(DialogErrorType.CONNECTION_LOST);
@@ -840,12 +969,15 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             });
 
         } else {
+            paySlider.setSlideInitial();
             retryDialog(DialogErrorType.NO_NET);
         }
     }
 
     private void apiRenewSubscription() {
         if (MyApplication.getInstance().isOnline()) {
+            if(paySlider.isSliderInIntialStage())
+                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -866,6 +998,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             RestClient.getApiService().renewSubscription(params, new retrofit.Callback<PurchaseSubscriptionResponse>() {
                 @Override
                 public void success(final PurchaseSubscriptionResponse purchaseSubscriptionResponse, Response response) {
+
                     DialogPopup.dismissLoadingDialog();
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                     Log.i("cancel Subscription response = ", "" + responseStr);
@@ -887,17 +1020,21 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
                                     0l);
                         } else{
+                            paySlider.setSlideInitial();
                             DialogPopup.alertPopup(activity, "", message);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        paySlider.setSlideInitial();;
                         retryDialog(DialogErrorType.SERVER_ERROR);
+
                     }
                     DialogPopup.dismissLoadingDialog();
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
+                    paySlider.setSlideInitial();
                     Log.e("customerFetchUserAddress error=", "" + error.toString());
                     DialogPopup.dismissLoadingDialog();
                     retryDialog(DialogErrorType.CONNECTION_LOST);
@@ -905,6 +1042,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             });
 
         } else {
+            paySlider.setSlideInitial();
             retryDialog(DialogErrorType.NO_NET);
         }
     }

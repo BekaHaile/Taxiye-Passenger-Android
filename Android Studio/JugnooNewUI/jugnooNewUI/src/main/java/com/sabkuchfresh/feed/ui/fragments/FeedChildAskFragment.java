@@ -80,7 +80,7 @@ public class FeedChildAskFragment extends ImageSelectFragment {
 
     @Override
     public boolean canSubmit() {
-        if (TextUtils.isEmpty(etContent.getText().toString().trim())) {
+        if (TextUtils.isEmpty(etContent.getText().toString().trim()) && (imageSelected==null || imageSelected.size()==0)) {
             Toast.makeText(activity, R.string.please_enter_something, Toast.LENGTH_SHORT).show();
             return false;
         }

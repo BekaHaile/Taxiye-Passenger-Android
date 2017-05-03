@@ -24,7 +24,6 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -82,7 +81,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private LinearLayout noFreshsView;
     private TextView swipe_text;
 
-    private FreshSortingDialog freshSortingDialog;
     private ArrayList<RecentOrder> recentOrder = new ArrayList<>();
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<SubItem> mealsData = new ArrayList<>();
@@ -205,15 +203,17 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     activity.setRefreshCart(false);
                 }
             }, 300);
-
+            activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                activity.llCheckoutBarSetVisibilityDirect(View.GONE);
             }
 
             if(noMealsView.getVisibility() == View.VISIBLE){
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                activity.llCheckoutBarSetVisibilityDirect(View.GONE);
             }
         }
 
@@ -240,24 +240,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         slots.add(new SortResponseModel(3, "Price: High to Low", false));
 
 
-    }
-
-    public FreshSortingDialog getFreshSortingDialog() {
-
-        if (freshSortingDialog == null) {
-            freshSortingDialog = new FreshSortingDialog(activity, slots,
-                    new FreshSortingDialog.FreshDeliverySortDialogCallback() {
-                        @Override
-                        public void onOkClicked(int position) {
-                            //setSelectedSlotToView();
-//                            activity.sortArray(position);
-                            activity.mealSort = position;
-                            onSortEvent(position);
-//                            mBus.post(new SortSelection(position));
-                        }
-                    });
-        }
-        return freshSortingDialog;
     }
 
 
@@ -310,6 +292,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         relativeLayoutNoMenus.setVisibility(View.GONE);
                         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                         activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
+                        activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
@@ -322,6 +305,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                     activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                                    activity.llCheckoutBarSetVisibilityDirect(View.GONE);
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
                                     mSwipeRefreshLayout.setVisibility(View.GONE);
                                     noMealsView.setVisibility(View.GONE);
@@ -331,8 +315,10 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 else {
                                     if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                                        activity.llCheckoutBarSetVisibilityDirect(View.GONE);
                                     } else{
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
+                                        activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
                                     }
                                     int sortedBy = jObj.optInt(Constants.SORTED_BY);
                                     mealsData.clear();
@@ -369,10 +355,10 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     if(mealsData.size()+recentOrder.size()>0) {
                                         noMealsView.setVisibility(View.GONE);
                                         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                        activity.getTopBar().getLlCartContainer().setVisibility(View.VISIBLE);
+                                        activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
                                     } else {
                                         noMealsView.setVisibility(View.VISIBLE);
-                                        activity.getTopBar().getLlCartContainer().setVisibility(View.GONE);
+                                        activity.llCheckoutBarSetVisibilityDirect(View.GONE);
                                     }
 
                                     if (activity.getProductsResponse() != null

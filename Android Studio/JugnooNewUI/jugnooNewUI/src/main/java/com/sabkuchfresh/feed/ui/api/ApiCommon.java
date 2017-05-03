@@ -41,6 +41,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
     private MultipartTypedOutput multipartTypedOutput;
     private ApiName apiName;
     private boolean putAccessToken = true;
+    private boolean isCancelled;
+
+
 
 
     /**
@@ -97,7 +100,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
             callback = new Callback<T>() {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
-                    DialogPopup.dismissLoadingDialog();
+                    if(showLoader) {
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                    if(isCancelled())
+                        return;
+
                     try {
                         if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 							apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
@@ -119,7 +127,11 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    DialogPopup.dismissLoadingDialog();
+                    if(showLoader) {
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                    if(isCancelled())
+                        return;
                     error.printStackTrace();
                     if (!apiCommonCallback.onFailure(error)) {
                         retryDialog(DialogErrorType.CONNECTION_LOST);
@@ -129,9 +141,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 }
             };
         }
-        if(putDefaultParams){
+//        if(putDefaultParams){
             new HomeUtil().putDefaultParams(params);
-        }
+//        }
 
         if(putAccessToken){
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -144,7 +156,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
         }
         switch (apiName) {
             case GENERATE_FEED_API:
-                RestClient.getFeedApiService().testAPI(params, callback);
+                RestClient.getFeedApiService().generateFeed(params, callback);
                 break;
             case REGISTER_FOR_FEED:
                 RestClient.getFeedApiService().registerForFeed(params, callback);
@@ -188,5 +200,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
     }
 
+    public boolean isCancelled() {
+        return isCancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        isCancelled = cancelled;
+    }
 
 }

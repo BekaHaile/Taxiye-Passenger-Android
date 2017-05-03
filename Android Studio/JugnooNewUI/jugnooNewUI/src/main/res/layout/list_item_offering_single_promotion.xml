@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/relative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_7"
+                android:layout_marginRight="@dimen/dp_7"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:splitMotionEvents="false">
+
+    <View
+        android:id="@+id/vMultipleOffersBg"
+        android:layout_width="@dimen/dp_115"
+        android:layout_height="@dimen/dp_70"
+        android:background="@drawable/bg_coupon_white_dotted_round_border"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_marginTop="@dimen/dp_4"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_14"
+        android:paddingBottom="@dimen/dp_14"
+        />
+
+    <LinearLayout
+        android:layout_width="@dimen/dp_115"
+        android:layout_height="@dimen/dp_70"
+        android:orientation="vertical"
+        android:background="@drawable/bg_coupon_white_dotted_round_border"
+        android:gravity="center"
+        >
+        <TextView
+            android:id="@+id/textViewCouponTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="1 Free"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/sp_10"
+            app:font="maven"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_14"
+            />
+
+        <TextView
+            android:id="@+id/textViewCouponExpiry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="1 Free"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/sp_10"
+            app:font="maven"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_14"
+            android:paddingBottom="@dimen/dp_5"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvPromoCount"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/sp_9"
+        android:gravity="center"
+        android:background="@drawable/circle_yellow_orange_stroke"
+        android:layout_alignBottom="@+id/vMultipleOffersBg"
+        android:layout_alignRight="@+id/vMultipleOffersBg"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:layout_marginRight="@dimen/dp_4"
+        android:text="2X"
+        android:visibility="visible"
+        app:font="maven"
+        />
+
+</RelativeLayout>
+

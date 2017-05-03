@@ -48,4 +48,9 @@ public interface GoogleAPIServices {
 	@GET("/geocode/json")
 	void getMyAddress(@QueryMap Map<String, String> params, Callback<GoogleGeocodeResponse> cb);
 
+	@GET("/directions/json")
+	Response getDirectionsWaypoints(@Query("origin") String originLatLng,
+									@Query("destination") String destLatLng,
+									@Query(value = "waypoints", encodeValue = false) String waypoints);
+
 }
