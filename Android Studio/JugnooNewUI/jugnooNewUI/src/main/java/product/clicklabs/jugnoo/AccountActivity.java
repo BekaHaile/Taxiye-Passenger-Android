@@ -733,10 +733,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     @Override
                     public void onMenuItemClick(MenuInfo menuInfo) {
                         if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())){
+
                             Intent intent = new Intent(AccountActivity.this, PaymentActivity.class);
                             intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
                             startActivity(intent);
                             overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            GAUtils.event(SIDE_MENU, USER+PROFILE,WALLET);
                         }else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())){
                             try {
                                 if((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
@@ -746,6 +748,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     startActivity(new Intent(AccountActivity.this, JugnooStarActivity.class));
                                 }
                                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                GAUtils.event(SIDE_MENU, USER+PROFILE,INBOX);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -753,7 +756,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
                            startActivity(new Intent(AccountActivity.this, NotificationCenterActivity.class));
                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
-
+                            GAUtils.event(SIDE_MENU, USER+PROFILE,JUGNOO + STAR);
                         }
                     }
                 },AccountActivity.this));
