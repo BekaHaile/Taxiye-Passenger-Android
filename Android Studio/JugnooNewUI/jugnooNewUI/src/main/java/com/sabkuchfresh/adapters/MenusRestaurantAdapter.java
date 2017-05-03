@@ -78,6 +78,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private Callback callback;
     private String searchText;
     private boolean searchApiHitOnce = false;
+    private RecyclerView recyclerView;
 
     private static final int MAIN_ITEM = 0;
     private static final int FORM_ITEM = 1;
@@ -86,7 +87,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors,
-                                  ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback) {
+                                  ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback, RecyclerView recyclerView) {
         this.activity = activity;
         this.vendorsComplete = vendors;
         this.vendorsFiltered = new ArrayList<>();
@@ -104,6 +105,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         timerHandler.postDelayed(timerRunnable, 1000);
         restaurantName = ""; locality = ""; telephone = "";
         searchApiHitOnce = false;
+        this.recyclerView = recyclerView;
     }
 
     private Handler timerHandler;
@@ -805,6 +807,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                     if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
                                         if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
                                             searchVendors(searchText, productsResponse.getRestaurantIds());
+                                            recyclerView.scrollTo(0, 0);
                                             if(productsResponse.getRestaurantIds().size() > 0) {
                                                 queryMap.put(searchText, productsResponse.getRestaurantIds());
                                             }

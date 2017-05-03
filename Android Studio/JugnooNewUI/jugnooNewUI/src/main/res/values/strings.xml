@@ -666,8 +666,8 @@
     <string name="add_cash">ADD CASH</string>
     <string name="payment_option_dialog_jugnoo_cash_deduction">Jugnoo Cash will be deducted first</string>
 
-    <string name="paytm_coupon_selected_but_paytm_not_added">You need to add Paytm Wallet to avail this coupon</string>
-    <string name="paytm_coupon_selected_but_paytm_option_not_selected">You need to select Paytm as preferred payment option to avail this coupon</string>
+    <string name="paytm_coupon_selected_but_paytm_not_added">Please add Paytm Wallet to avail the selected coupon</string>
+    <string name="paytm_coupon_selected_but_paytm_option_not_selected">Please select Paytm as preferred payment option to avail the selected coupon</string>
     <string name="paytm_low_cash">Your Paytm cash is low</string>
     <string name="paytm_no_cash">You do not have money in your\nPaytm Account</string>
     <string name="paytm_no_cash_when_selecting_coupon">You do not have enough Paytm cash</string>
@@ -992,8 +992,8 @@
     <string name="transaction_successful">Transaction Successful</string>
     <string name="transaction_failed">Transaction failed</string>
     <string name="mobikwik">MobiKwik</string>
-    <string name="mobikwik_coupon_selected_but_mobikwik_option_not_selected">You need to select MobiKwik as preferred payment option to avail this coupon</string>
-    <string name="mobikwik_coupon_selected_but_mobikwik_not_added">You need to add MobiKwik Wallet to avail this coupon</string>
+    <string name="mobikwik_coupon_selected_but_mobikwik_option_not_selected">Please select MobiKwik as preferred payment option to avail the selected coupon</string>
+    <string name="mobikwik_coupon_selected_but_mobikwik_not_added">Please add MobiKwik Wallet to avail the selected coupon</string>
     <string name="link_mobile_wallet_message">Link Mobile Wallet for ease of payments</string>
     <string name="use_mobile_wallet_powered_by_format">Use mobile wallet powered by %s</string>
     <string name="none">None</string>
@@ -1089,8 +1089,8 @@
     <string name="please_swipe_down_to_reload">Please swipe down to reload</string>
 
 
-    <string name="freecharge_coupon_selected_but_freecharge_option_not_selected">You need to select FreeCharge as preferred payment option to avail this coupon</string>
-    <string name="freecharge_coupon_selected_but_freecharge_not_added">You need to add FreeCharge Wallet to avail this coupon</string>
+    <string name="freecharge_coupon_selected_but_freecharge_option_not_selected">Please select FreeCharge as preferred payment option to avail the selected coupon</string>
+    <string name="freecharge_coupon_selected_but_freecharge_not_added">Please add FreeCharge Wallet to avail the selected coupon</string>
 
     <string name="freecharge">FreeCharge</string>
     <string name="add_freecharge_cash">Add FreeCharge Cash</string>

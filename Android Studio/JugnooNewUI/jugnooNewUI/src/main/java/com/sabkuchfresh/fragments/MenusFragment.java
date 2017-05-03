@@ -146,7 +146,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             @Override
             public void onNotify(int count) {
             }
-        });
+        }, recyclerViewRestaurant);
 
         recyclerViewRestaurant.setAdapter(menusRestaurantAdapter);
 

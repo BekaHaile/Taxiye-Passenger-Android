@@ -7,9 +7,9 @@
             <solid android:color="@color/theme_color_alpha"/>
             <corners
                 android:bottomLeftRadius="0dp"
-                android:bottomRightRadius="@dimen/dp_10"
+                android:bottomRightRadius="@dimen/dp_5"
                 android:topLeftRadius="0dp"
-                android:topRightRadius="@dimen/dp_10"
+                android:topRightRadius="@dimen/dp_5"
                 />
         </shape>
 
@@ -19,9 +19,9 @@
             <solid android:color="@color/theme_color"/>
             <corners
                 android:bottomLeftRadius="0dp"
-                android:bottomRightRadius="@dimen/dp_10"
+                android:bottomRightRadius="@dimen/dp_5"
                 android:topLeftRadius="0dp"
-                android:topRightRadius="@dimen/dp_10"
+                android:topRightRadius="@dimen/dp_5"
                 />
         </shape>
 

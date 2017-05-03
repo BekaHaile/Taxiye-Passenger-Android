@@ -66,8 +66,6 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 //		activity.getString(R.string.valid_until_format,
 //				DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate())))
 
-		// TODO: 02/05/17 check for only title in couponInfo
-//		String titleStr = promoCoupon instanceof CouponInfo ? ((CouponInfo)promoCoupon).getTitleOnly() : promoCoupon.getTitle();
 
 		String expireDate = DateOperations.convertDateOnlyViaFormatSlash(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate()));
 		SpannableStringBuilder title = new SpannableStringBuilder(promoCoupon.getTitle());
@@ -84,13 +82,11 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 		validUntilDate.setSpan(boldDateSpan, validUntilDate.length()-expireDate.length(), validUntilDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		holder.textViewCouponTitle.setText(title);
-		holder.textViewCouponTitle.append("\n\n");
-		holder.textViewCouponTitle.append(validUntilDate);
+		holder.textViewCouponExpiry.setText(validUntilDate);
 
 		holder.tvPromoCount.setText(promoCoupon.getRepeatedCount()+"X");
-		holder.tvMultipleOffersBg.setVisibility(promoCoupon.getRepeatedCount() > 1 ? View.VISIBLE : View.GONE);
-		holder.tvPromoCount.setVisibility(promoCoupon.getRepeatedCount() > 1 ? View.VISIBLE : View.GONE);
-		holder.tvMultipleOffersBg.setText(holder.textViewCouponTitle.getText());
+		holder.vMultipleOffersBg.setVisibility(promoCoupon.getRepeatedCount() > 1 ? View.VISIBLE : View.INVISIBLE);
+		holder.tvPromoCount.setVisibility(promoCoupon.getRepeatedCount() > 1 ? View.VISIBLE : View.INVISIBLE);
 
 		int paddingL = activity.getResources().getDimensionPixelSize(R.dimen.dp_7);
 		int paddingR = activity.getResources().getDimensionPixelSize(R.dimen.dp_7);
@@ -131,14 +127,16 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 	}
 
 	class ViewHolder extends RecyclerView.ViewHolder {
-		@Bind(R.id.tvMultipleOffersBg)
-		TextView tvMultipleOffersBg;
+		@Bind(R.id.vMultipleOffersBg)
+		View vMultipleOffersBg;
 		@Bind(R.id.textViewCouponTitle)
 		TextView textViewCouponTitle;
 		@Bind(R.id.tvPromoCount)
 		TextView tvPromoCount;
 		@Bind(R.id.relative)
 		RelativeLayout relative;
+		@Bind(R.id.textViewCouponExpiry)
+		TextView textViewCouponExpiry;
 
 		ViewHolder(final View view, final ItemListener itemListener) {
 			super(view);

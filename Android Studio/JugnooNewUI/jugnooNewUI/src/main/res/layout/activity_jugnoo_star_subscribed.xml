@@ -465,7 +465,7 @@
 
     <Button
         android:id="@id/btnUpgradeNow"
-        android:visibility="visible"
+        android:visibility="gone"
         style="@style/ButtonTheme"
         android:layout_marginLeft="-10dp"
         android:layout_marginRight="-10dp"

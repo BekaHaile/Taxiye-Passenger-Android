@@ -654,6 +654,9 @@
         58dp
     </dimen>
     <dimen name="sp_25">25sp</dimen>
+    <dimen name="dp_9">
+        9dp
+    </dimen>
 
 
 </resources>
