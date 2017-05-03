@@ -1029,7 +1029,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             for (Item item : subcategory.getItems()) {
                                 for (ItemSelected itemSelected : item.getItemSelectedList()) {
                                     if (itemSelected.getQuantity() > 0) {
-                                        totalQuantity = totalQuantity + itemSelected.getQuantity();
+                                        totalQuantity++;
                                         totalPrice = totalPrice + itemSelected.getTotalPriceWithQuantity();
                                     }
                                 }
@@ -1039,7 +1039,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         for (Item item : category.getItems()) {
                             for (ItemSelected itemSelected : item.getItemSelectedList()) {
                                 if (itemSelected.getQuantity() > 0) {
-                                    totalQuantity = totalQuantity + itemSelected.getQuantity();
+                                    totalQuantity++;
                                     totalPrice = totalPrice + itemSelected.getTotalPriceWithQuantity();
                                 }
                             }

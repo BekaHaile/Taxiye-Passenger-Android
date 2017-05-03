@@ -912,8 +912,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         public void onPaymentOptionSelected(PaymentOption paymentOption) {
             activity.setPaymentOption(paymentOption);
             setPaymentOptionUI();
-            selectAutoSelectedCouponAtCheckout();
-            promoCouponsAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -1069,6 +1067,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 				}
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+
+
+            if(promoCouponsAdapter != null && promoCoupons != null && promoCoupons.size() > 0) {
+                if(selectAutoSelectedCouponAtCheckout()) {
+                    promoCouponsAdapter.notifyDataSetChanged();
+                }
             }
 
             textViewPaytmValue.setText(String.format(activity.getResources()
