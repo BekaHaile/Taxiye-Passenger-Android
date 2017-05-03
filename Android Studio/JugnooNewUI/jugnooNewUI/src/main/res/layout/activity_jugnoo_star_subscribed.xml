@@ -412,6 +412,7 @@
                     android:id="@+id/rvBenefits"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:listSelector="@color/menu_item_selector_color_F7"
                     android:layout_marginTop="@dimen/px_10"
                     android:fadeScrollbars="true"
                     android:scrollbars="vertical"

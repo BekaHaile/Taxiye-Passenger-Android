@@ -1518,7 +1518,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             currentOffsetFeedHomeAppBar = verticalOffset;
             if(getTopFragment() instanceof FeedHomeFragment) {
-                if(getFeedHomeFragment().shouldTranslateFeedHomeAddPost()) {
+                if((-verticalOffset!=appBarLayout.getTotalScrollRange() &&  feedHomeAddPostView.getTranslationY()!=0 && feedHomeAddPostView.getTranslationY()!=feedHomeAddPostView.getHeight()) ||   getFeedHomeFragment().shouldTranslateFeedHomeAddPost()) {
                     feedHomeAddPostView.animate().translationY(feedHomeAddPostView.getHeight() - ((appBarLayout.getTotalScrollRange() + verticalOffset) * 1.0f / appBarLayout.getTotalScrollRange()) * feedHomeAddPostView.getHeight()).start();
                 }
 
