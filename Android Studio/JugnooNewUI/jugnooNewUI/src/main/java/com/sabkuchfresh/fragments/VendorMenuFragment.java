@@ -269,12 +269,16 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 				menusCategoryFragmentsAdapter.notifyDataSetChanged();
 				tabs.notifyDataSetChanged();
 				activity.resumeMethod();
-				if (activity.isRefreshCart()) {
+                activity.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (activity.isRefreshCart()) {
 
-				}
-				activity.setRefreshCart(false);
-				activity.setMinOrderAmountText(VendorMenuFragment.this);
-
+                        }
+                        activity.setRefreshCart(false);
+                        activity.setMinOrderAmountText(VendorMenuFragment.this);
+                    }
+                }, 200);
 			}
 			else{
 				if(recyclerViewOffers!=null && recyclerViewOffers.getVisibility()==View.VISIBLE)
