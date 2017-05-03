@@ -32,7 +32,6 @@ import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONArray;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
@@ -440,7 +439,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
                             activity.performBackPressed(false);
                             if (activity.getFeedHomeFragment() != null && activity.getFeedHomeFragment().getView() != null) {
-                                activity.getFeedHomeFragment().fetchFeedsApi(true, true);
+                                activity.getFeedHomeFragment().fetchFeedsApi(true, true, false);
                             }
                             if (activity.getTopFragment() instanceof FeedPostDetailFragment) {
                                 activity.getOfferingsCommentFragment().fetchDetailAPI();

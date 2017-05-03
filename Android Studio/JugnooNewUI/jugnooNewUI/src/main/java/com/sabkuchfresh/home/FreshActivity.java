@@ -3248,7 +3248,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (appType == AppConstant.ApplicationType.MENUS && getMenusFragment() != null) {
                     getMenusFragment().getAllMenus(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
-                    getFeedHomeFragment().fetchFeedsApi(true, true);
+                    getFeedHomeFragment().fetchFeedsApi(true, true, true);
                 }
             }
         } catch (Exception e) {

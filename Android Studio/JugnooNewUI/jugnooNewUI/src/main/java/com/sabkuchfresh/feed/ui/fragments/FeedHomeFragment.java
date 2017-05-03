@@ -89,7 +89,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private MenuItem itemCart;
     private long notificationsSeenCount = 0;
     private int UPDATE_NOTIFICATION_COUNT_INTERVAL = 15 * 1000;
-    private boolean animateAddPostText  ;
 
 
     public FeedHomeFragment() {
@@ -138,8 +137,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         rlNoReviews.setVisibility(View.GONE);
         relativeLayoutNotAvailable.setVisibility(View.GONE);
 
-        //TypeWriter animation to be shown everytime screen is opened
-        animateAddPostText=true;
+
 
         //SetUpRecyclerView
         layoutManager = new LinearLayoutManager(getActivity());
@@ -322,7 +320,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchFeedsApi(false, false);
+                fetchFeedsApi(false, false, false);
 
             }
         });
@@ -355,7 +353,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 public void run() {
                     isFragmentHidden = false;
                     if (updateFeedData) {
-                        fetchFeedsApi(true, false);
+                        fetchFeedsApi(true, false, false);
                     }
                     updateFeedData = false;
                 }
@@ -390,7 +388,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     }
 
 
-    public void fetchFeedsApi(boolean loader, final boolean scrollToTop) {
+    public void fetchFeedsApi(boolean loader, final boolean scrollToTop,final boolean animateAddPostText) {
         countRecords = 0;
         pageCount = 1;
         hasMorePages=false;
@@ -458,7 +456,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                     activity.getTvAddPost().animateText(feedbackResponse.getAddPostText());
 
                 }else{
-                    animateAddPostText=false;
                     activity.getTvAddPost().setmText(feedbackResponse.getAddPostText());
 
                 }
@@ -622,7 +619,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             boolean uploaded = intent.getBooleanExtra(Constants.KEY_UPLOADED, false);
 
             if (uploaded) {
-                fetchFeedsApi(false, false);
+                fetchFeedsApi(false, false, false);
             }
         }
     };
