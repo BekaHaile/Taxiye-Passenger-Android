@@ -363,7 +363,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             placeOrder();
                             GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT, PAY_NOW+CLICKED);
                         } else{
-
+                            if(paySlider.isSliderInIntialStage())
+                                paySlider.fullAnimate();
                             Utils.showToast(activity, "Please select payment option");
                         }
                         break;
@@ -818,7 +819,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 @Override
                 public void success(final PurchaseSubscriptionResponse purchaseSubscriptionResponse, Response response) {
                     DialogPopup.dismissLoadingDialog();
-                    paySlider.setSlideInitial();
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                     Log.i("cancel Subscription response = ", "" + responseStr);
                     try {
@@ -846,8 +846,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                 //DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", message);
                             }
                         }
+                        else{
+                            paySlider.setSlideInitial();
+
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        paySlider.setSlideInitial();
                         retryDialog(DialogErrorType.SERVER_ERROR);
                     }
                     DialogPopup.dismissLoadingDialog();
@@ -919,7 +924,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             RestClient.getApiService().upgradeSubscription(params, new retrofit.Callback<PurchaseSubscriptionResponse>() {
                 @Override
                 public void success(final PurchaseSubscriptionResponse purchaseSubscriptionResponse, Response response) {
-                    paySlider.setSlideInitial();
                     DialogPopup.dismissLoadingDialog();
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                     Log.i("cancel Subscription response = ", "" + responseStr);
@@ -928,6 +932,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
                         String message = JSONParser.getServerMessage(jObj);
                         if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+
                             DialogPopup.alertPopupWithListener(activity, "", message, getResources().getString(R.string.ok), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -941,9 +946,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
                                     0l);
                         } else{
+                            paySlider.setSlideInitial();
+
                             DialogPopup.alertPopup(activity, "", message);
                         }
                     } catch (Exception e) {
+                        paySlider.setSlideInitial();
+
                         e.printStackTrace();
                         retryDialog(DialogErrorType.SERVER_ERROR);
                     }
@@ -989,7 +998,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             RestClient.getApiService().renewSubscription(params, new retrofit.Callback<PurchaseSubscriptionResponse>() {
                 @Override
                 public void success(final PurchaseSubscriptionResponse purchaseSubscriptionResponse, Response response) {
-                    paySlider.setSlideInitial();
+
                     DialogPopup.dismissLoadingDialog();
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                     Log.i("cancel Subscription response = ", "" + responseStr);
@@ -1011,11 +1020,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME,
                                     0l);
                         } else{
+                            paySlider.setSlideInitial();
                             DialogPopup.alertPopup(activity, "", message);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        paySlider.setSlideInitial();;
                         retryDialog(DialogErrorType.SERVER_ERROR);
+
                     }
                     DialogPopup.dismissLoadingDialog();
                 }

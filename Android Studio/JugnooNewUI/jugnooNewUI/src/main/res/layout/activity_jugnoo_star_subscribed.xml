@@ -123,7 +123,7 @@
                     android:id="@+id/cvContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="3dp"
+                    app:cardCornerRadius="9.5dp"
                     android:layout_margin="@dimen/px_40">
 
                     <LinearLayout
@@ -464,15 +464,17 @@
 
     <Button
         android:id="@id/btnUpgradeNow"
-        android:visibility="gone"
+        android:visibility="visible"
         style="@style/ButtonTheme"
-        android:layout_marginTop="@dimen/px_30"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginRight="-10dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:textAllCaps="true"
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
         android:text="@string/upgrade_now" />
+
     <RelativeLayout
         android:id="@+id/rlFragment"
         android:layout_width="match_parent"
