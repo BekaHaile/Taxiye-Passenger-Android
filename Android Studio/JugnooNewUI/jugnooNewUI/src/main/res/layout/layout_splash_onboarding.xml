@@ -188,7 +188,7 @@
                 android:layout_height="@dimen/splash_button_height"
                 android:layout_marginTop="@dimen/px_50"
                 android:background="@drawable/capsule_theme_color_selector"
-                android:text="@string/submit"
+                android:text="@string/next"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_white_grey_selector"
                 android:textSize="@dimen/text_size_34"

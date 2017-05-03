@@ -686,7 +686,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
 								}
 							} else{
-								Utils.showToast(SplashNewActivity.this, getResources().getString(R.string.press_skip_this_step_to_proceed));
+								//Utils.showToast(SplashNewActivity.this, getResources().getString(R.string.press_skip_this_step_to_proceed));
+								tvSkip.performClick();
 							}
 							GAUtils.event(JUGNOO, REFERRAL_CODE_SCREEN, SUBMIT+CLICKED);
 						}
