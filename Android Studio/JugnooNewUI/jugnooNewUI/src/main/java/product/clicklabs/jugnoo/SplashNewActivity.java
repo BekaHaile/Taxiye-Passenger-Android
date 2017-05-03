@@ -678,6 +678,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							String email = etOnboardingEmail.getText().toString().trim();
 							String referralCode = etReferralCode.getText().toString().trim();
 							if (!TextUtils.isEmpty(referralCode)) {
+								if(!TextUtils.isEmpty(email) && !Utils.isEmailValid(email)){
+									Utils.showToast(SplashNewActivity.this, getResources().getString(R.string.email_was_incorrect));
+								}
 								apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
 							} else{
 								tvSkip.performClick();
