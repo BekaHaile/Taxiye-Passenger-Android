@@ -3,10 +3,8 @@
     android:shape="rectangle"
     >
     
-    <solid 
-        android:color="@color/theme_color"
-        />
-    
+
+    <gradient android:endColor="#efa645" android:startColor="#e85d7b"/>
     <corners 
         android:radius="@dimen/button_corner_radius"
         />

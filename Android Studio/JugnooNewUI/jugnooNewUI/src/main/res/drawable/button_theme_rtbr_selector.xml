@@ -4,7 +4,8 @@
 
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/theme_color_alpha"/>
+            <gradient android:endColor="#c58f3f" android:startColor="#c1556c"/>
+
             <corners
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="@dimen/dp_5"
@@ -16,7 +17,7 @@
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/theme_color"/>
+            <gradient android:endColor="#efa645" android:startColor="#e85d7b"/>
             <corners
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="@dimen/dp_5"
