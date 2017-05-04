@@ -20,6 +20,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -156,6 +157,11 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
 
                                             }
                                         }, true, false);
+                            }
+
+                            @Override
+                            public MenusResponse.Vendor getVendorOpened() {
+                                return activity.getVendorOpened();
                             }
                         });
                 recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);

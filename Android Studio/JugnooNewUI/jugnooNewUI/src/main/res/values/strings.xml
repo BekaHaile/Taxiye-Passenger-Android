@@ -1682,6 +1682,7 @@
     <string name="btn_renew_text">Renew for \u20B9 42/month </string>
     <string name="ask_a_question">Ask a question</string>
     <string name="email_was_incorrect">Email ID was incorrect</string>
+    <string name="item_not_available">Selected item currently not available!</string>
 
 
 </resources>
