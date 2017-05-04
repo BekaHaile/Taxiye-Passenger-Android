@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:src="@drawable/bg_top_2"
+        android:tag="mwar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/px_300">
+
+        <ImageView
+            android:id="@+id/imageViewEmail"
+            android:layout_width="@dimen/px_30"
+            android:layout_height="@dimen/px_30"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="36px"
+            android:src="@drawable/ic_phone"
+            android:tag="mhar" />
+
+        <AutoCompleteTextView
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="88px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:layout_toLeftOf="@+id/textViewEmailRequired"
+            android:layout_toRightOf="@+id/imageViewEmail"
+            android:background="#0000"
+            android:completionThreshold="1"
+            android:gravity="center_vertical"
+            android:hint="@string/phone_number"
+            android:inputType="number"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:maxLines="1"
+            android:maxLength="10"
+            android:ellipsize="end"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/text_color_hint"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/text_size_34" />
+
+        <TextView
+            android:id="@+id/textViewEmailRequired"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30px"
+            android:text="@string/nl_splash_required"
+            android:textColor="@color/text_color_hint"
+            android:textSize="@dimen/text_size_22" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/splash_bottom_building_bg2"
+        android:tag="mwar" />
+
+</RelativeLayout>
