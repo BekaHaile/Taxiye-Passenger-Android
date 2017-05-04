@@ -252,6 +252,9 @@ public class MenusResponse implements Serializable {
 		@SerializedName("delivery_time_text")
 		@Expose
 		private String deliveryTimeText;
+		@SerializedName("min_order_text")
+		@Expose
+		private String minOrderText;
 
 		public Double getRating() {
 			return rating==null?null:Math.round(rating * 10.0) / 10.0;
@@ -604,6 +607,14 @@ public class MenusResponse implements Serializable {
 
 		public void setDeliveryTimeText(String deliveryTimeText) {
 			this.deliveryTimeText = deliveryTimeText;
+		}
+
+		public String getMinOrderText() {
+			return minOrderText;
+		}
+
+		public void setMinOrderText(String minOrderText) {
+			this.minOrderText = minOrderText;
 		}
 	}
 

@@ -1755,6 +1755,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void orderComplete() {
+        orderJustCompleted = true;
         clearAllCartAtOrderComplete();
         splInstr = "";
         slotSelected = null;
@@ -1789,9 +1790,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             @Override
             public void run() {
                 setLocalityAddressFirstTime(Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType));
+                orderJustCompleted = false;
             }
         }, 1000);
         clearEtFocus();
+    }
+
+    private boolean orderJustCompleted;
+    public boolean isOrderJustCompleted(){
+        return orderJustCompleted;
     }
 
     public void resetSlider(){
@@ -3893,29 +3900,42 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     };
 
 
-    public void setVendorDeliveryTimeToTextView(MenusResponse.Vendor vendor, TextView textView) {
-        final String prefix;
-        final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-        final SpannableStringBuilder sb;
-        if (vendor.getIsClosed() == 0) {
-            String deliveryTime = String.valueOf(vendor.getDeliveryTime());
-            if (vendor.getMinDeliveryTime() != null) {
-                deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
-            }
-            prefix = getString(R.string.delivers_in);
-            sb = new SpannableStringBuilder(deliveryTime + " mins");
-
-        } else {
-            prefix = getString(R.string.opens_at);
-            sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt())));
-        }
-        sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textView.setText(prefix);
-        textView.append(" ");
-        textView.append(sb);
-
-        if(!TextUtils.isEmpty(vendor.getDeliveryTimeText())){
+    /**
+     * Sets restaurant's delivery time to textView provided and colorResId to its drawable
+     * @param vendor restaurant object
+     * @param textView textView to set delivery time to
+     * @param colorResId resource id of color file for color to set to textView's drawable
+     * @return returns the visibility for textView
+     */
+    public int setVendorDeliveryTimeAndDrawableColorToTextView(MenusResponse.Vendor vendor, TextView textView, int colorResId) {
+        if (!TextUtils.isEmpty(vendor.getDeliveryTimeText())) {
             textView.setText(Utils.trimHTML(Utils.fromHtml(vendor.getDeliveryTimeText())));
+            setTextViewDrawableColor(textView, ContextCompat.getColor(this, colorResId));
+            return View.VISIBLE;
+        } else if (vendor.getDeliveryTimeText() == null) {
+            final String prefix;
+            final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+            final SpannableStringBuilder sb;
+            if (vendor.getIsClosed() == 0) {
+                String deliveryTime = String.valueOf(vendor.getDeliveryTime());
+                if (vendor.getMinDeliveryTime() != null) {
+                    deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
+                }
+                prefix = getString(R.string.delivers_in);
+                sb = new SpannableStringBuilder(deliveryTime + " mins");
+
+            } else {
+                prefix = getString(R.string.opens_at);
+                sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt())));
+            }
+            sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.setText(prefix);
+            textView.append(" ");
+            textView.append(sb);
+            setTextViewDrawableColor(textView, ContextCompat.getColor(this, colorResId));
+            return View.VISIBLE;
+        } else {
+            return View.GONE;
         }
     }
 
@@ -3961,10 +3981,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
-    public void setTextViewDrawableColor(TextView textView, int color) {
+    public void setTextViewDrawableColor(TextView textView, int resolvedColor) {
         for (Drawable drawable : textView.getCompoundDrawables()) {
             if (drawable != null) {
-                drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+                drawable.setColorFilter(new PorterDuffColorFilter(resolvedColor, PorterDuff.Mode.SRC_IN));
             }
         }
     }

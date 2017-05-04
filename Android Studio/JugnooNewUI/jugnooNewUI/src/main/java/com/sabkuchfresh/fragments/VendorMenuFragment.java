@@ -276,7 +276,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
                         }
                         activity.setRefreshCart(false);
-                        activity.setMinOrderAmountText(VendorMenuFragment.this);
+                        if(!activity.isOrderJustCompleted()) {
+                            activity.setMinOrderAmountText(VendorMenuFragment.this);
+                        }
                     }
                 }, 200);
 			}
@@ -399,8 +401,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     .placeholder(R.drawable.ic_fresh_item_placeholder)
                     .into(activity.ivCollapseRestImage);
 
-            activity.setVendorDeliveryTimeToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime);
-            activity.setTextViewDrawableColor(activity.tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));
+            int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime, R.color.white);
+			activity.tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
 
             if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
                 activity.tvCollapRestaurantRating.setVisibility(View.VISIBLE);
