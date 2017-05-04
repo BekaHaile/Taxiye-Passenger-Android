@@ -787,8 +787,17 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			rlMobileNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					fbAccountKit.startFbAccountKit(null);
-					//startFbAccountKit(null);
+//					fbAccountKit.startFbAccountKit(null);
+					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
+					intent.putExtra("show_timer", 1);
+					//intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
+					intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
+					intent.putExtra("signup_by", signUpBy);
+					intent.putExtra("email", editTextEmail.getText().toString().trim());
+					intent.putExtra("otp_length", "4");
+					startActivity(intent);
+					//finish();
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});
@@ -2632,7 +2641,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				editTextEmail.setText(previousLoginEmail);
 				fromPreviousAccounts = true;
 				PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), "IND");
-				//startFbAccountKit(phoneNumber);
 				fbAccountKit.startFbAccountKit(phoneNumber);
 			} else {
 				fromPreviousAccounts = false;
@@ -3137,7 +3145,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								facebookRegister = true;
 								//notRegisteredMsg = error;
 								fbVerifiedNumber = jObj.optString("fb_verified_number");
-								//startFbAccountKit(null);
 								fbAccountKit.startFbAccountKit(null);
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
@@ -3156,7 +3163,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 								//sendToOtpScreen = true;
 								PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), "IND");
-								//startFbAccountKit(phoneNumber);
 								fbAccountKit.startFbAccountKit(phoneNumber);
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								loginDataFetched = true;
@@ -3255,7 +3261,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								String error = jObj.getString("error");
 								googleRegister = true;
 								//notRegisteredMsg = error;
-								//startFbAccountKit(null);
 								fbAccountKit.startFbAccountKit(null);
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){

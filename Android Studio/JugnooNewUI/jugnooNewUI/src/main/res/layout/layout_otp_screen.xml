@@ -102,7 +102,7 @@
             android:paddingBottom="15px"
             android:paddingLeft="20px"
             android:paddingRight="20px"
-            android:visibility="gone"
+            android:visibility="visible"
             android:paddingTop="15px"
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
@@ -112,7 +112,7 @@
         <ImageView
             android:layout_width="410px"
             android:layout_height="2px"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_gravity="center_horizontal"
             android:src="@color/stroke_light_grey" />
 
@@ -131,7 +131,8 @@
         <RelativeLayout
             android:layout_width="411px"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone">
 
             <include layout="@layout/layout_otp_edittext" />
 
@@ -154,7 +155,8 @@
             android:layout_width="410px"
             android:layout_height="2px"
             android:layout_gravity="center_horizontal"
-            android:src="@color/stroke_light_grey" />
+            android:src="@color/stroke_light_grey"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -282,6 +284,7 @@
             android:layout_marginTop="25px"
             android:background="@drawable/capsule_login_button_selector"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <ImageView
