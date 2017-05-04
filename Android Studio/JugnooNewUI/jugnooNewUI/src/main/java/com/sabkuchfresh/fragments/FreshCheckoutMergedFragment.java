@@ -804,6 +804,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             chargesList.add(new Tax(activity.getString(R.string.discount), getTotalPromoAmount()));
         }
 
+        if(isFreshOpen()){
+            double totalSavings = getTotalSavings();
+            if(totalSavings > 0) {
+                chargesList.add(new Tax(activity.getString(R.string.total_savings), totalSavings));
+            }
+        }
+
         taxTotal.setValue((double)Math.round(payableAmount()));
         chargesList.add(taxTotal);
         chargesAdapter.notifyDataSetChanged();
@@ -1064,7 +1071,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 							&& activity.getPaymentOption() == PaymentOption.CASH){
 						activity.setPaymentOption(PaymentOption.PAYTM);
 					}
-				}
+				} else if(type == AppConstant.ApplicationType.FRESH){
+                    if(activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()){
+                        activity.setPaymentOption(PaymentOption.CASH);
+                    } else if(activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()
+                            && activity.getPaymentOption() == PaymentOption.CASH){
+                        activity.setPaymentOption(PaymentOption.PAYTM);
+                    }
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1927,22 +1942,44 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         try {
             if(type == AppConstant.ApplicationType.MENUS){
-				if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()){
-					relativeLayoutPaytm.setVisibility(View.GONE);
-					relativeLayoutMobikwik.setVisibility(View.GONE);
-					relativeLayoutFreeCharge.setVisibility(View.GONE);
-                    relativeLayoutJugnooPay.setVisibility(View.GONE);
-					rlOtherModesToPay.setVisibility(View.GONE);
-                    rlUPI.setVisibility(View.GONE);
-				} else if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()){
-					relativeLayoutCash.setVisibility(View.GONE);
-				}
-			}
+				setPaymentOptionVisibility(activity.getVendorOpened().getApplicablePaymentMode());
+			} else if(type == AppConstant.ApplicationType.FRESH){
+                setPaymentOptionVisibility(activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void setPaymentOptionVisibility(int applicablePaymentMode){
+        if(applicablePaymentMode == ApplicablePaymentMode.CASH.getOrdinal()){
+            relativeLayoutPaytm.setVisibility(View.GONE);
+            relativeLayoutMobikwik.setVisibility(View.GONE);
+            relativeLayoutFreeCharge.setVisibility(View.GONE);
+            relativeLayoutJugnooPay.setVisibility(View.GONE);
+            rlOtherModesToPay.setVisibility(View.GONE);
+            rlUPI.setVisibility(View.GONE);
+        } else if(applicablePaymentMode == ApplicablePaymentMode.ONLINE.getOrdinal()){
+            relativeLayoutCash.setVisibility(View.GONE);
+        }
+    }
+
+    private void filterCouponsByApplicationPaymentMode(int applicablePaymentMode, ProductType productType){
+        if (promoCoupons == null) {
+            promoCoupons = new ArrayList<>();
+        }
+        promoCoupons.clear();
+        ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(productType);
+        if (applicablePaymentMode == ApplicablePaymentMode.CASH.getOrdinal()) {
+            for (PromoCoupon promoCoupon : promoCouponsList) {
+                if (MyApplication.getInstance().getWalletCore().couponOfWhichWallet(promoCoupon) == PaymentOption.CASH.getOrdinal()) {
+                    promoCoupons.add(promoCoupon);
+                }
+            }
+        } else {
+            promoCoupons.addAll(promoCouponsList);
+        }
+    }
 
     private void updateCouponsDataView(){
         try {
@@ -1951,22 +1988,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             } else if (type == AppConstant.ApplicationType.GROCERY) {
                 promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
             } else if (type == AppConstant.ApplicationType.MENUS) {
-                if (promoCoupons == null) {
-                    promoCoupons = new ArrayList<>();
-                }
-                promoCoupons.clear();
-                ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(ProductType.MENUS);
-                if (activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()) {
-                    for (PromoCoupon promoCoupon : promoCouponsList) {
-                        if (MyApplication.getInstance().getWalletCore().couponOfWhichWallet(promoCoupon) == PaymentOption.CASH.getOrdinal()) {
-                            promoCoupons.add(promoCoupon);
-                        }
-                    }
-                } else {
-                    promoCoupons.addAll(promoCouponsList);
-                }
+                filterCouponsByApplicationPaymentMode(activity.getVendorOpened().getApplicablePaymentMode(), ProductType.MENUS);
             } else {
-                promoCoupons = Data.userData.getCoupons(ProductType.FRESH);
+                filterCouponsByApplicationPaymentMode(activity.getVendorOpened().getApplicablePaymentMode(), ProductType.FRESH);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2544,6 +2568,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
     }
 
+    private double getTotalSavings(){
+        double totalSavings = 0d;
+        try {
+            for(SubItem subItems : subItemsInCart){
+                if(!TextUtils.isEmpty(subItems.getOldPrice())) {
+                    totalSavings = totalSavings + ((Double.parseDouble(subItems.getOldPrice()) - subItems.getPrice()) * subItems.getSubItemQuantitySelected());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totalSavings;
+    }
+
 
 
     @Subscribe
@@ -3019,6 +3057,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private boolean isMenusOpen(){
         return type == AppConstant.ApplicationType.MENUS;
+    }
+
+    private boolean isFreshOpen(){
+        return type == AppConstant.ApplicationType.FRESH;
     }
 
     private void clearMenusCartAndGoToMenusFragment(){
