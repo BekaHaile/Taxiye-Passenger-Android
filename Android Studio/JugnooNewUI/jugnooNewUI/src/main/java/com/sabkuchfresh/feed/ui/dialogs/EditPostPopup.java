@@ -21,6 +21,7 @@ import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by Parminder Singh on 3/24/17.
@@ -32,12 +33,15 @@ public class EditPostPopup extends Dialog {
     private FeedDetail feedDetail;
     private View viewClicked;
     private int positionInList;
+    private View arrowUp,arrowDown;
 
 
     public <T extends EditPostDialogCallback> EditPostPopup(@NonNull T deleteDialogCall, @StyleRes int themeResId, Activity context) {
         super(context, themeResId);
         this.editPostDialogCallback = deleteDialogCall;
         setContentView(R.layout.dialog_feed_edit_popup);
+        arrowDown=findViewById(R.id.arrow_down);
+        arrowUp=findViewById(R.id.arrow_up);
         findViewById(R.id.tv_edit_post).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,11 +98,11 @@ public class EditPostPopup extends Dialog {
             int[] openingViewLocation = new int[2];
             viewClicked.getLocationOnScreen(openingViewLocation);
             getWindow().getDecorView().setPivotX(openingViewLocation[0]+ viewClicked.getMeasuredWidth()/2);
-            getWindow().getDecorView().setPivotY(viewClicked.getY());
+            getWindow().getDecorView().setPivotY(arrowDown.getVisibility()==View.VISIBLE?getContext().getResources().getDimensionPixelSize(R.dimen.height_popup_edit_feed):0);
             getWindow().getDecorView().animate()
-                    .scaleX(0.0f)
-                    .scaleY(0.0f)
-                    .setDuration(150)
+                    .scaleX(0.3f)
+                    .scaleY(0.3f)
+                    .setDuration(200)
                     .setInterpolator(new AccelerateInterpolator())
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
@@ -125,18 +129,30 @@ public class EditPostPopup extends Dialog {
             int[] openingViewLocation = new int[2];
             viewClicked.getLocationOnScreen(openingViewLocation);
             WindowManager.LayoutParams wlp = getWindow().getAttributes();
-            wlp.x = openingViewLocation[0];
-            wlp.y = openingViewLocation[1]+ viewClicked.getHeight() - FeedUtils.dpToPx(10);
+            int xViewClicked = openingViewLocation[0];
+            int yViewClicked = openingViewLocation[1];
+            wlp.x = xViewClicked;
+            if(openingViewLocation[1] > FeedUtils.getScreenHeight(getContext())/2){
+                wlp.y= yViewClicked- getContext().getResources().getDimensionPixelSize(R.dimen.height_popup_edit_feed) + FeedUtils.dpToPx(10);
+                arrowDown.setVisibility(View.VISIBLE);
+                arrowUp.setVisibility(View.GONE);
+                getWindow().getDecorView().setPivotY(getContext().getResources().getDimensionPixelSize(R.dimen.height_popup_edit_feed));
+            }else{
+                wlp.y = openingViewLocation[1]+ viewClicked.getHeight() - FeedUtils.dpToPx(10);
+                arrowUp.setVisibility(View.VISIBLE);
+                arrowDown.setVisibility(View.GONE);
+                getWindow().getDecorView().setPivotY(0);
+            }
+
             getWindow().getDecorView().setPivotX(openingViewLocation[0]+viewClicked.getMeasuredWidth()/2);
-            getWindow().getDecorView().setPivotY(viewClicked.getY());
-            getWindow().getDecorView().setScaleX(0.0f);
-            getWindow().getDecorView().setScaleY(0.0f);
+            getWindow().getDecorView().setScaleX(0.3f);
+            getWindow().getDecorView().setScaleY(0.3f);
             getWindow().setAttributes(wlp);
             getWindow().getDecorView().
                     animate().
                     scaleX(1f).
                     scaleY(1f).
-                    setDuration(150);
+                    setDuration(250);
 //                   .setInterpolator(new AccelerateInterpolator());
 
         }
