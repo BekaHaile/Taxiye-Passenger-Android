@@ -262,26 +262,29 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden) {
-            activity.fragmentUISetup(this);
-            activity.setAddressTextToLocationPlaceHolder();
-            activity.resumeMethod();
-            menusRestaurantAdapter.applyFilter();
-            activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-            if (searchOpened) {
-                searchOpened = false;
-                openSearch(false);
-            }
+        try {
+            if (!hidden) {
+				activity.fragmentUISetup(this);
+				activity.setAddressTextToLocationPlaceHolder();
+				activity.resumeMethod();
+				menusRestaurantAdapter.applyFilter();
+				activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
+				if (searchOpened) {
+					searchOpened = false;
+					openSearch(false);
+				}
 
-            activity.getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (activity.isRefreshCart()) {
-                        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
-                    }
-                    activity.setRefreshCart(false);
-                }
-            }, 300);
+				activity.getHandler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						if (activity.isRefreshCart()) {
+							activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
+						}
+						activity.setRefreshCart(false);
+					}
+				}, 300);
+			}
+        } catch (Exception e) {
         }
     }
 

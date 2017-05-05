@@ -493,7 +493,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         btnAddStar = (Button) rootView.findViewById(R.id.btnAddStar);
 
 
-        activity.sliderText.setText("Swipe to confirm >>");
+        try {
+            activity.sliderText.setText("Swipe to confirm >>");
+        } catch (Exception e) {
+        }
 
         displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

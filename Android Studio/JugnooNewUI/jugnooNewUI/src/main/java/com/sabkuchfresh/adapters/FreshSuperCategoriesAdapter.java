@@ -14,12 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.fragments.FreshHomeFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
@@ -193,7 +191,6 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
                     throw new Exception();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 Picasso.with(context).load(R.drawable.ic_fresh_new_placeholder)
                         .into(holder.ivSuperCategoryImage);
             }
