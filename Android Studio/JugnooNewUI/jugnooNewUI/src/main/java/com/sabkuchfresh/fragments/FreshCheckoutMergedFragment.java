@@ -723,7 +723,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private void setSlideInitial(){
         animateSliderButton(paramsF.leftMargin, 0);
-        activity.rlSliderContainer.setBackgroundResource(R.color.theme_color);
+        activity.rlSliderContainer.setBackgroundResource(R.drawable.bg_rectangle_gradient_normal);
         activity.relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
         activity.sliderText.setVisibility(View.VISIBLE);
         activity.viewAlpha.setAlpha(0.0f);

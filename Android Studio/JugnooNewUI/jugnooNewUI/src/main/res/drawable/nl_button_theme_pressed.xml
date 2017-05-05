@@ -4,7 +4,7 @@
     >
     
 
-    <gradient android:endColor="#c58f3f" android:startColor="#c1556c"/>
+    <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"/>
 
     <corners 
         android:radius="@dimen/button_corner_radius"

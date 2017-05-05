@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spannable;
@@ -774,6 +775,16 @@ public class Utils implements GAAction, GACategory{
 		shader = lin_grad;
 
 		return shader;
+	}
+
+	public static void setTextColorGradient(Activity activity,TextView... textViews){
+		for(TextView toSetView:textViews){
+			toSetView.measure(0,0);
+			int mWidth = toSetView.getMeasuredWidth();
+			Shader textShader=new LinearGradient(0, 0, (int)(mWidth/1.3), 0, ContextCompat.getColor(activity,R.color.gradient_normal_start),ContextCompat.getColor(activity,R.color.gradient_normal_end), Shader.TileMode.CLAMP);
+			toSetView.getPaint().setShader(textShader);
+		}
+
 	}
 
 	public static StateListDrawable getSelector(Context context, int normalState, int pressedState){
