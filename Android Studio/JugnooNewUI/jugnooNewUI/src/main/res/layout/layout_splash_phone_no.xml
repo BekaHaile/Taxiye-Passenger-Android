@@ -10,10 +10,20 @@
         android:src="@drawable/bg_top_2"
         android:tag="mwar" />
 
+    <ImageView
+        android:layout_width="403px"
+        android:layout_height="101px"
+        android:src="@drawable/splash_logo"
+        android:tag="mwar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/px_240"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/px_300">
+        android:layout_marginTop="@dimen/px_480"
+        android:layout_marginRight="@dimen/px_80"
+        android:layout_marginLeft="@dimen/px_80">
 
         <ImageView
             android:id="@+id/imageViewEmail"
