@@ -37,6 +37,9 @@ public class UserCheckoutResponse{
 	@SerializedName("subscription")
 	@Expose
 	private Subscription subscription;
+	@SerializedName("payment_info")
+	@Expose
+	private PaymentInfo paymentInfo;
 	@SerializedName("delivery_info")
 	@Expose
 	private DeliveryInfo deliveryInfo;
@@ -182,6 +185,10 @@ public class UserCheckoutResponse{
 		this.subscriptionInfo = subscriptionInfo;
 	}
 
+	public PaymentInfo getPaymentInfo() {
+		return paymentInfo;
+	}
+
 	public Integer getShowStarSubscriptions() {
 		if(showStarSubscriptions == null)
 			showStarSubscriptions = 0;
@@ -241,6 +248,16 @@ public class UserCheckoutResponse{
 
 	public void setRefreshOnCartChange(Integer refreshOnCartChange) {
 		this.refreshOnCartChange = refreshOnCartChange;
+	}
+
+	public class PaymentInfo{
+		@SerializedName("applicable_payment_mode")
+		@Expose
+		private Integer applicablePaymentMode;
+
+		public Integer getApplicablePaymentMode() {
+			return applicablePaymentMode;
+		}
 	}
 
 	public class Subscription {

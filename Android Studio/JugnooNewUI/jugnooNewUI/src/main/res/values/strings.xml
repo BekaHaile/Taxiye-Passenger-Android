@@ -1683,6 +1683,7 @@
     <string name="ask_a_question">Ask a question</string>
     <string name="email_was_incorrect">Email ID was incorrect</string>
     <string name="item_not_available">Selected item currently not available!</string>
+    <string name="total_savings">Total Savings</string>
 
 
 </resources>
