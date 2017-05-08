@@ -743,6 +743,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						performLoginBackPressed();
 					} else if (State.SIGNUP == state) {
 						performSignupBackPressed();
+					} else if (State.SPLASH_LOGIN_PHONE_NO == state){
+						changeUIState(State.SPLASH_LS_NEW);
 					}
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 				}
@@ -1484,6 +1486,19 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		currentView.setVisibility(View.GONE);
 	}
 
+	private void animLeftToRight(RelativeLayout currentView, RelativeLayout newView, int duration){
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.left_out);
+		animation.setFillAfter(true);
+		animation.setDuration(duration);
+		newView.startAnimation(animation);
+
+		Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.left_in);
+		animation1.setFillAfter(false);
+		animation1.setDuration(duration);
+		currentView.startAnimation(animation1);
+		currentView.setVisibility(View.GONE);
+	}
+
 	private void changeUIState(State state) {
 		imageViewJugnooLogo.requestFocus();
 		llContainer.setVisibility(View.GONE);
@@ -1570,7 +1585,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				relativeLayoutLS.setVisibility(View.GONE);
 				linearLayoutLogin.setVisibility(View.GONE);
 				relativeLayoutSignup.setVisibility(View.GONE);
-				rlPhoneLogin.setVisibility(View.GONE);
 				rlLoginSignupNew.setVisibility(View.VISIBLE);
 
 				if(this.state == State.SPLASH_INIT) {
@@ -1584,9 +1598,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					animation9.setDuration(duration);
 					rlSplashLogo.startAnimation(animation9);
 					rlSplashLogo.setVisibility(View.GONE);
-				}
-
-				if(this.state == State.CLAIM_GIFT) {
+				} else if(this.state == State.CLAIM_GIFT) {
 					Animation animation8 = AnimationUtils.loadAnimation(this, R.anim.right_in);
 					animation8.setFillAfter(true);
 					animation8.setDuration(duration);
@@ -1597,6 +1609,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					animation9.setDuration(duration);
 					rlClaimGift.startAnimation(animation9);
 					rlClaimGift.setVisibility(View.GONE);
+				} else if(this.state == State.SPLASH_LOGIN_PHONE_NO){
+					animLeftToRight(rlPhoneLogin, rlLoginSignupNew, duration);
 				}
 				GAUtils.trackScreenView(SIGNUP_LOGIN);
 
@@ -1606,18 +1620,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				imageViewBack.setVisibility(View.VISIBLE);
 				llContainer.setVisibility(View.VISIBLE);
 				rlPhoneLogin.setVisibility(View.VISIBLE);
-				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, 500);
-
-				/*Animation anim12 = AnimationUtils.loadAnimation(this, R.anim.right_in);
-				anim12.setFillAfter(true);
-				anim12.setDuration(duration);
-				rlPhoneLogin.startAnimation(anim12);
-
-				Animation anim23 = AnimationUtils.loadAnimation(this, R.anim.right_out);
-				anim23.setFillAfter(false);
-				anim23.setDuration(duration);
-				rlLoginSignupNew.startAnimation(anim23);
-				rlLoginSignupNew.setVisibility(View.GONE);*/
+				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, duration);
 
 				break;
 
