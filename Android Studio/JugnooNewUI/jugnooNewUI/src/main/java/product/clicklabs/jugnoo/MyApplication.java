@@ -404,12 +404,6 @@ public class MyApplication extends Application {
 			configModeToSet = ConfigMode.LIVE;
 		} else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
 			configModeToSet = ConfigMode.DEV;
-		} else if (link.equalsIgnoreCase(Config.getDev1ServerUrl())) {
-			configModeToSet = ConfigMode.DEV_1;
-		} else if (link.equalsIgnoreCase(Config.getDev2ServerUrl())) {
-			configModeToSet = ConfigMode.DEV_2;
-		} else if (link.equalsIgnoreCase(Config.getDev3ServerUrl())) {
-			configModeToSet = ConfigMode.DEV_3;
 		} else {
 			Config.CUSTOM_SERVER_URL = link;
 			configModeToSet = ConfigMode.CUSTOM;
@@ -426,8 +420,11 @@ public class MyApplication extends Application {
 		}
 		Config.setConfigMode(configModeToSet);
 		Config.FRESH_SERVER_URL = freshServerUrlToSet;
+		Config.MENUS_SERVER_URL = menusServerUrlToSet;
 
 		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
+		Prefs.with(context).save(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshServerUrl());
+		Prefs.with(context).save(SPLabels.MENUS_SERVER_SELECTED, Config.getMenusServerUrl());
 
 		RestClient.setupAllClients();
 	}
