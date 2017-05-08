@@ -45,6 +45,9 @@
             <!-- SignUp Onboarding -->
             <include layout="@layout/layout_splash_onboarding"/>
 
+            <!-- Login with phone no-->
+            <include layout="@layout/layout_splash_phone_no"/>
+
         </LinearLayout>
 
         <TextView

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlPhoneLogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="visible"
     android:background="@color/white">
 
     <ImageView
@@ -19,6 +21,7 @@
         android:layout_marginTop="@dimen/px_240"/>
 
     <RelativeLayout
+        android:id="@+id/rlPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/px_480"
@@ -68,7 +71,28 @@
             android:textColor="@color/text_color_hint"
             android:textSize="@dimen/text_size_22" />
 
+
+
     </RelativeLayout>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginLeft="@dimen/px_80"
+        android:layout_marginRight="@dimen/px_80"
+        android:layout_below="@+id/rlPhone"
+        android:src="@color/grey_light" />
+
+    <Button
+        android:layout_width="550px"
+        android:layout_height="@dimen/splash_button_height"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/px_50"
+        android:layout_below="@+id/rlPhone"
+        android:text="@string/continue_text"
+        android:textColor="@color/white"
+        android:background="@drawable/capsule_theme_login_selector"/>
 
     <ImageView
         android:layout_width="match_parent"

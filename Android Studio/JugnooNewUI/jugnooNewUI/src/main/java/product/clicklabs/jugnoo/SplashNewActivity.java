@@ -194,7 +194,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	private TextView tvGiftFrom, tvGiftDetail, tvReferralTitle, tvSkip;
 	private Button btnClaimGift, bPromoSubmit;
 	private String refreeUserId = "", loginResponseStr;
-	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle;
+	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle, rlPhoneLogin;
 	private LoginResponse loginResponseData;
 
 
@@ -564,6 +564,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			svSignupOnboarding = (ScrollView) findViewById(R.id.svSignupOnboarding);
 			llSignupOnboarding = (LinearLayout) findViewById(R.id.llSignupOnboarding);
 			tvSkip = (TextView) findViewById(R.id.tvSkip);
+			rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
+
 
 			root.setOnClickListener(onClickListenerKeybordHide);
 
@@ -788,7 +790,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				@Override
 				public void onClick(View v) {
 //					fbAccountKit.startFbAccountKit(null);
-					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
+
+					/*Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 					intent.putExtra("show_timer", 1);
 					//intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
 					intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
@@ -796,8 +799,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					intent.putExtra("email", editTextEmail.getText().toString().trim());
 					intent.putExtra("otp_length", "4");
 					startActivity(intent);
-					//finish();
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);*/
+
+					changeUIState(State.SPLASH_LOGIN_PHONE_NO);
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});
@@ -1467,6 +1471,19 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		Log.i("Splash", "temp");
 	}
 
+	private void animRightToLeft(RelativeLayout currentView, RelativeLayout newView, int duration){
+		Animation anim1 = AnimationUtils.loadAnimation(this, R.anim.right_in);
+		anim1.setFillAfter(true);
+		anim1.setDuration(duration);
+		newView.startAnimation(anim1);
+
+		Animation anim2 = AnimationUtils.loadAnimation(this, R.anim.right_out);
+		anim2.setFillAfter(false);
+		anim2.setDuration(duration);
+		currentView.startAnimation(anim2);
+		currentView.setVisibility(View.GONE);
+	}
+
 	private void changeUIState(State state) {
 		imageViewJugnooLogo.requestFocus();
 		llContainer.setVisibility(View.GONE);
@@ -1475,6 +1492,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		rlLoginSignupNew.clearAnimation();
 		rlLoginSignupNew.setVisibility(View.GONE);
 		llSignupOnboarding.setVisibility(View.GONE);
+		rlPhoneLogin.setVisibility(View.GONE);
 		int duration = 500;
 		switch (state) {
 			case SPLASH_INIT:
@@ -1552,6 +1570,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				relativeLayoutLS.setVisibility(View.GONE);
 				linearLayoutLogin.setVisibility(View.GONE);
 				relativeLayoutSignup.setVisibility(View.GONE);
+				rlPhoneLogin.setVisibility(View.GONE);
 				rlLoginSignupNew.setVisibility(View.VISIBLE);
 
 				if(this.state == State.SPLASH_INIT) {
@@ -1580,6 +1599,25 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					rlClaimGift.setVisibility(View.GONE);
 				}
 				GAUtils.trackScreenView(SIGNUP_LOGIN);
+
+				break;
+
+			case SPLASH_LOGIN_PHONE_NO:
+				imageViewBack.setVisibility(View.VISIBLE);
+				llContainer.setVisibility(View.VISIBLE);
+				rlPhoneLogin.setVisibility(View.VISIBLE);
+				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, 500);
+
+				/*Animation anim12 = AnimationUtils.loadAnimation(this, R.anim.right_in);
+				anim12.setFillAfter(true);
+				anim12.setDuration(duration);
+				rlPhoneLogin.startAnimation(anim12);
+
+				Animation anim23 = AnimationUtils.loadAnimation(this, R.anim.right_out);
+				anim23.setFillAfter(false);
+				anim23.setDuration(duration);
+				rlLoginSignupNew.startAnimation(anim23);
+				rlLoginSignupNew.setVisibility(View.GONE);*/
 
 				break;
 
@@ -2582,7 +2620,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 	public enum State {
 		SPLASH_INIT(0), SPLASH_LS(1), SPLASH_NO_NET(2), LOGIN(3), SIGNUP(4), CLAIM_GIFT(5), SPLASH_LS_NEW(6),
-		SPLASH_ONBOARDING(7);
+		SPLASH_ONBOARDING(7), SPLASH_LOGIN_PHONE_NO(8);
 
 		private int ordinal;
 
