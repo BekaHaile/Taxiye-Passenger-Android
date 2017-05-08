@@ -490,6 +490,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             menusRestaurantAdapter.setSearchApiHitOnce(false);
             if (clearEt) {
                 activity.getTopBar().etSearch.setText("");
+            } else {
+                activity.getTopBar().etSearch.setText(menusRestaurantAdapter.getSearchText());
+                activity.getTopBar().etSearch.setSelection(activity.getTopBar().etSearch.getText().length());
             }
             activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
             activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);

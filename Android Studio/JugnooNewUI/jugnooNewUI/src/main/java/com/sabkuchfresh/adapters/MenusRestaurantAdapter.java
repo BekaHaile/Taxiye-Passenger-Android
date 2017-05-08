@@ -1027,4 +1027,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     };
 
+    public String getSearchText(){
+        return searchText;
+    }
+
 }
