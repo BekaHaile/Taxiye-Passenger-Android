@@ -728,7 +728,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			buttonRefresh.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (!loginDataFetched) {
+					if (!loginDataFetched && state != State.SPLASH_ONBOARDING) {
 						getDeviceToken();
 					}
 				}
