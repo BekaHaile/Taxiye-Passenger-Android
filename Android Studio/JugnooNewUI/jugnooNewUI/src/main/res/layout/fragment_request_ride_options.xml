@@ -213,7 +213,7 @@
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="-1dp"
-                        android:src="@color/text_color_hint"/>
+                        android:src="@color/stroke_light_grey_alpha"/>
 
                     <LinearLayout
                         android:id="@+id/linearLayoutMinFareMS"
@@ -250,7 +250,7 @@
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="-1dp"
-                        android:src="@color/text_color_hint"/>
+                        android:src="@color/stroke_light_grey_alpha"/>
 
                     <TextView
                         android:id="@+id/textViewOffers"
@@ -274,7 +274,7 @@
                     android:layout_marginLeft="5px"
                     android:layout_marginRight="5px"
                     android:layout_marginTop="-1dp"
-                    android:background="@color/text_color_hint"/>
+                    android:background="@color/stroke_light_grey_alpha"/>
 
 
                 <TextView
