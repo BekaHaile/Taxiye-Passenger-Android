@@ -408,11 +408,11 @@
                     android:id="@+id/buttonCancelRide"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/menu_item_selector_color"
+                    android:background="@drawable/bg_theme_color_selector"
                     android:singleLine="true"
+                    android:textColor="@android:color/white"
                     android:text="Cancel Ride"
                     android:textAllCaps="true"
-                    android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_32"
                     android:visibility="gone"
 

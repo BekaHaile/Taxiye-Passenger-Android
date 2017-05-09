@@ -378,4 +378,11 @@
     <color name="orange_promo_count_stroke">#f6a623</color>
     <color name="text_color_87">#878787</color>
 
+    <!--New Gradient Colors-->
+    <color name="gradient_normal_start">#e85d7b</color>
+    <color name="gradient_normal_end">#efa645</color>
+    <color name="gradient_pressed_start">#c1556c</color>
+    <color name="gradient_pressed_end">#c58f3f</color>
+
+
 </resources>

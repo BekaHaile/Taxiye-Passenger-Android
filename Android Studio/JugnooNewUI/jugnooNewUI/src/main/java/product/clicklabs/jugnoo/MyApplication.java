@@ -88,11 +88,11 @@ public class MyApplication extends Application {
          Edited by Parminder Singh on 1/30/17 at 3:47 PM
          **/
 
-
         Typekit.getInstance()
                 .add("maven", Typekit.createFromAsset(this, "fonts/maven_pro_medium.ttf"))
-				.add(getString(R.string.maven_r), Typekit.createFromAsset(this, "fonts/maven_pro_regular.otf"))
-				.add("avenir",Typekit.createFromAsset(this,  "fonts/avenir_next_demi.otf"));
+                .add(getString(R.string.maven_r), Typekit.createFromAsset(this, "fonts/maven_pro_regular.otf"))
+                .add("avenir",Typekit.createFromAsset(this,  "fonts/avenir_next_demi.otf"));
+
 
 
         super.onCreate();

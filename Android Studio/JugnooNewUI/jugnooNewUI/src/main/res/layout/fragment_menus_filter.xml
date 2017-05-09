@@ -503,7 +503,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="8px"
                             android:layout_alignParentBottom="true"
-                            android:background="@color/theme_color"
+                            android:background="@drawable/bg_rectangle_gradient_normal"
                             />
 
                     </RelativeLayout>
@@ -536,7 +536,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="8px"
                             android:layout_alignParentBottom="true"
-                            android:background="@color/theme_color"
+                            android:background="@drawable/bg_rectangle_gradient_normal"
                             />
 
                     </RelativeLayout>
@@ -568,7 +568,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="8px"
                             android:layout_alignParentBottom="true"
-                            android:background="@color/theme_color"
+                            android:background="@drawable/bg_rectangle_gradient_normal"
                             />
 
                     </RelativeLayout>
@@ -634,7 +634,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="8px"
                             android:layout_alignParentBottom="true"
-                            android:background="@color/theme_color"
+                            android:background="@drawable/bg_rectangle_gradient_normal"
                             />
 
                     </RelativeLayout>
@@ -667,7 +667,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="8px"
                             android:layout_alignParentBottom="true"
-                            android:background="@color/theme_color"
+                            android:background="@drawable/bg_rectangle_gradient_normal"
                             />
 
                     </RelativeLayout>
@@ -699,7 +699,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="8px"
                             android:layout_alignParentBottom="true"
-                            android:background="@color/theme_color"
+                            android:background="@drawable/bg_rectangle_gradient_normal"
                             />
 
                     </RelativeLayout>
