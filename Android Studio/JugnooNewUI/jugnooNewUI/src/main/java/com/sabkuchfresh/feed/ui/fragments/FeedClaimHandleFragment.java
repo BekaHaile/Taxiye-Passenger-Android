@@ -100,6 +100,14 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
         llMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
         GAUtils.trackScreenView(FEED+HANDLE_INPUT);
+        activity.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(FeedClaimHandleFragment.this.getView()!=null){
+                    Utils.showSoftKeyboard(activity,edtClaimHandle);
+                }
+            }
+        },200);
         return rootView;
 
     }
