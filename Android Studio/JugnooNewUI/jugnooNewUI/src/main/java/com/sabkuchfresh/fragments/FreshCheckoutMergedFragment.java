@@ -1072,9 +1072,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 						activity.setPaymentOption(PaymentOption.PAYTM);
 					}
 				} else if(type == AppConstant.ApplicationType.FRESH){
-                    if(activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()){
+                    if(getPaymentInfoMode() == ApplicablePaymentMode.CASH.getOrdinal()){
                         activity.setPaymentOption(PaymentOption.CASH);
-                    } else if(activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()
+                    } else if(getPaymentInfoMode() == ApplicablePaymentMode.ONLINE.getOrdinal()
                             && activity.getPaymentOption() == PaymentOption.CASH){
                         activity.setPaymentOption(PaymentOption.PAYTM);
                     }
@@ -1915,26 +1915,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
             }
 
-            // for razorPay layout adding
-			/*ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
-			if(paymentGatewayModeConfigs != null && paymentGatewayModeConfigs.size() > 0){
-				for(PaymentGatewayModeConfig modeConfig : paymentGatewayModeConfigs){
-					if(modeConfig.getEnabled()!= null && modeConfig.getEnabled() == 1){
-                        if(!TextUtils.isEmpty(modeConfig.getName())
-                                && modeConfig.getName().equalsIgnoreCase("upi_razorpay")){
-                            linearLayoutWalletContainer.addView(rlUPI);
-                            if(!TextUtils.isEmpty(modeConfig.getDisplayName())) {
-                                tvUPI.setText(modeConfig.getDisplayName());
-                            }
-                        } else {
-                            linearLayoutWalletContainer.addView(rlOtherModesToPay);
-                            if (!TextUtils.isEmpty(modeConfig.getDisplayName())) {
-                                tvOtherModesToPay.setText(modeConfig.getDisplayName());
-                            }
-                        }
-					}
-				}
-			}*/
 
         } catch (Exception e){
             e.printStackTrace();
@@ -1944,10 +1924,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             if(type == AppConstant.ApplicationType.MENUS){
 				setPaymentOptionVisibility(activity.getVendorOpened().getApplicablePaymentMode());
 			} else if(type == AppConstant.ApplicationType.FRESH){
-                setPaymentOptionVisibility(activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode());
+                setPaymentOptionVisibility(getPaymentInfoMode());
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private int getPaymentInfoMode(){
+        if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode() != null){
+            return activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode().intValue();
+        } else{
+            return ApplicablePaymentMode.BOTH.getOrdinal();
         }
     }
 
@@ -1990,7 +1978,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             } else if (type == AppConstant.ApplicationType.MENUS) {
                 filterCouponsByApplicationPaymentMode(activity.getVendorOpened().getApplicablePaymentMode(), ProductType.MENUS);
             } else {
-                filterCouponsByApplicationPaymentMode(activity.getVendorOpened().getApplicablePaymentMode(), ProductType.FRESH);
+                filterCouponsByApplicationPaymentMode(getPaymentInfoMode(), ProductType.FRESH);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2323,6 +2311,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         }
                                         updateCouponsDataView();
                                         updateCartDataView();
+                                        if(type == AppConstant.ApplicationType.FRESH){
+                                            setPaymentOptionVisibility(getPaymentInfoMode());
+                                        }
 
                                         try {
                                             if (cartChangedRefreshCheckout) {
