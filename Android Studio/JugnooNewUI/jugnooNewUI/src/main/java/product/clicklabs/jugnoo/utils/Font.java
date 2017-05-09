@@ -20,28 +20,28 @@ public class Font {
 
 	public Typeface mavenRegular(Context appContext) {											// accessing fonts functions
 		if (mavenRegular == null) {
-			mavenRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.ttf");
+			mavenRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.otf");
 		}
 		return mavenRegular;
 	}
 
 	public Typeface mavenLight(Context appContext) {											// accessing fonts functions
 		if (mavenLight == null) {
-			mavenLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_light_300.ttf");
+			mavenLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_light_300.otf");
 		}
 		return mavenLight;
 	}
 
 	public Typeface avenirNext(Context appContext) {											// accessing fonts functions
 		if (avenirNext == null) {
-			avenirNext = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_next_demi.ttf");
+			avenirNext = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_next_demi.otf");
 		}
 		return avenirNext;
 	}
 
 	public Typeface avenirMedium(Context appContext) {                                 // accessing fonts functions
 		if (avenirMedium == null) {
-			avenirMedium = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_medium.ttf");
+			avenirMedium = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_medium.otf");
 		}
 		return avenirMedium;
 	}
