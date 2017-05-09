@@ -51,11 +51,18 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Data.activityResumed = true;
 		if(!HomeActivity.checkIfUserDataNull(this)){
 			HomeActivity.checkForAccessTokenChange(this);
 		} else {
 			return;
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Data.activityResumed = false;
 	}
 
 	@Override
