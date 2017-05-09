@@ -175,7 +175,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             public void onCommentClick(final FeedDetail feedDetail, int positionInOriginalList) {
 
                 if (!swipeRefreshLayout.isRefreshing()) {
-                    activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList, true);
+                    activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList, true, -1);
                     GAUtils.event(FEED, HOME, COMMENT + CLICKED);
 
                 }
@@ -213,7 +213,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             @Override
             public void onFeedLayoutClick(FeedDetail feedDetail, int positionInOriginalList) {
                 if(!swipeRefreshLayout.isRefreshing()) {
-                    activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList, false);
+                    activity.getTransactionUtils().openFeedCommentsFragment(activity, activity.getRelativeLayoutContainer(), feedDetail, positionInOriginalList, false, -1);
                 }
 
             }
@@ -282,10 +282,12 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             public void run() {
                 try {
                     int postIdToOpen = Prefs.with(activity).getInt(Constants.SP_POST_ID_TO_OPEN, -1);
+                    int postNotificationId = Prefs.with(activity).getInt(Constants.SP_POST_NOTIFICATION_ID_TO_OPEN, -1);
                     if (postIdToOpen != -1) {
-                        activity.openFeedDetailsFragmentWithPostId(postIdToOpen);
+                        activity.openFeedDetailsFragmentWithPostId(postIdToOpen, postNotificationId);
                     }
                     Prefs.with(activity).save(Constants.SP_POST_ID_TO_OPEN, -1);
+                    Prefs.with(activity).save(Constants.SP_POST_NOTIFICATION_ID_TO_OPEN, -1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

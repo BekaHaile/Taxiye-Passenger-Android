@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
-import com.sabkuchfresh.commoncalls.ApiFeedNotificationUpdate;
 import com.sabkuchfresh.commoncalls.ApiFeedNotifications;
 import com.sabkuchfresh.feed.models.FeedNotificationsResponse;
 import com.sabkuchfresh.feed.models.NotificationDatum;
@@ -72,11 +71,14 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 				new FeedNotificationsAdapter.Callback() {
 			@Override
 			public void onNotificationClick(int position, NotificationDatum notificationDatum) {
+				int postNotificationId;
 				if(!notificationDatum.isRead()) {
-					updateFeedNotification(notificationDatum.getNotificationId());
 					notificationDatum.setIsRead(1);
+					postNotificationId = notificationDatum.getNotificationId();
+				} else {
+					postNotificationId = -1;
 				}
-				activity.openFeedDetailsFragmentWithPostId(notificationDatum.getPostId());
+				activity.openFeedDetailsFragmentWithPostId(notificationDatum.getPostId(), postNotificationId);
 			}
 		});
 		rvNotifications.setAdapter(notificationsAdapter);
@@ -139,16 +141,6 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 			});
 		}
 		apiFeedNotifications.hit(swipeRefreshLayout);
-	}
-
-
-
-	private ApiFeedNotificationUpdate apiFeedNotificationUpdate;
-	public void updateFeedNotification(int notificationId){
-		if(apiFeedNotificationUpdate == null){
-			apiFeedNotificationUpdate = new ApiFeedNotificationUpdate();
-		}
-		apiFeedNotificationUpdate.hit(notificationId);
 	}
 
 }

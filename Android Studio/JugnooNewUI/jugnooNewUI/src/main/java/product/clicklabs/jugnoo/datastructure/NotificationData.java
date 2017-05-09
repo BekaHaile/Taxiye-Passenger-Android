@@ -39,6 +39,9 @@ public class NotificationData {
     @SerializedName("post_id")
     @Expose
     private int postId;
+    @SerializedName("post_notification_id")
+    @Expose
+    private int postNotificationId;
 
     public NotificationData(int notificationId, String timePushArrived, String title, String message, int deepIndex,
                             String timeToDisplay, String timeTillDisplay, String notificationImage, String url) {
@@ -140,5 +143,13 @@ public class NotificationData {
 
     public void setPostId(int postId) {
         this.postId = postId;
+    }
+
+    public int getPostNotificationId() {
+        return postNotificationId;
+    }
+
+    public void setPostNotificationId(int postNotificationId) {
+        this.postNotificationId = postNotificationId;
     }
 }

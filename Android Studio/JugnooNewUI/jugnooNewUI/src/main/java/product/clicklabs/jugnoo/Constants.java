@@ -688,6 +688,7 @@ public interface Constants {
     String KEY_IS_READ = "is_read";
     String DEFAULT_IMAGE_URL = "http://tablabar.s3.amazonaws.com/brand_images/user.png";
     String SP_POST_ID_TO_OPEN = "sp_post_id_to_open";
+    String SP_POST_NOTIFICATION_ID_TO_OPEN = "sp_post_notification_id_to_open";
     String KEY_DRIVER_PHONE_NO = "driver_phone_no";
     String KEY_UPI_HANDLE = "upi_handle";
     String PAGE_COUNT = "pageCount";
@@ -698,4 +699,5 @@ public interface Constants {
     String SP_USE_COUPON_ = "sp_use_coupon_";
     String SP_USE_COUPON_IS_COUPON_ = "sp_use_coupon_is_coupon_";
     String KEY_ANIMATE_ASK_LOCAL_POST_TEXT = "key_animate_ask_local_post_text";
+    String KEY_POST_NOTIFICATION_ID = "post_notification_id";
 }

@@ -4264,11 +4264,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
-    public void openFeedDetailsFragmentWithPostId(int postId){
+    public void openFeedDetailsFragmentWithPostId(int postId, int postNotificationId){
         try {
             FeedDetail feedDetail = new FeedDetail();
             feedDetail.setPostId(postId);
-            getTransactionUtils().openFeedCommentsFragment(this, getRelativeLayoutContainer(), feedDetail, -1, false);
+            getTransactionUtils().openFeedCommentsFragment(this, getRelativeLayoutContainer(), feedDetail, -1, false, postNotificationId);
         } catch (Exception e) {
             e.printStackTrace();
         }
