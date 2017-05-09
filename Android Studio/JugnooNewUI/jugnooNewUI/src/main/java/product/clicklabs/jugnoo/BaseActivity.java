@@ -25,4 +25,15 @@ public class BaseActivity extends Activity {
 		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Data.activityResumed = true;
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Data.activityResumed = false;
+	}
 }
