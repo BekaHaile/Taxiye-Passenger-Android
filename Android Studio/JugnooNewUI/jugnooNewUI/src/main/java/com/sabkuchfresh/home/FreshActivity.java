@@ -2403,6 +2403,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         try {
                                             ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
                                             if (itemSelected.getQuantity() > 0) {
+												itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
                                                 item.getItemSelectedList().add(itemSelected);
                                             }
                                         } catch (Exception e) {
@@ -2420,6 +2421,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                     try {
                                         ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
                                         if (itemSelected.getQuantity() > 0) {
+											itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
                                             item.getItemSelectedList().add(itemSelected);
                                         }
                                     } catch (Exception e) {
