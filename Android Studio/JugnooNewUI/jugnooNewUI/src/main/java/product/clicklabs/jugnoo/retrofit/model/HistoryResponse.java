@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.retrofit.model.menus.Charges;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,18 +84,9 @@ public class HistoryResponse {
         @SerializedName("drop_address")
         @Expose
         private String dropAddress;
-        @SerializedName("city_id")
-        @Expose
-        private Integer cityId;
-        @SerializedName("driver_id")
-        @Expose
-        private Integer driverId = 0;
         @SerializedName("distance")
         @Expose
         private Double distance;
-        @SerializedName("wait_time")
-        @Expose
-        private Double waitTime = -1d;
         @SerializedName("is_cancelled_ride")
         @Expose
         private Integer isCancelledRide = 0;
@@ -103,91 +95,55 @@ public class HistoryResponse {
         private Double rideTime;
         @SerializedName("amount")
         @Expose
-        private Double amount;
-        @SerializedName("created_at")
-        @Expose
-        private String createdAt;
+        private double amount;
         @SerializedName("product_type")
         @Expose
         private Integer productType;
-        @SerializedName("customer_fare_factor")
-        @Expose
-        private Double customerFareFactor;
-        @SerializedName("cancellation_charges")
-        @Expose
-        private Double cancellationCharges;
         @SerializedName("date")
         @Expose
         private String date;
-        @SerializedName("is_rated_before")
-        @Expose
-        private Integer isRatedBefore;
         @SerializedName("engagement_id")
         @Expose
         private Integer engagementId = 0;
-        @SerializedName("user_id")
-        @Expose
-        private Integer userId;
         @SerializedName("order_id")
         @Expose
         private Integer orderId;
         @SerializedName("store_id")
         @Expose
         private Integer storeId;
-
-
-        @SerializedName("original_order_amount")
+        @SerializedName("discounted_amount")
         @Expose
-        private Double originalOrderAmount;
-
-        @SerializedName("order_item_amount_sum")
-        @Expose
-        private Double orderItemAmountSum;
-
+        private double discountedAmount;
         @SerializedName("order_amount")
         @Expose
-        private Double orderAmount;
-
-        @SerializedName("order_billable_amount")
-        @Expose
-        private Double orderBillableAmount;
-
-        @SerializedName("order_payble_amount")
-        @Expose
-        private Double orderPaybleAmount;
-
-
-
-        @SerializedName("jugnoo_deducted")
-        @Expose
-        private Double jugnooDeducted;
-        @SerializedName("paytm_deducted")
-        @Expose
-        private Double paytmDeducted;
-        @SerializedName("wallet_deducted")
-        @Expose
-        private Double walletDeducted;
+        private double orderAmount;
         @SerializedName("discount")
         @Expose
-        private Double discount;
-        @SerializedName("delivery_charges")
+        private double discount;
+        @SerializedName("sub_total")
         @Expose
-        private Double deliveryCharges;
+        private double subTotal;
+        @SerializedName("jugnoo_deducted")
+        @Expose
+        private double jugnooDeducted;
+        @SerializedName("wallet_deducted")
+        @Expose
+        private double walletDeducted;
+        @SerializedName("charges")
+        @Expose
+        private List<Charges> charges;
         @SerializedName("delivery_address")
         @Expose
         private String deliveryAddress;
-        @SerializedName("order_refund_amount")
+        @SerializedName("refund_amount")
         @Expose
-        private Double orderRefundAmount;
+        private double refundAmount;
         @SerializedName("expected_delivery_date")
         @Expose
         private String expectedDeliveryDate;
         @SerializedName("start_time")
         @Expose
         private String startTime;
-        @SerializedName("pending_feedback")
-        @Expose
-        private Integer pendingFeedback;
         @SerializedName("end_time")
         @Expose
         private String endTime;
@@ -211,19 +167,13 @@ public class HistoryResponse {
         private String orderTime;
         @SerializedName("cancellable")
         @Expose
-        private Integer cancellable = 0;
+        private int cancellable = 0;
         @SerializedName("can_reorder")
         @Expose
-        private Integer canReorder;
+        private int canReorder = 0;
         @SerializedName("order_items")
         @Expose
         private List<OrderItem> orderItems = new ArrayList<>();
-        @SerializedName("question")
-        @Expose
-        private String question;
-        @SerializedName("question_type")
-        @Expose
-        private Integer questionType;
         @SerializedName("client_id")
         @Expose
         private String clientId;
@@ -239,7 +189,6 @@ public class HistoryResponse {
         @SerializedName("support_category")
         @Expose
         private Integer supportCategory;
-
         @SerializedName("vehicle_type")
         @Expose
         private Integer vehicleType;
@@ -255,10 +204,6 @@ public class HistoryResponse {
         @SerializedName("delivery_address_type")
         @Expose
         private String deliveryAddressType;
-
-        @SerializedName("restaurant_id")
-        @Expose
-        private Integer restaurantId;
         @SerializedName("restaurant_name")
         @Expose
         private String restaurantName;
@@ -268,15 +213,6 @@ public class HistoryResponse {
         @SerializedName("restaurant_phone_no")
         @Expose
         private String restaurantPhoneNo;
-        @SerializedName("service_tax")
-        @Expose
-        private Double serviceTax;
-        @SerializedName("value_added_tax")
-        @Expose
-        private Double valueAddedTax;
-        @SerializedName("packing_charges")
-        @Expose
-        private Double packingCharges;
         @SerializedName("delivery_latitude")
         @Expose
         private Double deliveryLatitude;
@@ -286,19 +222,9 @@ public class HistoryResponse {
         @SerializedName("address_id")
         @Expose
         private Integer addressId;
-
-        @SerializedName("old_amount")
-        @Expose
-        private Double oldAmount;
-        @SerializedName("new_amount")
-        @Expose
-        private Double newAmount;
-        @SerializedName("total_amount")
-        @Expose
-        private Double totalAmount;
         @SerializedName("payable_amount")
         @Expose
-        private Double payableAmount;
+        private double payableAmount;
         @SerializedName("note")
         @Expose
         private String note;
@@ -308,6 +234,11 @@ public class HistoryResponse {
         @SerializedName("other_payment_mode_text")
         @Expose
         private String otherPaymentModeText;
+
+
+
+
+
 
         /**
          * @return The pickupAddress
@@ -337,19 +268,6 @@ public class HistoryResponse {
             this.dropAddress = dropAddress;
         }
 
-        /**
-         * @return The driverId
-         */
-        public Integer getDriverId() {
-            return driverId;
-        }
-
-        /**
-         * @param driverId The driver_id
-         */
-        public void setDriverId(Integer driverId) {
-            this.driverId = driverId;
-        }
 
         /**
          * @return The distance
@@ -365,19 +283,6 @@ public class HistoryResponse {
             this.distance = distance;
         }
 
-        /**
-         * @return The waitTime
-         */
-        public Double getWaitTime() {
-            return waitTime;
-        }
-
-        /**
-         * @param waitTime The wait_time
-         */
-        public void setWaitTime(Double waitTime) {
-            this.waitTime = waitTime;
-        }
 
         /**
          * @return The isCancelledRide
@@ -418,30 +323,17 @@ public class HistoryResponse {
         /**
          * @return The amount
          */
-        public Double getAmount() {
+        public double getAmount() {
             return amount;
         }
 
         /**
          * @param amount The amount
          */
-        public void setAmount(Double amount) {
+        public void setAmount(double amount) {
             this.amount = amount;
         }
 
-        /**
-         * @return The createdAt
-         */
-        public String getCreatedAt() {
-            return createdAt;
-        }
-
-        /**
-         * @param createdAt The created_at
-         */
-        public void setCreatedAt(String createdAt) {
-            this.createdAt = createdAt;
-        }
 
         /**
          * @return The productType
@@ -465,33 +357,7 @@ public class HistoryResponse {
             this.orderStatusInt = orderStatusInt;
         }
 
-        /**
-         * @return The customerFareFactor
-         */
-        public Double getCustomerFareFactor() {
-            return customerFareFactor;
-        }
 
-        /**
-         * @param customerFareFactor The customer_fare_factor
-         */
-        public void setCustomerFareFactor(Double customerFareFactor) {
-            this.customerFareFactor = customerFareFactor;
-        }
-
-        /**
-         * @return The cancellationCharges
-         */
-        public Double getCancellationCharges() {
-            return cancellationCharges;
-        }
-
-        /**
-         * @param cancellationCharges The cancellation_charges
-         */
-        public void setCancellationCharges(Double cancellationCharges) {
-            this.cancellationCharges = cancellationCharges;
-        }
 
         /**
          * @return The date
@@ -507,53 +373,10 @@ public class HistoryResponse {
             this.date = date;
         }
 
-        public Double getOriginalOrderAmount() {
-            return originalOrderAmount;
-        }
-
-        public void setOriginalOrderAmount(Double originalOrderAmount) {
-            this.originalOrderAmount = originalOrderAmount;
-        }
-
-        public Double getOrderBillableAmount() {
-            return orderBillableAmount;
-        }
-
-        public void setOrderBillableAmount(Double orderBillableAmount) {
-            this.orderBillableAmount = orderBillableAmount;
-        }
 
 
-        public Double getOrderPaybleAmount() {
-            return orderPaybleAmount;
-        }
-
-        public void setOrderPaybleAmount(Double orderPaybleAmount) {
-            this.orderPaybleAmount = orderPaybleAmount;
-        }
 
 
-        public Double getOrderItemAmountSum() {
-            return orderItemAmountSum;
-        }
-
-        public void setOrderItemAmountSum(Double orderItemAmountSum) {
-            this.orderItemAmountSum = orderItemAmountSum;
-        }
-
-        /**
-         * @return The isRatedBefore
-         */
-        public Integer getIsRatedBefore() {
-            return isRatedBefore;
-        }
-
-        /**
-         * @param isRatedBefore The is_rated_before
-         */
-        public void setIsRatedBefore(Integer isRatedBefore) {
-            this.isRatedBefore = isRatedBefore;
-        }
 
         /**
          * @return The engagementId
@@ -569,19 +392,6 @@ public class HistoryResponse {
             this.engagementId = engagementId;
         }
 
-        /**
-         * @return The userId
-         */
-        public Integer getUserId() {
-            return userId;
-        }
-
-        /**
-         * @param userId The user_id
-         */
-        public void setUserId(Integer userId) {
-            this.userId = userId;
-        }
 
         /**
          * @return The orderId
@@ -614,43 +424,29 @@ public class HistoryResponse {
         /**
          * @return The orderAmount
          */
-        public Double getOrderAmount() {
+        public double getOrderAmount() {
             return orderAmount;
         }
 
         /**
          * @param orderAmount The order_amount
          */
-        public void setOrderAmount(Double orderAmount) {
+        public void setOrderAmount(double orderAmount) {
             this.orderAmount = orderAmount;
         }
 
         /**
          * @return The jugnooDeducted
          */
-        public Double getJugnooDeducted() {
+        public double getJugnooDeducted() {
             return jugnooDeducted;
         }
 
         /**
          * @param jugnooDeducted The jugnoo_deducted
          */
-        public void setJugnooDeducted(Double jugnooDeducted) {
+        public void setJugnooDeducted(double jugnooDeducted) {
             this.jugnooDeducted = jugnooDeducted;
-        }
-
-        /**
-         * @return The paytmDeducted
-         */
-        public Double getPaytmDeducted() {
-            return paytmDeducted;
-        }
-
-        /**
-         * @param paytmDeducted The paytm_deducted
-         */
-        public void setPaytmDeducted(Double paytmDeducted) {
-            this.paytmDeducted = paytmDeducted;
         }
 
         /**
@@ -667,19 +463,6 @@ public class HistoryResponse {
             this.discount = discount;
         }
 
-        /**
-         * @return The deliveryCharges
-         */
-        public Double getDeliveryCharges() {
-            return deliveryCharges;
-        }
-
-        /**
-         * @param deliveryCharges The delivery_charges
-         */
-        public void setDeliveryCharges(Double deliveryCharges) {
-            this.deliveryCharges = deliveryCharges;
-        }
 
         /**
          * @return The deliveryAddress
@@ -695,23 +478,6 @@ public class HistoryResponse {
             this.deliveryAddress = deliveryAddress;
         }
 
-        /**
-         * @return The orderRefundAmount
-         */
-        public Double getOrderRefundAmount() {
-            if(orderRefundAmount != null){
-                return orderRefundAmount;
-            } else {
-                return 0d;
-            }
-        }
-
-        /**
-         * @param orderRefundAmount The order_refund_amount
-         */
-        public void setOrderRefundAmount(Double orderRefundAmount) {
-            this.orderRefundAmount = orderRefundAmount;
-        }
 
         /**
          * @return The expectedDeliveryDate
@@ -741,19 +507,6 @@ public class HistoryResponse {
             this.startTime = startTime;
         }
 
-        /**
-         * @return The pendingFeedback
-         */
-        public Integer getPendingFeedback() {
-            return pendingFeedback;
-        }
-
-        /**
-         * @param pendingFeedback The pending_feedback
-         */
-        public void setPendingFeedback(Integer pendingFeedback) {
-            this.pendingFeedback = pendingFeedback;
-        }
 
         /**
          * @return The endTime
@@ -828,36 +581,28 @@ public class HistoryResponse {
         /**
          * @return The cancellable
          */
-        public Integer getCancellable() {
-            if(cancellable != null){
-                return cancellable;
-            } else {
-                return 0;
-            }
+        public int getCancellable() {
+            return cancellable;
         }
 
         /**
          * @param cancellable The cancellable
          */
-        public void setCancellable(Integer cancellable) {
+        public void setCancellable(int cancellable) {
             this.cancellable = cancellable;
         }
 
         /**
          * @return The canReorder
          */
-        public Integer getCanReorder() {
-            if(canReorder != null){
-                return canReorder;
-            } else {
-                return 0;
-            }
+        public int getCanReorder() {
+            return canReorder;
         }
 
         /**
          * @param canReorder The can_reorder
          */
-        public void setCanReorder(Integer canReorder) {
+        public void setCanReorder(int canReorder) {
             this.canReorder = canReorder;
         }
 
@@ -875,33 +620,6 @@ public class HistoryResponse {
             this.orderItems = orderItems;
         }
 
-        /**
-         * @return The question
-         */
-        public String getQuestion() {
-            return question;
-        }
-
-        /**
-         * @param question The question
-         */
-        public void setQuestion(String question) {
-            this.question = question;
-        }
-
-        /**
-         * @return The questionType
-         */
-        public Integer getQuestionType() {
-            return questionType;
-        }
-
-        /**
-         * @param questionType The question_type
-         */
-        public void setQuestionType(Integer questionType) {
-            this.questionType = questionType;
-        }
 
         public String getClientId() {
             return clientId;
@@ -947,11 +665,11 @@ public class HistoryResponse {
             this.autosStatusText = autosStatusText;
         }
 
-        public Double getWalletDeducted() {
+        public double getWalletDeducted() {
             return walletDeducted;
         }
 
-        public void setWalletDeducted(Double walletDeducted) {
+        public void setWalletDeducted(double walletDeducted) {
             this.walletDeducted = walletDeducted;
         }
 
@@ -1004,33 +722,6 @@ public class HistoryResponse {
             this.deliveryAddressType = deliveryAddressType;
         }
 
-
-      /*  public int getSubAmountValue() {
-            return subAmountValue;
-        }
-
-        public void setSubAmountValue(int subAmountValue) {
-            this.subAmountValue = subAmountValue;
-        }
-
-
-        public String getTotalAmountValue() {
-            return totalAmountValue;
-        }
-
-        public void setTotalAmountValue(String totalAmountValue) {
-            this.totalAmountValue = totalAmountValue;
-        }*/
-
-
-        public Integer getRestaurantId() {
-            return restaurantId;
-        }
-
-        public void setRestaurantId(Integer restaurantId) {
-            this.restaurantId = restaurantId;
-        }
-
         public String getRestaurantName() {
             return restaurantName;
         }
@@ -1055,41 +746,6 @@ public class HistoryResponse {
             this.restaurantPhoneNo = restaurantPhoneNo;
         }
 
-        public Double getServiceTax() {
-            if(serviceTax != null){
-                return serviceTax;
-            } else {
-                return 0d;
-            }
-        }
-
-        public void setServiceTax(Double serviceTax) {
-            this.serviceTax = serviceTax;
-        }
-
-        public Double getValueAddedTax() {
-            if(valueAddedTax != null){
-                return valueAddedTax;
-            } else {
-                return 0d;
-            }
-        }
-
-        public void setValueAddedTax(Double valueAddedTax) {
-            this.valueAddedTax = valueAddedTax;
-        }
-
-        public Double getPackingCharges() {
-            if(packingCharges != null){
-                return packingCharges;
-            } else {
-                return 0d;
-            }
-        }
-
-        public void setPackingCharges(Double packingCharges) {
-            this.packingCharges = packingCharges;
-        }
 
         public Double getDeliveryLatitude() {
             return deliveryLatitude;
@@ -1118,46 +774,12 @@ public class HistoryResponse {
             this.addressId = addressId;
         }
 
-        public Integer getCityId() {
-            if(cityId == null){
-                cityId = -1;
-            }
-            return cityId;
-        }
 
-        public void setCityId(Integer cityId) {
-            this.cityId = cityId;
-        }
-
-        public Double getOldAmount() {
-            return oldAmount;
-        }
-
-        public void setOldAmount(Double oldAmount) {
-            this.oldAmount = oldAmount;
-        }
-
-        public Double getNewAmount() {
-            return newAmount;
-        }
-
-        public void setNewAmount(Double newAmount) {
-            this.newAmount = newAmount;
-        }
-
-        public Double getTotalAmount() {
-            return totalAmount;
-        }
-
-        public void setTotalAmount(Double totalAmount) {
-            this.totalAmount = totalAmount;
-        }
-
-        public Double getPayableAmount() {
+        public double getPayableAmount() {
             return payableAmount;
         }
 
-        public void setPayableAmount(Double payableAmount) {
+        public void setPayableAmount(double payableAmount) {
             this.payableAmount = payableAmount;
         }
 
@@ -1187,6 +809,38 @@ public class HistoryResponse {
         public void setOtherPaymentModeText(String otherPaymentModeText) {
             this.otherPaymentModeText = otherPaymentModeText;
         }
+
+        public double getDiscountedAmount() {
+            return discountedAmount;
+        }
+
+        public void setDiscountedAmount(double discountedAmount) {
+            this.discountedAmount = discountedAmount;
+        }
+
+        public double getSubTotal() {
+            return subTotal;
+        }
+
+        public void setSubTotal(double subTotal) {
+            this.subTotal = subTotal;
+        }
+
+        public List<Charges> getCharges() {
+            return charges;
+        }
+
+        public void setCharges(List<Charges> charges) {
+            this.charges = charges;
+        }
+
+        public double getRefundAmount() {
+            return refundAmount;
+        }
+
+        public void setRefundAmount(double refundAmount) {
+            this.refundAmount = refundAmount;
+        }
     }
 
 
@@ -1198,30 +852,21 @@ public class HistoryResponse {
         @SerializedName("item_amount")
         @Expose
         private Double itemAmount;
-        @SerializedName("item_refund_amount")
-        @Expose
-        private Integer itemRefundAmount;
         @SerializedName("item_quantity")
         @Expose
         private Integer itemQuantity;
         @SerializedName("item_name")
         @Expose
         private String itemName;
-        @SerializedName("unit")
+        @SerializedName("item_unit_price")
         @Expose
-        private String unit;
-        @SerializedName("unit_amount")
-        @Expose
-        private Double unitAmount;
+        private double itemUnitPrice;
         @SerializedName("item_cancelled")
         @Expose
         private Integer itemCancelled;
         @SerializedName("customisations")
         @Expose
         private String customisations;
-        @SerializedName("sub_item_image")
-        @Expose
-        private String subItemImage;
         /**
          * @return The subItemId
          */
@@ -1248,20 +893,6 @@ public class HistoryResponse {
          */
         public void setItemAmount(Double itemAmount) {
             this.itemAmount = itemAmount;
-        }
-
-        /**
-         * @return The itemRefundAmount
-         */
-        public Integer getItemRefundAmount() {
-            return itemRefundAmount;
-        }
-
-        /**
-         * @param itemRefundAmount The item_refund_amount
-         */
-        public void setItemRefundAmount(Integer itemRefundAmount) {
-            this.itemRefundAmount = itemRefundAmount;
         }
 
         /**
@@ -1292,20 +923,6 @@ public class HistoryResponse {
             this.itemName = itemName;
         }
 
-        /**
-         * @return The unit
-         */
-        public String getUnit() {
-            return unit;
-        }
-
-        /**
-         * @param unit The unit
-         */
-        public void setUnit(String unit) {
-            this.unit = unit;
-        }
-
 
         public Integer getItemCancelled() {
             if(itemCancelled == null){
@@ -1321,18 +938,6 @@ public class HistoryResponse {
             this.itemCancelled = itemCancelled;
         }
 
-        public Double getUnitAmount() {
-            if(unitAmount != null){
-                return unitAmount;
-            } else {
-                return 0.0;
-            }
-        }
-
-        public void setUnitAmount(Double unitAmount) {
-            this.unitAmount = unitAmount;
-        }
-
         public String getCustomisations() {
             return customisations;
         }
@@ -1341,12 +946,12 @@ public class HistoryResponse {
             this.customisations = customisations;
         }
 
-        public String getSubItemImage() {
-            return subItemImage;
+        public double getItemUnitPrice() {
+            return itemUnitPrice;
         }
 
-        public void setSubItemImage(String subItemImage) {
-            this.subItemImage = subItemImage;
+        public void setItemUnitPrice(double itemUnitPrice) {
+            this.itemUnitPrice = itemUnitPrice;
         }
     }
 }

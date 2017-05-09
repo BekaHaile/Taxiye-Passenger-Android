@@ -113,7 +113,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements GA
 			ASSL.closeActivity(relative);
 			System.gc();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		super.onDestroy();
 	}

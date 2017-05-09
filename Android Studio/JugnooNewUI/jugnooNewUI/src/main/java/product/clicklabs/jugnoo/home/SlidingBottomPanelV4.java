@@ -158,7 +158,6 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         try {
             updateBottomPanel(Data.autoData.getRegions().size());
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         update();

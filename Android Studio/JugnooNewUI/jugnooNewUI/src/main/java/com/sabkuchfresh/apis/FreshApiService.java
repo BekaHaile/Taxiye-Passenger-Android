@@ -41,7 +41,7 @@ public interface FreshApiService {
 					Callback<PlaceOrderResponse> callback);
 
 	@FormUrlEncoded
-	@POST("/order_history")
+	@POST("/v2/order_history")
 	void orderHistory(@FieldMap Map<String, String> params,
                       Callback<HistoryResponse> callback);
 

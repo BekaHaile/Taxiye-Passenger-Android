@@ -36,6 +36,7 @@ import com.sabkuchfresh.commoncalls.ApiCancelOrder;
 import com.sabkuchfresh.fragments.OrderCancelReasonsFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
+import com.sabkuchfresh.retrofit.model.menus.Charges;
 import com.sabkuchfresh.utils.TextViewStrikeThrough;
 
 import org.json.JSONObject;
@@ -84,7 +85,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private OrderItemsAdapter orderItemsAdapter;
     private LinearLayout llFinalAmount, llDeliveryPlace, orderComplete, orderCancel;
     private ArrayList<HistoryResponse.OrderItem> subItemsOrders = new ArrayList<>();
-    private HistoryResponse.Datum orderHistory;
+    private HistoryResponse.Datum datum1;
     private FragmentActivity activity;
     private CardView cvOrderStatus, cvPaymentMethod;
     public TextView tvStatus0, tvStatus1, tvStatus2, tvStatus3;
@@ -114,7 +115,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             GAUtils.trackScreenView(((FreshActivity)activity).getGaCategory()+ORDER_STATUS);
         }
 
-        new ASSL(activity, relative, 1134, 720, false);
+        try {
+            new ASSL(activity, relative, 1134, 720, false);
+        } catch (Exception e) {}
 
 
         try {
@@ -213,7 +216,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 if (activity instanceof RideTransactionsActivity) {
                     new TransactionUtils().openRideIssuesFragment(activity,
                             ((RideTransactionsActivity) activity).getContainer(),
-                            -1, -1, null, null, 0, false, 0, orderHistory);
+                            -1, -1, null, null, 0, false, 0, datum1);
                 } else{
                     activity.onBackPressed();
                 }
@@ -223,8 +226,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         imageViewCallRestaurant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!TextUtils.isEmpty(orderHistory.getRestaurantPhoneNo())){
-                    Utils.openCallIntent(activity, orderHistory.getRestaurantPhoneNo());
+                if(!TextUtils.isEmpty(datum1.getRestaurantPhoneNo())){
+                    Utils.openCallIntent(activity, datum1.getRestaurantPhoneNo());
                 }
             }
         });
@@ -248,7 +251,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 ((FreshActivity)activity).fragmentUISetup(this);
             }
             setFragTitle();
-            if (orderHistory.getCancellable() == 1) {
+            if (datum1.getCancellable() == 1) {
                 orderCancel.setVisibility(View.VISIBLE);
                 orderComplete.setVisibility(View.GONE);
                 if(activity instanceof SupportActivity) {
@@ -261,7 +264,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 cancelfeedbackBtn.setVisibility(View.GONE);
                 if (activity instanceof RideTransactionsActivity) {
                     feedbackBtn.setText(R.string.need_help);
-                    if (orderHistory.getCanReorder() == 1) {
+                    if (datum1.getCanReorder() == 1) {
                         reorderBtn.setVisibility(View.VISIBLE);
                     } else {
                         orderComplete.setVisibility(View.GONE);
@@ -271,16 +274,16 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }
                 } else {
-                    if (orderHistory.getCanReorder() == 1 && !(activity instanceof FreshActivity)) {
+                    if (datum1.getCanReorder() == 1 && !(activity instanceof FreshActivity)) {
                         reorderBtn.setVisibility(View.VISIBLE);
                         feedbackBtn.setVisibility(View.GONE);
-                    } else if (orderHistory.getCanReorder() == 1 && (activity instanceof FreshActivity)) {
+                    } else if (datum1.getCanReorder() == 1 && (activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
                         buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
-                    } else if (orderHistory.getCanReorder() == 0 && !(activity instanceof FreshActivity)) {
+                    } else if (datum1.getCanReorder() == 0 && !(activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
@@ -337,7 +340,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
                                     llMain.setVisibility(View.VISIBLE);
-                                    orderHistory = historyResponse.getData().get(0);
+                                    datum1 = historyResponse.getData().get(0);
                                     subItemsOrders.clear();
                                     subItemsOrders.addAll(historyResponse.getData().get(0).getOrderItems());
                                     orderItemsAdapter.notifyDataSetChanged();
@@ -492,6 +495,14 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         ivStatus0.setLayoutParams(layoutParams);
     }
 
+    /**
+     * to show positive/negative fields
+     * @param llFinalAmount
+     * @param fieldText
+     * @param fieldTextVal
+     * @param showNegative
+     * @return
+     */
     private View addFinalAmountView(LinearLayout llFinalAmount, String fieldText, Double fieldTextVal, boolean showNegative){
         return addFinalAmountView(llFinalAmount, fieldText, fieldTextVal, showNegative, false, true, false);
     }
@@ -546,18 +557,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         return subTotal;
     }
 
-    private double getBilledAmount(HistoryResponse historyResponse){
-        return (historyResponse.getData().get(0).getOrderAmount() + historyResponse.getData().get(0).getJugnooDeducted()
-                + historyResponse.getData().get(0).getDiscount());
-    }
-
     private void setStatusResponse(HistoryResponse historyResponse) {
         try {
-            HistoryResponse.Datum datum = historyResponse.getData().get(0);
+            HistoryResponse.Datum datum1 = historyResponse.getData().get(0);
 
-            tvOrderStatusVal.setText(datum.getOrderStatus());
-            if((datum.getOrderStatusInt() == OrderStatus.ORDER_COMPLETED.getOrdinal())
-                    || datum.getOrderStatusInt() == OrderStatus.CASH_RECEIVED.getOrdinal()){
+            tvOrderStatusVal.setText(datum1.getOrderStatus());
+            if((datum1.getOrderStatusInt() == OrderStatus.ORDER_COMPLETED.getOrdinal())
+                    || datum1.getOrderStatusInt() == OrderStatus.CASH_RECEIVED.getOrdinal()){
                 ivOrderCompleted.setVisibility(View.VISIBLE);
             } else{
                 ivOrderCompleted.setVisibility(View.GONE);
@@ -567,47 +573,47 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 cvOrderStatus.setVisibility(View.VISIBLE);
                 rlOrderStatus.setVisibility(View.GONE);
                 setDefaultState();
-                showPossibleStatus(historyResponse.getRecentOrdersPossibleStatus(), datum.getOrderTrackingIndex());
+                showPossibleStatus(historyResponse.getRecentOrdersPossibleStatus(), datum1.getOrderTrackingIndex());
             } else{
                 cvOrderStatus.setVisibility(View.GONE);
                 rlOrderStatus.setVisibility(View.VISIBLE);
             }
 
 
-            tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getOrderTime())));
+            tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum1.getOrderTime())));
 
-            if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
+            if(datum1.getProductType() == ProductType.MENUS.getOrdinal()){
                 tvDeliveryTime.setText(activity.getString(R.string.delivered_from_colon));
 
                 tvDeliveryTimeVal.setText("");
                 final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-                final SpannableStringBuilder sb = new SpannableStringBuilder("      "+orderHistory.getRestaurantName());
+                final SpannableStringBuilder sb = new SpannableStringBuilder("      "+ datum1.getRestaurantName());
                 sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tvDeliveryTimeVal.append(sb);
-                tvDeliveryTimeVal.append("\n"+orderHistory.getRestaurantAddress());
+                tvDeliveryTimeVal.append("\n"+ datum1.getRestaurantAddress());
                 imageViewRestaurant.setVisibility(View.VISIBLE);
-                imageViewCallRestaurant.setVisibility(TextUtils.isEmpty(orderHistory.getRestaurantPhoneNo()) ? View.GONE : View.VISIBLE);
+                imageViewCallRestaurant.setVisibility(TextUtils.isEmpty(datum1.getRestaurantPhoneNo()) ? View.GONE : View.VISIBLE);
             } else {
-                if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
-                    tvDeliveryTimeVal.setText(datum.getExpectedDeliveryDate() + " " +
-                            DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()).replace("AM", "").replace("PM", "") + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+                if (datum1.getStartTime() != null && datum1.getEndTime() != null) {
+                    tvDeliveryTimeVal.setText(datum1.getExpectedDeliveryDate() + " " +
+                            DateOperations.convertDayTimeAPViaFormat(datum1.getStartTime()).replace("AM", "").replace("PM", "") + " - " + DateOperations.convertDayTimeAPViaFormat(datum1.getEndTime()));
                 } else {
-                    tvDeliveryTimeVal.setText(datum.getExpectedDeliveryDate());
+                    tvDeliveryTimeVal.setText(datum1.getExpectedDeliveryDate());
                 }
                 imageViewRestaurant.setVisibility(View.GONE);
                 imageViewCallRestaurant.setVisibility(View.GONE);
             }
-            tvDeliveryToVal.setText(datum.getDeliveryAddress());
+            tvDeliveryToVal.setText(datum1.getDeliveryAddress());
 
 
-            tvOrderStatusVal.setTextColor(Color.parseColor(datum.getOrderStatusColor()));
+            tvOrderStatusVal.setTextColor(Color.parseColor(datum1.getOrderStatusColor()));
 
-            if(!datum.getDeliveryAddressType().equalsIgnoreCase("")){
+            if(!datum1.getDeliveryAddressType().equalsIgnoreCase("")){
                 llDeliveryPlace.setVisibility(View.VISIBLE);
-                tvDelveryPlace.setText(datum.getDeliveryAddressType());
-                if(datum.getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.home))){
+                tvDelveryPlace.setText(datum1.getDeliveryAddressType());
+                if(datum1.getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.home))){
                     ivDeliveryPlace.setImageResource(R.drawable.home);
-                } else if(datum.getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.work))){
+                } else if(datum1.getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.work))){
                     ivDeliveryPlace.setImageResource(R.drawable.work);
                 } else{
                     ivDeliveryPlace.setImageResource(R.drawable.ic_loc_other);
@@ -616,52 +622,47 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 llDeliveryPlace.setVisibility(View.GONE);
             }
 
-            double totalAmountVal = datum.getOriginalOrderAmount();
-            boolean showAsterisk = false;
             tvTotalAmountValOld.setVisibility(View.GONE);
-            if(datum.getNewAmount() != null){
-                if (datum.getOldAmount() != null && Double.compare(datum.getNewAmount(), datum.getOldAmount()) != 0) {
-                    tvTotalAmountValOld.setVisibility(View.VISIBLE);
-                    tvTotalAmountValOld.setText(activity.getString(R.string.rupees_value_format,
-                            Utils.getMoneyDecimalFormat().format(datum.getOldAmount())));
-                }
-                totalAmountVal = datum.getNewAmount();
-            } else if(datum.getTotalAmount() != null){
-                totalAmountVal = datum.getTotalAmount();
+            if(Double.compare(datum1.getDiscountedAmount(), datum1.getOrderAmount()) != 0){
+                tvTotalAmountValOld.setVisibility(View.VISIBLE);
+                tvTotalAmountValOld.setText(activity.getString(R.string.rupees_value_format,
+                            Utils.getMoneyDecimalFormat().format(datum1.getOrderAmount())));
             }
             tvTotalAmountVal.setText(activity.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormat().format(totalAmountVal)));
+                    Utils.getMoneyDecimalFormat().format(datum1.getDiscountedAmount())));
 
-            tvTotalAmountMessage.setVisibility(TextUtils.isEmpty(datum.getNote()) ? View.GONE : View.VISIBLE);
-            tvTotalAmountMessage.setText(datum.getNote());
-            showAsterisk = !TextUtils.isEmpty(datum.getNote());
+            tvTotalAmountMessage.setVisibility(TextUtils.isEmpty(datum1.getNote()) ? View.GONE : View.VISIBLE);
+            tvTotalAmountMessage.setText(datum1.getNote());
+            boolean showAsterisk = !TextUtils.isEmpty(datum1.getNote());
 
 
             llExtraCharges.removeAllViews();
-            addFinalAmountView(llExtraCharges, activity.getString(R.string.sub_total), datum.getOrderItemAmountSum(), false, false, true, showAsterisk);
-            if((datum.getPackingCharges() != null) && (datum.getPackingCharges() > 0)){
-                addFinalAmountView(llExtraCharges, activity.getString(R.string.packaging_charges), datum.getPackingCharges(), false);
+            addFinalAmountView(llExtraCharges, activity.getString(R.string.sub_total), datum1.getSubTotal(), false, false, true, showAsterisk);
+            if(datum1.getCharges() != null) {
+                for (Charges charges : datum1.getCharges()){
+                    try {
+                        if(Double.parseDouble(charges.getValue()) > 0){
+                            addFinalAmountView(llExtraCharges, charges.getText(), Double.parseDouble(charges.getValue()), false);
+						} else if(charges.getForceShow() == 1){
+                            addFinalAmountView(llExtraCharges, charges.getText(), Double.parseDouble(charges.getValue()), false, true, true, false);
+                        }
+                    } catch (Exception e) {}
+                }
             }
-            if((datum.getValueAddedTax() != null) && (datum.getValueAddedTax() > 0)){
-                addFinalAmountView(llExtraCharges, activity.getString(R.string.vat), datum.getValueAddedTax(), false);
+            if((datum1.getDiscount() != null) && (datum1.getDiscount() > 0)){
+                addFinalAmountView(llExtraCharges, activity.getString(R.string.discount), datum1.getDiscount(), true);
             }
-            if((datum.getServiceTax() != null) && (datum.getServiceTax() > 0)){
-                addFinalAmountView(llExtraCharges, activity.getString(R.string.service_tax), datum.getServiceTax(), false);
-            }
-            addFinalAmountView(llExtraCharges, activity.getString(R.string.delivery_charges), datum.getDeliveryCharges(), false, true, true, false);
-            if((datum.getDiscount() != null) && (datum.getDiscount() > 0)){
-                addFinalAmountView(llExtraCharges, activity.getString(R.string.discount), datum.getDiscount(), true);
-            }
+
 
 
 
 
 
             View vDivider = rootView.findViewById(R.id.vDividerPayment);
-            if(datum.getWalletDeducted() != null && datum.getWalletDeducted() > 0) {
+            if(datum1.getWalletDeducted() > 0) {
                 rlWalletDeducted.setVisibility(View.VISIBLE);
                 tvAmountPayableVal.setText(activity.getString(R.string.rupees_value_format,
-                        Utils.getMoneyDecimalFormat().format(datum.getWalletDeducted())));
+                        Utils.getMoneyDecimalFormat().format(datum1.getWalletDeducted())));
             } else{
                 rlWalletDeducted.setVisibility(View.GONE);
             }
@@ -670,21 +671,21 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             tvPaymentMethodVal.setPadding(0, 0, 0, 0);
             tvPaymentMethodVal.setText("");
             tvPaymentMethodVal.setBackgroundResource(R.drawable.background_transparent);
-            if(datum.getPaymentMode() == PaymentOption.PAYTM.getOrdinal()){
+            if(datum1.getPaymentMode() == PaymentOption.PAYTM.getOrdinal()){
                 params.setMargins((int)(ASSL.Xscale() * 10f), 0, 0, 0);
                 tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_paytm_small);
-            } else if(datum.getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()){
+            } else if(datum1.getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()){
                 params.setMargins((int)(ASSL.Xscale() * 25f), 0, 0, 0);
                 tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_mobikwik_small);
-            } else if(datum.getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()){
+            } else if(datum1.getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()){
                 params.setMargins((int)(ASSL.Xscale() * 30f), 0, 0, 0);
                 tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_freecharge_small);
-            } else if(datum.getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()){
+            } else if(datum1.getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()){
                 tvPaymentMethodVal.setText(R.string.jugnoo_pay);
                 params.setMargins((int)(ASSL.Xscale() * 35f), 0, 0, 0);
-            } else if(datum.getPaymentMode() == PaymentOption.RAZOR_PAY.getOrdinal()){
-                if(!TextUtils.isEmpty(datum.getOtherPaymentModeText())){
-                    tvPaymentMethodVal.setText(datum.getOtherPaymentModeText());
+            } else if(datum1.getPaymentMode() == PaymentOption.RAZOR_PAY.getOrdinal()){
+                if(!TextUtils.isEmpty(datum1.getOtherPaymentModeText())){
+                    tvPaymentMethodVal.setText(datum1.getOtherPaymentModeText());
                 } else {
                     tvPaymentMethodVal.setText(R.string.other_payment_mode);
                 }
@@ -694,28 +695,27 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
 
             llFinalAmount.removeAllViews();
-            if(datum.getPayableAmount() != null && datum.getPayableAmount() > 0){
-                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.cash), datum.getPayableAmount(), false);
+            if(datum1.getPayableAmount() > 0){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.cash), datum1.getPayableAmount(), false);
             }
-            if((datum.getJugnooDeducted() != null) && (datum.getJugnooDeducted() > 0)){
-                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash), datum.getJugnooDeducted(), false);
+            if(datum1.getJugnooDeducted() > 0){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash), datum1.getJugnooDeducted(), false);
             }
-            if(datum.getOrderRefundAmount() != null && datum.getOrderRefundAmount() > 0){
-                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.refund), datum.getOrderRefundAmount(), false);
+            if(datum1.getRefundAmount() > 0){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.refund), datum1.getRefundAmount(), false);
             }
 
             if(vDivider != null){
                 vDivider.setVisibility(View.INVISIBLE);
             }
 
-            if(llFinalAmount.getChildCount() > 0
-                    || (datum.getWalletDeducted() != null && datum.getWalletDeducted() > 0)){
+            if(llFinalAmount.getChildCount() > 0 || datum1.getWalletDeducted() > 0){
                 cvPaymentMethod.setVisibility(View.VISIBLE);
             } else {
                 cvPaymentMethod.setVisibility(View.GONE);
             }
 
-            if (orderHistory.getCancellable() == 1) {
+            if (datum1.getCancellable() == 1) {
                 orderCancel.setVisibility(View.VISIBLE);
                 orderComplete.setVisibility(View.GONE);
                 if(activity instanceof SupportActivity) {
@@ -728,7 +728,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 cancelfeedbackBtn.setVisibility(View.GONE);
                 if (activity instanceof RideTransactionsActivity) {
                     feedbackBtn.setText(R.string.need_help);
-                    if (orderHistory.getCanReorder() == 1) {
+                    if (datum1.getCanReorder() == 1) {
                         reorderBtn.setVisibility(View.VISIBLE);
                     } else {
                         orderComplete.setVisibility(View.GONE);
@@ -738,22 +738,22 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }
                 } else {
-                    if (orderHistory.getCanReorder() == 1 && !(activity instanceof FreshActivity)) {
+                    if (datum1.getCanReorder() == 1 && !(activity instanceof FreshActivity)) {
                         reorderBtn.setVisibility(View.VISIBLE);
                         feedbackBtn.setVisibility(View.GONE);
-                    } else if (orderHistory.getCanReorder() == 1 && (activity instanceof FreshActivity)) {
+                    } else if (datum1.getCanReorder() == 1 && (activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
                         buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
-                    } else if (orderHistory.getCanReorder() == 0 && !(activity instanceof FreshActivity)) {
+                    } else if (datum1.getCanReorder() == 0 && !(activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
                         buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
-                    } else if (orderHistory.getCanReorder() == 0 && (activity instanceof FreshActivity)) {
+                    } else if (datum1.getCanReorder() == 0 && (activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
@@ -779,9 +779,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         int tag = v.getId();
         switch (tag) {
             case R.id.buttonCancelOrder:
-                if (orderHistory.getCancellable() == 1) {
-                    int storeId = orderHistory.getStoreId() == null ? 0 : orderHistory.getStoreId();
-                    if(orderHistory.getShowCancellationReasons() == 1){
+                if (datum1.getCancellable() == 1) {
+                    int storeId = datum1.getStoreId() == null ? 0 : datum1.getStoreId();
+                    if(datum1.getShowCancellationReasons() == 1){
                         int containerId = -1;
                         if(activity instanceof FreshActivity) {
                             containerId = ((FreshActivity)activity).getRelativeLayoutContainer().getId();
@@ -793,8 +793,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         if(containerId > -1) {
                             activity.getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-                                    .add(containerId, OrderCancelReasonsFragment.newInstance(orderHistory.getOrderId(),
-                                            productType, storeId, orderHistory.getClientId()),
+                                    .add(containerId, OrderCancelReasonsFragment.newInstance(datum1.getOrderId(),
+                                            productType, storeId, datum1.getClientId()),
                                             OrderCancelReasonsFragment.class.getName())
                                     .addToBackStack(OrderCancelReasonsFragment.class.getName())
                                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -826,18 +826,18 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 if (activity instanceof RideTransactionsActivity) {
                     new TransactionUtils().openRideIssuesFragment(activity,
                             ((RideTransactionsActivity) activity).getContainer(),
-                            -1, -1, null, null, 0, false, 0, orderHistory);
+                            -1, -1, null, null, 0, false, 0, datum1);
                 } else{
                     activity.onBackPressed();
                 }
                 break;
             case R.id.reorderBtn:
-                saveHistoryCardToSP(orderHistory);
+                saveHistoryCardToSP(datum1);
                 break;
             case R.id.cancelfeedbackBtn:
                 new TransactionUtils().openRideIssuesFragment(activity,
                         ((RideTransactionsActivity) activity).getContainer(),
-                        -1, -1, null, null, 0, false, 0, orderHistory);
+                        -1, -1, null, null, 0, false, 0, datum1);
                 if(activity instanceof FreshActivity) {
                     GAUtils.event(((FreshActivity)activity).getGaCategory(), ORDER_STATUS, NEED_HELP);
                 } else {
@@ -942,7 +942,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         @Override
                         public void onClick(View v) {
                             Data.isOrderCancelled = true;
-                            orderHistory.setCancellable(0);
+                            datum1.setCancellable(0);
 
                             Intent intent = new Intent(Data.LOCAL_BROADCAST);
                             intent.putExtra("message", "Order cancelled, refresh inventory");
@@ -970,8 +970,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 }
             });
         }
-        int storeId = orderHistory.getStoreId() == null ? 0 : orderHistory.getStoreId();
-        apiCancelOrder.hit(orderHistory.getOrderId(), orderHistory.getClientId(),
+        int storeId = datum1.getStoreId() == null ? 0 : datum1.getStoreId();
+        apiCancelOrder.hit(datum1.getOrderId(), datum1.getClientId(),
                 storeId,
                 productType);
     }

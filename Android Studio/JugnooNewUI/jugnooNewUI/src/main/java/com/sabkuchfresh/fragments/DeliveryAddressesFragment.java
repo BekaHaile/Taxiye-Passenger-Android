@@ -123,6 +123,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
     private BottomSheetBehavior bottomSheetBehavior;
     private GoogleMap googleMap;
+    private boolean autoCompleteResultClicked = false;
 
     @OnClick(R.id.bMyLocation)
     void zoomToCurrentLocation(){
@@ -174,6 +175,9 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         if(editTextDeliveryAddress != null){
             editTextDeliveryAddress.setText("");
         }
+        if(tvDeliveryAddress != null){
+            tvDeliveryAddress.setText("");
+        }
 
 
         linearLayoutMain = (CoordinatorLayout) rootView.findViewById(R.id.linearLayoutMain);
@@ -224,7 +228,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                                 GAUtils.event(((FreshActivity) activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES + SELECTED);
                             }
 						} else {
-							goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false);
+							goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false, false);
 						}
 					}
 
@@ -309,10 +313,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     @Override
                     public void onPlaceSearchPost(SearchResult searchResult) {
                         try {
+                            progressWheelDeliveryAddressPin.setVisibility(View.GONE);
                             editTextDeliveryAddress.setText("");
                             scrollViewSearch.setVisibility(View.GONE);
 
-                            goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false);
+                            goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false, true);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -362,11 +367,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                             && ((AddPlaceActivity)activity).getSearchResult() != null){
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((AddPlaceActivity)activity).getSearchResult().getLatLng(), 14));
                     } else {
-//                        if(activity instanceof FreshActivity){
-//                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((FreshActivity)activity).getSelectedLatLng(), 14));
-//                        } else {
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
-//                        }
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
                     }
 
 
@@ -391,6 +392,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                         @Override
                         public void onMapSettled() {
                             fillAddressDetails(DeliveryAddressesFragment.this.googleMap.getCameraPosition().target);
+                            autoCompleteResultClicked = false;
                         }
 
                         @Override
@@ -519,15 +521,17 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 searchResultNearPin = homeUtil.getNearBySavedAddress(activity, latLng,
                         Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
                 if (searchResultNearPin != null) {
-                    tvDeliveryAddress.setText(searchResultNearPin.getName());
-                    if (isVisible() && scrollViewSearch.getVisibility() == View.GONE) {
-                        tvDeliveryAddressSetVisibility(View.VISIBLE);
-                    }
-                    mapSettledCanForward = true;
+                    setFetchedAddressToTextView(searchResultNearPin.getName());
                     return;
                 }
             }
 
+            // we need to check if the autoCompleteResult clicked latLng is near some saved place,
+            // if yes this case will also behave like map pan near saved location case
+            if(autoCompleteResultClicked) {
+                mapSettledCanForward = true;
+                return;
+            }
 
             if(isVisible() && !isRemoving()) {
                 progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
@@ -552,14 +556,10 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                             current_city = geocodeResponse.results.get(0).getCity();
                             current_pincode = geocodeResponse.results.get(0).getCountry();
 
-                            tvDeliveryAddress.setText(current_street + (current_street.length()>0?", ":"")
+                            setFetchedAddressToTextView(current_street + (current_street.length()>0?", ":"")
                                     + current_route + (current_route.length()>0?", ":"")
                                     + geocodeResponse.results.get(0).getAddAddress()
                                     + ", " + current_city);
-                            if(isVisible() && scrollViewSearch.getVisibility() == View.GONE) {
-                                tvDeliveryAddressSetVisibility(View.VISIBLE);
-                            }
-                            mapSettledCanForward = true;
                         } else {
                             Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
                             tvDeliveryAddress.setText("");
@@ -586,8 +586,16 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         }
     }
 
+    private void setFetchedAddressToTextView(String address){
+        tvDeliveryAddress.setText(address);
+        if (isVisible() && scrollViewSearch.getVisibility() == View.GONE) {
+            tvDeliveryAddressSetVisibility(View.VISIBLE);
+        }
+        mapSettledCanForward = true;
+    }
 
-    private void goToPredefinedSearchResultConfirmation(SearchResult searchResult, int placeRequestCode, boolean editThisAddress){
+
+    private void goToPredefinedSearchResultConfirmation(SearchResult searchResult, int placeRequestCode, boolean editThisAddress, boolean zoomToMap){
         try {
             if(activity instanceof FreshActivity){
 				FreshActivity freshActivity = (FreshActivity) activity;
@@ -596,13 +604,13 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 freshActivity.setEditThisAddress(editThisAddress);
                 freshActivity.setDeliveryAddressToEdit(null);
 			}
-            setAddressToBundleAndOpenAddressForm(searchResult.getAddress(), searchResult.getLatitude(), searchResult.getLongitude(), searchResult.getPlaceId());
+            setAddressToBundleAndOpenAddressForm(searchResult.getAddress(), searchResult.getLatitude(), searchResult.getLongitude(), searchResult.getPlaceId(), zoomToMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setAddressToBundleAndOpenAddressForm(String addressRes, double latitude, double longitude, String placeId){
+    private void setAddressToBundleAndOpenAddressForm(String addressRes, double latitude, double longitude, String placeId, boolean zoomToMap){
         try {
             current_street = "";
             current_route = "";
@@ -642,10 +650,20 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 }
             }
             //fillAddressDetails(searchResult.getLatLng());
-            if(activity instanceof FreshActivity) {
-                ((FreshActivity)activity).openAddToAddressBook(createAddressBundle(placeId));
-            }else if(activity instanceof AddPlaceActivity){
-                ((AddPlaceActivity)activity).openAddToAddressBook(createAddressBundle(placeId));
+
+            // if zoomToMap is true then only zooming map to the provided location and set provided address
+            if(zoomToMap){
+                setFetchedAddressToTextView(addressRes);
+                autoCompleteResultClicked = true;
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14), 300, null);
+            }
+            // else do normally, direct to AddToAddressBook Fragment
+            else {
+                if (activity instanceof FreshActivity) {
+                    ((FreshActivity) activity).openAddToAddressBook(createAddressBundle(placeId));
+                } else if (activity instanceof AddPlaceActivity) {
+                    ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle(placeId));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -772,7 +790,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         try {
             String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
             final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-            goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
+            goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -782,7 +800,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         try {
             String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
             final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-            goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
+            goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -855,7 +873,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
             }
         } else {
-            goToPredefinedSearchResultConfirmation(searchResult, searchResult.getPlaceRequestCode(), true);
+            goToPredefinedSearchResultConfirmation(searchResult, searchResult.getPlaceRequestCode(), true, false);
         }
     }
 

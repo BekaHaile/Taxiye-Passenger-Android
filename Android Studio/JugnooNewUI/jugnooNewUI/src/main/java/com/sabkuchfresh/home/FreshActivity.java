@@ -2075,13 +2075,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     @Override
     public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
-            drawerLayout.closeDrawer(GravityCompat.START);
-            return;
-        }
-        if(fabViewTest.menuLabelsRightTest.isOpened()){
-            fabViewTest.menuLabelsRightTest.close(true);
-            return;
+        try {
+            if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+				drawerLayout.closeDrawer(GravityCompat.START);
+				return;
+			}
+            if(fabViewTest.menuLabelsRightTest.isOpened()){
+				fabViewTest.menuLabelsRightTest.close(true);
+				return;
+			}
+        } catch (Exception e) {
         }
         performBackPressed(true);
     }
@@ -2095,7 +2098,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         System.gc();
-		ButterKnife.unbind(this);
         super.onDestroy();
     }
 

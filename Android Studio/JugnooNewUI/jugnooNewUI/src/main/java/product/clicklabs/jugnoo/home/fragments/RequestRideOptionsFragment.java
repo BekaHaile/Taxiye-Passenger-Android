@@ -100,7 +100,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 new ASSL(getActivity(), linearLayoutSlidingBottom, 1134, 720, false);
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         linearLayoutOptionsSingleSupply = (LinearLayout) rootView.findViewById(R.id.linearLayoutOptionsSingleSupply);
@@ -336,7 +335,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             updatePreferredPaymentOptionUI();
             activity.updateConfirmedStatePaymentUI();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -380,7 +378,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 activity.forceFarAwayCity();
             }
         } catch(Exception e){
-            e.printStackTrace();
         }
     }
 

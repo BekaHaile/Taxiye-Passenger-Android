@@ -85,7 +85,7 @@ public class OrderItemsAdapter extends BaseAdapter {
 
 		mHolder.textViewItemName.setText(subItem.getItemName());
 		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
-				Utils.getMoneyDecimalFormat().format(subItem.getUnitAmount())));
+				Utils.getMoneyDecimalFormat().format(subItem.getItemUnitPrice())));
 		mHolder.textViewItemQuantity.setText("X "+subItem.getItemQuantity());
 		mHolder.textViewItemTotalPrice.setText(context.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(subItem.getItemAmount())));
 

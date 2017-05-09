@@ -272,12 +272,15 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (activity.isRefreshCart()) {
+                        try {
+                            if (activity.isRefreshCart()) {
 
-                        }
-                        activity.setRefreshCart(false);
-                        if(!activity.isOrderJustCompleted()) {
-                            activity.setMinOrderAmountText(VendorMenuFragment.this);
+							}
+                            activity.setRefreshCart(false);
+                            if(!activity.isOrderJustCompleted()) {
+								activity.setMinOrderAmountText(VendorMenuFragment.this);
+							}
+                        } catch (Exception e) {
                         }
                     }
                 }, 200);
@@ -289,7 +292,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 				}
 			}
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
