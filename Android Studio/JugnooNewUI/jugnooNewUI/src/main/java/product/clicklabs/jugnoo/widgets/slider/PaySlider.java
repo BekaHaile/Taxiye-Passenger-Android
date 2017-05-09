@@ -13,7 +13,6 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.Log;
 
 /**
  * Created by Parminder Singh on 4/29/17.
@@ -62,8 +61,7 @@ public abstract class PaySlider {
                         break;
 
                     case MotionEvent.ACTION_MOVE:
-                        if((event.getRawX()-getRelativeSliderLeftMargin()) > (tvSlide.getWidth()/2)
-                                && (event.getRawX()-getRelativeSliderLeftMargin()) < relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2)){
+                        if((event.getRawX()-getRelativeSliderLeftMargin()) > (tvSlide.getWidth()/2) && (event.getRawX()-getRelativeSliderLeftMargin()) < relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2)){
                             paramsF.leftMargin = (int) layoutX(event.getRawX()-getRelativeSliderLeftMargin());
                             relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
                             sliderText.setVisibility(View.VISIBLE);
@@ -99,7 +97,7 @@ public abstract class PaySlider {
 
     public void setSlideInitial(){
         animateSliderButton(paramsF.leftMargin, 0);
-        rlSliderContainer.setBackgroundResource(R.color.theme_color);
+        rlSliderContainer.setBackgroundResource(R.drawable.bg_rectangle_gradient_normal);
         relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
         sliderText.setVisibility(View.VISIBLE);
         viewAlpha.setAlpha(0.0f);

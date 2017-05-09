@@ -2,20 +2,20 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true">
-        <shape
-            android:shape="rectangle">
-            <corners android:radius="50dp"/>
-            <solid android:color="@color/green_light_dark"/>
+        <shape>
+            <corners android:radius="50dp" />
+            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"/>
+
 
         </shape>
     </item>
-
     <item>
-        <shape android:shape="rectangle">
-            <corners android:radius="50dp"/>
-            <solid android:color="@color/green_light"/>
+        <shape>
+            <corners android:radius="50dp" />
+
+            <gradient android:endColor="@color/gradient_normal_end" android:startColor="@color/gradient_normal_start"/>
+
 
         </shape>
     </item>
-
 </selector>

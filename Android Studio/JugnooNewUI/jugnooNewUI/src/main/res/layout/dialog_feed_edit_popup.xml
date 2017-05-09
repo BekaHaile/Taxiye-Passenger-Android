@@ -5,8 +5,10 @@
     android:layout_width="match_parent"
     android:layout_marginLeft="@dimen/spacing_small"
     android:layout_marginRight="@dimen/spacing_small"
-    android:layout_height="wrap_content">
+    android:layout_height="@dimen/height_popup_edit_feed">
     <View
+        android:id="@+id/arrow_up"
+        android:visibility="visible"
         android:background="@drawable/background_popup_edit_feed"
         android:layout_gravity="right"
         android:layout_marginTop="-10dp"
@@ -16,7 +18,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@drawable/background_white_rounded_radius_5"
         android:orientation="vertical"
         android:padding="5dp">
@@ -29,9 +32,10 @@
             android:drawableLeft="@drawable/ic_feed_edit_icon"
             android:drawablePadding="@dimen/spacing_normal"
             android:gravity="center|left"
-            android:paddingBottom="@dimen/spacing_normal"
-            android:paddingTop="@dimen/spacing_normal"
+
             android:text="Edit Post"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:textColor="@color/feed_grey_text"
             app:font="maven" />
 
@@ -40,8 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/feed_grey_background_light"
-            android:paddingLeft="@dimen/spacing_extra_tiny"
-            android:paddingRight="@dimen/spacing_extra_tiny" />
+           />
 
         <TextView
             android:id="@+id/tv_delete_post"
@@ -50,13 +53,24 @@
             android:drawableLeft="@drawable/ic_delete_feed"
             android:drawablePadding="@dimen/spacing_normal"
             android:gravity="center|left"
-            android:paddingBottom="@dimen/spacing_normal"
-            android:paddingTop="@dimen/spacing_normal"
+
             android:text="Delete Post"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:textColor="@color/feed_grey_text"
             app:font="maven" />
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/arrow_down"
+        android:background="@drawable/background_popup_edit_feed"
+        android:layout_gravity="right"
+        android:layout_marginBottom="-10dp"
+        android:rotation="180"
+        android:visibility="gone"
+        android:layout_marginRight="12.5dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
 
 </LinearLayout>

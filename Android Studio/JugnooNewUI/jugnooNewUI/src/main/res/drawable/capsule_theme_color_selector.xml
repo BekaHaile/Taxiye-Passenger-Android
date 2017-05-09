@@ -5,16 +5,14 @@
         <shape
             android:shape="rectangle">
             <corners android:radius="50dp"/>
-            <solid android:color="@color/theme_color_alpha"/>
-
+            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"/>
         </shape>
     </item>
 
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="50dp"/>
-            <solid android:color="@color/theme_color"/>
-
+            <gradient android:endColor="@color/gradient_normal_end" android:startColor="@color/gradient_normal_start"/>
         </shape>
     </item>
 

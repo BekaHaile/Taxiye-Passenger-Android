@@ -14,8 +14,8 @@
         android:gravity="center"
         android:padding="5px"
         android:text="Reason"
-        android:background="@drawable/capsule_white_stroke"
-        android:textColor="@color/text_color"
+        android:background="@drawable/capsule_green_color_selector"
+        android:textColor="@color/white"
         android:textSize="@dimen/text_size_28" />
 
 

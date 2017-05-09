@@ -6,7 +6,7 @@
     android:layout_height="108px"
     android:layout_alignParentBottom="true"
     android:orientation="vertical"
-    android:visibility="gone"
+    android:visibility="visible"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="bottom">
 
@@ -14,8 +14,8 @@
         android:id="@+id/rlSliderContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/theme_color"
-        android:visibility="gone">
+        android:background="@drawable/bg_rectangle_gradient_normal"
+        android:visibility="visible">
 
         <View
             android:id="@+id/viewAlpha"

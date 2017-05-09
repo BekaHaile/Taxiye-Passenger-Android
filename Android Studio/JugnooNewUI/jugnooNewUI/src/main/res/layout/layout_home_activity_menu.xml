@@ -11,7 +11,7 @@
     <RelativeLayout
         android:id="@+id/rlTopContainer"
         android:layout_width="match_parent"
-        android:background="#ff834e"
+        android:background="@drawable/bg_rectangle_gradient_normal"
         android:layout_height="wrap_content">
 
 

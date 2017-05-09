@@ -41,7 +41,8 @@
     <!-- Background -->
     <item>
         <shape>
-            <solid android:color="@color/theme_color_pressed" />
+            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"/>
+
             <corners android:radius="43dp" />
         </shape>
     </item>

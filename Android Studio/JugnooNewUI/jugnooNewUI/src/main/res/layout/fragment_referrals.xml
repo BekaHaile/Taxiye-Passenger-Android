@@ -57,7 +57,7 @@
             android:layout_height="@dimen/px_82"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="@drawable/button_green"
+            android:background="@drawable/capsule_green_color_selector"
             >
 
             <ImageView

@@ -466,9 +466,8 @@
     <Button
         android:id="@id/btnUpgradeNow"
         android:visibility="gone"
-        style="@style/ButtonTheme"
-        android:layout_marginLeft="-10dp"
-        android:layout_marginRight="-10dp"
+        android:background="@drawable/bg_theme_color_selector"
+        android:textColor="@android:color/white"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:textAllCaps="true"
