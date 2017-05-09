@@ -2,7 +2,7 @@
 <RelativeLayout
     android:id="@+id/rlJugnooStar"
     android:layout_width="match_parent"
-    android:layout_height="110px"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:visibility="visible"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -14,11 +14,12 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="40px"
+        android:layout_marginTop="25px"
+        android:layout_marginBottom="25px"
         android:gravity="center"
         android:text="@string/jugnoo_star"
-        android:textAllCaps="true"
         android:textColor="@color/text_color_light_selector"
-        android:textSize="@dimen/text_size_28" />
+        android:textSize="27px" />
 
     <TextView
         android:layout_toRightOf="@id/tvJugnooStar"
@@ -30,7 +31,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/px_3"
         android:gravity="right"
-
         android:text="@string/rupee_0"
         android:textColor="@color/theme_color"
         android:textSize="36px"

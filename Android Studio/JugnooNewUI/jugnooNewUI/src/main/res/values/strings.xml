@@ -1684,6 +1684,7 @@
     <string name="email_was_incorrect">Email ID was incorrect</string>
     <string name="item_not_available">Selected item currently not available!</string>
     <string name="total_savings">Total Savings</string>
+    <string name="title_my_profile">MY PROFILE</string>
 
 
 </resources>
