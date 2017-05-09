@@ -379,11 +379,11 @@ public class TransactionUtils {
         }
     }
 
-    public void openFeedCommentsFragment(FragmentActivity activity, View container, FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad) {
+    public void openFeedCommentsFragment(FragmentActivity activity, View container, FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad, int postNotificationId) {
         if (!checkIfFragmentAdded(activity, FeedPostDetailFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, 0)
-                    .add(container.getId(), FeedPostDetailFragment.newInstance(feedDetail,positionInOriginalList,openKeyboardOnLoad),
+                    .add(container.getId(), FeedPostDetailFragment.newInstance(feedDetail,positionInOriginalList,openKeyboardOnLoad, postNotificationId),
                             FeedPostDetailFragment.class.getName())
                     .addToBackStack(FeedPostDetailFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
