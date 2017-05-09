@@ -4404,9 +4404,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             llCheckoutBar.post(new Runnable() {
                 @Override
                 public void run() {
-                    llCheckoutBar.getMeasuredHeight();
-                    llCheckoutBar.setVisibility(View.GONE);
-                    vCheckoutShadow.setVisibility(View.GONE);
+                    if(llCheckoutBar != null) {
+                        llCheckoutBar.getMeasuredHeight();
+                        llCheckoutBar.setVisibility(View.GONE);
+                    }
+                    if(vCheckoutShadow != null) {
+                        vCheckoutShadow.setVisibility(View.GONE);
+                    }
                 }
             });
         }
@@ -4415,9 +4419,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             llPayViewContainer.post(new Runnable() {
                 @Override
                 public void run() {
-                    ViewGroup.LayoutParams layoutParams = llPayViewContainer.getLayoutParams();
-                    layoutParams.height = getResources().getDimensionPixelSize(R.dimen.dp_54);
-                    llPayViewContainer.setLayoutParams(layoutParams);
+                    if(llPayViewContainer != null) {
+                        ViewGroup.LayoutParams layoutParams = llPayViewContainer.getLayoutParams();
+                        layoutParams.height = getResources().getDimensionPixelSize(R.dimen.dp_54);
+                        llPayViewContainer.setLayoutParams(layoutParams);
+                    }
                 }
             });
         }
