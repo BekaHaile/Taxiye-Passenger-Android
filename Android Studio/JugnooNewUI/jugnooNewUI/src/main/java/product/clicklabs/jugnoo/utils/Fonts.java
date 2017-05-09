@@ -20,28 +20,28 @@ public class Fonts {
 
     public static Typeface mavenRegular(Context appContext) {											// accessing fonts functions
         if (mavenRegular == null) {
-            mavenRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.otf");
+            mavenRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.ttf");
         }
         return mavenRegular;
     }
 
     public static Typeface mavenLight(Context appContext) {											// accessing fonts functions
         if (mavenLight == null) {
-            mavenLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_light_300.otf");
+            mavenLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_light_300.ttf");
         }
         return mavenLight;
     }
 
     public static Typeface avenirNext(Context appContext) {											// accessing fonts functions
         if (avenirNext == null) {
-            avenirNext = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_next_demi.otf");
+            avenirNext = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_next_demi.ttf");
         }
         return avenirNext;
     }
 
     public static Typeface avenirMedium(Context appContext) {                                 // accessing fonts functions
         if (avenirMedium == null) {
-            avenirMedium = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_medium.otf");
+            avenirMedium = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_medium.ttf");
         }
         return avenirMedium;
     }
@@ -52,14 +52,14 @@ public class Fonts {
 
     public static Typeface latoRegular(Context appContext) {											// accessing fonts functions
         if (latoRegular == null) {
-            latoRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.otf");
+            latoRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.ttf");
         }
         return latoRegular;
     }
 
     public static Typeface latoLight(Context appContext) {											// accessing fonts functions
         if (latoLight == null) {
-            latoLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_light_300.otf");
+            latoLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_light_300.ttf");
         }
         return latoLight;
     }
