@@ -192,7 +192,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	private RelativeLayout rlClaimGift, rlPromo;
 	private ImageView ivUser;
 	private TextView tvGiftFrom, tvGiftDetail, tvReferralTitle, tvSkip;
-	private Button btnClaimGift, bPromoSubmit;
+	private Button btnClaimGift, bPromoSubmit, btnPhoneLogin;
 	private String refreeUserId = "", loginResponseStr;
 	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle, rlPhoneLogin;
 	private LoginResponse loginResponseData;
@@ -565,6 +565,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			llSignupOnboarding = (LinearLayout) findViewById(R.id.llSignupOnboarding);
 			tvSkip = (TextView) findViewById(R.id.tvSkip);
 			rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
+			btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
 
 
 			root.setOnClickListener(onClickListenerKeybordHide);
@@ -694,6 +695,20 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				}
 			});
 
+			btnPhoneLogin.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
+					intent.putExtra("show_timer", 0);
+					intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
+					intent.putExtra("signup_by", signUpBy);
+					intent.putExtra("email", editTextEmail.getText().toString().trim());
+					intent.putExtra("otp_length", "4");
+					startActivity(intent);
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				}
+			});
+
 
 			buttonLogin.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -792,17 +807,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				@Override
 				public void onClick(View v) {
 //					fbAccountKit.startFbAccountKit(null);
-
-					/*Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
-					intent.putExtra("show_timer", 1);
-					//intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
-					intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
-					intent.putExtra("signup_by", signUpBy);
-					intent.putExtra("email", editTextEmail.getText().toString().trim());
-					intent.putExtra("otp_length", "4");
-					startActivity(intent);
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);*/
-
 					changeUIState(State.SPLASH_LOGIN_PHONE_NO);
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
