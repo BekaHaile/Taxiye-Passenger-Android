@@ -1487,12 +1487,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	}
 
 	private void animLeftToRight(RelativeLayout currentView, RelativeLayout newView, int duration){
-		Animation animation = AnimationUtils.loadAnimation(this, R.anim.left_out);
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.left_in);
 		animation.setFillAfter(true);
 		animation.setDuration(duration);
 		newView.startAnimation(animation);
 
-		Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.left_in);
+		Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.left_out);
 		animation1.setFillAfter(false);
 		animation1.setDuration(duration);
 		currentView.startAnimation(animation1);
@@ -1585,6 +1585,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				relativeLayoutLS.setVisibility(View.GONE);
 				linearLayoutLogin.setVisibility(View.GONE);
 				relativeLayoutSignup.setVisibility(View.GONE);
+				rlPhoneLogin.setVisibility(View.GONE);
 				rlLoginSignupNew.setVisibility(View.VISIBLE);
 
 				if(this.state == State.SPLASH_INIT) {
@@ -2486,7 +2487,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			performLoginBackPressed();
 		} else if (State.SIGNUP == state) {
 			performSignupBackPressed();
-		} else {
+		} else if (State.SPLASH_LOGIN_PHONE_NO == state){
+			changeUIState(State.SPLASH_LS_NEW);
+		} else{
 			super.onBackPressed();
 		}
 	}
