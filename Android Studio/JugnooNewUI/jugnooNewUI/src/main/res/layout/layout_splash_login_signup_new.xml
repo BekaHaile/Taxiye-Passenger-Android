@@ -42,7 +42,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_width="720px"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible">
 
@@ -51,7 +51,7 @@
                     android:layout_width="@dimen/px_387"
                     android:layout_height="@dimen/px_97"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_splash_ls_logo"
+                    android:src="@drawable/logo_big"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:tag="mwar"
