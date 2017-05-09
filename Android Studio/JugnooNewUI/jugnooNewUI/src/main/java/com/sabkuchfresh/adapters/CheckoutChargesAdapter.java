@@ -71,11 +71,12 @@ public class CheckoutChargesAdapter extends BaseAdapter {
 
 			holder.tvValue.setText(context.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(taxes.get(position).getValue())));
 
-			if (taxes.get(position).getValue() > 0) {
-				holder.tvValue.setTextColor(context.getResources().getColor(R.color.text_color));
-			} else {
+			if ((taxes.get(position).getValue() <= 0)
+					&& (!holder.tvName.getText().toString().equalsIgnoreCase(context.getString(R.string.total).toUpperCase()))) {
 				holder.tvValue.setText(context.getString(R.string.free));
 				holder.tvValue.setTextColor(context.getResources().getColor(R.color.green));
+			} else {
+				holder.tvValue.setTextColor(context.getResources().getColor(R.color.text_color));
 			}
 
 			holder.vSep.setVisibility((position) == getCount() - 1 ? View.GONE : View.VISIBLE);

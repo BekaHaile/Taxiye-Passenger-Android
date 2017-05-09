@@ -2314,6 +2314,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         }
                                         updateCouponsDataView();
                                         updateCartDataView();
+                                        setPaymentOptionUI();
                                         if(type == AppConstant.ApplicationType.FRESH){
                                             setPaymentOptionVisibility(getPaymentInfoMode());
                                         }
