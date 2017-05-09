@@ -610,6 +610,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							int postId = jObj.optInt(Constants.KEY_POST_ID, -1);
 							int postNotificationId = jObj.optInt(Constants.KEY_NOTIFICATION_ID, -1);
 
+							if(Data.activityResumed && deepindex == AppLinkIndex.FEED_PAGE.getOrdinal() && postId > 0){
+								return;
+							}
+
 							// deep link to restaurant page
 							Prefs.with(this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, jObj.optString(KEY_RESTAURANT_ID, ""));
 

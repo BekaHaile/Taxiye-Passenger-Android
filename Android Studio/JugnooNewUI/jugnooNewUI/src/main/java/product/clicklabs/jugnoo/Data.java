@@ -139,6 +139,7 @@ public class Data {
 	public static boolean isOrderCancelled = false;
 	public static boolean isSupportRideIssueUpdated = false;
 	public static String currentActivity = null;
+	public static boolean activityResumed = false;
 
 
 	public static void clearDataOnLogout(Context context){
