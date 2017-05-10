@@ -167,7 +167,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     int percentage = (int)(100.0 * offset / (float)(range - extent));
 
-                    Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
                     if(percentage > 0 && percentage % 10 == 0) {
                         GAUtils.event(MENUS, HOME + LIST_SCROLLED, percentage + "%");
                         Log.i("GA Logged", "scroll percentage: "+ percentage + "%");

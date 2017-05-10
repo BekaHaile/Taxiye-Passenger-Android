@@ -288,6 +288,8 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:visibility="gone"
+                    android:scrollbars="none"
+                    android:overScrollMode="never"
                     android:id="@+id/recycler_menu_nav_views"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -317,7 +319,7 @@
                         android:textColor="@color/text_color_light_selector"
                         android:textSize="27px" />
 
-                    <!--    <ImageView
+                    <!-- <ImageView
                             android:id="@+id/imageViewChangePassword"
                             style="@style/forward_image"
                             android:layout_alignParentRight="true"

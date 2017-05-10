@@ -150,6 +150,33 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         setSortingList();
 
+        recyclerViewCategoryItems.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                try {
+                    int offset = recyclerView.computeVerticalScrollOffset();
+                    int extent = recyclerView.computeVerticalScrollExtent();
+                    int range = recyclerView.computeVerticalScrollRange();
+
+                    int percentage = (int)(100.0 * offset / (float)(range - extent));
+
+                    if(percentage > 0 && percentage % 10 == 0) {
+                        GAUtils.event(MEALS, HOME + LIST_SCROLLED, percentage + "%");
+                        Log.i("GA Logged", "scroll percentage: "+ percentage + "%");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
 
         try {
