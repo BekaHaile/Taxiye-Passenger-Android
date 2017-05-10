@@ -266,8 +266,10 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
         switch (pos) {
             case 1:
+                tvReview.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
                 product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(getActivity(),tvReview);
-                product.clicklabs.jugnoo.utils.Utils.textColorGradient(getActivity(),tvAsk);
+                tvAsk.getPaint().setShader(null);
+                tvAsk.setTextColor(ContextCompat.getColor(activity,R.color.text_color_30alpha));
               /*  tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));*/
                 vReviewSelected.setVisibility(View.VISIBLE);
@@ -279,8 +281,10 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 break;
 
             case 0:
+                tvAsk.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
                 product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(getActivity(),tvAsk);
-                product.clicklabs.jugnoo.utils.Utils.textColorGradient(getActivity(),tvReview);
+                tvReview.getPaint().setShader(null);
+                tvReview.setTextColor(ContextCompat.getColor(activity,R.color.text_color_30alpha));
                /* tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
                 tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color));*/
                 vReviewSelected.setVisibility(View.GONE);
