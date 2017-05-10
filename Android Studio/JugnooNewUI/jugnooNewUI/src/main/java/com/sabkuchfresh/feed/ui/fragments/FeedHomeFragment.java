@@ -316,7 +316,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private void setUpSwipeRefreshLayout(View rootView) {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
-        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.grey_icon_color);
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

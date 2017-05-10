@@ -79,7 +79,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(this);
         swipeContainer.setColorSchemeResources(R.color.white);
-        swipeContainer.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+        swipeContainer.setProgressBackgroundColorSchemeResource(R.color.grey_icon_color);
         swipeContainer.setSize(SwipeRefreshLayout.DEFAULT);
         swipeContainer.setEnabled(true);
         //swipeContainer.setVisibility(View.GONE);

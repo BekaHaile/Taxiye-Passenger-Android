@@ -140,7 +140,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.white);
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.grey_icon_color);
         mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeRefreshLayout.setEnabled(true);
 

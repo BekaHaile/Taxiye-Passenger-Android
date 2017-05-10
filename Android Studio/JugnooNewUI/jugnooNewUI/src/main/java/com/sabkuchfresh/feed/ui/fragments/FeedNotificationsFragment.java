@@ -56,7 +56,7 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 
 
 		swipeRefreshLayout.setColorSchemeResources(R.color.white);
-		swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+		swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.grey_icon_color);
 		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
