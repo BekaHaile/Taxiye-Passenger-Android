@@ -631,7 +631,7 @@ public class Utils implements GAAction, GACategory{
 //            }
 
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.jugnoo_icon));
+            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
 

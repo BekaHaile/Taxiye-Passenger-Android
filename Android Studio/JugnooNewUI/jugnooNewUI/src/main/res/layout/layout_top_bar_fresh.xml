@@ -329,8 +329,7 @@
                 android:padding="15px"
                 android:text="@string/reset"
                 android:textAllCaps="true"
-                android:background="@drawable/capsule_green_color_selector"
-                android:textColor="@color/white"
+                android:textColor="@color/text_color_selector"
                 android:textSize="30.6px"
                 android:visibility="gone" />
 

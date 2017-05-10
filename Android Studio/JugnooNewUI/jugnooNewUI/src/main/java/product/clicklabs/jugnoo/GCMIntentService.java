@@ -99,7 +99,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			setPlaySound(builder, playSound);
 
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
@@ -201,7 +201,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
 
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
 
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
@@ -290,7 +290,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				Drawable drawable = context.getResources().getDrawable(R.drawable.circle_theme_size);
 				builder.setLargeIcon(drawableToBitmapPlusText(context, drawable, eta, 16));
 			} else{
-				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
 			}
 
 //			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
@@ -365,7 +365,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
             builder.setTicker(message);
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){

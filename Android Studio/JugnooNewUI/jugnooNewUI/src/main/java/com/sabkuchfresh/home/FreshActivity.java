@@ -4205,7 +4205,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void startRazorPayPayment(JSONObject options, boolean isUPA) {
         Checkout checkout = new Checkout();
-        checkout.setImage(R.drawable.jugnoo_icon);
+        checkout.setImage(R.drawable.ic_launcher);
         try {
             options.remove(Constants.KEY_AUTH_ORDER_ID);
 
