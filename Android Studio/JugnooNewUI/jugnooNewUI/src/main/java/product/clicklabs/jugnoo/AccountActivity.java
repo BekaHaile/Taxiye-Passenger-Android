@@ -1006,6 +1006,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     Data.userData.emailVerificationStatus = emailVerificationStatus;
 
                                     setUserData();
+
+                                    imageViewEditProfile.setVisibility(View.VISIBLE);
+                                    linearLayoutSave.setVisibility(View.GONE);
                                 }
                             }
                         } catch (Exception exception) {

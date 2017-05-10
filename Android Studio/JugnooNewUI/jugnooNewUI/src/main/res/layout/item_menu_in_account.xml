@@ -3,7 +3,6 @@
     android:id="@+id/rlJugnooStar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:visibility="visible"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -33,7 +32,7 @@
         android:gravity="right"
         android:text="@string/rupee_0"
         android:textColor="@color/theme_color"
-        android:textSize="36px"
+        android:textSize="27px"
         android:visibility="visible" />
     <View
 

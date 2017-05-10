@@ -142,6 +142,7 @@
                     android:layout_height="60px"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="0px"
+                    android:layout_marginBottom="@dimen/px_5"
                     android:background="@drawable/bg_white_orange_bb"
                     android:gravity="center"
                     android:hint="@string/enter_your_name"
@@ -151,7 +152,7 @@
                     android:textColor="@color/text_color"
                     android:textColorHint="@color/text_color_light"
                     android:textCursorDrawable="@drawable/cursor_black"
-                    android:textSize="@dimen/text_size_36" />
+                    android:textSize="31px" />
 
                 <EditText
                     android:id="@+id/editTextEmail"
@@ -166,7 +167,7 @@
                     android:textColor="@color/text_color_light"
                     android:textColorHint="@color/text_color_light"
                     android:textCursorDrawable="@drawable/cursor_black"
-                    android:textSize="@dimen/text_size_28" />
+                    android:textSize="@dimen/text_size_24" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -191,7 +192,7 @@
                             android:text="+91"
                             android:layout_marginLeft="@dimen/px_60"
                             android:textColor="@color/text_color_light"
-                            android:textSize="@dimen/text_size_28" />
+                            android:textSize="@dimen/text_size_24" />
 
 
                         <EditText
@@ -211,7 +212,7 @@
                             android:textColor="@color/text_color_light"
                             android:textColorHint="@color/black_text_alpha"
                             android:textCursorDrawable="@drawable/cursor_black"
-                            android:textSize="@dimen/text_size_28" />
+                            android:textSize="@dimen/text_size_24" />
 
 
                     </LinearLayout>
@@ -288,7 +289,6 @@
                 <android.support.v7.widget.RecyclerView
                     android:visibility="gone"
                     android:id="@+id/recycler_menu_nav_views"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -315,7 +315,7 @@
                         android:text="@string/change_password"
 
                         android:textColor="@color/text_color_light_selector"
-                        android:textSize="@dimen/text_size_28" />
+                        android:textSize="27px" />
 
                     <!--    <ImageView
                             android:id="@+id/imageViewChangePassword"
@@ -369,7 +369,7 @@
                             android:text="@string/save"
                             android:textAllCaps="true"
                             android:textColor="@color/text_color_theme_alpha_selector"
-                            android:textSize="@dimen/text_size_28"
+                            android:textSize="27px"
                             android:visibility="visible" />
                     </LinearLayout>
 
@@ -404,7 +404,7 @@
                         android:text="@string/address_book"
 
                         android:textColor="@color/text_color_light_selector"
-                        android:textSize="@dimen/text_size_28" />
+                        android:textSize="27px" />
 
 
                 </RelativeLayout>
