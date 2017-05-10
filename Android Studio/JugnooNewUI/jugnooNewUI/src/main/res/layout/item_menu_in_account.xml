@@ -15,14 +15,15 @@
         android:layout_marginLeft="40px"
         android:layout_marginTop="25px"
         android:layout_marginBottom="25px"
-        android:gravity="center"
+        android:gravity="left"
         android:text="@string/jugnoo_star"
+        android:layout_toLeftOf="@+id/textViewValue"
+        android:layout_alignParentLeft="true"
         android:textColor="@color/text_color_light_selector"
         android:textSize="27px" />
 
     <TextView
-        android:layout_toRightOf="@id/tvJugnooStar"
-        android:id="@+id/textViewValue"
+        android:id="@id/textViewValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -34,6 +35,8 @@
         android:textColor="@color/theme_color"
         android:textSize="27px"
         android:visibility="visible" />
+
+
     <View
 
         android:layout_alignParentBottom="true"

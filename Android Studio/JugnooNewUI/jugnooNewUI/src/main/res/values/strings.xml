@@ -1201,7 +1201,7 @@
     <string name="mins_format">%s mins</string>
     <string name="opens_at">Opens at</string>
     <string name="delivered_from_colon">Delivered from:</string>
-    <string name="oh_snap">Oh snap!</string>
+    <string name="oh_snap">OH SNAP!</string>
     <string name="nothing_found_near_you">Nothing found near you\ntry to search with a different location.</string>
     <string name="sort_by">Sort by</string>
     <string name="popularity">Popularity</string>

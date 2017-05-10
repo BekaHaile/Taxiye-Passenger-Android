@@ -86,6 +86,8 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        Utils.setTextColorGradient(activity,  (TextView)rootView.findViewById(R.id.textViewOhSnap));
+
         textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
         rvFreshSuper = (RecyclerView) rootView.findViewById(R.id.rvFreshSuper);
