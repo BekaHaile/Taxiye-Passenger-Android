@@ -140,8 +140,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         textViewSave = (TextView) findViewById(R.id.textViewSave); textViewSave.setTypeface(Fonts.mavenMedium(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         viewTrackingLog = findViewById(R.id.viewTrackingLog);
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
-        textViewTitle.setVisibility(View.GONE);
+//        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
+        textViewTitle.setText(R.string.title_my_profile);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -1006,6 +1006,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     Data.userData.emailVerificationStatus = emailVerificationStatus;
 
                                     setUserData();
+
+                                    imageViewEditProfile.setVisibility(View.VISIBLE);
+                                    linearLayoutSave.setVisibility(View.GONE);
                                 }
                             }
                         } catch (Exception exception) {

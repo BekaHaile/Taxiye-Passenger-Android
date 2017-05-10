@@ -20,17 +20,7 @@
             style="@style/title"
             android:text="@string/address_book" />
 
-        <ImageView
-            android:id="@+id/imageViewEditProfile"
-            android:layout_width="60px"
-            android:layout_height="60px"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20px"
-            android:padding="15px"
-            android:src="@drawable/edit_icon_selector"
-            android:tag="mwar"
-            android:visibility="visible" />
+
 
         <LinearLayout
             android:id="@+id/linearLayoutSave"
@@ -78,9 +68,9 @@
 
     <ScrollView
         android:id="@+id/scrollView"
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="-30px">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/linearLayoutMain"
@@ -94,10 +84,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
-                android:background="@color/white"
+                android:background="@drawable/bg_white_layer_shadow"
+                android:layout_margin="27px"
                 android:orientation="vertical"
                 android:visibility="visible">
 
+                <ImageView
+                    android:id="@+id/imageViewEditProfile"
+                    android:layout_width="60px"
+                    android:layout_height="60px"
+                    android:layout_gravity="right"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20px"
+                    android:layout_marginTop="10px"
+                    android:padding="15px"
+                    android:src="@drawable/edit_icon_selector"
+                    android:tag="mwar"
+                    android:visibility="visible" />
                 <RelativeLayout
                     android:id="@+id/relativeLayoutProfileImage"
                     android:layout_width="187px"
@@ -138,6 +142,7 @@
                     android:layout_height="60px"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="0px"
+                    android:layout_marginBottom="@dimen/px_5"
                     android:background="@drawable/bg_white_orange_bb"
                     android:gravity="center"
                     android:hint="@string/enter_your_name"
@@ -147,7 +152,7 @@
                     android:textColor="@color/text_color"
                     android:textColorHint="@color/text_color_light"
                     android:textCursorDrawable="@drawable/cursor_black"
-                    android:textSize="@dimen/text_size_36" />
+                    android:textSize="31px" />
 
                 <EditText
                     android:id="@+id/editTextEmail"
@@ -162,7 +167,7 @@
                     android:textColor="@color/text_color_light"
                     android:textColorHint="@color/text_color_light"
                     android:textCursorDrawable="@drawable/cursor_black"
-                    android:textSize="@dimen/text_size_28" />
+                    android:textSize="@dimen/text_size_24" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -187,7 +192,7 @@
                             android:text="+91"
                             android:layout_marginLeft="@dimen/px_60"
                             android:textColor="@color/text_color_light"
-                            android:textSize="@dimen/text_size_28" />
+                            android:textSize="@dimen/text_size_24" />
 
 
                         <EditText
@@ -207,7 +212,7 @@
                             android:textColor="@color/text_color_light"
                             android:textColorHint="@color/black_text_alpha"
                             android:textCursorDrawable="@drawable/cursor_black"
-                            android:textSize="@dimen/text_size_28" />
+                            android:textSize="@dimen/text_size_24" />
 
 
                     </LinearLayout>
@@ -227,10 +232,7 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="6px"
-                android:background="@drawable/shadow_down" />
+
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutJugnooJeanie"
@@ -238,6 +240,7 @@
                 android:layout_height="@dimen/top_bar_height"
                 android:layout_gravity="center_horizontal"
                 android:background="@color/white"
+                android:layout_marginBottom="20px"
                 android:visibility="gone">
 
 
@@ -273,171 +276,169 @@
             </RelativeLayout>
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginTop="26px"
-                android:background="@color/stroke_color_light" />
+            <LinearLayout
 
-
-            <android.support.v7.widget.RecyclerView
-                android:visibility="gone"
-                android:id="@+id/recycler_menu_nav_views"
-                android:background="@android:color/white"
+                android:background="@drawable/bg_white_layer_shadow"
+                android:layout_marginLeft="29px"
+                android:layout_marginRight="29px"
+                android:paddingBottom="25px"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <android.support.v7.widget.RecyclerView
+                    android:visibility="gone"
+                    android:id="@+id/recycler_menu_nav_views"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
 
-            </android.support.v7.widget.RecyclerView>
+                </android.support.v7.widget.RecyclerView>
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutChangePassword"
-                android:layout_width="match_parent"
-                android:layout_height="110px"
-                android:animateLayoutChanges="true"
-                android:visibility="visible"
-                android:background="@color/white">
-
-
-                <TextView
-                    android:id="@+id/textViewChangePassword"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutChangePassword"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="40px"
-                    android:gravity="center"
-                    android:text="@string/change_password"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28" />
+                    android:animateLayoutChanges="true"
+                    android:visibility="visible">
 
-                <!--    <ImageView
-                        android:id="@+id/imageViewChangePassword"
-                        style="@style/forward_image"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="40px"
-                        android:visibility="gone"
-                        android:rotation="270"
-                        /> -->
-
-                <ImageView
-                    android:id="@+id/imageViewChangePassword"
-                    android:layout_width="60px"
-                    android:layout_height="60px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20px"
-                    android:padding="15px"
-                    android:src="@drawable/edit_icon_selector"
-                    android:tag="mwar"
-                    android:visibility="visible" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutPasswordSave"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="35px"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-
-                    <ImageView
-                        android:id="@+id/imageViewPasswordSave"
-                        android:layout_width="24px"
-                        android:layout_height="24px"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/profile_save"
-                        android:visibility="visible" />
 
                     <TextView
-                        android:id="@+id/textViewPasswordSave"
+                        android:id="@+id/textViewChangePassword"
                         android:layout_width="wrap_content"
-                        android:layout_height="80px"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="40px"
+                        android:layout_marginTop="25px"
+                        android:layout_marginBottom="25px"
+                        android:gravity="center"
+                        android:text="@string/change_password"
+
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="27px" />
+
+                    <!--    <ImageView
+                            android:id="@+id/imageViewChangePassword"
+                            style="@style/forward_image"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="40px"
+                            android:visibility="gone"
+                            android:rotation="270"
+                            /> -->
+
+                    <ImageView
+                        android:id="@+id/imageViewChangePassword"
+                        android:layout_width="60px"
+                        android:layout_height="60px"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
-                        android:gravity="center_vertical|right"
-                        android:text="@string/save"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_color_theme_alpha_selector"
-                        android:textSize="@dimen/text_size_28"
+                        android:layout_marginRight="20px"
+                        android:padding="15px"
+                        android:src="@drawable/edit_icon_selector"
+                        android:tag="mwar"
                         android:visibility="visible" />
-                </LinearLayout>
 
-                <View
+                    <LinearLayout
+                        android:id="@+id/linearLayoutPasswordSave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="35px"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+
+                        <ImageView
+                            android:id="@+id/imageViewPasswordSave"
+                            android:layout_width="24px"
+                            android:layout_height="24px"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/profile_save"
+                            android:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/textViewPasswordSave"
+                            android:layout_width="wrap_content"
+                            android:layout_height="80px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10px"
+                            android:gravity="center_vertical|right"
+                            android:text="@string/save"
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_color_theme_alpha_selector"
+                            android:textSize="27px"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="40px"
+                        android:layout_marginRight="40px"
+                        android:background="@color/stroke_color_light" />
+                </RelativeLayout>
+
+                <include layout="@layout/layout_change_password" />
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutAddressBook"
                     android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginRight="40px"
-                    android:background="@color/stroke_color_light" />
-            </RelativeLayout>
-
-            <include layout="@layout/layout_change_password" />
-
-
-
-
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutAddressBook"
-                android:layout_width="match_parent"
-                android:layout_height="110px"
-                android:background="@color/white">
-
-
-
-                <TextView
-                    android:id="@+id/textViewAddressBook"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="40px"
-                    android:gravity="center"
-                    android:text="@string/address_book"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28" />
+                    >
 
 
+                    <TextView
+                        android:id="@+id/textViewAddressBook"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="40px"
+                        android:layout_marginTop="25px"
+                        android:layout_marginBottom="25px"
+                        android:gravity="center"
+                        android:text="@string/address_book"
 
-            </RelativeLayout>
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="27px" />
 
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutEmergencyContact"
-                android:layout_width="match_parent"
-                android:layout_height="110px"
-                android:background="@color/white">
+                </RelativeLayout>
 
 
-                <View android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginRight="40px"
-                    android:background="@color/stroke_color_light" />
-                <TextView
-                    android:id="@+id/textViewEmergencyContact"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="40px"
-                    android:gravity="center"
-                    android:text="@string/emergency_contacts"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28" />
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutEmergencyContact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="6px"
-                android:background="@drawable/shadow_down" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:layout_marginLeft="40px"
+                        android:layout_marginRight="40px"
+                        android:background="@color/stroke_color_light" />
+
+                    <TextView
+                        android:id="@+id/textViewEmergencyContact"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="25px"
+                        android:layout_marginBottom="25px"
+                        android:layout_marginLeft="40px"
+                        android:gravity="center"
+                        android:text="@string/emergency_contacts"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="27px" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/relativeLayoutAddressOld"
