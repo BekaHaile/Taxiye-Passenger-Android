@@ -132,7 +132,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
-        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.grey_icon_color);
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         swipeRefreshLayout.setEnabled(true);
 

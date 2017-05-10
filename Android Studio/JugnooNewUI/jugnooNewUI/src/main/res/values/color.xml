@@ -201,6 +201,7 @@
     <color name="jeanie_color">#FD9244</color>
     <color name="text_color_dark">#494958</color>
     <color name="text_color">#595968</color>
+    <color name="grey_icon_color">#595968</color>
     <color name="text_color_dark_1">#2d3a5c</color>
     <color name="theme_green_color">#5DC647</color>
     <color name="theme_red_color">#F54646</color>
