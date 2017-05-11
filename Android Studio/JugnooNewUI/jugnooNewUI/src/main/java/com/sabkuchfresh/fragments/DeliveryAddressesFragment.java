@@ -421,6 +421,15 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if(editTextDeliveryAddress != null) {
+            Utils.hideSoftKeyboard(activity, editTextDeliveryAddress);
+        }
+    }
+
     private void setupMapAndButtonMargins(){
         RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
         RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();

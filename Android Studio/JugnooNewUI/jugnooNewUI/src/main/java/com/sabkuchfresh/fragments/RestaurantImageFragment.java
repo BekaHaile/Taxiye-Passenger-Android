@@ -3,9 +3,11 @@ package com.sabkuchfresh.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,7 +20,9 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.BlurImageTask;
+import com.sabkuchfresh.utils.DirectionsGestureListener;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,6 +58,8 @@ public class RestaurantImageFragment extends Fragment {
 
     private FreshActivity activity;
     private BlurImageTask loadBlurredImageTask;
+    private Target target;
+    private int imageMaxHeight, imageMaxWidth;
 
 
     public RestaurantImageFragment() {
@@ -76,23 +82,29 @@ public class RestaurantImageFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof FreshActivity)
             activity = (FreshActivity) context;
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.restaurant_collapse_details, container, false);
         ButterKnife.bind(this, view);
         setupDetails(false);
-        backgroundImageView.setOnTouchListener(new View.OnTouchListener() {
+
+        backgroundImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.performBackPressed(true);
+            }
+        });
+
+        ivRestOriginalImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return gesture.onTouchEvent(event);
             }
         });
+
         return view;
     }
 
@@ -115,25 +127,76 @@ public class RestaurantImageFragment extends Fragment {
 
             layoutRestDetails.setVisibility(View.VISIBLE);
             ivRestOriginalImage.setVisibility(View.VISIBLE);
+
+
             backgroundImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             if (activity.getVendorOpened() != null && activity.getVendorOpened().getImage() != null) {
 
 
-                Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).placeholder(R.drawable.ic_fresh_item_placeholder).into(ivRestOriginalImage);
-                //background blurred Image
-                loadBlurredImageTask = new BlurImageTask(getActivity(), new BlurImageTask.OnExecution() {
+                ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
+                layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                ivRestOriginalImage.setLayoutParams(layoutParams);
+
+                ivRestOriginalImage.post(new Runnable() {
                     @Override
-                    public void onLoad(Bitmap originalbitmap, Bitmap blurredBitmap) {
-//                        if (originalbitmap != null) {
-//                            ivRestOriginalImage.setImageBitmap(originalbitmap);
-//                        }
-                        if (blurredBitmap != null) {
-                            backgroundImageView.setImageBitmap(blurredBitmap);
+                    public void run() {
+                        if(RestaurantImageFragment.this.getView()!=null && !TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
+                            target = new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                                    imageMaxWidth = ivRestOriginalImage.getMeasuredWidth();
+                                    imageMaxHeight = ivRestOriginalImage.getMeasuredHeight();
+
+                                    int imgHeight = (imageMaxWidth * bitmap.getHeight()) / bitmap.getWidth();
+                                    int imgWidth = imageMaxWidth;
+
+                                    if (imgHeight > imageMaxHeight) {
+                                        imgHeight = imageMaxHeight;
+                                        imgWidth = (imageMaxHeight * bitmap.getWidth()) / bitmap.getHeight();
+                                    }
+
+
+                                    ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
+                                    layoutParams.width = imgWidth;
+                                    layoutParams.height = imgHeight;
+                                    ivRestOriginalImage.setLayoutParams(layoutParams);
+                                    ivRestOriginalImage.setImageBitmap(bitmap);
+                                }
+
+                                @Override
+                                public void onBitmapFailed(Drawable drawable) {
+                                    ivRestOriginalImage.setImageDrawable(drawable);
+                                }
+
+                                @Override
+                                public void onPrepareLoad(Drawable drawable) {
+                                    ivRestOriginalImage.setImageDrawable(drawable);
+                                }
+                            };
+
+
+                            Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).placeholder(R.drawable.ic_fresh_item_placeholder).into(target);
                         }
                     }
                 });
-                loadBlurredImageTask.execute(activity.getVendorOpened().getImage());
+
+
+                //background blurred Image
+                if(!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
+                    loadBlurredImageTask = new BlurImageTask(getActivity(), new BlurImageTask.OnExecution() {
+                        @Override
+                        public void onLoad(Bitmap originalbitmap, Bitmap blurredBitmap) {
+//                        if (originalbitmap != null) {
+//                            ivRestOriginalImage.setImageBitmap(originalbitmap);
+//                        }
+                            if (blurredBitmap != null) {
+                                backgroundImageView.setImageBitmap(blurredBitmap);
+                            }
+                        }
+                    });
+                    loadBlurredImageTask.execute(activity.getVendorOpened().getImage());
+                }
 
 
                 tvRestTitle.setText(activity.getVendorOpened().getName());
@@ -157,6 +220,7 @@ public class RestaurantImageFragment extends Fragment {
                     activity.openRestaurantReviewsListFragment();
                 }
             });
+
         }
     }
 
@@ -184,52 +248,24 @@ public class RestaurantImageFragment extends Fragment {
 
 
     final GestureDetector gesture = new GestureDetector(getActivity(),
-            new GestureDetector.SimpleOnGestureListener() {
-
+            new DirectionsGestureListener(new DirectionsGestureListener.Callback() {
                 @Override
-                public boolean onDown(MotionEvent e) {
-                    return true;
+                public void topSwipe() {
+                    activity.performBackPressed(true);
                 }
 
                 @Override
-                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                    final float SWIPE_MIN_DISTANCE = 125.0f;
-                    if (e1.getY() - e2.getY() < SWIPE_MIN_DISTANCE)
-                        return false;
-
-
-                    switch (getSlope(e1.getX(), e1.getY(), e2.getX(), e2.getY())) {
-                        case 1:
-                            activity.performBackPressed(true);
-                            return true;
-                        case 2:
-
-                            return true;
-                        case 3:
-
-                            return true;
-                        case 4:
-                            return true;
-                    }
-                    return false;
+                public void bottomSwipe() {
                 }
-            });
 
-    private int getSlope(float x1, float y1, float x2, float y2) {
-        Double angle = Math.toDegrees(Math.atan2(y1 - y2, x2 - x1));
-        if (angle > 45 && angle <= 135)
-            // top
-            return 1;
-        if (angle >= 135 && angle < 180 || angle < -135 && angle > -180)
-            // left
-            return 2;
-        if (angle < -45 && angle >= -135)
-            // down
-            return 3;
-        if (angle > -45 && angle <= 45)
-            // right
-            return 4;
-        return 0;
-    }
+                @Override
+                public void leftSwipe() {
 
+                }
+
+                @Override
+                public void rightSwipe() {
+
+                }
+            }));
 }
