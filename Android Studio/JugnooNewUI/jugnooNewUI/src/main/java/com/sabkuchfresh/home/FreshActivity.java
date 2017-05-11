@@ -1541,7 +1541,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     };
 
-    public void openRestaurantFragment() {
+    public void openRestaurantImageFragment() {
         if (canExitVendorMenu())
             transactionUtils.openRestaurantImageFragment(FreshActivity.this, relativeLayoutContainer);
     }
@@ -3797,16 +3797,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         ivCollapseRestImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openRestaurantFragment();
-            }
-        });
-
-        tvCollapRestaurantName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//                TODO openRestaurantImageFragment();
                 openRestaurantReviewsListFragment();
             }
         });
+
+//        tvCollapRestaurantName.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openRestaurantReviewsListFragment();
+//            }
+//        });
 
 
         //to enable animate layout changes since it acts weirdly with collapsing toolbar if declared in xml because it animates whole heirarchy and hence toolbar behaves weirdly
