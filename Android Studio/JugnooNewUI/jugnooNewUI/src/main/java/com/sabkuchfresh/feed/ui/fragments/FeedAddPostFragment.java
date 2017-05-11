@@ -133,7 +133,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             @Override
             public void onPageSelected(int position) {
                 switchAddFeed(position);
-//                ivAccessCamera.setEnabled(getVisibleFragment().canUploadImages());
                 toggleAnonymousPosting(getVisibleFragment().isAnonymousPostingEnabled());
                 btnSubmit.setActivated(getVisibleFragment().submitEnabledState());
 
@@ -210,6 +209,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                     handleName = Data.getFeedData().getHandleName();
                 }
             }
+            switchAddFeed(0);
         }
 
         labelAnonymousSwitch.setTypeface(labelAnonymousSwitch.getTypeface(), Typeface.BOLD);
