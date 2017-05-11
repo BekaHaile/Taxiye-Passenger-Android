@@ -31,8 +31,7 @@
             android:layout_marginBottom="24px"
             android:layout_marginLeft="24px"
             android:layout_marginTop="24px"
-            android:maxLines="2"
-            android:text="cashback\nabc"
+            android:text="cashback\nkjhkj"
             android:textColor="@color/text_color_selector"
             android:textSize="@dimen/text_size_32"
             />
@@ -45,6 +44,8 @@
         android:layout_height="2px"
         android:background="@color/stroke_light_grey_alpha"
         android:layout_below="@+id/linearLayoutContent"
+        android:layout_marginLeft="24px"
+        android:layout_marginRight="24px"
         />
 
 </RelativeLayout>

@@ -275,10 +275,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 					openSearch(false);
 				}
 
+				final boolean refreshCartFinal = activity.isRefreshCart();
 				activity.getHandler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						if (activity.isRefreshCart()) {
+						if (refreshCartFinal) {
 							activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
 						}
 						activity.setRefreshCart(false);

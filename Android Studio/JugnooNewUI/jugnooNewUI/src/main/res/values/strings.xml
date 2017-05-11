@@ -1685,6 +1685,7 @@
     <string name="item_not_available">Selected item currently not available!</string>
     <string name="total_savings">Total Savings</string>
     <string name="title_my_profile">MY PROFILE</string>
+    <string name="order_adjustment">Order Adjustment</string>
 
 
 </resources>

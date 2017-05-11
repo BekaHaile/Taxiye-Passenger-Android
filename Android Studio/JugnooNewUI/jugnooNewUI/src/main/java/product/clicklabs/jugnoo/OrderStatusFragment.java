@@ -520,7 +520,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
                 tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
             } else {
-                if(fieldTextVal != null && fieldTextVal > 0){
+                if(fieldTextVal > 0){
                     tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
                     tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 } else {
@@ -528,7 +528,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         tvDelChargesVal.setText(activity.getResources().getString(R.string.free));
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
                     } else {
-                        tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
+                        if(Utils.compareDouble(fieldTextVal, 0) == -1){
+                            tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(Math.abs(fieldTextVal))));
+                        } else {
+                            tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
+                        }
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                     }
                 }
@@ -695,6 +699,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
 
             llFinalAmount.removeAllViews();
+            if(Utils.compareDouble(datum1.getOrderAdjustment(), 0) != 0){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.order_adjustment), datum1.getOrderAdjustment(), false);
+            }
             if(datum1.getPayableAmount() > 0){
                 vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.cash), datum1.getPayableAmount(), false);
             }

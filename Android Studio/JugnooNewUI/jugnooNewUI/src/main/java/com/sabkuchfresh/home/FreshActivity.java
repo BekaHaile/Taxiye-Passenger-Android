@@ -3794,6 +3794,20 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         rlCollapseDetails = (RelativeLayout) findViewById(R.id.layout_rest_details);
         llCollapseRating = (LinearLayout) findViewById(R.id.llCollapseRating);
 
+        ivCollapseRestImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRestaurantFragment();
+            }
+        });
+
+        tvCollapRestaurantName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRestaurantReviewsListFragment();
+            }
+        });
+
 
         //to enable animate layout changes since it acts weirdly with collapsing toolbar if declared in xml because it animates whole heirarchy and hence toolbar behaves weirdly
         //This method is being used to animate the specific group and its nested children

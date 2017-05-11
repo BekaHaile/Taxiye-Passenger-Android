@@ -234,6 +234,9 @@ public class HistoryResponse {
         @SerializedName("other_payment_mode_text")
         @Expose
         private String otherPaymentModeText;
+        @SerializedName("order_adjustment")
+        @Expose
+        private double orderAdjustment;
 
 
 
@@ -840,6 +843,14 @@ public class HistoryResponse {
 
         public void setRefundAmount(double refundAmount) {
             this.refundAmount = refundAmount;
+        }
+
+        public double getOrderAdjustment() {
+            return orderAdjustment;
+        }
+
+        public void setOrderAdjustment(double orderAdjustment) {
+            this.orderAdjustment = orderAdjustment;
         }
     }
 

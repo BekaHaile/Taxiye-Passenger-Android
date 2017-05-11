@@ -225,6 +225,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         viewPromoTitle.setVisibility(View.VISIBLE);
         tvOfferTitle.setVisibility(View.VISIBLE);
         tvOfferTitle.setText(setUpOfferTitle(promoText,null));
+        rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.VISIBLE);
 
 
     }
@@ -417,12 +418,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             layoutParams.weight=1;
             activity.tvCollapRestaurantName.setLayoutParams(layoutParams);
             activity.tvCollapRestaurantName.requestLayout();
-            activity.ivCollapseRestImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activity.openRestaurantReviewsListFragment();
-                }
-            });
         }
     }
 

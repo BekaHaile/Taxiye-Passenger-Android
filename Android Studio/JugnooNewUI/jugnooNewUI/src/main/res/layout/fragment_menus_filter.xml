@@ -51,7 +51,7 @@
                     <RelativeLayout
                         android:id="@+id/relativeLayoutAcceptOnline"
                         android:layout_width="match_parent"
-                        android:layout_height="94px"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/bg_transparent_menu_item_selector">
 
 
@@ -66,6 +66,8 @@
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_32"
                             android:visibility="visible"
+                            android:layout_marginBottom="24px"
+                            android:layout_marginTop="24px"
                             />
 
                         <ImageView
@@ -83,8 +85,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="2px"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="44px"
-                            android:layout_marginRight="44px"
+                            android:layout_marginLeft="24px"
+                            android:layout_marginRight="24px"
                             android:background="@color/stroke_light_grey_alpha"
                             />
 
@@ -93,7 +95,7 @@
                     <RelativeLayout
                         android:id="@+id/relativeLayoutOffersDiscount"
                         android:layout_width="match_parent"
-                        android:layout_height="100px"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/bg_transparent_menu_item_selector">
 
 
@@ -108,6 +110,8 @@
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_32"
                             android:visibility="visible"
+                            android:layout_marginBottom="24px"
+                            android:layout_marginTop="24px"
                             />
 
 
@@ -126,8 +130,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="2px"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="44px"
-                            android:layout_marginRight="44px"
+                            android:layout_marginLeft="24px"
+                            android:layout_marginRight="24px"
                             android:background="@color/stroke_light_grey_alpha"
                             />
 
@@ -136,7 +140,7 @@
                     <RelativeLayout
                         android:id="@+id/relativeLayoutPureVeg"
                         android:layout_width="match_parent"
-                        android:layout_height="100px"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/bg_transparent_menu_item_selector"
                         >
 
@@ -152,6 +156,8 @@
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_32"
                             android:visibility="visible"
+                            android:layout_marginBottom="24px"
+                            android:layout_marginTop="24px"
                             />
 
                         <ImageView
@@ -169,8 +175,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="2px"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="44px"
-                            android:layout_marginRight="44px"
+                            android:layout_marginLeft="24px"
+                            android:layout_marginRight="24px"
                             android:background="@color/stroke_light_grey_alpha"
                             />
 
@@ -179,7 +185,7 @@
                     <RelativeLayout
                         android:id="@+id/relativeLayoutFreeDelivery"
                         android:layout_width="match_parent"
-                        android:layout_height="100px"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/bg_transparent_menu_item_selector"
                         >
 
@@ -195,6 +201,8 @@
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_32"
                             android:visibility="visible"
+                            android:layout_marginBottom="24px"
+                            android:layout_marginTop="24px"
                             />
 
                         <ImageView
@@ -251,7 +259,7 @@
                     <RelativeLayout
                         android:id="@+id/relativeLayoutPopularity"
                         android:layout_width="match_parent"
-                        android:layout_height="94px"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/bg_transparent_menu_item_selector">
 
 
@@ -266,6 +274,8 @@
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_32"
                             android:visibility="visible"
+                            android:layout_marginBottom="24px"
+                            android:layout_marginTop="24px"
                             />
 
                         <ImageView
@@ -283,8 +293,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="2px"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="44px"
-                            android:layout_marginRight="44px"
+                            android:layout_marginLeft="24px"
+                            android:layout_marginRight="24px"
                             android:background="@color/stroke_light_grey_alpha"
                             />
 
@@ -293,7 +303,7 @@
                     <RelativeLayout
                         android:id="@+id/relativeLayoutDistance"
                         android:layout_width="match_parent"
-                        android:layout_height="100px"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/bg_transparent_menu_item_selector">
 
 
@@ -308,6 +318,8 @@
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_32"
                             android:visibility="visible"
+                            android:layout_marginBottom="24px"
+                            android:layout_marginTop="24px"
                             />
 
 
@@ -325,8 +337,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="2px"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="44px"
-                            android:layout_marginRight="44px"
+                            android:layout_marginLeft="24px"
+                            android:layout_marginRight="24px"
                             android:background="@color/stroke_light_grey_alpha"
                             />
 
@@ -335,7 +347,7 @@
                     <RelativeLayout
                         android:id="@+id/relativeLayoutPrice"
                         android:layout_width="match_parent"
-                        android:layout_height="100px"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/bg_transparent_menu_item_selector"
                         >
 
@@ -351,6 +363,8 @@
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_32"
                             android:visibility="visible"
+                            android:layout_marginBottom="24px"
+                            android:layout_marginTop="24px"
                             />
 
                         <ImageView
@@ -389,7 +403,7 @@
                 android:id="@+id/cardViewCuisines"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="100px"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
                 android:layout_marginTop="10px"
@@ -414,6 +428,8 @@
                         android:textColor="@color/text_color_selector"
                         android:textSize="@dimen/text_size_32"
                         android:visibility="visible"
+                        android:layout_marginBottom="24px"
+                        android:layout_marginTop="24px"
                         />
 
 
@@ -466,7 +482,7 @@
                 android:id="@+id/cardViewMinimumOrder"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="100px"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="24px"
                 android:layout_marginRight="24px"
                 android:layout_marginTop="10px"
@@ -491,11 +507,13 @@
                         <TextView
                             android:id="@+id/textViewMO150"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/less_than_150"
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_26"
+                            android:paddingTop="30px"
+                            android:paddingBottom="30px"
                             />
 
                         <ImageView
@@ -529,6 +547,8 @@
                             android:text="@string/less_than_250"
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_26"
+                            android:paddingTop="30px"
+                            android:paddingBottom="30px"
                             />
 
                         <ImageView
@@ -561,6 +581,8 @@
                             android:text="@string/less_than_500"
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_26"
+                            android:paddingTop="30px"
+                            android:paddingBottom="30px"
                             />
 
                         <ImageView
@@ -597,7 +619,7 @@
                 android:id="@+id/cardViewDeliveryTime"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="100px"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
                 android:layout_marginTop="10px"
@@ -627,6 +649,8 @@
                             android:text="@string/min_30"
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_26"
+                            android:paddingTop="30px"
+                            android:paddingBottom="30px"
                             />
 
                         <ImageView
@@ -660,6 +684,8 @@
                             android:text="@string/min_45"
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_26"
+                            android:paddingTop="30px"
+                            android:paddingBottom="30px"
                             />
 
                         <ImageView
@@ -692,6 +718,8 @@
                             android:text="@string/min_60"
                             android:textColor="@color/text_color_selector"
                             android:textSize="@dimen/text_size_26"
+                            android:paddingTop="30px"
+                            android:paddingBottom="30px"
                             />
 
                         <ImageView
