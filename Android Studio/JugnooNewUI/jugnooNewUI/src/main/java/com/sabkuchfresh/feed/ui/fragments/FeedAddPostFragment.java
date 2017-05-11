@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.gson.annotations.SerializedName;
 import com.picker.image.model.ImageEntry;
+import com.picker.image.util.Util;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.ui.adapters.FeedAddPostPagerAdapter;
@@ -265,8 +266,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
         switch (pos) {
             case 1:
-                tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
-                tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+                tvReview.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
+                product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(getActivity(),tvReview);
+                tvAsk.getPaint().setShader(null);
+                tvAsk.setTextColor(ContextCompat.getColor(activity,R.color.text_color_30alpha));
+              /*  tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+                tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));*/
                 vReviewSelected.setVisibility(View.VISIBLE);
                 vAskSelected.setVisibility(View.GONE);
                 ivReview.setImageResource(R.drawable.ic_feed_star);
@@ -276,8 +281,12 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                 break;
 
             case 0:
-                tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
-                tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+                tvAsk.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
+                product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(getActivity(),tvAsk);
+                tvReview.getPaint().setShader(null);
+                tvReview.setTextColor(ContextCompat.getColor(activity,R.color.text_color_30alpha));
+               /* tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+                tvAsk.setTextColor(ContextCompat.getColor(activity, R.color.text_color));*/
                 vReviewSelected.setVisibility(View.GONE);
                 vAskSelected.setVisibility(View.VISIBLE);
                 ivReview.setImageResource(R.drawable.ic_feed_star_disable);

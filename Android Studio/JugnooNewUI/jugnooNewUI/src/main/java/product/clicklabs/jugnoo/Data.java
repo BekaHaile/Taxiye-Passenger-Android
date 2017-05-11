@@ -139,6 +139,7 @@ public class Data {
 	public static boolean isOrderCancelled = false;
 	public static boolean isSupportRideIssueUpdated = false;
 	public static String currentActivity = null;
+	public static boolean activityResumed = false;
 
 
 	public static void clearDataOnLogout(Context context){
@@ -350,6 +351,7 @@ public class Data {
 				// For deep linking with Feed particular post_id
 				else if(intent.getIntExtra(Constants.KEY_POST_ID, -1) != -1){
 					Prefs.with(context).save(Constants.SP_POST_ID_TO_OPEN, intent.getIntExtra(Constants.KEY_POST_ID, -1));
+					Prefs.with(context).save(Constants.SP_POST_NOTIFICATION_ID_TO_OPEN, intent.getIntExtra(Constants.KEY_POST_NOTIFICATION_ID, -1));
 				}
 			}
 

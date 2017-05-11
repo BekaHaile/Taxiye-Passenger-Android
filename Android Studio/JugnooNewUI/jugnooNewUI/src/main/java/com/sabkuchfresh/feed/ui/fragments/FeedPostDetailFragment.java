@@ -22,9 +22,12 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
-import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.models.FeedNotificationsResponse;
 import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.feed.ui.adapters.FeedPostDetailAdapter;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.feed.ui.api.DeleteFeed;
 import com.sabkuchfresh.feed.ui.api.LikeFeed;
 import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
@@ -72,6 +75,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
     private RecyclerView recyclerView;
     private DeleteFeed deleteFeed;
     private boolean openKeyboardOnLoad;
+    private int postNotificationId;
     private TextView tvSwitchLabel;
     private SwitchCompat switchCompat;
 
@@ -81,12 +85,13 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
     }
 
 
-    public static FeedPostDetailFragment newInstance(FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad) {
+    public static FeedPostDetailFragment newInstance(FeedDetail feedDetail, int positionInOriginalList, boolean openKeyboardOnLoad, int postNotificationId) {
         FeedPostDetailFragment fragment = new FeedPostDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable(FEED_DETAIL, feedDetail);
         args.putSerializable(POSITION_IN_ORIGINAL_LIST, positionInOriginalList);
         args.putBoolean(OPEN_KEYBOARD_ON_LOAD, openKeyboardOnLoad);
+        args.putInt(Constants.KEY_POST_NOTIFICATION_ID, postNotificationId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,6 +104,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
             feedDetail = (FeedDetail) getArguments().getSerializable(FEED_DETAIL);
             positionInOriginalList = getArguments().getInt(POSITION_IN_ORIGINAL_LIST);
             openKeyboardOnLoad = getArguments().getBoolean(OPEN_KEYBOARD_ON_LOAD);
+            postNotificationId = getArguments().getInt(Constants.KEY_POST_NOTIFICATION_ID, -1);
         }
     }
 
@@ -215,7 +221,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
             }
         });
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-        ;
+
         recyclerView.setAdapter(feedOfferingCommentsAdapter);
         final String handleName ;
         if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getHandleName()))
@@ -233,6 +239,11 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
         });
         switchCompat.setChecked(true);
         fetchFeedDetail();
+
+        if(postNotificationId != -1){
+            updateFeedNotification(postNotificationId);
+        }
+
         return rootView;
     }
 
@@ -664,6 +675,50 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
             public void onNegativeClick() {
             }
         }, R.style.Feed_Popup_Theme, activity, message).show();
+    }
+
+    public void updateFeedNotification(int notificationId){
+        try {
+            if(Data.userData != null) {
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_NOTIFICATION_ID, String.valueOf(notificationId));
+                params.put(Constants.KEY_IS_READ, String.valueOf(1));
+
+                new ApiCommon<FeedNotificationsResponse>(activity).execute(params, ApiName.FEED_UPDATE_NOTIFICATION, new APICommonCallback<FeedNotificationsResponse>() {
+                    @Override
+                    public boolean onNotConnected() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onException(Exception e) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSuccess(FeedNotificationsResponse feedNotificationsResponse, String message, int flag) {
+
+                    }
+
+                    @Override
+                    public boolean onError(FeedNotificationsResponse feedNotificationsResponse, String message, int flag) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onFailure(RetrofitError error) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

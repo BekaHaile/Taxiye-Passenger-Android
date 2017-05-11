@@ -20,11 +20,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 
 import java.util.ArrayList;
@@ -215,9 +217,8 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
 //            makeTextViewResizable(mHolder.textViewAboutItemDescription, 2, context.getString(R.string.more), true);
 
-            if(context instanceof FreshActivity
-                    && ((FreshActivity)context).getVendorOpened() != null
-                    && (1 == ((FreshActivity)context).getVendorOpened().getIsClosed() || 0 == ((FreshActivity)context).getVendorOpened().getIsAvailable())){
+            if(callback.getVendorOpened() != null
+                    && (1 == callback.getVendorOpened().getIsClosed() || 0 == callback.getVendorOpened().getIsAvailable())){
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
             }
 
@@ -230,6 +231,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.imageViewMinus.setTag(position);
             mHolder.imageViewPlus.setTag(position);
+            mHolder.relativeLayoutItem.setTag(position);
 
             View.OnClickListener plusClick = new View.OnClickListener() {
                 @Override
@@ -279,6 +281,21 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             }
                         }
                     } catch (Exception e){}
+                }
+            });
+
+            mHolder.relativeLayoutItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int pos = (int) v.getTag();
+                        Item item1 = subItems.get(pos);
+                        if(!item1.isActive() && callback.getVendorOpened() != null){
+                            Utils.showToast(context, callback.getVendorOpened().getItemInactiveAlertText(context), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -373,6 +390,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         void onPlusClicked(int position, Item item, boolean isNewItemAdded);
         void onMinusClicked(int position, Item item);
         void onMinusFailed(int position, Item item);
+        MenusResponse.Vendor getVendorOpened();
     }
 
     public interface CallbackCheckForAdd{

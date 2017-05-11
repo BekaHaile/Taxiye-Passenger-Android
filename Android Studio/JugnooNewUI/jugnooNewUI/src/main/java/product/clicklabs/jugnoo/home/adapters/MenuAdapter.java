@@ -205,6 +205,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     }
                 } else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_promotion_selector);
+
                     try {
                         int couponsCount = Data.userData.getTotalCouponCount();
                         if(couponsCount > 0) {
@@ -213,6 +214,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                            /* holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
                             setLayoutParamsForValue(holder.textViewValue);*/
 						}
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -277,6 +279,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         }
                     }
                 });
+
+
+                try {
+                    Utils.setTextColorGradient(activity,   holder.textViewValue);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

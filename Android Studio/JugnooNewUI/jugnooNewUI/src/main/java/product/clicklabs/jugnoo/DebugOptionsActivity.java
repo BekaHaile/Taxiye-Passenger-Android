@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -41,8 +40,8 @@ public class DebugOptionsActivity extends BaseActivity {
     RelativeLayout relativeLayoutServerEnv;
     ImageView imageViewArrowServerEnv;
     LinearLayout linearLayoutServerEnvBelow;
-    RelativeLayout relativeLayoutLive4012, relativeLayoutTest8012, relativeLayoutTest8013, relativeLayoutTest8014, relativeLayoutTest8015, relativeLayoutCustom;
-    ImageView imageViewLive4012, imageViewTest8012, imageViewTest8013, imageViewTest8014, imageViewTest8015, imageViewCustom;
+    RelativeLayout relativeLayoutLive4012, relativeLayoutTest8012, relativeLayoutCustom;
+    ImageView imageViewLive4012, imageViewTest8012, imageViewCustom;
     EditText editTextCustom;
 
     RelativeLayout relativeLayoutServerEnvFresh;
@@ -51,6 +50,13 @@ public class DebugOptionsActivity extends BaseActivity {
     RelativeLayout relativeLayoutLiveFresh, relativeLayoutTestFresh, relativeLayoutCustomFresh;
     ImageView imageViewLiveFresh, imageViewTestFresh, imageViewCustomFresh;
     EditText editTextCustomFresh;
+
+    RelativeLayout relativeLayoutServerEnvMenus;
+    ImageView imageViewArrowServerEnvMenus;
+    LinearLayout linearLayoutServerEnvMenusBelow;
+    RelativeLayout relativeLayoutLiveMenus, relativeLayoutTestMenus, relativeLayoutCustomMenus;
+    ImageView imageViewLiveMenus, imageViewTestMenus, imageViewCustomMenus;
+    EditText editTextCustomMenus;
 
 
     RelativeLayout relativeLayoutAuto;
@@ -65,6 +71,7 @@ public class DebugOptionsActivity extends BaseActivity {
 
     String selectedServer = Config.getDefaultServerUrl();
     String selectedServerFresh = Config.getFreshDefaultServerUrl();
+    String selectedServerMenus = Config.getMenusDefaultServerUrl();
 
     ProgressDialog progressDialog;
 
@@ -91,6 +98,7 @@ public class DebugOptionsActivity extends BaseActivity {
         ((TextView) findViewById(R.id.textViewDebugOptions)).setTypeface(Fonts.mavenRegular(this));
         ((TextView) findViewById(R.id.textViewServerEnv)).setTypeface(Fonts.mavenRegular(this));
         ((TextView) findViewById(R.id.textViewServerEnvFresh)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView) findViewById(R.id.textViewServerEnvMenus)).setTypeface(Fonts.mavenRegular(this));
 
 
         relativeLayoutDebugOptions = (RelativeLayout) findViewById(R.id.relativeLayoutDebugOptions);
@@ -110,21 +118,12 @@ public class DebugOptionsActivity extends BaseActivity {
         linearLayoutServerEnvBelow = (LinearLayout) findViewById(R.id.linearLayoutServerEnvBelow);
         relativeLayoutLive4012 = (RelativeLayout) findViewById(R.id.relativeLayoutLive4012);
         relativeLayoutTest8012 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8012);
-        relativeLayoutTest8013 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8013);
-        relativeLayoutTest8014 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8014);
-        relativeLayoutTest8015 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8015);
         relativeLayoutCustom = (RelativeLayout) findViewById(R.id.relativeLayoutCustom);
         imageViewLive4012 = (ImageView) findViewById(R.id.imageViewLive4012);
         imageViewTest8012 = (ImageView) findViewById(R.id.imageViewTest8012);
-        imageViewTest8013 = (ImageView) findViewById(R.id.imageViewTest8013);
-        imageViewTest8014 = (ImageView) findViewById(R.id.imageViewTest8014);
-        imageViewTest8015 = (ImageView) findViewById(R.id.imageViewTest8015);
         imageViewCustom = (ImageView) findViewById(R.id.imageViewCustom);
         ((TextView) findViewById(R.id.textViewLive4012)).setTypeface(Fonts.mavenLight(this));
         ((TextView) findViewById(R.id.textViewTest8012)).setTypeface(Fonts.mavenLight(this));
-        ((TextView) findViewById(R.id.textViewTest8013)).setTypeface(Fonts.mavenLight(this));
-        ((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.mavenLight(this));
-        ((TextView) findViewById(R.id.textViewTest8015)).setTypeface(Fonts.mavenLight(this));
         editTextCustom = (EditText) findViewById(R.id.editTextCustom);
         editTextCustom.setTypeface(Fonts.mavenMedium(this));
 
@@ -144,6 +143,20 @@ public class DebugOptionsActivity extends BaseActivity {
         editTextCustomFresh.setTypeface(Fonts.mavenMedium(this));
 
 
+        relativeLayoutServerEnvMenus = (RelativeLayout) findViewById(R.id.relativeLayoutServerEnvMenus);
+        imageViewArrowServerEnvMenus = (ImageView) findViewById(R.id.imageViewArrowServerEnvMenus);
+        linearLayoutServerEnvMenusBelow = (LinearLayout) findViewById(R.id.linearLayoutServerEnvMenusBelow);
+        relativeLayoutLiveMenus = (RelativeLayout) findViewById(R.id.relativeLayoutLiveMenus);
+        relativeLayoutTestMenus = (RelativeLayout) findViewById(R.id.relativeLayoutTestMenus);
+        relativeLayoutCustomMenus = (RelativeLayout) findViewById(R.id.relativeLayoutCustomMenus);
+        imageViewLiveMenus = (ImageView) findViewById(R.id.imageViewLiveMenus);
+        imageViewTestMenus = (ImageView) findViewById(R.id.imageViewTestMenus);
+        imageViewCustomMenus = (ImageView) findViewById(R.id.imageViewCustomMenus);
+        ((TextView) findViewById(R.id.textViewLiveMenus)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewTestMenus)).setTypeface(Fonts.mavenLight(this));
+        editTextCustomMenus = (EditText) findViewById(R.id.editTextCustomMenus);
+        editTextCustomMenus.setTypeface(Fonts.mavenMedium(this));
+        
 
         relativeLayoutAuto = (RelativeLayout) findViewById(R.id.relativeLayoutAuto);
         buttonSave = (Button) findViewById(R.id.buttonSave);
@@ -207,6 +220,21 @@ public class DebugOptionsActivity extends BaseActivity {
                     Prefs.with(DebugOptionsActivity.this).save(SPLabels.FRESH_SERVER_SELECTED, selectedServerFresh);
                 }
 
+                if (!selectedServerMenus.equalsIgnoreCase(Config.getMenusLiveServerUrl())
+                        && !selectedServerMenus.equalsIgnoreCase(Config.getMenusDevServerUrl())) {
+                    String customUrl = editTextCustomMenus.getText().toString().trim();
+                    if ("".equalsIgnoreCase(customUrl)) {
+                        editTextCustomMenus.requestFocus();
+                        editTextCustomMenus.setError("Please enter something");
+                        stop = true;
+                    } else {
+                        selectedServerMenus = customUrl;
+                        Prefs.with(DebugOptionsActivity.this).save(SPLabels.MENUS_SERVER_SELECTED, selectedServerMenus);
+                    }
+                } else {
+                    Prefs.with(DebugOptionsActivity.this).save(SPLabels.MENUS_SERVER_SELECTED, selectedServerMenus);
+                }
+
                 if(!stop){
                     performBackPressed();
                 }
@@ -227,6 +255,7 @@ public class DebugOptionsActivity extends BaseActivity {
 
         selectedServer = Prefs.with(this).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
         selectedServerFresh = Prefs.with(this).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
+        selectedServerMenus = Prefs.with(this).getString(SPLabels.MENUS_SERVER_SELECTED, Config.getMenusDefaultServerUrl());
 
         if (showAllDriversValue == 1) {
             relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
@@ -246,6 +275,7 @@ public class DebugOptionsActivity extends BaseActivity {
 
         setServerUI(selectedServer);
         setFreshServerUI(selectedServerFresh);
+        setMenusServerUI(selectedServerMenus);
 
         imageViewArrowDebugOptions.setRotation(90);
         linearLayoutDebugOptionsBelow.setVisibility(View.VISIBLE);
@@ -253,6 +283,8 @@ public class DebugOptionsActivity extends BaseActivity {
         linearLayoutServerEnvBelow.setVisibility(View.VISIBLE);
         imageViewArrowServerEnvFresh.setRotation(90);
         linearLayoutServerEnvFreshBelow.setVisibility(View.VISIBLE);
+        imageViewArrowServerEnvMenus.setRotation(90);
+        linearLayoutServerEnvMenusBelow.setVisibility(View.VISIBLE);
 
 
         relativeLayoutShowAllDrivers.setOnClickListener(new OnClickListener() {
@@ -299,30 +331,6 @@ public class DebugOptionsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 selectedServer = Config.getDevServerUrl();
-                setServerUI(selectedServer);
-            }
-        });
-
-        relativeLayoutTest8013.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServer = Config.getDev1ServerUrl();
-                setServerUI(selectedServer);
-            }
-        });
-
-        relativeLayoutTest8014.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServer = Config.getDev2ServerUrl();
-                setServerUI(selectedServer);
-            }
-        });
-
-        relativeLayoutTest8015.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServer = Config.getDev3ServerUrl();
                 setServerUI(selectedServer);
             }
         });
@@ -393,6 +401,49 @@ public class DebugOptionsActivity extends BaseActivity {
 
 
 
+
+
+
+        relativeLayoutLiveMenus.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedServerMenus = Config.getMenusLiveServerUrl();
+                setMenusServerUI(selectedServerMenus);
+            }
+        });
+
+        relativeLayoutTestMenus.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedServerMenus = Config.getMenusDevServerUrl();
+                setMenusServerUI(selectedServerMenus);
+            }
+        });
+
+        relativeLayoutCustomMenus.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String customUrl = editTextCustomMenus.getText().toString().trim();
+                if ("".equalsIgnoreCase(customUrl)) {
+                    editTextCustomMenus.requestFocus();
+                    editTextCustomMenus.setError("Please enter something");
+                } else {
+                    selectedServerMenus = customUrl;
+                    setMenusServerUI(selectedServerMenus);
+                }
+            }
+        });
+
+        editTextCustomMenus.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedServerMenus = editTextCustomMenus.getText().toString().trim();
+            }
+        });
+        
+        
+
+
         relativeLayoutDebugOptions.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -432,6 +483,19 @@ public class DebugOptionsActivity extends BaseActivity {
             }
         });
 
+        relativeLayoutServerEnvMenus.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(linearLayoutServerEnvMenusBelow.getVisibility() == View.VISIBLE){
+                    imageViewArrowServerEnvMenus.setRotation(270);
+                    linearLayoutServerEnvMenusBelow.setVisibility(View.GONE);
+                } else{
+                    imageViewArrowServerEnvMenus.setRotation(90);
+                    linearLayoutServerEnvMenusBelow.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
@@ -440,16 +504,10 @@ public class DebugOptionsActivity extends BaseActivity {
     public void setServerUI(String selectedServer) {
         relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
         relativeLayoutTest8012.setBackgroundColor(Color.TRANSPARENT);
-        relativeLayoutTest8013.setBackgroundColor(Color.TRANSPARENT);
-        relativeLayoutTest8014.setBackgroundColor(Color.TRANSPARENT);
-        relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
         relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
         imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
         imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
-        imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
-        imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
-        imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
         imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
 
         if (selectedServer.equalsIgnoreCase(Config.getLiveServerUrl())) {
@@ -459,18 +517,6 @@ public class DebugOptionsActivity extends BaseActivity {
         else if (selectedServer.equalsIgnoreCase(Config.getDevServerUrl())) {
             relativeLayoutTest8012.setBackgroundColor(Color.WHITE);
             imageViewTest8012.setImageResource(R.drawable.check_box_checked);
-        }
-        else if (selectedServer.equalsIgnoreCase(Config.getDev1ServerUrl())) {
-            relativeLayoutTest8013.setBackgroundColor(Color.WHITE);
-            imageViewTest8013.setImageResource(R.drawable.check_box_checked);
-        }
-        else if (selectedServer.equalsIgnoreCase(Config.getDev2ServerUrl())) {
-            relativeLayoutTest8014.setBackgroundColor(Color.WHITE);
-            imageViewTest8014.setImageResource(R.drawable.check_box_checked);
-        }
-        else if (selectedServer.equalsIgnoreCase(Config.getDev3ServerUrl())) {
-            relativeLayoutTest8015.setBackgroundColor(Color.WHITE);
-            imageViewTest8015.setImageResource(R.drawable.check_box_checked);
         }
         else {
             relativeLayoutCustom.setBackgroundColor(Color.WHITE);
@@ -502,6 +548,32 @@ public class DebugOptionsActivity extends BaseActivity {
             imageViewCustomFresh.setImageResource(R.drawable.check_box_checked);
             editTextCustomFresh.setText(selectedServer);
             editTextCustomFresh.setSelection(editTextCustomFresh.getText().toString().length());
+        }
+    }
+
+
+    public void setMenusServerUI(String selectedServer) {
+        relativeLayoutLiveMenus.setBackgroundColor(Color.TRANSPARENT);
+        relativeLayoutTestMenus.setBackgroundColor(Color.TRANSPARENT);
+        relativeLayoutCustomMenus.setBackgroundColor(Color.TRANSPARENT);
+
+        imageViewLiveMenus.setImageResource(R.drawable.check_box_unchecked);
+        imageViewTestMenus.setImageResource(R.drawable.check_box_unchecked);
+        imageViewCustomMenus.setImageResource(R.drawable.check_box_unchecked);
+
+        if (selectedServer.equalsIgnoreCase(Config.getMenusLiveServerUrl())) {
+            relativeLayoutLiveMenus.setBackgroundColor(Color.WHITE);
+            imageViewLiveMenus.setImageResource(R.drawable.check_box_checked);
+        }
+        else if (selectedServer.equalsIgnoreCase(Config.getMenusDevServerUrl())) {
+            relativeLayoutTestMenus.setBackgroundColor(Color.WHITE);
+            imageViewTestMenus.setImageResource(R.drawable.check_box_checked);
+        }
+        else {
+            relativeLayoutCustomMenus.setBackgroundColor(Color.WHITE);
+            imageViewCustomMenus.setImageResource(R.drawable.check_box_checked);
+            editTextCustomMenus.setText(selectedServer);
+            editTextCustomMenus.setSelection(editTextCustomMenus.getText().toString().length());
         }
     }
 

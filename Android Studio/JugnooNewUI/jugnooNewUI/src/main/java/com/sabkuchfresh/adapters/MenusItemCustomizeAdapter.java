@@ -269,7 +269,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
 
-            if(getCustomizeItemSelected(getCustomizeItem(customizeOption), false).getCustomizeOptions().contains(customizeOption.getCustomizeOptionId())){
+            if(item.getCustomizeItemSelected(getCustomizeItem(customizeOption), false, itemSelected).getCustomizeOptions().contains(customizeOption.getCustomizeOptionId())){
                 mHolder.ivCustomizeOptionItem.setImageResource(customizeOption.getIsMultiSelect() == 1 ? R.drawable.checkbox_signup_checked : R.drawable.ic_radio_button_selected);
             } else {
                 mHolder.ivCustomizeOptionItem.setImageResource(customizeOption.getIsMultiSelect() == 1 ? R.drawable.check_box_unchecked : R.drawable.ic_radio_button_normal);
@@ -283,7 +283,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                         int pos = (int) v.getTag();
                         CustomizeOption customizeOption = customizeOptions.get(pos);
                         CustomizeItem customizeItem = getCustomizeItem(customizeOption);
-                        CustomizeItemSelected customizeItemSelected = getCustomizeItemSelected(customizeItem, true);
+                        CustomizeItemSelected customizeItemSelected = item.getCustomizeItemSelected(customizeItem, true, itemSelected);
                         if(customizeOption.getIsMultiSelect() == 1){
                             if(customizeItemSelected.getCustomizeOptions().contains(customizeOption.getCustomizeOptionId())){
                                 customizeItemSelected.getCustomizeOptions().remove(customizeOption.getCustomizeOptionId());
@@ -314,32 +314,33 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
         return customizeOptions == null ? 0 : customizeOptions.size();
     }
 
-    private CustomizeItemSelected getCustomizeItemSelected(CustomizeItem customizeItem, boolean addSelected){
-        CustomizeItemSelected customizeItemSelected = new CustomizeItemSelected(customizeItem.getCustomizeId());
-        int index = itemSelected.getCustomizeItemSelectedList().indexOf(customizeItemSelected);
-        if(index > -1){
-            customizeItemSelected = itemSelected.getCustomizeItemSelectedList().get(index);
-        } else if(addSelected) {
-            itemSelected.getCustomizeItemSelectedList().add(customizeItemSelected);
-        }
-        return customizeItemSelected;
-    }
+//    private CustomizeItemSelected getCustomizeItemSelected(CustomizeItem customizeItem, boolean addSelected){
+//        CustomizeItemSelected customizeItemSelected = new CustomizeItemSelected(customizeItem.getCustomizeId());
+//        int index = itemSelected.getCustomizeItemSelectedList().indexOf(customizeItemSelected);
+//        if(index > -1){
+//            customizeItemSelected = itemSelected.getCustomizeItemSelectedList().get(index);
+//        } else if(addSelected) {
+//            itemSelected.getCustomizeItemSelectedList().add(customizeItemSelected);
+//        }
+//        return customizeItemSelected;
+//    }
 
     private CustomizeItem getCustomizeItem(CustomizeOption customizeOption){
         return item.getCustomizeItem().get(customizeOption.getCustomizeItemPos());
     }
 
     private void updateItemSelectedTotalPrice(){
-        double totalPrice = item.getPrice();
-        for(CustomizeItem customizeItem : item.getCustomizeItem()) {
-            CustomizeItemSelected customizeItemSelected = getCustomizeItemSelected(customizeItem, false);
-            for(CustomizeOption customizeOption : customizeItem.getCustomizeOptions()){
-                if(customizeItemSelected.getCustomizeOptions().contains(customizeOption.getCustomizeOptionId())){
-                    totalPrice = totalPrice + customizeOption.getCustomizePrice();
-                }
-            }
-        }
-        itemSelected.setTotalPrice(totalPrice);
+//        double totalPrice = item.getPrice();
+//        for(CustomizeItem customizeItem : item.getCustomizeItem()) {
+//            CustomizeItemSelected customizeItemSelected = getCustomizeItemSelected(customizeItem, false);
+//            for(CustomizeOption customizeOption : customizeItem.getCustomizeOptions()){
+//                if(customizeItemSelected.getCustomizeOptions().contains(customizeOption.getCustomizeOptionId())){
+//                    totalPrice = totalPrice + customizeOption.getCustomizePrice();
+//                }
+//            }
+//        }
+//        itemSelected.setTotalPrice(totalPrice);
+        itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
         callback.updateItemTotalPrice(itemSelected);
     }
 

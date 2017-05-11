@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +59,8 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
     @Override
     public void onBindViewHolder(MenuItemViewHolder holder, int position) {
         try {
+
+
             if(menuList.get(position)!=null) {
 
                 holder.tvValue.setVisibility(View.GONE);
@@ -65,8 +68,7 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
                 holder.tvJugnooStar.setText(menuList.get(position).getName());
                 if(menuList.get(position).getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())) {
                     holder.tvValue.setVisibility(View.VISIBLE);
-                    holder.tvValue.setText(String.format(activity.getResources()
-                            .getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
+                    holder.tvValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
                 }else if(menuList.get(position).getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
                     int unreadNotificationsCount = Prefs.with(activity).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
                     if(unreadNotificationsCount > 0){
@@ -79,6 +81,7 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
             else
                 holder.tvJugnooStar.setText(null);
 
+            product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(activity,   holder.tvValue);
         } catch (Exception e) {
             e.printStackTrace();
         }

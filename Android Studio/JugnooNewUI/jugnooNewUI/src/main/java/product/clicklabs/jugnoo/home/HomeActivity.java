@@ -4217,6 +4217,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    boolean ignoreTimeCheckFetchWalletBalance = true;
     @Override
     protected void onResume() {
         super.onResume();
@@ -4276,9 +4277,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             callAndHandleStateRestoreAPI(false);
                         }
                         initiateTimersForStates(passengerScreenMode);
-
-                        fetchWalletBalance(this, false);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    fetchWalletBalance(this, ignoreTimeCheckFetchWalletBalance);
+                    ignoreTimeCheckFetchWalletBalance = false;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -4314,7 +4320,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
                 } catch (Exception e) {
-                    e.printStackTrace();
                 }
 
 
@@ -4613,13 +4618,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(Gravity.START)){
-            drawerLayout.closeDrawer(Gravity.START);
-            return;
-        }
-        if(fabViewTest.menuLabelsRightTest.isOpened()){
-            fabViewTest.menuLabelsRightTest.close(true);
-            return;
+        try {
+            if(drawerLayout.isDrawerOpen(Gravity.START)){
+				drawerLayout.closeDrawer(Gravity.START);
+				return;
+			}
+            if(fabViewTest.menuLabelsRightTest.isOpened()){
+				fabViewTest.menuLabelsRightTest.close(true);
+				return;
+			}
+        } catch (Exception e) {
         }
         performBackpressed();
     }
@@ -4931,7 +4939,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -8752,7 +8759,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }, handlerTime);
             }
         } catch (Exception e){
-            e.printStackTrace();
         }
 
 

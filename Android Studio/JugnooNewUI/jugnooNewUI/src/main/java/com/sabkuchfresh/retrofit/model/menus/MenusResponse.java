@@ -1,5 +1,7 @@
 package com.sabkuchfresh.retrofit.model.menus;
 
+import android.content.Context;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -7,6 +9,8 @@ import com.sabkuchfresh.retrofit.model.RecentOrder;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by shankar on 11/15/16.
@@ -252,6 +256,13 @@ public class MenusResponse implements Serializable {
 		@SerializedName("delivery_time_text")
 		@Expose
 		private String deliveryTimeText;
+		@SerializedName("min_order_text")
+		@Expose
+		private String minOrderText;
+
+		@SerializedName("item_inactive_alert_text")
+		@Expose
+		private String itemInactiveAlertText;
 
 		public Double getRating() {
 			return rating==null?null:Math.round(rating * 10.0) / 10.0;
@@ -604,6 +615,26 @@ public class MenusResponse implements Serializable {
 
 		public void setDeliveryTimeText(String deliveryTimeText) {
 			this.deliveryTimeText = deliveryTimeText;
+		}
+
+		public String getMinOrderText() {
+			return minOrderText;
+		}
+
+		public void setMinOrderText(String minOrderText) {
+			this.minOrderText = minOrderText;
+		}
+
+		public String getItemInactiveAlertText(Context context) {
+			if (itemInactiveAlertText == null) {
+				return context.getString(R.string.item_not_available);
+			} else {
+				return itemInactiveAlertText;
+			}
+		}
+
+		public void setItemInactiveAlertText(String itemInactiveAlertText) {
+			this.itemInactiveAlertText = itemInactiveAlertText;
 		}
 	}
 

@@ -493,7 +493,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         btnAddStar = (Button) rootView.findViewById(R.id.btnAddStar);
 
 
-        activity.sliderText.setText("Swipe to confirm >>");
+        try {
+            activity.sliderText.setText("Swipe to confirm >>");
+        } catch (Exception e) {
+        }
 
         displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -723,7 +726,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private void setSlideInitial(){
         animateSliderButton(paramsF.leftMargin, 0);
-        activity.rlSliderContainer.setBackgroundResource(R.color.theme_color);
+        activity.rlSliderContainer.setBackgroundResource(R.drawable.bg_rectangle_gradient_normal);
         activity.relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
         activity.sliderText.setVisibility(View.VISIBLE);
         activity.viewAlpha.setAlpha(0.0f);
@@ -802,6 +805,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         if (getTotalPromoAmount() > 0) {
             chargesList.add(new Tax(activity.getString(R.string.discount), getTotalPromoAmount()));
+        }
+
+        if(isFreshOpen()){
+            double totalSavings = getTotalSavings();
+            if(totalSavings > 0) {
+                chargesList.add(new Tax(activity.getString(R.string.total_savings), totalSavings));
+            }
         }
 
         taxTotal.setValue((double)Math.round(payableAmount()));
@@ -1064,7 +1074,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 							&& activity.getPaymentOption() == PaymentOption.CASH){
 						activity.setPaymentOption(PaymentOption.PAYTM);
 					}
-				}
+				} else if(type == AppConstant.ApplicationType.FRESH){
+                    if(getPaymentInfoMode() == ApplicablePaymentMode.CASH.getOrdinal()){
+                        activity.setPaymentOption(PaymentOption.CASH);
+                    } else if(getPaymentInfoMode() == ApplicablePaymentMode.ONLINE.getOrdinal()
+                            && activity.getPaymentOption() == PaymentOption.CASH){
+                        activity.setPaymentOption(PaymentOption.PAYTM);
+                    }
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1900,26 +1918,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
             }
 
-            // for razorPay layout adding
-			/*ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
-			if(paymentGatewayModeConfigs != null && paymentGatewayModeConfigs.size() > 0){
-				for(PaymentGatewayModeConfig modeConfig : paymentGatewayModeConfigs){
-					if(modeConfig.getEnabled()!= null && modeConfig.getEnabled() == 1){
-                        if(!TextUtils.isEmpty(modeConfig.getName())
-                                && modeConfig.getName().equalsIgnoreCase("upi_razorpay")){
-                            linearLayoutWalletContainer.addView(rlUPI);
-                            if(!TextUtils.isEmpty(modeConfig.getDisplayName())) {
-                                tvUPI.setText(modeConfig.getDisplayName());
-                            }
-                        } else {
-                            linearLayoutWalletContainer.addView(rlOtherModesToPay);
-                            if (!TextUtils.isEmpty(modeConfig.getDisplayName())) {
-                                tvOtherModesToPay.setText(modeConfig.getDisplayName());
-                            }
-                        }
-					}
-				}
-			}*/
 
         } catch (Exception e){
             e.printStackTrace();
@@ -1927,22 +1925,52 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         try {
             if(type == AppConstant.ApplicationType.MENUS){
-				if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()){
-					relativeLayoutPaytm.setVisibility(View.GONE);
-					relativeLayoutMobikwik.setVisibility(View.GONE);
-					relativeLayoutFreeCharge.setVisibility(View.GONE);
-                    relativeLayoutJugnooPay.setVisibility(View.GONE);
-					rlOtherModesToPay.setVisibility(View.GONE);
-                    rlUPI.setVisibility(View.GONE);
-				} else if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()){
-					relativeLayoutCash.setVisibility(View.GONE);
-				}
-			}
+				setPaymentOptionVisibility(activity.getVendorOpened().getApplicablePaymentMode());
+			} else if(type == AppConstant.ApplicationType.FRESH){
+                setPaymentOptionVisibility(getPaymentInfoMode());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private int getPaymentInfoMode(){
+        if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode() != null){
+            return activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode().intValue();
+        } else{
+            return ApplicablePaymentMode.BOTH.getOrdinal();
+        }
+    }
+
+    private void setPaymentOptionVisibility(int applicablePaymentMode){
+        if(applicablePaymentMode == ApplicablePaymentMode.CASH.getOrdinal()){
+            relativeLayoutPaytm.setVisibility(View.GONE);
+            relativeLayoutMobikwik.setVisibility(View.GONE);
+            relativeLayoutFreeCharge.setVisibility(View.GONE);
+            relativeLayoutJugnooPay.setVisibility(View.GONE);
+            rlOtherModesToPay.setVisibility(View.GONE);
+            rlUPI.setVisibility(View.GONE);
+        } else if(applicablePaymentMode == ApplicablePaymentMode.ONLINE.getOrdinal()){
+            relativeLayoutCash.setVisibility(View.GONE);
+        }
+    }
+
+    private void filterCouponsByApplicationPaymentMode(int applicablePaymentMode, ProductType productType){
+        if (promoCoupons == null) {
+            promoCoupons = new ArrayList<>();
+        }
+        promoCoupons.clear();
+        ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(productType);
+        if (applicablePaymentMode == ApplicablePaymentMode.CASH.getOrdinal()) {
+            for (PromoCoupon promoCoupon : promoCouponsList) {
+                if (MyApplication.getInstance().getWalletCore().couponOfWhichWallet(promoCoupon) == PaymentOption.CASH.getOrdinal()) {
+                    promoCoupons.add(promoCoupon);
+                }
+            }
+        } else {
+            promoCoupons.addAll(promoCouponsList);
+        }
+    }
 
     private void updateCouponsDataView(){
         try {
@@ -1951,22 +1979,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             } else if (type == AppConstant.ApplicationType.GROCERY) {
                 promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
             } else if (type == AppConstant.ApplicationType.MENUS) {
-                if (promoCoupons == null) {
-                    promoCoupons = new ArrayList<>();
-                }
-                promoCoupons.clear();
-                ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(ProductType.MENUS);
-                if (activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()) {
-                    for (PromoCoupon promoCoupon : promoCouponsList) {
-                        if (MyApplication.getInstance().getWalletCore().couponOfWhichWallet(promoCoupon) == PaymentOption.CASH.getOrdinal()) {
-                            promoCoupons.add(promoCoupon);
-                        }
-                    }
-                } else {
-                    promoCoupons.addAll(promoCouponsList);
-                }
+                filterCouponsByApplicationPaymentMode(activity.getVendorOpened().getApplicablePaymentMode(), ProductType.MENUS);
             } else {
-                promoCoupons = Data.userData.getCoupons(ProductType.FRESH);
+                filterCouponsByApplicationPaymentMode(getPaymentInfoMode(), ProductType.FRESH);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2299,6 +2314,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         }
                                         updateCouponsDataView();
                                         updateCartDataView();
+                                        setPaymentOptionUI();
+                                        if(type == AppConstant.ApplicationType.FRESH){
+                                            setPaymentOptionVisibility(getPaymentInfoMode());
+                                        }
 
                                         try {
                                             if (cartChangedRefreshCheckout) {
@@ -2542,6 +2561,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
             deliverySlotsAdapter.notifyDataSetChanged();
         }
+    }
+
+    private double getTotalSavings(){
+        double totalSavings = 0d;
+        try {
+            for(SubItem subItems : subItemsInCart){
+                if(!TextUtils.isEmpty(subItems.getOldPrice())) {
+                    totalSavings = totalSavings + ((Double.parseDouble(subItems.getOldPrice()) - subItems.getPrice()) * subItems.getSubItemQuantitySelected());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totalSavings;
     }
 
 
@@ -3019,6 +3052,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private boolean isMenusOpen(){
         return type == AppConstant.ApplicationType.MENUS;
+    }
+
+    private boolean isFreshOpen(){
+        return type == AppConstant.ApplicationType.FRESH;
     }
 
     private void clearMenusCartAndGoToMenusFragment(){

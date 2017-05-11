@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/theme_color" />
+                    android:background="@drawable/bg_rectangle_gradient_normal" />
 
         </RelativeLayout>
 
@@ -90,7 +90,7 @@
                     android:id="@+id/ivReview"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:src="@drawable/ic_feed_star" />
+                    android:src="@drawable/ic_feed_star_disable" />
 
                 <TextView
                     android:id="@+id/tvReview"
@@ -99,7 +99,7 @@
                     android:layout_marginLeft="8dp"
                     android:text="@string/review"
                     android:textAllCaps="true"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/text_color_30alpha"
                     android:textSize="@dimen/sp_13"
                     app:font="maven" />
             </LinearLayout>

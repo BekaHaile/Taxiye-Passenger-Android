@@ -130,7 +130,7 @@ public class RideOrderShortView {
 				}
 				textViewTripTotal.setText(R.string.order_total);
 				textViewTripTotalValue.setText(context.getString(R.string.rupees_value_format,
-						Utils.getMoneyDecimalFormat().format(datum.getOrderAmount())));
+						Utils.getMoneyDecimalFormat().format(datum.getDiscountedAmount())));
 				textViewStatus.setText(datum.getOrderStatus());
 				try{textViewStatus.setTextColor(Color.parseColor(datum.getOrderStatusColor()));} catch(Exception e){}
 				textViewOrderAddress.setText(datum.getDeliveryAddress());

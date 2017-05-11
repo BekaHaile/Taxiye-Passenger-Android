@@ -285,7 +285,6 @@ public class ApiFindADriver {
 					Data.getGroceryData().getPromoCoupons().addAll(findADriverResponse.getGroceryCoupons());
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
 			try {
@@ -317,7 +316,6 @@ public class ApiFindADriver {
 					Data.getPayData().getPromoCoupons().addAll(findADriverResponse.getPayCoupons());
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
 			// for Dodo promo and coupons
@@ -334,7 +332,6 @@ public class ApiFindADriver {
                     Data.getDeliveryData().getPromoCoupons().addAll(findADriverResponse.getDeliveryCoupons());
                 }
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
 			try {

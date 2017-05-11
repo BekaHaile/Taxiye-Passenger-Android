@@ -19,13 +19,12 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/centreLocationPivot"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="-14px"
             >
 
             <ImageView
                 android:id="@+id/centreLocationPin"
-                android:layout_width="86px"
-                android:layout_height="150px"
+                android:layout_width="87px"
+                android:layout_height="140px"
                 android:background="@drawable/ic_centre_pin_big"
                 android:tag="mwar"/>
 

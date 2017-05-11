@@ -120,6 +120,8 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(activity,  (TextView)rootView.findViewById(R.id.textViewOhSnap));
+
         textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
 
@@ -140,7 +142,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.white);
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.grey_icon_color);
         mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeRefreshLayout.setEnabled(true);
 
@@ -149,6 +151,33 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         vShadow.setVisibility(View.VISIBLE);
 
         setSortingList();
+
+        recyclerViewCategoryItems.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                try {
+                    int offset = recyclerView.computeVerticalScrollOffset();
+                    int extent = recyclerView.computeVerticalScrollExtent();
+                    int range = recyclerView.computeVerticalScrollRange();
+
+                    int percentage = (int)(100.0 * offset / (float)(range - extent));
+
+                    if(percentage > 0 && percentage % 10 == 0) {
+                        GAUtils.event(MEALS, HOME + LIST_SCROLLED, percentage + "%");
+                        Log.i("GA Logged", "scroll percentage: "+ percentage + "%");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
 

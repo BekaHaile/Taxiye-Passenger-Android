@@ -1,16 +1,13 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Pair;
 
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
-import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.RazorpayCallbackService;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
-import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
 
@@ -40,7 +37,7 @@ public class StarBaseActivity extends BaseFragmentActivity implements PaymentRes
 
     public void startRazorPayPayment(JSONObject options, boolean isUPA) {
         Checkout checkout = new Checkout();
-        checkout.setImage(R.drawable.jugnoo_icon);
+        checkout.setImage(R.drawable.ic_launcher);
         try {
             options.remove(Constants.KEY_AUTH_ORDER_ID);
 

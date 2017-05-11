@@ -157,7 +157,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         int position = (int) v.getTag();
                         /*notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
                         notifyItemUnchecked(position);*/
-                        openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl(), notificationList.get(position).getPostId());
+                        openDeepLink(notificationList.get(position).getDeepIndex(),
+                                notificationList.get(position).getUrl(),
+                                notificationList.get(position).getPostId(),
+                                notificationList.get(position).getPostNotificationId());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -201,7 +204,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return position == notificationList.size();
     }
 
-    private void openDeepLink(int deepInt, String url, int postId){
+    private void openDeepLink(int deepInt, String url, int postId, int postNotificationId){
         try{
             //int deepInt = Integer.parseInt(deepLink);
             Intent intent = new Intent();
@@ -292,6 +295,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             else if(AppLinkIndex.FEED_PAGE.getOrdinal() == deepInt){
                 if(postId > 0){
                     Prefs.with(activity).save(Constants.SP_POST_ID_TO_OPEN, postId);
+                    Prefs.with(activity).save(Constants.SP_POST_NOTIFICATION_ID_TO_OPEN, postNotificationId);
                 }
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFeedClientId(), new LatLng(Data.latitude, Data.longitude), true);
             }

@@ -118,6 +118,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView) rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(activity,  (TextView)rootView.findViewById(R.id.textViewOhSnap));
+
         textViewNothingFound = (TextView) rootView.findViewById(R.id.textViewNothingFound);
         textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
@@ -132,7 +134,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
-        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.grey_icon_color);
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         swipeRefreshLayout.setEnabled(true);
 
@@ -167,7 +169,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     int percentage = (int)(100.0 * offset / (float)(range - extent));
 
-                    Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
                     if(percentage > 0 && percentage % 10 == 0) {
                         GAUtils.event(MENUS, HOME + LIST_SCROLLED, percentage + "%");
                         Log.i("GA Logged", "scroll percentage: "+ percentage + "%");
@@ -262,26 +263,29 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden) {
-            activity.fragmentUISetup(this);
-            activity.setAddressTextToLocationPlaceHolder();
-            activity.resumeMethod();
-            menusRestaurantAdapter.applyFilter();
-            activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-            if (searchOpened) {
-                searchOpened = false;
-                openSearch(false);
-            }
+        try {
+            if (!hidden) {
+				activity.fragmentUISetup(this);
+				activity.setAddressTextToLocationPlaceHolder();
+				activity.resumeMethod();
+				menusRestaurantAdapter.applyFilter();
+				activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
+				if (searchOpened) {
+					searchOpened = false;
+					openSearch(false);
+				}
 
-            activity.getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (activity.isRefreshCart()) {
-                        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
-                    }
-                    activity.setRefreshCart(false);
-                }
-            }, 300);
+				activity.getHandler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						if (activity.isRefreshCart()) {
+							activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
+						}
+						activity.setRefreshCart(false);
+					}
+				}, 300);
+			}
+        } catch (Exception e) {
         }
     }
 
@@ -487,6 +491,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             menusRestaurantAdapter.setSearchApiHitOnce(false);
             if (clearEt) {
                 activity.getTopBar().etSearch.setText("");
+            } else {
+                activity.getTopBar().etSearch.setText(menusRestaurantAdapter.getSearchText());
+                activity.getTopBar().etSearch.setSelection(activity.getTopBar().etSearch.getText().length());
             }
             activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
             activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);

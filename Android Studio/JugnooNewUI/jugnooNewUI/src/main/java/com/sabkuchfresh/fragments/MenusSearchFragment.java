@@ -22,6 +22,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.utils.Utils;
 
@@ -140,6 +141,11 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 
 									}
 								}, true, false);
+					}
+
+					@Override
+					public MenusResponse.Vendor getVendorOpened() {
+						return activity.getVendorOpened();
 					}
 				});
 		recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);

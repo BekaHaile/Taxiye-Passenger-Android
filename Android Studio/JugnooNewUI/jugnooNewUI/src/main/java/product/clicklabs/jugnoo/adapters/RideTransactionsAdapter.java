@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,13 +89,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewTo.setText(R.string.to_colon);
                 holder.textViewToValue.setText(orderHistory.getDropAddress());
                 holder.textViewDetails.setText(R.string.details_colon);
-                if(orderHistory.getOriginalOrderAmount() != null){
-                    holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
-                            Utils.getMoneyDecimalFormat().format(orderHistory.getOriginalOrderAmount())));
-                } else {
-                    holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
-                            Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
-                }
+                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
+                        Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
                 holder.imageViewProductType.setImageResource(R.drawable.ic_auto_grey);
 
                 try {
@@ -114,7 +110,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     try{
                         holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getAutosStatusColor()));
                     } catch (Exception e){
-                        holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.text_color_blue));
+                        holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, R.color.text_color_blue));
                     }
                     holder.textViewDetailsValue.setText(orderHistory.getDate() + ", " + decimalFormat.format(orderHistory.getDistance()) + " km, "+decimalFormatNoDec.format(orderHistory.getRideTime()) + " min");
                     holder.relativeLayoutTo.setVisibility(View.VISIBLE);
@@ -127,7 +123,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     try{
                         holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getAutosStatusColor()));
                     } catch (Exception e){
-                        holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.text_color_red));
+                        holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, R.color.text_color_red));
                     }
                     holder.textViewDetailsValue.setText(orderHistory.getDate());
                     holder.relativeLayoutTo.setVisibility(View.GONE);
@@ -155,16 +151,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
                 }
 
-                double amount = 0.0d;
-                if((orderHistory.getProductType() == ProductType.FRESH.getOrdinal() || orderHistory.getProductType() == ProductType.GROCERY.getOrdinal())
-                        && orderHistory.getTotalAmount() != null){
-                    amount = orderHistory.getTotalAmount();
-                } else if(orderHistory.getOriginalOrderAmount() != null){
-                    amount = orderHistory.getOriginalOrderAmount();
-                } else {
-                    amount = orderHistory.getOrderAmount();
-                }
-                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(amount)));
+                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(orderHistory.getDiscountedAmount())));
 
 
                 if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {

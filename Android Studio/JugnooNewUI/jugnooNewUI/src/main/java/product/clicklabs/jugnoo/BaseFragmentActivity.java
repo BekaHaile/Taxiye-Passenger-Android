@@ -55,6 +55,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Data.activityResumed = true;
 		if(!HomeActivity.checkIfUserDataNull(this)){
 			HomeActivity.checkForAccessTokenChange(this);
 		} else {
@@ -74,6 +75,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		Data.activityResumed = false;
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
 	}
 

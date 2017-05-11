@@ -79,13 +79,15 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(this);
         swipeContainer.setColorSchemeResources(R.color.white);
-        swipeContainer.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+        swipeContainer.setProgressBackgroundColorSchemeResource(R.color.grey_icon_color);
         swipeContainer.setSize(SwipeRefreshLayout.DEFAULT);
         swipeContainer.setEnabled(true);
         //swipeContainer.setVisibility(View.GONE);
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        Utils.setTextColorGradient(activity,  (TextView)rootView.findViewById(R.id.textViewOhSnap));
+
         textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
         rvFreshSuper = (RecyclerView) rootView.findViewById(R.id.rvFreshSuper);
@@ -155,31 +157,34 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden){
-            superCategoriesAdapter.notifyDataSetChanged();
-            activity.setAddressTextToLocationPlaceHolder();
-            activity.fragmentUISetup(this);
-            if(activity.getCartChangedAtCheckout()){
-                activity.updateItemListFromSPDB();
-                activity.updateCartValuesGetTotalPrice();
-            }
-            activity.setCartChangedAtCheckout(false);
-            activity.getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if(activity.isRefreshCart() || activity.refreshCart2){
-                        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
-                    }
-                    activity.setRefreshCart(false);
-                    activity.refreshCart2 = false;
-                }
-            }, 300);
-        }
+        try {
+            if(!hidden){
+				superCategoriesAdapter.notifyDataSetChanged();
+				activity.setAddressTextToLocationPlaceHolder();
+				activity.fragmentUISetup(this);
+				if(activity.getCartChangedAtCheckout()){
+					activity.updateItemListFromSPDB();
+					activity.updateCartValuesGetTotalPrice();
+				}
+				activity.setCartChangedAtCheckout(false);
+				activity.getHandler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						if(activity.isRefreshCart() || activity.refreshCart2){
+							activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
+						}
+						activity.setRefreshCart(false);
+						activity.refreshCart2 = false;
+					}
+				}, 300);
+			}
 
-        if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
-            activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
-            activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
-            activity.llCheckoutBarSetVisibilityDirect(View.GONE);
+            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+				activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+				activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+				activity.llCheckoutBarSetVisibilityDirect(View.GONE);
+			}
+        } catch (Exception e) {
         }
     }
 

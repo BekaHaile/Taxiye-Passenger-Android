@@ -63,7 +63,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         try {
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
-                holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
+                holder.imageViewSelected.setBackgroundResource(R.drawable.bg_rectangle_gradient_normal);
                 Picasso.with(activity)
                         .load(region.getImages().getTabHighlighted())
                         .placeholder(region.getTabSelected())
@@ -115,7 +115,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     static class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
         public ImageView imageViewSep, imageViewTab, imageViewMultipleSurge;
-        public View imageViewSelected;
+        public ImageView imageViewSelected;
         public TextView textViewVehicleName;
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
@@ -123,7 +123,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
             imageViewTab = (ImageView) itemView.findViewById(R.id.imageViewTab);
             imageViewMultipleSurge = (ImageView) itemView.findViewById(R.id.imageViewMultipleSurge);
-            imageViewSelected = (View) itemView.findViewById(R.id.imageViewSelected);
+            imageViewSelected = (ImageView) itemView.findViewById(R.id.imageViewSelected);
             textViewVehicleName = (TextView)itemView.findViewById(R.id.textViewVehicleName);
             textViewVehicleName.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         }

@@ -54,7 +54,7 @@
         android:layout_marginTop="35px"
         android:src="@color/text_color_hint" />
 
-    <View
+    <ImageView
         android:id="@+id/imageViewSelected"
         android:layout_width="match_parent"
         android:layout_height="10px"

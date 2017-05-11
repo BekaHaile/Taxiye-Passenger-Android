@@ -657,6 +657,6 @@
     <dimen name="dp_9">
         9dp
     </dimen>
-
+<dimen name="height_popup_edit_feed">100dp</dimen>
 
 </resources>

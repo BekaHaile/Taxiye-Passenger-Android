@@ -26,8 +26,8 @@
 
             <ImageView
                 android:id="@+id/imageViewJugnooLogo"
-                android:layout_width="300px"
-                android:layout_height="316px"
+                android:layout_width="386px"
+                android:layout_height="96px"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/logo_big"
                 android:focusable="true"

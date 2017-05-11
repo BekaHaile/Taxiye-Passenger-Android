@@ -224,4 +224,30 @@ public class Item {
 	public void setDisplayPrice(String displayPrice) {
 		this.displayPrice = displayPrice;
 	}
+
+
+	public double getCustomizeItemsSelectedTotalPriceForItemSelected(ItemSelected itemSelected){
+		double totalPrice = getPrice();
+		for(CustomizeItem customizeItem : getCustomizeItem()) {
+			CustomizeItemSelected customizeItemSelected = getCustomizeItemSelected(customizeItem, false, itemSelected);
+			for(CustomizeOption customizeOption : customizeItem.getCustomizeOptions()){
+				if(customizeItemSelected.getCustomizeOptions().contains(customizeOption.getCustomizeOptionId())){
+					totalPrice = totalPrice + customizeOption.getCustomizePrice();
+				}
+			}
+		}
+		return totalPrice;
+	}
+
+	public CustomizeItemSelected getCustomizeItemSelected(CustomizeItem customizeItem, boolean addSelected, ItemSelected itemSelected){
+		CustomizeItemSelected customizeItemSelected = new CustomizeItemSelected(customizeItem.getCustomizeId());
+		int index = itemSelected.getCustomizeItemSelectedList().indexOf(customizeItemSelected);
+		if(index > -1){
+			customizeItemSelected = itemSelected.getCustomizeItemSelectedList().get(index);
+		} else if(addSelected) {
+			itemSelected.getCustomizeItemSelectedList().add(customizeItemSelected);
+		}
+		return customizeItemSelected;
+	}
+
 }
