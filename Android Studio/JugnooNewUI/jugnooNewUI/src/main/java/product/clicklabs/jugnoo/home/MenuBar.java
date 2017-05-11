@@ -130,7 +130,9 @@ public class MenuBar {
 		setupFreshUI();
 	}
 
-	private void setProfileData() {
+
+
+	public void setProfileData() {
 
 		if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
 

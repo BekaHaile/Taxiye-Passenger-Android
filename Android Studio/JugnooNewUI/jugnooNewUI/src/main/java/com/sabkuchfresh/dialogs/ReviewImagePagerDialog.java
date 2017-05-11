@@ -94,7 +94,12 @@ public class ReviewImagePagerDialog extends DialogFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.dialog_fragment_review_images, container, false);
-
+		rootView.findViewById(R.id.dismiss_view).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getDialog().dismiss();
+			}
+		});
 		int positionImageClicked = getArguments().getInt(Constants.KEY_POSITION, 0);
 		int likeIsEnabled = getArguments().getInt(Constants.KEY_LIKE_IS_ENABLED, 1);
 		int shareIsEnabled = getArguments().getInt(Constants.KEY_SHARE_IS_ENABLED, 1);
@@ -110,6 +115,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		activity = (FreshActivity) getActivity();
 
 		ivClose = (ImageView) rootView.findViewById(R.id.ivClose);
+		ivClose.setVisibility(View.GONE);
 		vpImages = (ViewPager) rootView.findViewById(R.id.vpImages);
 		tvLikeShareCount = (TextView) rootView.findViewById(R.id.tvLikeShareCount);
 
