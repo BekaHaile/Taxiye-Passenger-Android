@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.BlurImageTask;
 import com.sabkuchfresh.utils.DirectionsGestureListener;
+import com.sabkuchfresh.utils.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -55,6 +56,8 @@ public class RestaurantImageFragment extends Fragment {
 
     @Bind(R.id.llCollapseRating)
     LinearLayout llCollapseRating;
+    @Bind(R.id.tvFeedHyperLink)
+    public TextView tvFeedHyperLink;
 
     private FreshActivity activity;
     private BlurImageTask loadBlurredImageTask;
@@ -206,11 +209,11 @@ public class RestaurantImageFragment extends Fragment {
 
                 if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
                     tvCollapRestaurantRating.setVisibility(View.VISIBLE);
-                    activity.setRatingAndGetColor(tvCollapRestaurantRating, activity.getVendorOpened().getRating(),
-                            activity.getVendorOpened().getColorCode(), true);
+                    activity.setRatingNumberOfStars(tvCollapRestaurantRating, activity.getVendorOpened().getRating());
                 } else {
                     tvCollapRestaurantRating.setVisibility(View.GONE);
                 }
+                Utils.setTextUnderline(tvFeedHyperLink, getString(R.string.feed));
 
             }
 

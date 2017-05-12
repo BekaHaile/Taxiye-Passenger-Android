@@ -1202,17 +1202,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 visMinOrder = setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof VendorMenuFragment || fragment instanceof RestaurantImageFragment) {
-                llCartContainerVis = View.VISIBLE;
-                ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(vendorOpened.getName());
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                visMinOrder = setMinOrderAmountText(fragment);
                 if(fragment instanceof VendorMenuFragment) {
                     freshSortVis = View.VISIBLE;
+                    ivSearchVis = View.VISIBLE;
+                    llCartContainerVis = View.VISIBLE;
+                    visMinOrder = setMinOrderAmountText(fragment);
                 }
 
             } else if (fragment instanceof MenusItemCustomizeFragment) {
@@ -3801,17 +3801,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         ivCollapseRestImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                TODO openRestaurantImageFragment();
-                openRestaurantReviewsListFragment();
+                openRestaurantImageFragment();
             }
         });
-
-//        tvCollapRestaurantName.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openRestaurantReviewsListFragment();
-//            }
-//        });
 
 
         //to enable animate layout changes since it acts weirdly with collapsing toolbar if declared in xml because it animates whole heirarchy and hence toolbar behaves weirdly
@@ -3827,12 +3819,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         topBar.getLlSearchCart().setLayoutTransition(layoutTransition);*/
 
 
-       /* llCollapseRating.setOnClickListener(new View.OnClickListener() {
+       llCollapseRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openRestaurantReviewsListFragment();
             }
-        });*/
+        });
 
     }
 
@@ -3981,6 +3973,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         return ratingColor;
+    }
+
+    public void setRatingNumberOfStars(TextView tv, Double rating) {
+        StringBuilder ratingStars = new StringBuilder();
+        for(int i=0; i<rating.intValue(); i++){
+            ratingStars.append(getString(R.string.star_icon));
+        }
+        Spannable spannable = new SpannableString(rating+" "+ratingStars);
+        Typeface star = Typeface.createFromAsset(getAssets(), "fonts/icomoon.ttf");
+        spannable.setSpan(new CustomTypeFaceSpan("", star), spannable.length()-ratingStars.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv.setText(spannable);
     }
 
     public int getParsedColor(String colorCode, Integer defaultColor){
@@ -4449,6 +4452,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             });
         }
 
+        if(tvFeedHyperLink != null){
+            tvFeedHyperLink.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(tvFeedHyperLink != null) {
+                        Utils.setTextUnderline(tvFeedHyperLink, getString(R.string.feed));
+                    }
+                }
+            });
+        }
+
     }
 
 
@@ -4474,5 +4488,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public TextView sliderText;
     @Bind(R.id.buttonPlaceOrder)
     public Button buttonPlaceOrder;
+    @Bind(R.id.tvFeedHyperLink)
+    public TextView tvFeedHyperLink;
 
 }
