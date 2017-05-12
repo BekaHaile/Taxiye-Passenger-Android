@@ -53,9 +53,9 @@ public class UserDebtDialog {
 		this.userDebt = userDebt;
 		if(message.length() == 0){
 			if(activity instanceof HomeActivity) {
-				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message), userDebt);
+				message = activity.getString(R.string.user_debt_settle_balance_message, String.valueOf(userDebt));
 			} else if(activity instanceof FreshActivity){
-				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message_fresh), userDebt);
+				message = activity.getString(R.string.user_debt_settle_balance_message_fresh, String.valueOf(userDebt));
 			}
 		}
 		DialogPopup.alertPopupWithListener(activity, "", message,

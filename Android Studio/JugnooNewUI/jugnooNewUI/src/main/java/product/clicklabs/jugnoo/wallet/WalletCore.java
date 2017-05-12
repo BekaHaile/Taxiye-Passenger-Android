@@ -420,9 +420,8 @@ public class WalletCore {
 				};
 				if(couponOfWallet == PaymentOption.PAYTM.getOrdinal()){
 					if (Data.userData.getPaytmEnabled() == 1) {
-						DialogPopup.alertPopupWithListener(activity, "",
-								activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected),
-								onClickListenerCancel);
+						DialogPopup.alertPopup(activity, "",
+								activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected));
 					} else {
 						DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
 								activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_not_added),
@@ -434,9 +433,8 @@ public class WalletCore {
 					}
 				} else if(couponOfWallet == PaymentOption.MOBIKWIK.getOrdinal()){
 					if (Data.userData.getMobikwikEnabled() == 1) {
-						DialogPopup.alertPopupWithListener(activity, "",
-								activity.getResources().getString(R.string.mobikwik_coupon_selected_but_mobikwik_option_not_selected),
-								onClickListenerCancel);
+						DialogPopup.alertPopup(activity, "",
+								activity.getResources().getString(R.string.mobikwik_coupon_selected_but_mobikwik_option_not_selected));
 					} else {
 						DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
 								activity.getResources().getString(R.string.mobikwik_coupon_selected_but_mobikwik_not_added),
@@ -448,9 +446,8 @@ public class WalletCore {
 					}
 				} else if(couponOfWallet == PaymentOption.FREECHARGE.getOrdinal()) {
                     if (Data.userData.getFreeChargeEnabled() == 1) {
-                        DialogPopup.alertPopupWithListener(activity, "",
-                                activity.getResources().getString(R.string.freecharge_coupon_selected_but_freecharge_option_not_selected),
-                                onClickListenerCancel);
+                        DialogPopup.alertPopup(activity, "",
+                                activity.getResources().getString(R.string.freecharge_coupon_selected_but_freecharge_option_not_selected));
                     } else {
                         DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
                                 activity.getResources().getString(R.string.freecharge_coupon_selected_but_freecharge_not_added),

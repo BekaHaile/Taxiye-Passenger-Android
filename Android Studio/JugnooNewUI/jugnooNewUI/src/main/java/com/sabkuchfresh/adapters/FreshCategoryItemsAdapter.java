@@ -253,7 +253,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 @Override
                 public void onClick(View v) {
                     if(appType != AppConstant.ApplicationType.MENUS) {
-                        DialogPopup.alertPopupWithCancellable((Activity) context, "", subItem.getSubItemDesc());
+                        DialogPopup.alertPopup((Activity) context, "", subItem.getSubItemDesc());
                     }
                 }
             });

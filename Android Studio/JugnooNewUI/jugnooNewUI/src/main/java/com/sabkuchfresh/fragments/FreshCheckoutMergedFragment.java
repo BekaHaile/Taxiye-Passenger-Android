@@ -2809,13 +2809,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             if(!TextUtils.isEmpty(promoCoupon.getInvalidMessage())){
                 message = promoCoupon.getInvalidMessage();
             }
-            DialogPopup.alertPopupWithListener(activity, "", message,
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
+            DialogPopup.alertPopup(activity, "", message);
         } else {
             if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, activity.getPaymentOption().getOrdinal(), promoCoupon)) {
                 activity.setSelectedPromoCoupon(promoCoupon);
