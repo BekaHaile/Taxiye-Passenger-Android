@@ -1691,6 +1691,8 @@
     <string name="feed_claim_handle_description">Pick a nickname</string>
     <string name="error_enter_handle">Please enter a handle name.</string>
     <string name="hint_pick_a_nickname">Pick a nickname</string>
+    <string name="please_give_some_rating">Please give some rating</string>
+    <string name="write_a_review">Write a review</string>
 
 
 </resources>

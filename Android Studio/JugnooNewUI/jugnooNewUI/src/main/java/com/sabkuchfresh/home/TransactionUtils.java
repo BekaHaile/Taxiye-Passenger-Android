@@ -138,7 +138,7 @@ public class TransactionUtils {
     public void openMenusFilterFragment(FragmentActivity activity, View container) {
         if (!checkIfFragmentAdded(activity, MenusFilterFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.slide_up, R.anim.hold, R.anim.hold, R.anim.slide_down)
+                    .setCustomAnimations(R.anim.bottom_in, R.anim.hold, R.anim.hold, R.anim.bottom_out)
                     .add(container.getId(), new MenusFilterFragment(),
                             MenusFilterFragment.class.getName())
                     .addToBackStack(MenusFilterFragment.class.getName())
@@ -303,7 +303,7 @@ public class TransactionUtils {
     public void openRestaurantAddReviewFragment(FragmentActivity activity, View container, int restaurantId) {
         if (!checkIfFragmentAdded(activity, RestaurantAddReviewFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.bottom_in, 0)
+                    .setCustomAnimations(R.anim.bottom_in, R.anim.hold, R.anim.hold, R.anim.bottom_out)
                     .add(container.getId(), RestaurantAddReviewFragment.newInstance(restaurantId),
                             RestaurantAddReviewFragment.class.getName())
                     .addToBackStack(RestaurantAddReviewFragment.class.getName())

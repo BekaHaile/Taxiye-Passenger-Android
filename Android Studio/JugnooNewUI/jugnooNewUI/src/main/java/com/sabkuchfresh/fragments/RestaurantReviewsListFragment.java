@@ -12,6 +12,7 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.ASSL;
 
 /**
  * Created by Shankar on 15/11/16.
@@ -35,11 +35,11 @@ import product.clicklabs.jugnoo.utils.ASSL;
 public class RestaurantReviewsListFragment extends Fragment implements GAAction{
     private final String TAG = RestaurantReviewsListFragment.class.getSimpleName();
 
-    private RelativeLayout rlRoot;
     private RecyclerView recyclerViewReviews;
     private RelativeLayout rlNoReviews;
     private TextView tvFeedEmpty;
     private RestaurantReviewsAdapter reviewsAdapter;
+    private Button bAddReview;
 
     private View rootView;
     private FreshActivity activity;
@@ -70,14 +70,6 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
 
-        rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
-        try {
-            if (rlRoot != null) {
-                new ASSL(activity, rlRoot, 1134, 720, false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         GAUtils.trackScreenView(MENUS+FEED);
 
         recyclerViewReviews = (RecyclerView) rootView.findViewById(R.id.recyclerViewReviews);
@@ -145,6 +137,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
 
         rlNoReviews = (RelativeLayout) rootView.findViewById(R.id.rlNoReviews);
         tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);
+        bAddReview = (Button) rootView.findViewById(R.id.bAddReview);
 
         tvFeedEmpty.setText(activity.getString(R.string.feed_is_empty));
         SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add));
@@ -153,6 +146,13 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         tvFeedEmpty.append(ssb);
 
         fetchFeedback();
+
+        bAddReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.openRestaurantAddReviewFragment(true);
+            }
+        });
 
         return rootView;
     }
@@ -200,12 +200,5 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         apiRestaurantFetchFeedback.hit(restaurantId);
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ASSL.closeActivity(rlRoot);
-        System.gc();
-    }
 
 }

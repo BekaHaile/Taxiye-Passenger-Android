@@ -659,5 +659,23 @@
         9dp
     </dimen>
 <dimen name="height_popup_edit_feed">100dp</dimen>
+    <dimen name="dp_50">
+        50dp
+    </dimen>
+    <dimen name="dp_22">
+        22dp
+    </dimen>
+    <dimen name="sp_28">
+        28sp
+    </dimen>
+    <dimen name="dp_19">
+        19dp
+    </dimen>
+    <dimen name="dp_155">
+        155dp
+    </dimen>
+    <dimen name="dp_322">
+        322dp
+    </dimen>
 
 </resources>

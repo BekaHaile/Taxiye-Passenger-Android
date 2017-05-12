@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
-import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.utils.AppConstant;
 
@@ -47,7 +46,7 @@ public class TopBar implements GAAction, GACategory {
     public LinearLayout llSearchContainer;
     public EditText etSearch;
     public ProgressWheel pbSearch;
-    public ImageView ivSearchCross, ivSearch, ivFilterApplied, ivAddReview;
+    public ImageView ivSearchCross, ivSearch, ivFilterApplied;
     public RelativeLayout rlFilter;
 
     public RelativeLayout llSearchCartContainer;
@@ -96,7 +95,6 @@ public class TopBar implements GAAction, GACategory {
         ivFilterApplied = (ImageView) drawerLayout.findViewById(R.id.ivFilterApplied);
         ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
         ivFilterApplied.setVisibility(View.GONE);
-        ivAddReview = (ImageView) drawerLayout.findViewById(R.id.ivAddReview);
         tvNameCap = (TextView) drawerLayout.findViewById(R.id.tvNameCap);
         ivFreshSort = (ImageView) drawerLayout.findViewById(R.id.ivFreshSort);
         //setSearchVisibility(View.GONE);
@@ -107,7 +105,6 @@ public class TopBar implements GAAction, GACategory {
         ivSearch.setOnClickListener(topBarOnClickListener);
         rlFilter.setOnClickListener(topBarOnClickListener);
         imageViewBack.setOnClickListener(topBarOnClickListener);
-        ivAddReview.setOnClickListener(topBarOnClickListener);
         ivFreshSort.setOnClickListener(topBarOnClickListener);
 
         buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
@@ -239,15 +236,6 @@ public class TopBar implements GAAction, GACategory {
                 case R.id.rlFilter:
                     if (activity instanceof FreshActivity) {
                         ((FreshActivity) activity).openMenusFilter();
-                    }
-                    break;
-
-                case R.id.ivAddReview:
-                    if (activity instanceof FreshActivity) {
-                        if (((FreshActivity) activity).getTopFragment() instanceof FeedHomeFragment) {
-                            ((FreshActivity) activity).openFeedAddPostFragment(null);
-                        } else
-                            ((FreshActivity) activity).openRestaurantAddReviewFragment(true);
                     }
                     break;
 

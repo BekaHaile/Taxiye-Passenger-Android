@@ -54,10 +54,6 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	@Override
 	public RestaurantReviewsAdapter.ViewHolderReview onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant_review, parent, false);
-		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
-				RecyclerView.LayoutParams.WRAP_CONTENT);
-		v.setLayoutParams(layoutParams);
-		ASSL.DoMagic(v);
 		return new ViewHolderReview(v);
 	}
 
@@ -70,7 +66,8 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			if (!TextUtils.isEmpty(review.getUserImage())) {
 				holder.ivImage.setVisibility(View.VISIBLE);
 				Picasso.with(activity).load(review.getUserImage())
-						.resize((int) (ASSL.minRatio() * 100f), (int) (ASSL.minRatio() * 100f))
+						.resize(activity.getResources().getDimensionPixelSize(R.dimen.dp_50),
+								activity.getResources().getDimensionPixelSize(R.dimen.dp_50))
 						.centerCrop()
 						.transform(new CircleTransform())
 						.into(holder.ivImage);
@@ -83,52 +80,17 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.tvDateTime.setText(review.getDate());
 			holder.tvReviewMessage.setText(review.getReviewDesc());
 			holder.tvReviewTag.setText(review.getTags());
-
-
-			RelativeLayout.LayoutParams paramsRating = (RelativeLayout.LayoutParams) holder.tvRating.getLayoutParams();
-			RelativeLayout.LayoutParams paramsRatingTag = (RelativeLayout.LayoutParams) holder.tvReviewTag.getLayoutParams();
-			int ratingVis = View.VISIBLE, messageVis = View.VISIBLE;
-			if (review.getRating() != null && !TextUtils.isEmpty(review.getReviewDesc())) {
-				paramsRating.setMargins(paramsRating.leftMargin, paramsRating.topMargin, paramsRating.rightMargin, 0);
-				paramsRatingTag.setMargins(paramsRatingTag.leftMargin, paramsRatingTag.topMargin, paramsRatingTag.rightMargin, 0);
-				holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags()) ? View.INVISIBLE : View.VISIBLE);
-			} else if (review.getRating() != null && TextUtils.isEmpty(review.getReviewDesc())) {
-				paramsRating.setMargins(paramsRating.leftMargin, paramsRating.topMargin, paramsRating.rightMargin, (int) (ASSL.Yscale() * 40f));
-				paramsRatingTag.setMargins(paramsRatingTag.leftMargin, paramsRatingTag.topMargin, paramsRatingTag.rightMargin, (int) (ASSL.Yscale() * 40f));
-				messageVis = View.GONE;
-				holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags()) ? View.INVISIBLE : View.VISIBLE);
-			} else if (review.getRating() == null && !TextUtils.isEmpty(review.getReviewDesc())) {
-				ratingVis = View.GONE;
-				holder.tvReviewTag.setVisibility(View.GONE);
-			} else if(review.getRating() == null && TextUtils.isEmpty(review.getReviewDesc())){
-				messageVis = View.GONE;
-				ratingVis = View.GONE;
-				holder.tvReviewTag.setVisibility(View.GONE);
-			}
-			holder.tvRating.setLayoutParams(paramsRating);
-			holder.tvReviewTag.setLayoutParams(paramsRatingTag);
-			holder.tvRating.setVisibility(ratingVis);
-			holder.tvReviewMessage.setVisibility(messageVis);
-
-			RelativeLayout.LayoutParams paramsName = (RelativeLayout.LayoutParams) holder.tvName.getLayoutParams();
-			RelativeLayout.LayoutParams paramsTime = (RelativeLayout.LayoutParams) holder.tvDateTime.getLayoutParams();
-			if(ratingVis == View.VISIBLE){
-				paramsName.setMargins(paramsName.leftMargin, (int)(ASSL.Yscale() * 36f), paramsName.rightMargin, paramsName.bottomMargin);
-				paramsTime.setMargins(paramsTime.leftMargin, (int)(ASSL.Yscale() * 40f), paramsTime.rightMargin, paramsTime.bottomMargin);
-			} else {
-				paramsName.setMargins(paramsName.leftMargin, (int)(ASSL.Yscale() * 61f), paramsName.rightMargin, paramsName.bottomMargin);
-				paramsTime.setMargins(paramsTime.leftMargin, (int)(ASSL.Yscale() * 65f), paramsTime.rightMargin, paramsTime.bottomMargin);
-			}
-			holder.tvName.setLayoutParams(paramsName);
-			holder.tvDateTime.setLayoutParams(paramsTime);
+			holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags()) ? View.GONE : View.VISIBLE);
+			holder.tvRating.setVisibility(review.getRating() == null ? View.GONE : View.VISIBLE);
+			holder.tvReviewMessage.setVisibility(TextUtils.isEmpty(review.getReviewDesc()) ? View.GONE : View.VISIBLE);
 
 			if (review.getRating() != null) {
 				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor(), true);
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, color);
 				if (review.getRatingFlag() == 1) {
-					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_uparrow, 0);
+					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumbsup_small, 0, 0, 0);
 				} else {
-					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_downarrow, 0);
+					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumbsdown_small, 0, 0, 0);
 				}
 			} else {
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, ContextCompat.getColor(activity, R.color.text_color_light));

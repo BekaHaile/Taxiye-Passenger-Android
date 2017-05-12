@@ -1106,7 +1106,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             int rlFilterVis = View.GONE;
             topBar.buttonCheckServer.setVisibility(View.GONE);
-            topBar.ivAddReview.setVisibility(View.GONE);
             topBar.tvNameCap.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
             topBar.tvDeliveryAddress.setVisibility(View.GONE);
@@ -1315,7 +1314,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     topBar.title.setText(getVendorOpened().getName());
                 }
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                topBar.ivAddReview.setVisibility(View.VISIBLE);
             } else if (fragment instanceof RestaurantAddReviewFragment) {
             	topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -1400,9 +1398,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setGravity(Gravity.CENTER);
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
-            if(topBar.ivAddReview.getVisibility() == View.VISIBLE){
-                titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.ivAddReview.getId());
-            } else if(fragment instanceof FeedReserveSpotFragment
+            if(fragment instanceof FeedReserveSpotFragment
                     || fragment instanceof FeedSpotReservedSharingFragment
                     || fragment instanceof FeedNotificationsFragment || fragment instanceof FeedChangeCityFragment){
                 topBar.title.setGravity(Gravity.CENTER);

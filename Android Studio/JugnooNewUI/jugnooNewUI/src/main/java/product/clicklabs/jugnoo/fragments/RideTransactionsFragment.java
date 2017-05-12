@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,7 +45,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class RideTransactionsFragment extends Fragment implements Constants {
+public class RideTransactionsFragment extends Fragment implements Constants, SwipeRefreshLayout.OnRefreshListener {
 
 	private final String TAG = RideTransactionsFragment.class.getSimpleName();
 
@@ -52,6 +53,7 @@ public class RideTransactionsFragment extends Fragment implements Constants {
 	private RecyclerView recyclerViewRideTransactions;
 	private LinearLayout linearLayoutNoRides;
 	private Button buttonGetRide;
+	private SwipeRefreshLayout swipeRefreshLayout;
 
 	private RideTransactionsAdapter rideTransactionsAdapter;
 
@@ -65,20 +67,6 @@ public class RideTransactionsFragment extends Fragment implements Constants {
 	}
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
-//        FlurryAgent.init(activity, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-//        FlurryAgent.onEvent(RideTransactionsFragment.class.getSimpleName() + " started");
-    }
-
-    @Override
-    public void onStop() {
-		super.onStop();
-//        FlurryAgent.onEndSession(activity);
-    }
-	
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,6 +85,12 @@ public class RideTransactionsFragment extends Fragment implements Constants {
 		}
 		rideInfosList = new ArrayList<>();
 		totalRides = 0;
+
+		swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+		swipeRefreshLayout.setOnRefreshListener(this);
+		swipeRefreshLayout.setColorSchemeResources(R.color.white);
+		swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.grey_icon_color);
+		swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
 
 		recyclerViewRideTransactions = (RecyclerView) rootView.findViewById(R.id.recyclerViewRideTransactions);
 		recyclerViewRideTransactions.setLayoutManager(new LinearLayoutManager(activity));
@@ -224,7 +218,7 @@ public class RideTransactionsFragment extends Fragment implements Constants {
 					rideInfosList.clear();
 				}
 
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				swipeRefreshLayout.setRefreshing(true);
 				linearLayoutNoRides.setVisibility(View.GONE);
 
 				HashMap<String, String> params = new HashMap<>();
@@ -258,22 +252,24 @@ public class RideTransactionsFragment extends Fragment implements Constants {
 							exception.printStackTrace();
 							updateListData("Some error occurred, tap to retry", true);
 						}
-						DialogPopup.dismissLoadingDialog();
+						swipeRefreshLayout.setRefreshing(false);
 					}
 
 					@Override
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "getRecentRidesAPI error="+error.toString());
 						updateListData("Some error occurred, tap to retry", true);
-						DialogPopup.dismissLoadingDialog();
+						swipeRefreshLayout.setRefreshing(false);
 					}
 				});
 			}
 			else {
 				updateListData("No internet connection, tap to retry", true);
+				swipeRefreshLayout.setRefreshing(false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			swipeRefreshLayout.setRefreshing(false);
 		}
 	}
 
@@ -306,4 +302,8 @@ public class RideTransactionsFragment extends Fragment implements Constants {
 	}
 
 
+	@Override
+	public void onRefresh() {
+		getRecentRidesAPI(activity, true);
+	}
 }
