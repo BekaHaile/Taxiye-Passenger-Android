@@ -430,6 +430,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     } else {
                         addFeedReserveSpotFragment();
                     }
+
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
                     lastClientId = Config.getFeedClientId();
 

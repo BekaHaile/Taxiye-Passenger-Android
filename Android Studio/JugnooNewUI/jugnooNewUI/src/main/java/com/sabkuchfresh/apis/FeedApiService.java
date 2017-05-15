@@ -3,12 +3,14 @@ package com.sabkuchfresh.apis;
 import com.sabkuchfresh.feed.models.CountNotificationResponse;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.models.FeedNotificationsResponse;
+import com.sabkuchfresh.feed.models.HandleSuggestionsResponse;
 import com.sabkuchfresh.feed.models.RegisterForFeedResponse;
 import com.sabkuchfresh.feed.models.feedcitiesresponse.FeedCityResponse;
 import com.sabkuchfresh.retrofit.model.feed.SuggestRestaurantQueryResp;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedDetailResponse;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedListResponse;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -102,6 +104,7 @@ public interface FeedApiService {
 	@POST("/feeds/v1/set_user_handle")
 	void setUserHandle(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
 
-
-
+	@FormUrlEncoded
+	@POST("/feeds/v1/handle_suggestions")
+    void getHandleSuggestions(@FieldMap Map<String, String> params, Callback<HandleSuggestionsResponse> callback);
 }
