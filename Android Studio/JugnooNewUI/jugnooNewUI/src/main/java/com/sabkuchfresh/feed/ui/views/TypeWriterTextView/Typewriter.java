@@ -9,7 +9,7 @@ public class Typewriter extends android.support.v7.widget.AppCompatTextView {
 
     private CharSequence mText;
     private int mIndex;
-    private long mDelay = 50; //Default 500ms delay
+    private long mDelay =75; //Default 500ms delay
     private AudioManager am ;
 
     public Typewriter(Context context) {
@@ -28,7 +28,7 @@ public class Typewriter extends android.support.v7.widget.AppCompatTextView {
         @Override
         public void run() {
             setText(mText.subSequence(0, mIndex++));
-//            am.playSoundEffect(AudioManager.FX_KEY_CLICK, 0.5f);
+            am.playSoundEffect(AudioManager.FX_KEY_CLICK, 0.5f);
             if (mIndex <= mText.length()) {
                 mHandler.postDelayed(characterAdder, mDelay);
             }
