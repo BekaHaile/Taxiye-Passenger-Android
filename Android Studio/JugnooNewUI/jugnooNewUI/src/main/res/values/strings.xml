@@ -1504,7 +1504,8 @@
     <string name="telephone_number_optional">Telephone Number (optional)</string>
     <string name="restaurant_name_is_neccessary">Restaurant name is neccessary</string>
 
-    <string name="star_icon">&#xe9d9;</string>
+    <string name="star_icon">&#xe900;</string>
+    <string name="back_arrow">&#xe901;</string>
     <string name="feed_star_selected">&#xe900;</string>
     <string name="feed_star_deselected">&#xe9d7;</string>
     <string name="thanks_for_recommendation">Thanks for your recommendation!</string>
@@ -1515,7 +1516,7 @@
     <string name="claim_gift">Claim gift</string>
     <string name="auto_renewal">Auto Renewal</string>
     <string name="upgrade_now">Upgrade Now</string>
-    <string name="what_you_love_about_restaurant">What do you love about this restaurant?</string>
+    <string name="what_you_love_about_restaurant">What do you love about this restaurant...</string>
     <string name="please_enter_some_feedback">Please enter some feedback</string>
     <string name="feedback_must_be_in_500">Feedback must be in 500 characters</string>
     <string name="thanks_for_your_valuable_feedback">Thanks for your valuable feedback</string>

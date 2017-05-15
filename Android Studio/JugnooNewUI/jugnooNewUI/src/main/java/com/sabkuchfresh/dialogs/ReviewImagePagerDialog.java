@@ -2,7 +2,6 @@ package com.sabkuchfresh.dialogs;
 
 import android.app.DialogFragment;
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -23,7 +22,6 @@ import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.DirectionsGestureListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +119,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 		try {
 			RelativeLayout.LayoutParams vpParams = (RelativeLayout.LayoutParams) vpImages.getLayoutParams();
-			vpParams.height= FeedUtils.dpToPx(270);
+			vpParams.height = FeedUtils.dpToPx(270);
 
 			if(showDynamicImageHeight &&  imageArrayList!=null && imageArrayList.size()==1 && imageArrayList.get(0).getHeight()!=null && imageArrayList.get(0).getHeight()>0){
 
@@ -144,6 +142,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 			}
 
+			vpParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
 			vpImages.setLayoutParams(vpParams);
 			vpImages.setAdapter(new ImagePagerAdapter(activity,imageArrayList==null? activity.getCurrentReview().getImages():imageArrayList));
 
@@ -180,6 +179,8 @@ public class ReviewImagePagerDialog extends DialogFragment {
 				}
 				String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
 				tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
+
+				tvLikeShareCount.setVisibility(View.GONE);
 			}
 
 

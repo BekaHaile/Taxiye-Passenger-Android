@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.BlurImageTask;
 import com.sabkuchfresh.utils.DirectionsGestureListener;
-import com.sabkuchfresh.utils.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -92,6 +91,10 @@ public class RestaurantImageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.restaurant_collapse_details, container, false);
         ButterKnife.bind(this, view);
+
+        tvCollapRestaurantDeliveryTime.setText("");
+        tvCollapRestaurantRating.setText("");
+
         setupDetails(false);
 
         backgroundImageView.setOnClickListener(new View.OnClickListener() {
@@ -134,55 +137,58 @@ public class RestaurantImageFragment extends Fragment {
 
             backgroundImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            if (activity.getVendorOpened() != null && activity.getVendorOpened().getImage() != null) {
+            if (activity.getVendorOpened() != null) {
 
 
-                ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
-                layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                ivRestOriginalImage.setLayoutParams(layoutParams);
+                if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
+                    ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
+                    layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    ivRestOriginalImage.setLayoutParams(layoutParams);
 
-                ivRestOriginalImage.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(RestaurantImageFragment.this.getView()!=null && !TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
-                            target = new Target() {
-                                @Override
-                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                                    imageMaxWidth = ivRestOriginalImage.getMeasuredWidth();
-                                    imageMaxHeight = ivRestOriginalImage.getMeasuredHeight();
+                    ivRestOriginalImage.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (RestaurantImageFragment.this.getView() != null && !TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
+                                target = new Target() {
+                                    @Override
+                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                                        imageMaxWidth = ivRestOriginalImage.getMeasuredWidth();
+                                        imageMaxHeight = ivRestOriginalImage.getMeasuredHeight();
 
-                                    int imgHeight = (imageMaxWidth * bitmap.getHeight()) / bitmap.getWidth();
-                                    int imgWidth = imageMaxWidth;
+                                        int imgHeight = (imageMaxWidth * bitmap.getHeight()) / bitmap.getWidth();
+                                        int imgWidth = imageMaxWidth;
 
-                                    if (imgHeight > imageMaxHeight) {
-                                        imgHeight = imageMaxHeight;
-                                        imgWidth = (imageMaxHeight * bitmap.getWidth()) / bitmap.getHeight();
+                                        if (imgHeight > imageMaxHeight) {
+                                            imgHeight = imageMaxHeight;
+                                            imgWidth = (imageMaxHeight * bitmap.getWidth()) / bitmap.getHeight();
+                                        }
+
+
+                                        ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
+                                        layoutParams.width = imgWidth;
+                                        layoutParams.height = imgHeight;
+                                        ivRestOriginalImage.setLayoutParams(layoutParams);
+                                        ivRestOriginalImage.setImageBitmap(bitmap);
                                     }
 
+                                    @Override
+                                    public void onBitmapFailed(Drawable drawable) {
+                                        ivRestOriginalImage.setImageDrawable(drawable);
+                                    }
 
-                                    ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
-                                    layoutParams.width = imgWidth;
-                                    layoutParams.height = imgHeight;
-                                    ivRestOriginalImage.setLayoutParams(layoutParams);
-                                    ivRestOriginalImage.setImageBitmap(bitmap);
+                                    @Override
+                                    public void onPrepareLoad(Drawable drawable) {
+                                        ivRestOriginalImage.setImageDrawable(drawable);
+                                    }
+                                };
+
+                                if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
+                                    Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).placeholder(R.drawable.ic_fresh_item_placeholder).into(target);
                                 }
-
-                                @Override
-                                public void onBitmapFailed(Drawable drawable) {
-                                    ivRestOriginalImage.setImageDrawable(drawable);
-                                }
-
-                                @Override
-                                public void onPrepareLoad(Drawable drawable) {
-                                    ivRestOriginalImage.setImageDrawable(drawable);
-                                }
-                            };
-
-
-                            Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).placeholder(R.drawable.ic_fresh_item_placeholder).into(target);
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
 
                 //background blurred Image
@@ -213,8 +219,9 @@ public class RestaurantImageFragment extends Fragment {
                 } else {
                     tvCollapRestaurantRating.setVisibility(View.GONE);
                 }
-                Utils.setTextUnderline(tvFeedHyperLink, getString(R.string.feed));
 
+
+				activity.setFeedArrowToTextView(tvFeedHyperLink);
             }
 
             llCollapseRating.setOnClickListener(new View.OnClickListener() {

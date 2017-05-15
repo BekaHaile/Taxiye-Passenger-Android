@@ -370,6 +370,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                     if (reviewDescription.length() > 300) {
                         editTextRSFeedback.requestFocus();
                         editTextRSFeedback.setError(getString(R.string.review_must_be_in));
+                        return;
                     } else {
                         if (productType != ProductType.MENUS) {
                             comments = comments + ", " + reviewDescription;

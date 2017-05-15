@@ -50,7 +50,7 @@ public class TopBar implements GAAction, GACategory {
     public RelativeLayout rlFilter;
 
     public RelativeLayout llSearchCartContainer;
-    public TextView textViewReset, tvNameCap;
+    public TextView textViewReset;
     public LinearLayout llSearchCart;
     private Animation searchBarAnimation;
     private Animation searchBarCloseAnimation;
@@ -95,7 +95,6 @@ public class TopBar implements GAAction, GACategory {
         ivFilterApplied = (ImageView) drawerLayout.findViewById(R.id.ivFilterApplied);
         ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
         ivFilterApplied.setVisibility(View.GONE);
-        tvNameCap = (TextView) drawerLayout.findViewById(R.id.tvNameCap);
         ivFreshSort = (ImageView) drawerLayout.findViewById(R.id.ivFreshSort);
         //setSearchVisibility(View.GONE);
 

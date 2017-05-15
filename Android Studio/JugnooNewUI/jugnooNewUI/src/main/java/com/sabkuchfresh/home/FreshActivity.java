@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -36,6 +35,8 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -187,6 +188,7 @@ import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -1106,7 +1108,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             int rlFilterVis = View.GONE;
             topBar.buttonCheckServer.setVisibility(View.GONE);
-            topBar.tvNameCap.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
             topBar.tvDeliveryAddress.setVisibility(View.GONE);
             int padding = (int) (20f * ASSL.minRatio());
@@ -1320,12 +1321,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewBack.setImageResource(R.drawable.ic_cross_grey_selector);
                 padding = (int) (25f * ASSL.minRatio());
 
-                topBar.title.setVisibility(View.GONE);
-                topBar.tvNameCap.setVisibility(View.VISIBLE);
-                try {
-                    topBar.tvNameCap.setText(Data.userData.userName.substring(0, 1));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                topBar.title.setVisibility(View.VISIBLE);
+                if (getVendorOpened() != null) {
+                    topBar.title.setText(getVendorOpened().getName());
                 }
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             } else if (fragment instanceof FeedAddPostFragment){
@@ -1400,22 +1398,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
             if(fragment instanceof FeedReserveSpotFragment
                     || fragment instanceof FeedSpotReservedSharingFragment
-                    || fragment instanceof FeedNotificationsFragment || fragment instanceof FeedChangeCityFragment){
+                    || fragment instanceof FeedNotificationsFragment
+					|| fragment instanceof FeedChangeCityFragment
+					|| fragment instanceof RestaurantReviewsListFragment
+                    || fragment instanceof RestaurantAddReviewFragment
+                    || fragment instanceof FeedbackFragment){
                 topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
-            }
-            if(fragment instanceof FeedbackFragment){
-                topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.addRule(RelativeLayout.LEFT_OF, 0);
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
             }
 
 
-            if(fragment instanceof FeedbackFragment){
-                topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.addRule(RelativeLayout.LEFT_OF, 0);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
-            }
             topBar.ivFreshSort.setVisibility(freshSortVis);
 
             feedHomeAddPostView.setVisibility(View.GONE);
@@ -3947,6 +3939,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             textView.setText(prefix);
             textView.append(" ");
             textView.append(sb);
+            textView.append(".");
             setTextViewDrawableColor(textView, ContextCompat.getColor(this, colorResId));
             return View.VISIBLE;
         } else {
@@ -3960,8 +3953,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public int setRatingAndGetColor(TextView tv, Double rating, String colorCode, boolean setBackgroundColor) {
         Spannable spannable = new SpannableString(getString(R.string.star_icon) + " " + rating);
-        Typeface star = Typeface.createFromAsset(getAssets(), "fonts/icomoon.ttf");
-        spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new CustomTypeFaceSpan("", Fonts.iconsFont(this)), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv.setText(spannable);
         int ratingColor;
         if (colorCode != null && colorCode.startsWith("#") && colorCode.length() == 7) ratingColor = Color.parseColor(colorCode);
@@ -3977,12 +3969,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void setRatingNumberOfStars(TextView tv, Double rating) {
         StringBuilder ratingStars = new StringBuilder();
-        for(int i=0; i<rating.intValue(); i++){
+        for(int i=0; i<5; i++){
             ratingStars.append(getString(R.string.star_icon));
         }
         Spannable spannable = new SpannableString(rating+" "+ratingStars);
-        Typeface star = Typeface.createFromAsset(getAssets(), "fonts/icomoon.ttf");
-        spannable.setSpan(new CustomTypeFaceSpan("", star), spannable.length()-ratingStars.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new CustomTypeFaceSpan("", Fonts.iconsFont(this)), spannable.length()-ratingStars.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.green_delivery_stores)), spannable.length()-5, spannable.length()-(5-rating.intValue()), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
         tv.setText(spannable);
     }
 
@@ -4457,7 +4450,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 @Override
                 public void run() {
                     if(tvFeedHyperLink != null) {
-                        Utils.setTextUnderline(tvFeedHyperLink, getString(R.string.feed));
+                        setFeedArrowToTextView(tvFeedHyperLink);
                     }
                 }
             });
@@ -4490,5 +4483,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public Button buttonPlaceOrder;
     @Bind(R.id.tvFeedHyperLink)
     public TextView tvFeedHyperLink;
+
+    public void setFeedArrowToTextView(TextView tvFeedHyperLink){
+        Spannable spannable = new SpannableString(getString(R.string.back_arrow));
+        spannable.setSpan(new CustomTypeFaceSpan("", Fonts.iconsFont(FreshActivity.this)), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new RelativeSizeSpan(0.7f), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvFeedHyperLink.setText(R.string.feed);
+        tvFeedHyperLink.append(" ");
+        tvFeedHyperLink.append(spannable);
+    }
 
 }

@@ -156,6 +156,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             e.printStackTrace();
         }
 
+        activity.tvCollapRestaurantDeliveryTime.setText("");
+        activity.tvCollapRestaurantRating.setText("");
+
         success(activity.getMenuProductsResponse());
 
         activity.setSortingList(this);
@@ -378,20 +381,13 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     }
                     activity.getBus().post(new SortSelection(activity.menusSort));
 
+                    if(activity.getMenuProductsResponse().getMenusPromotionInfo()!=null && activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText()!=null) {
+                        setUpPromoDisplayView(activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText(),activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoTC());
+                    }
 
                     setUpCollapseToolbarData();
                 }
-
-                if(activity.getMenuProductsResponse().getMenusPromotionInfo()!=null && activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText()!=null)
-                {
-                    setUpPromoDisplayView(activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText(),activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoTC());
-                }
-
-
-
             }
-
-
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -400,9 +396,11 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private void setUpCollapseToolbarData() {
         if (activity.getVendorOpened() != null) {
             activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
-            Picasso.with(activity).load(activity.getVendorOpened().getImage())
-                    .placeholder(R.drawable.ic_fresh_item_placeholder)
-                    .into(activity.ivCollapseRestImage);
+            if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
+                Picasso.with(activity).load(activity.getVendorOpened().getImage())
+                        .placeholder(R.drawable.ic_fresh_item_placeholder)
+                        .into(activity.ivCollapseRestImage);
+            }
 
             int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime, R.color.white);
 			activity.tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
@@ -413,11 +411,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             } else {
                 activity.tvCollapRestaurantRating.setVisibility(View.GONE);
             }
-
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) activity.tvCollapRestaurantName.getLayoutParams();
-            layoutParams.weight=1;
-            activity.tvCollapRestaurantName.setLayoutParams(layoutParams);
-            activity.tvCollapRestaurantName.requestLayout();
         }
     }
 

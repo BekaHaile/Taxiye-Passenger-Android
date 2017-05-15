@@ -198,12 +198,12 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			StringBuilder shareCount = new StringBuilder();
 			if (review.getLikeCount() > 1) {
 				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.likes));
-			} else {
+			} else if (review.getLikeCount() == 1) {
 				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.like));
 			}
 			if (review.getShareCount() > 1) {
 				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.shares));
-			} else {
+			} else if (review.getShareCount() == 1){
 				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.share));
 			}
 			holder.ivFeedLike.setVisibility(callback.getLikeIsEnabled() == 1 ? View.VISIBLE : View.GONE);
@@ -216,7 +216,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			}
 			String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
 			holder.tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
-			holder.tvLikeShareCount.setVisibility((likeCount.length() == 0 && shareCount.length() == 0) ? View.GONE : View.VISIBLE);
+//			holder.tvLikeShareCount.setVisibility((likeCount.length() == 0 && shareCount.length() == 0) ? View.INVISIBLE : View.VISIBLE);
 
 			if(review.getIsLiked() >= 1){
 				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);

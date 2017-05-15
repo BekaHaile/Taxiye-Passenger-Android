@@ -59,7 +59,7 @@
         android:layout_marginLeft="@dimen/px_30"
         android:layout_marginRight="@dimen/px_5"
         android:layout_marginBottom="@dimen/px_20"
-        android:text="Resto"
+        android:text=""
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_36"
         android:layout_above="@+id/tvCollapRestaurantDeliveryTime"
@@ -76,33 +76,30 @@
         android:layout_alignParentBottom="true"
         android:gravity="right|bottom"
         >
+        <TextView
+            android:id="@+id/tvFeedHyperLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/feed"
+            android:textColor="@drawable/text_color_white_alpha_selector"
+            android:textSize="@dimen/text_size_26"
+            android:layout_marginRight="@dimen/px_30"
+            app:font="maven"
+            />
 
-<!--android:background="@drawable/capsule_text_color_vendor_menu"-->
         <TextView
             android:id="@+id/tvCollapRestaurantRating"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/px_40"
             android:gravity="center_vertical"
             android:layout_marginRight="@dimen/px_30"
-            android:text="ewqe"
+            android:layout_marginBottom="@dimen/px_20"
+            android:text=""
             android:textColor="@drawable/text_color_white_alpha_selector"
             android:textSize="@dimen/text_size_24"
             android:visibility="visible"
             app:font="maven"
             />
-
-        <TextView
-            android:id="@+id/tvFeedHyperLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/px_30"
-            android:layout_marginBottom="@dimen/px_30"
-            android:text="Feed"
-            android:textColor="@color/text_color_theme_alpha_selector"
-            android:textSize="@dimen/text_size_24"
-            app:font="maven"
-            />
-
     </LinearLayout>
 
 

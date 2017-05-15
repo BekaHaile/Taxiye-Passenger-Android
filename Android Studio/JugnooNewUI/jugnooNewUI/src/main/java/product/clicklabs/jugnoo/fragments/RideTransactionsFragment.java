@@ -213,17 +213,12 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 		try {
 			DialogPopup.dismissLoadingDialog();
 			if(MyApplication.getInstance().isOnline()) {
-
-				if(refresh){
-					rideInfosList.clear();
-				}
-
 				swipeRefreshLayout.setRefreshing(true);
 				linearLayoutNoRides.setVisibility(View.GONE);
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_START_FROM, "" + rideInfosList.size());
+				params.put(Constants.KEY_START_FROM, "" + (refresh ? 0 : rideInfosList.size()));
 
 				new HomeUtil().putDefaultParams(params);
 				RestClient.getApiService().getRecentRides(params, new Callback<HistoryResponse>() {
@@ -237,6 +232,9 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt("flag");
 								if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
+									if(refresh){
+										rideInfosList.clear();
+									}
 									totalRides = jObj.getInt("history_size");
 									rideInfosList.addAll(historyResponse.getData());
 
