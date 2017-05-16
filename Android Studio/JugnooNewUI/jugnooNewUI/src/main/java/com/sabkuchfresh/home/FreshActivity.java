@@ -1321,9 +1321,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 padding = (int) (25f * ASSL.minRatio());
 
                 topBar.title.setVisibility(View.VISIBLE);
-                if (getVendorOpened() != null) {
-                    topBar.title.setText(getVendorOpened().getName());
-                }
+                topBar.title.setText(R.string.write_a_review);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             } else if (fragment instanceof FeedAddPostFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -3794,7 +3792,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         ivCollapseRestImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openRestaurantImageFragment();
+                if(getVendorOpened() != null && !TextUtils.isEmpty(getVendorOpened().getImage())){
+                    openRestaurantImageFragment();
+                }
             }
         });
 

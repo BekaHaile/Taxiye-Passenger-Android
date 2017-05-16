@@ -400,6 +400,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 Picasso.with(activity).load(activity.getVendorOpened().getImage())
                         .placeholder(R.drawable.ic_fresh_item_placeholder)
                         .into(activity.ivCollapseRestImage);
+            } else {
+                activity.ivCollapseRestImage.setImageDrawable(null);
             }
 
             int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime, R.color.white);

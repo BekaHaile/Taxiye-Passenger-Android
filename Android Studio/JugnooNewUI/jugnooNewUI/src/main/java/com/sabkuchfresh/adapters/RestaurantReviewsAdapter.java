@@ -80,7 +80,11 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 			holder.tvName.setText(review.getUserName());
 //			holder.tvDateTime.setText(review.getDate());
-			holder.tvDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getUpdatedAt(), activity.isTimeAutomatic));
+			try {
+				holder.tvDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getUpdatedAt(), activity.isTimeAutomatic));
+			} catch (Exception e) {
+				holder.tvDateTime.setText(review.getDate());
+			}
 
 			holder.tvReviewMessage.setText(review.getReviewDesc());
 			holder.tvReviewTag.setText(review.getTags());
