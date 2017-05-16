@@ -42,26 +42,41 @@
             app:font="maven" />
 
 
-        <EditText
-            android:id="@+id/edt_claim_handle"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:maxLength="20"
             android:layout_marginTop="@dimen/spacing_large"
-            android:drawableRight="@drawable/ic_refresh"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-            android:gravity="center"
-            android:hint="@string/hint_pick_a_nickname"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingBottom="@dimen/spacing_normal"
-            android:textColor="@color/text_color_grey_red"
-            android:textColorHint="@color/feed_grey_hint_color"
-            android:textCursorDrawable="@drawable/cursor_black"
-            android:textSize="@dimen/font_large"
-            app:font="maven" />
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp">
+
+            <EditText
+                android:id="@+id/edt_claim_handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="20"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                android:gravity="center"
+
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/spacing_normal"
+                android:textColor="@color/text_color_grey_red"
+                android:textColorHint="@color/feed_grey_hint_color"
+                android:textCursorDrawable="@drawable/cursor_black"
+                android:textSize="@dimen/font_large"
+                app:font="maven" />
+
+            <ImageView
+                android:id="@+id/iv_refresh_suggestions"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentRight="true"
+
+                android:src="@drawable/ic_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_error"
@@ -84,8 +99,8 @@
         <RelativeLayout
             android:id="@+id/layout_suggestions"
             android:visibility="gone"
-            android:layout_marginRight="@dimen/spacing_extra_large"
-            android:layout_marginLeft="@dimen/spacing_extra_large"
+            android:layout_marginRight="@dimen/spacing_normal"
+            android:layout_marginLeft="@dimen/spacing_normal"
             android:layout_marginBottom="@dimen/spacing_large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -124,7 +139,8 @@
                     android:id="@+id/tv_suggestion_2"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:paddingBottom="@dimen/spacing_tiny"
                     android:paddingTop="@dimen/spacing_tiny"
                     android:textColor="@color/feed_grey_text"
@@ -140,6 +156,8 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     app:font="maven"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:paddingBottom="@dimen/spacing_tiny"
                     android:paddingTop="@dimen/spacing_tiny"
                     android:textColor="@color/feed_grey_text"

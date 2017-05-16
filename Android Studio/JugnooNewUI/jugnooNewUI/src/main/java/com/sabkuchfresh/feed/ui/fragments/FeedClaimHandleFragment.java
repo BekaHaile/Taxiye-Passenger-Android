@@ -6,11 +6,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -66,8 +69,10 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
     TextView tvSuggestion3;
     @Bind(R.id.label_suggestions)
     TextView labelSuggestions;
+    @Bind(R.id.iv_refresh_suggestions)
+    ImageView ivRefreshSuggestions;
     private ApiCommon<HandleSuggestionsResponse> handleSuggestionsAPI;
-
+    private RotateAnimation rotateAnimation;
 
 
     @Nullable
@@ -77,30 +82,22 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
         ButterKnife.bind(this, rootView);
         btnReserveSpot.setEnabled(false);
 
-        edtClaimHandle.setOnTouchListener(new View.OnTouchListener() {
-
-
+        ivRefreshSuggestions.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_RIGHT = 2;
+            public void onClick(View v) {
 
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-
-
-                    if (event.getRawX() >= (edtClaimHandle.getRight() - (edtClaimHandle.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width() + 75))) {
-
-                        getHandleSuggestions(false);
-                        return true;
+                if(!handleSuggestionsAPI.isInProgress()){
+                    if (rotateAnimation==null) {
+                        rotateAnimation = new RotateAnimation(0f, 360f,v.getWidth()/2,v.getHeight()/2);
+                        rotateAnimation.setInterpolator(new LinearInterpolator());
+                        rotateAnimation.setRepeatCount(Animation.INFINITE);
+                        rotateAnimation.setDuration(500);
+                        rotateAnimation.setFillAfter(true);
                     }
 
-
-                    return false;
-
-
+                    ivRefreshSuggestions.startAnimation(rotateAnimation);
+                    getHandleSuggestions(false);
                 }
-                return false;
-
 
             }
         });
@@ -157,81 +154,102 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
             tvSuggestion2.setSelected(s.toString().equals(tvSuggestion2.getText().toString()));
             tvSuggestion3.setSelected(s.toString().equals(tvSuggestion3.getText().toString()));
         }
+        else{
+            tvSuggestion1.setSelected(false);
+            tvSuggestion2.setSelected(false);
+            tvSuggestion3.setSelected(false);
+        }
     }
 
-    private void getHandleSuggestions(final boolean isFirsTime) {
+    private HashMap<String,String> handleSuggestionParams = new HashMap<>();
+    private void getHandleSuggestions(final boolean isFirstTime) {
 
         if (handleSuggestionsAPI == null) {
             handleSuggestionsAPI = new ApiCommon<HandleSuggestionsResponse>(activity).putAccessToken(true).putDefaultParams(true).showLoader(false);
         }
+        handleSuggestionParams.put(Constants.ALL_CRAZY,String.valueOf(isFirstTime?0:1));
         if (!handleSuggestionsAPI.isInProgress()) {
-            handleSuggestionsAPI.execute(null, ApiName.GET_HANLDE_SUGGESTIONS, new APICommonCallback<HandleSuggestionsResponse>() {
+            handleSuggestionsAPI.execute(handleSuggestionParams, ApiName.GET_HANLDE_SUGGESTIONS, new APICommonCallback<HandleSuggestionsResponse>() {
                 @Override
                 public boolean onNotConnected() {
                     Toast.makeText(activity, R.string.error_get_handle_suggestions, Toast.LENGTH_SHORT).show();
+                    ivRefreshSuggestions.clearAnimation();
                     return true;
                 }
 
                 @Override
                 public boolean onException(Exception e) {
                     Toast.makeText(activity, R.string.error_get_handle_suggestions, Toast.LENGTH_SHORT).show();
-
+                    ivRefreshSuggestions.clearAnimation();
                     return true;
                 }
 
                 @Override
                 public void onSuccess(HandleSuggestionsResponse handleSuggestionsResponse, String message, int flag) {
 
-                    if (FeedClaimHandleFragment.this.getView() != null && handleSuggestionsResponse.getHandleSuggestions() != null) {
+                    if (FeedClaimHandleFragment.this.getView() != null ) {
 
-                        if (layoutHandleSuggestions.getVisibility() != View.VISIBLE) {
-                            layoutHandleSuggestions.setVisibility(View.VISIBLE);
+                        if(ivRefreshSuggestions.getAnimation()!=null) {
+                            ivRefreshSuggestions.getAnimation().setRepeatCount(0);
                         }
-                        for (int suggestionIndex = 0; suggestionIndex < handleSuggestionsResponse.getHandleSuggestions().size() - 1; suggestionIndex++) {
-
-
-                            TextView viewToSet = null;
-                            switch (suggestionIndex) {
-                                case 0:
-                                    viewToSet = tvSuggestion1;
-                                    break;
-                                case 1:
-                                    viewToSet = tvSuggestion2;
-                                    break;
-                                case 2:
-                                    viewToSet = tvSuggestion3;
-                                    break;
+                        if (handleSuggestionsResponse.getHandleSuggestions() != null) {
+                            if (layoutHandleSuggestions.getVisibility() != View.VISIBLE) {
+                                layoutHandleSuggestions.setVisibility(View.VISIBLE);
                             }
+                            edtClaimHandle.setText(null);
+                            for (int suggestionIndex = 0; suggestionIndex < handleSuggestionsResponse.getHandleSuggestions().size() ; suggestionIndex++) {
 
-                            if (viewToSet != null) {
-                                if (viewToSet.getVisibility() != View.VISIBLE) {
-                                    viewToSet.setVisibility(View.VISIBLE);
+
+                                TextView viewToSet = null;
+                                switch (suggestionIndex) {
+                                    case 0:
+                                        if(isFirstTime)
+                                        {
+                                            edtClaimHandle.setText(handleSuggestionsResponse.getHandleSuggestions().get(suggestionIndex));
+                                            edtClaimHandle.setSelection(edtClaimHandle.getText().toString().length());
+                                        }
+                                        break;
+                                    case 1:
+                                        viewToSet = tvSuggestion1;
+                                        break;
+                                    case 2:
+                                        viewToSet = tvSuggestion2;
+                                        break;
+                                    case 3:
+                                        viewToSet = tvSuggestion3;
+                                        break;
                                 }
-                                viewToSet.setText(handleSuggestionsResponse.getHandleSuggestions().get(suggestionIndex).trim());
+
+                                if (viewToSet != null) {
+                                    if (viewToSet.getVisibility() != View.VISIBLE) {
+                                        viewToSet.setVisibility(View.VISIBLE);
+                                    }
+                                    viewToSet.setText(handleSuggestionsResponse.getHandleSuggestions().get(suggestionIndex).trim());
+                                }
+
+
+                                //To Refresh Suggestion State
+                                resetSuggestionsState(edtClaimHandle.getText());
+                                sv.fullScroll(View.FOCUS_DOWN);
+
+
+
+                                 /*
+                                   Using Reflection
+                                   try {
+                                        Field field = FeedClaimHandleFragment.this.getClass().getDeclaredField("tvSuggestion" + suggestionIndex+1);
+                                        TextView textView = (TextView) field.get(FeedClaimHandleFragment.this);
+                                        textView.setVisibility(View.VISIBLE);
+                                        textView.setText(handleSuggestionsResponse.getHandleSuggestions().get(suggestionIndex));
+                                    } catch (NoSuchFieldException e) {
+                                        e.printStackTrace();
+                                    } catch (IllegalAccessException e) {
+                                        e.printStackTrace();
+                                    }
+    */
+
+
                             }
-
-
-                            //To Refresh Suggestion State
-                            resetSuggestionsState(edtClaimHandle.getText());
-                            sv.fullScroll(View.FOCUS_DOWN);
-
-
-
-                             /*
-                               Using Reflection
-                               try {
-                                    Field field = FeedClaimHandleFragment.this.getClass().getDeclaredField("tvSuggestion" + suggestionIndex+1);
-                                    TextView textView = (TextView) field.get(FeedClaimHandleFragment.this);
-                                    textView.setVisibility(View.VISIBLE);
-                                    textView.setText(handleSuggestionsResponse.getHandleSuggestions().get(suggestionIndex));
-                                } catch (NoSuchFieldException e) {
-                                    e.printStackTrace();
-                                } catch (IllegalAccessException e) {
-                                    e.printStackTrace();
-                                }
-*/
-
-
                         }
                     }
                 }
@@ -239,14 +257,14 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
                 @Override
                 public boolean onError(HandleSuggestionsResponse handleSuggestionsResponse, String message, int flag) {
                     Toast.makeText(activity, R.string.error_get_handle_suggestions, Toast.LENGTH_SHORT).show();
-
+                    ivRefreshSuggestions.clearAnimation();
                     return true;
                 }
 
                 @Override
                 public boolean onFailure(RetrofitError error) {
                     Toast.makeText(activity, R.string.error_get_handle_suggestions, Toast.LENGTH_SHORT).show();
-
+                    ivRefreshSuggestions.clearAnimation();
                     return true;
                 }
 
