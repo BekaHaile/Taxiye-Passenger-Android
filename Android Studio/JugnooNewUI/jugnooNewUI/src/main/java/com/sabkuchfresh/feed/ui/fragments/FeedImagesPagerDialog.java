@@ -6,16 +6,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
+import com.sabkuchfresh.utils.DirectionsGestureListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +35,6 @@ public class FeedImagesPagerDialog extends DialogFragment {
 
     public static final String IMAGES_TO_SHOW = "imagesToShow";
     public static final String POSITION_TO_OPEN = "positionToOpen";
-    private ViewPager viewPager;
 
 
     public static FeedImagesPagerDialog newInstance(ArrayList<FetchFeedbackResponse.ReviewImage> imagesToShow) {
@@ -63,7 +67,7 @@ public class FeedImagesPagerDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.layout_feed_images_pager, container, false);
-        viewPager = (ViewPager) rootView.findViewById(R.id.vpImages);
+        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.vpImages);
         ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) getArguments().getSerializable(IMAGES_TO_SHOW);
         viewPager.setPadding(0, 20, 0, 20);
         viewPager.setAdapter(new DisplayImagesPager(getActivity(), reviewImages));
@@ -75,13 +79,13 @@ public class FeedImagesPagerDialog extends DialogFragment {
 
     }
 
-    public class DisplayImagesPager extends PagerAdapter {
+    private class DisplayImagesPager extends PagerAdapter {
 
         private Context context;
         private List<FetchFeedbackResponse.ReviewImage> reviewImages;
         private LayoutInflater inflater;
 
-        public DisplayImagesPager(Context context, List<FetchFeedbackResponse.ReviewImage> reviewImages) {
+        private DisplayImagesPager(Context context, List<FetchFeedbackResponse.ReviewImage> reviewImages) {
             this.context = context;
             this.reviewImages = reviewImages;
             this.inflater = LayoutInflater.from(context);
@@ -90,17 +94,39 @@ public class FeedImagesPagerDialog extends DialogFragment {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageView ivReviewImage = (ImageView) inflater.inflate(R.layout.dialog_item_review_image, container, false);
-            ViewPager.LayoutParams layoutParams = (ViewPager.LayoutParams) ivReviewImage.getLayoutParams();
+            View inflaterView =  inflater.inflate(R.layout.item_feed_pager, container, false);
+            ImageView ivReviewImage = (ImageView) inflaterView.findViewById(R.id.iv_picture);
+            View swipeView = inflaterView.findViewById(R.id.swipe_view);
+            swipeView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    gesture.onTouchEvent(event);
+                    return false;
+                }
+            });
+            inflaterView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getDialog().dismiss();
+                }
+            });
+
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ivReviewImage.getLayoutParams();
             if (reviewImages.get(position).getHeight() != null && reviewImages.get(position).getHeight() > 0)
                 layoutParams.height = reviewImages.get(position).getHeight();
             else
                 layoutParams.height = FeedUtils.dpToPx(270);
             ivReviewImage.setLayoutParams(layoutParams);
-            ivReviewImage.setClickable(true);
+            ivReviewImage.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    gesture.onTouchEvent(event);
+                    return true;
+                }
+            });
             Glide.with(context).load(reviewImages.get(position).getUrl()).override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).into(ivReviewImage);
-            container.addView(ivReviewImage);
-            return ivReviewImage;
+            container.addView(inflaterView);
+            return inflaterView;
         }
 
 
@@ -123,4 +149,27 @@ public class FeedImagesPagerDialog extends DialogFragment {
             }
         }
     }
+
+    final GestureDetector gesture = new GestureDetector(getActivity(),
+            new DirectionsGestureListener(new DirectionsGestureListener.Callback() {
+                @Override
+                public void topSwipe() {
+                    getDialog().dismiss();
+                }
+
+                @Override
+                public void bottomSwipe() {
+                    getDialog().dismiss();
+                }
+
+                @Override
+                public void leftSwipe() {
+
+                }
+
+                @Override
+                public void rightSwipe() {
+
+                }
+            }));
 }
