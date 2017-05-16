@@ -1690,6 +1690,7 @@
     <string name="error_get_handle_suggestions">Network Error! Could not fetch suggestions.</string>
     <string name="feed_claim_handle_description">Pick a nickname</string>
     <string name="error_enter_handle">Please enter a handle name.</string>
+    <string name="hint_pick_a_nickname">Pick a nickname</string>
 
 
 </resources>

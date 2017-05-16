@@ -1,6 +1,5 @@
 package com.sabkuchfresh.feed.ui.fragments;
 
-import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
@@ -10,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -70,14 +67,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
     @Bind(R.id.label_suggestions)
     TextView labelSuggestions;
     private ApiCommon<HandleSuggestionsResponse> handleSuggestionsAPI;
-    private Runnable  scrollDownRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if(sv!=null){
-                sv.fullScroll(View.FOCUS_DOWN);
-            }
-        }
-    };
+
 
 
     @Nullable
@@ -90,29 +80,29 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
         edtClaimHandle.setOnTouchListener(new View.OnTouchListener() {
 
 
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            final int DRAWABLE_RIGHT = 2;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
 
 
-            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
 
 
-                if (event.getRawX() >= (edtClaimHandle.getRight() - (edtClaimHandle.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width() + 75))) {
+                    if (event.getRawX() >= (edtClaimHandle.getRight() - (edtClaimHandle.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width() + 75))) {
 
-                       getHandleSuggestions();
-                       return true;
+                        getHandleSuggestions(false);
+                        return true;
+                    }
+
+
+                    return false;
+
+
                 }
-
-
                 return false;
 
 
             }
-            return false;
-
-
-        }
         });
         edtClaimHandle.addTextChangedListener(new HandleTextWatcher() {
             @Override
@@ -134,7 +124,6 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
         });
 
 
-
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(llMain, null, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
@@ -153,41 +142,29 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
             }
         });
         llMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
-
         GAUtils.trackScreenView(FEED + HANDLE_INPUT);
-        activity.getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (FeedClaimHandleFragment.this.getView() != null) {
-                    Utils.showSoftKeyboard(activity, edtClaimHandle);
-                }
-            }
-        }, 200);
-
         tvSuggestion1.setOnClickListener(suggestionListener);
         tvSuggestion2.setOnClickListener(suggestionListener);
         tvSuggestion3.setOnClickListener(suggestionListener);
-        getHandleSuggestions();
-
-
+        getHandleSuggestions(true);
         return rootView;
 
     }
 
     private void resetSuggestionsState(Editable s) {
-        if(s.toString().trim().length()>0){
+        if (s.toString().trim().length() > 0) {
             tvSuggestion1.setSelected(s.toString().equals(tvSuggestion1.getText().toString()));
             tvSuggestion2.setSelected(s.toString().equals(tvSuggestion2.getText().toString()));
             tvSuggestion3.setSelected(s.toString().equals(tvSuggestion3.getText().toString()));
         }
     }
 
-    private void getHandleSuggestions() {
+    private void getHandleSuggestions(final boolean isFirsTime) {
 
-        if(handleSuggestionsAPI==null) {
+        if (handleSuggestionsAPI == null) {
             handleSuggestionsAPI = new ApiCommon<HandleSuggestionsResponse>(activity).putAccessToken(true).putDefaultParams(true).showLoader(false);
         }
-        if(!handleSuggestionsAPI.isInProgress()){
+        if (!handleSuggestionsAPI.isInProgress()) {
             handleSuggestionsAPI.execute(null, ApiName.GET_HANLDE_SUGGESTIONS, new APICommonCallback<HandleSuggestionsResponse>() {
                 @Override
                 public boolean onNotConnected() {
@@ -205,16 +182,16 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
                 @Override
                 public void onSuccess(HandleSuggestionsResponse handleSuggestionsResponse, String message, int flag) {
 
-                    if (FeedClaimHandleFragment.this.getView()!=null && handleSuggestionsResponse.getHandleSuggestions()!=null) {
+                    if (FeedClaimHandleFragment.this.getView() != null && handleSuggestionsResponse.getHandleSuggestions() != null) {
 
-                        if(layoutHandleSuggestions.getVisibility()!=View.VISIBLE) {
+                        if (layoutHandleSuggestions.getVisibility() != View.VISIBLE) {
                             layoutHandleSuggestions.setVisibility(View.VISIBLE);
                         }
-                        for(int suggestionIndex = 0;suggestionIndex<handleSuggestionsResponse.getHandleSuggestions().size()-1;suggestionIndex++){
+                        for (int suggestionIndex = 0; suggestionIndex < handleSuggestionsResponse.getHandleSuggestions().size() - 1; suggestionIndex++) {
 
 
                             TextView viewToSet = null;
-                            switch (suggestionIndex){
+                            switch (suggestionIndex) {
                                 case 0:
                                     viewToSet = tvSuggestion1;
                                     break;
@@ -226,8 +203,8 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
                                     break;
                             }
 
-                            if(viewToSet!=null) {
-                                if(viewToSet.getVisibility()!=View.VISIBLE) {
+                            if (viewToSet != null) {
+                                if (viewToSet.getVisibility() != View.VISIBLE) {
                                     viewToSet.setVisibility(View.VISIBLE);
                                 }
                                 viewToSet.setText(handleSuggestionsResponse.getHandleSuggestions().get(suggestionIndex).trim());
@@ -236,8 +213,9 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
 
                             //To Refresh Suggestion State
                             resetSuggestionsState(edtClaimHandle.getText());
+                            sv.fullScroll(View.FOCUS_DOWN);
 
-                            activity.getHandler().postDelayed(scrollDownRunnable,250);
+
 
                              /*
                                Using Reflection
@@ -252,7 +230,6 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
                                     e.printStackTrace();
                                 }
 */
-
 
 
                         }
@@ -286,7 +263,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(handleSuggestionsAPI!=null){
+        if (handleSuggestionsAPI != null) {
             handleSuggestionsAPI.setCancelled(true);
         }
         ButterKnife.unbind(this);
@@ -359,9 +336,9 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
     View.OnClickListener suggestionListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(v instanceof TextView){
+            if (v instanceof TextView) {
                 TextView textView = (TextView) v;
-                if(textView.getText().toString().trim().length()>0) {
+                if (textView.getText().toString().trim().length() > 0) {
                     edtClaimHandle.setText(((TextView) v).getText());
                     edtClaimHandle.setSelection(edtClaimHandle.getText().toString().length());
                 }

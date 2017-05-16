@@ -4,15 +4,13 @@
     android:layout_width="match_parent"
     android:background="@color/feed_grey_background_light"
     android:layout_height="match_parent"
-    android:id="@+id/sv"
-    >
+    android:id="@+id/sv">
 
 
     <LinearLayout
         android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
         android:orientation="vertical">
 
         <ImageView
@@ -23,12 +21,10 @@
 
 
         <ImageView
-            android:layout_width="75dp"
-            android:layout_height="91dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="@dimen/spacing_extra_huge"
+            android:layout_marginTop="@dimen/spacing_huge"
             android:src="@drawable/ic_feed_claim_handle_vector" />
 
         <TextView
@@ -38,7 +34,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginTop="@dimen/spacing_small"
+            android:layout_marginTop="@dimen/spacing_normal"
             android:gravity="center"
             android:text="@string/feed_claim_handle_description"
             android:textColor="@color/feed_grey_text"
@@ -57,7 +53,7 @@
             android:drawableRight="@drawable/ic_refresh"
             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
             android:gravity="center"
-            android:hint="Claim your handle"
+            android:hint="@string/hint_pick_a_nickname"
             android:inputType="text"
             android:maxLines="1"
             android:paddingBottom="@dimen/spacing_normal"
@@ -73,11 +69,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/spacing_normal"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginLeft="@dimen/spacing_large"
+            android:layout_marginRight="@dimen/spacing_large"
             android:layout_marginTop="@dimen/spacing_dimin"
             android:textColor="@color/feed_red"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="@dimen/font_small"
+            android:drawablePadding="3dp"
+            android:drawableLeft="@drawable/ic_exclamation"
             android:visibility="invisible"
             app:font="maven" />
         
@@ -86,7 +86,7 @@
             android:visibility="gone"
             android:layout_marginRight="@dimen/spacing_extra_large"
             android:layout_marginLeft="@dimen/spacing_extra_large"
-            android:layout_marginBottom="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -95,7 +95,6 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-
                 android:layout_below="@+id/label_suggestions"
                 android:paddingRight="@dimen/spacing_small"
                 android:paddingLeft="@dimen/spacing_small"
