@@ -41,6 +41,9 @@ public class RestaurantImageFragment extends Fragment {
     @Bind(R.id.tvCollapRestaurantRating)
     TextView tvCollapRestaurantRating;
 
+    @Bind(R.id.llCollapRatingStars)
+    LinearLayout llCollapRatingStars;
+
     @Bind(R.id.tvCollapRestaurantDeliveryTime)
     TextView tvCollapRestaurantDeliveryTime;
 
@@ -92,9 +95,6 @@ public class RestaurantImageFragment extends Fragment {
         View view = inflater.inflate(R.layout.restaurant_collapse_details, container, false);
         ButterKnife.bind(this, view);
 
-        tvCollapRestaurantDeliveryTime.setText("");
-        tvCollapRestaurantRating.setText("");
-
         setupDetails(false);
 
         backgroundImageView.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +128,9 @@ public class RestaurantImageFragment extends Fragment {
         }
 
         if (activity != null) {
+            tvCollapRestaurantDeliveryTime.setText("");
+            activity.clearRestaurantRatingStars(llCollapRatingStars, tvCollapRestaurantRating);
+
             shadowView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.opaque_black_strong));
 
 
@@ -208,16 +211,16 @@ public class RestaurantImageFragment extends Fragment {
                 }
 
 
-                tvRestTitle.setText(activity.getVendorOpened().getName());
+                tvRestTitle.setText(activity.getVendorOpened().getName().toUpperCase());
 
                 int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), tvCollapRestaurantDeliveryTime, R.color.white);
                 tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
 
                 if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
-                    tvCollapRestaurantRating.setVisibility(View.VISIBLE);
-                    activity.setRatingNumberOfStars(tvCollapRestaurantRating, activity.getVendorOpened().getRating());
+                    llCollapRatingStars.setVisibility(View.VISIBLE);
+                    activity.setRestaurantRatingStarsToLL(llCollapRatingStars, tvCollapRestaurantRating, activity.getVendorOpened().getRating());
                 } else {
-                    tvCollapRestaurantRating.setVisibility(View.GONE);
+                    llCollapRatingStars.setVisibility(View.GONE);
                 }
 
 

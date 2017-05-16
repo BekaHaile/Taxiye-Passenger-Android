@@ -35,7 +35,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Pair;
@@ -3682,6 +3681,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private State mCurrentState;
     public TextView tvCollapRestaurantName;
     public TextView tvCollapRestaurantRating, tvCollapRestaurantDeliveryTime;
+    public LinearLayout llCollapRatingStars;
     private RelativeLayout rlCollapseDetails;
     public LinearLayout llCollapseRating;
     private LinearLayout llToolbarLayout;
@@ -3763,7 +3763,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 tvCollapRestaurantName.setTextColor(tvCollapRestaurantName.getTextColors().withAlpha(255 - calculatedAlpha));
 
-                tvCollapRestaurantRating.setAlpha((float) (255 - calculatedAlpha) / 255f);
+                llCollapRatingStars.setAlpha((float) (255 - calculatedAlpha) / 255f);
                 if (ivCollapseRestImage.getBackground() != null)
                     ivCollapseRestImage.getBackground().setAlpha(255 - calculatedAlpha);
 
@@ -3786,6 +3786,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         ivCollapseRestImage = (ImageView) findViewById(R.id.iv_rest_collapse_image);
         tvCollapRestaurantName = (TextView) findViewById(R.id.tv_rest_title);
         tvCollapRestaurantRating = (TextView) findViewById(R.id.tvCollapRestaurantRating);
+        llCollapRatingStars = (LinearLayout) findViewById(R.id.llCollapRatingStars);
         tvCollapRestaurantDeliveryTime = (TextView) findViewById(R.id.tvCollapRestaurantDeliveryTime);
         rlCollapseDetails = (RelativeLayout) findViewById(R.id.layout_rest_details);
         llCollapseRating = (LinearLayout) findViewById(R.id.llCollapseRating);
@@ -3847,7 +3848,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 //Restaurant Details
                 tvCollapRestaurantName.setTextColor(tvCollapRestaurantName.getTextColors().withAlpha(255));
 //                tvCollapRestaurantRating.setTextColor(tvCollapRestaurantRating.getTextColors().withAlpha(255));
-                tvCollapRestaurantRating.setAlpha(1f);
+                llCollapRatingStars.setAlpha(1f);
                 tvCollapRestaurantDeliveryTime.setAlpha(1f);
                 break;
             case COLLAPSED:
@@ -3965,18 +3966,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         return ratingColor;
-    }
-
-    public void setRatingNumberOfStars(TextView tv, Double rating) {
-        StringBuilder ratingStars = new StringBuilder();
-        for(int i=0; i<5; i++){
-            ratingStars.append(getString(R.string.star_icon));
-        }
-        Spannable spannable = new SpannableString(rating+" "+ratingStars);
-        spannable.setSpan(new CustomTypeFaceSpan("", Fonts.iconsFont(this)), spannable.length()-ratingStars.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.green_delivery_stores)), spannable.length()-5, spannable.length()-(5-rating.intValue()), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        tv.setText(spannable);
     }
 
     public int getParsedColor(String colorCode, Integer defaultColor){
@@ -4491,6 +4480,42 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         tvFeedHyperLink.setText(R.string.feed);
         tvFeedHyperLink.append(" ");
         tvFeedHyperLink.append(spannable);
+    }
+
+
+
+    public void setRestaurantRatingStarsToLL(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating, Double rating){
+        llCollapRatingStars.removeAllViews();
+        llCollapRatingStars.addView(tvCollapRestaurantRating);
+        tvCollapRestaurantRating.setText(String.valueOf(rating));
+        double ratingInt = rating.intValue();
+        for(int i=0; i<5; i++){
+            ImageView star = new ImageView(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.dp_11), getResources().getDimensionPixelSize(R.dimen.dp_11));
+            params.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_1), 0, 0, 0);
+            if(i < ratingInt){
+                star.setImageResource(R.drawable.ic_star_white);
+                star.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(this, R.color.green_delivery_stores), PorterDuff.Mode.SRC_IN));
+            } else if(i == ratingInt){
+                double decimal = Math.round((rating - Math.floor(rating))*10.0)/10.0;
+                if(decimal < 0.3){
+                    star.setImageResource(R.drawable.ic_star_white);
+                } else if(decimal < 0.8){
+                    star.setImageResource(R.drawable.ic_half_star_green_white);
+                } else {
+                    star.setImageResource(R.drawable.ic_star_white);
+                    star.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(this, R.color.green_delivery_stores), PorterDuff.Mode.SRC_IN));
+                }
+            } else {
+                star.setImageResource(R.drawable.ic_star_white);
+            }
+            llCollapRatingStars.addView(star, params);
+        }
+    }
+
+    public void clearRestaurantRatingStars(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating){
+        llCollapRatingStars.removeAllViews();
+        tvCollapRestaurantRating.setText("");
     }
 
 }

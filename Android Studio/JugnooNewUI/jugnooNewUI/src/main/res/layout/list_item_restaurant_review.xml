@@ -200,7 +200,7 @@
         />
 
     <ImageView
-        android:id="@+id/ivFeedLike"
+        android:id="@+id/ivFeedLike1"
         android:layout_width="@dimen/dp_30"
         android:layout_height="@dimen/dp_30"
         android:layout_alignWithParentIfMissing="true"
@@ -212,8 +212,29 @@
         android:padding="@dimen/dp_5"
         android:src="@drawable/ic_feed_like_normal"
         android:tag="mwar"
+        android:visibility="gone"
         />
 
+
+    <com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton
+        android:clickable="false"
+        android:id="@+id/ivFeedLike"
+        app:circle_start_color="#ffffff"
+        app:circle_end_color="#cd8fff"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
+        app:icon_size="14dp"
+        app:anim_scale_factor="3.8"
+        app:icon_type="heart"
+
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@+id/vSepBelowMessage"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_toLeftOf="@+id/ivFeedShare"
+
+        />
 
     <View
         android:id="@+id/vShadowDown"

@@ -130,6 +130,11 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
             public int getLikeIsEnabled() {
                 return fetchFeedbackResponse == null ? 1 : fetchFeedbackResponse.getLikeIsEnabled();
             }
+
+            @Override
+            public RecyclerView getRecyclerView() {
+                return recyclerViewReviews;
+            }
         }, restaurantReviews);
         recyclerViewReviews.setAdapter(reviewsAdapter);
         recyclerViewReviews.setEnabled(true);

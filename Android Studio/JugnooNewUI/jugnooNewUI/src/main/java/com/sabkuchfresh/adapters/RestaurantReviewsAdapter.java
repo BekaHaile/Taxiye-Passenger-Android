@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.commoncalls.ApiRestLikeShareFeedback;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
+import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
+import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.CircleTransform;
@@ -77,7 +79,9 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 
 			holder.tvName.setText(review.getUserName());
-			holder.tvDateTime.setText(review.getDate());
+//			holder.tvDateTime.setText(review.getDate());
+			holder.tvDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getUpdatedAt(), activity.isTimeAutomatic));
+
 			holder.tvReviewMessage.setText(review.getReviewDesc());
 			holder.tvReviewTag.setText(review.getTags());
 			holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags()) ? View.GONE : View.VISIBLE);
@@ -218,11 +222,12 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
 //			holder.tvLikeShareCount.setVisibility((likeCount.length() == 0 && shareCount.length() == 0) ? View.INVISIBLE : View.VISIBLE);
 
-			if(review.getIsLiked() >= 1){
-				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
-			} else {
-				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_normal);
-			}
+			holder.ivFeedLike.setLiked(review.getIsLiked() >= 1);
+//			if(review.getIsLiked() >= 1){
+//				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
+//			} else {
+//				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_normal);
+//			}
 			if(review.getIsShared() >= 1){
 				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_active);
 			} else {
@@ -361,7 +366,8 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		public ImageView ivImage;
 		public RecyclerView rvFeedImages;
 		public TextView tvLikeShareCount;
-		public ImageView ivFeedImageSingle, ivFeedEdit, ivFeedShare, ivFeedLike;
+		public ImageView ivFeedImageSingle, ivFeedEdit, ivFeedShare;
+		public LikeButton ivFeedLike;
 		public View vSepBelowMessage, vShadowDown;
 		public RestaurantReviewImagesAdapter imagesAdapter = null;
 
@@ -382,7 +388,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			tvLikeShareCount = (TextView) itemView.findViewById(R.id.tvLikeShareCount);
 			ivFeedEdit = (ImageView) itemView.findViewById(R.id.ivFeedEdit);
 			ivFeedShare = (ImageView) itemView.findViewById(R.id.ivFeedShare);
-			ivFeedLike = (ImageView) itemView.findViewById(R.id.ivFeedLike);
+			ivFeedLike = (LikeButton) itemView.findViewById(R.id.ivFeedLike);
 			ivFeedImageSingle = (ImageView) itemView.findViewById(R.id.ivFeedImageSingle);
 			vSepBelowMessage = itemView.findViewById(R.id.vSepBelowMessage);
 			vShadowDown = itemView.findViewById(R.id.vShadowDown);
@@ -413,6 +419,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		String getShareTextOther();
 		int getShareIsEnabled();
 		int getLikeIsEnabled();
+		RecyclerView getRecyclerView();
 	}
 
 
@@ -420,7 +427,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	public final String ACTION_SHARE = "SHARE";
 
 	private ApiRestLikeShareFeedback apiRestLikeShareFeedback;
-	private void likeShareReview(final int position, int feedback, String action){
+	private void likeShareReview(final int position, int feedback, final String action){
 		if(apiRestLikeShareFeedback == null){
 			apiRestLikeShareFeedback = new ApiRestLikeShareFeedback(activity);
 		}
@@ -428,8 +435,23 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			@Override
 			public void onSuccess(FetchFeedbackResponse.Review review) {
 				if(review != null){
+					long delay = 0;
 					restaurantReviews.set(position, review);
-					notifyDataSetChanged();
+					if(action.equalsIgnoreCase(ACTION_LIKE)
+							&& callback != null && callback.getRecyclerView() != null) {
+						ViewHolderReview holder = ((ViewHolderReview) callback.getRecyclerView().findViewHolderForAdapterPosition(position));
+						if (holder != null) {
+							LikeButton likeButton = holder.ivFeedLike;
+							likeButton.onClick(likeButton);
+							delay = 200L;
+						}
+					}
+					activity.getHandler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							notifyDataSetChanged();
+						}
+					}, delay);
 				}
 			}
 

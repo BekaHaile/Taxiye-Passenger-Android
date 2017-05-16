@@ -677,5 +677,8 @@
     <dimen name="dp_322">
         322dp
     </dimen>
+    <dimen name="dp_11">
+        11dp
+    </dimen>
 
 </resources>
