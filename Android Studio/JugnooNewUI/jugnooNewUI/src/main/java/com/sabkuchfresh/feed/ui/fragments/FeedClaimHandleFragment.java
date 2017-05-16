@@ -13,6 +13,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -71,6 +72,8 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
     TextView labelSuggestions;
     @Bind(R.id.iv_refresh_suggestions)
     ImageView ivRefreshSuggestions;
+    @Bind(R.id.sv_suggestions)
+    HorizontalScrollView scrollViewSuggestions;
     private ApiCommon<HandleSuggestionsResponse> handleSuggestionsAPI;
     private RotateAnimation rotateAnimation;
 
@@ -81,7 +84,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
         View rootView = inflater.inflate(R.layout.fragment_feed_claim_handle, container, false);
         ButterKnife.bind(this, rootView);
         btnReserveSpot.setEnabled(false);
-
+        scrollViewSuggestions.setHorizontalScrollBarEnabled(false);
         ivRefreshSuggestions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,8 +170,9 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
         if (handleSuggestionsAPI == null) {
             handleSuggestionsAPI = new ApiCommon<HandleSuggestionsResponse>(activity).putAccessToken(true).putDefaultParams(true).showLoader(false);
         }
-        handleSuggestionParams.put(Constants.ALL_CRAZY,String.valueOf(isFirstTime?0:1));
+
         if (!handleSuggestionsAPI.isInProgress()) {
+            handleSuggestionParams.put(Constants.ALL_CRAZY,String.valueOf(isFirstTime?0:1));
             handleSuggestionsAPI.execute(handleSuggestionParams, ApiName.GET_HANLDE_SUGGESTIONS, new APICommonCallback<HandleSuggestionsResponse>() {
                 @Override
                 public boolean onNotConnected() {
@@ -203,11 +207,9 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
                                 TextView viewToSet = null;
                                 switch (suggestionIndex) {
                                     case 0:
-                                        if(isFirstTime)
-                                        {
-                                            edtClaimHandle.setText(handleSuggestionsResponse.getHandleSuggestions().get(suggestionIndex));
-                                            edtClaimHandle.setSelection(edtClaimHandle.getText().toString().length());
-                                        }
+                                        edtClaimHandle.setText(handleSuggestionsResponse.getHandleSuggestions().get(suggestionIndex));
+                                        edtClaimHandle.setSelection(edtClaimHandle.getText().toString().length());
+
                                         break;
                                     case 1:
                                         viewToSet = tvSuggestion1;
@@ -313,8 +315,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
             public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
                 Utils.hideKeyboard(activity);
                 Data.getFeedData().setHasHandle(1);
-
-
+                ivRefreshSuggestions.setVisibility(View.GONE);
                 edtClaimHandle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done_green_vector, 0);
                 edtClaimHandle.setActivated(true);
                 tvError.setVisibility(View.INVISIBLE);

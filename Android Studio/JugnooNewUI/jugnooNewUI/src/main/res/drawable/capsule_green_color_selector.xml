@@ -15,8 +15,8 @@
     <item android:state_enabled="false">
         <shape>
             <corners android:radius="50dp" />
+            <solid android:color="@color/grey_alpha_50"/>
             <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"/>
-
 
         </shape>
     </item>
