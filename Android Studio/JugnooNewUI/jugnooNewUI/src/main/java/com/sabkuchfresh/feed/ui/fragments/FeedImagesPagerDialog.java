@@ -192,13 +192,17 @@ public class FeedImagesPagerDialog extends DialogFragment {
 
         @Override
         public boolean onException(Exception e, T model, Target<R> target, boolean isFirstResource) {
-            progressView.setVisibility(View.GONE);
+            if(progressView!=null) {
+                progressView.setVisibility(View.GONE);
+            }
             return false;
         }
 
         @Override
         public boolean onResourceReady(R resource, T model, Target<R> target, boolean isFromMemoryCache, boolean isFirstResource) {
-            progressView.setVisibility(View.GONE);
+            if(progressView!=null) {
+                progressView.setVisibility(View.GONE);
+            }
             return false;
         }
     }
