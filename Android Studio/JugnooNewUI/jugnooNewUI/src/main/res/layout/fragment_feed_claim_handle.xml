@@ -99,7 +99,7 @@
 
         <RelativeLayout
             android:id="@+id/layout_suggestions"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/spacing_normal"
             android:layout_marginLeft="@dimen/spacing_normal"
