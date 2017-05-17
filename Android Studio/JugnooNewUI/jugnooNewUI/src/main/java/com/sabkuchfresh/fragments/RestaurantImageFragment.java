@@ -3,7 +3,6 @@ package com.sabkuchfresh.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +40,9 @@ public class RestaurantImageFragment extends Fragment {
     @Bind(R.id.tvCollapRestaurantRating)
     TextView tvCollapRestaurantRating;
 
+    @Bind(R.id.llCollapRatingStars)
+    LinearLayout llCollapRatingStars;
+
     @Bind(R.id.tvCollapRestaurantDeliveryTime)
     TextView tvCollapRestaurantDeliveryTime;
 
@@ -55,11 +57,13 @@ public class RestaurantImageFragment extends Fragment {
 
     @Bind(R.id.llCollapseRating)
     LinearLayout llCollapseRating;
+    @Bind(R.id.tvFeedHyperLink)
+    public TextView tvFeedHyperLink;
 
     private FreshActivity activity;
     private BlurImageTask loadBlurredImageTask;
     private Target target;
-    private int imageMaxHeight, imageMaxWidth;
+
 
 
     public RestaurantImageFragment() {
@@ -89,6 +93,7 @@ public class RestaurantImageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.restaurant_collapse_details, container, false);
         ButterKnife.bind(this, view);
+
         setupDetails(false);
 
         backgroundImageView.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +127,9 @@ public class RestaurantImageFragment extends Fragment {
         }
 
         if (activity != null) {
+            tvCollapRestaurantDeliveryTime.setText("");
+            activity.clearRestaurantRatingStars(llCollapRatingStars, tvCollapRestaurantRating);
+
             shadowView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.opaque_black_strong));
 
 
@@ -131,55 +139,18 @@ public class RestaurantImageFragment extends Fragment {
 
             backgroundImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            if (activity.getVendorOpened() != null && activity.getVendorOpened().getImage() != null) {
+            if (activity.getVendorOpened() != null) {
 
 
-                ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
-                layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                ivRestOriginalImage.setLayoutParams(layoutParams);
+                if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
+                    ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
+                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    ivRestOriginalImage.setLayoutParams(layoutParams);
 
-                ivRestOriginalImage.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(RestaurantImageFragment.this.getView()!=null && !TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
-                            target = new Target() {
-                                @Override
-                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                                    imageMaxWidth = ivRestOriginalImage.getMeasuredWidth();
-                                    imageMaxHeight = ivRestOriginalImage.getMeasuredHeight();
-
-                                    int imgHeight = (imageMaxWidth * bitmap.getHeight()) / bitmap.getWidth();
-                                    int imgWidth = imageMaxWidth;
-
-                                    if (imgHeight > imageMaxHeight) {
-                                        imgHeight = imageMaxHeight;
-                                        imgWidth = (imageMaxHeight * bitmap.getWidth()) / bitmap.getHeight();
-                                    }
-
-
-                                    ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
-                                    layoutParams.width = imgWidth;
-                                    layoutParams.height = imgHeight;
-                                    ivRestOriginalImage.setLayoutParams(layoutParams);
-                                    ivRestOriginalImage.setImageBitmap(bitmap);
-                                }
-
-                                @Override
-                                public void onBitmapFailed(Drawable drawable) {
-                                    ivRestOriginalImage.setImageDrawable(drawable);
-                                }
-
-                                @Override
-                                public void onPrepareLoad(Drawable drawable) {
-                                    ivRestOriginalImage.setImageDrawable(drawable);
-                                }
-                            };
-
-
-                            Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).placeholder(R.drawable.ic_fresh_item_placeholder).into(target);
-                        }
+                    if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
+                        Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).placeholder(R.drawable.ic_fresh_item_placeholder).into(ivRestOriginalImage);
                     }
-                });
+                }
 
 
                 //background blurred Image
@@ -199,19 +170,20 @@ public class RestaurantImageFragment extends Fragment {
                 }
 
 
-                tvRestTitle.setText(activity.getVendorOpened().getName());
+                tvRestTitle.setText(activity.getVendorOpened().getName().toUpperCase());
 
                 int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), tvCollapRestaurantDeliveryTime, R.color.white);
                 tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
 
                 if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
-                    tvCollapRestaurantRating.setVisibility(View.VISIBLE);
-                    activity.setRatingAndGetColor(tvCollapRestaurantRating, activity.getVendorOpened().getRating(),
-                            activity.getVendorOpened().getColorCode(), true);
+                    llCollapRatingStars.setVisibility(View.VISIBLE);
+                    activity.setRestaurantRatingStarsToLL(llCollapRatingStars, tvCollapRestaurantRating, activity.getVendorOpened().getRating());
                 } else {
-                    tvCollapRestaurantRating.setVisibility(View.GONE);
+                    llCollapRatingStars.setVisibility(View.GONE);
                 }
 
+
+				activity.setFeedArrowToTextView(tvFeedHyperLink);
             }
 
             llCollapseRating.setOnClickListener(new View.OnClickListener() {

@@ -948,7 +948,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                                 public void onClick(View v) {
                                                     callback.onNotify(0);
                                                 }
-                                            }, false, true);
+                                            }, false, true, true);
                                     restaurantName = ""; locality = ""; telephone = "";
                                     notifyDataSetChanged();
                                 } else {

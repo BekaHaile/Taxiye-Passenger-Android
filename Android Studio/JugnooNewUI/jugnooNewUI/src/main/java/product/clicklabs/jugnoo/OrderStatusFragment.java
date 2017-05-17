@@ -100,6 +100,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private TextView tvTotalAmountMessage;
     private TextView tvPaymentMethodVal;
     private RelativeLayout rlWalletDeducted;
+    private LinearLayout llPaymentSummary;
 
     @Nullable
     @Override
@@ -139,7 +140,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         tvDelveryPlace = (TextView) rootView.findViewById(R.id.tvDelveryPlace); tvDelveryPlace.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         tvDeliveryToVal = (TextView) rootView.findViewById(R.id.tvDeliveryToVal); tvDeliveryToVal.setTypeface(Fonts.mavenMedium(activity));
         tvTotalAmountVal = (TextView) rootView.findViewById(R.id.tvTotalAmountVal);
-        tvAmountPayableVal = (TextView) rootView.findViewById(R.id.tvAmountPayableVal); tvAmountPayableVal.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+        tvAmountPayableVal = (TextView) rootView.findViewById(R.id.tvAmountPayableVal);
         llFinalAmount = (LinearLayout) rootView.findViewById(R.id.llFinalAmount);
         llFinalAmount.setVisibility(View.GONE);
         bNeedHelp = (Button) rootView.findViewById(R.id.bNeedHelp);
@@ -195,6 +196,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         ((TextView)rootView.findViewById(R.id.tvItemSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         ((TextView)rootView.findViewById(R.id.tvBillSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         ((TextView)rootView.findViewById(R.id.tvPaymentSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        llPaymentSummary = (LinearLayout) rootView.findViewById(R.id.llPaymentSummary);
 
 
         buttonCancelOrder.setOnClickListener(this);
@@ -661,12 +663,19 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
 
 
-
+            llFinalAmount.removeAllViews();
             View vDivider = rootView.findViewById(R.id.vDividerPayment);
+            if(datum1.getJugnooDeducted() > 0){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash), datum1.getJugnooDeducted(), false);
+            }
+
             if(datum1.getWalletDeducted() > 0) {
                 rlWalletDeducted.setVisibility(View.VISIBLE);
+                llPaymentSummary.removeView(rlWalletDeducted);
+                llFinalAmount.addView(rlWalletDeducted);
                 tvAmountPayableVal.setText(activity.getString(R.string.rupees_value_format,
                         Utils.getMoneyDecimalFormat().format(datum1.getWalletDeducted())));
+                llFinalAmount.setVisibility(View.VISIBLE);
             } else{
                 rlWalletDeducted.setVisibility(View.GONE);
             }
@@ -698,15 +707,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             tvPaymentMethodVal.setLayoutParams(params);
 
 
-            llFinalAmount.removeAllViews();
-            if(Utils.compareDouble(datum1.getOrderAdjustment(), 0) != 0){
-                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.order_adjustment), datum1.getOrderAdjustment(), false);
-            }
             if(datum1.getPayableAmount() > 0){
                 vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.cash), datum1.getPayableAmount(), false);
             }
-            if(datum1.getJugnooDeducted() > 0){
-                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash), datum1.getJugnooDeducted(), false);
+            if(Utils.compareDouble(datum1.getOrderAdjustment(), 0) != 0){
+                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.order_adjustment), datum1.getOrderAdjustment(), false);
             }
             if(datum1.getRefundAmount() > 0){
                 vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.refund), datum1.getRefundAmount(), false);

@@ -176,13 +176,8 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 				@Override
 				public void onClick(View textView) {
 					try {
-						DialogPopup.alertPopupWithListener(activity, "",
-								Data.userData.getReferralMessages().referralMoreInfoMessage, "",
-								new View.OnClickListener() {
-							@Override
-							public void onClick(View view) {
-							}
-						}, false, false, true);
+						DialogPopup.alertPopup(activity, "",
+								Data.userData.getReferralMessages().referralMoreInfoMessage);
 						GAUtils.event(SIDE_MENU, FREE_GIFT, GAAction.DETAILS+CLICKED);
 					} catch (Exception e) {
 						e.printStackTrace();

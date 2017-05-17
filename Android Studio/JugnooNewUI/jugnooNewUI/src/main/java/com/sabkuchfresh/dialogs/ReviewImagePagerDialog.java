@@ -2,7 +2,6 @@ package com.sabkuchfresh.dialogs;
 
 import android.app.DialogFragment;
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -23,7 +22,6 @@ import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.DirectionsGestureListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,12 +92,6 @@ public class ReviewImagePagerDialog extends DialogFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.dialog_fragment_review_images, container, false);
-		rootView.findViewById(R.id.dismiss_view).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getDialog().dismiss();
-			}
-		});
 		int positionImageClicked = getArguments().getInt(Constants.KEY_POSITION, 0);
 		int likeIsEnabled = getArguments().getInt(Constants.KEY_LIKE_IS_ENABLED, 1);
 		int shareIsEnabled = getArguments().getInt(Constants.KEY_SHARE_IS_ENABLED, 1);
@@ -121,7 +113,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 		try {
 			RelativeLayout.LayoutParams vpParams = (RelativeLayout.LayoutParams) vpImages.getLayoutParams();
-			vpParams.height= FeedUtils.dpToPx(270);
+			vpParams.height = FeedUtils.dpToPx(270);
 
 			if(showDynamicImageHeight &&  imageArrayList!=null && imageArrayList.size()==1 && imageArrayList.get(0).getHeight()!=null && imageArrayList.get(0).getHeight()>0){
 
@@ -144,6 +136,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 			}
 
+			vpParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
 			vpImages.setLayoutParams(vpParams);
 			vpImages.setAdapter(new ImagePagerAdapter(activity,imageArrayList==null? activity.getCurrentReview().getImages():imageArrayList));
 
@@ -180,6 +173,8 @@ public class ReviewImagePagerDialog extends DialogFragment {
 				}
 				String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
 				tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
+
+				tvLikeShareCount.setVisibility(View.GONE);
 			}
 
 
@@ -222,7 +217,15 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			ImageView ivReviewImage = (ImageView) inflater.inflate(R.layout.dialog_item_review_image, container, false);
+			RelativeLayout root = (RelativeLayout) inflater.inflate(R.layout.dialog_item_review_image, container, false);
+			ImageView ivReviewImage = (ImageView) root.findViewById(R.id.ivReviewImage);
+
+			root.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					getDialog().dismiss();
+				}
+			});
 
 			ivReviewImage.setOnTouchListener(new View.OnTouchListener() {
 				@Override
@@ -234,15 +237,11 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 
 			if(reviewImages!=null && reviewImages.size()==1 && reviewImages.get(0).getHeight()!=null && reviewImages.get(0).getHeight()>0)
-			  Glide.with(activity).load(reviewImages.get(position).getUrl()).override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).into(ivReviewImage);
+			  Glide.with(activity).load(reviewImages.get(position).getUrl()).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivReviewImage);
 			else
-				Glide.with(activity).load(reviewImages.get(position).getUrl()).centerCrop().into(ivReviewImage);
-			/*Picasso.with(context).load(reviewImages.get(position).getUrl())
-					.placeholder(R.drawable.ic_fresh_new_placeholder)
-					.into(ivReviewImage);
-*/
-			container.addView(ivReviewImage);
-			return ivReviewImage;
+				Glide.with(activity).load(reviewImages.get(position).getUrl()).into(ivReviewImage);
+			container.addView(root);
+			return root;
 		}
 
 

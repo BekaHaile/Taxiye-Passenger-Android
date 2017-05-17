@@ -8,25 +8,31 @@
     android:splitMotionEvents="false">
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewRideTransactions"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:splitMotionEvents="false"
-        android:scrollbars="vertical"
-        android:fadeScrollbars="true"
-        >
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewRideTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false"
+            />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutNoRides"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="250px"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         >
+
         <ImageView
             android:layout_width="241px"
             android:layout_height="342px"
@@ -39,10 +45,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginTop="30px"
             android:text="@string/no_current_transactions"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_32"
-            android:layout_marginTop="30px"
             />
 
         <Button

@@ -177,12 +177,7 @@ public class ReferDriverActivity extends BaseActivity  {
                                 }
                             });
                         }else {
-                            DialogPopup.alertPopupWithListener(ReferDriverActivity.this, "", settleUserDebt.getMessage(), new OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            });
+                            DialogPopup.alertPopup(ReferDriverActivity.this, "", settleUserDebt.getMessage());
                         }
 
                     }

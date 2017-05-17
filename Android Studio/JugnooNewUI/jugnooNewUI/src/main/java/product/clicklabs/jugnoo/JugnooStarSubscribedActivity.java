@@ -8,8 +8,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -344,13 +342,7 @@ public class JugnooStarSubscribedActivity extends StarBaseActivity implements Vi
                 openStarCheckoutFragment(JugnooStarSubscribedActivity.this, rlFragment, purchaseType);
                 break;
             case R.id.ivStarInfo:
-                DialogPopup.alertPopupWithListener(JugnooStarSubscribedActivity.this, "", getResources().getString(R.string.star_info_text)
-                        , getResources().getString(R.string.ok), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                            }
-                        }, false, false, true);
+                DialogPopup.alertPopup(JugnooStarSubscribedActivity.this, "", getResources().getString(R.string.star_info_text));
                 break;
         }
     }
