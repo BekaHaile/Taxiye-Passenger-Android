@@ -64,7 +64,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		try {
 			FetchFeedbackResponse.Review review = restaurantReviews.get(position);
 
-			holder.tvNameCap.setText(!TextUtils.isEmpty(review.getUserName()) ? review.getUserName().substring(0, 1) : "");
+			holder.tvNameCap.setText(!TextUtils.isEmpty(review.getUserName()) ? review.getUserName().substring(0, 1).toUpperCase() : "");
 			if (!TextUtils.isEmpty(review.getUserImage())) {
 				holder.ivImage.setVisibility(View.VISIBLE);
 				Picasso.with(activity).load(review.getUserImage())
