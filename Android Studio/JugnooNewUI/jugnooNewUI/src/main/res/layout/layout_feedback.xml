@@ -369,6 +369,7 @@
                     android:visibility="visible"
                     android:inputType="textCapSentences|textMultiLine"
                     app:font="maven"
+                    android:maxLength="300"
                     />
 
                 <LinearLayout

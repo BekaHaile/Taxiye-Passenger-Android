@@ -4768,7 +4768,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             buttonConfirmRequest.setEnabled(false);
                             removeSpecialPickupMarkers();
                             try {
-                                promoCouponSelectedForRide = null;
                                 if (userMode == UserMode.PASSENGER) {
                                     dontCallRefreshDriver = false;
                                 }
