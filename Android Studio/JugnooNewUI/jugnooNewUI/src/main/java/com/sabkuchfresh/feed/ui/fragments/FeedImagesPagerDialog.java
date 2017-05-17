@@ -2,10 +2,12 @@ package com.sabkuchfresh.feed.ui.fragments;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
@@ -93,10 +97,11 @@ public class FeedImagesPagerDialog extends DialogFragment {
 
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(ViewGroup container, final int position) {
             View inflaterView =  inflater.inflate(R.layout.item_feed_pager, container, false);
-            ImageView ivReviewImage = (ImageView) inflaterView.findViewById(R.id.iv_picture);
+            final ImageView ivReviewImage = (ImageView) inflaterView.findViewById(R.id.iv_picture);
             View swipeView = inflaterView.findViewById(R.id.swipe_view);
+            View pbar = inflaterView.findViewById(R.id.pbar);
             swipeView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -110,13 +115,6 @@ public class FeedImagesPagerDialog extends DialogFragment {
                     getDialog().dismiss();
                 }
             });
-
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ivReviewImage.getLayoutParams();
-            if (reviewImages.get(position).getHeight() != null && reviewImages.get(position).getHeight() > 0)
-                layoutParams.height = reviewImages.get(position).getHeight();
-            else
-                layoutParams.height = FeedUtils.dpToPx(270);
-            ivReviewImage.setLayoutParams(layoutParams);
             ivReviewImage.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -124,7 +122,16 @@ public class FeedImagesPagerDialog extends DialogFragment {
                     return true;
                 }
             });
-            Glide.with(context).load(reviewImages.get(position).getUrl()).override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).into(ivReviewImage);
+
+
+            if(!TextUtils.isEmpty(reviewImages.get(position).getUrl())){
+                Glide.with(context).load(reviewImages.get(position).getUrl()).error(R.drawable.ic_fresh_new_placeholder).listener(new MyRequestListener<String, GlideDrawable>(pbar)).into(ivReviewImage);
+
+            }
+            else{
+                ivReviewImage.setImageResource(R.drawable.ic_fresh_new_placeholder);
+            }
+
             container.addView(inflaterView);
             return inflaterView;
         }
@@ -172,4 +179,27 @@ public class FeedImagesPagerDialog extends DialogFragment {
 
                 }
             }));
+
+    /*
+        To hide progress bar when loading is done
+     */
+    private class MyRequestListener<T,R> implements RequestListener<T,R>{
+        private View progressView;
+
+        public MyRequestListener(View imageView) {
+            this.progressView = imageView;
+        }
+
+        @Override
+        public boolean onException(Exception e, T model, Target<R> target, boolean isFirstResource) {
+            progressView.setVisibility(View.GONE);
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(R resource, T model, Target<R> target, boolean isFromMemoryCache, boolean isFirstResource) {
+            progressView.setVisibility(View.GONE);
+            return false;
+        }
+    }
 }

@@ -281,11 +281,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 });
 
 
-                try {
-                    Utils.setTextColorGradient(activity,   holder.textViewValue);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
