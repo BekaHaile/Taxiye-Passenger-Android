@@ -10,18 +10,11 @@
     android:id="@+id/rlRoot"
     >
 
-    <View
-        android:id="@+id/dismiss_view"
-        android:clickable="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
     <android.support.v4.view.ViewPager
         android:id="@+id/vpImages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:layout_marginTop="20px"
-        android:layout_marginBottom="20px"
         />
 
 

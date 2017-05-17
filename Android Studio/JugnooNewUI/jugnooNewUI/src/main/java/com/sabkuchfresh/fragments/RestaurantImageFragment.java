@@ -3,7 +3,6 @@ package com.sabkuchfresh.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -64,7 +63,7 @@ public class RestaurantImageFragment extends Fragment {
     private FreshActivity activity;
     private BlurImageTask loadBlurredImageTask;
     private Target target;
-    private int imageMaxHeight, imageMaxWidth;
+
 
 
     public RestaurantImageFragment() {
@@ -145,52 +144,12 @@ public class RestaurantImageFragment extends Fragment {
 
                 if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
                     ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
-                    layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     ivRestOriginalImage.setLayoutParams(layoutParams);
 
-                    ivRestOriginalImage.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (RestaurantImageFragment.this.getView() != null && !TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
-                                target = new Target() {
-                                    @Override
-                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                                        imageMaxWidth = ivRestOriginalImage.getMeasuredWidth();
-                                        imageMaxHeight = ivRestOriginalImage.getMeasuredHeight();
-
-                                        int imgHeight = (imageMaxWidth * bitmap.getHeight()) / bitmap.getWidth();
-                                        int imgWidth = imageMaxWidth;
-
-                                        if (imgHeight > imageMaxHeight) {
-                                            imgHeight = imageMaxHeight;
-                                            imgWidth = (imageMaxHeight * bitmap.getWidth()) / bitmap.getHeight();
-                                        }
-
-
-                                        ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
-                                        layoutParams.width = imgWidth;
-                                        layoutParams.height = imgHeight;
-                                        ivRestOriginalImage.setLayoutParams(layoutParams);
-                                        ivRestOriginalImage.setImageBitmap(bitmap);
-                                    }
-
-                                    @Override
-                                    public void onBitmapFailed(Drawable drawable) {
-                                        ivRestOriginalImage.setImageDrawable(drawable);
-                                    }
-
-                                    @Override
-                                    public void onPrepareLoad(Drawable drawable) {
-                                        ivRestOriginalImage.setImageDrawable(drawable);
-                                    }
-                                };
-
-                                if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
-                                    Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).placeholder(R.drawable.ic_fresh_item_placeholder).into(target);
-                                }
-                            }
-                        }
-                    });
+                    if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
+                        Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).placeholder(R.drawable.ic_fresh_item_placeholder).into(ivRestOriginalImage);
+                    }
                 }
 
 

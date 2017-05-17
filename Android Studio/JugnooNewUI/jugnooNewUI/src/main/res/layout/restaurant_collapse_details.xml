@@ -27,7 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="560px"
         android:layout_centerInParent="true"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:tag="mwar"
         android:transitionName="@string/zoom_view"
         android:visibility="gone"/>
