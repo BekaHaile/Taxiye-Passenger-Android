@@ -676,6 +676,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 tvAmountPayableVal.setText(activity.getString(R.string.rupees_value_format,
                         Utils.getMoneyDecimalFormat().format(datum1.getWalletDeducted())));
                 llFinalAmount.setVisibility(View.VISIBLE);
+                vDivider = rootView.findViewById(R.id.vDividerPayment);
             } else{
                 rlWalletDeducted.setVisibility(View.GONE);
             }
