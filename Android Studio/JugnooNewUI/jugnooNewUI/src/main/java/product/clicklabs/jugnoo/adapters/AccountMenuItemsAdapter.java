@@ -81,7 +81,6 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
             else
                 holder.tvJugnooStar.setText(null);
 
-            product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(activity,   holder.tvValue);
         } catch (Exception e) {
             e.printStackTrace();
         }
