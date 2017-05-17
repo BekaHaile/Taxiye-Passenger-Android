@@ -300,7 +300,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
 
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_HANDLE, edtClaimHandle.getText().toString().trim());
-        new ApiCommon<FeedCommonResponse>(activity).putAccessToken(true).execute(params, ApiName.SET_HANDLE_API, new APICommonCallback<FeedCommonResponse>() {
+         new ApiCommon<>(activity).putAccessToken(true).execute(params, ApiName.SET_HANDLE_API, new APICommonCallback<FeedCommonResponse>() {
             @Override
             public boolean onNotConnected() {
                 return false;
@@ -313,13 +313,13 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
 
             @Override
             public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                ivRefreshSuggestions.clearAnimation();
+                ivRefreshSuggestions.setVisibility(View.GONE);
                 Utils.hideKeyboard(activity);
                 Data.getFeedData().setHasHandle(1);
-                ivRefreshSuggestions.setVisibility(View.GONE);
                 edtClaimHandle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done_green_vector, 0);
                 edtClaimHandle.setActivated(true);
                 tvError.setVisibility(View.INVISIBLE);
-
                 activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
