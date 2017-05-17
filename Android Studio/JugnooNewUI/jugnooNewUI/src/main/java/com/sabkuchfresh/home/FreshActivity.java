@@ -152,6 +152,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
+import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -265,6 +266,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private Typewriter tvAddPost;
     private ImageView ivProfilePic;
     public int currentOffsetFeedHomeAppBar;
+
 
 
     public View getFeedHomeAddPostView() {
@@ -413,6 +415,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     lastClientId = Config.getMenusClientId();
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
+
                     if(Data.getFeedData().getFeedActive()) {
                         if(Data.getFeedData().getHasHandle()){
 
@@ -814,6 +817,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedAddress(searchResultLastFMM.getAddress());
                     setSelectedAddressType(searchResultLastFMM.getName());
                 }
+            }
+
+            if(AccountActivity.updateMenuBar){
+                menuBar.setProfileData();;
+                AccountActivity.updateMenuBar=false;
             }
         } catch (Exception e) {
             e.printStackTrace();

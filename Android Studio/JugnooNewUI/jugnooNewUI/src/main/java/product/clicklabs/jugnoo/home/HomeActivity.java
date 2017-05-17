@@ -116,6 +116,7 @@ import java.util.TimerTask;
 
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
+import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -4360,6 +4361,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
+            if(AccountActivity.updateMenuBar){
+                menuBar.setProfileData();;
+                AccountActivity.updateMenuBar=false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

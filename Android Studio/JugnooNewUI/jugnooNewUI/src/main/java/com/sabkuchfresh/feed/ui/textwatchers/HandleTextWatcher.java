@@ -40,12 +40,12 @@ public abstract class HandleTextWatcher implements TextWatcher {
         }
 */
         enableSubmitButton(s.length()>=3);
-        afterTextChange();
+        afterTextChange(s);
 
 
     }
 
     public   abstract void enableSubmitButton(boolean isEnable);
 
-    public  abstract void afterTextChange();
+    public  abstract void afterTextChange(Editable s);
 }

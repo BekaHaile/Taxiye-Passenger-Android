@@ -32,6 +32,7 @@ import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
+import com.sabkuchfresh.feed.ui.fragments.FeedImagesPagerDialog;
 import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
@@ -304,7 +305,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             }
 
-         //SetAddress
+           //SetAddress
             holder.tvFeedAddress.setVisibility(restaurantAddress == null ? View.GONE : View.VISIBLE);
             holder.tvFeedAddress.setText(restaurantAddress);
 
@@ -718,8 +719,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param reviewImages images List to be shown
      */
     public static void showZoomedPagerDialog(int pos, ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages, Activity activity) {
-        ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(pos, reviewImages);
-        dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+
+
+       /* ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(pos, reviewImages);
+        dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());*/
+
+        FeedImagesPagerDialog feedImagesPagerDialog = FeedImagesPagerDialog.newInstance(reviewImages,pos);
+        feedImagesPagerDialog.show(activity.getFragmentManager(),FeedImagesPagerDialog.class.getSimpleName());
     }
 
 

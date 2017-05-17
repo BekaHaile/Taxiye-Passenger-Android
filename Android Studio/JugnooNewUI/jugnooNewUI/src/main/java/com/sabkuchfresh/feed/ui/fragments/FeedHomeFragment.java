@@ -455,7 +455,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
                 //Set Data for Add Post View
-                if(animateAddPostText){
+                if(animateAddPostText && activity.getTopFragment() instanceof FeedHomeFragment){
                     activity.getTvAddPost().animateText(feedbackResponse.getAddPostText());
 
                 }else{

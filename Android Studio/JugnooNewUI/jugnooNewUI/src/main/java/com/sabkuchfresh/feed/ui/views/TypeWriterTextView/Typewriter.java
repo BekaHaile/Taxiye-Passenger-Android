@@ -1,6 +1,7 @@
 package com.sabkuchfresh.feed.ui.views.TypeWriterTextView;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.util.AttributeSet;
 
@@ -8,15 +9,18 @@ public class Typewriter extends android.support.v7.widget.AppCompatTextView {
 
     private CharSequence mText;
     private int mIndex;
-    private long mDelay = 50; //Default 500ms delay
-
+    private long mDelay =75; //Default 500ms delay
+    private AudioManager am ;
 
     public Typewriter(Context context) {
         super(context);
+        am= (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+
     }
 
     public Typewriter(Context context, AttributeSet attrs) {
         super(context, attrs);
+        am= (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
     }
 
     private Handler mHandler = new Handler();
@@ -24,6 +28,7 @@ public class Typewriter extends android.support.v7.widget.AppCompatTextView {
         @Override
         public void run() {
             setText(mText.subSequence(0, mIndex++));
+            am.playSoundEffect(AudioManager.FX_KEY_CLICK, 0.5f);
             if (mIndex <= mText.length()) {
                 mHandler.postDelayed(characterAdder, mDelay);
             }

@@ -71,6 +71,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 import android.os.Handler;
+import android.widget.Toast;
 
 
 /**
@@ -432,6 +433,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     };
 
     private void placeOrder() {
+        if(paymentOption==null)
+        {
+            Toast.makeText(activity, "Please select a payment mode.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         try {
             final int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
             boolean goAhead = true;

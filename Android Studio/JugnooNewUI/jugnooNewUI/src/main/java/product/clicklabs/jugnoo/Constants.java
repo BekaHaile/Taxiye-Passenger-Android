@@ -700,4 +700,5 @@ public interface Constants {
     String SP_USE_COUPON_IS_COUPON_ = "sp_use_coupon_is_coupon_";
     String KEY_ANIMATE_ASK_LOCAL_POST_TEXT = "key_animate_ask_local_post_text";
     String KEY_POST_NOTIFICATION_ID = "post_notification_id";
+    String ALL_CRAZY = "all_crazy";
 }
