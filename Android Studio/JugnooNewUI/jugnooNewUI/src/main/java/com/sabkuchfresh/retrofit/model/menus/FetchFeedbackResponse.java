@@ -180,9 +180,9 @@ public class FetchFeedbackResponse {
 		@Expose
 		private List<ReviewImage> images;
 		private boolean expanded;
-		@SerializedName("updated_at")
+		@SerializedName("post_time")
 		@Expose
-		private String updatedAt;
+		private String postTime;
 
 		public Integer getOrderId() {
 			return orderId;
@@ -335,8 +335,8 @@ public class FetchFeedbackResponse {
 			this.expanded = expanded;
 		}
 
-		public String getUpdatedAt() {
-			return updatedAt;
+		public String getPostTime() {
+			return postTime;
 		}
 	}
 

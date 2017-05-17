@@ -150,7 +150,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         tvFeedEmpty.append("\n");
         tvFeedEmpty.append(ssb);
 
-        fetchFeedback();
+        fetchFeedback(false);
 
         bAddReview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,18 +171,28 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
     }
 
     private ApiRestaurantFetchFeedback apiRestaurantFetchFeedback;
-    public void fetchFeedback(){
+    public void fetchFeedback(final boolean scrollToTop){
         if(apiRestaurantFetchFeedback == null){
             apiRestaurantFetchFeedback = new ApiRestaurantFetchFeedback(activity, new ApiRestaurantFetchFeedback.Callback() {
                 @Override
-                public void onSuccess(FetchFeedbackResponse fetchFeedbackResponse) {
-                    restaurantReviews.clear();
-                    restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
-                    reviewsAdapter.notifyDataSetChanged();
-                    rlNoReviews.setVisibility(restaurantReviews.size() == 0 ? View.VISIBLE : View.GONE);
-                    RestaurantReviewsListFragment.this.fetchFeedbackResponse = fetchFeedbackResponse;
-                    if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
-                        activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
+                public void onSuccess(FetchFeedbackResponse fetchFeedbackResponse, boolean scrollToTop) {
+                    if(RestaurantReviewsListFragment.this.getView() != null) {
+                        restaurantReviews.clear();
+                        restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
+                        reviewsAdapter.notifyDataSetChanged();
+                        rlNoReviews.setVisibility(restaurantReviews.size() == 0 ? View.VISIBLE : View.GONE);
+                        RestaurantReviewsListFragment.this.fetchFeedbackResponse = fetchFeedbackResponse;
+                        if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
+                            activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
+                        }
+                        if (scrollToTop) {
+                            recyclerViewReviews.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recyclerViewReviews.scrollToPosition(0);
+                                }
+                            });
+                        }
                     }
                 }
 
@@ -193,7 +203,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
 
                 @Override
                 public void onRetry(View view) {
-                    fetchFeedback();
+                    fetchFeedback(scrollToTop);
                 }
 
                 @Override
@@ -202,7 +212,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                 }
             });
         }
-        apiRestaurantFetchFeedback.hit(restaurantId);
+        apiRestaurantFetchFeedback.hit(restaurantId, scrollToTop);
     }
 
 

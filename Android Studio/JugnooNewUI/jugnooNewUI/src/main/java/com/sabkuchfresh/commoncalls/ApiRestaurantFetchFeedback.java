@@ -36,7 +36,7 @@ public class ApiRestaurantFetchFeedback {
 		this.callback = callback;
 	}
 
-	public void hit(int restaurantId) {
+	public void hit(int restaurantId, final boolean scrollToTop) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
 
@@ -57,7 +57,7 @@ public class ApiRestaurantFetchFeedback {
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
 									feedbackResponse.getError(), feedbackResponse.getMessage())) {
 								if(feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-									callback.onSuccess(feedbackResponse);
+									callback.onSuccess(feedbackResponse, scrollToTop);
 								} else {
 									DialogPopup.alertPopup(activity, "", message);
 								}
@@ -108,7 +108,7 @@ public class ApiRestaurantFetchFeedback {
 
 
 	public interface Callback{
-		void onSuccess(FetchFeedbackResponse fetchFeedbackResponse);
+		void onSuccess(FetchFeedbackResponse fetchFeedbackResponse, boolean scrollToTop);
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);
