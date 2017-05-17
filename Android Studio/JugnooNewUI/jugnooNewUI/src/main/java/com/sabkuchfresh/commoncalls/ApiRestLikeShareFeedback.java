@@ -35,7 +35,7 @@ public class ApiRestLikeShareFeedback {
 	 * @param feedbackId id of feedback/review
 	 * @param action LIKE or SHARE
 	 */
-	public void hit(int restaurantId, int feedbackId, String action, final Callback callback) {
+	public void hit(int restaurantId, int feedbackId, String action, final Callback callback, final int position) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
 				/**
@@ -56,7 +56,7 @@ public class ApiRestLikeShareFeedback {
 									settleUserDebt.getError(), settleUserDebt.getMessage())) {
 								if(settleUserDebt.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()
 										&& settleUserDebt.getReview() != null && settleUserDebt.getReview().size() > 0){
-									callback.onSuccess(settleUserDebt.getReview().get(0));
+									callback.onSuccess(settleUserDebt.getReview().get(0), position);
 								} else {
 									callback.onFailure();
 									/**
@@ -83,7 +83,7 @@ public class ApiRestLikeShareFeedback {
 	}
 
 	public interface Callback{
-		void onSuccess(FetchFeedbackResponse.Review review);
+		void onSuccess(FetchFeedbackResponse.Review review, int position);
 		void onFailure();
 	}
 

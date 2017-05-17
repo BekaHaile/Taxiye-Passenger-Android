@@ -136,7 +136,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         rlNoReviews = (RelativeLayout) rootView.findViewById(R.id.rlNoReviews);
         rlNoReviews.setVisibility(View.GONE);
         relativeLayoutNotAvailable.setVisibility(View.GONE);
-        product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(activity,  (TextView)rootView.findViewById(R.id.textViewOhSnap));
 
 
 

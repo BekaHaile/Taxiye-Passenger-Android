@@ -118,7 +118,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView) rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(activity,  (TextView)rootView.findViewById(R.id.textViewOhSnap));
 
         textViewNothingFound = (TextView) rootView.findViewById(R.id.textViewNothingFound);
         textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));

@@ -431,15 +431,14 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	public final String ACTION_SHARE = "SHARE";
 
 	private ApiRestLikeShareFeedback apiRestLikeShareFeedback;
-	private void likeShareReview(final int position, int feedback, final String action){
+	private void likeShareReview(int position, int feedback, final String action){
 		if(apiRestLikeShareFeedback == null){
 			apiRestLikeShareFeedback = new ApiRestLikeShareFeedback(activity);
 		}
 		apiRestLikeShareFeedback.hit(callback.getRestaurantId(), feedback, action, new ApiRestLikeShareFeedback.Callback() {
 			@Override
-			public void onSuccess(FetchFeedbackResponse.Review review) {
+			public void onSuccess(FetchFeedbackResponse.Review review, int position) {
 				if(review != null){
-					long delay = 0;
 					restaurantReviews.set(position, review);
 					if(action.equalsIgnoreCase(ACTION_LIKE)
 							&& callback != null && callback.getRecyclerView() != null) {
@@ -447,15 +446,9 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 						if (holder != null) {
 							LikeButton likeButton = holder.ivFeedLike;
 							likeButton.onClick(likeButton);
-							delay = 200L;
 						}
 					}
-					activity.getHandler().postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							notifyDataSetChanged();
-						}
-					}, delay);
+					notifyItemChanged(position);
 				}
 			}
 
@@ -463,7 +456,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			public void onFailure() {
 
 			}
-		});
+		}, position);
 	}
 
 }

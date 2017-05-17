@@ -267,7 +267,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         switch (pos) {
             case 1:
                 tvReview.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
-                product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(getActivity(),tvReview);
                 tvAsk.getPaint().setShader(null);
                 tvAsk.setTextColor(ContextCompat.getColor(activity,R.color.text_color_30alpha));
               /*  tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
@@ -282,7 +281,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             case 0:
                 tvAsk.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
-                product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(getActivity(),tvAsk);
                 tvReview.getPaint().setShader(null);
                 tvReview.setTextColor(ContextCompat.getColor(activity,R.color.text_color_30alpha));
                /* tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
