@@ -644,7 +644,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
                                 Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
                                 RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
                                 if (frag != null) {
-                                    frag.fetchFeedback();
+                                    frag.fetchFeedback(true);
                                 }
                             } else {
                                 DialogPopup.alertPopup(activity, "", notificationInboxResponse.getMessage());

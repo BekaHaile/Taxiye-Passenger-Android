@@ -81,7 +81,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.tvName.setText(review.getUserName());
 //			holder.tvDateTime.setText(review.getDate());
 			try {
-				holder.tvDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getUpdatedAt(), activity.isTimeAutomatic));
+				holder.tvDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getPostTime(), activity.isTimeAutomatic));
 			} catch (Exception e) {
 				holder.tvDateTime.setText(review.getDate());
 			}
@@ -206,12 +206,12 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			StringBuilder shareCount = new StringBuilder();
 			if (review.getLikeCount() > 1) {
 				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.likes));
-			} else if (review.getLikeCount() == 1) {
+			} else {
 				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.like));
 			}
 			if (review.getShareCount() > 1) {
 				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.shares));
-			} else if (review.getShareCount() == 1){
+			} else {
 				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.share));
 			}
 			holder.ivFeedLike.setVisibility(callback.getLikeIsEnabled() == 1 ? View.VISIBLE : View.GONE);
