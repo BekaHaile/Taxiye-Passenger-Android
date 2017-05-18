@@ -30,8 +30,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="240px"
-                android:layout_height="252px"
+                android:layout_width="@dimen/px_387"
+                android:layout_height="@dimen/px_97"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/logo_big"
                 android:focusable="true"

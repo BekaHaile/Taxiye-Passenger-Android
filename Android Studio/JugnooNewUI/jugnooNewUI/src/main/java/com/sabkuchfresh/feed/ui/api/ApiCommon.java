@@ -43,6 +43,16 @@ public class ApiCommon<T extends FeedCommonResponse> {
     private boolean putAccessToken = true;
     private boolean isCancelled;
 
+    public boolean isInProgress() {
+        return isInProgress;
+    }
+
+    public void setInProgress(boolean inProgress) {
+        isInProgress = inProgress;
+    }
+
+    private boolean isInProgress;
+
 
 
 
@@ -74,15 +84,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
         this.apiCommonCallback = apiCommonCallback;
         this.params = params;
         this.apiName = apiName;
+        if(this.params==null){
+            this.params = new HashMap<>();
+        }
         hitAPI();
     }
 
-    public void execute(MultipartTypedOutput params, @NonNull ApiName apiName, APICommonCallback<T> apiCommonCallback) {
-        this.apiCommonCallback = apiCommonCallback;
-        this.multipartTypedOutput = params;
-        this.apiName = apiName;
-        hitAPI();
-    }
 
     private void hitAPI() {
 
@@ -100,6 +107,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
             callback = new Callback<T>() {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
+                  setInProgress(false);
                     if(showLoader) {
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -127,6 +135,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
                 @Override
                 public void failure(RetrofitError error) {
+                   setInProgress(false);
                     if(showLoader) {
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -141,9 +150,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 }
             };
         }
-//        if(putDefaultParams){
-            new HomeUtil().putDefaultParams(params);
-//        }
+
+        new HomeUtil().putDefaultParams(params);
+
 
         if(putAccessToken){
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -154,6 +163,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
         if(showLoader) {
             DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
         }
+        setInProgress(true);
         switch (apiName) {
             case GENERATE_FEED_API:
                 RestClient.getFeedApiService().generateFeed(params, callback);
@@ -172,6 +182,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case FEED_UPDATE_NOTIFICATION:
                 RestClient.getFeedApiService().updateNotification(params, callback);
+                break;
+            case GET_HANLDE_SUGGESTIONS:
+                RestClient.getFeedApiService().getHandleSuggestions(params, callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

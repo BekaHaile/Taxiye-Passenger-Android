@@ -815,7 +815,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                     if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
                                         if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
                                             searchVendors(searchText, productsResponse.getRestaurantIds());
-                                            recyclerView.scrollTo(0, 0);
+                                            recyclerView.scrollToPosition(0);
                                             if(productsResponse.getRestaurantIds().size() > 0) {
                                                 queryMap.put(searchText, productsResponse.getRestaurantIds());
                                             }
@@ -948,7 +948,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                                 public void onClick(View v) {
                                                     callback.onNotify(0);
                                                 }
-                                            }, false, true);
+                                            }, false, true, true);
                                     restaurantName = ""; locality = ""; telephone = "";
                                     notifyDataSetChanged();
                                 } else {

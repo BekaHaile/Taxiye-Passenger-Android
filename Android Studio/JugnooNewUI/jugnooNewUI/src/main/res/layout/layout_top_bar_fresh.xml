@@ -285,37 +285,6 @@
 
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/ivAddReview"
-                    android:layout_width="@dimen/px_82"
-                    android:layout_height="@dimen/px_82"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:paddingRight="0px"
-                    android:paddingLeft="@dimen/px_20"
-                    android:paddingBottom="@dimen/px_10"
-                    android:paddingTop="@dimen/px_10"
-                    android:tag="mwar"
-                    android:src="@drawable/ic_add_grey_bg_selector"
-                    android:visibility="gone"
-                    />
-
-                <TextView
-                    android:id="@+id/tvNameCap"
-                    android:layout_width="@dimen/px_70"
-                    android:layout_height="@dimen/px_70"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/circle_grey"
-                    android:gravity="center"
-                    android:tag="mwar"
-                    android:text="G"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/px_42"
-                    android:textStyle="bold"
-                    app:font="maven"
-                    android:visibility="gone"
-                    />
             </RelativeLayout>
 
             <TextView

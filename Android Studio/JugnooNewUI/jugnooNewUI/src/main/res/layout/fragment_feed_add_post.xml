@@ -110,7 +110,7 @@
                 android:layout_height="3dp"
                 android:visibility="gone"
                 android:layout_alignParentBottom="true"
-                android:background="@color/theme_color" />
+                android:background="@drawable/bg_rectangle_gradient_normal" />
 
         </RelativeLayout>
 

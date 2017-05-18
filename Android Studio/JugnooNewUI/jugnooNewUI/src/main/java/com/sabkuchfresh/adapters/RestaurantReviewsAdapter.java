@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.commoncalls.ApiRestLikeShareFeedback;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
+import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
+import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.CircleTransform;
@@ -54,10 +56,6 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	@Override
 	public RestaurantReviewsAdapter.ViewHolderReview onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant_review, parent, false);
-		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
-				RecyclerView.LayoutParams.WRAP_CONTENT);
-		v.setLayoutParams(layoutParams);
-		ASSL.DoMagic(v);
 		return new ViewHolderReview(v);
 	}
 
@@ -66,11 +64,12 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		try {
 			FetchFeedbackResponse.Review review = restaurantReviews.get(position);
 
-			holder.tvNameCap.setText(!TextUtils.isEmpty(review.getUserName()) ? review.getUserName().substring(0, 1) : "");
+			holder.tvNameCap.setText(!TextUtils.isEmpty(review.getUserName()) ? review.getUserName().substring(0, 1).toUpperCase() : "");
 			if (!TextUtils.isEmpty(review.getUserImage())) {
 				holder.ivImage.setVisibility(View.VISIBLE);
 				Picasso.with(activity).load(review.getUserImage())
-						.resize((int) (ASSL.minRatio() * 100f), (int) (ASSL.minRatio() * 100f))
+						.resize(activity.getResources().getDimensionPixelSize(R.dimen.dp_50),
+								activity.getResources().getDimensionPixelSize(R.dimen.dp_50))
 						.centerCrop()
 						.transform(new CircleTransform())
 						.into(holder.ivImage);
@@ -80,55 +79,26 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 
 			holder.tvName.setText(review.getUserName());
-			holder.tvDateTime.setText(review.getDate());
+//			holder.tvDateTime.setText(review.getDate());
+			try {
+				holder.tvDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getPostTime(), activity.isTimeAutomatic));
+			} catch (Exception e) {
+				holder.tvDateTime.setText(review.getDate());
+			}
+
 			holder.tvReviewMessage.setText(review.getReviewDesc());
 			holder.tvReviewTag.setText(review.getTags());
-
-
-			RelativeLayout.LayoutParams paramsRating = (RelativeLayout.LayoutParams) holder.tvRating.getLayoutParams();
-			RelativeLayout.LayoutParams paramsRatingTag = (RelativeLayout.LayoutParams) holder.tvReviewTag.getLayoutParams();
-			int ratingVis = View.VISIBLE, messageVis = View.VISIBLE;
-			if (review.getRating() != null && !TextUtils.isEmpty(review.getReviewDesc())) {
-				paramsRating.setMargins(paramsRating.leftMargin, paramsRating.topMargin, paramsRating.rightMargin, 0);
-				paramsRatingTag.setMargins(paramsRatingTag.leftMargin, paramsRatingTag.topMargin, paramsRatingTag.rightMargin, 0);
-				holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags()) ? View.INVISIBLE : View.VISIBLE);
-			} else if (review.getRating() != null && TextUtils.isEmpty(review.getReviewDesc())) {
-				paramsRating.setMargins(paramsRating.leftMargin, paramsRating.topMargin, paramsRating.rightMargin, (int) (ASSL.Yscale() * 40f));
-				paramsRatingTag.setMargins(paramsRatingTag.leftMargin, paramsRatingTag.topMargin, paramsRatingTag.rightMargin, (int) (ASSL.Yscale() * 40f));
-				messageVis = View.GONE;
-				holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags()) ? View.INVISIBLE : View.VISIBLE);
-			} else if (review.getRating() == null && !TextUtils.isEmpty(review.getReviewDesc())) {
-				ratingVis = View.GONE;
-				holder.tvReviewTag.setVisibility(View.GONE);
-			} else if(review.getRating() == null && TextUtils.isEmpty(review.getReviewDesc())){
-				messageVis = View.GONE;
-				ratingVis = View.GONE;
-				holder.tvReviewTag.setVisibility(View.GONE);
-			}
-			holder.tvRating.setLayoutParams(paramsRating);
-			holder.tvReviewTag.setLayoutParams(paramsRatingTag);
-			holder.tvRating.setVisibility(ratingVis);
-			holder.tvReviewMessage.setVisibility(messageVis);
-
-			RelativeLayout.LayoutParams paramsName = (RelativeLayout.LayoutParams) holder.tvName.getLayoutParams();
-			RelativeLayout.LayoutParams paramsTime = (RelativeLayout.LayoutParams) holder.tvDateTime.getLayoutParams();
-			if(ratingVis == View.VISIBLE){
-				paramsName.setMargins(paramsName.leftMargin, (int)(ASSL.Yscale() * 36f), paramsName.rightMargin, paramsName.bottomMargin);
-				paramsTime.setMargins(paramsTime.leftMargin, (int)(ASSL.Yscale() * 40f), paramsTime.rightMargin, paramsTime.bottomMargin);
-			} else {
-				paramsName.setMargins(paramsName.leftMargin, (int)(ASSL.Yscale() * 61f), paramsName.rightMargin, paramsName.bottomMargin);
-				paramsTime.setMargins(paramsTime.leftMargin, (int)(ASSL.Yscale() * 65f), paramsTime.rightMargin, paramsTime.bottomMargin);
-			}
-			holder.tvName.setLayoutParams(paramsName);
-			holder.tvDateTime.setLayoutParams(paramsTime);
+			holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags()) ? View.GONE : View.VISIBLE);
+			holder.tvRating.setVisibility(review.getRating() == null ? View.GONE : View.VISIBLE);
+			holder.tvReviewMessage.setVisibility(TextUtils.isEmpty(review.getReviewDesc()) ? View.GONE : View.VISIBLE);
 
 			if (review.getRating() != null) {
 				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor(), true);
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, color);
 				if (review.getRatingFlag() == 1) {
-					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_uparrow, 0);
+					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumbsup_small, 0, 0, 0);
 				} else {
-					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_downarrow, 0);
+					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumbsdown_small, 0, 0, 0);
 				}
 			} else {
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, ContextCompat.getColor(activity, R.color.text_color_light));
@@ -254,13 +224,14 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			}
 			String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
 			holder.tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
-			holder.tvLikeShareCount.setVisibility((likeCount.length() == 0 && shareCount.length() == 0) ? View.GONE : View.VISIBLE);
+//			holder.tvLikeShareCount.setVisibility((likeCount.length() == 0 && shareCount.length() == 0) ? View.INVISIBLE : View.VISIBLE);
 
-			if(review.getIsLiked() >= 1){
-				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
-			} else {
-				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_normal);
-			}
+			holder.ivFeedLike.setLiked(review.getIsLiked() >= 1);
+//			if(review.getIsLiked() >= 1){
+//				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
+//			} else {
+//				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_normal);
+//			}
 			if(review.getIsShared() >= 1){
 				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_active);
 			} else {
@@ -399,7 +370,8 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		public ImageView ivImage;
 		public RecyclerView rvFeedImages;
 		public TextView tvLikeShareCount;
-		public ImageView ivFeedImageSingle, ivFeedEdit, ivFeedShare, ivFeedLike;
+		public ImageView ivFeedImageSingle, ivFeedEdit, ivFeedShare;
+		public LikeButton ivFeedLike;
 		public View vSepBelowMessage, vShadowDown;
 		public RestaurantReviewImagesAdapter imagesAdapter = null;
 
@@ -420,7 +392,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			tvLikeShareCount = (TextView) itemView.findViewById(R.id.tvLikeShareCount);
 			ivFeedEdit = (ImageView) itemView.findViewById(R.id.ivFeedEdit);
 			ivFeedShare = (ImageView) itemView.findViewById(R.id.ivFeedShare);
-			ivFeedLike = (ImageView) itemView.findViewById(R.id.ivFeedLike);
+			ivFeedLike = (LikeButton) itemView.findViewById(R.id.ivFeedLike);
 			ivFeedImageSingle = (ImageView) itemView.findViewById(R.id.ivFeedImageSingle);
 			vSepBelowMessage = itemView.findViewById(R.id.vSepBelowMessage);
 			vShadowDown = itemView.findViewById(R.id.vShadowDown);
@@ -451,6 +423,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		String getShareTextOther();
 		int getShareIsEnabled();
 		int getLikeIsEnabled();
+		RecyclerView getRecyclerView();
 	}
 
 
@@ -458,16 +431,24 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	public final String ACTION_SHARE = "SHARE";
 
 	private ApiRestLikeShareFeedback apiRestLikeShareFeedback;
-	private void likeShareReview(final int position, int feedback, String action){
+	private void likeShareReview(int position, int feedback, final String action){
 		if(apiRestLikeShareFeedback == null){
 			apiRestLikeShareFeedback = new ApiRestLikeShareFeedback(activity);
 		}
 		apiRestLikeShareFeedback.hit(callback.getRestaurantId(), feedback, action, new ApiRestLikeShareFeedback.Callback() {
 			@Override
-			public void onSuccess(FetchFeedbackResponse.Review review) {
+			public void onSuccess(FetchFeedbackResponse.Review review, int position) {
 				if(review != null){
 					restaurantReviews.set(position, review);
-					notifyDataSetChanged();
+					if(action.equalsIgnoreCase(ACTION_LIKE)
+							&& callback != null && callback.getRecyclerView() != null) {
+						ViewHolderReview holder = ((ViewHolderReview) callback.getRecyclerView().findViewHolderForAdapterPosition(position));
+						if (holder != null) {
+							LikeButton likeButton = holder.ivFeedLike;
+							likeButton.onClick(likeButton);
+						}
+					}
+					notifyItemChanged(position);
 				}
 			}
 
@@ -475,7 +456,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			public void onFailure() {
 
 			}
-		});
+		}, position);
 	}
 
 }

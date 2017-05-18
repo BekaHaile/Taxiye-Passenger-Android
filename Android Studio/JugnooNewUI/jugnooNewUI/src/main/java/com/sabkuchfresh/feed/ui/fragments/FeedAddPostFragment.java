@@ -133,7 +133,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
             @Override
             public void onPageSelected(int position) {
                 switchAddFeed(position);
-//                ivAccessCamera.setEnabled(getVisibleFragment().canUploadImages());
                 toggleAnonymousPosting(getVisibleFragment().isAnonymousPostingEnabled());
                 btnSubmit.setActivated(getVisibleFragment().submitEnabledState());
 
@@ -210,6 +209,7 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
                     handleName = Data.getFeedData().getHandleName();
                 }
             }
+            switchAddFeed(0);
         }
 
         labelAnonymousSwitch.setTypeface(labelAnonymousSwitch.getTypeface(), Typeface.BOLD);
@@ -267,7 +267,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
         switch (pos) {
             case 1:
                 tvReview.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
-                product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(getActivity(),tvReview);
                 tvAsk.getPaint().setShader(null);
                 tvAsk.setTextColor(ContextCompat.getColor(activity,R.color.text_color_30alpha));
               /*  tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
@@ -282,7 +281,6 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
             case 0:
                 tvAsk.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
-                product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(getActivity(),tvAsk);
                 tvReview.getPaint().setShader(null);
                 tvReview.setTextColor(ContextCompat.getColor(activity,R.color.text_color_30alpha));
                /* tvReview.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));

@@ -898,6 +898,10 @@ public class Utils {
 		return product.clicklabs.jugnoo.utils.Utils.trimHTML(s);
 	}
 
+	public static void setTextUnderline(TextView textView, String text){
+		product.clicklabs.jugnoo.utils.Utils.setTextUnderline(textView, text);
+	}
+
 }
 
 

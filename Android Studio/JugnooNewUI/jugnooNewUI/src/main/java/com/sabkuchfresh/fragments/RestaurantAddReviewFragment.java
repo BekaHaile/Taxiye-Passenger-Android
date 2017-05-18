@@ -41,7 +41,6 @@ import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 
 import org.json.JSONArray;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
@@ -152,7 +151,11 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
                 } else*/ if (reviewDesc.length() > 500) {
                     etFeedback.requestFocus();
                     etFeedback.setError(activity.getString(R.string.feedback_must_be_in_500));
-                } else {
+                }
+                else if(customRatingBar.getScore() < 1){
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.please_give_some_rating));
+                }
+                else {
                     submitFeedback(reviewDesc);
                     Utils.hideSoftKeyboard(activity, etFeedback);
                 }
@@ -210,6 +213,15 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
         etFeedback.setSelection(etFeedback.length());
         updateSubmitButtonStatus();
+
+
+        customRatingBar.setOnScoreChanged(new RatingBarMenuFeedback.IRatingBarCallbacks() {
+            @Override
+            public void scoreChanged(float score) {
+                updateSubmitButtonStatus();
+            }
+        });
+
         return rootView;
     }
 
@@ -227,10 +239,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length()>0)
-                    bSubmit.setEnabled(true);
-                else
-                    updateSubmitButtonStatus();
+                updateSubmitButtonStatus();
 
                 updateTextCount();
             }
@@ -238,7 +247,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     }
 
     private void updateSubmitButtonStatus() {
-        if(etFeedback.getText().toString().trim().length()>0||(objectList!=null && objectList.size()>0) )
+        if(customRatingBar.getScore() > 0 && (etFeedback.getText().toString().trim().length()>0||(objectList!=null && objectList.size()>0)))
             bSubmit.setEnabled(true);
         else
             bSubmit.setEnabled(false);
@@ -635,7 +644,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
                                 Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
                                 RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
                                 if (frag != null) {
-                                    frag.fetchFeedback();
+                                    frag.fetchFeedback(true);
                                 }
                             } else {
                                 DialogPopup.alertPopup(activity, "", notificationInboxResponse.getMessage());

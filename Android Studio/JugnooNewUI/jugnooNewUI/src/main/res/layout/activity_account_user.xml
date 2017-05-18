@@ -147,6 +147,7 @@
                     android:gravity="center"
                     android:hint="@string/enter_your_name"
                     android:inputType="textCapWords"
+                    android:digits="@string/digits_characters_numbers"
                     android:maxLength="60"
                     android:singleLine="true"
                     android:textColor="@color/text_color"

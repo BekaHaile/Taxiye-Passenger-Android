@@ -118,7 +118,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView) rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        product.clicklabs.jugnoo.utils.Utils.setTextColorGradient(activity,  (TextView)rootView.findViewById(R.id.textViewOhSnap));
 
         textViewNothingFound = (TextView) rootView.findViewById(R.id.textViewNothingFound);
         textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
@@ -275,10 +274,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 					openSearch(false);
 				}
 
+				final boolean refreshCartFinal = activity.isRefreshCart();
 				activity.getHandler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						if (activity.isRefreshCart()) {
+						if (refreshCartFinal) {
 							activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
 						}
 						activity.setRefreshCart(false);

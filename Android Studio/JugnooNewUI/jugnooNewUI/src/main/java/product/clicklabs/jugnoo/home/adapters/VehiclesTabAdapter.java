@@ -63,7 +63,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         try {
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
-                holder.imageViewSelected.setBackgroundResource(R.drawable.bg_rectangle_gradient_normal);
+                holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
                 Picasso.with(activity)
                         .load(region.getImages().getTabHighlighted())
                         .placeholder(region.getTabSelected())

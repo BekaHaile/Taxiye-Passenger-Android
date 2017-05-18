@@ -13,6 +13,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
@@ -38,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -954,6 +956,26 @@ public class Utils implements GAAction, GACategory{
 		return result;
 	}
 
+
+	public static void setImageFitToScreen(ImageView ivRestOriginalImage, Bitmap bitmap){
+		int imageMaxWidth = ivRestOriginalImage.getMeasuredWidth();
+		int imageMaxHeight = ivRestOriginalImage.getMeasuredHeight();
+
+		int imgHeight = (imageMaxWidth * bitmap.getHeight()) / bitmap.getWidth();
+		int imgWidth = imageMaxWidth;
+
+		if (imgHeight > imageMaxHeight) {
+			imgHeight = imageMaxHeight;
+			imgWidth = (imageMaxHeight * bitmap.getWidth()) / bitmap.getHeight();
+		}
+
+
+		ViewGroup.LayoutParams layoutParams = ivRestOriginalImage.getLayoutParams();
+		layoutParams.width = imgWidth;
+		layoutParams.height = imgHeight;
+		ivRestOriginalImage.setLayoutParams(layoutParams);
+		ivRestOriginalImage.setImageBitmap(bitmap);
+	}
 
 }
 

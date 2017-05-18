@@ -8,7 +8,7 @@ import android.graphics.Typeface;
  */
 public class Fonts {
 
-    private static Typeface mavenMedium, mavenRegular, mavenLight, avenirNext, avenirMedium;																// fonts declaration
+    private static Typeface mavenMedium, mavenRegular, mavenLight, avenirNext, avenirMedium, iconsFont; // fonts declaration
 
 
     public static Typeface mavenMedium(Context appContext) {											// accessing fonts functions
@@ -65,4 +65,11 @@ public class Fonts {
     }
 
 
+
+    public static Typeface iconsFont(Context context){
+        if(iconsFont == null){
+            iconsFont = Typeface.createFromAsset(context.getAssets(), "fonts/icomoon.ttf");
+        }
+        return iconsFont;
+    }
 }

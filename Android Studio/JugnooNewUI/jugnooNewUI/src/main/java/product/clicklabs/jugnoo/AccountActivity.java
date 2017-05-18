@@ -127,7 +127,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private FBAccountKit fbAccountKit;
     private boolean setJeanieState;
     Bundle bundle = new Bundle();
-
+    public static boolean updateMenuBar ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -926,6 +926,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 String error = jObj.getString("error");
                                 DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                updateMenuBar=true;
                                 linearLayoutSave.setVisibility(View.GONE);
                                 imageViewEditProfile.setVisibility(View.VISIBLE);
                                 String message = jObj.getString("message");

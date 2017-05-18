@@ -192,12 +192,7 @@ public class ReferDriverDialog {
 								}
 							});
 						}else {
-							DialogPopup.alertPopupWithListener(activity, "", settleUserDebt.getMessage(), new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-
-								}
-							});
+							DialogPopup.alertPopup(activity, "", settleUserDebt.getMessage());
 						}
 					}
 

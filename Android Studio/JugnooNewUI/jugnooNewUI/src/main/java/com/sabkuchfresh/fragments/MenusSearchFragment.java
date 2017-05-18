@@ -27,9 +27,12 @@ import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -218,7 +221,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 						else if(token.length() > 1 && token.length() > tokenSearched.length()){
 							if(listHashMap.containsKey(tokenSearched)) {
 								List<Item> items = getItemsInSearch(token, listHashMap.get(tokenSearched));
-								itemsInSearch.addAll(items);
+								itemsInSearch.addAll(getFilteredSet(items));
 								if(items.size() > 0) {
 									listHashMap.put(token, items);
 								}
@@ -228,7 +231,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 						}
 						else if(token.length() < tokenSearched.length()){
 							if(listHashMap.containsKey(token)){
-								itemsInSearch.addAll(listHashMap.get(token));
+								itemsInSearch.addAll(getFilteredSet(listHashMap.get(token)));
 							} else{
 								searchFromStart(token);
 							}
@@ -309,12 +312,25 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 				items.addAll(getItemsInSearch(token, category.getItems()));
 			}
 		}
-		itemsInSearch.addAll(items);
+		itemsInSearch.addAll(getFilteredSet(items));
 		if(items.size() > 0) {
 			listHashMap.put(token, items);
 		}
 	}
 
+	private Set getFilteredSet(List<Item> items){
+		Set set = new TreeSet(new Comparator<Item>() {
+			@Override
+			public int compare(Item o1, Item o2) {
+				if (o1.getRestaurantItemId().equals(o2.getRestaurantItemId())) {
+					return 0;
+				}
+				return 1;
+			}
+		});
+		set.addAll(items);
+		return set;
+	}
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {

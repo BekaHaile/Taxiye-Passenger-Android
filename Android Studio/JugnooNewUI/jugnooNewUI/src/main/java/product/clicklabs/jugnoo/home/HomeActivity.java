@@ -116,6 +116,7 @@ import java.util.TimerTask;
 
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
+import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -4360,6 +4361,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
+            if(AccountActivity.updateMenuBar){
+                menuBar.setProfileData();;
+                AccountActivity.updateMenuBar=false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4763,7 +4768,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             buttonConfirmRequest.setEnabled(false);
                             removeSpecialPickupMarkers();
                             try {
-                                promoCouponSelectedForRide = null;
                                 if (userMode == UserMode.PASSENGER) {
                                     dontCallRefreshDriver = false;
                                 }
@@ -6983,14 +6987,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                 if (promoCouponSelectedForRide != null) {
                                     if (promoCouponSelectedForRide instanceof CouponInfo) {
-                                        nameValuePairs.put("coupon_to_apply", "" + promoCouponSelectedForRide.getId());
+                                        nameValuePairs.put("coupon_to_apply", String.valueOf(promoCouponSelectedForRide.getId()));
                                         if (promoCouponSelectedForRide.getId() == 0) {
-                                            nameValuePairs.put("promo_to_apply", "" + promoCouponSelectedForRide.getId());
+                                            nameValuePairs.put("promo_to_apply", String.valueOf(promoCouponSelectedForRide.getId()));
                                         }
                                     } else if (promoCouponSelectedForRide instanceof PromotionInfo) {
-                                        nameValuePairs.put("promo_to_apply", "" + promoCouponSelectedForRide.getId());
+                                        nameValuePairs.put("promo_to_apply", String.valueOf(promoCouponSelectedForRide.getId()));
                                     }
-                                    nameValuePairs.put(KEY_MASTER_COUPON, "" + promoCouponSelectedForRide.getMasterCoupon());
+                                    nameValuePairs.put(KEY_MASTER_COUPON, String.valueOf(promoCouponSelectedForRide.getMasterCoupon()));
                                 }
 
                                 if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {

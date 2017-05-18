@@ -12,6 +12,7 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.ASSL;
 
 /**
  * Created by Shankar on 15/11/16.
@@ -35,11 +35,11 @@ import product.clicklabs.jugnoo.utils.ASSL;
 public class RestaurantReviewsListFragment extends Fragment implements GAAction{
     private final String TAG = RestaurantReviewsListFragment.class.getSimpleName();
 
-    private RelativeLayout rlRoot;
     private RecyclerView recyclerViewReviews;
     private RelativeLayout rlNoReviews;
     private TextView tvFeedEmpty;
     private RestaurantReviewsAdapter reviewsAdapter;
+    private Button bAddReview;
 
     private View rootView;
     private FreshActivity activity;
@@ -70,14 +70,6 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
 
-        rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
-        try {
-            if (rlRoot != null) {
-                new ASSL(activity, rlRoot, 1134, 720, false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         GAUtils.trackScreenView(MENUS+FEED);
 
         recyclerViewReviews = (RecyclerView) rootView.findViewById(R.id.recyclerViewReviews);
@@ -138,6 +130,11 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
             public int getLikeIsEnabled() {
                 return fetchFeedbackResponse == null ? 1 : fetchFeedbackResponse.getLikeIsEnabled();
             }
+
+            @Override
+            public RecyclerView getRecyclerView() {
+                return recyclerViewReviews;
+            }
         }, restaurantReviews);
         recyclerViewReviews.setAdapter(reviewsAdapter);
         recyclerViewReviews.setEnabled(true);
@@ -145,6 +142,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
 
         rlNoReviews = (RelativeLayout) rootView.findViewById(R.id.rlNoReviews);
         tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);
+        bAddReview = (Button) rootView.findViewById(R.id.bAddReview);
 
         tvFeedEmpty.setText(activity.getString(R.string.feed_is_empty));
         SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add));
@@ -152,7 +150,14 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         tvFeedEmpty.append("\n");
         tvFeedEmpty.append(ssb);
 
-        fetchFeedback();
+        fetchFeedback(false);
+
+        bAddReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.openRestaurantAddReviewFragment(true);
+            }
+        });
 
         return rootView;
     }
@@ -166,18 +171,28 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
     }
 
     private ApiRestaurantFetchFeedback apiRestaurantFetchFeedback;
-    public void fetchFeedback(){
+    public void fetchFeedback(final boolean scrollToTop){
         if(apiRestaurantFetchFeedback == null){
             apiRestaurantFetchFeedback = new ApiRestaurantFetchFeedback(activity, new ApiRestaurantFetchFeedback.Callback() {
                 @Override
-                public void onSuccess(FetchFeedbackResponse fetchFeedbackResponse) {
-                    restaurantReviews.clear();
-                    restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
-                    reviewsAdapter.notifyDataSetChanged();
-                    rlNoReviews.setVisibility(restaurantReviews.size() == 0 ? View.VISIBLE : View.GONE);
-                    RestaurantReviewsListFragment.this.fetchFeedbackResponse = fetchFeedbackResponse;
-                    if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
-                        activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
+                public void onSuccess(FetchFeedbackResponse fetchFeedbackResponse, boolean scrollToTop) {
+                    if(RestaurantReviewsListFragment.this.getView() != null) {
+                        restaurantReviews.clear();
+                        restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
+                        reviewsAdapter.notifyDataSetChanged();
+                        rlNoReviews.setVisibility(restaurantReviews.size() == 0 ? View.VISIBLE : View.GONE);
+                        RestaurantReviewsListFragment.this.fetchFeedbackResponse = fetchFeedbackResponse;
+                        if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
+                            activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
+                        }
+                        if (scrollToTop) {
+                            recyclerViewReviews.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recyclerViewReviews.scrollToPosition(0);
+                                }
+                            });
+                        }
                     }
                 }
 
@@ -188,7 +203,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
 
                 @Override
                 public void onRetry(View view) {
-                    fetchFeedback();
+                    fetchFeedback(scrollToTop);
                 }
 
                 @Override
@@ -197,15 +212,8 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                 }
             });
         }
-        apiRestaurantFetchFeedback.hit(restaurantId);
+        apiRestaurantFetchFeedback.hit(restaurantId, scrollToTop);
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ASSL.closeActivity(rlRoot);
-        System.gc();
-    }
 
 }

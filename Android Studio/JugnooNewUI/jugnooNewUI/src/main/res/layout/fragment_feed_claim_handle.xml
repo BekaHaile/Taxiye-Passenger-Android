@@ -4,15 +4,13 @@
     android:layout_width="match_parent"
     android:background="@color/feed_grey_background_light"
     android:layout_height="match_parent"
-    android:id="@+id/sv"
-    >
+    android:id="@+id/sv">
 
 
     <LinearLayout
         android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <ImageView
@@ -23,12 +21,10 @@
 
 
         <ImageView
-            android:layout_width="75dp"
-            android:layout_height="91dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="@dimen/spacing_extra_huge"
+            android:layout_marginTop="@dimen/spacing_huge"
             android:src="@drawable/ic_feed_claim_handle_vector" />
 
         <TextView
@@ -38,47 +34,168 @@
             android:layout_gravity="center"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginTop="@dimen/spacing_small"
+            android:layout_marginTop="@dimen/spacing_normal"
             android:gravity="center"
-            android:text="@string/feed_claim_handle_description_format"
+            android:text="@string/feed_claim_handle_description"
             android:textColor="@color/feed_grey_text"
-            android:textSize="@dimen/font_extra_large"
+            android:textSize="@dimen/font_huge"
             app:font="maven" />
 
 
-        <EditText
-            android:id="@+id/edt_claim_handle"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:maxLength="20"
             android:layout_marginTop="@dimen/spacing_large"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-            android:gravity="center"
-            android:hint="Claim your handle"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingBottom="@dimen/spacing_normal"
-            android:textColor="@color/text_color_grey_red"
-            android:textColorHint="@color/feed_grey_hint_color"
-            android:textCursorDrawable="@drawable/cursor_black"
-            android:textSize="@dimen/font_large"
-            app:font="maven" />
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp">
+
+            <EditText
+                android:id="@+id/edt_claim_handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="20"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                android:gravity="center"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/spacing_normal"
+                android:textColor="@color/text_color_grey_red"
+                android:textColorHint="@color/feed_grey_hint_color"
+                android:textCursorDrawable="@drawable/cursor_black"
+                android:textSize="@dimen/font_large"
+                app:font="maven" />
+
+            <ImageView
+                android:id="@+id/iv_refresh_suggestions"
+                android:layout_marginTop="5dp"
+                android:padding="@dimen/spacing_tiny"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/spacing_small"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:layout_marginLeft="@dimen/spacing_large"
+            android:layout_marginRight="@dimen/spacing_large"
             android:layout_marginTop="@dimen/spacing_dimin"
             android:textColor="@color/feed_red"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="@dimen/font_small"
+            android:drawablePadding="3dp"
+            android:drawableLeft="@drawable/ic_exclamation"
             android:visibility="invisible"
             app:font="maven" />
+
+
+
+        <RelativeLayout
+            android:id="@+id/layout_suggestions"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/spacing_normal"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+
+            <HorizontalScrollView
+                android:id="@+id/sv_suggestions"
+                android:background="@drawable/bg_feed_handle_suggestions"
+                android:fillViewport="true"
+                android:scrollbars="none"
+                android:paddingRight="@dimen/spacing_small"
+                android:paddingLeft="@dimen/spacing_small"
+                android:layout_below="@+id/label_suggestions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/spacing_normal"
+                android:paddingBottom="@dimen/spacing_normal"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+
+
+
+                <TextView
+                    android:id="@+id/tv_suggestion_1"
+                    android:layout_width="wrap_content"
+                    android:maxLines="1"
+                    android:minWidth="92dp"
+                    android:paddingBottom="@dimen/spacing_extra_tiny"
+                    android:paddingTop="@dimen/spacing_extra_tiny"
+                    android:textColor="@color/feed_grey_text"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:gravity="center"
+                    app:font="maven"
+                    android:background="@drawable/bg_suggestion_handle_text"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv_suggestion_2"
+                    android:layout_width="wrap_content"
+                    android:minWidth="92dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:maxLines="1"
+
+                    android:paddingBottom="@dimen/spacing_extra_tiny"
+                    android:paddingTop="@dimen/spacing_extra_tiny"
+                    android:textColor="@color/feed_grey_text"
+                    android:gravity="center"
+                    app:font="maven"
+                    android:layout_marginLeft="@dimen/spacing_extra_tiny"
+                    android:layout_marginRight="@dimen/spacing_extra_tiny"
+                    android:background="@drawable/bg_suggestion_handle_text"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv_suggestion_3"
+                    android:layout_width="wrap_content"
+                    android:minWidth="92dp"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    app:font="maven"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="@dimen/spacing_extra_tiny"
+                    android:paddingTop="@dimen/spacing_extra_tiny"
+                    android:textColor="@color/feed_grey_text"
+                    android:background="@drawable/bg_suggestion_handle_text"
+                    android:layout_height="wrap_content" />
+
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+            <TextView
+                android:background="@color/feed_grey_background_light"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:id="@id/label_suggestions"
+                android:textAllCaps="true"
+                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginBottom="-10dp"
+                app:font="@string/maven_r"
+                android:textColor="@color/text_color_hint"
+                android:text="@string/label_suggestions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+
+
 
 
         <Button
