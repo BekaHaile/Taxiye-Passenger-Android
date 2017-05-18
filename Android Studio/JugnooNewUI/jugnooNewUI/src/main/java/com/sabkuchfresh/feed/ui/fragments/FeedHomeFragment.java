@@ -27,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.fugu.CaptureUserData;
+import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -51,7 +53,9 @@ import com.sabkuchfresh.utils.AppConstant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -758,7 +762,13 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 break;
 
             case R.id.item_notification:
-                activity.getTransactionUtils().openFeedNotificationsFragment(activity, activity.getRelativeLayoutContainer());
+                FuguConfig fuguConfig = new FuguConfig(getString(R.string.fugu_key));
+                fuguConfig.configActionBar("#FAA31C","#ffffff",R.drawable.ic_back_selector);
+
+                FuguConfig.getInstance().registerIdentifiedUser(getActivity(), Data.getFuguUserData());
+                FuguConfig.getInstance().showConversations(getActivity());
+
+               activity.getTransactionUtils().openFeedNotificationsFragment(activity, activity.getRelativeLayoutContainer());
                 break;
             default:
                 break;

@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.fugu.CaptureUserData;
+import com.fugu.FuguConfig;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.apis.ApiTrackPush;
@@ -140,6 +143,7 @@ public class Data {
 	public static boolean isSupportRideIssueUpdated = false;
 	public static String currentActivity = null;
 	public static boolean activityResumed = false;
+	private static CaptureUserData fuguUserData;
 
 
 	public static void clearDataOnLogout(Context context){
@@ -554,5 +558,22 @@ public class Data {
 		} else {
 			return context.getString(R.string.ask_local);
 		}
+	}
+
+	public static CaptureUserData getFuguUserData(){
+		if(userData==null)
+			return null;
+
+		if(fuguUserData==null) {
+			fuguUserData = new CaptureUserData.Builder().userUniqueKey(UUID.randomUUID().toString()).fullName(userData.userName).email(userData.userEmail).phoneNumber(userData.phoneNo).build();
+		}
+		return fuguUserData;
+
+
+
+	}
+
+	public static void setFuguUserData(CaptureUserData userData){
+		fuguUserData = userData;
 	}
 }
