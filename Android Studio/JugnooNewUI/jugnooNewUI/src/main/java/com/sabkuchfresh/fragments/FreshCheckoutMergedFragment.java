@@ -2636,6 +2636,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         activity.setCartChangedAtCheckout(true);
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
+        updateCartDataView();
         if(type == AppConstant.ApplicationType.MEALS
                 && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             getCheckoutDataAPI(selectedSubscription);
@@ -2644,7 +2645,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 removeCouponWithCheck();
             }
         }
-        updateCartDataView();
         GAUtils.event(activity.getGaCategory(), CHECKOUT, CART+ITEM+INCREASED);
     }
 
