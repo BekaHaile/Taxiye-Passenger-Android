@@ -186,8 +186,12 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
     /**
      * Method used to update list data
      */
-    public void updateDetail() {
-        menusCategoryItemsAdapter.notifyDataSetChanged();
+    public void updateDetail(boolean setData) {
+        if(setData){
+            menusCategoryItemsAdapter.setSubItems(true);
+        } else {
+            menusCategoryItemsAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

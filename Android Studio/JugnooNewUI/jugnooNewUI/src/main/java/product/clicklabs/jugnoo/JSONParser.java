@@ -706,18 +706,8 @@ public class JSONParser implements Constants {
 
         resetMenusFilters(context);
 
-
-        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getAutosClientId(), -1);
-        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getAutosClientId(), false);
-
-        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getFreshClientId(), -1);
-        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getFreshClientId(), false);
-
-        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMealsClientId(), -1);
-        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMealsClientId(), false);
-
-        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMenusClientId(), -1);
-        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMenusClientId(), false);
+        resetUseCouponSP(context);
+        resetIsVegToggle(context);
 
         return resp;
     }
@@ -1872,6 +1862,25 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_DELIVERY_TIME, -1);
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_CUISINES, "");
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_QUICK, "");
+    }
+
+
+    private void resetUseCouponSP(Context context) {
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getAutosClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getAutosClientId(), false);
+
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getFreshClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getFreshClientId(), false);
+
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMealsClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMealsClientId(), false);
+
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMenusClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMenusClientId(), false);
+    }
+
+    private void resetIsVegToggle(Context context){
+        Prefs.with(context).save(KEY_SP_IS_VEG_TOGGLE, 0);
     }
 
 }

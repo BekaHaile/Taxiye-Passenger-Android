@@ -38,11 +38,13 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener, GAAction {
@@ -316,10 +318,18 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             // Update pager adapter
 
             try {
+                if(event.isVegToggle){
+					menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories());
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
                 for (int i = 0; i < viewPager.getChildCount(); i++) {
                     Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + i);
                     if (page != null) {
-                        ((MenusCategoryItemsFragment) page).updateDetail();
+                        ((MenusCategoryItemsFragment) page).updateDetail(event.isVegToggle);
                     }
                 }
             } catch (Exception e) {
@@ -397,6 +407,11 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private void setUpCollapseToolbarData() {
         if (activity.getVendorOpened() != null) {
             activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
+
+            // TODO: 18/05/17 remove this
+            int isVegToggle = Prefs.with(activity).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
+            activity.tvCollapRestaurantName.setTextColor(ContextCompat.getColor(activity, isVegToggle == 1 ? R.color.text_green_color : R.color.white));
+
             if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
                 Picasso.with(activity).load(activity.getVendorOpened().getImage())
                         .placeholder(R.drawable.ic_fresh_item_placeholder)
