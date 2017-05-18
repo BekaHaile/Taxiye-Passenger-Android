@@ -250,14 +250,14 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 			try {
-				menusCategoryItemsAdapter.notifyDataSetChanged();
-				if(itemsInSearch.size() > 0){
+				menusCategoryItemsAdapter.setList(itemsInSearch, true);
+				if(menusCategoryItemsAdapter.getItemCount() > 1){
 					textViewPlaceholder.setVisibility(View.GONE);
 				} else{
 					textViewPlaceholder.setVisibility(View.VISIBLE);
 				}
 
-				if(itemsInSearch.size() == 0) {
+				if(menusCategoryItemsAdapter.getItemCount() == 1) {
 					GAUtils.event(GACategory.MENUS, SEARCH + NOT_FOUND, token);
 				}
 			} catch (Exception e) {
@@ -318,8 +318,8 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 		}
 	}
 
-	private Set getFilteredSet(List<Item> items){
-		Set set = new TreeSet(new Comparator<Item>() {
+	private Set<Item> getFilteredSet(List<Item> items){
+		Set<Item> set = new TreeSet<>(new Comparator<Item>() {
 			@Override
 			public int compare(Item o1, Item o2) {
 				if (o1.getRestaurantItemId().equals(o2.getRestaurantItemId())) {

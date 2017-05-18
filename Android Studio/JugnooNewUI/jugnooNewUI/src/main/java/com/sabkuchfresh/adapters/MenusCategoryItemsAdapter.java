@@ -107,9 +107,24 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         this.context = context;
         this.callback = callback;
         this.categoryPos = -1;
-        subItems = items;
+        setList(items, false);
     }
 
+    public void setList(ArrayList<Item> items, boolean notify){
+        int isVegToggle = Prefs.with(context).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
+        if(subItems == null) {
+            subItems = new ArrayList<>();
+        }
+        subItems.clear();
+        for(Item item : items){
+            if(isVegCheck(isVegToggle, item)) {
+                subItems.add(item);
+            }
+        }
+        if(notify) {
+            notifyDataSetChanged();
+        }
+    }
 
 
     @Override
