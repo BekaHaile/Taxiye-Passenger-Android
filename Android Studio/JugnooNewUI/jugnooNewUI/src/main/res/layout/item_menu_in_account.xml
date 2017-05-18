@@ -20,7 +20,7 @@
         android:layout_toLeftOf="@+id/textViewValue"
         android:layout_alignParentLeft="true"
         android:textColor="@color/text_color_light_selector"
-        android:textSize="27px" />
+        android:textSize="30px" />
 
     <TextView
         android:id="@id/textViewValue"
@@ -33,7 +33,7 @@
         android:gravity="right"
         android:text="@string/rupee_0"
         android:textColor="@color/theme_color"
-        android:textSize="27px"
+        android:textSize="30px"
         android:visibility="visible" />
 
 

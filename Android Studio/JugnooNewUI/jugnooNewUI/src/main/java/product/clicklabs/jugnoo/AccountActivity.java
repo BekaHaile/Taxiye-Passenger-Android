@@ -272,12 +272,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         imageViewPokemon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Prefs.with(AccountActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
-                    imageViewPokemon.setImageResource(R.drawable.jugnoo_sticky_off);
-                    Prefs.with(AccountActivity.this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 0);
-                } else {
-                    imageViewPokemon.setImageResource(R.drawable.jugnoo_sticky_on);
-                    Prefs.with(AccountActivity.this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 1);
+                if (!editTextUserName.isEnabled()) {
+                    if(Prefs.with(AccountActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
+                        imageViewPokemon.setImageResource(R.drawable.jugnoo_sticky_off);
+                        Prefs.with(AccountActivity.this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 0);
+                    } else {
+                        imageViewPokemon.setImageResource(R.drawable.jugnoo_sticky_on);
+                        Prefs.with(AccountActivity.this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 1);
+                    }
                 }
             }
         });
@@ -285,12 +287,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         imageViewFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Prefs.with(AccountActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_off);
-                    Prefs.with(AccountActivity.this).save(Constants.FAB_ENABLED_BY_USER, 0);
-                } else {
-                    imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_on);
-                    Prefs.with(AccountActivity.this).save(Constants.FAB_ENABLED_BY_USER, 1);
+                if (!editTextUserName.isEnabled()) {
+                    if (Prefs.with(AccountActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                        imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_off);
+                        Prefs.with(AccountActivity.this).save(Constants.FAB_ENABLED_BY_USER, 0);
+                    } else {
+                        imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_on);
+                        Prefs.with(AccountActivity.this).save(Constants.FAB_ENABLED_BY_USER, 1);
+                    }
                 }
             }
         });
@@ -298,7 +302,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         imageViewFABQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new JeanieIntroDialog(AccountActivity.this).show();
+                if (!editTextUserName.isEnabled()) {
+                    new JeanieIntroDialog(AccountActivity.this).show();
+                }
             }
         });
 
@@ -332,9 +338,11 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         linearLayoutAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, AboutActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                GAUtils.event(SIDE_MENU, USER+PROFILE, GAAction.ABOUT);
+                if (!editTextUserName.isEnabled()) {
+                    startActivity(new Intent(AccountActivity.this, AboutActivity.class));
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    GAUtils.event(SIDE_MENU, USER + PROFILE, GAAction.ABOUT);
+                }
             }
         });
 
@@ -590,67 +598,81 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AccountActivity.this, EmergencyActivity.class);
-                intent.putExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
-                        EmergencyActivity.EmergencyActivityMode.EMERGENCY_CONTACTS.getOrdinal());
-                startActivity(intent);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                GAUtils.event(SIDE_MENU, USER+PROFILE, ADD+GAAction.EMERGENCY_CONTACTS);
+                if (!editTextUserName.isEnabled()) {
+                    Intent intent = new Intent(AccountActivity.this, EmergencyActivity.class);
+                    intent.putExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
+                            EmergencyActivity.EmergencyActivityMode.EMERGENCY_CONTACTS.getOrdinal());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    GAUtils.event(SIDE_MENU, USER + PROFILE, ADD + GAAction.EMERGENCY_CONTACTS);
+                }
             }
         });
 
         relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
-                intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_HOME);
-                intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
-                startActivityForResult(intent, Constants.REQUEST_CODE_ADD_HOME);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                if (!editTextUserName.isEnabled()) {
+                    Intent intent = new Intent(AccountActivity.this, AddPlaceActivity.class);
+                    intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_HOME);
+                    intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
+                    startActivityForResult(intent, Constants.REQUEST_CODE_ADD_HOME);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
             }
         });
 
         relativeLayoutAddWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
-                intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_WORK);
-                intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
-                startActivityForResult(intent, Constants.REQUEST_CODE_ADD_WORK);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                if (!editTextUserName.isEnabled()) {
+                    Intent intent = new Intent(AccountActivity.this, AddPlaceActivity.class);
+                    intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_WORK);
+                    intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
+                    startActivityForResult(intent, Constants.REQUEST_CODE_ADD_WORK);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
             }
         });
 
         imageViewEditHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                relativeLayoutAddHome.performClick();
+                if (!editTextUserName.isEnabled()) {
+                    relativeLayoutAddHome.performClick();
+                }
             }
         });
 
         imageViewEditWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                relativeLayoutAddWork.performClick();
+                if (!editTextUserName.isEnabled()) {
+                    relativeLayoutAddWork.performClick();
+                }
             }
         });
 
         relativeLayoutAddNewAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
-                intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-                intent.putExtra(Constants.KEY_ADDRESS, "");
-                startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                if (!editTextUserName.isEnabled()) {
+                    Intent intent = new Intent(AccountActivity.this, AddPlaceActivity.class);
+                    intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    intent.putExtra(Constants.KEY_ADDRESS, "");
+                    startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
             }
         });
 
         relativeLayoutAddressBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, true);
-                GAUtils.event(SIDE_MENU, USER+PROFILE, ADDRESS_BOOK);
+                if (!editTextUserName.isEnabled()) {
+                    openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, true);
+                    GAUtils.event(SIDE_MENU, USER + PROFILE, ADDRESS_BOOK);
+                }
             }
         });
 
@@ -677,24 +699,26 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
             @Override
             public void onClick(View v) {
-                DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "",
-                        getResources().getString(R.string.are_you_sure_you_want_to_logout),
-                        getResources().getString(R.string.logout), getResources().getString(R.string.cancel),
-                        new View.OnClickListener() {
+                if (!editTextUserName.isEnabled()) {
+                    DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "",
+                            getResources().getString(R.string.are_you_sure_you_want_to_logout),
+                            getResources().getString(R.string.logout), getResources().getString(R.string.cancel),
+                            new View.OnClickListener() {
 
-                            @Override
-                            public void onClick(View v) {
-                                logoutAsync(AccountActivity.this);
-                            }
-                        },
-                        new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    logoutAsync(AccountActivity.this);
+                                }
+                            },
+                            new View.OnClickListener() {
 
-                            @Override
-                            public void onClick(View v) {
-                            }
-                        },
-                        true, false);
-                GAUtils.event(SIDE_MENU, USER+PROFILE, GAAction.LOGOUT);
+                                @Override
+                                public void onClick(View v) {
+                                }
+                            },
+                            true, false);
+                    GAUtils.event(SIDE_MENU, USER + PROFILE, GAAction.LOGOUT);
+                }
 
             }
         });
@@ -702,8 +726,11 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         viewTrackingLog.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                startActivity(new Intent(AccountActivity.this, TrackingLogActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                if (!editTextUserName.isEnabled()) {
+                    startActivity(new Intent(AccountActivity.this, TrackingLogActivity.class));
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+                }
                 return false;
             }
         });
@@ -732,31 +759,32 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 recyclerViewMenuItems.setAdapter(new AccountMenuItemsAdapter(itemsToShowInAccountScreen, recyclerViewMenuItems, new AccountMenuItemsAdapter.AccountMenuItemsCallback() {
                     @Override
                     public void onMenuItemClick(MenuInfo menuInfo) {
-                        if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())){
+                        if (!editTextUserName.isEnabled()) {
+                            if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())) {
 
-                            Intent intent = new Intent(AccountActivity.this, PaymentActivity.class);
-                            intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                            GAUtils.event(SIDE_MENU, USER+PROFILE,WALLET);
-                        }else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())){
-                            try {
-                                if((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
-                                        || Data.userData.isSubscriptionActive()){
-                                    startActivity(new Intent(AccountActivity.this, JugnooStarSubscribedActivity.class));
-                                } else {
-                                    startActivity(new Intent(AccountActivity.this, JugnooStarActivity.class));
-                                }
+                                Intent intent = new Intent(AccountActivity.this, PaymentActivity.class);
+                                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
+                                startActivity(intent);
                                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                GAUtils.event(SIDE_MENU, USER+PROFILE,INBOX);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                GAUtils.event(SIDE_MENU, USER + PROFILE, WALLET);
+                            } else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())) {
+                                try {
+                                    if ((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
+                                            || Data.userData.isSubscriptionActive()) {
+                                        startActivity(new Intent(AccountActivity.this, JugnooStarSubscribedActivity.class));
+                                    } else {
+                                        startActivity(new Intent(AccountActivity.this, JugnooStarActivity.class));
+                                    }
+                                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                    GAUtils.event(SIDE_MENU, USER + PROFILE, INBOX);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())) {
+                                startActivity(new Intent(AccountActivity.this, NotificationCenterActivity.class));
+                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                GAUtils.event(SIDE_MENU, USER + PROFILE, JUGNOO + STAR);
                             }
-                        }
-                        else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
-                           startActivity(new Intent(AccountActivity.this, NotificationCenterActivity.class));
-                           overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                            GAUtils.event(SIDE_MENU, USER+PROFILE,JUGNOO + STAR);
                         }
                     }
                 },AccountActivity.this));
@@ -869,6 +897,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
 
             scrollView.scrollTo(0, 0);
+            textViewTitle.setText(R.string.title_my_profile);
         } catch (Exception e) {
             e.printStackTrace();
         }
