@@ -112,8 +112,12 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     public void onDestroyView() {
         super.onDestroyView();
         if (activity != null) {
-            activity.unregisterReceiver(broadcastReceiver);
-            activity.getHandler().removeCallbacks(runnableNotificationCount);
+            try {
+                activity.getHandler().removeCallbacks(runnableNotificationCount);
+                activity.unregisterReceiver(broadcastReceiver);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
