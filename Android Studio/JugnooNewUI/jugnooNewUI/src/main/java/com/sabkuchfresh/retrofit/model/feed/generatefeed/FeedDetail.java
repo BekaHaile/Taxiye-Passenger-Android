@@ -113,8 +113,17 @@ public class FeedDetail implements Serializable {
     @Expose
     private String userImageColor;
 
+
+    @SerializedName("latest_comment")
+    private LatestComment latestComment;
+
+    public LatestComment getLatestComment() {
+        return latestComment;
+    }
+
     private transient Drawable owenerImageDrawable;
     private transient Drawable userImageDrawable;
+
 
 
     public boolean isAnonymousPost() {
@@ -352,6 +361,52 @@ public class FeedDetail implements Serializable {
         }
 
 
+
     }
+
+
+    public static   class LatestComment implements Serializable{
+        @SerializedName("comment")
+        private String comment ;
+
+        @SerializedName("user_image")
+        private String userPic;
+
+
+        @SerializedName("user_name")
+        private String commentedBy;
+
+        @SerializedName("user_image_color")
+        private String commentedByColor;
+
+        private Drawable userImageDrawable;
+
+        public Drawable getUserImageDrawable() {
+            return userImageDrawable;
+        }
+
+        public void setUserImageDrawable(Drawable userImageDrawable) {
+            this.userImageDrawable = userImageDrawable;
+        }
+
+
+        public String getCommentedBy() {
+            return commentedBy;
+        }
+
+        public String getComment() {
+            return comment;
+        }
+
+        public String getUserPic() {
+            return userPic;
+        }
+
+        public String getCommentedByColor() {
+            return commentedByColor;
+        }
+
+    }
+
 
 }

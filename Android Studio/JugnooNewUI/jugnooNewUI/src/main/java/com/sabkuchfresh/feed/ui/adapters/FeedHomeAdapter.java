@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -31,7 +32,6 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
-import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.feed.ui.fragments.FeedImagesPagerDialog;
 import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.feed.utils.FeedUtils;
@@ -484,53 +484,63 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
-        if(!isViewingDetail && (feedDetail.getFeedType()== FeedDetail.FeedType.COMMENT_ON_POST || feedDetail.getFeedType()== FeedDetail.FeedType.COMMENT_ON_REVIEW ) && feedDetail.getCommentContent()!=null ){
-       /*
 
-        //Show Comment if X Comment on Y Post Done with only one textVIew
-            String userCommentName = feedDetail.getUserName() + "\n";
-            String newline = "\n"  ;//margin between name and comment
-            String keyComment =  feedDetail.getCommentContent();
+            boolean showCommentLayout = false;
+            if(!isViewingDetail){
+                String commentToShow =null,commentedBy=null,commentedByPic=null;
+                Drawable imageDrawable = null;//Used instead of default image if user hasnot uploaded one.
 
 
+                if((feedDetail.getFeedType()== FeedDetail.FeedType.COMMENT_ON_POST || feedDetail.getFeedType()== FeedDetail.FeedType.COMMENT_ON_REVIEW ) && feedDetail.getCommentContent()!=null){
+                        //This case occurs in X commented on Y's post where we show X's comment.
+                        commentToShow = feedDetail.getCommentContent();
+                        commentedBy = feedDetail.getUserName();
+                        commentedByPic = feedDetail.getUserImage();
+                      if (feedDetail.getUserImageDrawable() == null && commentedBy!=null && commentedBy.trim().length()>0) {
+                          String firstLetter = feedDetail.getUserName().toUpperCase().substring(0, 1);
+                         TextDrawable drawable = TextDrawable.builder().beginConfig().bold().endConfig().buildRound(firstLetter, activity.getParsedColor(feedDetail.getUserImageColor(), null));
+                           feedDetail.setUserImageDrawable(drawable);
+                       }
+                        imageDrawable = feedDetail.getUserImageDrawable();
+                } else if(feedDetail.getLatestComment()!=null){
+                        //Showing the latest comment in every post.
+                        commentToShow= feedDetail.getLatestComment().getComment();
+                        commentedBy = feedDetail.getLatestComment().getCommentedBy();
+                        commentedByPic = feedDetail.getLatestComment().getUserPic();
+                    if (feedDetail.getLatestComment().getUserImageDrawable() == null && commentedBy!=null && commentedBy.trim().length()>0) {
+                        String firstLetter = feedDetail.getUserName().toUpperCase().substring(0, 1);
+                        TextDrawable drawable = TextDrawable.builder().beginConfig().bold().endConfig().buildRound(firstLetter, activity.getParsedColor(feedDetail.getLatestComment().getCommentedByColor(), null));
+                        feedDetail.getLatestComment().setUserImageDrawable(drawable);
+                    }
+                    imageDrawable=feedDetail.getLatestComment().getUserImageDrawable();
 
-            SpannableString spannableString = new SpannableString(userCommentName + newline+  keyComment );
-            spannableString.setSpan(BOLD_SPAN,0,userCommentName.length(),SPAN_INCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity,R.color.feed_grey_text_heading)),0,userCommentName.length(),SPAN_INCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(new RelativeSizeSpan(0.9f),spannableString.length()-keyComment.length(),spannableString.length(),SPAN_INCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(new RelativeSizeSpan(0.2f),userCommentName.length(),spannableString.length()-keyComment.length(),SPAN_INCLUSIVE_EXCLUSIVE);//margin between name and comment reducing size
-            holder.tvUserCommentedNameAndComment.setText(spannableString);
-*/
-            String keyComment =  ": " + feedDetail.getCommentContent();
-            SpannableString commentNameAndContent = new SpannableString(feedDetail.getUserName() + keyComment);
-            commentNameAndContent.setSpan(BOLD_SPAN,0,feedDetail.getUserName().length(),SPAN_INCLUSIVE_EXCLUSIVE);
-            holder.tvUserCommentedName.setText(commentNameAndContent);
-
-
-            //User Image Comment
-            if (!TextUtils.isEmpty(userImage) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(userImage)) {
-                Picasso.with(activity).load(userImage).placeholder(R.drawable.placeholder_img).transform(new CircleTransform()).into(holder.ivUserCommentedPic);
-
-            } else if(!TextUtils.isEmpty(feedDetail.getUserName())) {
-
-                if (feedDetail.getUserImageDrawable() == null) {
-                    String firstLetter =  feedDetail.getUserName().toUpperCase().substring(0,1);
-                    TextDrawable drawable = TextDrawable.builder()
-                            .beginConfig().bold().endConfig()
-                            .buildRound(firstLetter, activity.getParsedColor(feedDetail.getUserImageColor(), null));
-                    feedDetail.setUserImageDrawable(drawable);
                 }
 
-                holder.ivUserCommentedPic.setImageDrawable(feedDetail.getUserImageDrawable());
-            }else{
-                holder.ivUserCommentedPic.setImageDrawable(feedDetail.getUserImageDrawable());
+                if(commentToShow!=null && commentedBy!=null){
+
+                    showCommentLayout= true;
+
+                    //Set Content and username
+                    SpannableString commentNameAndContent = new SpannableString(commentedBy+ commentToShow);
+                    commentNameAndContent.setSpan(BOLD_SPAN,0,commentedBy.length(),SPAN_INCLUSIVE_EXCLUSIVE);
+                    holder.tvUserCommentedName.setText(commentNameAndContent);
+
+
+                    //User Image Comment
+                    if (!TextUtils.isEmpty(commentedByPic) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(commentedByPic)) {
+                        Picasso.with(activity).load(commentedByPic).placeholder(R.drawable.placeholder_img).transform(new CircleTransform()).into(holder.ivUserCommentedPic);
+
+                    } else{
+                        holder.ivUserCommentedPic.setImageDrawable(imageDrawable==null?ContextCompat.getDrawable(activity,R.drawable.placeholder_img):imageDrawable);
+                    }
+
+
+
+                }
             }
 
-            holder.layoutComment.setVisibility(View.VISIBLE);
-        }else{
-            holder.layoutComment.setVisibility(View.GONE);
+            holder.layoutComment.setVisibility(showCommentLayout?View.VISIBLE:View.GONE);
 
-        }
 
 
         }
