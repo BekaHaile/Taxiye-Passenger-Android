@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,7 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
+import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
@@ -707,6 +709,8 @@ public class JSONParser implements Constants {
         resetMenusFilters(context);
 
 
+
+
         Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getAutosClientId(), -1);
         Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getAutosClientId(), false);
 
@@ -719,6 +723,13 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMenusClientId(), -1);
         Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMenusClientId(), false);
 
+        try {
+            if(Data.getFuguUserData()!=null) {
+                FuguConfig.getInstance().registerIdentifiedUser((Activity) context, Data.getFuguUserData());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return resp;
     }
 

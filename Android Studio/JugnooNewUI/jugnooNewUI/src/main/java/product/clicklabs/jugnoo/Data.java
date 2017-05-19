@@ -565,13 +565,26 @@ public class Data {
 			return null;
 
 		if(fuguUserData==null) {
-			fuguUserData = new CaptureUserData.Builder().userUniqueKey(UUID.randomUUID().toString()).fullName(userData.userName).email(userData.userEmail).phoneNumber(userData.phoneNo).build();
+			fuguUserData = new CaptureUserData.Builder().userUniqueKey(userData.userIdentifier).fullName(userData.userName).email(userData.userEmail).phoneNumber(userData.phoneNo).build();
 		}
 		return fuguUserData;
 
 
 
 	}
+
+
+	public static void initializeFuguHandler(Context context){
+
+
+			FuguConfig  fuguConfig = new FuguConfig(context.getString(R.string.fugu_key));
+            fuguConfig.configActionBar("#FAA31C","#ffffff",R.drawable.ic_back_selector);
+
+
+
+
+
+    }
 
 	public static void setFuguUserData(CaptureUserData userData){
 		fuguUserData = userData;
