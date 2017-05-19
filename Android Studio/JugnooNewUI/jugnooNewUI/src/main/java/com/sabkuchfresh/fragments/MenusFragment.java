@@ -139,7 +139,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
             @Override
-            public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
+            public void onRestaurantSelected(MenusResponse.Vendor vendor) {
                 activity.fetchRestaurantMenuAPI(vendor.getRestaurantId());
                 Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
             }

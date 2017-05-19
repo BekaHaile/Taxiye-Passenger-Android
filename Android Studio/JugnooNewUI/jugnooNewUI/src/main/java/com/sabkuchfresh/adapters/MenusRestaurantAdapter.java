@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -79,11 +80,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private String searchText;
     private boolean searchApiHitOnce = false;
     private RecyclerView recyclerView;
+    private ArrayList<MenusResponse.Vendor> offerVendors;
 
     private static final int MAIN_ITEM = 0;
     private static final int FORM_ITEM = 1;
     private static final int STATUS_ITEM = 3;
     private static final int NO_VENDORS_ITEM = 4;
+    private static final int OFFERS_PAGER_ITEM = 5;
 
 
     public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors,
@@ -154,6 +157,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         setRestIdMappedVendors();
         this.vendorsToShow.clear();
         this.vendorsToShow.addAll(vendors);
+
+        // TODO: 19/05/17  remove this
+        offerVendors = new ArrayList<>();
+        offerVendors.addAll(vendors);
+
         applyFilter();
     }
 
@@ -274,6 +282,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             v.setLayoutParams(layoutParams);
             ASSL.DoMagic(v);
             return new ViewNoVenderItem(v, activity);
+        } else if(viewType == OFFERS_PAGER_ITEM){
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_offers_pager, parent, false);
+            return new ViewHolderOffers(v, activity);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
@@ -281,6 +292,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         try {
+            if(offerVendorsSize() > 0 && position > 0){
+                position--;
+            }
             if (holder instanceof ViewTitleStatus) {
                 ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
                 try {
@@ -324,7 +338,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
 
             } else if (holder instanceof ViewHolder) {
-                position = position - recentOrders.size();
+                position = position - recentOrdersSize();
                 ViewHolder mHolder = ((ViewHolder) holder);
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
                 mHolder.textViewRestaurantName.setText(vendor.getName());
@@ -416,7 +430,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     public void onClick(View v) {
                         try {
                             int pos = (int) v.getTag();
-                            callback.onRestaurantSelected(pos, vendorsToShow.get(pos));
+                            callback.onRestaurantSelected(vendorsToShow.get(pos));
 //                            if(searchApiHitOnce && searchText.length() > 0){
 //                            for analytics event
 //                            }
@@ -491,6 +505,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 } else if (vendorsToShow.size() == 0) {
                     holderNoVenderItem.textViewNoMenus.setText(R.string.oops_no_results_found);
                 }
+
+            } else if (holder instanceof ViewHolderOffers){
+                ViewHolderOffers holderOffers = (ViewHolderOffers) holder;
+                holderOffers.menusVendorOffersAdapter.setList(offerVendors);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -589,12 +607,19 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
+        if(offerVendorsSize() > 0){
+            if(position == 0) {
+                return OFFERS_PAGER_ITEM;
+            } else {
+                position--;
+            }
+        }
         if (vendorsCompleteCount() > 0) {
-            if (position >= 0 && position < recentOrders.size()) {
+            if (position >= 0 && position < recentOrdersSize()) {
                 return STATUS_ITEM;
-            } else if (position >= recentOrders.size() && vendorsToShow.size() == 0) {
+            } else if (position >= recentOrdersSize() && vendorsToShow.size() == 0) {
                 return FORM_ITEM;
-            } else if (position >= recentOrders.size() && position - recentOrders.size() < vendorsToShow.size()) {
+            } else if (position >= recentOrdersSize() && position - recentOrdersSize() < vendorsToShow.size()) {
                 return MAIN_ITEM;
             } else {
                 return FORM_ITEM;
@@ -614,11 +639,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemCount() {
 //        int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
         int formItem = (recentOrdersSize() > 0 || vendorsCompleteCount() > 0) ? 1 : 0;
-        return recentOrdersSize() + vendorsToShowCount() + formItem;
+        return (offerVendorsSize() > 0 ? 1 : 0) + recentOrdersSize() + vendorsToShowCount() + formItem;
     }
 
     private int recentOrdersSize() {
         return recentOrders == null ? 0 : recentOrders.size();
+    }
+
+    private int offerVendorsSize(){
+        return offerVendors == null ? 0 : offerVendors.size();
     }
 
     private int vendorsToShowCount() {
@@ -752,7 +781,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     public interface Callback {
-        void onRestaurantSelected(int position, MenusResponse.Vendor vendor);
+        void onRestaurantSelected(MenusResponse.Vendor vendor);
 
         void onNotify(int count);
     }
@@ -1029,6 +1058,27 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public String getSearchText(){
         return searchText;
+    }
+
+
+
+    public class ViewHolderOffers extends RecyclerView.ViewHolder {
+        public RecyclerView rvMenusVendorOffers;
+        public MenusVendorOffersAdapter menusVendorOffersAdapter;
+
+        public ViewHolderOffers(View view, Context context) {
+            super(view);
+            rvMenusVendorOffers = (RecyclerView) view.findViewById(R.id.rvMenusVendorOffers);
+            rvMenusVendorOffers.setLayoutManager(new LinearLayoutManager(context, LinearLayout.HORIZONTAL, false));
+            menusVendorOffersAdapter = new MenusVendorOffersAdapter(activity, offerVendors,
+                    rvMenusVendorOffers, new MenusVendorOffersAdapter.Callback() {
+                @Override
+                public void onOfferClick(MenusResponse.Vendor vendor) {
+                    callback.onRestaurantSelected(vendor);
+                }
+            });
+            rvMenusVendorOffers.setAdapter(menusVendorOffersAdapter);
+        }
     }
 
 }
