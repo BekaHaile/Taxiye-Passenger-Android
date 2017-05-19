@@ -536,14 +536,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             slots.add(new SortResponseModel(1, "Popularity", false));
             slots.add(new SortResponseModel(2, "Price: Low to High", false));
             slots.add(new SortResponseModel(3, "Price: High to Low", false));
+            if(freshSort < 0 || freshSort >= slots.size()){
+                freshSort = 0;
+            }
+            slots.get(freshSort).check = true;
         } else if (fragment instanceof VendorMenuFragment) {
             slots.add(new SortResponseModel(0, "A-Z", false));
             slots.add(new SortResponseModel(1, "Price: Low to High", false));
             slots.add(new SortResponseModel(2, "Price: High to Low", false));
-
-            slots.get(1).check = true;
-            menusSort = slots.get(1).id;
-            onSortEvent(new SortSelection(menusSort));
+            if(menusSort < 0 || menusSort >= slots.size()){
+                menusSort = 0;
+            }
+            slots.get(menusSort).check = true;
         }
     }
 

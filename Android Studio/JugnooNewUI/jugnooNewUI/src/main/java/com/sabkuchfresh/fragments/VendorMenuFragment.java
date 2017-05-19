@@ -159,9 +159,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         activity.tvCollapRestaurantDeliveryTime.setText("");
         activity.clearRestaurantRatingStars(activity.llCollapRatingStars, activity.tvCollapRestaurantRating);
 
+        activity.setSortingList(this);
+
         success(activity.getMenuProductsResponse());
 
-        activity.setSortingList(this);
 
         return rootView;
     }
