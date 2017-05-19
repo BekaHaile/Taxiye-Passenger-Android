@@ -55,6 +55,9 @@
                 android:textColor="@color/text_color_theme_alpha_selector"
                 android:textSize="@dimen/text_size_28"
                 android:visibility="visible" />
+
+
+
         </LinearLayout>
 
 
@@ -64,13 +67,18 @@
             android:layout_height="60px"
             android:layout_centerHorizontal="true" />
 
+
     </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="14px"
+        android:background="@drawable/shadow_down_new"/>
 
     <ScrollView
         android:id="@+id/scrollView"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
         <LinearLayout
             android:id="@+id/linearLayoutMain"
@@ -85,7 +93,10 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:background="@drawable/bg_white_layer_shadow"
-                android:layout_margin="27px"
+                android:layout_marginLeft="14px"
+                android:layout_marginRight="14px"
+
+                android:layout_marginBottom="6px"
                 android:orientation="vertical"
                 android:visibility="visible">
 
@@ -106,6 +117,7 @@
                     android:id="@+id/relativeLayoutProfileImage"
                     android:layout_width="187px"
                     android:layout_height="187px"
+                    android:layout_marginTop="10px"
                     android:layout_gravity="center_horizontal"
                     android:tag="mwar">
 
@@ -139,10 +151,11 @@
                 <EditText
                     android:id="@+id/editTextUserName"
                     android:layout_width="420px"
-                    android:layout_height="60px"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="0px"
-                    android:layout_marginBottom="@dimen/px_5"
+
+                    android:paddingBottom="10px"
                     android:background="@drawable/bg_white_orange_bb"
                     android:gravity="center"
                     android:hint="@string/enter_your_name"
@@ -153,12 +166,13 @@
                     android:textColor="@color/text_color"
                     android:textColorHint="@color/text_color_light"
                     android:textCursorDrawable="@drawable/cursor_black"
-                    android:textSize="31px" />
+                    android:textSize="33px" />
 
                 <EditText
                     android:id="@+id/editTextEmail"
                     android:layout_width="420px"
-                    android:layout_height="50px"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10px"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/bg_white_orange_bb"
                     android:gravity="center"
@@ -168,18 +182,19 @@
                     android:textColor="@color/text_color_light"
                     android:textColorHint="@color/text_color_light"
                     android:textCursorDrawable="@drawable/cursor_black"
-                    android:textSize="@dimen/text_size_24" />
+                    android:textSize="@dimen/text_size_26" />
 
                 <RelativeLayout
+                    android:layout_marginTop="-10px"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="30px">
+                    android:layout_marginBottom="20px">
 
                     <LinearLayout
                         android:id="@+id/linearLayoutPhone"
                         android:layout_width="wrap_content"
-                        android:layout_height="50px"
+                        android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:layout_centerVertical="true"
                         android:orientation="horizontal">
@@ -193,7 +208,7 @@
                             android:text="+91"
                             android:layout_marginLeft="@dimen/px_60"
                             android:textColor="@color/text_color_light"
-                            android:textSize="@dimen/text_size_24" />
+                            android:textSize="@dimen/text_size_26" />
 
 
                         <EditText
@@ -213,7 +228,7 @@
                             android:textColor="@color/text_color_light"
                             android:textColorHint="@color/black_text_alpha"
                             android:textCursorDrawable="@drawable/cursor_black"
-                            android:textSize="@dimen/text_size_24" />
+                            android:textSize="@dimen/text_size_26" />
 
 
                     </LinearLayout>
@@ -223,7 +238,10 @@
                         android:layout_width="60px"
                         android:layout_height="60px"
                         android:layout_toRightOf="@+id/linearLayoutPhone"
-                        android:padding="15px"
+                        android:paddingLeft="15px"
+                        android:paddingRight="15px"
+                        android:paddingBottom="15px"
+                        android:paddingTop="5px"
                         android:src="@drawable/edit_icon_selector"
                         android:tag="mwar"
                         android:visibility="visible" />
@@ -280,8 +298,8 @@
             <LinearLayout
 
                 android:background="@drawable/bg_white_layer_shadow"
-                android:layout_marginLeft="29px"
-                android:layout_marginRight="29px"
+                android:layout_marginLeft="14px"
+                android:layout_marginRight="14px"
                 android:paddingBottom="25px"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -318,7 +336,7 @@
                         android:text="@string/change_password"
 
                         android:textColor="@color/text_color_light_selector"
-                        android:textSize="27px" />
+                        android:textSize="30px" />
 
                     <!-- <ImageView
                             android:id="@+id/imageViewChangePassword"
@@ -372,7 +390,7 @@
                             android:text="@string/save"
                             android:textAllCaps="true"
                             android:textColor="@color/text_color_theme_alpha_selector"
-                            android:textSize="27px"
+                            android:textSize="30px"
                             android:visibility="visible" />
                     </LinearLayout>
 
@@ -407,7 +425,7 @@
                         android:text="@string/address_book"
 
                         android:textColor="@color/text_color_light_selector"
-                        android:textSize="27px" />
+                        android:textSize="30px" />
 
 
                 </RelativeLayout>
@@ -437,7 +455,7 @@
                         android:gravity="center"
                         android:text="@string/emergency_contacts"
                         android:textColor="@color/text_color_light_selector"
-                        android:textSize="27px" />
+                        android:textSize="30px" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -718,7 +736,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="26px"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -778,6 +796,8 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:layout_marginLeft="40px"
+                android:layout_marginRight="40px"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -787,9 +807,9 @@
                     android:layout_height="70px"
                     android:layout_gravity="right"
                     android:layout_marginBottom="10px"
-                    android:layout_marginLeft="40px"
+
                     android:layout_marginRight="30px"
-                    android:layout_marginTop="20px"
+                    android:layout_marginTop="10px"
                     android:gravity="center_vertical|right"
                     android:orientation="horizontal">
 
@@ -821,8 +841,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_gravity="right"
                     android:layout_marginBottom="10px"
-                    android:layout_marginRight="30px"
-                    android:layout_marginTop="20px"
+
+                    android:layout_marginTop="10px"
                     android:gravity="center_vertical|right"
                     android:orientation="horizontal">
 

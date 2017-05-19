@@ -191,7 +191,9 @@ public class SupportActivity extends BaseFragmentActivity  {
 	
 	@Override
 	protected void onDestroy() {
-        ASSL.closeActivity(relative);
+		if(relative != null) {
+			ASSL.closeActivity(relative);
+		}
         System.gc();
 		super.onDestroy();
 	}

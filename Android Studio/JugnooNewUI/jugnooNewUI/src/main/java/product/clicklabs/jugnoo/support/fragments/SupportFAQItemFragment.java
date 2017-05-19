@@ -158,9 +158,7 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 
 		showItem();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
 
 		buttonSubmit.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -244,6 +242,9 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 		keyboardLayoutListener.setResizeTextView(false);
 		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return rootView;
 	}
