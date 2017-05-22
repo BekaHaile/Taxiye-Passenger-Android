@@ -381,6 +381,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     } finally {
                                         Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
                                     }
+
+                                    if(activity.getMenusFilterFragment() != null){
+                                        activity.getMenusFilterFragment().setCuisinesList();
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }

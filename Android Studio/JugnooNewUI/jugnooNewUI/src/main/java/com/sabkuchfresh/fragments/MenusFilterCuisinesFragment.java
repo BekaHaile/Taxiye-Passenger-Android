@@ -44,7 +44,6 @@ public class MenusFilterCuisinesFragment extends Fragment{
         rootView = inflater.inflate(R.layout.fragment_menus_filter_cuisines, container, false);
 
         activity = (FreshActivity) getActivity();
-        activity.fragmentUISetup(this);
 
         linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
         try {

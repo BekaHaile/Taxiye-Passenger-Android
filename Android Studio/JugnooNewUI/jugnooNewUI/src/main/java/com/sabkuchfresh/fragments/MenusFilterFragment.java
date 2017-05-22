@@ -33,6 +33,8 @@ import static product.clicklabs.jugnoo.Constants.PUREVEGETARIAN;
 public class MenusFilterFragment extends Fragment implements GAAction{
 
 	private final String TAG = MenusFilterFragment.class.getSimpleName();
+	private ImageView ivBack;
+	private TextView tvReset;
 	private RelativeLayout rlRoot;
 	private TextView textViewSortBy, textViewPopularity, textViewDistance, textViewPrice;
 	private CardView cardViewSort;
@@ -94,8 +96,6 @@ public class MenusFilterFragment extends Fragment implements GAAction{
         activity = (FreshActivity) getActivity();
         mBus = (activity).getBus();
 
-		activity.fragmentUISetup(this);
-		setResetClickListener();
 		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
 		try {
 			if(rlRoot != null) {
@@ -106,6 +106,10 @@ public class MenusFilterFragment extends Fragment implements GAAction{
 		}
 
 		GAUtils.trackScreenView(MENUS+FILTERS);
+
+		ivBack = (ImageView) rootView.findViewById(R.id.ivBack);
+		tvReset = (TextView) rootView.findViewById(R.id.tvReset);
+		setResetClickListener();
 
 		textViewQuickFilters = (TextView) rootView.findViewById(R.id.textViewQuickFilters); textViewQuickFilters.setTypeface(Fonts.mavenMedium(activity));
 		textViewAcceptOnline = (TextView) rootView.findViewById(R.id.textViewAcceptOnline); textViewAcceptOnline.setTypeface(Fonts.mavenMedium(activity));
@@ -140,25 +144,7 @@ public class MenusFilterFragment extends Fragment implements GAAction{
 		textViewSelectCuisinesValue = (TextView) rootView.findViewById(R.id.textViewSelectCuisinesValue); textViewSelectCuisinesValue.setTypeface(Fonts.mavenMedium(activity));
 		textViewSelectCuisinesValue.setVisibility(View.GONE);
 
-		if(activity.getMenusResponse() != null && activity.getMenusResponse().getFilters() != null
-				&& activity.getMenusResponse().getFilters().getCuisines() != null
-				&& activity.getMenusResponse().getFilters().getCuisines().size() > 0){
-			cardViewCuisines.setVisibility(View.VISIBLE);
-			textViewCuisines.setVisibility(View.VISIBLE);
-			activity.getFilterCuisinesLocal().clear();
-			for(int i=0; i<activity.getMenusResponse().getFilters().getCuisines().size(); i++){
-				String cuisine = activity.getMenusResponse().getFilters().getCuisines().get(i);
-				if(activity.getCuisinesSelected().contains(cuisine)){
-					activity.getFilterCuisinesLocal().add(new FilterCuisine(cuisine, 1));
-				} else {
-					activity.getFilterCuisinesLocal().add(new FilterCuisine(cuisine, 0));
-				}
-			}
-			setFiltersText();
-		} else {
-			cardViewCuisines.setVisibility(View.GONE);
-			textViewCuisines.setVisibility(View.GONE);
-		}
+
 
 
 
@@ -206,15 +192,6 @@ public class MenusFilterFragment extends Fragment implements GAAction{
 			}
 		});
 
-/*
-		relativeLayoutPopularity.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setSortBySelected(getSortBySelected() != SortType.ONLINEPAYMENTACCEPTED ? SortType.ONLINEPAYMENTACCEPTED : SortType.NONE);
-				updateSortTypeUI();
-			}
-		});
-*/
 
 		relativeLayoutDistance.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -356,19 +333,6 @@ public class MenusFilterFragment extends Fragment implements GAAction{
 				activity.setDtSelected(getDtSelected());
 				activity.setMoSelected(getMoSelected());
 
-		/*		for(String qf : quickFilterLocal){
-					FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Quick Filter", qf);
-				}
-				for(String cuisines : activity.getCuisinesSelected()){
-					FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Cuisines", cuisines);
-				}
-				FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Sort By", String.valueOf(activity.getSortBySelected()));
-				FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Min Order", String.valueOf(activity.getMoSelected()));
-				FlurryEventLogger.eventGA(FlurryEventNames.MENUS_FRAGMENT, "Delivery Time", String.valueOf(activity.getDtSelected()));
-				FlurryEventLogger.eventGA(Events.MENUS, Events.APPLY_FILTERS, Events.MENU_APPLY_FILTER);*/
-
-
-
 				String quickFilters = null;
 				if (quickFilterLocal!=null) {
 					for(String qf : quickFilterLocal){
@@ -384,9 +348,6 @@ public class MenusFilterFragment extends Fragment implements GAAction{
 				GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.MINIMUM_ORDER, String.valueOf(activity.getMoSelected()));
 				GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.DELIVERY_TIME, String.valueOf(activity.getDtSelected()));
 				GAUtils.event(GAAction.MENUS, GAAction.FILTERS , GAAction.APPLY_BUTTON + GAAction.CLICKED);
-
-
-
 
 
 				activity.performBackPressed(false);
@@ -413,6 +374,15 @@ public class MenusFilterFragment extends Fragment implements GAAction{
 		updateQuickFilterUI();
 
 
+		ivBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(activity != null){
+					activity.performBackPressed(true);
+				}
+			}
+		});
+
 		return rootView;
 	}
 
@@ -427,8 +397,6 @@ public class MenusFilterFragment extends Fragment implements GAAction{
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if(!hidden){
-			activity.fragmentUISetup(this);
-			setResetClickListener();
 			setFiltersText();
 		}
 	}
@@ -543,28 +511,30 @@ public class MenusFilterFragment extends Fragment implements GAAction{
 
 
 	private void setResetClickListener(){
-		activity.getTopBar().textViewReset.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setSortBySelected(SortType.NONE);
-				setMoSelected(MinOrder.NONE);
-				setDtSelected(DeliveryTime.NONE);
-				for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
-					filterCuisine.setSelected(0);
+		if(getView() != null) {
+			tvReset.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					setSortBySelected(SortType.NONE);
+					setMoSelected(MinOrder.NONE);
+					setDtSelected(DeliveryTime.NONE);
+					for (FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()) {
+						filterCuisine.setSelected(0);
+					}
+
+					quickFilterLocal.clear();
+					updateQuickFilterUI();
+
+					updateSortTypeUI();
+					updateMinOrderUI();
+					updateDeliveryTimeUI();
+					setFiltersText();
+
+					GAUtils.event(GAAction.MENUS, GAAction.FILTERS, GAAction.RESET_BUTTON + GAAction.CLICKED);
+
 				}
-
-				quickFilterLocal.clear();
-				updateQuickFilterUI();
-
-				updateSortTypeUI();
-				updateMinOrderUI();
-				updateDeliveryTimeUI();
-				setFiltersText();
-
-				GAUtils.event(GAAction.MENUS, GAAction.FILTERS , GAAction.RESET_BUTTON + GAAction.CLICKED);
-
-			}
-		});
+			});
+		}
 	}
 
 	private void setFiltersText(){
@@ -580,4 +550,27 @@ public class MenusFilterFragment extends Fragment implements GAAction{
 		}
 		textViewSelectCuisinesValue.setVisibility(textViewSelectCuisinesValue.getText().length() > 0 ? View.VISIBLE : View.GONE);
 	}
+
+	public void setCuisinesList(){
+		if(activity.getMenusResponse() != null && activity.getMenusResponse().getFilters() != null
+				&& activity.getMenusResponse().getFilters().getCuisines() != null
+				&& activity.getMenusResponse().getFilters().getCuisines().size() > 0){
+			cardViewCuisines.setVisibility(View.VISIBLE);
+			textViewCuisines.setVisibility(View.VISIBLE);
+			activity.getFilterCuisinesLocal().clear();
+			for(int i=0; i<activity.getMenusResponse().getFilters().getCuisines().size(); i++){
+				String cuisine = activity.getMenusResponse().getFilters().getCuisines().get(i);
+				if(activity.getCuisinesSelected().contains(cuisine)){
+					activity.getFilterCuisinesLocal().add(new FilterCuisine(cuisine, 1));
+				} else {
+					activity.getFilterCuisinesLocal().add(new FilterCuisine(cuisine, 0));
+				}
+			}
+			setFiltersText();
+		} else {
+			cardViewCuisines.setVisibility(View.GONE);
+			textViewCuisines.setVisibility(View.GONE);
+		}
+	}
+
 }
