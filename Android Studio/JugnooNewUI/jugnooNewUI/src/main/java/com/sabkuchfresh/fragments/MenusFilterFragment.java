@@ -3,7 +3,6 @@ package com.sabkuchfresh.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,7 +50,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	private ImageView imageViewRadioPopularity, imageViewRadioDistance, imageViewRadioPrice;
 
 	private TextView textViewCuisines, textViewSelectCuisinesValue;
-	private CardView cardViewCuisines;
+	private RelativeLayout cardViewCuisines;
 
 	private TextView textViewMinimumOrder;
 	private RelativeLayout relativeLayoutMO150, relativeLayoutMO250, relativeLayoutMO500;
@@ -131,7 +130,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		imageViewRadioPrice = (ImageView) rootView.findViewById(R.id.imageViewRadioPrice);
 
 		textViewCuisines = (TextView) rootView.findViewById(R.id.textViewCuisines); textViewCuisines.setTypeface(Fonts.mavenMedium(activity));
-		cardViewCuisines = (CardView) rootView.findViewById(R.id.cardViewCuisines);
+		cardViewCuisines = (RelativeLayout) rootView.findViewById(R.id.cardViewCuisines);
 		((TextView)rootView.findViewById(R.id.textViewSelectCuisines)).setTypeface(Fonts.mavenMedium(activity));
 		textViewSelectCuisinesValue = (TextView) rootView.findViewById(R.id.textViewSelectCuisinesValue); textViewSelectCuisinesValue.setTypeface(Fonts.mavenMedium(activity));
 		textViewSelectCuisinesValue.setVisibility(View.GONE);

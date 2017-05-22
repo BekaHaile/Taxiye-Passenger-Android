@@ -522,6 +522,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if (activity.getTopFragment() instanceof MenusFragment) {
             activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
         }
+        recyclerViewRestaurant.smoothScrollToPosition(0);
     }
 
 }
