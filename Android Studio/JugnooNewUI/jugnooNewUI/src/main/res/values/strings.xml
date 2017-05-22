@@ -1208,9 +1208,9 @@
     <string name="price">Price</string>
     <string name="cuisines">Cuisines</string>
     <string name="minimum_order">Minimum order</string>
-    <string name="less_than_150"><![CDATA[<Rs. 150]]></string>
-    <string name="less_than_250"><![CDATA[<Rs. 250]]></string>
-    <string name="less_than_500"><![CDATA[<Rs. 500]]></string>
+    <string name="less_than_150"><![CDATA[< \u20B9150]]></string>
+    <string name="less_than_250"><![CDATA[< \u20B9250]]></string>
+    <string name="less_than_500"><![CDATA[< \u20B9500]]></string>
     <string name="delivery_time_wo_colon">Delivery time</string>
     <string name="min_30">30 Min</string>
     <string name="min_45">45 Min</string>
@@ -1696,6 +1696,8 @@
     <string name="write_a_review">Write a review</string>
     <string name="feed">Feed</string>
     <string name="back_button">Back button</string>
+    <string name="online_payment">Online Payment</string>
+    <string name="start_typing_a_cuisine">Start typing a cuisine…</string>
 
 
 </resources>

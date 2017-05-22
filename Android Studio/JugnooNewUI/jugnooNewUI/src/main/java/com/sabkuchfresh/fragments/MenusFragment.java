@@ -267,9 +267,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 				activity.fragmentUISetup(this);
 				activity.setAddressTextToLocationPlaceHolder();
 				activity.resumeMethod();
-				menusRestaurantAdapter.applyFilter();
-				activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-				if (searchOpened) {
+                applyFilter();
+                if (searchOpened) {
 					searchOpened = false;
 					openSearch(false);
 				}
@@ -343,10 +342,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
                                     menusRestaurantAdapter.setList(vendors);
-                                    menusRestaurantAdapter.applyFilter();
-                                    if (activity.getTopFragment() instanceof MenusFragment) {
-                                        activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-                                    }
+                                    applyFilter();
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
@@ -519,6 +515,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public MenusRestaurantAdapter getMenusRestaurantAdapter() {
         return menusRestaurantAdapter;
+    }
+
+    public void applyFilter(){
+        menusRestaurantAdapter.applyFilter();
+        if (activity.getTopFragment() instanceof MenusFragment) {
+            activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
+        }
     }
 
 }

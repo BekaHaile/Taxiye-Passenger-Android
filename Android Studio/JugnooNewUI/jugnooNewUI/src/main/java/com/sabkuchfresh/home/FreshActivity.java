@@ -336,6 +336,35 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             topBar.etSearch.addTextChangedListener(textWatcher);
 
+            drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    if(menuBar != null){
+                        menuBar.getRecyclerViewMenu().scrollToPosition(0);
+                    }
+                    Utils.hideKeyboard(FreshActivity.this);
+                    if(drawerView.equals(llRightDrawer)){
+                        if(getMenusFragment() != null) {
+                            getMenusFragment().applyFilter();
+                        }
+                    }
+                }
+
+                @Override
+                public void onDrawerStateChanged(int newState) {
+
+                }
+            });
 
 
            /* appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -1905,6 +1934,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
             } else if(getTopFragment() instanceof FeedPostDetailFragment){
                 GAUtils.event(FEED, COMMENT, BACK+BUTTON+CLICKED);
+            }
+        }
+
+        if(drawerLayout.isDrawerOpen(GravityCompat.END)){
+            if(getMenusFilterFragment() != null) {
+                getMenusFilterFragment().performBackPress();
+                return;
             }
         }
 
