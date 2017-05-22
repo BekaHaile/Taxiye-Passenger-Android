@@ -266,6 +266,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private Typewriter tvAddPost;
     private ImageView ivProfilePic;
     public int currentOffsetFeedHomeAppBar;
+    public boolean filtersChanged = false;
 
 
 
@@ -344,7 +345,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void onDrawerOpened(View drawerView) {
-
+                    if (drawerView.equals(llRightDrawer)) {
+                        filtersChanged = false;
+                    }
                 }
 
                 @Override
@@ -355,7 +358,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Utils.hideKeyboard(FreshActivity.this);
                     if(drawerView.equals(llRightDrawer)){
                         if(getMenusFragment() != null) {
-                            getMenusFragment().applyFilter();
+                            getMenusFragment().applyFilter(filtersChanged);
                         }
                     }
                 }

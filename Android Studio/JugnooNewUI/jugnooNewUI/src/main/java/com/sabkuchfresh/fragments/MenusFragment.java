@@ -267,7 +267,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 				activity.fragmentUISetup(this);
 				activity.setAddressTextToLocationPlaceHolder();
 				activity.resumeMethod();
-                applyFilter();
+                applyFilter(false);
                 if (searchOpened) {
 					searchOpened = false;
 					openSearch(false);
@@ -342,7 +342,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
                                     menusRestaurantAdapter.setList(vendors);
-                                    applyFilter();
+                                    applyFilter(false);
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
@@ -517,12 +517,14 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return menusRestaurantAdapter;
     }
 
-    public void applyFilter(){
+    public void applyFilter(boolean scrollToTop){
         menusRestaurantAdapter.applyFilter();
         if (activity.getTopFragment() instanceof MenusFragment) {
             activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
         }
-        recyclerViewRestaurant.smoothScrollToPosition(0);
+        if(scrollToTop) {
+            recyclerViewRestaurant.smoothScrollToPosition(0);
+        }
     }
 
 }
