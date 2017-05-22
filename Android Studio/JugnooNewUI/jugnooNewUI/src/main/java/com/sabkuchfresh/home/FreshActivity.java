@@ -2600,6 +2600,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
+    public void openDeepIndex(){
+        if(deepLinkAction != null && menuBar != null) {
+            deepLinkAction.openDeepLink(menuBar);
+        }
+    }
 
     private PaytmRechargeDialog paytmRechargeDialog;
 

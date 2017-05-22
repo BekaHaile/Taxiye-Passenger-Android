@@ -8,13 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,19 +26,19 @@ import product.clicklabs.jugnoo.R;
 public class MenusVendorOffersAdapter extends RecyclerView.Adapter<MenusVendorOffersAdapter.ViewHolderVendorOffer> implements ItemListener {
 
 	private Context context;
-	private ArrayList<MenusResponse.Vendor> vendorOffers;
+	private List<MenusResponse.BannerInfo> bannerInfos;
 	private RecyclerView recyclerView;
 	private Callback callback;
 
-	public MenusVendorOffersAdapter(Context context, ArrayList<MenusResponse.Vendor> vendorOffers, RecyclerView recyclerView, Callback callback){
+	public MenusVendorOffersAdapter(Context context, List<MenusResponse.BannerInfo> bannerInfos, RecyclerView recyclerView, Callback callback){
 		this.context = context;
-		this.vendorOffers = vendorOffers;
+		this.bannerInfos = bannerInfos;
 		this.recyclerView = recyclerView;
 		this.callback = callback;
 	}
 
-	public void setList(ArrayList<MenusResponse.Vendor> vendorOffers){
-		this.vendorOffers = vendorOffers;
+	public void setList(List<MenusResponse.BannerInfo> bannerInfos){
+		this.bannerInfos = bannerInfos;
 		notifyDataSetChanged();
 	}
 
@@ -51,10 +50,9 @@ public class MenusVendorOffersAdapter extends RecyclerView.Adapter<MenusVendorOf
 
 	@Override
 	public void onBindViewHolder(MenusVendorOffersAdapter.ViewHolderVendorOffer holder, int position) {
-		MenusResponse.Vendor vendor = vendorOffers.get(position);
-		holder.tvRestName.setText(vendor.getName());
-		if(!TextUtils.isEmpty(vendor.getImage())) {
-			Picasso.with(context).load(vendor.getImage())
+		MenusResponse.BannerInfo bannerInfo = bannerInfos.get(position);
+		if(!TextUtils.isEmpty(bannerInfo.getImageLink())) {
+			Picasso.with(context).load(bannerInfo.getImageLink())
 					.placeholder(R.drawable.ic_fresh_item_placeholder)
 					.resize(context.getResources().getDimensionPixelSize(R.dimen.dp_150),
 							context.getResources().getDimensionPixelSize(R.dimen.dp_80))
@@ -79,7 +77,7 @@ public class MenusVendorOffersAdapter extends RecyclerView.Adapter<MenusVendorOf
 
 	@Override
 	public int getItemCount() {
-		return vendorOffers == null ? 0 : vendorOffers.size();
+		return bannerInfos == null ? 0 : bannerInfos.size();
 	}
 
 	@Override
@@ -88,7 +86,7 @@ public class MenusVendorOffersAdapter extends RecyclerView.Adapter<MenusVendorOf
 		if(pos != RecyclerView.NO_POSITION){
 			switch(viewClicked.getId()){
 				case R.id.relative:
-					callback.onOfferClick(vendorOffers.get(pos));
+					callback.onBannerInfoClick(bannerInfos.get(pos));
 					break;
 			}
 		}
@@ -98,8 +96,6 @@ public class MenusVendorOffersAdapter extends RecyclerView.Adapter<MenusVendorOf
 
 		@Bind(R.id.ivRestImage)
 		ImageView ivRestImage;
-		@Bind(R.id.tvRestName)
-		TextView tvRestName;
 		@Bind(R.id.relative)
 		RelativeLayout relative;
 
@@ -117,7 +113,7 @@ public class MenusVendorOffersAdapter extends RecyclerView.Adapter<MenusVendorOf
 
 
 	public interface Callback{
-		void onOfferClick(MenusResponse.Vendor vendor);
+		void onBannerInfoClick(MenusResponse.BannerInfo bannerInfo);
 	}
 
 }

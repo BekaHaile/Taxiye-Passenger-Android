@@ -80,7 +80,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private String searchText;
     private boolean searchApiHitOnce = false;
     private RecyclerView recyclerView;
-    private ArrayList<MenusResponse.Vendor> offerVendors;
+    private List<MenusResponse.BannerInfo> bannerInfos;
 
     private static final int MAIN_ITEM = 0;
     private static final int FORM_ITEM = 1;
@@ -150,7 +150,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         callback.onNotify(vendorsToShow.size());
     }
 
-    public void setList(ArrayList<MenusResponse.Vendor> vendors) {
+    public void setList(ArrayList<MenusResponse.Vendor> vendors, List<MenusResponse.BannerInfo> bannerInfos) {
         this.vendorsComplete = vendors;
         this.vendorsFiltered.clear();
         this.vendorsFiltered.addAll(vendors);
@@ -158,9 +158,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.vendorsToShow.clear();
         this.vendorsToShow.addAll(vendors);
 
-        // TODO: 19/05/17  remove this
-        offerVendors = new ArrayList<>();
-        offerVendors.addAll(vendors);
+        this.bannerInfos = bannerInfos;
 
         applyFilter();
     }
@@ -430,7 +428,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     public void onClick(View v) {
                         try {
                             int pos = (int) v.getTag();
-                            callback.onRestaurantSelected(vendorsToShow.get(pos));
+                            callback.onRestaurantSelected(vendorsToShow.get(pos).getRestaurantId());
 //                            if(searchApiHitOnce && searchText.length() > 0){
 //                            for analytics event
 //                            }
@@ -508,7 +506,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             } else if (holder instanceof ViewHolderOffers){
                 ViewHolderOffers holderOffers = (ViewHolderOffers) holder;
-                holderOffers.menusVendorOffersAdapter.setList(offerVendors);
+                holderOffers.menusVendorOffersAdapter.setList(bannerInfos);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -647,7 +645,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     private int offerVendorsSize(){
-        return offerVendors == null ? 0 : offerVendors.size();
+        return bannerInfos == null ? 0 : bannerInfos.size();
     }
 
     private int vendorsToShowCount() {
@@ -781,8 +779,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     public interface Callback {
-        void onRestaurantSelected(MenusResponse.Vendor vendor);
-
+        void onRestaurantSelected(int vendorId);
+        void onBannerInfoDeepIndexClick(int deepIndex);
         void onNotify(int count);
     }
 
@@ -1070,11 +1068,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             super(view);
             rvMenusVendorOffers = (RecyclerView) view.findViewById(R.id.rvMenusVendorOffers);
             rvMenusVendorOffers.setLayoutManager(new LinearLayoutManager(context, LinearLayout.HORIZONTAL, false));
-            menusVendorOffersAdapter = new MenusVendorOffersAdapter(activity, offerVendors,
+            menusVendorOffersAdapter = new MenusVendorOffersAdapter(activity, bannerInfos,
                     rvMenusVendorOffers, new MenusVendorOffersAdapter.Callback() {
                 @Override
-                public void onOfferClick(MenusResponse.Vendor vendor) {
-                    callback.onRestaurantSelected(vendor);
+                public void onBannerInfoClick(MenusResponse.BannerInfo bannerInfo) {
+                    if(bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1){
+                        callback.onBannerInfoDeepIndexClick(bannerInfo.getDeepIndex());
+                    } else {
+                        callback.onRestaurantSelected(bannerInfo.getRestaurantId());
+                    }
                 }
             });
             rvMenusVendorOffers.setAdapter(menusVendorOffersAdapter);

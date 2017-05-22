@@ -56,6 +56,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.http.HEAD;
 import retrofit.mime.TypedByteArray;
 
 /**
@@ -139,13 +140,21 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
             @Override
-            public void onRestaurantSelected(MenusResponse.Vendor vendor) {
-                activity.fetchRestaurantMenuAPI(vendor.getRestaurantId());
+            public void onRestaurantSelected(int vendorId) {
+                activity.fetchRestaurantMenuAPI(vendorId);
                 Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
             }
 
             @Override
             public void onNotify(int count) {
+            }
+
+            @Override
+            public void onBannerInfoDeepIndexClick(int deepIndex) {
+                Data.deepLinkIndex = deepIndex;
+                if(activity != null) {
+                    activity.openDeepIndex();
+                }
             }
         }, recyclerViewRestaurant);
 
@@ -341,7 +350,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     status.clear();
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
-                                    menusRestaurantAdapter.setList(vendors);
+                                    menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos());
                                     applyFilter(false);
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
