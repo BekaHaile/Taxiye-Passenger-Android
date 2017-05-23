@@ -127,10 +127,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
 
-        // TODO: 23/05/17 check toggle visibility from server
         viewPromoTitle.setVisibility(View.VISIBLE);
-        tvSwitchVegToggle = (TextView) viewPromoTitle.findViewById(R.id.tvSwitchVegToggle); tvSwitchVegToggle.setVisibility(View.VISIBLE);
-        switchVegToggle = (SwitchCompat) viewPromoTitle.findViewById(R.id.switchVegToggle); switchVegToggle.setVisibility(View.VISIBLE);
+        tvSwitchVegToggle = (TextView) viewPromoTitle.findViewById(R.id.tvSwitchVegToggle);
+        switchVegToggle = (SwitchCompat) viewPromoTitle.findViewById(R.id.switchVegToggle);
         switchVegToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 int isVegToggle = Prefs.with(activity).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
@@ -451,6 +450,14 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 activity.setRestaurantRatingStarsToLL(activity.llCollapRatingStars, activity.tvCollapRestaurantRating, activity.getVendorOpened().getRating());
             } else {
                 activity.llCollapRatingStars.setVisibility(View.GONE);
+            }
+
+            tvSwitchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
+            switchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
+
+            if(switchVegToggle.getVisibility() == View.GONE && tvOfferTitle.getVisibility() == View.GONE){
+                viewPromoTitle.setVisibility(View.GONE);
+                rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.GONE);
             }
         }
     }
