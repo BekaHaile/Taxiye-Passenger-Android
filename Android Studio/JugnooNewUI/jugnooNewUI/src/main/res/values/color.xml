@@ -386,7 +386,8 @@
     <color name="gradient_pressed_start">#c1556c</color>
     <color name="gradient_pressed_end">#c58f3f</color>
 
-    <color name="bg_address_confirm">#f6c96f</color>
+    <color name="bg_address_confirm_border">#f6c96f</color>
+    <color name="bg_address_confirm">#ffe6b3</color>
     <color name="text_address_confirm">#8b572a</color>
 
 

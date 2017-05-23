@@ -4,7 +4,7 @@
     <item>
         <rotate android:fromDegrees="45" android:toDegrees="45" android:pivotX="-40%" android:pivotY="87%" >
             <shape android:shape="rectangle" >
-                <stroke android:color="@color/bg_address_confirm" android:width="10dp"/>
+                <stroke android:color="@color/bg_address_confirm_border" android:width="0.5dp"/>
                 <solid android:color="@color/bg_address_confirm" />
             </shape>
         </rotate>

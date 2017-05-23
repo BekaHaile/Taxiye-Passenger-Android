@@ -5,6 +5,7 @@
         <shape>
             <solid android:color="@color/bg_address_confirm"/>
             <corners android:radius="5dp"/>
+            <stroke android:color="@color/bg_address_confirm_border" android:width="0.5dp"/>
         </shape>
     </item>
 </selector>

@@ -680,5 +680,8 @@
     <dimen name="dp_11">
         11dp
     </dimen>
+    <dimen name="padding_bottom_menu_labels">23dp</dimen>
+    <dimen name="height_strip_offers">35dp</dimen>
+    <dimen name="padding_left_menu_labels">20dp</dimen>
 
 </resources>
