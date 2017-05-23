@@ -116,7 +116,7 @@ public class MealsData {
 		@SerializedName("message")
 		private String textToDisplay;
 
-		@SerializedName("deep_index")
+		@SerializedName("deepindex")
 		private String deepIndex;
 
 
