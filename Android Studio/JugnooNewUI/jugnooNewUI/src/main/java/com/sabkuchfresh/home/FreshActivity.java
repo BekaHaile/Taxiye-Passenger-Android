@@ -3234,6 +3234,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 				address = getSelectedAddressType();
 			}
             setLocationAddress(address);
+            deliveryAddressView.showConfirmAddressBar(TextUtils.isEmpty(getSelectedAddressType()));
         } catch (Exception e) {
             e.printStackTrace();
         }

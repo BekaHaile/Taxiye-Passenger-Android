@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llLocation"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:orientation="vertical"
     android:visibility="gone">
 
@@ -12,9 +14,40 @@
         android:layout_height="@dimen/shadow_new_height"
         android:src="@drawable/shadow_down_new" />
 
+    <TextView
+        android:id="@+id/tv_confirm_address"
+        android:gravity="center"
+        android:text="@string/label_confirm_delivery_address"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:paddingTop="7.5dp"
+        android:paddingBottom="7.5dp"
+        android:tag="@string/dont_touch_me"
+        android:background="@drawable/bg_address_confirm"
+        android:textColor="@color/text_address_confirm"
+        app:font="@string/maven_r"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <View
+        android:id="@+id/arrow_down"
+        android:visibility="gone"
+        android:background="@drawable/bg_triangle_confirm_address"
+        android:layout_gravity="center"
+        android:rotation="180"
+        android:tag="@string/dont_touch_me"
+        android:layout_marginBottom="-12dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_bar_height"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/px_10"
+        android:paddingBottom="@dimen/px_20"
         android:background="@drawable/bg_white_menu_item_selector_color_selector">
 
         <ImageView
@@ -28,7 +61,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/px_22"
             android:layout_toRightOf="@+id/ivLoc"
             android:layout_toLeftOf="@+id/ivEditLoc"
