@@ -77,13 +77,18 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 item.setItemName(subcategory.getSubcategoryName());
                 item.setIsSubCategory(1);
                 subItems.add(item);
+                int itemsInSubCategories = 0;
                 for(int j=0; j<subcategory.getItems().size(); j++){
                     Item item1 = subcategory.getItems().get(j);
                     item1.setSubCategoryPos(i);
                     item1.setItemPos(j);
                     if(isVegCheck(isVegToggle, item1)){
                         subItems.add(item1);
+                        itemsInSubCategories++;
                     }
+                }
+                if(itemsInSubCategories == 0){
+                    subItems.remove(subItems.size()-1);
                 }
             }
         } else if(category.getItems() != null){

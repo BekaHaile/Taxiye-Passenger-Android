@@ -3802,18 +3802,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         });
 
-        // TODO: 18/05/17  remove this
-        tvCollapRestaurantName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int isVegToggle = Prefs.with(FreshActivity.this).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
-                Prefs.with(FreshActivity.this).save(Constants.KEY_SP_IS_VEG_TOGGLE,
-                        isVegToggle == 0 ? 1 : 0);
-                getVendorMenuFragment().onUpdateListEvent(new UpdateMainList(true, true));
-                tvCollapRestaurantName.setTextColor(ContextCompat.getColor(FreshActivity.this, isVegToggle == 0 ? R.color.text_green_color : R.color.white));
-            }
-        });
-
 
         //to enable animate layout changes since it acts weirdly with collapsing toolbar if declared in xml because it animates whole heirarchy and hence toolbar behaves weirdly
         //This method is being used to animate the specific group and its nested children

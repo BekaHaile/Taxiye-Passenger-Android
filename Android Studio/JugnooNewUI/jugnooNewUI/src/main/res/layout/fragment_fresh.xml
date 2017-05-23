@@ -84,13 +84,58 @@
         </RelativeLayout>
 
 
+        <RelativeLayout
+            android:id="@+id/rlVegToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rlSelectedStore"
+            android:tag="@string/dont_touch_me"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:id="@+id/tvSwitchVegToggle"
+                android:text="@string/veg_only"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_11"
+                app:font="@string/maven_r"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_toLeftOf="@+id/switchVegToggle"
+                android:layout_alignTop="@+id/switchVegToggle"
+                android:layout_alignBottom="@+id/switchVegToggle"
+                android:gravity="center"
+
+                />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switchVegToggle"
+                android:theme="@style/ThemeSwitchAlternate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_alignParentRight="true"
+                />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_7"
+                android:src="@drawable/shadow_down_new"
+                android:layout_below="@+id/switchVegToggle"
+                />
+
+        </RelativeLayout>
+        
         <include
             android:id="@+id/layout_offer_title"
             layout="@layout/item_vendor_menu_offer_heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:layout_below="@id/rlSelectedStore"
+            android:layout_below="@+id/rlVegToggle"
             android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView

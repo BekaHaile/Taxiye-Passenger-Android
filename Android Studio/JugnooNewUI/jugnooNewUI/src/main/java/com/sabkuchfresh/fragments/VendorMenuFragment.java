@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,6 +71,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private View viewPromoTitle;
     private ImageButton ibArrow;
 
+    private RelativeLayout rlVegToggle;
+    private SwitchCompat switchVegToggle;
+
     public VendorMenuFragment() {
     }
 
@@ -116,6 +121,19 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
+
+        // TODO: 23/05/17 check toggle visibility from server
+        rlVegToggle = (RelativeLayout) rootView.findViewById(R.id.rlVegToggle); rlVegToggle.setVisibility(View.VISIBLE);
+        switchVegToggle = (SwitchCompat) rootView.findViewById(R.id.switchVegToggle);
+        switchVegToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int isVegToggle = Prefs.with(activity).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
+                Prefs.with(activity).save(Constants.KEY_SP_IS_VEG_TOGGLE,
+                        isVegToggle == 0 ? 1 : 0);
+                onUpdateListEvent(new UpdateMainList(true, true));
+            }
+        });
+        switchVegToggle.setChecked(false);
 
         viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
         menusCategoryFragmentsAdapter = new MenusCategoryFragmentsAdapter(activity, getChildFragmentManager());
@@ -408,9 +426,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         if (activity.getVendorOpened() != null) {
             activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
 
-            // TODO: 18/05/17 remove this
             int isVegToggle = Prefs.with(activity).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
-            activity.tvCollapRestaurantName.setTextColor(ContextCompat.getColor(activity, isVegToggle == 1 ? R.color.text_green_color : R.color.white));
+            switchVegToggle.setChecked(isVegToggle == 1);
 
             if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
                 Picasso.with(activity).load(activity.getVendorOpened().getImage())
