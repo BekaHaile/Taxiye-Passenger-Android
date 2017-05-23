@@ -1,5 +1,7 @@
 package com.sabkuchfresh.fragments;
 
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -71,7 +73,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private View viewPromoTitle;
     private ImageButton ibArrow;
 
-    private RelativeLayout rlVegToggle;
+    private TextView tvSwitchVegToggle;
     private SwitchCompat switchVegToggle;
 
     public VendorMenuFragment() {
@@ -98,6 +100,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         activity = (FreshActivity) getActivity();
         viewPromoTitle = rootView.findViewById(R.id.layout_offer_title);
+        tvOfferTitle = (TextView)  viewPromoTitle.findViewById(R.id.tv_offer_title);
+        ibArrow = (ImageButton) viewPromoTitle.findViewById(R.id.ib_arrow);
+        ibArrow.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(activity, R.color.theme_color), PorterDuff.Mode.SRC_IN));
         //ifHasAnyOffers
 
         RelativeLayout rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore);
@@ -123,8 +128,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
 
         // TODO: 23/05/17 check toggle visibility from server
-        rlVegToggle = (RelativeLayout) rootView.findViewById(R.id.rlVegToggle); rlVegToggle.setVisibility(View.VISIBLE);
-        switchVegToggle = (SwitchCompat) rootView.findViewById(R.id.switchVegToggle);
+        viewPromoTitle.setVisibility(View.VISIBLE);
+        tvSwitchVegToggle = (TextView) viewPromoTitle.findViewById(R.id.tvSwitchVegToggle); tvSwitchVegToggle.setVisibility(View.VISIBLE);
+        switchVegToggle = (SwitchCompat) viewPromoTitle.findViewById(R.id.switchVegToggle); switchVegToggle.setVisibility(View.VISIBLE);
         switchVegToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 int isVegToggle = Prefs.with(activity).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
@@ -189,8 +195,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
     private void setUpPromoDisplayView(String promoText,String TandC) {
         recyclerViewOffers = (RecyclerView) rootView.findViewById(R.id.recycler_view_offers);
-        tvOfferTitle = (TextView)  viewPromoTitle.findViewById(R.id.tv_offer_title);
-        ibArrow = (ImageButton) viewPromoTitle.findViewById(R.id.ib_arrow);
         View.OnClickListener expandClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,8 +227,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     startEnableStateRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            viewPromoTitle.findViewById(R.id.tv_offer_title).setEnabled(true);
-                            viewPromoTitle.findViewById(R.id.ib_arrow).setEnabled(true);
+                            tvOfferTitle.setEnabled(true);
+                            ibArrow.setEnabled(true);
                         }
                     };
 
@@ -233,8 +237,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 }
 
 
-                viewPromoTitle.findViewById(R.id.tv_offer_title).setEnabled(false);
-                viewPromoTitle.findViewById(R.id.ib_arrow).setEnabled(false);
+                tvOfferTitle.setEnabled(false);
+                ibArrow.setEnabled(false);
                 handler.postDelayed(startEnableStateRunnable,activity.getResources().getInteger(R.integer.anim_time_promo_recycler));
 
             }
@@ -244,10 +248,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         ibArrow.setOnClickListener(expandClickListener);
         recyclerViewOffers.setAdapter(new DisplayOffersAdapter(activity,true,TandC));
         recyclerViewOffers.setLayoutManager(new LinearLayoutManager(activity));
-   /*     String heading = "FLAT 20% OFF";
-        String subHeading="ON FIRST ORDER";*/
-        viewPromoTitle.setVisibility(View.VISIBLE);
         tvOfferTitle.setVisibility(View.VISIBLE);
+        ibArrow.setVisibility(View.VISIBLE);
         tvOfferTitle.setText(setUpOfferTitle(promoText,null));
         rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.VISIBLE);
 
@@ -412,6 +414,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
                     if(activity.getMenuProductsResponse().getMenusPromotionInfo()!=null && activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText()!=null) {
                         setUpPromoDisplayView(activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText(),activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoTC());
+                    } else {
+                        tvOfferTitle.setVisibility(View.GONE);
+                        ibArrow.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.VISIBLE);
                     }
 
                     setUpCollapseToolbarData();
