@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -507,6 +508,18 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             } else if (holder instanceof ViewHolderOffers){
                 ViewHolderOffers holderOffers = (ViewHolderOffers) holder;
                 holderOffers.menusVendorOffersAdapter.setList(bannerInfos);
+                holderOffers.tabDots.setupWithViewPager(holderOffers.pagerMenusVendorOffers, true);
+                for (int i = 0; i < holderOffers.tabDots.getTabCount(); i++) {
+                    View tab = ((ViewGroup) holderOffers.tabDots.getChildAt(0)).getChildAt(i);
+                    ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+                    p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+                    tab.requestLayout();
+                }
+                if(bannerInfos.size() == 1){
+                    holderOffers.tabDots.setVisibility(View.GONE);
+                } else{
+                    holderOffers.tabDots.setVisibility(View.VISIBLE);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1061,15 +1074,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     public class ViewHolderOffers extends RecyclerView.ViewHolder {
-        public RecyclerView rvMenusVendorOffers;
         public MenusVendorOffersAdapter menusVendorOffersAdapter;
+        public ViewPager pagerMenusVendorOffers;
+        public TabLayout tabDots;
 
         public ViewHolderOffers(View view, Context context) {
             super(view);
-            rvMenusVendorOffers = (RecyclerView) view.findViewById(R.id.rvMenusVendorOffers);
-            rvMenusVendorOffers.setLayoutManager(new LinearLayoutManager(context, LinearLayout.HORIZONTAL, false));
-            menusVendorOffersAdapter = new MenusVendorOffersAdapter(activity, bannerInfos,
-                    rvMenusVendorOffers, new MenusVendorOffersAdapter.Callback() {
+            pagerMenusVendorOffers = (ViewPager) view.findViewById(R.id.pagerMenusVendorOffers);
+            tabDots = (TabLayout) view.findViewById(R.id.tabDots);
+            menusVendorOffersAdapter = new MenusVendorOffersAdapter(activity, bannerInfos, new MenusVendorOffersAdapter.Callback() {
                 @Override
                 public void onBannerInfoClick(MenusResponse.BannerInfo bannerInfo) {
                     if(bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1){
@@ -1079,7 +1092,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     }
                 }
             });
-            rvMenusVendorOffers.setAdapter(menusVendorOffersAdapter);
+            pagerMenusVendorOffers.setAdapter(menusVendorOffersAdapter);
         }
     }
 
