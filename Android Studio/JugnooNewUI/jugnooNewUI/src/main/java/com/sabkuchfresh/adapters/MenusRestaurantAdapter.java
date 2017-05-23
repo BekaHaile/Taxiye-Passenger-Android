@@ -815,7 +815,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                     if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
                                         if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
                                             searchVendors(searchText, productsResponse.getRestaurantIds());
-                                            recyclerView.scrollToPosition(0);
+                                            recyclerView.smoothScrollToPosition(0);
                                             if(productsResponse.getRestaurantIds().size() > 0) {
                                                 queryMap.put(searchText, productsResponse.getRestaurantIds());
                                             }

@@ -384,6 +384,7 @@
     <color name="gradient_normal_end">#efa645</color>
     <color name="gradient_pressed_start">#c1556c</color>
     <color name="gradient_pressed_end">#c58f3f</color>
+    <color name="border_color_new">#CCd0d0d0</color>
 
 
 </resources>

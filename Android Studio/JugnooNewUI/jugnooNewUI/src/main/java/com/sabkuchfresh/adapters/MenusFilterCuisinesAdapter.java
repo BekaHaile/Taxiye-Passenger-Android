@@ -31,13 +31,11 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 	private ArrayList<FilterCuisine> cuisines;
 	private ArrayList<FilterCuisine> cuisinesToShow;
 	private EditText editTextSearch;
+	private Callback callback;
 
-	public MenusFilterCuisinesAdapter(final FreshActivity activity, ArrayList<FilterCuisine> cuisines, EditText editText) {
+	public MenusFilterCuisinesAdapter(FreshActivity activity, ArrayList<FilterCuisine> cuisines, EditText editText, Callback callback) {
 		this.activity = activity;
-		this.cuisines = new ArrayList<>();
-		for(FilterCuisine filterCuisine : cuisines){
-			this.cuisines.add(new FilterCuisine(filterCuisine.getName(), filterCuisine.getSelected()));
-		}
+		this.cuisines = cuisines;
 		this.cuisinesToShow = new ArrayList<>();
 		this.cuisinesToShow.addAll(this.cuisines);
 		this.editTextSearch = editText;
@@ -59,6 +57,7 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 						MenusFilterCuisinesAdapter.this.activity.getString(R.string.no_cuisine_found) : null);
 			}
 		});
+		this.callback = callback;
 	}
 
 	public ArrayList<FilterCuisine> getCuisines(){
@@ -100,8 +99,9 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 	@Override
 	public void onBindViewHolder(MenusFilterCuisinesAdapter.ViewHolder holder, int position) {
 		try {
-			holder.textViewCuisine.setText(cuisinesToShow.get(position).getName());
-			holder.imageViewCheck.setImageResource(cuisinesToShow.get(position).getSelected() == 1 ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
+			FilterCuisine filterCuisine = cuisinesToShow.get(position);
+			holder.textViewCuisine.setText(filterCuisine.getName());
+			holder.imageViewCheck.setImageResource(filterCuisine.getSelected() == 1 ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
 			holder.imageViewSep.setVisibility(position == getItemCount()-1 ? View.GONE : View.VISIBLE);
 			holder.relative.setTag(position);
 			holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +109,11 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 				public void onClick(View v) {
 					try {
 						int pos = (int) v.getTag();
-						cuisinesToShow.get(pos).setSelected(cuisinesToShow.get(pos).getSelected() == 1 ? 0 : 1);
+						FilterCuisine filterCuisine = cuisinesToShow.get(pos);
+						filterCuisine.setSelected(filterCuisine.getSelected() == 1 ? 0 : 1);
+						if(callback != null) {
+							callback.onCuisineClicked(filterCuisine);
+						}
 						notifyDataSetChanged();
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -141,5 +145,9 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 		}
 	}
 
+
+	public interface Callback{
+		void onCuisineClicked(FilterCuisine filterCuisine);
+	}
 
 }

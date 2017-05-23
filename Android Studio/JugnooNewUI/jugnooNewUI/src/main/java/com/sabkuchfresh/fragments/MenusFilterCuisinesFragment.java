@@ -44,7 +44,6 @@ public class MenusFilterCuisinesFragment extends Fragment{
         rootView = inflater.inflate(R.layout.fragment_menus_filter_cuisines, container, false);
 
         activity = (FreshActivity) getActivity();
-        activity.fragmentUISetup(this);
 
         linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
         try {
@@ -62,7 +61,7 @@ public class MenusFilterCuisinesFragment extends Fragment{
         recyclerViewCuisines.setHasFixedSize(false);
         buttonDone = (Button) rootView.findViewById(R.id.buttonDone); buttonDone.setTypeface(Fonts.mavenMedium(activity));
 
-        menusFilterCuisinesAdapter = new MenusFilterCuisinesAdapter(activity, activity.getFilterCuisinesLocal(), editTextCuisine);
+        menusFilterCuisinesAdapter = new MenusFilterCuisinesAdapter(activity, activity.getFilterCuisinesLocal(), editTextCuisine, null);
         recyclerViewCuisines.setAdapter(menusFilterCuisinesAdapter);
 
         buttonDone.setOnClickListener(new View.OnClickListener() {

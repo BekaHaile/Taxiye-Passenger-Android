@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.activities.MainActivity;
-import com.sabkuchfresh.analytics.GAUtils;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -41,6 +40,10 @@ public class MenuBar {
 
 	public LinearLayout menuLayout;
 
+	public RecyclerView getRecyclerViewMenu() {
+		return recyclerViewMenu;
+	}
+
 	private RecyclerView recyclerViewMenu;
 
 	public MenuAdapter getMenuAdapter() {
@@ -57,28 +60,6 @@ public class MenuBar {
 		this.activity = activity;
 		this.drawerLayout = rootView;
 		initComponents();
-		drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-			@Override
-			public void onDrawerSlide(View drawerView, float slideOffset) {
-
-			}
-
-			@Override
-			public void onDrawerOpened(View drawerView) {
-
-			}
-
-			@Override
-			public void onDrawerClosed(View drawerView) {
-				recyclerViewMenu.scrollToPosition(0);
-			}
-
-			@Override
-			public void onDrawerStateChanged(int newState) {
-
-			}
-		});
-
 	}
 
 

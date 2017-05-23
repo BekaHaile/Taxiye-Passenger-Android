@@ -2181,7 +2181,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 params.put(Constants.INTERATED, "1");
                 if(type == AppConstant.ApplicationType.MEALS){
                     params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
-                } if(isMenusOpen()){
+                } else if(isMenusOpen()){
                     params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
                 } else {
                     params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());

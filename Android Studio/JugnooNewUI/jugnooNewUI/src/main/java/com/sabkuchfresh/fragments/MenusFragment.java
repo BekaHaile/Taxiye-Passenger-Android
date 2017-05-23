@@ -267,9 +267,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 				activity.fragmentUISetup(this);
 				activity.setAddressTextToLocationPlaceHolder();
 				activity.resumeMethod();
-				menusRestaurantAdapter.applyFilter();
-				activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-				if (searchOpened) {
+                applyFilter(false);
+                if (searchOpened) {
 					searchOpened = false;
 					openSearch(false);
 				}
@@ -343,10 +342,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
                                     menusRestaurantAdapter.setList(vendors);
-                                    menusRestaurantAdapter.applyFilter();
-                                    if (activity.getTopFragment() instanceof MenusFragment) {
-                                        activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-                                    }
+                                    applyFilter(false);
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
@@ -380,6 +376,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                         e.printStackTrace();
                                     } finally {
                                         Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+                                    }
+
+                                    if(activity.getMenusFilterFragment() != null){
+                                        activity.getMenusFilterFragment().setCuisinesList();
                                     }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -515,6 +515,16 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public MenusRestaurantAdapter getMenusRestaurantAdapter() {
         return menusRestaurantAdapter;
+    }
+
+    public void applyFilter(boolean scrollToTop){
+        menusRestaurantAdapter.applyFilter();
+        if (activity.getTopFragment() instanceof MenusFragment) {
+            activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
+        }
+        if(scrollToTop) {
+            recyclerViewRestaurant.smoothScrollToPosition(0);
+        }
     }
 
 }
