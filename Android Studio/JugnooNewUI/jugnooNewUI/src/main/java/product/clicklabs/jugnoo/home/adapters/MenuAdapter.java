@@ -251,7 +251,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_about_selector);
                 }else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
 
-                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
 
                 }
                 else{

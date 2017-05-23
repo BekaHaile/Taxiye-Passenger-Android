@@ -578,7 +578,7 @@ public class Data {
 
 
 			FuguConfig  fuguConfig = new FuguConfig(context.getString(R.string.fugu_key));
-            fuguConfig.configActionBar("#FAA31C","#ffffff",R.drawable.ic_back_selector);
+            fuguConfig.configActionBar("#ffffff","#595968",R.drawable.ic_back_selector);
 
 
 
