@@ -67,7 +67,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20px"
-                            android:src="@drawable/ic_home"
+                            android:src="@drawable/ic_loc_other"
                             android:tag="mwar" />
 
                         <LinearLayout
@@ -99,6 +99,17 @@
                                 android:textSize="26px" />
                         </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/tv_no_address_alert"
+                            android:textSize="14.5sp"
+                            android:visibility="gone"
+                            android:textColor="@color/red_alert_no_address"
+                            app:font="@string/maven_r"
+                            android:tag="@string/dont_touch_me"
+                            android:layout_centerInParent="true"
+                            android:text="Please confirm delivery address."
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
                         <ImageView
                             android:id="@+id/imageViewDeliveryAddressForward"
                             style="@style/back_image"

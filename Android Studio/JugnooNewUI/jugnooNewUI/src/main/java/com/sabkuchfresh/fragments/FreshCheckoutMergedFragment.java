@@ -156,7 +156,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private RelativeLayout relativeLayoutDeliveryAddress;
     private ImageView imageViewAddressType, imageViewDeliveryAddressForward;
-    private TextView textViewAddressName, textViewAddressValue;
+    private TextView textViewAddressName, textViewAddressValue,tvNoAddressAlert;
 
     private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutJugnooPay, relativeLayoutCash;
     private LinearLayout linearLayoutWalletContainer;
@@ -405,7 +405,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         chargesAdapter = new CheckoutChargesAdapter(activity, chargesList);
         listViewCharges.setAdapter(chargesAdapter);
-
         linearLayoutDeliverySlot = (LinearLayout) rootView.findViewById(R.id.linearLayoutDeliverySlot);
         recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
         recyclerViewDeliverySlots.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
@@ -440,6 +439,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         imageViewDeliveryAddressForward = (ImageView) rootView.findViewById(R.id.imageViewDeliveryAddressForward);
         textViewAddressName = (TextView) rootView.findViewById(R.id.textViewAddressName); textViewAddressName.setTypeface(Fonts.mavenMedium(activity));
         textViewAddressValue = (TextView) rootView.findViewById(R.id.textViewAddressValue); textViewAddressValue.setTypeface(Fonts.mavenRegular(activity));
+        tvNoAddressAlert = (TextView) rootView.findViewById(R.id.tv_no_address_alert);
 
         llDeliveryFrom = (LinearLayout) rootView.findViewById(R.id.llDeliveryFrom);
         rlDeliveryFrom = (RelativeLayout) rootView.findViewById(R.id.rlDeliveryFrom);
@@ -2600,9 +2600,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
         imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
+        imageViewAddressType.setPadding(0,0,0,0);
         textViewAddressName.setVisibility(View.GONE);
         textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
         if(!addressSelectedNotValid() && !TextUtils.isEmpty(activity.getSelectedAddress())) {
+            textViewAddressValue.setVisibility(View.VISIBLE);          tvNoAddressAlert.setVisibility(View.GONE);
+            imageViewDeliveryAddressForward.setVisibility(View.VISIBLE);
             textViewAddressValue.setText(activity.getSelectedAddress());
             imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
             if(!TextUtils.isEmpty(activity.getSelectedAddressType())){
@@ -2623,6 +2626,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         } else {
             textViewAddressValue.setText(activity.getResources().getString(R.string.add_address));
+            imageViewAddressType.setImageResource(R.drawable.ic_exclamation_address);
+            int padding = activity.getResources().getDimensionPixelSize(R.dimen.dp_2);
+            imageViewAddressType.setPadding(padding,padding,padding,padding);
+            textViewAddressValue.setVisibility(View.GONE);
+            tvNoAddressAlert.setVisibility(View.VISIBLE);
+            imageViewDeliveryAddressForward.setVisibility(View.GONE);
+
+
         }
     }
 
