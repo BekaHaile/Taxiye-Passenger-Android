@@ -78,6 +78,11 @@ public class MenusVendorOffersAdapter extends PagerAdapter {
 	}
 
 	@Override
+	public int getItemPosition(Object object) {
+		return POSITION_NONE;
+	}
+
+	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		View v = layoutInflater.inflate(R.layout.item_menus_vendor_offer, container, false);
 		ViewHolderVendorOffer holder = new ViewHolderVendorOffer(v);
