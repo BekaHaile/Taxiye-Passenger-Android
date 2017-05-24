@@ -357,9 +357,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     }
                     Utils.hideKeyboard(FreshActivity.this);
                     if(drawerView.equals(llRightDrawer)){
-                        if(getMenusFragment() != null) {
-                            getMenusFragment().applyFilter(filtersChanged);
-                        }
+                        applyRealTimeFilters();
                     }
                 }
 
@@ -4587,6 +4585,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             return (MenusFilterFragment) fragment;
         }
         return null;
+    }
+
+    public void applyRealTimeFilters(){
+        if(getMenusFragment() != null) {
+            getMenusFragment().applyFilter(filtersChanged);
+        }
     }
 
 }
