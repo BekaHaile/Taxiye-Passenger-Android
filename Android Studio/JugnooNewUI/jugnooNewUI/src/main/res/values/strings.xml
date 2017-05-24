@@ -1695,6 +1695,10 @@
     <string name="please_give_some_rating">Please give some rating</string>
     <string name="write_a_review">Write a review</string>
     <string name="feed">Feed</string>
+    <string name="veg_only">Veg Only</string>
+    <string name="back_button">Back button</string>
+    <string name="online_payment">Online Payment</string>
+    <string name="start_typing_a_cuisine">Start typing a cuisine…</string>
 
 
 </resources>

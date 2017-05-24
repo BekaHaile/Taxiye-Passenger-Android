@@ -20,7 +20,6 @@ import com.sabkuchfresh.fragments.FreshFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
-import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
 import com.sabkuchfresh.fragments.NewFeedbackFragment;
@@ -129,19 +128,6 @@ public class TransactionUtils {
                             RestaurantImageFragment.class.getName())
                     .addToBackStack(RestaurantImageFragment.class.getName())
                    //  .addSharedElement(freshActivity.ivCollapseRestImage, activity.getString(R.string.zoom_view))
-                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                    .commitAllowingStateLoss();
-        }
-    }
-
-    public void openMenusFilterFragment(FragmentActivity activity, View container) {
-        if (!checkIfFragmentAdded(activity, MenusFilterFragment.class.getName())) {
-            activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.bottom_in, R.anim.hold, R.anim.hold, R.anim.bottom_out)
-                    .add(container.getId(), new MenusFilterFragment(),
-                            MenusFilterFragment.class.getName())
-                    .addToBackStack(MenusFilterFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();
@@ -430,9 +416,6 @@ public class TransactionUtils {
                     .commitAllowingStateLoss();
         }
     }
-
-
-
 
 }
 

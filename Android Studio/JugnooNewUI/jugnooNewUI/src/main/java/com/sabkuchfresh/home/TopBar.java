@@ -50,7 +50,6 @@ public class TopBar implements GAAction, GACategory {
     public RelativeLayout rlFilter;
 
     public RelativeLayout llSearchCartContainer;
-    public TextView textViewReset;
     public LinearLayout llSearchCart;
     private Animation searchBarAnimation;
     private Animation searchBarCloseAnimation;
@@ -82,9 +81,6 @@ public class TopBar implements GAAction, GACategory {
         imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
         progressWheelDeliveryAddressPin = (ProgressWheel) drawerLayout.findViewById(R.id.progressWheelDeliveryAddressPin);
         progressWheelDeliveryAddressPin.setVisibility(View.GONE);
-
-        textViewReset = (TextView) drawerLayout.findViewById(R.id.textViewReset);
-        textViewReset.setTypeface(Fonts.mavenMedium(activity));
 
         llSearchContainer = (LinearLayout) drawerLayout.findViewById(R.id.llSearchContainer);
         etSearch = (EditText) drawerLayout.findViewById(R.id.etSearch);

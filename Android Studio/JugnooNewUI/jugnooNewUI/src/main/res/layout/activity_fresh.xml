@@ -124,5 +124,19 @@
     <include layout="@layout/layout_home_activity_menu" />
 
 
+    <LinearLayout
+        android:id="@+id/llRightDrawer"
+        android:layout_width="@dimen/dp_295"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:tag="@string/dont_touch_me"
+        >
+
+    </LinearLayout>
+
+
 
 </android.support.v4.widget.DrawerLayout>
