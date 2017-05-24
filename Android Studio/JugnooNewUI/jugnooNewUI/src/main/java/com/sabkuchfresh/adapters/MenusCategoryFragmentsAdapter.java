@@ -46,6 +46,9 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 			this.categories = new ArrayList<>();
 		}
 		this.categories.clear();
+		for(int i=0; i<categories.size(); i++){
+			categories.get(i).setCategoryPos(i);
+		}
 		this.categories.addAll(categories);
 		notifyDataSetChanged();
 	}
@@ -56,6 +59,9 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 			this.categories = new ArrayList<>();
 		}
 		this.categories.clear();
+		for(int i=0; i<categories.size(); i++){
+			categories.get(i).setCategoryPos(i);
+		}
 		for(Category category : categories){
 			int vegItemsCount = 0;
 			if(category.getSubcategories() != null){
@@ -82,7 +88,7 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 
 	@Override
 	public Fragment getItem(int position) {
-		return MenusCategoryItemsFragment.newInstance(position, 1);
+		return MenusCategoryItemsFragment.newInstance(categories.get(position).getCategoryPos(), 1);
 	}
 
 	@Override

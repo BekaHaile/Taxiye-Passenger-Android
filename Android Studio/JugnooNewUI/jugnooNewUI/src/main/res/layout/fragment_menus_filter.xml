@@ -334,6 +334,47 @@
                 >
 
                 <RelativeLayout
+                    android:id="@+id/relativeLayoutDeliveryTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_transparent_menu_item_selector"
+                    >
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="26px"
+                        android:layout_marginTop="26px"
+                        android:layout_toRightOf="@+id/imageViewRadioDeliveryTime"
+                        android:gravity="center_vertical"
+                        android:text="@string/delivery_time_wo_colon"
+                        android:textColor="@color/text_color_selector"
+                        android:textSize="@dimen/text_size_28"
+                        android:visibility="visible"
+                        app:font="maven"
+                        />
+
+                    <ImageView
+                        android:id="@+id/imageViewRadioDeliveryTime"
+                        android:layout_width="33px"
+                        android:layout_height="33px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="26px"
+                        android:layout_marginRight="26px"
+                        android:src="@drawable/ic_radio_button_normal"
+                        />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/stroke_light_grey_alpha"
+                    />
+
+                <RelativeLayout
                     android:id="@+id/relativeLayoutPopularity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -364,47 +405,6 @@
                         android:layout_marginRight="26px"
                         android:src="@drawable/ic_radio_button_normal"
                         android:tag="mwar"
-                        />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutDistance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
-
-
-                    <TextView
-                        android:id="@+id/textViewDistance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="26px"
-                        android:layout_marginTop="26px"
-                        android:layout_toRightOf="@+id/imageViewRadioDistance"
-                        android:gravity="center_vertical"
-                        android:text="@string/distance"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_28"
-                        android:visibility="visible"
-                        />
-
-
-                    <ImageView
-                        android:id="@+id/imageViewRadioDistance"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="26px"
-                        android:layout_marginRight="26px"
-                        android:src="@drawable/ic_radio_button_normal"
                         />
 
                 </RelativeLayout>
@@ -449,6 +449,50 @@
                         />
 
                 </RelativeLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/stroke_light_grey_alpha"
+                    />
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutDistance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_transparent_menu_item_selector">
+
+
+                    <TextView
+                        android:id="@+id/textViewDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="26px"
+                        android:layout_marginTop="26px"
+                        android:layout_toRightOf="@+id/imageViewRadioDistance"
+                        android:gravity="center_vertical"
+                        android:text="@string/distance"
+                        android:textColor="@color/text_color_selector"
+                        android:textSize="@dimen/text_size_28"
+                        android:visibility="visible"
+                        />
+
+
+                    <ImageView
+                        android:id="@+id/imageViewRadioDistance"
+                        android:layout_width="33px"
+                        android:layout_height="33px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="26px"
+                        android:layout_marginRight="26px"
+                        android:src="@drawable/ic_radio_button_normal"
+                        />
+
+                </RelativeLayout>
+
 
             </LinearLayout>
 
@@ -533,7 +577,7 @@
                 android:layout_marginLeft="30px"
                 android:layout_marginTop="30px"
                 android:gravity="center_vertical"
-                android:text="@string/minimum_order"
+                android:text="@string/minimum_order_amount"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_hint"
                 android:textSize="@dimen/text_size_24"
@@ -548,6 +592,7 @@
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
                 android:layout_marginTop="10px"
+                android:layout_marginBottom="30px"
                 android:background="@drawable/bg_white_r_b_new"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -667,7 +712,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_hint"
                 android:textSize="@dimen/text_size_24"
-                android:visibility="visible"
+                android:visibility="gone"
                 />
 
 
@@ -683,6 +728,7 @@
                 android:background="@drawable/bg_white_r_b_new"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 >
 
                 <RelativeLayout
@@ -809,10 +855,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rlTopBar"
+        android:background="@color/menu_item_selector_color_F7"
         android:orientation="vertical"
         android:tag="@string/dont_touch_me"
         android:visibility="gone"
-        android:background="@color/menu_item_selector_color_F7"
         >
 
         <TextView

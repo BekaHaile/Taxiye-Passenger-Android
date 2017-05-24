@@ -45,6 +45,9 @@ public class Item {
 	@SerializedName("isSubCategory")
 	@Expose
 	private Integer isSubCategory;
+	@SerializedName("subCategoryId")
+	@Expose
+	private int subCategoryId;
 	@SerializedName("subCategoryPos")
 	@Expose
 	private Integer subCategoryPos;
@@ -160,7 +163,11 @@ public class Item {
 	@Override
 	public boolean equals(Object o) {
 		if(o instanceof Item){
-			return ((Item)o).restaurantItemId.equals(restaurantItemId);
+			if(getIsSubCategory() == 1){
+				return ((Item)o).subCategoryId == subCategoryId;
+			} else {
+				return ((Item) o).restaurantItemId.equals(restaurantItemId);
+			}
 		} else {
 			return false;
 		}
@@ -250,4 +257,7 @@ public class Item {
 		return customizeItemSelected;
 	}
 
+	public int getSubCategoryId() {
+		return subCategoryId;
+	}
 }

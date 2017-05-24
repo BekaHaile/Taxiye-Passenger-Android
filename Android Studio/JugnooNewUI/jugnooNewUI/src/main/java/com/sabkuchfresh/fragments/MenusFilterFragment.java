@@ -40,14 +40,14 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	private TextView tvReset;
 	private RelativeLayout rlRoot;
 	private TextView textViewSortBy, textViewPopularity, textViewDistance, textViewPrice;
-	private RelativeLayout relativeLayoutPopularity, relativeLayoutDistance, relativeLayoutPrice;
+	private RelativeLayout relativeLayoutPopularity, relativeLayoutDistance, relativeLayoutPrice, relativeLayoutDeliveryTime;
 
 	private RelativeLayout relativeLayoutAcceptOnline, relativeLayoutOffersDiscount, relativeLayoutPureVeg, relativeLayoutFreeDelivery;
 	private TextView textViewQuickFilters, textViewAcceptOnline, textViewOffersDiscount, textViewPureVeg, textViewFreeDelivery;
 	private ImageView imageViewAcceptOnline, imageViewOffersDiscount, imageViewPureVeg, imageViewFreeDelivery;
 
 
-	private ImageView imageViewRadioPopularity, imageViewRadioDistance, imageViewRadioPrice;
+	private ImageView imageViewRadioPopularity, imageViewRadioDistance, imageViewRadioPrice, imageViewRadioDeliveryTime;
 
 	private TextView textViewCuisines, textViewSelectCuisinesValue;
 	private RelativeLayout cardViewCuisines;
@@ -125,9 +125,11 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		relativeLayoutPopularity = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPopularity);
 		relativeLayoutDistance = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDistance);
 		relativeLayoutPrice = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPrice);
+		relativeLayoutDeliveryTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDeliveryTime);
 		imageViewRadioPopularity = (ImageView) rootView.findViewById(R.id.imageViewRadioPopularity);
 		imageViewRadioDistance = (ImageView) rootView.findViewById(R.id.imageViewRadioDistance);
 		imageViewRadioPrice = (ImageView) rootView.findViewById(R.id.imageViewRadioPrice);
+		imageViewRadioDeliveryTime = (ImageView) rootView.findViewById(R.id.imageViewRadioDeliveryTime);
 
 		textViewCuisines = (TextView) rootView.findViewById(R.id.textViewCuisines); textViewCuisines.setTypeface(Fonts.mavenMedium(activity));
 		cardViewCuisines = (RelativeLayout) rootView.findViewById(R.id.cardViewCuisines);
@@ -199,6 +201,14 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 			}
 		});
 
+		relativeLayoutDeliveryTime.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setSortBySelected(getSortBySelected() != SortType.DELIVERY_TIME ? SortType.DELIVERY_TIME : SortType.NONE);
+				updateSortTypeUI();
+			}
+		});
+
 
 		relativeLayoutAcceptOnline.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -209,7 +219,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 					activity.getQuickFilterSelected().add(ACCEPTONLINE);
 				}
 				imageViewAcceptOnline.setImageResource(activity.getQuickFilterSelected().contains(ACCEPTONLINE)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
-				activity.filtersChanged = true;
+				applyRealTimeFilters();
 				gaEventQuickFilters();
 			}
 		});
@@ -223,7 +233,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 					activity.getQuickFilterSelected().add(OFFERSDISCOUNT);
 				}
 				imageViewOffersDiscount.setImageResource(activity.getQuickFilterSelected().contains(OFFERSDISCOUNT)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
-				activity.filtersChanged = true;
+				applyRealTimeFilters();
 				gaEventQuickFilters();
 			}
 		});
@@ -238,7 +248,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 					activity.getQuickFilterSelected().add(PUREVEGETARIAN);
 				}
 				imageViewPureVeg.setImageResource(activity.getQuickFilterSelected().contains(PUREVEGETARIAN)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
-				activity.filtersChanged = true;
+				applyRealTimeFilters();
 				gaEventQuickFilters();
 			}
 		});
@@ -252,7 +262,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 					activity.getQuickFilterSelected().add(FREEDELIVERY);
 				}
 				imageViewFreeDelivery.setImageResource(activity.getQuickFilterSelected().contains(FREEDELIVERY)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
-				activity.filtersChanged = true;
+				applyRealTimeFilters();
 				gaEventQuickFilters();
 			}
 		});
@@ -320,7 +330,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 					}
 				}
 
-				activity.filtersChanged = true;
+				applyRealTimeFilters();
 				gaEventQuickFilters();
 
 
@@ -407,19 +417,24 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		imageViewRadioPopularity.setImageResource(R.drawable.ic_radio_button_normal);
 		imageViewRadioDistance.setImageResource(R.drawable.ic_radio_button_normal);
 		imageViewRadioPrice.setImageResource(R.drawable.ic_radio_button_normal);
+		imageViewRadioDeliveryTime.setImageResource(R.drawable.ic_radio_button_normal);
 		if(getSortBySelected() == SortType.POPULARITY){
 			imageViewRadioPopularity.setImageResource(R.drawable.ic_radio_button_selected);
 		} else if(getSortBySelected() == SortType.DISTANCE){
 			imageViewRadioDistance.setImageResource(R.drawable.ic_radio_button_selected);
 		} else if(getSortBySelected() == SortType.PRICE){
 			imageViewRadioPrice.setImageResource(R.drawable.ic_radio_button_selected);
+		} else if(getSortBySelected() == SortType.DELIVERY_TIME){
+			imageViewRadioDeliveryTime.setImageResource(R.drawable.ic_radio_button_selected);
 		}
+		GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.SORT_BY, String.valueOf(activity.getSortBySelected()));
 	}
 
 	private void updateMinOrderUI(){
 		imageViewMO150.setVisibility(getMoSelected() == MinOrder.MO150 ? View.VISIBLE : View.GONE);
 		imageViewMO250.setVisibility(getMoSelected() == MinOrder.MO250 ? View.VISIBLE : View.GONE);
 		imageViewMO500.setVisibility(getMoSelected() == MinOrder.MO500 ? View.VISIBLE : View.GONE);
+		GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.MINIMUM_ORDER, String.valueOf(activity.getMoSelected()));
 	}
 
 
@@ -427,6 +442,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		imageViewDT30.setVisibility(getDtSelected() == DeliveryTime.DT30 ? View.VISIBLE : View.GONE);
 		imageViewDT45.setVisibility(getDtSelected() == DeliveryTime.DT45 ? View.VISIBLE : View.GONE);
 		imageViewDT60.setVisibility(getDtSelected() == DeliveryTime.DT60 ? View.VISIBLE : View.GONE);
+		GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.DELIVERY_TIME, String.valueOf(activity.getDtSelected()));
 	}
 
 	public SortType getSortBySelected() {
@@ -436,7 +452,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	public void setSortBySelected(SortType sortBySelected) {
 		activity.setSortBySelected(sortBySelected);
 		GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.SORT_BY, String.valueOf(activity.getSortBySelected()));
-		activity.filtersChanged = true;
+		applyRealTimeFilters();
 	}
 
 	public MinOrder getMoSelected() {
@@ -446,7 +462,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	public void setMoSelected(MinOrder moSelected) {
 		activity.setMoSelected(moSelected);
 		GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.MINIMUM_ORDER, String.valueOf(activity.getMoSelected()));
-		activity.filtersChanged = true;
+		applyRealTimeFilters();
 	}
 
 	public DeliveryTime getDtSelected() {
@@ -456,12 +472,12 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	public void setDtSelected(DeliveryTime dtSelected) {
 		activity.setDtSelected(dtSelected);
 		GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.DELIVERY_TIME, String.valueOf(activity.getDtSelected()));
-		activity.filtersChanged = true;
+		applyRealTimeFilters();
 	}
 
 
 	public enum SortType{
-		NONE(-1), POPULARITY(0), DISTANCE(1), PRICE(2), ONLINEPAYMENTACCEPTED(3);
+		NONE(-1), POPULARITY(0), DISTANCE(1), PRICE(2), ONLINEPAYMENTACCEPTED(3), DELIVERY_TIME(4);
 
 		private int ordinal;
 		SortType(int ordinal){
@@ -561,7 +577,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		} else {
 			activity.getCuisinesSelected().remove(filterCuisine.getName());
 		}
-		activity.filtersChanged = true;
+		applyRealTimeFilters();
 	}
 
 	private void gaEventQuickFilters(){
@@ -571,6 +587,14 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		}
 		if (quickFilters != null) {
 			GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.QUICK_FILTER, quickFilters.substring(0, quickFilters.length() - 2));
+		}
+	}
+
+	private void applyRealTimeFilters(){
+		if(activity != null){
+			activity.filtersChanged = true;
+			activity.applyRealTimeFilters();
+			activity.filtersChanged = false;
 		}
 	}
 }

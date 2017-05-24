@@ -357,9 +357,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     }
                     Utils.hideKeyboard(FreshActivity.this);
                     if(drawerView.equals(llRightDrawer)){
-                        if(getMenusFragment() != null) {
-                            getMenusFragment().applyFilter(filtersChanged);
-                        }
+                        applyRealTimeFilters();
                     }
                 }
 
@@ -3046,6 +3044,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             sortBySelected = MenusFilterFragment.SortType.PRICE;
         } else if (sortBy == MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED.getOrdinal()) {
             sortBySelected = MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED;
+        } else if (sortBy == MenusFilterFragment.SortType.DELIVERY_TIME.getOrdinal()) {
+            sortBySelected = MenusFilterFragment.SortType.DELIVERY_TIME;
         }
 
         int mo = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_MIN_ORDER, moSelected.getOrdinal());
@@ -4585,6 +4585,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             return (MenusFilterFragment) fragment;
         }
         return null;
+    }
+
+    public void applyRealTimeFilters(){
+        if(getMenusFragment() != null) {
+            getMenusFragment().applyFilter(filtersChanged);
+        }
     }
 
 }
