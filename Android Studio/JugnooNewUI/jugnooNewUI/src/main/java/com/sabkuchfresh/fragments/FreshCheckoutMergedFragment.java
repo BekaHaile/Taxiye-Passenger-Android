@@ -6,10 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -2605,6 +2607,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
         if(!addressSelectedNotValid() && !TextUtils.isEmpty(activity.getSelectedAddress())) {
             textViewAddressValue.setVisibility(View.VISIBLE);          tvNoAddressAlert.setVisibility(View.GONE);
+            imageViewDeliveryAddressForward.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_back_pay_selector));
             imageViewDeliveryAddressForward.setVisibility(View.VISIBLE);
             textViewAddressValue.setText(activity.getSelectedAddress());
             imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
@@ -2627,11 +2630,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         } else {
             textViewAddressValue.setText(activity.getResources().getString(R.string.add_address));
             imageViewAddressType.setImageResource(R.drawable.ic_exclamation_address);
+            imageViewDeliveryAddressForward.getDrawable().mutate().setColorFilter(ContextCompat.getColor(activity,R.color.red_alert_no_address), PorterDuff.Mode.SRC_ATOP);
             int padding = activity.getResources().getDimensionPixelSize(R.dimen.dp_2);
             imageViewAddressType.setPadding(padding,padding,padding,padding);
             textViewAddressValue.setVisibility(View.GONE);
             tvNoAddressAlert.setVisibility(View.VISIBLE);
-            imageViewDeliveryAddressForward.setVisibility(View.GONE);
+//            imageViewDeliveryAddressForward.setVisibility(View.GONE);
 
 
         }
