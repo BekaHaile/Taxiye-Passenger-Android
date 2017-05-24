@@ -660,7 +660,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     private int offerVendorsSize(){
-        return bannerInfos == null ? 0 : bannerInfos.size();
+        return bannerInfos == null || vendorsCompleteCount() == 0 ? 0 : bannerInfos.size();
     }
 
     private int vendorsToShowCount() {

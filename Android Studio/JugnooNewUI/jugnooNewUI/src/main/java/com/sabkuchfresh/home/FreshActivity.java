@@ -847,7 +847,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
                 // to check from Last selected address that if its id is -10(marked for special case of
-                // deleting selected delivery address from address book), if it is the case clear
+                // deleting selected delivery address from address book), if it is the case, clear
                 // address related local variables and save empty jsonObject in SP for setting
                 // delivery location to current location.
                 SearchResult searchResultLastFMM = gson.fromJson(Prefs.with(this)
@@ -868,10 +868,24 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedAddress(searchResultLastFMM.getAddress());
                     setSelectedAddressType(searchResultLastFMM.getName());
                 }
+                // else find any tagged address near current set location, if that is not tagged
+                else if(getSelectedAddressId() == 0){
+                    SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
+                            Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                    if(searchResult != null){
+                        setSelectedAddress(searchResult.getAddress());
+                        setSelectedLatLng(searchResult.getLatLng());
+                        setSelectedAddressId(searchResult.getId());
+                        setSelectedAddressType(searchResult.getName());
+                        setAddressTextToLocationPlaceHolder();
+                        saveOfferingLastAddress(getAppType());
+                    }
+                }
+
             }
 
             if(AccountActivity.updateMenuBar){
-                menuBar.setProfileData();;
+                menuBar.setProfileData();
                 AccountActivity.updateMenuBar=false;
             }
         } catch (Exception e) {
@@ -1583,9 +1597,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (getFreshFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                     int textViewMinOrderVis;
                     if (fragment instanceof FreshFragment || fragment instanceof FreshSearchFragment) {
-                        if (Data.userData.isSubscriptionActive() && getProductsResponse() != null && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
-                            textViewMinOrderVis = View.VISIBLE;
-                            textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
+                        if (Data.userData.isSubscriptionActive()) {
+                            if(getProductsResponse() != null && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())){
+                                textViewMinOrderVis = View.VISIBLE;
+                                textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
+                            } else if(getSuperCategoriesData() != null && !TextUtils.isEmpty(getSuperCategoriesData().getSubscriptionMessage())){
+                                textViewMinOrderVis = View.VISIBLE;
+                                textViewMinOrder.setText(getSuperCategoriesData().getSubscriptionMessage());
+                            } else {
+                                textViewMinOrderVis = View.GONE;
+                            }
                         } else if (totalQuantity > 0 && totalPrice < getOpenedDeliveryStore().getMinAmount()) {
                             textViewMinOrderVis = View.VISIBLE;
                             double leftAmount = getOpenedDeliveryStore().getMinAmount() - totalPrice;
@@ -3290,7 +3311,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 				address = getSelectedAddressType();
 			}
             setLocationAddress(address);
-            deliveryAddressView.showConfirmAddressBar(TextUtils.isEmpty(getSelectedAddressType()));
+            if(deliveryAddresses != null) {
+                deliveryAddressView.showConfirmAddressBar(TextUtils.isEmpty(getSelectedAddressType()) && !TextUtils.isEmpty(address));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
