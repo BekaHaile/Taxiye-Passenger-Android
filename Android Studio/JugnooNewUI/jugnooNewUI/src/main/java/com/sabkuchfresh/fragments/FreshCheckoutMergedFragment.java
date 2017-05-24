@@ -96,6 +96,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -1483,8 +1484,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT), isRazorUPI);
                                         doSlideInitial = false;
                                     } else {
+                                        paramsPlaceOrder = params;
                                         orderPlacedSuccess(placeOrderResponse);
-                                        fbPurchasedEvent(params, placeOrderResponse);
                                         doSlideInitial = false;
                                     }
                                 } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
@@ -1631,9 +1632,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void fbPurchasedEvent(HashMap<String, String> params, PlaceOrderResponse placeOrderResponse) {
         try {
             Bundle bundle = new Bundle();
-            for(String key : params.keySet()){
-				bundle.putString(key, params.get(key));
-			}
+            if(params != null) {
+                for (String key : params.keySet()) {
+                    bundle.putString(key, params.get(key));
+                }
+            }
             bundle.putString("order_id", String.valueOf(placeOrderResponse.getOrderId()));
             bundle.putString("amount", String.valueOf(placeOrderResponse.getAmount()));
 
@@ -1746,13 +1749,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         activity.clearAllCartAtOrderComplete();
         activity.setSelectedPromoCoupon(noSelectionCoupon);
         flurryEventPlaceOrder(placeOrderResponse);
+        fbPurchasedEvent(paramsPlaceOrder, placeOrderResponse);
     }
 
     private void flurryEventPlaceOrder(PlaceOrderResponse placeOrderResponse){
         try {
             chargeDetails.put("Charged ID", placeOrderResponse.getOrderId());
             MyApplication.getInstance().charged(chargeDetails, items);
-
+            if(activity.getVendorOpened() != null) {
+                MyApplication.getInstance().updateUserDataAddInMultiValue(Events.RESTAURANT_NAMES, activity.getVendorOpened().getName());
+            }
 
             ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
 					.setTransactionId(String.valueOf(placeOrderResponse.getOrderId()))
@@ -3160,4 +3166,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
     }
 
+
+    private HashMap<String, String> paramsPlaceOrder;
 }

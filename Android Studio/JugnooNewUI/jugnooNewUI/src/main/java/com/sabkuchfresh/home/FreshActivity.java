@@ -1622,7 +1622,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     return 1;
                 } else if (getMealFragment() != null) {
                     int textViewMinOrderVis;
-                    if(Data.getMealsData().getOfferStripMeals()!=null && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())){
+                    if(getMealFragment().shouldShowStrip() && Data.getMealsData().getOfferStripMeals()!=null && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())){
                         textViewMinOrderVis = View.VISIBLE;
                         textViewMinOrder.setText(Utils.trimHTML(Utils.fromHtml(Data.getMealsData().getOfferStripMeals().getTextToDisplay())));
                     } else{
