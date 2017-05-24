@@ -88,7 +88,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     }
                 }
                 if(itemsInSubCategories == 0){
-                    subItems.remove(subItems.size()-1);
+                    subItems.remove(item);
                 }
             }
         } else if(category.getItems() != null){
@@ -523,5 +523,49 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     private boolean isVegCheck(int isVegToggle, Item item1) {
         return isVegToggle != 1 || item1.getIsVeg() == 1;
+    }
+
+    public void setSubItemsTemp(boolean notify){
+        if(subItems == null) {
+            subItems = new ArrayList<>();
+        }
+        subItems.clear();
+        int isVegToggle = Prefs.with(context).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
+        if(category.getSubcategories() != null){
+            List<Subcategory> subcategories = category.getSubcategories();
+            for(int i=0; i<subcategories.size(); i++){
+                Subcategory subcategory = subcategories.get(i);
+                Item item = new Item();
+                item.setItemName(subcategory.getSubcategoryName());
+                item.setIsSubCategory(1);
+                subItems.add(item);
+                int itemsInSubCategories = 0;
+                for(int j=0; j<subcategory.getItems().size(); j++){
+                    Item item1 = subcategory.getItems().get(j);
+                    item1.setSubCategoryPos(i);
+                    item1.setItemPos(j);
+                    if(isVegCheck(isVegToggle, item1)){
+                        subItems.add(item1);
+                        itemsInSubCategories++;
+                    }
+                }
+                if(itemsInSubCategories == 0){
+                    subItems.remove(subItems.size()-1);
+                }
+            }
+        } else if(category.getItems() != null){
+            List<Item> items = category.getItems();
+            for(int j=0; j<items.size(); j++){
+                Item item1 = items.get(j);
+                item1.setSubCategoryPos(-1);
+                item1.setItemPos(j);
+                if(isVegCheck(isVegToggle, item1)) {
+                    subItems.add(item1);
+                }
+            }
+        }
+        if(notify){
+            notifyDataSetChanged();
+        }
     }
 }

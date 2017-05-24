@@ -239,6 +239,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     point = -(int) (rhs.getDistance() - lhs.getDistance());
                 } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE) {
                     point = lhs.getPriceRange() - rhs.getPriceRange();
+                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DELIVERY_TIME) {
+                    point = lhs.getDeliveryTime() - rhs.getDeliveryTime();
                 }
 
                 return point;

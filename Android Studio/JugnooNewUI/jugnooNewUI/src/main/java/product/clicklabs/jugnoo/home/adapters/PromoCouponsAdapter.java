@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,9 +106,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 			} else {
 				holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
 			}
-
-			holder.relative.setBackgroundResource(promoCoupon.getIsValid() == 1 ?
-					R.drawable.bg_transparent_menu_item_selector : R.drawable.bg_menu_item_selector_color);
+			holder.textViewOfferName.setTextColor(ContextCompat.getColor(activity, promoCoupon.getIsValid() == 1 ? R.color.text_color : R.color.text_color_hint));
 		}
 
 		holder.textViewTNC.setOnClickListener(new View.OnClickListener() {

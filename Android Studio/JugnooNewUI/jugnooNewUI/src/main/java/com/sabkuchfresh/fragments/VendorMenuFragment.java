@@ -108,6 +108,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         RelativeLayout rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore);
         rlSelectedStore.setVisibility(View.GONE);
 
+        // TODO: 24/05/17 check this
+//        Prefs.with(activity).save(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
+
         mBus = (activity).getBus();
         activity.setSwipeAvailable(false);
 
@@ -130,6 +133,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         viewPromoTitle.setVisibility(View.VISIBLE);
         tvSwitchVegToggle = (TextView) viewPromoTitle.findViewById(R.id.tvSwitchVegToggle);
         switchVegToggle = (SwitchCompat) viewPromoTitle.findViewById(R.id.switchVegToggle);
+
+        int isVegToggle = Prefs.with(activity).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
+        switchVegToggle.setChecked(isVegToggle == 1);
+
         switchVegToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 int isVegToggle = Prefs.with(activity).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
@@ -138,7 +145,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 onUpdateListEvent(new UpdateMainList(true, true));
             }
         });
-        switchVegToggle.setChecked(false);
 
         viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
         menusCategoryFragmentsAdapter = new MenusCategoryFragmentsAdapter(activity, getChildFragmentManager());
@@ -398,7 +404,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
                     activity.updateItemListFromSPDB();
                     activity.updateCartValuesGetTotalPrice();
-                    menusCategoryFragmentsAdapter.setCategories(activity.getMenuProductsResponse().getCategories());
+                    menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories());
                     tabs.setViewPager(viewPager);
                     viewPager.setCurrentItem(Data.tabLinkIndex);
                     Data.tabLinkIndex = 0;
@@ -430,9 +436,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private void setUpCollapseToolbarData() {
         if (activity.getVendorOpened() != null) {
             activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
-
-            int isVegToggle = Prefs.with(activity).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
-            switchVegToggle.setChecked(isVegToggle == 1);
 
             if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
                 Picasso.with(activity).load(activity.getVendorOpened().getImage())
