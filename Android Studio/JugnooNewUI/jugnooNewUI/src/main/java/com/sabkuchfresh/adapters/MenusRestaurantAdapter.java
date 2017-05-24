@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -79,11 +81,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private String searchText;
     private boolean searchApiHitOnce = false;
     private RecyclerView recyclerView;
+    private List<MenusResponse.BannerInfo> bannerInfos;
 
     private static final int MAIN_ITEM = 0;
     private static final int FORM_ITEM = 1;
     private static final int STATUS_ITEM = 3;
     private static final int NO_VENDORS_ITEM = 4;
+    private static final int OFFERS_PAGER_ITEM = 5;
 
 
     public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors,
@@ -147,13 +151,16 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         callback.onNotify(vendorsToShow.size());
     }
 
-    public void setList(ArrayList<MenusResponse.Vendor> vendors) {
+    public void setList(ArrayList<MenusResponse.Vendor> vendors, List<MenusResponse.BannerInfo> bannerInfos) {
         this.vendorsComplete = vendors;
         this.vendorsFiltered.clear();
         this.vendorsFiltered.addAll(vendors);
         setRestIdMappedVendors();
         this.vendorsToShow.clear();
         this.vendorsToShow.addAll(vendors);
+
+        this.bannerInfos = bannerInfos;
+
         applyFilter();
     }
 
@@ -232,6 +239,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     point = -(int) (rhs.getDistance() - lhs.getDistance());
                 } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE) {
                     point = lhs.getPriceRange() - rhs.getPriceRange();
+                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DELIVERY_TIME) {
+                    point = lhs.getDeliveryTime() - rhs.getDeliveryTime();
                 }
 
                 return point;
@@ -274,6 +283,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             v.setLayoutParams(layoutParams);
             ASSL.DoMagic(v);
             return new ViewNoVenderItem(v, activity);
+        } else if(viewType == OFFERS_PAGER_ITEM){
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_offers_pager, parent, false);
+            return new ViewHolderOffers(v, activity);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
@@ -281,6 +293,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         try {
+            if(offerVendorsSize() > 0 && position > 0){
+                position--;
+            }
             if (holder instanceof ViewTitleStatus) {
                 ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
                 try {
@@ -324,7 +339,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
 
             } else if (holder instanceof ViewHolder) {
-                position = position - recentOrders.size();
+                position = position - recentOrdersSize();
                 ViewHolder mHolder = ((ViewHolder) holder);
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
                 mHolder.textViewRestaurantName.setText(vendor.getName());
@@ -416,7 +431,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     public void onClick(View v) {
                         try {
                             int pos = (int) v.getTag();
-                            callback.onRestaurantSelected(pos, vendorsToShow.get(pos));
+                            callback.onRestaurantSelected(vendorsToShow.get(pos).getRestaurantId());
 //                            if(searchApiHitOnce && searchText.length() > 0){
 //                            for analytics event
 //                            }
@@ -490,6 +505,22 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     holderNoVenderItem.textViewNoMenus.setText(R.string.no_menus_available_with_these_filters);
                 } else if (vendorsToShow.size() == 0) {
                     holderNoVenderItem.textViewNoMenus.setText(R.string.oops_no_results_found);
+                }
+
+            } else if (holder instanceof ViewHolderOffers){
+                ViewHolderOffers holderOffers = (ViewHolderOffers) holder;
+                holderOffers.menusVendorOffersAdapter.setList(bannerInfos);
+                holderOffers.tabDots.setupWithViewPager(holderOffers.pagerMenusVendorOffers, true);
+                for (int i = 0; i < holderOffers.tabDots.getTabCount(); i++) {
+                    View tab = ((ViewGroup) holderOffers.tabDots.getChildAt(0)).getChildAt(i);
+                    ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+                    p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+                    tab.requestLayout();
+                }
+                if(bannerInfos.size() == 1){
+                    holderOffers.tabDots.setVisibility(View.GONE);
+                } else{
+                    holderOffers.tabDots.setVisibility(View.VISIBLE);
                 }
             }
         } catch (Exception e) {
@@ -589,12 +620,19 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
+        if(offerVendorsSize() > 0){
+            if(position == 0) {
+                return OFFERS_PAGER_ITEM;
+            } else {
+                position--;
+            }
+        }
         if (vendorsCompleteCount() > 0) {
-            if (position >= 0 && position < recentOrders.size()) {
+            if (position >= 0 && position < recentOrdersSize()) {
                 return STATUS_ITEM;
-            } else if (position >= recentOrders.size() && vendorsToShow.size() == 0) {
+            } else if (position >= recentOrdersSize() && vendorsToShow.size() == 0) {
                 return FORM_ITEM;
-            } else if (position >= recentOrders.size() && position - recentOrders.size() < vendorsToShow.size()) {
+            } else if (position >= recentOrdersSize() && position - recentOrdersSize() < vendorsToShow.size()) {
                 return MAIN_ITEM;
             } else {
                 return FORM_ITEM;
@@ -614,11 +652,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemCount() {
 //        int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
         int formItem = (recentOrdersSize() > 0 || vendorsCompleteCount() > 0) ? 1 : 0;
-        return recentOrdersSize() + vendorsToShowCount() + formItem;
+        return (offerVendorsSize() > 0 ? 1 : 0) + recentOrdersSize() + vendorsToShowCount() + formItem;
     }
 
     private int recentOrdersSize() {
         return recentOrders == null ? 0 : recentOrders.size();
+    }
+
+    private int offerVendorsSize(){
+        return bannerInfos == null || vendorsCompleteCount() == 0 ? 0 : bannerInfos.size();
     }
 
     private int vendorsToShowCount() {
@@ -752,8 +794,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     public interface Callback {
-        void onRestaurantSelected(int position, MenusResponse.Vendor vendor);
-
+        void onRestaurantSelected(int vendorId);
+        void onBannerInfoDeepIndexClick(int deepIndex);
         void onNotify(int count);
     }
 
@@ -815,7 +857,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                     if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
                                         if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
                                             searchVendors(searchText, productsResponse.getRestaurantIds());
-                                            recyclerView.scrollToPosition(0);
+                                            recyclerView.smoothScrollToPosition(0);
                                             if(productsResponse.getRestaurantIds().size() > 0) {
                                                 queryMap.put(searchText, productsResponse.getRestaurantIds());
                                             }
@@ -1029,6 +1071,31 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public String getSearchText(){
         return searchText;
+    }
+
+
+
+    public class ViewHolderOffers extends RecyclerView.ViewHolder {
+        public MenusVendorOffersAdapter menusVendorOffersAdapter;
+        public ViewPager pagerMenusVendorOffers;
+        public TabLayout tabDots;
+
+        public ViewHolderOffers(View view, Context context) {
+            super(view);
+            pagerMenusVendorOffers = (ViewPager) view.findViewById(R.id.pagerMenusVendorOffers);
+            tabDots = (TabLayout) view.findViewById(R.id.tabDots);
+            menusVendorOffersAdapter = new MenusVendorOffersAdapter(activity, bannerInfos, new MenusVendorOffersAdapter.Callback() {
+                @Override
+                public void onBannerInfoClick(MenusResponse.BannerInfo bannerInfo) {
+                    if(bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1){
+                        callback.onBannerInfoDeepIndexClick(bannerInfo.getDeepIndex());
+                    } else {
+                        callback.onRestaurantSelected(bannerInfo.getRestaurantId());
+                    }
+                }
+            });
+            pagerMenusVendorOffers.setAdapter(menusVendorOffersAdapter);
+        }
     }
 
 }

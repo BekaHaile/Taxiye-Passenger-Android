@@ -43,6 +43,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * Created by ankit on 19/01/17.
@@ -210,6 +211,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 RestClient.getFreshApiService().getSuperCategories(params, new Callback<SuperCategoriesData>() {
                     @Override
                     public void success(final SuperCategoriesData superCategoriesData, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         if(finalProgressDialog != null){
                             finalProgressDialog.dismiss();
                         }

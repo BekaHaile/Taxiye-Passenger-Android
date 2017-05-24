@@ -56,6 +56,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.http.HEAD;
 import retrofit.mime.TypedByteArray;
 
 /**
@@ -139,13 +140,21 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
             @Override
-            public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
-                activity.fetchRestaurantMenuAPI(vendor.getRestaurantId());
+            public void onRestaurantSelected(int vendorId) {
+                activity.fetchRestaurantMenuAPI(vendorId);
                 Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
             }
 
             @Override
             public void onNotify(int count) {
+            }
+
+            @Override
+            public void onBannerInfoDeepIndexClick(int deepIndex) {
+                Data.deepLinkIndex = deepIndex;
+                if(activity != null) {
+                    activity.openDeepIndex();
+                }
             }
         }, recyclerViewRestaurant);
 
@@ -267,9 +276,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 				activity.fragmentUISetup(this);
 				activity.setAddressTextToLocationPlaceHolder();
 				activity.resumeMethod();
-				menusRestaurantAdapter.applyFilter();
-				activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-				if (searchOpened) {
+                applyFilter(false);
+                if (searchOpened) {
 					searchOpened = false;
 					openSearch(false);
 				}
@@ -342,11 +350,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     status.clear();
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
-                                    menusRestaurantAdapter.setList(vendors);
-                                    menusRestaurantAdapter.applyFilter();
-                                    if (activity.getTopFragment() instanceof MenusFragment) {
-                                        activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-                                    }
+                                    menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos());
+                                    applyFilter(false);
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
@@ -380,6 +385,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                         e.printStackTrace();
                                     } finally {
                                         Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+                                    }
+
+                                    if(activity.getMenusFilterFragment() != null){
+                                        activity.getMenusFilterFragment().setCuisinesList();
                                     }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -515,6 +524,16 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public MenusRestaurantAdapter getMenusRestaurantAdapter() {
         return menusRestaurantAdapter;
+    }
+
+    public void applyFilter(boolean scrollToTop){
+        menusRestaurantAdapter.applyFilter();
+        if (activity.getTopFragment() instanceof MenusFragment) {
+            activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
+        }
+        if(scrollToTop) {
+            recyclerViewRestaurant.smoothScrollToPosition(0);
+        }
     }
 
 }

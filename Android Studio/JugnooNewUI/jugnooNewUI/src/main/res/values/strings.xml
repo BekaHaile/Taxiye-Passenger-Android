@@ -857,7 +857,7 @@
     <string name="limit_address">Address must be within 200 characters</string>
     <string name="please_select_a_delivery_slot">Please select a Delivery Slot</string>
     <string name="no_slots_currently">No Delivery Slots currently</string>
-    <string name="please_select_a_delivery_address">Please select a Delivery Address</string>
+    <string name="please_select_a_delivery_address">Please confirm delivery address</string>
     <string name="pay_rupees_using_format">Pay \u20B9%s using:</string>
     <string name="payment">Payment</string>
     <string name="place_order">Place Order</string>
@@ -1695,6 +1695,12 @@
     <string name="please_give_some_rating">Please give some rating</string>
     <string name="write_a_review">Write a review</string>
     <string name="feed">Feed</string>
+    <string name="label_confirm_delivery_address">Click and confirm delivery address!</string>
+    <string name="veg_only">Veg Only</string>
+    <string name="back_button">Back button</string>
+    <string name="online_payment">Online Payment</string>
+    <string name="start_typing_a_cuisine">Start typing a cuisine…</string>
+    <string name="minimum_order_amount">Minimum Order Amount</string>
 
 
 </resources>

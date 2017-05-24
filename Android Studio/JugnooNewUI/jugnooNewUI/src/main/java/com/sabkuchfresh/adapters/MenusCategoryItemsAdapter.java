@@ -32,9 +32,11 @@ import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -46,6 +48,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     private Context context;
     private List<Item> subItems;
     private int categoryPos;
+    private Category category;
     private Callback callback;
 
     private static final int MAIN_ITEM = 0;
@@ -56,11 +59,16 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         this.context = context;
         this.callback = callback;
         this.categoryPos = categoryPos;
-        setSubItems(category);
+        this.category = category;
+        setSubItems(false);
     }
 
-    private void setSubItems(Category category){
-        subItems = new ArrayList<>();
+    public void setSubItems(boolean notify){
+        if(subItems == null) {
+            subItems = new ArrayList<>();
+        }
+        subItems.clear();
+        int isVegToggle = Prefs.with(context).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
         if(category.getSubcategories() != null){
             List<Subcategory> subcategories = category.getSubcategories();
             for(int i=0; i<subcategories.size(); i++){
@@ -69,11 +77,18 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 item.setItemName(subcategory.getSubcategoryName());
                 item.setIsSubCategory(1);
                 subItems.add(item);
+                int itemsInSubCategories = 0;
                 for(int j=0; j<subcategory.getItems().size(); j++){
                     Item item1 = subcategory.getItems().get(j);
                     item1.setSubCategoryPos(i);
                     item1.setItemPos(j);
-                    subItems.add(item1);
+                    if(isVegCheck(isVegToggle, item1)){
+                        subItems.add(item1);
+                        itemsInSubCategories++;
+                    }
+                }
+                if(itemsInSubCategories == 0){
+                    subItems.remove(item);
                 }
             }
         } else if(category.getItems() != null){
@@ -82,8 +97,13 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 Item item1 = items.get(j);
                 item1.setSubCategoryPos(-1);
                 item1.setItemPos(j);
-                subItems.add(item1);
+                if(isVegCheck(isVegToggle, item1)) {
+                    subItems.add(item1);
+                }
             }
+        }
+        if(notify){
+            notifyDataSetChanged();
         }
     }
 
@@ -92,9 +112,24 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         this.context = context;
         this.callback = callback;
         this.categoryPos = -1;
-        subItems = items;
+        setList(items, false);
     }
 
+    public void setList(ArrayList<Item> items, boolean notify){
+        int isVegToggle = Prefs.with(context).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
+        if(subItems == null) {
+            subItems = new ArrayList<>();
+        }
+        subItems.clear();
+        for(Item item : items){
+            if(isVegCheck(isVegToggle, item)) {
+                subItems.add(item);
+            }
+        }
+        if(notify) {
+            notifyDataSetChanged();
+        }
+    }
 
 
     @Override
@@ -483,6 +518,54 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             textView.append(item.getDisplayPrice());
         } else {
             textView.append(context.getString(R.string.rupees_value_format, com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(item.getPrice())));
+        }
+    }
+
+    private boolean isVegCheck(int isVegToggle, Item item1) {
+        return isVegToggle != 1 || item1.getIsVeg() == 1;
+    }
+
+    public void setSubItemsTemp(boolean notify){
+        if(subItems == null) {
+            subItems = new ArrayList<>();
+        }
+        subItems.clear();
+        int isVegToggle = Prefs.with(context).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
+        if(category.getSubcategories() != null){
+            List<Subcategory> subcategories = category.getSubcategories();
+            for(int i=0; i<subcategories.size(); i++){
+                Subcategory subcategory = subcategories.get(i);
+                Item item = new Item();
+                item.setItemName(subcategory.getSubcategoryName());
+                item.setIsSubCategory(1);
+                subItems.add(item);
+                int itemsInSubCategories = 0;
+                for(int j=0; j<subcategory.getItems().size(); j++){
+                    Item item1 = subcategory.getItems().get(j);
+                    item1.setSubCategoryPos(i);
+                    item1.setItemPos(j);
+                    if(isVegCheck(isVegToggle, item1)){
+                        subItems.add(item1);
+                        itemsInSubCategories++;
+                    }
+                }
+                if(itemsInSubCategories == 0){
+                    subItems.remove(subItems.size()-1);
+                }
+            }
+        } else if(category.getItems() != null){
+            List<Item> items = category.getItems();
+            for(int j=0; j<items.size(); j++){
+                Item item1 = items.get(j);
+                item1.setSubCategoryPos(-1);
+                item1.setItemPos(j);
+                if(isVegCheck(isVegToggle, item1)) {
+                    subItems.add(item1);
+                }
+            }
+        }
+        if(notify){
+            notifyDataSetChanged();
         }
     }
 }

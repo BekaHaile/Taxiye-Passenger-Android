@@ -6,10 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -94,6 +96,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -156,7 +159,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private RelativeLayout relativeLayoutDeliveryAddress;
     private ImageView imageViewAddressType, imageViewDeliveryAddressForward;
-    private TextView textViewAddressName, textViewAddressValue;
+    private TextView textViewAddressName, textViewAddressValue,tvNoAddressAlert;
 
     private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutJugnooPay, relativeLayoutCash;
     private LinearLayout linearLayoutWalletContainer;
@@ -405,7 +408,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         chargesAdapter = new CheckoutChargesAdapter(activity, chargesList);
         listViewCharges.setAdapter(chargesAdapter);
-
         linearLayoutDeliverySlot = (LinearLayout) rootView.findViewById(R.id.linearLayoutDeliverySlot);
         recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
         recyclerViewDeliverySlots.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
@@ -440,6 +442,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         imageViewDeliveryAddressForward = (ImageView) rootView.findViewById(R.id.imageViewDeliveryAddressForward);
         textViewAddressName = (TextView) rootView.findViewById(R.id.textViewAddressName); textViewAddressName.setTypeface(Fonts.mavenMedium(activity));
         textViewAddressValue = (TextView) rootView.findViewById(R.id.textViewAddressValue); textViewAddressValue.setTypeface(Fonts.mavenRegular(activity));
+        tvNoAddressAlert = (TextView) rootView.findViewById(R.id.tv_no_address_alert);
 
         llDeliveryFrom = (LinearLayout) rootView.findViewById(R.id.llDeliveryFrom);
         rlDeliveryFrom = (RelativeLayout) rootView.findViewById(R.id.rlDeliveryFrom);
@@ -1481,8 +1484,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT), isRazorUPI);
                                         doSlideInitial = false;
                                     } else {
+                                        paramsPlaceOrder = params;
                                         orderPlacedSuccess(placeOrderResponse);
-                                        fbPurchasedEvent(params, placeOrderResponse);
                                         doSlideInitial = false;
                                     }
                                 } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
@@ -1629,9 +1632,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void fbPurchasedEvent(HashMap<String, String> params, PlaceOrderResponse placeOrderResponse) {
         try {
             Bundle bundle = new Bundle();
-            for(String key : params.keySet()){
-				bundle.putString(key, params.get(key));
-			}
+            if(params != null) {
+                for (String key : params.keySet()) {
+                    bundle.putString(key, params.get(key));
+                }
+            }
             bundle.putString("order_id", String.valueOf(placeOrderResponse.getOrderId()));
             bundle.putString("amount", String.valueOf(placeOrderResponse.getAmount()));
 
@@ -1744,13 +1749,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         activity.clearAllCartAtOrderComplete();
         activity.setSelectedPromoCoupon(noSelectionCoupon);
         flurryEventPlaceOrder(placeOrderResponse);
+        fbPurchasedEvent(paramsPlaceOrder, placeOrderResponse);
     }
 
     private void flurryEventPlaceOrder(PlaceOrderResponse placeOrderResponse){
         try {
             chargeDetails.put("Charged ID", placeOrderResponse.getOrderId());
             MyApplication.getInstance().charged(chargeDetails, items);
-
+            if(activity.getVendorOpened() != null) {
+                MyApplication.getInstance().updateUserDataAddInMultiValue(Events.RESTAURANT_NAMES, activity.getVendorOpened().getName());
+            }
 
             ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
 					.setTransactionId(String.valueOf(placeOrderResponse.getOrderId()))
@@ -2181,7 +2189,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 params.put(Constants.INTERATED, "1");
                 if(type == AppConstant.ApplicationType.MEALS){
                     params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
-                } if(isMenusOpen()){
+                } else if(isMenusOpen()){
                     params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
                 } else {
                     params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
@@ -2600,9 +2608,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
         imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
+        imageViewAddressType.setPadding(0,0,0,0);
         textViewAddressName.setVisibility(View.GONE);
         textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
         if(!addressSelectedNotValid() && !TextUtils.isEmpty(activity.getSelectedAddress())) {
+            textViewAddressValue.setVisibility(View.VISIBLE);          tvNoAddressAlert.setVisibility(View.GONE);
+            imageViewDeliveryAddressForward.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_back_pay_selector));
+            imageViewDeliveryAddressForward.setVisibility(View.VISIBLE);
             textViewAddressValue.setText(activity.getSelectedAddress());
             imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
             if(!TextUtils.isEmpty(activity.getSelectedAddressType())){
@@ -2623,6 +2635,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         } else {
             textViewAddressValue.setText(activity.getResources().getString(R.string.add_address));
+            imageViewAddressType.setImageResource(R.drawable.ic_exclamation_address);
+            imageViewDeliveryAddressForward.getDrawable().mutate().setColorFilter(ContextCompat.getColor(activity,R.color.red_alert_no_address), PorterDuff.Mode.SRC_ATOP);
+            int padding = activity.getResources().getDimensionPixelSize(R.dimen.dp_2);
+            imageViewAddressType.setPadding(padding,padding,padding,padding);
+            textViewAddressValue.setVisibility(View.GONE);
+            tvNoAddressAlert.setVisibility(View.VISIBLE);
+//            imageViewDeliveryAddressForward.setVisibility(View.GONE);
+
+
         }
     }
 
@@ -3145,4 +3166,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
     }
 
+
+    private HashMap<String, String> paramsPlaceOrder;
 }

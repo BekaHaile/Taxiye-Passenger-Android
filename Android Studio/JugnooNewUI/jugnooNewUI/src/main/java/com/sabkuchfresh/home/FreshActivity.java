@@ -95,7 +95,6 @@ import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.GroceryFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MealFragment;
-import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
@@ -207,7 +206,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private RelativeLayout relativeLayoutContainer;
 
-    private TextView textViewMinOrder;
+    public TextView textViewMinOrder;
 
     private MenuBar menuBar;
     private TopBar topBar;
@@ -267,6 +266,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private Typewriter tvAddPost;
     private ImageView ivProfilePic;
     public int currentOffsetFeedHomeAppBar;
+    public boolean filtersChanged = false;
 
 
 
@@ -337,6 +337,35 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             topBar.etSearch.addTextChangedListener(textWatcher);
 
+            drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    if (drawerView.equals(llRightDrawer)) {
+                        filtersChanged = false;
+                    }
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    if(menuBar != null){
+                        menuBar.getRecyclerViewMenu().scrollToPosition(0);
+                    }
+                    Utils.hideKeyboard(FreshActivity.this);
+                    if(drawerView.equals(llRightDrawer)){
+                        applyRealTimeFilters();
+                    }
+                }
+
+                @Override
+                public void onDrawerStateChanged(int newState) {
+
+                }
+            });
 
 
            /* appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -394,7 +423,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             try {
-                float marginBottom = 60f;
+                float marginBottom = 50f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
 
                 createAppCart(lastClientId);
@@ -414,6 +443,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
                     lastClientId = Config.getMenusClientId();
+
+                    getHandler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(llRightDrawer.getId(), new MenusFilterFragment(), MenusFilterFragment.class.getName())
+                                    .commitAllowingStateLoss();
+                        }
+                    });
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
 
@@ -444,7 +482,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
                 int dpAsPixels = (int) (marginBottom * scale + 0.5f);
+
+                // Set Jeanie Padding Bottom if Offering strip shown so that they do not overlap.
+                if(getAppType()== AppConstant.ApplicationType.MEALS &&  Data.getMealsData()!=null
+                        && Data.getMealsData().getOfferStripMeals()!=null && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())) {
+                    marginBottom += getResources().getDimensionPixelSize(R.dimen.height_strip_offers);
+                }
+
                 fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
+
                 fabViewTest.setRlGenieHelpBottomMargin(200f);
                 lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
                 Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
@@ -536,14 +582,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             slots.add(new SortResponseModel(1, "Popularity", false));
             slots.add(new SortResponseModel(2, "Price: Low to High", false));
             slots.add(new SortResponseModel(3, "Price: High to Low", false));
+            if(freshSort < 0 || freshSort >= slots.size()){
+                freshSort = 0;
+            }
+            slots.get(freshSort).check = true;
         } else if (fragment instanceof VendorMenuFragment) {
             slots.add(new SortResponseModel(0, "A-Z", false));
             slots.add(new SortResponseModel(1, "Price: Low to High", false));
             slots.add(new SortResponseModel(2, "Price: High to Low", false));
-
-            slots.get(1).check = true;
-            menusSort = slots.get(1).id;
-            onSortEvent(new SortSelection(menusSort));
+            if(menusSort < 0 || menusSort >= slots.size()){
+                menusSort = 0;
+            }
+            slots.get(menusSort).check = true;
         }
     }
 
@@ -797,7 +847,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
                 // to check from Last selected address that if its id is -10(marked for special case of
-                // deleting selected delivery address from address book), if it is the case clear
+                // deleting selected delivery address from address book), if it is the case, clear
                 // address related local variables and save empty jsonObject in SP for setting
                 // delivery location to current location.
                 SearchResult searchResultLastFMM = gson.fromJson(Prefs.with(this)
@@ -818,10 +868,24 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedAddress(searchResultLastFMM.getAddress());
                     setSelectedAddressType(searchResultLastFMM.getName());
                 }
+                // else find any tagged address near current set location, if that is not tagged
+                else if(getSelectedAddressId() == 0){
+                    SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
+                            Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                    if(searchResult != null){
+                        setSelectedAddress(searchResult.getAddress());
+                        setSelectedLatLng(searchResult.getLatLng());
+                        setSelectedAddressId(searchResult.getId());
+                        setSelectedAddressType(searchResult.getName());
+                        setAddressTextToLocationPlaceHolder();
+                        saveOfferingLastAddress(getAppType());
+                    }
+                }
+
             }
 
             if(AccountActivity.updateMenuBar){
-                menuBar.setProfileData();;
+                menuBar.setProfileData();
                 AccountActivity.updateMenuBar=false;
             }
         } catch (Exception e) {
@@ -1099,7 +1163,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             int ivSearchVis = View.GONE;
             int llSearchContainerVis = View.GONE;
             topBar.imageViewDelete.setVisibility(View.GONE);
-            topBar.textViewReset.setVisibility(View.GONE);
             if (topView.getVisibility() != View.VISIBLE)
                 topView.setVisibility(View.VISIBLE);
             fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
@@ -1115,6 +1178,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             int freshSortVis = View.GONE;
 			int llAddToCartVis = View.GONE;
             int llPayViewContainerVis = View.GONE;
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -1200,6 +1264,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
                 visMinOrder = setMinOrderAmountText(fragment);
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END);
 
             } else if (fragment instanceof VendorMenuFragment || fragment instanceof RestaurantImageFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1223,22 +1288,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getString(R.string.customize_item));
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof MenusFilterFragment) {
-                topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.imageViewBack.setVisibility(View.VISIBLE);
-
-                topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(R.string.filters);
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                topBar.textViewReset.setVisibility(View.VISIBLE);
-            } else if (fragment instanceof MenusFilterCuisinesFragment) {
-                topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.imageViewBack.setVisibility(View.VISIBLE);
-                llSearchCartVis = View.GONE;
-
-                topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(R.string.select_cuisines);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             } else if (fragment instanceof FreshCheckoutMergedFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1412,8 +1461,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             setCollapsingToolbar(fragment instanceof VendorMenuFragment, fragment);
 
 
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1550,9 +1597,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (getFreshFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                     int textViewMinOrderVis;
                     if (fragment instanceof FreshFragment || fragment instanceof FreshSearchFragment) {
-                        if (Data.userData.isSubscriptionActive() && getProductsResponse() != null && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())) {
-                            textViewMinOrderVis = View.VISIBLE;
-                            textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
+                        if (Data.userData.isSubscriptionActive()) {
+                            if(getProductsResponse() != null && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())){
+                                textViewMinOrderVis = View.VISIBLE;
+                                textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
+                            } else if(getSuperCategoriesData() != null && !TextUtils.isEmpty(getSuperCategoriesData().getSubscriptionMessage())){
+                                textViewMinOrderVis = View.VISIBLE;
+                                textViewMinOrder.setText(getSuperCategoriesData().getSubscriptionMessage());
+                            } else {
+                                textViewMinOrderVis = View.GONE;
+                            }
                         } else if (totalQuantity > 0 && totalPrice < getOpenedDeliveryStore().getMinAmount()) {
                             textViewMinOrderVis = View.VISIBLE;
                             double leftAmount = getOpenedDeliveryStore().getMinAmount() - totalPrice;
@@ -1562,6 +1616,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             textViewMinOrderVis = View.GONE;
                         }
                     } else {
+                        textViewMinOrderVis = View.GONE;
+                    }
+                    textViewMinOrderSetVisibility(textViewMinOrderVis);
+                    return 1;
+                } else if (getMealFragment() != null) {
+                    int textViewMinOrderVis;
+                    if(getMealFragment().shouldShowStrip() && Data.getMealsData().getOfferStripMeals()!=null && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())){
+                        textViewMinOrderVis = View.VISIBLE;
+                        textViewMinOrder.setText(Utils.trimHTML(Utils.fromHtml(Data.getMealsData().getOfferStripMeals().getTextToDisplay())));
+                    } else{
                         textViewMinOrderVis = View.GONE;
                     }
                     textViewMinOrderSetVisibility(textViewMinOrderVis);
@@ -1637,9 +1701,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void openMenusFilter() {
-//        FlurryEventLogger.eventGA(Events.MENUS, Events.FILTERS, Events.MENU_FILTERS);
         GAUtils.event(GAAction.MENUS, GAAction.HOME ,GAAction.FILTER_BUTTON + GAAction.CLICKED);
-        getTransactionUtils().openMenusFilterFragment(this, getRelativeLayoutContainer());
+        drawerLayout.openDrawer(GravityCompat.END);
     }
 
     public FreshSearchFragment getFreshSearchFragment() {
@@ -1912,6 +1975,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         }
 
+        if(drawerLayout.isDrawerOpen(GravityCompat.END)){
+            if(getMenusFilterFragment() != null) {
+                getMenusFilterFragment().performBackPress();
+                return;
+            }
+        }
+
         if(getTopFragment() instanceof DeliveryAddressesFragment && getDeliveryAddressesFragment().backWasConsumed()){
             return;
         }
@@ -1923,7 +1993,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             return;
         }
 
-        if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
+        if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() >= 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finishWithToast();
             return;
         }
@@ -2565,6 +2635,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
+    public void openDeepIndex(){
+        if(deepLinkAction != null && menuBar != null) {
+            deepLinkAction.openDeepLink(menuBar);
+        }
+    }
 
     private PaytmRechargeDialog paytmRechargeDialog;
 
@@ -2990,6 +3065,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             sortBySelected = MenusFilterFragment.SortType.PRICE;
         } else if (sortBy == MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED.getOrdinal()) {
             sortBySelected = MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED;
+        } else if (sortBy == MenusFilterFragment.SortType.DELIVERY_TIME.getOrdinal()) {
+            sortBySelected = MenusFilterFragment.SortType.DELIVERY_TIME;
         }
 
         int mo = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_MIN_ORDER, moSelected.getOrdinal());
@@ -3234,6 +3311,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 				address = getSelectedAddressType();
 			}
             setLocationAddress(address);
+            if(deliveryAddressView != null) {
+                deliveryAddressView.showConfirmAddressBar(TextUtils.isEmpty(getSelectedAddressType()) && !TextUtils.isEmpty(address));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4516,6 +4596,24 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void clearRestaurantRatingStars(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating){
         llCollapRatingStars.removeAllViews();
         tvCollapRestaurantRating.setText("");
+    }
+
+
+    @Bind(R.id.llRightDrawer)
+    public LinearLayout llRightDrawer;
+
+    public MenusFilterFragment getMenusFilterFragment(){
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MenusFilterFragment.class.getName());
+        if(fragment != null){
+            return (MenusFilterFragment) fragment;
+        }
+        return null;
+    }
+
+    public void applyRealTimeFilters(){
+        if(getMenusFragment() != null) {
+            getMenusFragment().applyFilter(filtersChanged);
+        }
     }
 
 }

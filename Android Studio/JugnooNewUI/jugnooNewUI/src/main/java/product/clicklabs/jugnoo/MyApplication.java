@@ -104,6 +104,7 @@ public class MyApplication extends Application {
 //		LeakCanary.install(this);
 
 		Paper.init(this);
+        Data.initializeFuguHandler(getApplicationContext());
 
         try {
             Fabric.with(this, new Crashlytics());
@@ -377,6 +378,14 @@ public class MyApplication extends Application {
 			e.printStackTrace();
 		}
 	}
+
+    public void updateUserDataAddInMultiValue(String key, String value) {
+        try {
+            getCleverTap().profile.addMultiValueForKey(key, value);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 	private CleverTapUtils cleverTapUtils;
 	public CleverTapUtils getCleverTapUtils(){

@@ -194,7 +194,21 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             e.printStackTrace();
         }
 
+        activity.textViewMinOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Data.getMealsData()!=null && Data.getMealsData().getOfferStripMeals()!=null
+                        && Data.getMealsData().getOfferStripMeals().getDeepIndex()!=null && activity.getAppType()== AppConstant.ApplicationType.MEALS ){
 
+                    try {
+                        Data.deepLinkIndex = Integer.parseInt(Data.getMealsData().getOfferStripMeals().getDeepIndex());
+                        activity.openDeepIndex();
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         return rootView;
     }
 
@@ -229,6 +243,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
                     }
                     activity.setRefreshCart(false);
+                    activity.setMinOrderAmountText(MealFragment.this);
                 }
             }, 300);
             activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
@@ -276,6 +291,14 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onDestroy();
         ASSL.closeActivity(llRoot);
         System.gc();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(activity.textViewMinOrder!=null) {
+            activity.textViewMinOrder.setOnClickListener(null);
+        }
     }
 
     @Override
@@ -339,6 +362,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     noMealsView.setVisibility(View.GONE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
                                             productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
+
                                 }
                                 else {
                                     if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
@@ -396,6 +420,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     }
                                 }
                             }
+                            activity.setMinOrderAmountText(MealFragment.this);
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
@@ -406,6 +431,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             e.printStackTrace();
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
+
                     }
 
                     @Override
@@ -529,4 +555,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return mealAdapter;
     }
 
+    public boolean shouldShowStrip() {
+        return getView()!=null && relativeLayoutNoMenus.getVisibility()!=View.VISIBLE;
+    }
 }

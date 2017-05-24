@@ -421,8 +421,11 @@
     <style name="ThemeSwitch" >
         <item name="colorControlActivated">@color/yellow_jugnoo</item>
         <item name="android:colorForeground">@color/feed_grey_text_secondary</item>
+  </style>
 
-
+    <style name="ThemeSwitchAlternate" >
+        <item name="colorControlActivated">@color/green_fresh_fab</item>
+        <item name="android:colorForeground">@color/feed_grey_text_secondary</item>
     </style>
     
     <style name="Feed.Button.Green" parent="Base.Widget.AppCompat.Button">

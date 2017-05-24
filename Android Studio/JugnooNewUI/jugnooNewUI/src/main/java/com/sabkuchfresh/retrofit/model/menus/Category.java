@@ -29,6 +29,8 @@ public class Category {
 	@SerializedName("items")
 	@Expose
 	private List<Item> items = null;
+	@SerializedName("categoryPos")
+	private int categoryPos;
 
 
 	public Integer getCategoryId() {
@@ -86,5 +88,13 @@ public class Category {
 		} else {
 			return false;
 		}
+	}
+
+	public int getCategoryPos() {
+		return categoryPos;
+	}
+
+	public void setCategoryPos(int categoryPos) {
+		this.categoryPos = categoryPos;
 	}
 }

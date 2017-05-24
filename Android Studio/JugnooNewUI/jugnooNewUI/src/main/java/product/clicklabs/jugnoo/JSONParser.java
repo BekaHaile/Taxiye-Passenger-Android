@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,7 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
+import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
@@ -380,8 +382,9 @@ public class JSONParser implements Constants {
             JSONArray negativeFeedbackReasons = jMealsData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
             String feedbackOrderItems = jMealsData.optString("feedback_order_items", "");
 
+
             Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText, negativeFeedbackReasons
-            , feedbackOrderItems));
+            , feedbackOrderItems,mealsData.getOfferStripMeals()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -706,19 +709,16 @@ public class JSONParser implements Constants {
 
         resetMenusFilters(context);
 
+        resetUseCouponSP(context);
+        resetIsVegToggle(context);
 
-        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getAutosClientId(), -1);
-        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getAutosClientId(), false);
-
-        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getFreshClientId(), -1);
-        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getFreshClientId(), false);
-
-        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMealsClientId(), -1);
-        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMealsClientId(), false);
-
-        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMenusClientId(), -1);
-        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMenusClientId(), false);
-
+        try {
+            if(Data.getFuguUserData()!=null) {
+                FuguConfig.getInstance().registerIdentifiedUser((Activity) context, Data.getFuguUserData());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return resp;
     }
 
@@ -1872,6 +1872,25 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_DELIVERY_TIME, -1);
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_CUISINES, "");
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_QUICK, "");
+    }
+
+
+    private void resetUseCouponSP(Context context) {
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getAutosClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getAutosClientId(), false);
+
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getFreshClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getFreshClientId(), false);
+
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMealsClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMealsClientId(), false);
+
+        Prefs.with(context).save(Constants.SP_USE_COUPON_ + Config.getMenusClientId(), -1);
+        Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + Config.getMenusClientId(), false);
+    }
+
+    private void resetIsVegToggle(Context context){
+        Prefs.with(context).save(KEY_SP_IS_VEG_TOGGLE, 0);
     }
 
 }

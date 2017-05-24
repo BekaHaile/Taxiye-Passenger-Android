@@ -45,6 +45,11 @@ public class MenusResponse implements Serializable {
 	@SerializedName("review_count")
 	private long reviewCount;
 
+	@SerializedName("banner_info")
+	@Expose
+	private List<BannerInfo> bannerInfos;
+
+
 	public Double getRating() {
 		return rating==null?null:Math.round(rating * 10.0) / 10.0;
 	}
@@ -156,6 +161,9 @@ public class MenusResponse implements Serializable {
 		this.recentOrdersPossibleStatus = recentOrdersPossibleStatus;
 	}
 
+	public List<BannerInfo> getBannerInfos() {
+		return bannerInfos;
+	}
 
 
 	public class Vendor {
@@ -709,4 +717,36 @@ public class MenusResponse implements Serializable {
 			this.distance = distance;
 		}
 	}
+
+
+	public class BannerInfo{
+		@SerializedName("image_link")
+		@Expose
+		private String imageLink;
+		@SerializedName("restaurant_id")
+		@Expose
+		private Integer restaurantId;
+		@SerializedName("deep_index")
+		@Expose
+		private Integer deepIndex;
+
+		public String getImageLink() {
+			return imageLink;
+		}
+
+		public Integer getRestaurantId() {
+			if(restaurantId == null){
+				restaurantId = -1;
+			}
+			return restaurantId;
+		}
+
+		public Integer getDeepIndex() {
+			if(deepIndex == null){
+				deepIndex = -1;
+			}
+			return deepIndex;
+		}
+	}
+
 }

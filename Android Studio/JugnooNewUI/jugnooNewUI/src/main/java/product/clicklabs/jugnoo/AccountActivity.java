@@ -142,6 +142,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         viewTrackingLog = findViewById(R.id.viewTrackingLog);
 //        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         textViewTitle.setText(R.string.title_my_profile);
+        textViewTitle.setVisibility(View.VISIBLE);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -1313,7 +1314,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 }
                 transaction.commitAllowingStateLoss();
 
-                textViewTitle.setVisibility(View.VISIBLE);
                 textViewTitle.setText(R.string.address_book);
                 imageViewEditProfile.setVisibility(View.GONE);
                 linearLayoutSave.setVisibility(View.GONE);
@@ -1321,7 +1321,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
         } else{
             super.onBackPressed();
-            textViewTitle.setVisibility(View.GONE);
+            textViewTitle.setText(R.string.title_my_profile);
             scrollView.setVisibility(View.VISIBLE);
             if (editTextUserName.isEnabled()) {
                 imageViewEditProfile.setVisibility(View.GONE);

@@ -24,7 +24,8 @@ public enum MenuInfoTags {
     FEED("feed"),
     DELIVERY("delivery"),
     JUGNOO_STAR("jugnoo_star"),
-    SIGNUP_TUTORIAL("signup_tutorial");
+    SIGNUP_TUTORIAL("signup_tutorial"),
+    FUGU_SUPPORT("chat_with_jugnoo");
 
     private String tag;
 

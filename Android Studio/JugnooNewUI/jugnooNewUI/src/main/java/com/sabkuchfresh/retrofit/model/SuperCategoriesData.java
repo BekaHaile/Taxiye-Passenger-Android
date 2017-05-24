@@ -33,6 +33,9 @@ public class SuperCategoriesData {
 	@SerializedName("ads")
 	@Expose
 	private List<SuperCategory> ads = new ArrayList<>();
+	@SerializedName("subscription_message")
+	@Expose
+	private String subscriptionMessage;
 
 
 	public Integer getFlag() {
@@ -98,6 +101,14 @@ public class SuperCategoriesData {
 
 	public void setAds(List<SuperCategory> ads) {
 		this.ads = ads;
+	}
+
+	public String getSubscriptionMessage() {
+		return subscriptionMessage;
+	}
+
+	public void setSubscriptionMessage(String subscriptionMessage) {
+		this.subscriptionMessage = subscriptionMessage;
 	}
 
 	public class SuperCategory {
