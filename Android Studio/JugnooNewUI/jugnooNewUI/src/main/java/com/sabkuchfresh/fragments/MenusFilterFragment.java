@@ -218,7 +218,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				} else {
 					activity.getQuickFilterSelected().add(ACCEPTONLINE);
 				}
-				imageViewAcceptOnline.setImageResource(activity.getQuickFilterSelected().contains(ACCEPTONLINE)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
+				imageViewAcceptOnline.setImageResource(activity.getQuickFilterSelected().contains(ACCEPTONLINE)  ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 				applyRealTimeFilters();
 				gaEventQuickFilters();
 			}
@@ -232,7 +232,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				} else {
 					activity.getQuickFilterSelected().add(OFFERSDISCOUNT);
 				}
-				imageViewOffersDiscount.setImageResource(activity.getQuickFilterSelected().contains(OFFERSDISCOUNT)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
+				imageViewOffersDiscount.setImageResource(activity.getQuickFilterSelected().contains(OFFERSDISCOUNT)  ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 				applyRealTimeFilters();
 				gaEventQuickFilters();
 			}
@@ -247,7 +247,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				} else {
 					activity.getQuickFilterSelected().add(PUREVEGETARIAN);
 				}
-				imageViewPureVeg.setImageResource(activity.getQuickFilterSelected().contains(PUREVEGETARIAN)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
+				imageViewPureVeg.setImageResource(activity.getQuickFilterSelected().contains(PUREVEGETARIAN)  ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 				applyRealTimeFilters();
 				gaEventQuickFilters();
 			}
@@ -261,7 +261,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				} else {
 					activity.getQuickFilterSelected().add(FREEDELIVERY);
 				}
-				imageViewFreeDelivery.setImageResource(activity.getQuickFilterSelected().contains(FREEDELIVERY)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
+				imageViewFreeDelivery.setImageResource(activity.getQuickFilterSelected().contains(FREEDELIVERY)  ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 				applyRealTimeFilters();
 				gaEventQuickFilters();
 			}
@@ -406,10 +406,10 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 
 
 	private void updateQuickFilterUI() {
-		imageViewAcceptOnline.setImageResource(activity.getQuickFilterSelected().contains(ACCEPTONLINE)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
-		imageViewOffersDiscount.setImageResource(activity.getQuickFilterSelected().contains(OFFERSDISCOUNT) ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
-		imageViewPureVeg.setImageResource(activity.getQuickFilterSelected().contains(PUREVEGETARIAN) ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
-		imageViewFreeDelivery.setImageResource(activity.getQuickFilterSelected().contains(FREEDELIVERY) ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
+		imageViewAcceptOnline.setImageResource(activity.getQuickFilterSelected().contains(ACCEPTONLINE)  ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
+		imageViewOffersDiscount.setImageResource(activity.getQuickFilterSelected().contains(OFFERSDISCOUNT) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
+		imageViewPureVeg.setImageResource(activity.getQuickFilterSelected().contains(PUREVEGETARIAN) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
+		imageViewFreeDelivery.setImageResource(activity.getQuickFilterSelected().contains(FREEDELIVERY) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 	}
 
 

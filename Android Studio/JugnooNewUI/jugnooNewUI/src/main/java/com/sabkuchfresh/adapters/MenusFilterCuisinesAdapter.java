@@ -101,7 +101,7 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 		try {
 			FilterCuisine filterCuisine = cuisinesToShow.get(position);
 			holder.textViewCuisine.setText(filterCuisine.getName());
-			holder.imageViewCheck.setImageResource(filterCuisine.getSelected() == 1 ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
+			holder.imageViewCheck.setImageResource(filterCuisine.getSelected() == 1 ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 			holder.imageViewSep.setVisibility(position == getItemCount()-1 ? View.GONE : View.VISIBLE);
 			holder.relative.setTag(position);
 			holder.relative.setOnClickListener(new View.OnClickListener() {
