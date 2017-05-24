@@ -194,7 +194,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             e.printStackTrace();
         }
 
-        activity.setMinOrderAmountText(this);
         activity.textViewMinOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -363,6 +362,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     noMealsView.setVisibility(View.GONE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
                                             productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
+
                                 }
                                 else {
                                     if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
@@ -420,6 +420,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     }
                                 }
                             }
+                            activity.setMinOrderAmountText(MealFragment.this);
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
@@ -430,6 +431,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             e.printStackTrace();
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
+
                     }
 
                     @Override
@@ -553,4 +555,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return mealAdapter;
     }
 
+    public boolean shouldShowStrip() {
+        return getView()!=null && relativeLayoutNoMenus.getVisibility()!=View.VISIBLE;
+    }
 }

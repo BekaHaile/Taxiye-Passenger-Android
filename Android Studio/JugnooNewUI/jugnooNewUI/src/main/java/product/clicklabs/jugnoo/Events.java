@@ -141,4 +141,6 @@ public interface Events {
     String STAR_ICON = "MenuStarIcon";
     String MENU_FEEDBACK_SUBMIT = "MenuFeedbackSubmit";
     String FEEDBACK_SUBMIT = "Feedback page: Submit button";
+
+    String RESTAURANT_NAMES = "restaurant_names";
 }

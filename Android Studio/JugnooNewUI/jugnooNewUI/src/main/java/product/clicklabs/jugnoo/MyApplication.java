@@ -379,6 +379,14 @@ public class MyApplication extends Application {
 		}
 	}
 
+    public void updateUserDataAddInMultiValue(String key, String value) {
+        try {
+            getCleverTap().profile.addMultiValueForKey(key, value);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 	private CleverTapUtils cleverTapUtils;
 	public CleverTapUtils getCleverTapUtils(){
 		if(cleverTapUtils == null){
