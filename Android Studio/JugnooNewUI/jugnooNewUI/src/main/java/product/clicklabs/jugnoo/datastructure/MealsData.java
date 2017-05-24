@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -17,9 +19,11 @@ public class MealsData {
 	private int feedbackViewType;
 	private JSONArray negativeFeedbackReasons;
 	private String feedbackOrderItems;
+	private OfferStripMeals offerStripMeals;
 
 	public MealsData(String orderId, int pendingFeedback, double amount, String feedbackDeliveryDate, int feedbackViewType,
-					 String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons, String feedbackOrderItems) {
+					 String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons, String feedbackOrderItems,
+			OfferStripMeals offerStripMeals) {
 		this.orderId = orderId;
 		this.pendingFeedback = pendingFeedback;
 		this.amount = amount;
@@ -28,6 +32,7 @@ public class MealsData {
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 		this.negativeFeedbackReasons = negativeFeedbackReasons;
 		this.feedbackOrderItems = feedbackOrderItems;
+		this.offerStripMeals = offerStripMeals;
 	}
 
 	public ArrayList<PromoCoupon> getPromoCoupons() {
@@ -100,5 +105,27 @@ public class MealsData {
 
 	public void setFeedbackOrderItems(String feedbackOrderItems) {
 		this.feedbackOrderItems = feedbackOrderItems;
+	}
+
+	public OfferStripMeals getOfferStripMeals() {
+		return offerStripMeals;
+	}
+
+	public  class OfferStripMeals {
+
+		@SerializedName("message")
+		private String textToDisplay;
+
+		@SerializedName("deepindex")
+		private String deepIndex;
+
+
+		public String getTextToDisplay() {
+			return textToDisplay;
+		}
+
+		public String getDeepIndex() {
+			return deepIndex;
+		}
 	}
 }

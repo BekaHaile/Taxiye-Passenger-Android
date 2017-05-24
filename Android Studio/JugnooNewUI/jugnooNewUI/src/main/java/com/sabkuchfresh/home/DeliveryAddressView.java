@@ -18,6 +18,8 @@ public class DeliveryAddressView {
 	public LinearLayout llLocation;
 	public TextView tvDeliveryAddress, tvLocation;
 	public View shadowTop;
+	private TextView tvConfirmAddress;
+	private View viewArrowConfirmAddress;
 
 	public DeliveryAddressView(Context context, View rootView){
 		init(context, rootView);
@@ -28,6 +30,8 @@ public class DeliveryAddressView {
 		llLocation.setVisibility(View.VISIBLE);
 		tvDeliveryAddress = (TextView) rootView.findViewById(R.id.tvDeliveryAddress); tvDeliveryAddress.setTypeface(Fonts.mavenMedium(context));
 		tvLocation = (TextView) rootView.findViewById(R.id.tvLocation); tvLocation.setTypeface(Fonts.mavenMedium(context));
+		tvConfirmAddress = (TextView) rootView.findViewById(R.id.tv_confirm_address);
+		viewArrowConfirmAddress = (View) rootView.findViewById(R.id.arrow_down);
 		shadowTop = (View) rootView.findViewById(R.id.shadow_top);
 	}
 
@@ -41,5 +45,11 @@ public class DeliveryAddressView {
 
 	public View getShadowTop() {
 		return shadowTop;
+	}
+
+	public void showConfirmAddressBar(boolean show){
+
+		tvConfirmAddress.setVisibility(show?View.VISIBLE:View.GONE);
+		viewArrowConfirmAddress.setVisibility(show?View.VISIBLE:View.GONE);
 	}
 }

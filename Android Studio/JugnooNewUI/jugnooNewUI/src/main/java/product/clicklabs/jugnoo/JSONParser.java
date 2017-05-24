@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,7 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
+import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
@@ -380,8 +382,9 @@ public class JSONParser implements Constants {
             JSONArray negativeFeedbackReasons = jMealsData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
             String feedbackOrderItems = jMealsData.optString("feedback_order_items", "");
 
+
             Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText, negativeFeedbackReasons
-            , feedbackOrderItems));
+            , feedbackOrderItems,mealsData.getOfferStripMeals()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -709,6 +712,13 @@ public class JSONParser implements Constants {
         resetUseCouponSP(context);
         resetIsVegToggle(context);
 
+        try {
+            if(Data.getFuguUserData()!=null) {
+                FuguConfig.getInstance().registerIdentifiedUser((Activity) context, Data.getFuguUserData());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return resp;
     }
 

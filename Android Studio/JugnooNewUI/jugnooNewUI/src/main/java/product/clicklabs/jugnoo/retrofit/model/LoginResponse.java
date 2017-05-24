@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
@@ -242,6 +243,9 @@ public class LoginResponse {
 		@Expose
 		private List<CouponInfo> coupons = new ArrayList<>();
 
+		@SerializedName("offers_strip_meals")
+		private MealsData.OfferStripMeals offerStripMeals;
+
 		public List<PromotionInfo> getPromotions() {
 			return promotions;
 		}
@@ -256,6 +260,10 @@ public class LoginResponse {
 
 		public void setCoupons(List<CouponInfo> coupons) {
 			this.coupons = coupons;
+		}
+
+		public MealsData.OfferStripMeals getOfferStripMeals() {
+			return offerStripMeals;
 		}
 	}
 

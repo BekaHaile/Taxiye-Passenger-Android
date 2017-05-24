@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.analytics.GAAction;
@@ -248,9 +249,15 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
                 } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_about_selector);
-                } else{
+                }else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
+
+                }
+                else{
                     hideLayout(holder.relative);
                 }
+
 
                 holder.relative.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -611,6 +618,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     activity.startActivity(new Intent(activity, JugnooStarActivity.class));
                 }
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+
+            else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(tag)){
+                FuguConfig.getInstance().showConversations(activity);
+
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 drawerLayout.closeDrawer(GravityCompat.START);

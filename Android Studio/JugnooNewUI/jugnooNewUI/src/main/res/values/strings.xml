@@ -1695,6 +1695,7 @@
     <string name="please_give_some_rating">Please give some rating</string>
     <string name="write_a_review">Write a review</string>
     <string name="feed">Feed</string>
+    <string name="label_confirm_delivery_address">Click and confirm delivery address!</string>
     <string name="veg_only">Veg Only</string>
     <string name="back_button">Back button</string>
     <string name="online_payment">Online Payment</string>

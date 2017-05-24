@@ -194,7 +194,22 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             e.printStackTrace();
         }
 
+        activity.setMinOrderAmountText(this);
+        activity.textViewMinOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Data.getMealsData()!=null && Data.getMealsData().getOfferStripMeals()!=null
+                        && Data.getMealsData().getOfferStripMeals().getDeepIndex()!=null && activity.getAppType()== AppConstant.ApplicationType.MEALS ){
 
+                    try {
+                        Data.deepLinkIndex = Integer.parseInt(Data.getMealsData().getOfferStripMeals().getDeepIndex());
+                        activity.openDeepIndex();
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         return rootView;
     }
 
@@ -229,6 +244,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
                     }
                     activity.setRefreshCart(false);
+                    activity.setMinOrderAmountText(MealFragment.this);
                 }
             }, 300);
             activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
@@ -276,6 +292,14 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onDestroy();
         ASSL.closeActivity(llRoot);
         System.gc();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(activity.textViewMinOrder!=null) {
+            activity.textViewMinOrder.setOnClickListener(null);
+        }
     }
 
     @Override

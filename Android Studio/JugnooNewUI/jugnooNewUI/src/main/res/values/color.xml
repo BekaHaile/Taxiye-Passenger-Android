@@ -127,6 +127,7 @@
     <color name="red_alpha">#99F23A30</color>
     <color name="red_dark">#EA452F</color>
     <color name="red_dark_alpha">#99EA452F</color>
+    <color name="red_alert_no_address">#ff0437</color>
     <color name="green">#57B943</color>
 
 
@@ -385,6 +386,10 @@
     <color name="gradient_pressed_start">#c1556c</color>
     <color name="gradient_pressed_end">#c58f3f</color>
     <color name="border_color_new">#CCd0d0d0</color>
+
+    <color name="bg_address_confirm_border">#f6c96f</color>
+    <color name="bg_address_confirm">#ffe6b3</color>
+    <color name="text_address_confirm">#8b572a</color>
 
 
 </resources>

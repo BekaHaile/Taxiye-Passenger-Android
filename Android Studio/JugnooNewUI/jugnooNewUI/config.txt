@@ -1,0 +1,2476 @@
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/libs/picasso-2.4.0.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/libs/GoogleConversionTrackingSdk-2.2.4.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/libs/secure-component-sdk.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.splitwise/tokenautocomplete/2.0.3/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/converter-gson/2.1.0/aa557d71ead91cbf26e0c316a0f593d168303309/converter-gson-2.1.0.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.daimajia.swipelayout/library/1.2.0/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/support-compat/25.2.0/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.esotericsoftware/kryo/4.0.0/9f5c64c1315ec79bee0f56bb88e4ae94b65048ce/kryo-4.0.0.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.20.0/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.github.castorflex.smoothprogressbar/library/1.1.0/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.github.chrisbanes.photoview/library/1.2.3/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.firebase/firebase-common/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.amulyakhare/com.amulyakhare.textdrawable/1.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.2.0/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.esotericsoftware/minlog/1.3.0/ff07b5f1b01d2f92bb00a337f9a94873712f0827/minlog-1.3.0.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.melnykov/floatingactionbutton/1.3.0/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-io/1.3.2/b6dde38349ba9bb5e6ea6320531eae969985dae5/commons-io-1.3.2.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.2.0/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.3.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.razorpay/checkout/1.2.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/support-v4/25.2.0/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/de.greenrobot/eventbus/2.4.0/ddd166d01b3158d1c00576d29f7ed15c030df719/eventbus-2.4.0.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics-impl/10.0.1/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.8.0/5ea7af56cc7c567ed9856d99efb30740e9b17ff/okio-1.8.0.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.2.0/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/retrofit/2.1.0/2de7cd8b95b7021b1d597f049bcb422055119f2c/retrofit-2.1.0.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.2.0/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.3.2/90a3822c38ec8c996e84c16a3477ef632cbc87a3/commons-lang3-3.3.2.jar(**.class)
+-injars '/Applications/Android Studio.app/Contents/gradle/m2repository/org/ow2/asm/asm/5.0.4/asm-5.0.4.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/design/24.2.1/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.3.1/19047bdb6a4fc00a44124f64ca98e88fc204e7e3/okhttp-3.3.1.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/io.branch.sdk.android/library/1.14.5/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/io.paperdb/paperdb/2.0/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/multidex/1.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/10.0.1/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.squareup/otto/1.3.8/cf615176cd1177edf71d3c9605f8dc148fede6be/otto-1.3.8.jar(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.7/751f548c85fa49f330cecbb1875893f971b33c4e/gson-2.7.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.2.0/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.2.0/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-applinks/1.4.0/8ad21bf21784dacce5f2043afb97218cc377e835/bolts-applinks-1.4.0.jar(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.jakewharton.retrofit/retrofit1-okhttp3-client/1.0.2/7ed8a7e78c34074ec462b408b3c8a161028cb650/retrofit1-okhttp3-client-1.0.2.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth-base/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.2.4/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-tasks/1.4.0/d85884acf6810a3bbbecb587f239005cbc846dc4/bolts-tasks-1.4.0.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-tagmanager-v4-impl/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/cardview-v7/25.2.0/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/account-kit-sdk-4.21.0-beta/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/de.javakaffee/kryo-serializers/0.40/562cb61898302da4e8d3fd141c821edb1bc6b36d/kryo-serializers-0.40.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/customtabs/25.0.0/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.sothree.slidinguppanel/library/3.2.1/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/3.7.0/9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4/glide-3.7.0.jar(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.9.0/a681c044244d9fc375198588297a39ba78028423/retrofit-1.9.0.jar(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.3.0/2e7bc7033dc2c8423e661224171b3133fb155b28/okhttp-2.3.0.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.2.0/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/logging-interceptor/3.3.1/99ce730034c6f5aaed710d1e0e9df95e8714ed5f/logging-interceptor-3.3.1.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/10.0.1/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/2.2/3fb533efdaa50a768c394aa4624144cf8df17845/objenesis-2.2.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/io.branch.external.answersshim/answers-shim/0.0.4/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.esotericsoftware/reflectasm/1.11.3/8b102eed2f12412b254946811111ea48bc03a266/reflectasm-1.11.3.jar(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-android/1.4.0/cc174c559b5177982887bf6e1b76003aebad9516/bolts-android-1.4.0.jar(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.3.0/4f12ec1e1455909e1f0b8530c719c90b2d01745/okhttp-urlconnection-2.3.0.jar(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/7.0.1/d5d13ea991eab0252e3710e5df3d6a9d4b21d461/butterknife-7.0.1.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/support-fragment/25.2.0/jars/classes.jar'(**.class)
+-injars /Users/Saini/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.2.0/support-annotations-25.2.0.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.2.0/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.octo.android.robospice/robospice/1.4.14/fffe1563473feb2f956608554d3e97ad805914a7/robospice-1.4.14.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.2/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.octo.android.robospice/robospice-cache/1.4.14/1a13bea0b3ae105c44cb6be7fc76b6d36098faf5/robospice-cache-1.4.14.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.firebase/firebase-messaging/10.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.clevertap.android/clevertap-android-sdk/3.0.0/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.tsengvn/typekit/1.0.1/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.fugu/fugu/1.0.4/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.fugu/fugu/1.0.4/jars/libs/Java-WebSocket-1.2.1.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.firebase/firebase-core/10.0.1/jars/classes.jar'(**.class)
+-injars /Users/Saini/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/JugnooNewUI/app-release-yesbank/unspecified/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/JugnooNewUI/SecureComponent-releasev2.1/unspecified/jars/classes.jar'(**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/transforms/mergeJavaRes/release/jars/2/1f/main.jar'(!**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/transforms/mergeJavaRes/release/folders/2/1f/main'(!**.class)
+-injars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/classes/release'(**.class)
+-outjars '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/transforms/proguard/release/jars/3/1f/main.jar'
+
+-libraryjars /Users/Saini/Library/Android/sdk/platforms/android-24/android.jar
+-libraryjars /Users/Saini/Library/Android/sdk/platforms/android-24/optional/org.apache.http.legacy.jar
+
+-forceprocessing
+-printusage '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/outputs/mapping/release/usage.txt'
+-dontoptimize
+-optimizations !method/inlining/*
+-printmapping '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/outputs/mapping/release/mapping.txt'
+-dontusemixedcaseclassnames
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod,Signature,*Annotation*,*Annotation*,*Annotation*,SourceFile,LineNumberTable,InnerClasses,EnclosingMethod,JavascriptInterface,*Annotation*,*Annotation*
+-dontpreverify
+-verbose
+-dontnote com.android.vending.licensing.ILicensingService,com.google.vending.licensing.ILicensingService,com.google.android.vending.licensing.ILicensingService,android.support.**
+-dontwarn android.support.**,android.support.**,android.content.Context,com.google.android.gms.**,com.squareup.okhttp.**,java.beans.**,javax.security.**,com.google.common.**,retrofit.**,okio.**,com.flurry.**,rx.**,com.clevertap.android.sdk.**,butterknife.internal.**,butterknife.Views$InjectViewProcessor,com.gc.materialdesign.views.**,org.apache.**,uk.co.senab.photoview.**,org.objenesis.**,com.razorpay.**,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,com.crashlytics.android.answers.shim.*,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,com.esotericsoftware.**,de.javakaffee.kryoserializers.**,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context,android.security.NetworkSecurityPolicy,android.app.Notification,android.content.Context
+-printconfiguration '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/config.txt'
+-dump '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/outputs/mapping/release/dump.txt'
+-printseeds '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/outputs/mapping/release/seeds.txt'
+
+
+-keep public class com.google.vending.licensing.ILicensingService
+
+-keep public class com.android.vending.licensing.ILicensingService
+
+-keep public class com.google.android.vending.licensing.ILicensingService
+
+# For native methods, see http://proguard.sourceforge.net/manual/examples.html#native
+-keepclasseswithmembers,allowshrinking class * {
+    native <methods>;
+}
+
+# Keep setters in Views so that animations can still work.
+-keepclassmembers public class * extends android.view.View {
+    void set*(***);
+    *** get*();
+}
+
+# We want to keep methods in Activity that could be used in the XML attribute onClick.
+-keepclassmembers class * extends android.app.Activity {
+    public void *(android.view.View);
+}
+
+# For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations
+-keepclassmembers enum  * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final ** CREATOR;
+}
+
+-keepclassmembers class **.R$* {
+    public static <fields>;
+}
+
+# Preserve annotated Javascript interface methods.
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface
+    <methods>;
+}
+
+# Understand the @Keep support annotation.
+-keep class android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class * {
+    <fields>;
+    <methods>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <init>(...);
+}
+
+-keep class com.google.inject.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class org.apache.http.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class org.apache.james.mime4j.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class javax.inject.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class retrofit.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.example.testobfuscation.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class sun.misc.Unsafe {
+    <fields>;
+    <methods>;
+}
+
+-keep public class * extends android.app.Activity
+
+-keep public class * extends android.app.Application
+
+-keep public class * extends android.app.Service
+
+-keep public class * extends android.content.BroadcastReceiver
+
+-keep public class * extends android.content.ContentProvider
+
+-keep public class com.google.vending.licensing.ILicensingService
+
+-keep public class com.android.vending.licensing.ILicensingService
+
+-keep public class * extends android.support.v4.app.Fragment
+
+-keep public class * extends android.app.Fragment
+
+-keep class com.google.android.gms.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.github.castorflex.smoothprogressbar.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.flurry.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.google.ads.conversiontracking.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.squareup.picasso.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.crashlytics.sdk.android.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.facebook.android.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.google.code.gson.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class io.branch.sdk.android.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.android.support.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.squareup.retrofit.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.squareup.okhttp.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.sothree.slidinguppanel.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class sun.misc.Unsafe {
+    <fields>;
+    <methods>;
+}
+
+-keepclassmembers class ** {
+    @com.squareup.otto.Subscribe
+    public <fields>;
+    @com.squareup.otto.Produce
+    public <fields>;
+    @com.squareup.otto.Subscribe
+    public <methods>;
+    @com.squareup.otto.Produce
+    public <methods>;
+}
+
+# -keep class com.google.gson.stream.** { *; }
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** {
+    <fields>;
+    <methods>;
+}
+
+-keepclasseswithmembers,allowshrinking class * {
+    native <methods>;
+}
+
+-keepclasseswithmembers,allowshrinking class * {
+    public <init>(android.content.Context,android.util.AttributeSet);
+}
+
+-keepclasseswithmembers,allowshrinking class * {
+    public <init>(android.content.Context,android.util.AttributeSet,int);
+}
+
+-keepclassmembers public class * extends android.view.View {
+    void set*(***);
+    *** get*();
+}
+
+-keepclassmembers enum  * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keep class * extends android.os.Parcelable {
+    public static final android.os.Parcelable$Creator *;
+}
+
+-keepclassmembers class **.R$* {
+    public static <fields>;
+}
+
+-keepclassmembers enum  * {
+    <fields>;
+    <methods>;
+}
+
+-keep public class * extends java.lang.Exception
+
+-keep class **$$ViewInjector {
+    <fields>;
+    <methods>;
+}
+
+-keep,allowshrinking class * {
+    @butterknife.InjectView
+    <fields>;
+    @butterknife.InjectView
+    <methods>;
+}
+
+-keep class **$$ViewBinder {
+    <fields>;
+    <methods>;
+}
+
+-keep public class com.jugnoo.pay.models.** {
+    <fields>;
+    <methods>;
+}
+
+-keep public class in.org.npci.commonlibrary.** {
+    <fields>;
+    <methods>;
+}
+
+-keep public class com.yesbank.** {
+    <fields>;
+    <methods>;
+}
+
+-keep public class org.npci.upi.security.services.** {
+    <fields>;
+    <methods>;
+}
+
+-keep public class org.apache.xml.security.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class uk.co.senab.photoview.** {
+    <fields>;
+    <methods>;
+}
+
+-keep public class com.picker.image.** {
+    <fields>;
+    <methods>;
+}
+
+-keepclassmembers class com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse$ReviewImage {
+    private <fields>;
+}
+
+# Paper Db
+-keep class org.objenesis.** {
+    <fields>;
+    <methods>;
+}
+
+-keep interface  org.objenesis.** {
+    <fields>;
+    <methods>;
+}
+
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface
+    <methods>;
+}
+
+-keep class com.razorpay.** {
+    <fields>;
+    <methods>;
+}
+
+-keepclasseswithmembers class * {
+    public void onPayment*(...);
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# To enable ProGuard in your project, edit project.properties
+# to define the proguard.config property as described in that file.
+# 
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in ${sdk.dir}/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+# 
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+# Add any project specific keep options here:
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+# -keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+# }
+-keepclassmembers class * extends java.io.Serializable {
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Copyright (C) 2015 The Android Open Source Project
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# CoordinatorLayout resolves the behaviors of its child components with reflection.
+-keep public class * extends android.support.design.widget.CoordinatorLayout$Behavior {
+    public <init>(android.content.Context,android.util.AttributeSet);
+    public <init>();
+}
+
+# Copyright (C) 2016 The Android Open Source Project
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# keep setters in VectorDrawables so that animations can still work.
+-keepclassmembers class android.support.graphics.drawable.VectorDrawableCompat$* {
+    void set*(***);
+    *** get*();
+}
+
+# Copyright (C) 2015 The Android Open Source Project
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# When layoutManager xml attribute is used, RecyclerView inflates
+# LayoutManagers' constructors using reflection.
+-keep public class * extends android.support.v7.widget.RecyclerView$LayoutManager {
+    public <init>(...);
+}
+
+# 
+# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+# 
+# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+# copy, modify, and distribute this software in source code or binary form for use
+# in connection with the web services and APIs provided by Facebook.
+# 
+# As with any software that integrates with the Facebook platform, your use of
+# this software is subject to the Facebook Developer Principles and Policies
+# [http://developers.facebook.com/policy/]. This copyright notice shall be
+# included in all copies or substantial portions of the software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-keep class com.facebook.FacebookSdk {
+    boolean isInitialized();
+}
+
+-keep class com.facebook.appevents.AppEventsLogger {
+    com.facebook.appevents.AppEventsLogger newLogger(android.content.Context);
+    void logSdkEvent(java.lang.String,java.lang.Double,android.os.Bundle);
+}
+
+-keep class io.paperdb.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.esotericsoftware.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class de.javakaffee.kryoserializers.** {
+    <fields>;
+    <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# Proguard flags for consumers of the Google Play services SDK
+# https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
+# found via reflection.
+-keep class com.google.android.gms.common.internal.ReflectedParcelable
+
+-keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
+
+-keepclassmembers class * extends android.os.Parcelable {
+    public static final *** CREATOR;
+}
+
+# Keep the classes/members we need for client functionality.
+-keep @interface  android.support.annotation.Keep
+
+-keep @android.support.annotation.Keep class *
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep
+    <methods>;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface  com.google.android.gms.common.annotation.KeepName
+
+-keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembers,allowshrinking class * {
+    @com.google.android.gms.common.annotation.KeepName
+    <fields>;
+    @com.google.android.gms.common.annotation.KeepName
+    <methods>;
+}
+
+# Keep Dynamite API entry points
+-keep @interface  com.google.android.gms.common.util.DynamiteApi
+
+-keep @com.google.android.gms.common.util.DynamiteApi public class * {
+    public <fields>;
+    public <methods>;
+}
+
+# view res/layout/design_navigation_item.xml #generated:17
+-keep class android.support.design.internal.NavigationMenuItemView {
+    <init>(...);
+}
+
+# view res/layout/design_navigation_menu.xml #generated:17
+-keep class android.support.design.internal.NavigationMenuView {
+    <init>(...);
+}
+
+# view res/layout/activity_fresh.xml #generated:24
+# view res/layout/activity_pick.xml #generated:9
+# view res/layout/app_bar_main.xml #generated:9
+-keep class android.support.design.widget.AppBarLayout {
+    <init>(...);
+}
+
+# view res/layout/design_text_input_password_icon.xml #generated:18
+-keep class android.support.design.widget.CheckableImageButton {
+    <init>(...);
+}
+
+# view res/layout/activity_fresh.xml #generated:31
+-keep class android.support.design.widget.CollapsingToolbarLayout {
+    <init>(...);
+}
+
+# view res/layout/activity_fresh.xml #generated:8
+# view res/layout/activity_pick.xml #generated:1
+# view res/layout/app_bar_main.xml #generated:2
+# view res/layout/design_bottom_sheet_dialog.xml #generated:17
+# view res/layout/fragment_delivery_addresses.xml #generated:2
+-keep class android.support.design.widget.CoordinatorLayout {
+    <init>(...);
+}
+
+# view res/layout/design_layout_snackbar.xml #generated:18
+# view sw600dp-v13/res/layout-sw600dp-v13/design_layout_snackbar.xml #generated:18
+-keep class android.support.design.widget.Snackbar$SnackbarLayout {
+    <init>(...);
+}
+
+# view res/layout/fragment_fresh_home.xml #generated:45
+# view res/layout/item_feed_list.xml #generated:206
+# view res/layout/list_item_pager.xml #generated:14
+-keep class android.support.design.widget.TabLayout {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:519
+-keep class android.support.v4.content.FileProvider {
+    <init>(...);
+}
+
+# view res/layout/activity_pay_tutorial.xml #generated:10
+# view res/layout/activity_select_contact.xml #generated:71
+# view res/layout/activity_share.xml #generated:41
+# view res/layout/activity_signup_tutorial.xml #generated:9
+# view res/layout/dialog_fragment_review_images.xml #generated:13
+# view res/layout/fragment_fresh.xml #generated:139
+# view res/layout/fragment_fresh_home.xml #generated:40
+# view res/layout/fragment_image_pager.xml #generated:3
+# view res/layout/item_feed_list.xml #generated:194
+# view res/layout/layout_feed_images_pager.xml #generated:7
+# view res/layout/layout_home_activity_sliding_bottom.xml #generated:148
+# view res/layout/list_item_pager.xml #generated:9
+-keep class android.support.v4.view.ViewPager {
+    <init>(...);
+}
+
+# view res/layout/activity_fresh.xml #generated:1
+# view res/layout/activity_home.xml #generated:8
+# view res/layout/activity_home_switcher.xml #generated:1
+# view res/layout/activity_main.xml #generated:2
+-keep class android.support.v4.widget.DrawerLayout {
+    <init>(...);
+}
+
+# view res/layout/abc_alert_dialog_material.xml #generated:41
+# view res/layout/fragment_delivery_addresses.xml #generated:70
+# view res/layout/fragment_fresh_home.xml #generated:13
+-keep class android.support.v4.widget.NestedScrollView {
+    <init>(...);
+}
+
+# view res/layout/abc_alert_dialog_button_bar_material.xml #generated:43
+# view res/layout/abc_alert_dialog_material.xml #generated:52
+# view res/layout/abc_alert_dialog_material.xml #generated:66
+# view res/layout/abc_alert_dialog_title_material.xml #generated:56
+-keep class android.support.v4.widget.Space {
+    <init>(...);
+}
+
+# view res/layout/activity_notification_center.xml #generated:10
+# view res/layout/fragment_feed_notifications.xml #generated:38
+# view res/layout/fragment_feed_offering_list.xml #generated:12
+# view res/layout/fragment_fresh.xml #generated:162
+# view res/layout/fragment_fresh_category_items.xml #generated:54
+# view res/layout/fragment_fresh_home.xml #generated:25
+# view res/layout/fragment_menus.xml #generated:21
+# view res/layout/fragment_ride_transactions.xml #generated:11
+-keep class android.support.v4.widget.SwipeRefreshLayout {
+    <init>(...);
+}
+
+# view res/layout/abc_select_dialog_material.xml #generated:23
+-keep class android.support.v7.app.AlertController$RecycleListView {
+    <init>(...);
+}
+
+# view res/layout/abc_action_menu_item_layout.xml #generated:17
+-keep class android.support.v7.view.menu.ActionMenuItemView {
+    <init>(...);
+}
+
+# view res/layout/abc_expanded_menu_layout.xml #generated:17
+-keep class android.support.v7.view.menu.ExpandedMenuView {
+    <init>(...);
+}
+
+# view res/layout/abc_list_menu_item_layout.xml #generated:17
+# view res/layout/abc_popup_menu_item_layout.xml #generated:17
+-keep class android.support.v7.view.menu.ListMenuItemView {
+    <init>(...);
+}
+
+# view res/layout/abc_screen_toolbar.xml #generated:27
+-keep class android.support.v7.widget.ActionBarContainer {
+    <init>(...);
+}
+
+# view res/layout/abc_action_mode_bar.xml #generated:19
+# view res/layout/abc_screen_toolbar.xml #generated:43
+-keep class android.support.v7.widget.ActionBarContextView {
+    <init>(...);
+}
+
+# view res/layout/abc_screen_toolbar.xml #generated:17
+-keep class android.support.v7.widget.ActionBarOverlayLayout {
+    <init>(...);
+}
+
+# view res/layout/abc_action_menu_layout.xml #generated:17
+-keep class android.support.v7.widget.ActionMenuView {
+    <init>(...);
+}
+
+# view res/layout/abc_activity_chooser_view.xml #generated:19
+-keep class android.support.v7.widget.ActivityChooserView$InnerLayout {
+    <init>(...);
+}
+
+# view res/layout/abc_alert_dialog_material.xml #generated:18
+-keep class android.support.v7.widget.AlertDialogLayout {
+    <init>(...);
+}
+
+# view res/layout/com_facebook_device_auth_dialog_fragment.xml #generated:45
+# view res/layout/com_facebook_smart_device_dialog_fragment.xml #generated:47
+-keep class android.support.v7.widget.AppCompatImageView {
+    <init>(...);
+}
+
+# view res/layout/abc_alert_dialog_button_bar_material.xml #generated:26
+-keep class android.support.v7.widget.ButtonBarLayout {
+    <init>(...);
+}
+
+# view res/layout/activity_jugnoo_star_subscribed.xml #generated:122
+# view res/layout/activity_order_status.xml #generated:24
+# view res/layout/activity_order_status.xml #generated:364
+# view res/layout/activity_order_status.xml #generated:426
+# view res/layout/activity_order_status.xml #generated:530
+# view res/layout/activity_send_money.xml #generated:12
+# view res/layout/activity_transaction_completed.xml #generated:241
+# view res/layout/activity_transaction_completed.xml #generated:327
+# view res/layout/activity_transaction_completed.xml #generated:415
+# view res/layout/com_facebook_device_auth_dialog_fragment.xml #generated:22
+# view res/layout/com_facebook_smart_device_dialog_fragment.xml #generated:22
+# view res/layout/content_main.xml #generated:172
+# view res/layout/content_main.xml #generated:73
+# view res/layout/content_rate_experience.xml #generated:9
+# view res/layout/dialog_order_complete_referral.xml #generated:10
+# view res/layout/fragment_addon_items.xml #generated:28
+# view res/layout/fragment_address_book.xml #generated:36
+# view res/layout/fragment_address_book.xml #generated:76
+# view res/layout/fragment_addto_address.xml #generated:35
+# view res/layout/fragment_contacts.xml #generated:8
+# view res/layout/fragment_delivery_addresses.xml #generated:163
+# view res/layout/fragment_delivery_addresses.xml #generated:79
+# view res/layout/fragment_fresh_checkout_merged.xml #generated:138
+# view res/layout/fragment_fresh_checkout_merged.xml #generated:219
+# view res/layout/fragment_fresh_checkout_merged.xml #generated:283
+# view res/layout/fragment_fresh_checkout_merged.xml #generated:46
+# view res/layout/fragment_fresh_checkout_merged.xml #generated:638
+# view res/layout/fragment_fresh_checkout_merged.xml #generated:683
+# view res/layout/fragment_menus_filter.xml #generated:241
+# view res/layout/fragment_menus_filter.xml #generated:35
+# view res/layout/fragment_menus_filter.xml #generated:402
+# view res/layout/fragment_menus_filter.xml #generated:481
+# view res/layout/fragment_menus_filter.xml #generated:618
+# view res/layout/fragment_menus_filter_cuisines.xml #generated:16
+# view res/layout/fragment_menus_filter_cuisines.xml #generated:65
+# view res/layout/fragment_payment_address.xml #generated:9
+# view res/layout/fragment_place_search_list.xml #generated:168
+# view res/layout/fragment_place_search_list.xml #generated:205
+# view res/layout/fragment_place_search_list.xml #generated:94
+# view res/layout/fragment_promo_description.xml #generated:32
+# view res/layout/fragment_star_subscription_checkout.xml #generated:22
+# view res/layout/fragment_star_subscription_checkout.xml #generated:280
+# view res/layout/fragment_star_subscription_checkout.xml #generated:559
+# view res/layout/fragment_support_items_list.xml #generated:13
+# view res/layout/fragment_support_main.xml #generated:13
+# view res/layout/fragment_support_main.xml #generated:30
+# view res/layout/fragment_support_ride_issues.xml #generated:31
+# view res/layout/fugu_activity_chat.xml #generated:29
+# view res/layout/layout_fresh_become_star.xml #generated:2
+# view res/layout/layout_fresh_cart.xml #generated:19
+# view res/layout/layout_fresh_star_saving.xml #generated:2
+# view res/layout/layout_home_activity_special_pickup.xml #generated:29
+# view res/layout/layout_menus_cart.xml #generated:20
+# view res/layout/list_item_customize_option_item.xml #generated:8
+# view res/layout/list_item_fresh_super_category_single.xml #generated:9
+# view res/layout/list_item_meal.xml #generated:10
+# view res/layout/list_item_menus_customize_item.xml #generated:11
+# view res/layout/list_item_notification.xml #generated:10
+# view res/layout/list_item_ride_transaction.xml #generated:7
+-keep class android.support.v7.widget.CardView {
+    <init>(...);
+}
+
+# view res/layout/abc_screen_content_include.xml #generated:19
+-keep class android.support.v7.widget.ContentFrameLayout {
+    <init>(...);
+}
+
+# view res/layout/abc_alert_dialog_title_material.xml #generated:45
+-keep class android.support.v7.widget.DialogTitle {
+    <init>(...);
+}
+
+# view res/layout/abc_screen_simple_overlay_action_mode.xml #generated:23
+-keep class android.support.v7.widget.FitWindowsFrameLayout {
+    <init>(...);
+}
+
+# view res/layout/abc_dialog_title_material.xml #generated:22
+# view res/layout/abc_screen_simple.xml #generated:17
+-keep class android.support.v7.widget.FitWindowsLinearLayout {
+    <init>(...);
+}
+
+# view res/layout/activity_account_user.xml #generated:308
+# view res/layout/activity_chat.xml #generated:43
+# view res/layout/activity_chat.xml #generated:51
+# view res/layout/activity_notification_center.xml #generated:18
+# view res/layout/activity_pick.xml #generated:97
+# view res/layout/activity_promotions.xml #generated:93
+# view res/layout/activity_tracking_log.xml #generated:74
+# view res/layout/content_main.xml #generated:211
+# view res/layout/dialog_fresh_sort.xml #generated:16
+# view res/layout/fragment_add_emergency_contacts.xml #generated:116
+# view res/layout/fragment_album_browse.xml #generated:1
+# view res/layout/fragment_child_feed_review.xml #generated:129
+# view res/layout/fragment_child_feed_review.xml #generated:196
+# view res/layout/fragment_contacts.xml #generated:15
+# view res/layout/fragment_delivery_stores.xml #generated:8
+# view res/layout/fragment_emergency_contacts.xml #generated:106
+# view res/layout/fragment_emergency_contacts_operations.xml #generated:156
+# view res/layout/fragment_emergency_contacts_operations.xml #generated:78
+# view res/layout/fragment_feed_comments.xml #generated:14
+# view res/layout/fragment_feed_notifications.xml #generated:43
+# view res/layout/fragment_feed_offering_list.xml #generated:24
+# view res/layout/fragment_feed_select_city.xml #generated:120
+# view res/layout/fragment_feed_select_city.xml #generated:93
+# view res/layout/fragment_fresh.xml #generated:168
+# view res/layout/fragment_fresh.xml #generated:96
+# view res/layout/fragment_fresh_category_items.xml #generated:59
+# view res/layout/fragment_fresh_checkout_merged.xml #generated:241
+# view res/layout/fragment_fresh_home.xml #generated:62
+# view res/layout/fragment_fresh_search.xml #generated:10
+# view res/layout/fragment_image_browse.xml #generated:4
+# view res/layout/fragment_menus.xml #generated:32
+# view res/layout/fragment_menus_customize_item.xml #generated:11
+# view res/layout/fragment_menus_filter_cuisines.xml #generated:77
+# view res/layout/fragment_notification_settings.xml #generated:50
+# view res/layout/fragment_payment_address.xml #generated:52
+# view res/layout/fragment_referral_leaderboard.xml #generated:119
+# view res/layout/fragment_request_ride_options.xml #generated:144
+# view res/layout/fragment_restaurant_add_review.xml #generated:80
+# view res/layout/fragment_restaurant_reviews_list.xml #generated:11
+# view res/layout/fragment_ride_transactions.xml #generated:16
+# view res/layout/fragment_sliding_bottom_offers.xml #generated:11
+# view res/layout/fragment_support_items_list.xml #generated:22
+# view res/layout/fragment_support_main.xml #generated:39
+# view res/layout/fragment_support_ride_issues.xml #generated:40
+# view res/layout/fragment_t20_schedule.xml #generated:38
+# view res/layout/fragment_wallet_transactions.xml #generated:37
+# view res/layout/fugu_activity_channels.xml #generated:21
+# view res/layout/fugu_activity_chat.xml #generated:23
+# view res/layout/layout_home_activity_menu.xml #generated:108
+# view res/layout/list_item_offering_promotions.xml #generated:23
+# view res/layout/list_item_restaurant_review.xml #generated:123
+-keep class android.support.v7.widget.RecyclerView {
+    <init>(...);
+}
+
+# view res/layout/abc_search_view.xml #generated:75
+-keep class android.support.v7.widget.SearchView$SearchAutoComplete {
+    <init>(...);
+}
+
+# view res/layout/fragment_feed_add_post.xml #generated:356
+# view res/layout/fragment_feed_comments.xml #generated:50
+-keep class android.support.v7.widget.SwitchCompat {
+    <init>(...);
+}
+
+# view res/layout/abc_screen_toolbar.xml #generated:36
+# view res/layout/activity_fresh.xml #generated:46
+# view res/layout/fugu_layout_toolbar.xml #generated:2
+# view res/layout/toolbar.xml #generated:2
+-keep class android.support.v7.widget.Toolbar {
+    <init>(...);
+}
+
+# view res/layout/abc_screen_simple.xml #generated:25
+# view res/layout/abc_screen_simple_overlay_action_mode.xml #generated:32
+-keep class android.support.v7.widget.ViewStubCompat {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:429
+-keep class com.clevertap.android.sdk.FcmMessageListenerService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:424
+-keep class com.clevertap.android.sdk.FcmTokenListenerService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:439
+-keep class com.clevertap.android.sdk.InAppNotificationActivity {
+    <init>(...);
+}
+
+# view res/layout/item_feed_comment.xml #generated:11
+-keep class com.daimajia.swipe.SwipeLayout {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:555
+-keep class com.facebook.CustomTabMainActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:326
+-keep class com.facebook.FacebookActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:667
+-keep class com.facebook.accountkit.internal.AccountKitInitProvider {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:652
+-keep class com.facebook.accountkit.ui.AccountKitActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:331
+-keep class com.facebook.accountkit.ui.AccountKitEmailRedirectActivity {
+    <init>(...);
+}
+
+# view res/layout/com_accountkit_activity_layout.xml #generated:26
+-keep class com.facebook.accountkit.ui.AspectFrameLayout {
+    <init>(...);
+}
+
+# view res/layout/com_accountkit_activity_layout.xml #generated:47
+# view res/layout/com_accountkit_fragment_confirmation_code_bottom.xml #generated:22
+# view res/layout/com_accountkit_fragment_confirmation_code_bottom.xml #generated:28
+# view res/layout/com_accountkit_fragment_confirmation_code_top.xml #generated:22
+# view res/layout/com_accountkit_fragment_email_login_bottom.xml #generated:22
+# view res/layout/com_accountkit_fragment_email_login_text.xml #generated:22
+# view res/layout/com_accountkit_fragment_email_login_top.xml #generated:22
+# view res/layout/com_accountkit_fragment_email_verify_bottom.xml #generated:22
+# view res/layout/com_accountkit_fragment_error_bottom.xml #generated:22
+# view res/layout/com_accountkit_fragment_phone_login_bottom.xml #generated:22
+# view res/layout/com_accountkit_fragment_phone_login_text.xml #generated:22
+# view res/layout/com_accountkit_fragment_phone_login_top.xml #generated:22
+# view res/layout/com_accountkit_fragment_resend_bottom.xml #generated:22
+# view res/layout/com_accountkit_fragment_title.xml #generated:22
+-keep class com.facebook.accountkit.ui.ConstrainedLinearLayout {
+    <init>(...);
+}
+
+# view res/layout/com_accountkit_fragment_phone_login_top.xml #generated:35
+-keep class com.facebook.accountkit.ui.CountryCodeSpinner {
+    <init>(...);
+}
+
+# view res/layout/com_accountkit_confirmation_code_input.xml #generated:22
+-keep class com.facebook.accountkit.ui.NotifyingEditText {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:565
+-keep class com.facebook.internal.FacebookInitProvider {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:648
+-keep class com.fugu.activity.FuguChannelsActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:642
+-keep class com.fugu.activity.FuguChatActivity {
+    <init>(...);
+}
+
+# view res/layout/fugu_item_channels.xml #generated:56
+-keep class com.fugu.utils.CircularTextView {
+    <init>(...);
+}
+
+# view res/layout/fugu_activity_chat.xml #generated:15
+-keep class com.fugu.utils.CustomLinear {
+    <init>(...);
+}
+
+# view res/layout/fugu_dialog_progress.xml #generated:10
+-keep class com.fugu.utils.loadingBox.ProgressWheel {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:368
+-keep class com.google.android.gms.analytics.AnalyticsReceiver {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:376
+-keep class com.google.android.gms.analytics.AnalyticsService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:403
+-keep class com.google.android.gms.analytics.CampaignTrackingService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:546
+-keep class com.google.android.gms.auth.api.signin.RevocationBoundService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:537
+-keep class com.google.android.gms.auth.api.signin.internal.SignInHubActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:551
+-keep class com.google.android.gms.common.api.GoogleApiActivity {
+    <init>(...);
+}
+
+# view res/layout/activity_fare_estimate.xml #generated:61
+# view res/layout/activity_tracking_log.xml #generated:90
+# view res/layout/fragment_ride_summary.xml #generated:14
+-keep class com.google.android.gms.maps.SupportMapFragment {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:690
+-keep class com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:685
+-keep class com.google.android.gms.measurement.AppMeasurementReceiver {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:699
+-keep class com.google.android.gms.measurement.AppMeasurementService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:719
+-keep class com.google.firebase.iid.FirebaseInstanceIdInternalReceiver {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:704
+-keep class com.google.firebase.iid.FirebaseInstanceIdReceiver {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:726
+-keep class com.google.firebase.iid.FirebaseInstanceIdService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:573
+-keep class com.google.firebase.messaging.FirebaseMessagingService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:734
+-keep class com.google.firebase.provider.FirebaseInitProvider {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:487
+-keep class com.jugnoo.pay.activities.AddBeneficiaryAccount {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:482
+-keep class com.jugnoo.pay.activities.AddPaymentAddressActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:462
+-keep class com.jugnoo.pay.activities.MainActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:492
+-keep class com.jugnoo.pay.activities.PayTutorial {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:467
+-keep class com.jugnoo.pay.activities.SelectContactActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:472
+-keep class com.jugnoo.pay.activities.SendMoneyActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:477
+-keep class com.jugnoo.pay.activities.TranscCompletedActivity {
+    <init>(...);
+}
+
+# view res/layout/activity_pick.xml #generated:116
+-keep class com.melnykov.fab.FloatingActionButton {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:506
+-keep class com.picker.image.ui.PickerActivity {
+    <init>(...);
+}
+
+# view res/layout/element_album.xml #generated:2
+-keep class com.picker.image.ui.SquareFrameLayout {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:515
+-keep class com.picker.image.util.OfflineSpiceService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:672
+-keep class com.razorpay.CheckoutActivity {
+    <init>(...);
+}
+
+# view res/layout/rzp_loader.xml #generated:20
+-keep class com.razorpay.CircularProgressView {
+    <init>(...);
+}
+
+# view res/layout/item_feed_list_add_new_post.xml #generated:38
+-keep class com.sabkuchfresh.feed.ui.views.TypeWriterTextView.Typewriter {
+    <init>(...);
+}
+
+# view res/layout/animate_heart_view.xml #generated:15
+-keep class com.sabkuchfresh.feed.ui.views.animateheartview.CircleView {
+    <init>(...);
+}
+
+# view res/layout/animate_heart_view.xml #generated:7
+-keep class com.sabkuchfresh.feed.ui.views.animateheartview.DotsView {
+    <init>(...);
+}
+
+# view res/layout/item_feed_list.xml #generated:317
+# view res/layout/list_item_restaurant_review.xml #generated:219
+-keep class com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:512
+-keep class com.sabkuchfresh.home.FeedContactsUploadService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:410
+-keep class com.sabkuchfresh.home.FreshActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:533
+-keep class com.sabkuchfresh.home.RazorpayCallbackService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:501
+-keep class com.sabkuchfresh.home.TrackOrderActivity {
+    <init>(...);
+}
+
+# view res/layout/fragment_feed_add_post.xml #generated:121
+-keep class com.sabkuchfresh.utils.NonSwipeAbleViewPager {
+    <init>(...);
+}
+
+# view res/layout/content_rate_experience.xml #generated:48
+# view res/layout/fragment_child_feed_review.xml #generated:184
+# view res/layout/fragment_restaurant_add_review.xml #generated:30
+# view res/layout/layout_feedback.xml #generated:240
+-keep class com.sabkuchfresh.utils.RatingBarMenuFeedback {
+    <init>(...);
+}
+
+# view res/layout/activity_jugnoo_star.xml #generated:111
+# view res/layout/activity_jugnoo_star.xml #generated:178
+# view res/layout/activity_jugnoo_star_subscribed.xml #generated:289
+# view res/layout/activity_jugnoo_star_subscribed.xml #generated:356
+# view res/layout/activity_order_status.xml #generated:481
+# view res/layout/fragment_star_subscription_checkout.xml #generated:167
+# view res/layout/fragment_star_subscription_checkout.xml #generated:80
+-keep class com.sabkuchfresh.utils.TextViewStrikeThrough {
+    <init>(...);
+}
+
+# view res/layout/fragment_fresh.xml #generated:122
+-keep class com.sabkuchfresh.widgets.PagerSlidingTabStrip {
+    <init>(...);
+}
+
+# view res/layout/activity_home.xml #generated:19
+-keep class com.sothree.slidinguppanel.SlidingUpPanelLayout {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:605
+-keep class com.yesbank.AddAccount {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:601
+-keep class com.yesbank.CollectActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:581
+-keep class com.yesbank.PayActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:585
+-keep class com.yesbank.RaiseDisputeActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:589
+-keep class com.yesbank.Registration {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:597
+-keep class com.yesbank.SetMpin {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:593
+-keep class com.yesbank.TransactionStatus {
+    <init>(...);
+}
+
+# view res/layout/activity_home.xml #generated:239
+# view res/layout/layout_home_activity_assigning.xml #generated:45
+-keep class fr.castorflex.android.smoothprogressbar.SmoothProgressBar {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:634
+-keep class org.npci.upi.security.pinactivitycomponent.CLRemoteServiceImpl {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:609
+-keep class org.npci.upi.security.pinactivitycomponent.GetCredential {
+    <init>(...);
+}
+
+# view res/layout/activity_pin_activity_component.xml #generated:1
+-keep class org.npci.upi.security.pinactivitycomponent.GetCredentialFragment {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:205
+-keep class product.clicklabs.jugnoo.AboutActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:210
+-keep class product.clicklabs.jugnoo.AccountActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:180
+-keep class product.clicklabs.jugnoo.AddPlaceActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:240
+-keep class product.clicklabs.jugnoo.ChangePhoneBeforeOTPActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:127
+-keep class product.clicklabs.jugnoo.ChatActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:395
+-keep class product.clicklabs.jugnoo.CustomCampaignTrackingReceiver {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:245
+-keep class product.clicklabs.jugnoo.DebugOptionsActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:250
+-keep class product.clicklabs.jugnoo.FareEstimateActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:310
+-keep class product.clicklabs.jugnoo.FetchAppDataService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:134
+-keep class product.clicklabs.jugnoo.ForgotPasswordScreen {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:76
+-keep class product.clicklabs.jugnoo.GCMIntentService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:175
+-keep class product.clicklabs.jugnoo.HelpParticularActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:458
+-keep class product.clicklabs.jugnoo.HomeSwitcherActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:159
+-keep class product.clicklabs.jugnoo.IncomingSmsReceiver {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:185
+-keep class product.clicklabs.jugnoo.JugnooStarActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:190
+-keep class product.clicklabs.jugnoo.JugnooStarSubscribedActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:230
+-keep class product.clicklabs.jugnoo.MultipleAccountsActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:56
+-keep class product.clicklabs.jugnoo.MyApplication {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:83
+-keep class product.clicklabs.jugnoo.MyInstanceIDListenerService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:260
+-keep class product.clicklabs.jugnoo.NotificationCenterActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:139
+-keep class product.clicklabs.jugnoo.OTPConfirmScreen {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:215
+-keep class product.clicklabs.jugnoo.PhoneNoOTPConfirmScreen {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:304
+-keep class product.clicklabs.jugnoo.PushPendingCallsReceiver {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:299
+-keep class product.clicklabs.jugnoo.PushPendingCallsService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:255
+-keep class product.clicklabs.jugnoo.ReferDriverActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:235
+-keep class product.clicklabs.jugnoo.RequestDuplicateRegistrationActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:225
+-keep class product.clicklabs.jugnoo.RideCancellationActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:220
+-keep class product.clicklabs.jugnoo.RideTransactionsActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:91
+-keep class product.clicklabs.jugnoo.SplashNewActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:200
+-keep class product.clicklabs.jugnoo.WebActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:265
+-keep class product.clicklabs.jugnoo.emergency.EmergencyActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:293
+-keep class product.clicklabs.jugnoo.home.ContactsUploadService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:122
+-keep class product.clicklabs.jugnoo.home.HomeActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:291
+-keep class product.clicklabs.jugnoo.home.LocationReceiverBG {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:404
+-keep class product.clicklabs.jugnoo.home.LocationUpdateService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:296
+-keep class product.clicklabs.jugnoo.home.SyncIntentService {
+    <init>(...);
+}
+
+# view res/layout/layout_home_activity_sliding_bottom_v4.xml #generated:8
+-keep class product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:453
+-keep class product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:449
+-keep class product.clicklabs.jugnoo.home.trackinglog.TrackingLogSyncIntentService {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:170
+-keep class product.clicklabs.jugnoo.promotion.PromotionActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:165
+-keep class product.clicklabs.jugnoo.promotion.ShareActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:195
+-keep class product.clicklabs.jugnoo.support.SupportActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:270
+-keep class product.clicklabs.jugnoo.t20.T20Activity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:497
+-keep class product.clicklabs.jugnoo.tutorials.NewUserFlow {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:280
+-keep class product.clicklabs.jugnoo.utils.CallActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:285
+-keep class product.clicklabs.jugnoo.utils.GoogleSigninActivity {
+    <init>(...);
+}
+
+# view res/layout/activity_home_switcher_content.xml #generated:69
+# view res/layout/layout_feedback.xml #generated:337
+# view res/layout/layout_ride_summary_new.xml #generated:294
+-keep class product.clicklabs.jugnoo.utils.NonScrollGridView {
+    <init>(...);
+}
+
+# view res/layout/activity_account_user.xml #generated:622
+# view res/layout/activity_cancel_ride.xml #generated:55
+# view res/layout/activity_jugnoo_star.xml #generated:248
+# view res/layout/activity_jugnoo_star_subscribed.xml #generated:411
+# view res/layout/activity_order_status.xml #generated:414
+# view res/layout/fragment_addon_items.xml #generated:37
+# view res/layout/fragment_address_book.xml #generated:48
+# view res/layout/fragment_address_book.xml #generated:88
+# view res/layout/fragment_delivery_addresses.xml #generated:108
+# view res/layout/fragment_delivery_addresses.xml #generated:130
+# view res/layout/fragment_delivery_addresses.xml #generated:174
+# view res/layout/fragment_fresh_checkout_merged.xml #generated:648
+# view res/layout/fragment_jstar_view_benefits.xml #generated:17
+# view res/layout/fragment_order_cancel_reasons.xml #generated:39
+# view res/layout/fragment_place_search_list.xml #generated:107
+# view res/layout/fragment_place_search_list.xml #generated:179
+# view res/layout/fragment_place_search_list.xml #generated:217
+# view res/layout/fragment_star_subscription_checkout.xml #generated:571
+# view res/layout/layout_fresh_cart.xml #generated:103
+# view res/layout/layout_fresh_cart.xml #generated:112
+# view res/layout/layout_menus_cart.xml #generated:116
+# view res/layout/layout_menus_cart.xml #generated:504
+# view res/layout/layout_ride_summary.xml #generated:272
+-keep class product.clicklabs.jugnoo.utils.NonScrollListView {
+    <init>(...);
+}
+
+# view res/layout/activity_add_places.xml #generated:81
+# view res/layout/activity_otp_confrim.xml #generated:23
+# view res/layout/fragment_child_feed_review.xml #generated:112
+# view res/layout/fragment_place_search_list.xml #generated:54
+# view res/layout/item_progress_bar_feed.xml #generated:9
+# view res/layout/layout_centre_pickup_pin.xml #generated:58
+# view res/layout/layout_home_activity_assigning.xml #generated:164
+# view res/layout/layout_home_activity_request_final.xml #generated:56
+# view res/layout/layout_top_bar_fresh.xml #generated:201
+# view res/layout/layout_top_bar_fresh.xml #generated:89
+# view res/layout/progresswheel.xml #generated:9
+-keep class product.clicklabs.jugnoo.utils.ProgressWheel {
+    <init>(...);
+}
+
+# view res/layout/activity_home.xml #generated:43
+# view res/layout/activity_track_order.xml #generated:50
+# view res/layout/fragment_delivery_addresses.xml #generated:16
+-keep class product.clicklabs.jugnoo.utils.TouchableMapFragment {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:70
+-keep class product.clicklabs.jugnoo.wallet.PaymentActivity {
+    <init>(...);
+}
+
+# view AndroidManifest.xml #generated:275
+-keep class product.clicklabs.jugnoo.wallet.WalletRechargeWebViewActivity {
+    <init>(...);
+}
+
+# view res/layout/fragment_add_emergency_contacts.xml #generated:87
+-keep class product.clicklabs.jugnoo.widgets.ContactsCompletionView {
+    <init>(...);
+}
+
+# view res/layout/fragment_payment_address.xml #generated:62
+# view res/layout/layout_home_activity_fab_test.xml #generated:108
+# view res/layout/layout_home_activity_fab_test.xml #generated:32
+# view res/layout/layout_home_activity_fab_test.xml #generated:47
+# view res/layout/layout_home_activity_fab_test.xml #generated:62
+# view res/layout/layout_home_activity_fab_test.xml #generated:77
+# view res/layout/layout_home_activity_fab_test.xml #generated:92
+-keep class product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton {
+    <init>(...);
+}
+
+# view res/layout/activity_home_switcher_content.xml #generated:94
+# view res/layout/layout_home_activity_fab_test.xml #generated:12
+-keep class product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu {
+    <init>(...);
+}
+
+# view res/layout/layout_fresh_become_star.xml #generated:72
+# view res/layout/layout_home_activity_special_pickup.xml #generated:135
+-keep class product.clicklabs.jugnoo.widgets.MySpinner {
+    <init>(...);
+}
+
+# view res/layout/activity_select_contact.xml #generated:57
+# view res/layout/activity_share.xml #generated:27
+# view res/layout/layout_home_activity_sliding_bottom.xml #generated:13
+-keep class product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip {
+    <init>(...);
+}
+
+# view res/layout/layout_otp_screen.xml #generated:139
+-keep class product.clicklabs.jugnoo.widgets.PinEntryEditText {
+    <init>(...);
+}
+
+# onClick res/layout/fugu_activity_channels.xml #generated:27
+# onClick res/layout/fugu_activity_channels.xml #generated:40
+# onClick res/layout/fugu_activity_chat.xml #generated:70
+# onClick res/layout/fugu_activity_chat.xml #generated:84
+# onClick res/layout/layout_change_password.xml #generated:123
+# onClick res/layout/layout_change_password.xml #generated:39
+# onClick res/layout/layout_change_password.xml #generated:81
+-keepclassmembers class * {
+    *** onClick(...);
+}
+
+# onClick res/layout/activity_pick.xml #generated:116
+-keepclassmembers class * {
+    *** onClickDone(...);
+}
+
+# onClick res/layout/activity_pick.xml #generated:51
+-keepclassmembers class * {
+    *** startCamera(...);
+}

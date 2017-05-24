@@ -206,7 +206,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private RelativeLayout relativeLayoutContainer;
 
-    private TextView textViewMinOrder;
+    public TextView textViewMinOrder;
 
     private MenuBar menuBar;
     private TopBar topBar;
@@ -425,7 +425,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             try {
-                float marginBottom = 60f;
+                float marginBottom = 50f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
 
                 createAppCart(lastClientId);
@@ -484,7 +484,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
                 int dpAsPixels = (int) (marginBottom * scale + 0.5f);
+
+                // Set Jeanie Padding Bottom if Offering strip shown so that they do not overlap.
+                if(getAppType()== AppConstant.ApplicationType.MEALS &&  Data.getMealsData()!=null
+                        && Data.getMealsData().getOfferStripMeals()!=null && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())) {
+                    marginBottom += getResources().getDimensionPixelSize(R.dimen.height_strip_offers);
+                }
+
                 fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
+
                 fabViewTest.setRlGenieHelpBottomMargin(200f);
                 lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
                 Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
@@ -1441,8 +1449,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             setCollapsingToolbar(fragment instanceof VendorMenuFragment, fragment);
 
 
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1591,6 +1597,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             textViewMinOrderVis = View.GONE;
                         }
                     } else {
+                        textViewMinOrderVis = View.GONE;
+                    }
+                    textViewMinOrderSetVisibility(textViewMinOrderVis);
+                    return 1;
+                } else if (getMealFragment() != null) {
+                    int textViewMinOrderVis;
+                    if(Data.getMealsData().getOfferStripMeals()!=null && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())){
+                        textViewMinOrderVis = View.VISIBLE;
+                        textViewMinOrder.setText(Utils.trimHTML(Utils.fromHtml(Data.getMealsData().getOfferStripMeals().getTextToDisplay())));
+                    } else{
                         textViewMinOrderVis = View.GONE;
                     }
                     textViewMinOrderSetVisibility(textViewMinOrderVis);
@@ -3274,6 +3290,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 				address = getSelectedAddressType();
 			}
             setLocationAddress(address);
+            deliveryAddressView.showConfirmAddressBar(TextUtils.isEmpty(getSelectedAddressType()));
         } catch (Exception e) {
             e.printStackTrace();
         }
