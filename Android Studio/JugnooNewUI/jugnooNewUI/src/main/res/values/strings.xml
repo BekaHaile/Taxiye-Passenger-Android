@@ -857,7 +857,7 @@
     <string name="limit_address">Address must be within 200 characters</string>
     <string name="please_select_a_delivery_slot">Please select a Delivery Slot</string>
     <string name="no_slots_currently">No Delivery Slots currently</string>
-    <string name="please_select_a_delivery_address">Please select a Delivery Address</string>
+    <string name="please_select_a_delivery_address">Please confirm delivery address</string>
     <string name="pay_rupees_using_format">Pay \u20B9%s using:</string>
     <string name="payment">Payment</string>
     <string name="place_order">Place Order</string>
