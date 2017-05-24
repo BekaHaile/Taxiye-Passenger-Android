@@ -244,6 +244,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
                     }
                     activity.setRefreshCart(false);
+                    activity.setMinOrderAmountText(MealFragment.this);
                 }
             }, 300);
             activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);

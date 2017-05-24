@@ -164,4 +164,9 @@
 -keepclasseswithmembers class * {
   public void onPayment*(...);
 }
+ -dontwarn java.lang.invoke**
+ -dontwarn okio.**
+ -dontwarn com.squareup.okhttp.**
+ -dontwarn retrofit2.Platform$Java8
+
 
