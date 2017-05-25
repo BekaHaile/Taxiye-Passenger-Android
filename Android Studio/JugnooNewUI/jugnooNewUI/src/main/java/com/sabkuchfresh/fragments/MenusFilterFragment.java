@@ -354,6 +354,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				etSearchCuisine.setVisibility(View.VISIBLE);
 				ivSearchCuisine.setVisibility(View.VISIBLE);
 				tvReset.setVisibility(View.GONE);
+				etSearchCuisine.setText("");
 			}
 		});
 
@@ -368,7 +369,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		ivBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				performBackPress();
+				performBackPress(true);
 			}
 		});
 		tvReset.setOnClickListener(new View.OnClickListener() {
@@ -554,7 +555,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	}
 
 
-	public void performBackPress(){
+	public void performBackPress(boolean closeDrawer){
 		if(llCuisinesList.getVisibility() == View.VISIBLE){
 			scrollViewRoot.setVisibility(View.VISIBLE);
 			llCuisinesList.setVisibility(View.GONE);
@@ -565,7 +566,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 			Utils.hideKeyboard(activity);
 			return;
 		}
-		if(activity != null){
+		if(closeDrawer && activity != null){
 			activity.getDrawerLayout().closeDrawer(GravityCompat.END);
 		}
 	}

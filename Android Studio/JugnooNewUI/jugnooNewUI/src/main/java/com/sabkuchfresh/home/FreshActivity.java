@@ -358,6 +358,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Utils.hideKeyboard(FreshActivity.this);
                     if(drawerView.equals(llRightDrawer)){
                         applyRealTimeFilters();
+                        if(getMenusFilterFragment() != null){
+                            getMenusFilterFragment().performBackPress(false);
+                        }
                     }
                 }
 
@@ -1977,7 +1980,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         if(drawerLayout.isDrawerOpen(GravityCompat.END)){
             if(getMenusFilterFragment() != null) {
-                getMenusFilterFragment().performBackPress();
+                getMenusFilterFragment().performBackPress(true);
                 return;
             }
         }
