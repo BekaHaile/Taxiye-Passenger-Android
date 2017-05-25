@@ -355,6 +355,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				ivSearchCuisine.setVisibility(View.VISIBLE);
 				tvReset.setVisibility(View.GONE);
 				etSearchCuisine.setText("");
+				recyclerViewCuisinesList.scrollToPosition(0);
 			}
 		});
 
