@@ -497,6 +497,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         commentedBy = feedDetail.getUserName();
                         commentedByPic = feedDetail.getUserImage();
                       if (feedDetail.getUserImageDrawable() == null && commentedBy!=null && commentedBy.trim().length()>0) {
+                          commentedBy= commentedBy+": ";
                           String firstLetter = feedDetail.getUserName().toUpperCase().substring(0, 1);
                          TextDrawable drawable = TextDrawable.builder().beginConfig().bold().endConfig().buildRound(firstLetter, activity.getParsedColor(feedDetail.getUserImageColor(), null));
                            feedDetail.setUserImageDrawable(drawable);
@@ -508,7 +509,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         commentedBy = feedDetail.getLatestComment().getCommentedBy();
                         commentedByPic = feedDetail.getLatestComment().getUserPic();
                     if (feedDetail.getLatestComment().getUserImageDrawable() == null && commentedBy!=null && commentedBy.trim().length()>0) {
-                        String firstLetter = feedDetail.getUserName().toUpperCase().substring(0, 1);
+                        commentedBy= commentedBy+": ";
+                        String firstLetter = commentedBy.toUpperCase().substring(0, 1);
                         TextDrawable drawable = TextDrawable.builder().beginConfig().bold().endConfig().buildRound(firstLetter, activity.getParsedColor(feedDetail.getLatestComment().getCommentedByColor(), null));
                         feedDetail.getLatestComment().setUserImageDrawable(drawable);
                     }
@@ -526,14 +528,14 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder.tvUserCommentedName.setText(commentNameAndContent);
 
 
-                    //User Image Comment
+                  /*  //User Image Comment
                     if (!TextUtils.isEmpty(commentedByPic) && !Constants.DEFAULT_IMAGE_URL.equalsIgnoreCase(commentedByPic)) {
                         Picasso.with(activity).load(commentedByPic).placeholder(R.drawable.placeholder_img).transform(new CircleTransform()).into(holder.ivUserCommentedPic);
 
                     } else{
                         holder.ivUserCommentedPic.setImageDrawable(imageDrawable==null?ContextCompat.getDrawable(activity,R.drawable.placeholder_img):imageDrawable);
                     }
-
+*/
 
 
                 }
@@ -780,8 +782,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LinearLayout viewActionLike;
         @Bind(R.id.view_action_comment)
         LinearLayout viewActionComment;
-        @Bind(R.id.iv_user_commented_pic)
-        ImageView ivUserCommentedPic;
+    /*    @Bind(R.id.iv_user_commented_pic)
+        ImageView ivUserCommentedPic;*/
     /*    @Bind(R.id.tv_feed_rating)
         TextView tvFeedRating;*/
         @Bind(R.id.tv_restaurant_feed_address)
@@ -811,7 +813,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Bind(R.id.layout_actual_post)
         RelativeLayout layoutActualPost;
         @Bind(R.id.layout_comment)
-        LinearLayout layoutComment;
+        RelativeLayout  layoutComment;
         @Bind(R.id.like_button_animate)
         LikeButton likeButtonAnimate;
         @Bind(R.id.view_like)

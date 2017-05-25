@@ -165,7 +165,6 @@
                         android:text="jsfldsjfdsjfljsdkfjsdklfjsdfksdf"
                         android:textColor="@color/text_color_light"
                         app:font="@string/maven_r"
-                        android:="Offer available till 6.30PM"
                         />
                 </LinearLayout>
 

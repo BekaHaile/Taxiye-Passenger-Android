@@ -365,7 +365,9 @@ public class FeedDetail implements Serializable {
     }
 
 
-    public static   class LatestComment implements Serializable{
+    public   class LatestComment implements Serializable{
+
+
         @SerializedName("comment")
         private String comment ;
 
@@ -379,7 +381,12 @@ public class FeedDetail implements Serializable {
         @SerializedName("user_image_color")
         private String commentedByColor;
 
-        private Drawable userImageDrawable;
+        public LatestComment(String comment, String commentedBy) {
+            this.comment = comment;
+            this.commentedBy = commentedBy;
+        }
+
+        private transient Drawable userImageDrawable;
 
         public Drawable getUserImageDrawable() {
             return userImageDrawable;
@@ -407,6 +414,5 @@ public class FeedDetail implements Serializable {
         }
 
     }
-
 
 }
