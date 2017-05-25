@@ -206,7 +206,7 @@ public class AddressBookFragment extends Fragment {
 			apiFetchUserAddress = new ApiFetchUserAddress(activity, new ApiFetchUserAddress.Callback() {
 				@Override
 				public void onSuccess() {
-					setSavedPlaces();
+
 				}
 
 				@Override
@@ -222,6 +222,11 @@ public class AddressBookFragment extends Fragment {
 				@Override
 				public void onNoRetry(View view) {
 
+				}
+
+				@Override
+				public void onFinish() {
+					setSavedPlaces();
 				}
 			});
 		}

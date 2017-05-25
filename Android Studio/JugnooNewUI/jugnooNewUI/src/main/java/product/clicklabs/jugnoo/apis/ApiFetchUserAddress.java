@@ -73,6 +73,7 @@ public class ApiFetchUserAddress {
 							retryDialog(DialogErrorType.SERVER_ERROR);
 						}
 						DialogPopup.dismissLoadingDialog();
+						callback.onFinish();
 					}
 
 					@Override
@@ -81,14 +82,17 @@ public class ApiFetchUserAddress {
 						DialogPopup.dismissLoadingDialog();
 						retryDialog(DialogErrorType.CONNECTION_LOST);
 						callback.onFailure();
+						callback.onFinish();
 					}
 				});
 
 			} else {
 				retryDialog(DialogErrorType.NO_NET);
+				callback.onFinish();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			callback.onFinish();
 		}
 	}
 
@@ -119,6 +123,7 @@ public class ApiFetchUserAddress {
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);
+		void onFinish();
 	}
 
 
