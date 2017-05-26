@@ -29,7 +29,6 @@
 
 
     <ImageView
-        android:id="@+id/imageViewShadowBelow"
         android:layout_above="@+id/ll_anonymous"
         android:layout_width="match_parent"
         android:layout_height="@dimen/spacing_extra_tiny"

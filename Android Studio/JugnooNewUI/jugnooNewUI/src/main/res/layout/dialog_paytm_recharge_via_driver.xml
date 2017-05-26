@@ -21,7 +21,6 @@
             >
 
             <LinearLayout
-                android:id="@+id/linearLayoutTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30px"
@@ -103,7 +102,6 @@
 
 
                 <LinearLayout
-                    android:id="@+id/linearLayoutAmount"
                     android:layout_width="370px"
                     android:layout_height="118px"
                     android:layout_marginBottom="40px"

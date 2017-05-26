@@ -90,7 +90,6 @@
                     />
 
                 <TextView
-                    android:id="@+id/textViewNotificationValue"
                     android:layout_width="32px"
                     android:layout_height="35px"
                     android:layout_alignParentRight="true"

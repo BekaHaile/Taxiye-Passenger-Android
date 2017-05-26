@@ -193,7 +193,6 @@
             android:layout_below="@+id/textViewDate"
             >
             <ImageView
-                android:id="@+id/imageViewStart"
                 android:layout_width="26px"
                 android:layout_height="37px"
                 android:tag="mwar"
@@ -201,7 +200,6 @@
                 />
 
             <ImageView
-                android:id="@+id/imageViewStartEndLine"
                 android:layout_width="4px"
                 android:layout_height="78px"
                 android:tag="mwar"
@@ -209,7 +207,6 @@
                 />
 
             <ImageView
-                android:id="@+id/imageViewEnd"
                 android:layout_width="23px"
                 android:layout_height="30px"
                 android:tag="mwar"

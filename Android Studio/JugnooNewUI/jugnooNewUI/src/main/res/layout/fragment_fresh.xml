@@ -40,7 +40,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvSelectedStore"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/selected_store"
@@ -183,7 +182,6 @@
             android:visibility="gone">
 
             <ImageView
-                android:id="@+id/imageViewNoItem"
                 android:layout_width="389px"
                 android:layout_height="349px"
                 android:layout_gravity="center_horizontal"

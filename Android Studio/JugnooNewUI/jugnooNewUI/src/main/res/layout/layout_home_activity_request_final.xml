@@ -103,7 +103,6 @@
         />
 
     <ImageView
-        android:id="@+id/imageViewFabFakeFinal"
         android:layout_width="68dp"
         android:layout_height="68dp"
         android:layout_alignParentBottom="true"
@@ -236,7 +235,6 @@
 
 
                 <LinearLayout
-                    android:id="@+id/linearLayoutDriverInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"

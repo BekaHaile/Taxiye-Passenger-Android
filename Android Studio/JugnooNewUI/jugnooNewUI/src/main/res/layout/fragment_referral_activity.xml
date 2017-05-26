@@ -10,7 +10,6 @@
 
 
         <RelativeLayout
-            android:id="@+id/relativeLayoutDownloads"
             android:layout_width="match_parent"
             android:layout_height="@dimen/leaderboard_activity_item_height"
             android:background="@color/sliding_bottom_bg_color"
@@ -51,7 +50,6 @@
 
 
         <RelativeLayout
-            android:id="@+id/relativeLayoutFirstRides"
             android:layout_width="match_parent"
             android:layout_height="@dimen/leaderboard_activity_item_height"
             android:background="@color/sliding_bottom_bg_color" >
@@ -89,7 +87,6 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/relativeLayoutMoneyEarned"
             android:layout_width="match_parent"
             android:layout_height="@dimen/leaderboard_activity_item_height"
             android:background="@color/sliding_bottom_bg_color" >

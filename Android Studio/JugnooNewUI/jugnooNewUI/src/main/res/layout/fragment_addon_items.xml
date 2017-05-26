@@ -56,7 +56,6 @@
         />
 
     <ImageView
-        android:id="@+id/below_shadow_down"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_7"
         android:layout_above="@+id/relativeLayoutProceed"

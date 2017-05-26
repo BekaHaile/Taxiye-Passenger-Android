@@ -397,35 +397,6 @@
         </item>
     </style>
 
-    <style name="sabkuchfresh"/>
-
-    <style name="sabkuchfresh.Text"/>
-
-
-    <style name="sabkuchfresh.Text.RobotoRegularSmall_blueLink" parent="sabkuchfresh.Text">
-        <item name="fontStyle">
-            regular
-        </item>
-        <item name="android:textSize">
-            14sp
-        </item>
-        <item name="android:textColor">
-            @color/blue_btn
-        </item>
-    </style>
-
-    <style name="sabkuchfresh.Text.RobotoRegularSmall_address" parent="sabkuchfresh.Text">
-        <item name="fontStyle">
-            regular
-        </item>
-        <item name="android:textSize">
-            14sp
-        </item>
-        <item name="android:textColor">
-            @color/text_color
-        </item>
-    </style>
-
 
     <style name="LabelTextView" parent="@android:style/Widget.TextView">
         <item name="android:textColor">
@@ -442,21 +413,6 @@
         </item>
         <item name="android:textSize">
             @dimen/label_title_size
-        </item>
-    </style>
-
-    <style name="CrossImageView">
-        <item name="android:paddingLeft">
-            @dimen/padding_icon_cross
-        </item>
-        <item name="android:clickable">
-            true
-        </item>
-        <item name="android:gravity">
-            center_vertical
-        </item>
-        <item name="android:src">
-            @drawable/cross
         </item>
     </style>
 
@@ -684,24 +640,6 @@
         </item>
     </style>
 
-    <style name="CrossSelector">
-        <item name="android:layout_width">
-            70px
-        </item>
-        <item name="android:layout_height">
-            70px
-        </item>
-        <item name="android:padding">
-            20px
-        </item>
-        <item name="android:src">
-            @drawable/ic_cross_grey_selector
-        </item>
-        <item name="android:tag">
-            mwar
-        </item>
-    </style>
-
     <style name="DialogFragmentTrans" parent="@android:style/Theme.Translucent.NoTitleBar"/>
 
     <style name="Feed_Line_Horizontal">
@@ -713,39 +651,6 @@
         </item>
         <item name="android:background">
             @color/stroke_light_grey_alpha
-        </item>
-    </style>
-
-    <style name="ContextMenuButton">
-        <item name="android:layout_width">
-            match_parent
-        </item>
-        <item name="android:layout_height">
-            wrap_content
-        </item>
-        <item name="android:background">
-            @drawable/btn_context_menu
-        </item>
-        <item name="android:gravity">
-            left|center_vertical
-        </item>
-        <item name="android:paddingLeft">
-            20dp
-        </item>
-        <item name="android:paddingRight">
-            20dp
-        </item>
-        <item name="android:drawablePadding">
-            20dp
-        </item>
-        <item name="android:textColor">
-            @color/feed_grey_text
-        </item>
-        <item name="android:textSize">
-            @dimen/font_large
-        </item>
-        <item name="android:textAllCaps">
-            false
         </item>
     </style>
 
