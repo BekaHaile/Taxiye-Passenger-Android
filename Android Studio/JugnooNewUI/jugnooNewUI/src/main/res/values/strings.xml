@@ -12,7 +12,7 @@
     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>
     Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-     <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
+    <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -969,7 +969,8 @@
     <string name="fares_updated">Fares updated try again</string>
     <string name="no_current_offers">No Current Offers</string>
     <string name="mobikwik_wallet">MobiKwik Wallet</string>
-    >>>>>>> feature_menus
+    >>>>>>>
+    feature_menus
     <string name="freecharge_wallet">FreeCharge Wallet</string>
     <string name="add_mobikwik_wallet">Add MobiKwik Wallet</string>
     <string name="add_freecharge_wallet">Add FreeCharge Wallet</string>
@@ -1236,7 +1237,11 @@
 
 
     <string name="gcm_key">AIzaSyBj3fpsuedq8_w3euc_UxxXjeL4fxU5IRg</string>
-    // gcm sender id or project number
+    // gcm
+    sender
+    id or
+    project
+    number
     <!--<string name="google_project_id">360497338494</string>-->
     <string name="google_project_id">277283237448</string>
 
@@ -1248,7 +1253,8 @@
 
     <string name="session_expired_string">Session expired!</string>
 
-    //Screens Titles
+    //Screens
+    Titles
     <string name="otp_screen">One time password</string>
     <!--<string name="home_screen">Home</string>-->
     <string name="select_contact_screen">Select Contact</string>
@@ -1275,7 +1281,8 @@
     <string name="no_txn_currently">No transactions currently</string>
 
 
-    // signup
+    //
+    signup
     <string name="sign_up_string">Sign up</string>
     <string name="sign_in_string">Sign in</string>
     <string name="full_name_string">Full name</string>
@@ -1296,17 +1303,23 @@
     <string name="rupees_symbol">\u20B9</string>
 
 
-    // Home page strings
+    //
+    Home
+    page
+    strings
     <string name="send_money_string">SEND MONEY</string>
     <string name="request_money_string">Request Money</string>
     <string name="request">Request</string>
     <string name="requested_to">Requested to</string>
 
-    // otp strings
+    // otp
+    strings
     <string name="otp_string">Enter the OTP sent on your mobile xxxxxxx333</string>
     <string name="proceed_string">Proceed</string>
 
-    //forgot password screen
+    //forgot
+    password
+    screen
     <string name="forgot_string">Forgot your password?</string>
     <string name="new_password_string">New Password</string>
     <string name="old_password_string">Password</string>
@@ -1320,7 +1333,9 @@
     <string name="choose_mobile_number">Please make sure your mobile number registered with your bank is in your primary sim slot.</string>
 
 
-    // app policies url
+    // app
+    policies
+    url
 
     <string name="terms_url_string">http://54.149.71.85/shinrai-webpages/terms.html</string>
     <string name="privacy_url_string">http://54.149.71.85/shinrai-webpages/privacy_policy.html</string>
@@ -1330,7 +1345,10 @@
     <string name="help_note_string">Shinrai is based on trust, for any suggestions of problems that really matter and where we could do a difference, please send an e-mail at <u>weareshinrai@gmail.com.</u> Thanks for your trust, help and understanding! Lets rock it.</string>
 
 
-    // select contact strings
+    //
+    select
+    contact
+    strings
     <string name="add_contact">CONTACTS</string>
     <string name="mobile_contact">Type a name or mobile number</string>
     <string name="amount_string">Enter amount</string>
@@ -1701,6 +1719,10 @@
     <string name="online_payment">Online Payment</string>
     <string name="start_typing_a_cuisine">Start typing a cuisine…</string>
     <string name="minimum_order_amount">Minimum Order Amount</string>
+    <string
+        name="title_activity_test">
+        TestActivity
+    </string>
 
 
 </resources>
