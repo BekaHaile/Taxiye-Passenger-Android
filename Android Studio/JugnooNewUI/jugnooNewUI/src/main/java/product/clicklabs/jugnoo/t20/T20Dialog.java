@@ -154,7 +154,7 @@ public class T20Dialog {
 
 
 			if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
-				imageViewDialogTop.setImageResource(R.drawable.popup_t20_before_ride);
+				imageViewDialogTop.setImageResource(R.drawable.ic_fresh_new_placeholder);
 				linearLayoutBeforeRide.setVisibility(View.VISIBLE);
 				linearLayoutAfterRide.setVisibility(View.GONE);
 
@@ -164,7 +164,7 @@ public class T20Dialog {
 				dialog.show();
 			}
 			else if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
-				imageViewDialogTop.setImageResource(R.drawable.popup_t20_after_ride);
+				imageViewDialogTop.setImageResource(R.drawable.ic_fresh_new_placeholder);
 				linearLayoutBeforeRide.setVisibility(View.GONE);
 				linearLayoutAfterRide.setVisibility(View.VISIBLE);
 

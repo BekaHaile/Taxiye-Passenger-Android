@@ -22,7 +22,7 @@
             android:id="@+id/imageViewDialogTop"
             android:layout_width="644px"
             android:layout_height="268px"
-            android:src="@drawable/popup_t20_after_ride"
+            android:src="@drawable/ic_fresh_new_placeholder"
             android:tag="mwar"
             />
 
