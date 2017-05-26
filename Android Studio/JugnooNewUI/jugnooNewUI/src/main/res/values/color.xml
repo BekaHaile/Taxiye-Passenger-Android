@@ -348,6 +348,7 @@
     <color name="feed_red">#d0021b</color>
     <color name="feed_grey_edt_border">#4D979797</color>
     <color name="feed_comment_background">#fafafa</color>
+    <color name="geed_grey_text_secondary">#9c9cb5</color>
 
 
     <color name="feed_color_like_active">#ef6692</color>

@@ -497,9 +497,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         commentedBy = feedDetail.getUserName();
                         commentedByPic = feedDetail.getUserImage();
                       if (feedDetail.getUserImageDrawable() == null && commentedBy!=null && commentedBy.trim().length()>0) {
-                          commentedBy= commentedBy+": ";
                           String firstLetter = feedDetail.getUserName().toUpperCase().substring(0, 1);
-                         TextDrawable drawable = TextDrawable.builder().beginConfig().bold().endConfig().buildRound(firstLetter, activity.getParsedColor(feedDetail.getUserImageColor(), null));
+                           TextDrawable drawable = TextDrawable.builder().beginConfig().bold().endConfig().buildRound(firstLetter, activity.getParsedColor(feedDetail.getUserImageColor(), null));
                            feedDetail.setUserImageDrawable(drawable);
                        }
                         imageDrawable = feedDetail.getUserImageDrawable();
@@ -509,7 +508,6 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         commentedBy = feedDetail.getLatestComment().getCommentedBy();
                         commentedByPic = feedDetail.getLatestComment().getUserPic();
                     if (feedDetail.getLatestComment().getUserImageDrawable() == null && commentedBy!=null && commentedBy.trim().length()>0) {
-                        commentedBy= commentedBy+": ";
                         String firstLetter = commentedBy.toUpperCase().substring(0, 1);
                         TextDrawable drawable = TextDrawable.builder().beginConfig().bold().endConfig().buildRound(firstLetter, activity.getParsedColor(feedDetail.getLatestComment().getCommentedByColor(), null));
                         feedDetail.getLatestComment().setUserImageDrawable(drawable);
@@ -521,7 +519,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if(commentToShow!=null && commentedBy!=null){
 
                     showCommentLayout= true;
-
+                    commentedBy= commentedBy+": ";
                     //Set Content and username
                     SpannableString commentNameAndContent = new SpannableString(commentedBy+ commentToShow);
                     commentNameAndContent.setSpan(BOLD_SPAN,0,commentedBy.length(),SPAN_INCLUSIVE_EXCLUSIVE);

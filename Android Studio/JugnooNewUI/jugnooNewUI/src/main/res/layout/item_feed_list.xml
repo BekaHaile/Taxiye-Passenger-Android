@@ -299,7 +299,6 @@
         android:id="@+id/view_action_like"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-
         android:layout_below="@id/line_below_images_pager"
         android:layout_toLeftOf="@id/line_divider_like_comment"
         android:background="?attr/selectableItemBackground"
@@ -352,7 +351,7 @@
            android:id="@+id/layout_comment"
            android:layout_below="@id/view_action_like"
            android:orientation="vertical"
-           android:visibility="visible"
+           android:visibility="gone"
            android:layout_marginTop="-12.5dp"
            android:layout_marginBottom="@dimen/spacing_small"
            android:layout_width="match_parent"
@@ -368,9 +367,9 @@
            <View
                android:id="@+id/view_virtual"
                android:layout_centerHorizontal="true"
-               android:layout_width="0dp" android:layout_height="30dp">
+               android:layout_width="0dp" android:layout_height="25dp"/>
 
-           </View>
+
 
            <LinearLayout
                android:layout_alignParentRight="true"
@@ -378,10 +377,9 @@
                android:gravity="center"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content">
+
                <View
-
                    android:layout_toRightOf="@id/view_virtual"
-
                    android:layout_gravity="right"
                    android:background="@drawable/bg_triangle_feed_list_comment"
                    android:layout_width="25dp"
@@ -401,7 +399,7 @@
                android:lineSpacingExtra="2dp"
                android:layout_marginLeft="@dimen/spacing_normal"
                android:layout_marginRight="@dimen/spacing_normal"
-               android:textColor="@color/feed_grey_text_heading"
+               android:textColor="@color/feed_grey_text_secondary"
                android:layout_marginBottom="2.5dp"
                android:textSize="14sp"
                android:ellipsize="end"
