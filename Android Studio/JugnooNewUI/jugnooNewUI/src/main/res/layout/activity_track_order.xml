@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/rlTopBar"
@@ -16,11 +16,11 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="@string/order_id_format"
             android:textAllCaps="true"
-            android:layout_centerInParent="true"
-            android:textSize="@dimen/sp_17"
             android:textColor="@color/text_color"
+            android:textSize="@dimen/sp_17"
             app:font="maven"
 
             />
@@ -30,106 +30,26 @@
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_centerVertical="true"
-            android:padding="10dp"
-            android:src="@drawable/ic_back_selector"
-            android:scaleType="centerInside"
             android:layout_marginLeft="5dp"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back_selector"
             />
 
     </RelativeLayout>
 
-
-    <RelativeLayout
+    <include
+        layout="@layout/fragment_track_order"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rlTopBar"
-        android:animateLayoutChanges="true"
-        >
-
-        <fragment
-            android:id="@+id/googleMap"
-            class="product.clicklabs.jugnoo.utils.TouchableMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/tvTrackingInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="14dp"
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/white"
-            android:background="@drawable/background_black_80_r"
-            android:layout_centerInParent="true"
-            android:text="some text"
-            android:padding="10dp"
-            app:font="maven"
-            />
-
-
-        <TextView
-            android:id="@+id/tvETA"
-            android:layout_width="68dp"
-            android:layout_height="68dp"
-            android:layout_margin="10dp"
-            android:textSize="@dimen/sp_24"
-            android:textColor="@color/text_color"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/circle_white_stroke_alpha_border"
-            android:text="1\nmin"
-            android:padding="10dp"
-            android:gravity="center"
-            app:font="maven"
-            />
-
-        <ImageView
-            android:id="@+id/bMyLocation"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/mylocation_btn_selector"
-            android:contentDescription="@string/move_to_your_location"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            />
-
-
-        <LinearLayout
-            android:id="@+id/bCallDriver"
-            android:layout_width="@dimen/dp_200"
-            android:layout_height="@dimen/dp_45"
-            android:background="@drawable/capsule_theme_color_selector"
-            android:layout_marginBottom="@dimen/dp_20"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:visibility="gone"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_track_order_call"
-                android:text="@string/call_driver"
-                android:textSize="@dimen/sp_16"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:textAllCaps="true"
-                android:drawablePadding="4dp"
-                app:font="maven"
-                />
-
-        </LinearLayout>
-
-    </RelativeLayout>
+        />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_7"
-        android:background="@drawable/shadow_down_new"
         android:layout_below="@+id/rlTopBar"
+        android:background="@drawable/shadow_down_new"
         />
 
 

@@ -215,10 +215,10 @@ public class HistoryResponse {
         private String restaurantPhoneNo;
         @SerializedName("delivery_latitude")
         @Expose
-        private Double deliveryLatitude;
+        private double deliveryLatitude;
         @SerializedName("delivery_longitude")
         @Expose
-        private Double deliveryLongitude;
+        private double deliveryLongitude;
         @SerializedName("address_id")
         @Expose
         private Integer addressId;
@@ -240,6 +240,27 @@ public class HistoryResponse {
 
 
 
+        @SerializedName("pickup_latitude")
+        @Expose
+        private double pickupLatitude;
+        @SerializedName("pickup_longitude")
+        @Expose
+        private double pickupLongitude;
+        @SerializedName("show_live_tracking")
+        @Expose
+        private int showLiveTracking;
+        @SerializedName("delivery_id")
+        @Expose
+        private int deliveryId;
+        @SerializedName("show_delivery_route")
+        @Expose
+        private int showDeliveryRoute;
+        @SerializedName("driver_phone_no")
+        @Expose
+        private String driverPhoneNo;
+        @SerializedName("track_delivery_message")
+        @Expose
+        private String trackDeliveryMessage;
 
 
 
@@ -750,19 +771,19 @@ public class HistoryResponse {
         }
 
 
-        public Double getDeliveryLatitude() {
+        public double getDeliveryLatitude() {
             return deliveryLatitude;
         }
 
-        public void setDeliveryLatitude(Double deliveryLatitude) {
+        public void setDeliveryLatitude(double deliveryLatitude) {
             this.deliveryLatitude = deliveryLatitude;
         }
 
-        public Double getDeliveryLongitude() {
+        public double getDeliveryLongitude() {
             return deliveryLongitude;
         }
 
-        public void setDeliveryLongitude(Double deliveryLongitude) {
+        public void setDeliveryLongitude(double deliveryLongitude) {
             this.deliveryLongitude = deliveryLongitude;
         }
 
@@ -851,6 +872,34 @@ public class HistoryResponse {
 
         public void setOrderAdjustment(double orderAdjustment) {
             this.orderAdjustment = orderAdjustment;
+        }
+
+        public double getPickupLatitude() {
+            return pickupLatitude;
+        }
+
+        public double getPickupLongitude() {
+            return pickupLongitude;
+        }
+
+        public int getShowLiveTracking() {
+            return showLiveTracking;
+        }
+
+        public int getDeliveryId() {
+            return deliveryId;
+        }
+
+        public int getShowDeliveryRoute() {
+            return showDeliveryRoute;
+        }
+
+        public String getDriverPhoneNo() {
+            return driverPhoneNo;
+        }
+
+        public String getTrackDeliveryMessage() {
+            return trackDeliveryMessage;
         }
     }
 

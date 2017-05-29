@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -19,7 +20,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class RideTransactionsActivity extends BaseFragmentActivity implements GAAction {
+public class RideTransactionsActivity extends BaseAppCompatActivity implements GAAction {
 
     private final String TAG = RideTransactionsActivity.class.getSimpleName();
 
@@ -92,14 +93,19 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements GA
 
 	public void performBackPressed(){
 		Utils.hideSoftKeyboard(this, relativeLayoutContainer);
-		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-			finish();
-			overridePendingTransition(R.anim.left_in, R.anim.left_out);
-		} else {
-			super.onBackPressed();
+		OrderStatusFragment orderFrag = getOrderStatusFragment();
+		if(orderFrag == null || !orderFrag.performBack()) {
+			if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+				finish();
+				overridePendingTransition(R.anim.left_in, R.anim.left_out);
+			} else {
+				super.onBackPressed();
+			}
 		}
 	}
-	
+
+
+
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
@@ -117,5 +123,13 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements GA
 		super.onDestroy();
 	}
 
+
+	public OrderStatusFragment getOrderStatusFragment(){
+		Fragment fragment = getSupportFragmentManager().findFragmentByTag(OrderStatusFragment.class.getName());
+		if(fragment != null){
+			return (OrderStatusFragment) fragment;
+		}
+		return null;
+	}
 
 }

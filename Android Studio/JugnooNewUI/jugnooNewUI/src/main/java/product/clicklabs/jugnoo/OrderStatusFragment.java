@@ -9,11 +9,15 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -34,10 +38,12 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCancelOrder;
 import com.sabkuchfresh.fragments.OrderCancelReasonsFragment;
+import com.sabkuchfresh.fragments.TrackOrderFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
 import com.sabkuchfresh.utils.TextViewStrikeThrough;
+import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
 import org.json.JSONObject;
 
@@ -74,7 +80,8 @@ import retrofit.mime.TypedByteArray;
 
 public class OrderStatusFragment extends Fragment implements GAAction, View.OnClickListener{
 
-    private RelativeLayout relative, rlOrderStatus;
+    private CoordinatorLayout relative;
+    private RelativeLayout rlOrderStatus;
     private TextView tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,
             tvDelveryPlace, tvDeliveryToVal,
             tvTotalAmountVal, tvAmountPayableVal;
@@ -102,11 +109,19 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private RelativeLayout rlWalletDeducted;
     private LinearLayout llPaymentSummary;
 
+    private NestedScrollView scrollView;
+    private RelativeLayout rlContainer;
+    private LockableBottomSheetBehavior bottomSheetBehavior;
+    private RelativeLayout rlOrderStatusMapPeek;
+    private LinearLayout llShadowPeek;
+    private int llShadowPeekHeight;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_order_status, container, false);
-        relative = (RelativeLayout) rootView.findViewById(R.id.relative);
+        rootView = inflater.inflate(R.layout.fragment_order_status, container, false);
+        relative = (CoordinatorLayout) rootView.findViewById(R.id.relative);
 
         activity = getActivity();
 
@@ -128,6 +143,49 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        scrollView = (NestedScrollView) rootView.findViewById(R.id.scrollView);
+        bottomSheetBehavior = (LockableBottomSheetBehavior) BottomSheetBehavior.from(scrollView);
+        bottomSheetBehavior.setPeekHeight(0);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        bottomSheetBehavior.setLocked(true);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if(newState == BottomSheetBehavior.STATE_COLLAPSED){
+                    TrackOrderFragment fragment = getTrackOrderFragment();
+                    if(fragment != null){
+                        fragment.setPaddingZero();
+                    }
+                } else if(newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    TrackOrderFragment fragment = getTrackOrderFragment();
+                    if(fragment != null){
+                        fragment.setPaddingSome();
+                    }
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+        rlOrderStatusMapPeek = (RelativeLayout) rootView.findViewById(R.id.rlOrderStatusMapPeek);
+        rlOrderStatusMapPeek.setBackgroundColor(ContextCompat.getColor(activity, R.color.offer_popup_item_color));
+        llShadowPeek = (LinearLayout) rootView.findViewById(R.id.llShadowPeek);
+        llShadowPeek.setVisibility(View.GONE);
+        llShadowPeekHeight = activity.getResources().getDimensionPixelSize(R.dimen.dp_172);
+        rlContainer = (RelativeLayout) rootView.findViewById(R.id.rlContainer);
+        rlContainer.setVisibility(View.GONE);
+        llShadowPeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+
+
         llMain = (LinearLayout) rootView.findViewById(R.id.llMain);
         llMain.setVisibility(View.GONE);
         tvOrderStatus = (TextView) rootView.findViewById(R.id.tvOrderStatus); tvOrderStatus.setTypeface(Fonts.mavenMedium(activity));
@@ -171,6 +229,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         lineStatus2 = (View) rootView.findViewById(R.id.lineStatus2);
         lineStatus3 = (View) rootView.findViewById(R.id.lineStatus3);
         ivTopShadow = (ImageView) rootView.findViewById(R.id.ivTopShadow);
+        cvOrderStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         if(activity instanceof FreshActivity){
             ivTopShadow.setVisibility(View.VISIBLE);
@@ -348,6 +412,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                     orderItemsAdapter.notifyDataSetChanged();
                                     tvItemsQuantityVal.setText(String.valueOf(subItemsOrders.size()));
                                     setStatusResponse(historyResponse);
+                                    openTrackOrderFragment();
                                 } else {
                                     retryDialogOrderData(message, DialogErrorType.SERVER_ERROR);
                                 }
@@ -987,6 +1052,45 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         apiCancelOrder.hit(datum1.getOrderId(), datum1.getClientId(),
                 storeId,
                 productType);
+    }
+
+
+    private void openTrackOrderFragment(){
+        if(datum1.getShowLiveTracking() == 1 && datum1.getDeliveryId() > 0) {
+            bottomSheetBehavior.setLocked(false);
+            rlOrderStatusMapPeek.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+            llShadowPeek.setVisibility(View.VISIBLE);
+            rlContainer.setVisibility(View.VISIBLE);
+            getChildFragmentManager().beginTransaction()
+                    .replace(rlContainer.getId(), TrackOrderFragment.newInstance(Data.userData.accessToken,
+                            datum1.getOrderId(), datum1.getDeliveryId(),
+                            datum1.getPickupLatitude(), datum1.getPickupLongitude(),
+                            datum1.getDeliveryLatitude(), datum1.getDeliveryLongitude(),
+                            datum1.getShowDeliveryRoute(), datum1.getDriverPhoneNo(), llShadowPeekHeight),
+                            TrackOrderFragment.class.getName())
+                    .commit();
+        } else {
+            bottomSheetBehavior.setLocked(true);
+            rlOrderStatusMapPeek.setBackgroundColor(ContextCompat.getColor(activity, R.color.offer_popup_item_color));
+            llShadowPeek.setVisibility(View.GONE);
+            rlContainer.setVisibility(View.GONE);
+        }
+    }
+
+    public boolean performBack(){
+        if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            return true;
+        }
+        return false;
+    }
+
+    private TrackOrderFragment getTrackOrderFragment(){
+        Fragment fragment = getChildFragmentManager().findFragmentByTag(TrackOrderFragment.class.getName());
+        if(fragment != null){
+            return (TrackOrderFragment) fragment;
+        }
+        return null;
     }
 
 }

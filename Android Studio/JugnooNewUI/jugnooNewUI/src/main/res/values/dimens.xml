@@ -797,5 +797,14 @@
     <dimen name="dp_290">
         290dp
     </dimen>
+    <dimen name="dp_72">
+        72dp
+    </dimen>
+    <dimen name="dp_212">
+        212dp
+    </dimen>
+    <dimen name="dp_172">
+        172dp
+    </dimen>
 
 </resources>
