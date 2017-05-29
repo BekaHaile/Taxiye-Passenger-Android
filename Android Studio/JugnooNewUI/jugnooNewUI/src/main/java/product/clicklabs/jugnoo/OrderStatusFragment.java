@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.fugu.FuguConfig;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -72,7 +73,7 @@ import retrofit.mime.TypedByteArray;
  * Created by ankit on 27/10/16.
  */
 
-public class OrderStatusFragment extends Fragment implements GAAction, View.OnClickListener{
+public class OrderStatusFragment extends Fragment implements GAAction, View.OnClickListener {
 
     private RelativeLayout relative, rlOrderStatus;
     private TextView tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,
@@ -111,14 +112,15 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         activity = getActivity();
 
 
-        if(activity instanceof FreshActivity){
-            ((FreshActivity)activity).fragmentUISetup(this);
-            GAUtils.trackScreenView(((FreshActivity)activity).getGaCategory()+ORDER_STATUS);
+        if (activity instanceof FreshActivity) {
+            ((FreshActivity) activity).fragmentUISetup(this);
+            GAUtils.trackScreenView(((FreshActivity) activity).getGaCategory() + ORDER_STATUS);
         }
 
         try {
             new ASSL(activity, relative, 1134, 720, false);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
 
         try {
@@ -130,15 +132,24 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }
         llMain = (LinearLayout) rootView.findViewById(R.id.llMain);
         llMain.setVisibility(View.GONE);
-        tvOrderStatus = (TextView) rootView.findViewById(R.id.tvOrderStatus); tvOrderStatus.setTypeface(Fonts.mavenMedium(activity));
-        tvOrderStatusVal = (TextView) rootView.findViewById(R.id.tvOrderStatusVal); tvOrderStatusVal.setTypeface(Fonts.mavenMedium(activity));
-        tvOrderTime = (TextView) rootView.findViewById(R.id.tvOrderTime); tvOrderTime.setTypeface(Fonts.mavenMedium(activity));
-        tvOrderTimeVal = (TextView) rootView.findViewById(R.id.tvOrderTimeVal);tvOrderTimeVal.setTypeface(Fonts.mavenMedium(activity));
-        tvDeliveryTime = (TextView) rootView.findViewById(R.id.tvDeliveryTime); tvDeliveryTime.setTypeface(Fonts.mavenMedium(activity));
-        tvDeliveryTimeVal = (TextView) rootView.findViewById(R.id.tvDeliveryTimeVal); tvDeliveryTimeVal.setTypeface(Fonts.mavenMedium(activity));
-        tvDeliveryTo = (TextView) rootView.findViewById(R.id.tvDeliveryTo); tvDeliveryTo.setTypeface(Fonts.mavenMedium(activity));
-        tvDelveryPlace = (TextView) rootView.findViewById(R.id.tvDelveryPlace); tvDelveryPlace.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        tvDeliveryToVal = (TextView) rootView.findViewById(R.id.tvDeliveryToVal); tvDeliveryToVal.setTypeface(Fonts.mavenMedium(activity));
+        tvOrderStatus = (TextView) rootView.findViewById(R.id.tvOrderStatus);
+        tvOrderStatus.setTypeface(Fonts.mavenMedium(activity));
+        tvOrderStatusVal = (TextView) rootView.findViewById(R.id.tvOrderStatusVal);
+        tvOrderStatusVal.setTypeface(Fonts.mavenMedium(activity));
+        tvOrderTime = (TextView) rootView.findViewById(R.id.tvOrderTime);
+        tvOrderTime.setTypeface(Fonts.mavenMedium(activity));
+        tvOrderTimeVal = (TextView) rootView.findViewById(R.id.tvOrderTimeVal);
+        tvOrderTimeVal.setTypeface(Fonts.mavenMedium(activity));
+        tvDeliveryTime = (TextView) rootView.findViewById(R.id.tvDeliveryTime);
+        tvDeliveryTime.setTypeface(Fonts.mavenMedium(activity));
+        tvDeliveryTimeVal = (TextView) rootView.findViewById(R.id.tvDeliveryTimeVal);
+        tvDeliveryTimeVal.setTypeface(Fonts.mavenMedium(activity));
+        tvDeliveryTo = (TextView) rootView.findViewById(R.id.tvDeliveryTo);
+        tvDeliveryTo.setTypeface(Fonts.mavenMedium(activity));
+        tvDelveryPlace = (TextView) rootView.findViewById(R.id.tvDelveryPlace);
+        tvDelveryPlace.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        tvDeliveryToVal = (TextView) rootView.findViewById(R.id.tvDeliveryToVal);
+        tvDeliveryToVal.setTypeface(Fonts.mavenMedium(activity));
         tvTotalAmountVal = (TextView) rootView.findViewById(R.id.tvTotalAmountVal);
         tvAmountPayableVal = (TextView) rootView.findViewById(R.id.tvAmountPayableVal);
         llFinalAmount = (LinearLayout) rootView.findViewById(R.id.llFinalAmount);
@@ -159,10 +170,14 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
         // Order Status
         cvOrderStatus = (CardView) rootView.findViewById(R.id.cvOrderStatus);
-        tvStatus0 = (TextView) rootView.findViewById(R.id.tvStatus0); tvStatus0.setTypeface(Fonts.mavenRegular(activity));
-        tvStatus1 = (TextView) rootView.findViewById(R.id.tvStatus1); tvStatus1.setTypeface(Fonts.mavenRegular(activity));
-        tvStatus2 = (TextView) rootView.findViewById(R.id.tvStatus2); tvStatus2.setTypeface(Fonts.mavenRegular(activity));
-        tvStatus3 = (TextView) rootView.findViewById(R.id.tvStatus3); tvStatus3.setTypeface(Fonts.mavenRegular(activity));
+        tvStatus0 = (TextView) rootView.findViewById(R.id.tvStatus0);
+        tvStatus0.setTypeface(Fonts.mavenRegular(activity));
+        tvStatus1 = (TextView) rootView.findViewById(R.id.tvStatus1);
+        tvStatus1.setTypeface(Fonts.mavenRegular(activity));
+        tvStatus2 = (TextView) rootView.findViewById(R.id.tvStatus2);
+        tvStatus2.setTypeface(Fonts.mavenRegular(activity));
+        tvStatus3 = (TextView) rootView.findViewById(R.id.tvStatus3);
+        tvStatus3.setTypeface(Fonts.mavenRegular(activity));
         ivStatus0 = (ImageView) rootView.findViewById(R.id.ivStatus0);
         ivStatus1 = (ImageView) rootView.findViewById(R.id.ivStatus1);
         ivStatus2 = (ImageView) rootView.findViewById(R.id.ivStatus2);
@@ -172,7 +187,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         lineStatus3 = (View) rootView.findViewById(R.id.lineStatus3);
         ivTopShadow = (ImageView) rootView.findViewById(R.id.ivTopShadow);
 
-        if(activity instanceof FreshActivity){
+        if (activity instanceof FreshActivity) {
             ivTopShadow.setVisibility(View.VISIBLE);
         }
 
@@ -193,9 +208,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         tvTotalAmountMessage = (TextView) rootView.findViewById(R.id.tvTotalAmountMessage);
         tvPaymentMethodVal = (TextView) rootView.findViewById(R.id.tvPaymentMethodVal);
         rlWalletDeducted = (RelativeLayout) rootView.findViewById(R.id.rlWalletDeducted);
-        ((TextView)rootView.findViewById(R.id.tvItemSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        ((TextView)rootView.findViewById(R.id.tvBillSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        ((TextView)rootView.findViewById(R.id.tvPaymentSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        ((TextView) rootView.findViewById(R.id.tvItemSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        ((TextView) rootView.findViewById(R.id.tvBillSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        ((TextView) rootView.findViewById(R.id.tvPaymentSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         llPaymentSummary = (LinearLayout) rootView.findViewById(R.id.llPaymentSummary);
 
 
@@ -215,20 +230,14 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         bNeedHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (activity instanceof RideTransactionsActivity) {
-                    new TransactionUtils().openRideIssuesFragment(activity,
-                            ((RideTransactionsActivity) activity).getContainer(),
-                            -1, -1, null, null, 0, false, 0, datum1);
-                } else{
-                    activity.onBackPressed();
-                }
+                needHelpClick();
             }
         });
 
         imageViewCallRestaurant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!TextUtils.isEmpty(datum1.getRestaurantPhoneNo())){
+                if (!TextUtils.isEmpty(datum1.getRestaurantPhoneNo())) {
                     Utils.openCallIntent(activity, datum1.getRestaurantPhoneNo());
                 }
             }
@@ -248,15 +257,15 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden){
-            if(activity instanceof FreshActivity){
-                ((FreshActivity)activity).fragmentUISetup(this);
+        if (!hidden) {
+            if (activity instanceof FreshActivity) {
+                ((FreshActivity) activity).fragmentUISetup(this);
             }
             setFragTitle();
             if (datum1.getCancellable() == 1) {
                 orderCancel.setVisibility(View.VISIBLE);
                 orderComplete.setVisibility(View.GONE);
-                if(activity instanceof SupportActivity) {
+                if (activity instanceof SupportActivity) {
                     cancelfeedbackBtn.setVisibility(View.GONE);
                 }
 
@@ -291,7 +300,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         buttonCancelOrder.setText(R.string.ok);
                         buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
-                    }  else {
+                    } else {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.need_help);
@@ -304,12 +313,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }
     }
 
-    private void setFragTitle(){
-        if(activity instanceof RideTransactionsActivity) {
+    private void setFragTitle() {
+        if (activity instanceof RideTransactionsActivity) {
             ((RideTransactionsActivity) activity).setTitle("Order #" + orderId);
-        } else if(activity instanceof SupportActivity) {
+        } else if (activity instanceof SupportActivity) {
             ((SupportActivity) activity).setTitle("Order #" + orderId);
-        } else if(activity instanceof FreshActivity){
+        } else if (activity instanceof FreshActivity) {
             ((FreshActivity) activity).getTopBar().title.setText("Order #" + orderId);
         }
     }
@@ -319,7 +328,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
      */
     public void getOrderData(final Activity activity) {
         try {
-            if(MyApplication.getInstance().isOnline()) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 
@@ -327,13 +336,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_ORDER_ID, "" + orderId);
                 params.put(Constants.KEY_PRODUCT_TYPE, "" + productType);
-                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.INTERATED, "1");
 
                 Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
                     @Override
                     public void success(HistoryResponse historyResponse, Response response) {
-                        String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i("Server response", "response = " + responseStr);
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
@@ -361,20 +370,19 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e("TAG", "getRecentRidesAPI error="+error.toString());
+                        Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
                         DialogPopup.dismissLoadingDialog();
                         retryDialogOrderData("", DialogErrorType.CONNECTION_LOST);
                     }
                 };
 
                 new HomeUtil().putDefaultParams(params);
-                if(productType == ProductType.MENUS.getOrdinal()){
+                if (productType == ProductType.MENUS.getOrdinal()) {
                     RestClient.getMenusApiService().orderHistory(params, callback);
                 } else {
                     RestClient.getFreshApiService().orderHistory(params, callback);
                 }
-            }
-            else {
+            } else {
                 retryDialogOrderData("", DialogErrorType.NO_NET);
             }
         } catch (Exception e) {
@@ -383,7 +391,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     }
 
     private void retryDialogOrderData(String message, DialogErrorType dialogErrorType) {
-        if(TextUtils.isEmpty(message)) {
+        if (TextUtils.isEmpty(message)) {
             DialogPopup.dialogNoInternet(activity,
                     dialogErrorType,
                     new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
@@ -420,19 +428,19 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     }
 
 
-    private void showPossibleStatus(ArrayList<String> possibleStatus, int status){
+    private void showPossibleStatus(ArrayList<String> possibleStatus, int status) {
         setDefaultState();
-        int selectedSize = (int)(35*ASSL.Xscale());
-        switch (possibleStatus.size()){
+        int selectedSize = (int) (35 * ASSL.Xscale());
+        switch (possibleStatus.size()) {
             case 4:
                 tvStatus3.setVisibility(View.VISIBLE);
                 ivStatus3.setVisibility(View.VISIBLE);
                 lineStatus3.setVisibility(View.VISIBLE);
                 tvStatus3.setText(possibleStatus.get(3));
-                if(status == 3){
+                if (status == 3) {
                     ivStatus3.setBackgroundResource(R.drawable.circle_order_status_green);
                     lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
-                } else if(status > 3){
+                } else if (status > 3) {
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     ivStatus3.setLayoutParams(layoutParams);
                     ivStatus3.setBackgroundResource(R.drawable.ic_order_status_green);
@@ -443,10 +451,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 ivStatus2.setVisibility(View.VISIBLE);
                 lineStatus2.setVisibility(View.VISIBLE);
                 tvStatus2.setText(possibleStatus.get(2));
-                if(status == 2){
+                if (status == 2) {
                     ivStatus2.setBackgroundResource(R.drawable.circle_order_status_green);
                     lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
-                } else if(status > 2){
+                } else if (status > 2) {
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     ivStatus2.setLayoutParams(layoutParams);
                     ivStatus2.setBackgroundResource(R.drawable.ic_order_status_green);
@@ -457,10 +465,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 ivStatus1.setVisibility(View.VISIBLE);
                 lineStatus1.setVisibility(View.VISIBLE);
                 tvStatus1.setText(possibleStatus.get(1));
-                if(status == 1){
+                if (status == 1) {
                     ivStatus1.setBackgroundResource(R.drawable.circle_order_status_green);
                     lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
-                } else if(status > 1){
+                } else if (status > 1) {
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     ivStatus1.setLayoutParams(layoutParams);
                     ivStatus1.setBackgroundResource(R.drawable.ic_order_status_green);
@@ -470,9 +478,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 tvStatus0.setVisibility(View.VISIBLE);
                 ivStatus0.setVisibility(View.VISIBLE);
                 tvStatus0.setText(possibleStatus.get(0));
-                if(status == 0){
+                if (status == 0) {
                     ivStatus0.setBackgroundResource(R.drawable.circle_order_status_green);
-                } else if(status > 0){
+                } else if (status > 0) {
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     ivStatus0.setLayoutParams(layoutParams);
                     ivStatus0.setBackgroundResource(R.drawable.ic_order_status_green);
@@ -482,7 +490,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     }
 
     private void setDefaultState() {
-        int selectedSize = (int)(25*ASSL.Xscale());
+        int selectedSize = (int) (25 * ASSL.Xscale());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
         ivStatus3.setBackgroundResource(R.drawable.circle_order_status);
         ivStatus3.setLayoutParams(layoutParams);
@@ -499,17 +507,19 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     /**
      * to show positive/negative fields
+     *
      * @param llFinalAmount
      * @param fieldText
      * @param fieldTextVal
      * @param showNegative
      * @return
      */
-    private View addFinalAmountView(LinearLayout llFinalAmount, String fieldText, Double fieldTextVal, boolean showNegative){
+    private View addFinalAmountView(LinearLayout llFinalAmount, String fieldText, Double fieldTextVal, boolean showNegative) {
         return addFinalAmountView(llFinalAmount, fieldText, fieldTextVal, showNegative, false, true, false);
     }
+
     private View addFinalAmountView(LinearLayout llFinalAmount, String fieldText, Double fieldTextVal,
-                                    boolean showNegative, boolean showFree, boolean showDivider, boolean showAsterisk){
+                                    boolean showNegative, boolean showFree, boolean showDivider, boolean showAsterisk) {
         try {
             llFinalAmount.setVisibility(View.VISIBLE);
             LayoutInflater layoutInflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -518,11 +528,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             TextView tvDelCharges = (TextView) view.findViewById(R.id.tvDelCharges);
             TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
             tvDelCharges.setText(fieldText);
-            if(showNegative) {
+            if (showNegative) {
                 tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
                 tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
             } else {
-                if(fieldTextVal > 0){
+                if (fieldTextVal > 0) {
                     tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
                     tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 } else {
@@ -530,7 +540,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         tvDelChargesVal.setText(activity.getResources().getString(R.string.free));
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
                     } else {
-                        if(Utils.compareDouble(fieldTextVal, 0) == -1){
+                        if (Utils.compareDouble(fieldTextVal, 0) == -1) {
                             tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(Math.abs(fieldTextVal))));
                         } else {
                             tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
@@ -539,11 +549,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                     }
                 }
             }
-            if(showAsterisk){
+            if (showAsterisk) {
                 tvDelChargesVal.append("*");
             }
             View vDivider = view.findViewById(R.id.vDivider);
-            if(!showDivider){
+            if (!showDivider) {
                 vDivider.setVisibility(View.INVISIBLE);
             }
             llFinalAmount.addView(view);
@@ -555,9 +565,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         return null;
     }
 
-    private double getSubTotalAmount(HistoryResponse historyResponse){
+    private double getSubTotalAmount(HistoryResponse historyResponse) {
         Double subTotal = 0d;
-        for(HistoryResponse.OrderItem orderItem : historyResponse.getData().get(0).getOrderItems()){
+        for (HistoryResponse.OrderItem orderItem : historyResponse.getData().get(0).getOrderItems()) {
             subTotal = subTotal + orderItem.getItemAmount();
         }
         return subTotal;
@@ -568,19 +578,19 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             HistoryResponse.Datum datum1 = historyResponse.getData().get(0);
 
             tvOrderStatusVal.setText(datum1.getOrderStatus());
-            if((datum1.getOrderStatusInt() == OrderStatus.ORDER_COMPLETED.getOrdinal())
-                    || datum1.getOrderStatusInt() == OrderStatus.CASH_RECEIVED.getOrdinal()){
+            if ((datum1.getOrderStatusInt() == OrderStatus.ORDER_COMPLETED.getOrdinal())
+                    || datum1.getOrderStatusInt() == OrderStatus.CASH_RECEIVED.getOrdinal()) {
                 ivOrderCompleted.setVisibility(View.VISIBLE);
-            } else{
+            } else {
                 ivOrderCompleted.setVisibility(View.GONE);
             }
 
-            if(historyResponse.getRecentOrdersPossibleStatus().size() > 0){
+            if (historyResponse.getRecentOrdersPossibleStatus().size() > 0) {
                 cvOrderStatus.setVisibility(View.VISIBLE);
                 rlOrderStatus.setVisibility(View.GONE);
                 setDefaultState();
                 showPossibleStatus(historyResponse.getRecentOrdersPossibleStatus(), datum1.getOrderTrackingIndex());
-            } else{
+            } else {
                 cvOrderStatus.setVisibility(View.GONE);
                 rlOrderStatus.setVisibility(View.VISIBLE);
             }
@@ -588,15 +598,15 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum1.getOrderTime())));
 
-            if(datum1.getProductType() == ProductType.MENUS.getOrdinal()){
+            if (datum1.getProductType() == ProductType.MENUS.getOrdinal()) {
                 tvDeliveryTime.setText(activity.getString(R.string.delivered_from_colon));
 
                 tvDeliveryTimeVal.setText("");
                 final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-                final SpannableStringBuilder sb = new SpannableStringBuilder("      "+ datum1.getRestaurantName());
+                final SpannableStringBuilder sb = new SpannableStringBuilder("      " + datum1.getRestaurantName());
                 sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tvDeliveryTimeVal.append(sb);
-                tvDeliveryTimeVal.append("\n"+ datum1.getRestaurantAddress());
+                tvDeliveryTimeVal.append("\n" + datum1.getRestaurantAddress());
                 imageViewRestaurant.setVisibility(View.VISIBLE);
                 imageViewCallRestaurant.setVisibility(TextUtils.isEmpty(datum1.getRestaurantPhoneNo()) ? View.GONE : View.VISIBLE);
             } else {
@@ -614,25 +624,25 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
             tvOrderStatusVal.setTextColor(Color.parseColor(datum1.getOrderStatusColor()));
 
-            if(!datum1.getDeliveryAddressType().equalsIgnoreCase("")){
+            if (!datum1.getDeliveryAddressType().equalsIgnoreCase("")) {
                 llDeliveryPlace.setVisibility(View.VISIBLE);
                 tvDelveryPlace.setText(datum1.getDeliveryAddressType());
-                if(datum1.getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.home))){
+                if (datum1.getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.home))) {
                     ivDeliveryPlace.setImageResource(R.drawable.home);
-                } else if(datum1.getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.work))){
+                } else if (datum1.getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.work))) {
                     ivDeliveryPlace.setImageResource(R.drawable.work);
-                } else{
+                } else {
                     ivDeliveryPlace.setImageResource(R.drawable.ic_loc_other);
                 }
-            } else{
+            } else {
                 llDeliveryPlace.setVisibility(View.GONE);
             }
 
             tvTotalAmountValOld.setVisibility(View.GONE);
-            if(Double.compare(datum1.getDiscountedAmount(), datum1.getOrderAmount()) != 0){
+            if (Double.compare(datum1.getDiscountedAmount(), datum1.getOrderAmount()) != 0) {
                 tvTotalAmountValOld.setVisibility(View.VISIBLE);
                 tvTotalAmountValOld.setText(activity.getString(R.string.rupees_value_format,
-                            Utils.getMoneyDecimalFormat().format(datum1.getOrderAmount())));
+                        Utils.getMoneyDecimalFormat().format(datum1.getOrderAmount())));
             }
             tvTotalAmountVal.setText(activity.getString(R.string.rupees_value_format,
                     Utils.getMoneyDecimalFormat().format(datum1.getDiscountedAmount())));
@@ -644,32 +654,30 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
             llExtraCharges.removeAllViews();
             addFinalAmountView(llExtraCharges, activity.getString(R.string.sub_total), datum1.getSubTotal(), false, false, true, showAsterisk);
-            if(datum1.getCharges() != null) {
-                for (Charges charges : datum1.getCharges()){
+            if (datum1.getCharges() != null) {
+                for (Charges charges : datum1.getCharges()) {
                     try {
-                        if(Double.parseDouble(charges.getValue()) > 0){
+                        if (Double.parseDouble(charges.getValue()) > 0) {
                             addFinalAmountView(llExtraCharges, charges.getText(), Double.parseDouble(charges.getValue()), false);
-						} else if(charges.getForceShow() == 1){
+                        } else if (charges.getForceShow() == 1) {
                             addFinalAmountView(llExtraCharges, charges.getText(), Double.parseDouble(charges.getValue()), false, true, true, false);
                         }
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                    }
                 }
             }
-            if((datum1.getDiscount() != null) && (datum1.getDiscount() > 0)){
+            if ((datum1.getDiscount() != null) && (datum1.getDiscount() > 0)) {
                 addFinalAmountView(llExtraCharges, activity.getString(R.string.discount), datum1.getDiscount(), true);
             }
 
 
-
-
-
             llFinalAmount.removeAllViews();
             View vDivider = rootView.findViewById(R.id.vDividerPayment);
-            if(datum1.getJugnooDeducted() > 0){
+            if (datum1.getJugnooDeducted() > 0) {
                 vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash), datum1.getJugnooDeducted(), false);
             }
 
-            if(datum1.getWalletDeducted() > 0) {
+            if (datum1.getWalletDeducted() > 0) {
                 rlWalletDeducted.setVisibility(View.VISIBLE);
                 llPaymentSummary.removeView(rlWalletDeducted);
                 llFinalAmount.addView(rlWalletDeducted);
@@ -677,7 +685,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         Utils.getMoneyDecimalFormat().format(datum1.getWalletDeducted())));
                 llFinalAmount.setVisibility(View.VISIBLE);
                 vDivider = rootView.findViewById(R.id.vDividerPayment);
-            } else{
+            } else {
                 rlWalletDeducted.setVisibility(View.GONE);
             }
 
@@ -685,44 +693,44 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             tvPaymentMethodVal.setPadding(0, 0, 0, 0);
             tvPaymentMethodVal.setText("");
             tvPaymentMethodVal.setBackgroundResource(R.drawable.background_transparent);
-            if(datum1.getPaymentMode() == PaymentOption.PAYTM.getOrdinal()){
-                params.setMargins((int)(ASSL.Xscale() * 10f), 0, 0, 0);
+            if (datum1.getPaymentMode() == PaymentOption.PAYTM.getOrdinal()) {
+                params.setMargins((int) (ASSL.Xscale() * 10f), 0, 0, 0);
                 tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_paytm_small);
-            } else if(datum1.getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()){
-                params.setMargins((int)(ASSL.Xscale() * 25f), 0, 0, 0);
+            } else if (datum1.getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()) {
+                params.setMargins((int) (ASSL.Xscale() * 25f), 0, 0, 0);
                 tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_mobikwik_small);
-            } else if(datum1.getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()){
-                params.setMargins((int)(ASSL.Xscale() * 30f), 0, 0, 0);
+            } else if (datum1.getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()) {
+                params.setMargins((int) (ASSL.Xscale() * 30f), 0, 0, 0);
                 tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_freecharge_small);
-            } else if(datum1.getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()){
+            } else if (datum1.getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()) {
                 tvPaymentMethodVal.setText(R.string.jugnoo_pay);
-                params.setMargins((int)(ASSL.Xscale() * 35f), 0, 0, 0);
-            } else if(datum1.getPaymentMode() == PaymentOption.RAZOR_PAY.getOrdinal()){
-                if(!TextUtils.isEmpty(datum1.getOtherPaymentModeText())){
+                params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
+            } else if (datum1.getPaymentMode() == PaymentOption.RAZOR_PAY.getOrdinal()) {
+                if (!TextUtils.isEmpty(datum1.getOtherPaymentModeText())) {
                     tvPaymentMethodVal.setText(datum1.getOtherPaymentModeText());
                 } else {
                     tvPaymentMethodVal.setText(R.string.other_payment_mode);
                 }
-                params.setMargins((int)(ASSL.Xscale() * 35f), 0, 0, 0);
+                params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
             }
             tvPaymentMethodVal.setLayoutParams(params);
 
 
-            if(datum1.getPayableAmount() > 0){
+            if (datum1.getPayableAmount() > 0) {
                 vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.cash), datum1.getPayableAmount(), false);
             }
-            if(Utils.compareDouble(datum1.getOrderAdjustment(), 0) != 0){
+            if (Utils.compareDouble(datum1.getOrderAdjustment(), 0) != 0) {
                 vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.order_adjustment), datum1.getOrderAdjustment(), false);
             }
-            if(datum1.getRefundAmount() > 0){
+            if (datum1.getRefundAmount() > 0) {
                 vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.refund), datum1.getRefundAmount(), false);
             }
 
-            if(vDivider != null){
+            if (vDivider != null) {
                 vDivider.setVisibility(View.INVISIBLE);
             }
 
-            if(llFinalAmount.getChildCount() > 0 || datum1.getWalletDeducted() > 0){
+            if (llFinalAmount.getChildCount() > 0 || datum1.getWalletDeducted() > 0) {
                 cvPaymentMethod.setVisibility(View.VISIBLE);
             } else {
                 cvPaymentMethod.setVisibility(View.GONE);
@@ -731,7 +739,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             if (datum1.getCancellable() == 1) {
                 orderCancel.setVisibility(View.VISIBLE);
                 orderComplete.setVisibility(View.GONE);
-                if(activity instanceof SupportActivity) {
+                if (activity instanceof SupportActivity) {
                     cancelfeedbackBtn.setVisibility(View.GONE);
                 }
 
@@ -772,7 +780,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         buttonCancelOrder.setText(R.string.ok);
                         buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
-                    }  else {
+                    } else {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.need_help);
@@ -794,16 +802,16 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             case R.id.buttonCancelOrder:
                 if (datum1.getCancellable() == 1) {
                     int storeId = datum1.getStoreId() == null ? 0 : datum1.getStoreId();
-                    if(datum1.getShowCancellationReasons() == 1){
+                    if (datum1.getShowCancellationReasons() == 1) {
                         int containerId = -1;
-                        if(activity instanceof FreshActivity) {
-                            containerId = ((FreshActivity)activity).getRelativeLayoutContainer().getId();
-                        } else if(activity instanceof RideTransactionsActivity)  {
-                            containerId = ((RideTransactionsActivity)activity).getContainer().getId();
+                        if (activity instanceof FreshActivity) {
+                            containerId = ((FreshActivity) activity).getRelativeLayoutContainer().getId();
+                        } else if (activity instanceof RideTransactionsActivity) {
+                            containerId = ((RideTransactionsActivity) activity).getContainer().getId();
                         } else if (activity instanceof SupportActivity) {
-                            containerId = ((SupportActivity)activity).getContainer().getId();
+                            containerId = ((SupportActivity) activity).getContainer().getId();
                         }
-                        if(containerId > -1) {
+                        if (containerId > -1) {
                             activity.getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                                     .add(containerId, OrderCancelReasonsFragment.newInstance(datum1.getOrderId(),
@@ -836,27 +844,34 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 }
                 break;
             case R.id.feedbackBtn:
-                if (activity instanceof RideTransactionsActivity) {
-                    new TransactionUtils().openRideIssuesFragment(activity,
-                            ((RideTransactionsActivity) activity).getContainer(),
-                            -1, -1, null, null, 0, false, 0, datum1);
-                } else{
-                    activity.onBackPressed();
-                }
+                needHelpClick();
                 break;
             case R.id.reorderBtn:
                 saveHistoryCardToSP(datum1);
                 break;
             case R.id.cancelfeedbackBtn:
+                needHelpClick();
+                if (activity instanceof FreshActivity) {
+                    GAUtils.event(((FreshActivity) activity).getGaCategory(), ORDER_STATUS, NEED_HELP);
+                } else {
+                    GAUtils.event(GACategory.SIDE_MENU, ORDER + DETAILS, NEED_HELP + CLICKED);
+                }
+                break;
+        }
+    }
+
+    private void needHelpClick() {
+        if (activity instanceof RideTransactionsActivity) {
+            if (Data.isFuguChatEnabled()) {
+                FuguConfig.getInstance().showConversations(activity);
+
+            } else {
                 new TransactionUtils().openRideIssuesFragment(activity,
                         ((RideTransactionsActivity) activity).getContainer(),
                         -1, -1, null, null, 0, false, 0, datum1);
-                if(activity instanceof FreshActivity) {
-                    GAUtils.event(((FreshActivity)activity).getGaCategory(), ORDER_STATUS, NEED_HELP);
-                } else {
-                    GAUtils.event(GACategory.SIDE_MENU, ORDER+DETAILS, NEED_HELP+CLICKED);
-                }
-                break;
+            }
+        } else {
+            activity.onBackPressed();
         }
     }
 
@@ -928,12 +943,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 public void run() {
                     try {
                         int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
-                        if(PushFlags.STATUS_CHANGED.getOrdinal() == flag)
-                        {
+                        if (PushFlags.STATUS_CHANGED.getOrdinal() == flag) {
                             getOrderData(activity);
-                        }
-                        else if(PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
-                            Log.v("menus status ","menus status tracking");
+                        } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
+                            Log.v("menus status ", "menus status tracking");
                             getOrderData(activity);
                         }
                     } catch (Exception e) {
@@ -946,8 +959,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     };
 
     private ApiCancelOrder apiCancelOrder;
-    private void cancelOrderApi(){
-        if(apiCancelOrder == null){
+
+    private void cancelOrderApi() {
+        if (apiCancelOrder == null) {
             apiCancelOrder = new ApiCancelOrder(activity, new ApiCancelOrder.Callback() {
                 @Override
                 public void onSuccess(String message) {

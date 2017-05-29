@@ -30,6 +30,8 @@ import android.widget.TextView;
 
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.NotificationInfo;
+import com.fugu.FuguConfig;
+import com.fugu.FuguNotificationConfig;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -67,6 +69,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
     public static final int NOTIFICATION_ID = 1;
     public static final int PROMOTION_NOTIFICATION_ID = 1212;
+	private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
 
     public GCMIntentService() {
     }
@@ -418,6 +421,18 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
 		try {
+			if (fuguNotificationConfig.isFuguNotification(remoteMessage.getData())) {
+				fuguNotificationConfig.setLargeIcon(R.drawable.ic_launcher);
+                fuguNotificationConfig.setSmallIcon(R.drawable.notification_icon);
+
+
+                if(Build.VERSION.SDK_INT >= 16){
+                    fuguNotificationConfig.setPriority(Notification.PRIORITY_HIGH);
+                }
+                fuguNotificationConfig.showNotification(getApplicationContext(), remoteMessage.getData());
+				return;
+			}
+
 			if (remoteMessage.getData().size() > 0) {
 				Bundle extras = new Bundle();
 				for (Map.Entry<String, String> entry : remoteMessage.getData().entrySet()) {

@@ -73,6 +73,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private DrawerLayout drawerLayout;
 
     public MenuAdapter(ArrayList<MenuInfo> menuList, Activity activity, DrawerLayout drawerLayout) {
+        Data.setIsFuguChatEnabled(false);
         this.menuList = menuList;
         this.activity = activity;
         this.drawerLayout = drawerLayout;
@@ -250,7 +251,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_about_selector);
                 }else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
-
+                    Data.setIsFuguChatEnabled(true);
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
 
                 }
