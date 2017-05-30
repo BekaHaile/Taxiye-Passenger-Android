@@ -178,6 +178,9 @@
            android:layout_marginBottom="@dimen/spacing_small"
            android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
            android:textColor="@color/feed_grey_text"
+           android:autoLink="all"
+           android:textIsSelectable="true"
+           android:textColorLink="@color/yellow_jugnoo"
            android:textSize="@dimen/font_small"
            app:font="maven" />
     <ImageView
@@ -379,6 +382,9 @@
                android:layout_marginBottom="2.5dp"
                android:textSize="14sp"
                android:ellipsize="end"
+               android:autoLink="all"
+               android:textIsSelectable="true"
+               android:textColorLink="@color/yellow_jugnoo"
                android:maxLines="2"
                app:font="@string/maven_r" />
 

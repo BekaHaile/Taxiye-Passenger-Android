@@ -265,7 +265,6 @@
             ?attr/com_accountkit_primary_text_color
         </item>
         <item name="com_accountkit_status_bar_color">@android:color/black</item>
-
         <item name="com_accountkit_button_background_color">@color/theme_color</item>
         <item name="com_accountkit_button_text_color">@android:color/white</item>
         <item name="com_accountkit_icon_color">@color/theme_color</item>
@@ -277,7 +276,7 @@
         <item name="colorPrimaryDark">@color/white_less_dark</item>
         <item name="colorAccent">@color/white_less_dark</item>
         <item name="colorControlNormal">#e2e2e2</item>
-        <item name="colorControlActivated">@color/white_less_dark</item>
+        <item name="colorControlActivated">@color/yellow_jugnoo</item>
         <item name="colorControlHighlight">@color/white_less_dark</item>
         <item name="android:textColorHint">#595968</item>
         <item name="android:windowContentTransitions">true</item>

@@ -52,6 +52,9 @@
             android:lineSpacingExtra="3dp"
             android:textColor="@color/feed_grey_text_heading"
             android:textSize="@dimen/font_normal"
+            android:autoLink="all"
+            android:textIsSelectable="true"
+            android:textColorLink="@color/yellow_jugnoo"
             app:font="@string/maven_r" />
 
         <!-- <TextView
