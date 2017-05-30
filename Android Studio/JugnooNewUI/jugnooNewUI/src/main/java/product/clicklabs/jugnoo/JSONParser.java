@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
 import com.fugu.FuguConfig;
+import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
@@ -714,7 +715,9 @@ public class JSONParser implements Constants {
 
         try {
             if(Data.getFuguUserData()!=null) {
+                FuguNotificationConfig.updateFcmRegistrationToken(MyApplication.getInstance().getDeviceToken());
                 FuguConfig.getInstance().registerIdentifiedUser((Activity) context, Data.getFuguUserData());
+
             }
         } catch (Exception e) {
             e.printStackTrace();
