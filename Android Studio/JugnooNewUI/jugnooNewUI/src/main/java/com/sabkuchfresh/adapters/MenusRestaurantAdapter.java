@@ -1135,7 +1135,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         public ViewHolderOfferStrip(final View view, final ItemListener itemListener){
             super(view);
             textViewMinOrder = (TextView) view.findViewById(R.id.textViewMinOrder);
-            textViewMinOrder.setVisibility(View.VISIBLE);
+			ViewGroup.LayoutParams params = textViewMinOrder.getLayoutParams();
+			params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+			textViewMinOrder.setLayoutParams(params);
+
+			textViewMinOrder.setVisibility(View.VISIBLE);
             textViewMinOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
