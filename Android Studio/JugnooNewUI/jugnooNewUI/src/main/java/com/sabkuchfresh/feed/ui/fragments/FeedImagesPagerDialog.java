@@ -2,6 +2,7 @@ package com.sabkuchfresh.feed.ui.fragments;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -101,7 +102,15 @@ public class FeedImagesPagerDialog extends DialogFragment {
             View inflaterView =  inflater.inflate(R.layout.item_feed_pager, container, false);
             final ImageView ivReviewImage = (ImageView) inflaterView.findViewById(R.id.iv_picture);
             View swipeView = inflaterView.findViewById(R.id.swipe_view);
-            View pbar = inflaterView.findViewById(R.id.pbar);
+            final ImageView pbar = (ImageView) inflaterView.findViewById(R.id.pbar);
+            pbar.post(new Runnable() {
+                @Override
+                public void run() {
+                    AnimationDrawable animationDrawable = (AnimationDrawable) pbar.getDrawable();
+                    animationDrawable.start();
+
+                }
+            });
             swipeView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -184,9 +193,9 @@ public class FeedImagesPagerDialog extends DialogFragment {
         To hide progress bar when loading is done
      */
     private class MyRequestListener<T,R> implements RequestListener<T,R>{
-        private View progressView;
+        private ImageView progressView;
 
-        public MyRequestListener(View imageView) {
+        public MyRequestListener(ImageView imageView) {
             this.progressView = imageView;
         }
 
@@ -201,6 +210,7 @@ public class FeedImagesPagerDialog extends DialogFragment {
         @Override
         public boolean onResourceReady(R resource, T model, Target<R> target, boolean isFromMemoryCache, boolean isFirstResource) {
             if(progressView!=null) {
+                ((AnimationDrawable)   progressView.getDrawable()).stop();
                 progressView.setVisibility(View.GONE);
             }
             return false;
