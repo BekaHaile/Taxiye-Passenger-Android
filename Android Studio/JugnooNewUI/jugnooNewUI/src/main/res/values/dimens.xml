@@ -806,5 +806,8 @@
     <dimen name="dp_172">
         172dp
     </dimen>
+    <dimen name="dp_100">
+        100dp
+    </dimen>
 
 </resources>

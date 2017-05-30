@@ -353,8 +353,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         try {
             if(Data.getDatumToReOrder() != null){
-				activity.setSelectedAddress(Data.getDatumToReOrder().getDeliveryAddress());
-				activity.setSelectedLatLng(new LatLng(Data.getDatumToReOrder().getDeliveryLatitude(), Data.getDatumToReOrder().getDeliveryLongitude()));
+//				activity.setSelectedAddress(Data.getDatumToReOrder().getDeliveryAddress());
+//				activity.setSelectedLatLng(new LatLng(Data.getDatumToReOrder().getDeliveryLatitude(), Data.getDatumToReOrder().getDeliveryLongitude()));
                 ArrayList<SearchResult> searchResults = new HomeUtil().getSavedPlacesWithHomeWork(activity);
                 for(SearchResult searchResult : searchResults){
                     if(Data.getDatumToReOrder().getAddressId().equals(searchResult.getId())){

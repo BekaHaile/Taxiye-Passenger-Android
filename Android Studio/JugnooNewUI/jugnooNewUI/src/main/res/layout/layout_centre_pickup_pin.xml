@@ -22,7 +22,7 @@
 
             <ImageView
                 android:id="@+id/centreLocationPin"
-                android:layout_width="87px"
+                android:layout_width="80px"
                 android:layout_height="140px"
                 android:background="@drawable/ic_centre_pin_big"
                 android:tag="mwar"/>
@@ -34,7 +34,7 @@
 
                 <TextView
                     android:id="@+id/textViewCentrePinETA"
-                    android:layout_width="86px"
+                    android:layout_width="80px"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14px"
                     android:gravity="center"
@@ -44,7 +44,7 @@
 
                 <TextView
                     android:id="@+id/textViewCentrePinETAMin"
-                    android:layout_width="86px"
+                    android:layout_width="80px"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textViewCentrePinETA"
                     android:layout_marginTop="-6px"
