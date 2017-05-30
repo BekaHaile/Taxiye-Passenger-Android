@@ -27,7 +27,6 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.TrackOrderActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.RestaurantSearchResponse;
@@ -1072,18 +1071,26 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 int pos = (int) v.getTag();
                 RecentOrder order = recentOrders.get(pos);
                 if(order.getShowLiveTracking() == 1 && order.getDeliveryId() > 0) {
-                    Intent intent = new Intent(activity, TrackOrderActivity.class);
-                    intent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                    intent.putExtra(Constants.KEY_ORDER_ID, order.getOrderId());
-                    intent.putExtra(Constants.KEY_DELIVERY_ID, order.getDeliveryId());
-                    intent.putExtra(Constants.KEY_PICKUP_LATITUDE, order.getPickupLatitude());
-                    intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, order.getPickupLongitude());
-                    intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
-                    intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
-                    intent.putExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, order.getShowDeliveryRoute());
-                    intent.putExtra(Constants.KEY_DRIVER_PHONE_NO, order.getDriverPhoneNo());
+                    Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                    intent.putExtra(Constants.KEY_ORDER_ID, recentOrders.get(pos).getOrderId());
+                    intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MENUS.getOrdinal());
+                    intent.putExtra(Constants.KEY_OPEN_LIVE_TRACKING, 1);
                     activity.startActivity(intent);
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+
+//                    Intent intent = new Intent(activity, TrackOrderActivity.class);
+//                    intent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+//                    intent.putExtra(Constants.KEY_ORDER_ID, order.getOrderId());
+//                    intent.putExtra(Constants.KEY_DELIVERY_ID, order.getDeliveryId());
+//                    intent.putExtra(Constants.KEY_PICKUP_LATITUDE, order.getPickupLatitude());
+//                    intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, order.getPickupLongitude());
+//                    intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
+//                    intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
+//                    intent.putExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, order.getShowDeliveryRoute());
+//                    intent.putExtra(Constants.KEY_DRIVER_PHONE_NO, order.getDriverPhoneNo());
+//                    activity.startActivity(intent);
+//                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 } else {
                     Utils.showToast(activity, !TextUtils.isEmpty(order.getTrackDeliveryMessage()) ?
                             order.getTrackDeliveryMessage() : activity.getString(R.string.tracking_not_available_message));

@@ -114,7 +114,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private LockableBottomSheetBehavior bottomSheetBehavior;
     private RelativeLayout rlOrderStatusMapPeek;
     private LinearLayout llShadowPeek;
-    private int llShadowPeekHeight;
+    private int llShadowPeekHeight, openLiveTracking;
 
 
     @Nullable
@@ -139,12 +139,14 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         try {
             orderId = getArguments().getInt(Constants.KEY_ORDER_ID, 0);
             productType = getArguments().getInt(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
+            openLiveTracking = getArguments().getInt(Constants.KEY_OPEN_LIVE_TRACKING, 0);
             setFragTitle();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         scrollView = (NestedScrollView) rootView.findViewById(R.id.scrollView);
+        scrollView.setVisibility(View.GONE);
         bottomSheetBehavior = (LockableBottomSheetBehavior) BottomSheetBehavior.from(scrollView);
         bottomSheetBehavior.setPeekHeight(0);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -1058,7 +1060,6 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private void openTrackOrderFragment(){
         if(datum1.getLiveTracking() != null
                 && datum1.getLiveTracking().getShowLiveTracking() == 1 && datum1.getLiveTracking().getDeliveryId() > 0) {
-            bottomSheetBehavior.setLocked(false);
             rlOrderStatusMapPeek.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
             llShadowPeek.setVisibility(View.VISIBLE);
             rlContainer.setVisibility(View.VISIBLE);
@@ -1070,16 +1071,26 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                             datum1.getLiveTracking().getShowDeliveryRoute(), datum1.getLiveTracking().getDriverPhoneNo(), llShadowPeekHeight),
                             TrackOrderFragment.class.getName())
                     .commit();
+
+            if(openLiveTracking == 1){
+                scrollView.setVisibility(View.GONE);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                bottomSheetBehavior.setLocked(true);
+            } else {
+                scrollView.setVisibility(View.VISIBLE);
+                bottomSheetBehavior.setLocked(false);
+            }
         } else {
             bottomSheetBehavior.setLocked(true);
             rlOrderStatusMapPeek.setBackgroundColor(ContextCompat.getColor(activity, R.color.offer_popup_item_color));
             llShadowPeek.setVisibility(View.GONE);
             rlContainer.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
         }
     }
 
     public boolean performBack(){
-        if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+        if(openLiveTracking == 0 && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             return true;
         }
@@ -1093,5 +1104,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }
         return null;
     }
+
+    private Handler handler = new Handler();
 
 }

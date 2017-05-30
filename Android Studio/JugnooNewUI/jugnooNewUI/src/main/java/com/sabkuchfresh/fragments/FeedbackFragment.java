@@ -415,7 +415,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             public void onClick(View v) {
 //                getOrderData();
                 new TransactionUtils().openOrderStatusFragment(activity,
-                        activity.getRelativeLayoutContainer(), Integer.parseInt(orderId), productType.getOrdinal());
+                        activity.getRelativeLayoutContainer(), Integer.parseInt(orderId), productType.getOrdinal(), 0);
             }
         });
 
@@ -692,7 +692,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
                                     new TransactionUtils().openOrderStatusFragment(activity,
                                             activity.getRelativeLayoutContainer(), historyResponse.getData().get(0).getOrderId(),
-                                            historyResponse.getData().get(0).getProductType());
+                                            historyResponse.getData().get(0).getProductType(), 0);
                                 } else {
                                     updateListData(message);
                                 }

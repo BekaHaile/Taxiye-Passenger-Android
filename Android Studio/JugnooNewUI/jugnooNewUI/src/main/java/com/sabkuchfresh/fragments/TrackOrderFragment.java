@@ -99,6 +99,8 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 	private View rootView;
 	private Activity activity;
+	private boolean expanded;
+	private long lastEta;
 
 
 	public static TrackOrderFragment newInstance(String accessToken, int orderId, int deliveryId,
@@ -249,6 +251,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 	public void setMapPaddingAndMoveCamera(){
 		if(googleMap != null && rootHeight > 0) {
+			expanded = false;
 			googleMap.setPadding(0, 0, 0, rootHeight - initialHeight);
 
 			try {
@@ -324,7 +327,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 								&& (PushFlags.STATUS_CHANGED.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag)) {
-//							todo handle push finish();
+							activity.finish();
 							new Handler().postDelayed(new Runnable() {
 								@Override
 								public void run() {
@@ -440,9 +443,8 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 													new View.OnClickListener() {
 														@Override
 														public void onClick(View v) {
-															//// TODO: 29/05/17  handle ride end other cases
-//															finish();
-//															overridePendingTransition(R.anim.left_in, R.anim.left_out);
+															activity.finish();
+															activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 														}
 													});
 										}
@@ -594,11 +596,12 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 
 	private void setEtaText(long etaLong) {
+		lastEta = etaLong;
 		tvETA.setText(String.valueOf(etaLong) + "\n");
 		SpannableString spannableString = new SpannableString(etaLong > 1 ? "mins" : "min");
 		spannableString.setSpan(new RelativeSizeSpan(0.6f), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvETA.append(spannableString);
-		tvETA.setVisibility(etaLong > 0 ? View.VISIBLE : View.GONE);
+		tvETA.setVisibility((expanded && etaLong > 0) ? View.VISIBLE : View.GONE);
 	}
 
 	private Handler handler = new Handler();
@@ -633,15 +636,19 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 	public void setPaddingZero(){
 		if(googleMap != null) {
+			expanded = true;
 			googleMap.setPadding(0, 0, 0, 0);
 			bMyLocation.performClick();
+			setEtaText(lastEta);
 		}
 	}
 
 	public void setPaddingSome(){
 		if(googleMap != null) {
+			expanded = false;
 			googleMap.setPadding(0, 0, 0, rootHeight - initialHeight);
 			bMyLocation.performClick();
+			tvETA.setVisibility(View.GONE);
 		}
 	}
 }
