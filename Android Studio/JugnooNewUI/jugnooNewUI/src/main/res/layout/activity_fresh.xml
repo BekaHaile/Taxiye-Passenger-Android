@@ -91,21 +91,7 @@
                 />
 
 
-            <TextView
-                android:id="@+id/textViewMinOrder"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_strip_offers"
-                android:background="@color/text_color"
-                android:gravity="center"
-                android:text="@string/minimum_order"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_13"
-                android:paddingLeft="@dimen/dp_7"
-                android:paddingRight="@dimen/dp_7"
-                android:visibility="gone"
-                app:font="maven"
-                android:layout_gravity="center_horizontal"
-                />
+            <include layout="@layout/textview_min_order"/>
 
             <include layout="@layout/layout_fresh_checkout_bar"/>
 

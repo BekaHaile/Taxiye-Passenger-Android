@@ -50,6 +50,15 @@ public class MenusResponse implements Serializable {
 	private List<BannerInfo> bannerInfos;
 
 
+	@SerializedName("show_banner")
+	@Expose
+	private boolean showBanner;
+	@SerializedName("strip_info")
+	@Expose
+	private StripInfo stripInfo;
+
+
+
 	public Double getRating() {
 		return rating==null?null:Math.round(rating * 10.0) / 10.0;
 	}
@@ -163,6 +172,14 @@ public class MenusResponse implements Serializable {
 
 	public List<BannerInfo> getBannerInfos() {
 		return bannerInfos;
+	}
+
+	public boolean getShowBanner() {
+		return showBanner;
+	}
+
+	public StripInfo getStripInfo() {
+		return stripInfo;
 	}
 
 
@@ -746,6 +763,36 @@ public class MenusResponse implements Serializable {
 				deepIndex = -1;
 			}
 			return deepIndex;
+		}
+	}
+
+	public class StripInfo{
+		@SerializedName("text")
+		@Expose
+		private String text;
+		@SerializedName("restaurant_id")
+		@Expose
+		private Integer restaurantId;
+		@SerializedName("deep_index")
+		@Expose
+		private Integer deepIndex;
+
+		public Integer getRestaurantId() {
+			if(restaurantId == null){
+				restaurantId = -1;
+			}
+			return restaurantId;
+		}
+
+		public Integer getDeepIndex() {
+			if(deepIndex == null){
+				deepIndex = -1;
+			}
+			return deepIndex;
+		}
+
+		public String getText() {
+			return text;
 		}
 	}
 
