@@ -744,16 +744,21 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
 
     private void backPressed(boolean goodRating) {
-        activity.setRefreshCart(true);
-        try {
-            activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            activity.getSupportFragmentManager().popBackStackImmediate();
-        }
+        this.goodRating = goodRating;
+        if(fragResumed) {
+            activity.setRefreshCart(true);
+            try {
+                activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            } catch (Exception e) {
+                e.printStackTrace();
+                activity.getSupportFragmentManager().popBackStackImmediate();
+            }
 
-        if (goodRating && rateApp == 1) {
-            getRateAppDialog().show(rateAppDialogContent);
+            if (goodRating && rateApp == 1) {
+                getRateAppDialog().show(rateAppDialogContent);
+            }
+        } else {
+            backPressCalled = true;
         }
     }
 
@@ -839,4 +844,21 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 });
     }
 
+
+    boolean fragResumed, backPressCalled, goodRating;
+    @Override
+    public void onResume() {
+        super.onResume();
+        fragResumed = true;
+        if(backPressCalled){
+            backPressed(goodRating);
+            backPressCalled = false;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        fragResumed = false;
+    }
 }
