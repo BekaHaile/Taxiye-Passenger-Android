@@ -56,7 +56,6 @@
         android:tag="mwar"/>
 
     <ImageView
-        android:id="@+id/imageViewLocationErrorText"
         android:layout_width="375px"
         android:layout_height="146px"
         android:layout_below="@+id/imageViewLocationErrorArrow"
@@ -67,7 +66,6 @@
 
 
     <ImageView
-        android:id="@+id/imageViewLocationError"
         android:layout_width="110px"
         android:layout_height="140px"
         android:layout_alignParentBottom="true"

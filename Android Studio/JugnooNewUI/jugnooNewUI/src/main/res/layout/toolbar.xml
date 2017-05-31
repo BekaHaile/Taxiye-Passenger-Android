@@ -56,7 +56,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
                 android:padding="5dp"
-                android:src="@drawable/add_vpa"
+                android:src="@drawable/ic_add_checkout"
                 android:visibility="gone"/>
 
             <ImageView

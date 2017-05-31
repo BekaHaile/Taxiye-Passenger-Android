@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/add_payment_address_img"/>
+                android:src="@drawable/ic_add_payment_address_img"/>
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -67,7 +67,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="40px"
                 android:layout_marginBottom="70px"
-                android:src="@drawable/add_payment_address"
+                android:src="@drawable/ic_plus_theme_selector"
                 fab:fab_shadowXOffset="1dp"
                 fab:fab_shadowYOffset="2dp"
                 fab:fab_shadowColor="@color/leaderboard_activity_text_color"

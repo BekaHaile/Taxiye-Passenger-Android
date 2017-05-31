@@ -243,7 +243,7 @@
         android:paddingBottom="@dimen/spacing_tiny"
         android:paddingRight="13dp"
         android:background="@drawable/bg_black_80_botom_right_rounded"
-        android:drawableLeft="@drawable/location_icon"
+        android:drawableLeft="@drawable/ic_restaurant_location"
         android:maxLines="1"
         android:maxWidth="250dp"
         android:textColor="@color/white"

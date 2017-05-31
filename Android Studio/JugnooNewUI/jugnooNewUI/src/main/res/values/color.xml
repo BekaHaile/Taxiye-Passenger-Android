@@ -7,59 +7,49 @@
 
     // app background color
     <color name="appBackgroundColor">#ffffff</color>
-    <color name="layoutBackColor">#322940</color>
     <color name="whiteTxtColor">#ffffff</color>
     <color name="lightBlackTxtColor">#595968</color>
     <color name="generalTxtColor">#bcbcbc</color>
-    <color name="hintColor">#595968</color>
-    <color name="drawerColor">#2a1231</color>
 
-    // for country spinner
-    <color name="pf_grey">#262626</color>
+    // for
+    country
+    spinner
     <color name="pf_grey_light">#999999</color>
-    <color name="pf_white">#ffffff</color>
 
-    // services name txt colors
+    //
+    services
+    name
+    txt
+    colors
     <color name="services_name_txt_color">#4a4a4a</color>
-    <color name="services_item_bckgrnd_color">#f0f0f0</color>
     <color name="document_layout_bordor_color">#9b9b9b</color>
 
-    // seekbar colors
-    <color name="progress_primary">#b61ec4</color>
+    //
+    seekbar
+    colors
     <color name="progress_secondary">#dfdfdf</color>
 
 
-    // booking screen colors
-    <color name="past_booking_color">#de5b5b</color>
-    <color name="upcoming_booking_color">#2fcb11</color>
-    <color name="booking_yellow_color">#ffaf00</color>
-    <color name="booking_green_color">#a5d54e</color>
-
-    <color name="booking_pending_color">#7975bf</color>
-    <color name="booking_failed_color">#ce4141</color>
-    <color name="booking_completed_color">#a5d54e</color>
+    //
+    booking
+    screen
+    colors
 
 
     <color name="white_less_dark">#F1F1F1</color>
-    <color name="white_dark">#CFCFCF</color>
     <color name="white_dark1">#EFEFEF</color>
 
 
     <color name="black">#000000</color>
     <color name="black_alpha">#88202020</color>
-    <color name="black_light">#505050</color>
-
-    <color name="black_text_shop">#1C1C1C</color>
 
 
     <color name="white_translucent">#D8FFFFFF</color>
-    <color name="white_more_translucent">#66FFFFFF</color>
 
     <color name="black_translucent_less">#99000000</color>
     <color name="black_translucent">#77000000</color>
     <color name="black_translucent_level_2">#44000000</color>
     <color name="black_translucent_level_3">#33000000</color>
-    <color name="black_translucent_more">#BB000000</color>
     <color name="black_80">#CC000000</color>
     <color name="black_70">#B3000000</color>
     <color name="black_50">#80000000</color>
@@ -69,62 +59,21 @@
 
     <color name="transparent">#0000</color>
 
-    <color name="bg_grey">#D8242930</color>
     <color name="bg_grey_opaque">#242930</color>
-    <color name="bg_white_translucent">#AAFFFFFF</color>
     <color name="bg_divider_saved_location">#aaaaaa</color>
 
-    <color name="blue_btn">#4CC1D2</color>
-    <color name="blue_btn_pressed">#2CA1B2</color>
-    <color name="blue_btn_alpha">#774CC1D2</color>
 
-    <color name="green_btn">#66BB66</color>
-    <color name="green_btn_pressed">#669966</color>
-
-
-    <color name="grey_btn">#8E8E8E</color>
-    <color name="grey_btn_pressed">#7E7E7E</color>
     <color name="grey_e7">#e7e7e7</color>
 
-
-    <color name="blue_dark_btn">#3B5999</color>
-    <color name="blue_dark_btn_pressed">#1B3979</color>
-
-
-    <color name="red_banner">#9B3A26</color>
-
-    <color name="red_btn">#8E8E8E</color>
-    <color name="red_btn_pressed">#7E7E7E</color>
-
-
-    <color name="favorite_bg">#393E44</color>
-    <color name="favorite_div">#97989C</color>
 
     <color name="yellow_jugnoo">#FAA31C</color>
     <color name="yellow_jugnoo_alpha">#8CFAA31C</color>
 
 
-    <color name="yellow_pure">#FAF82A</color>
-
-    <color name="yellow_status">#F89414</color>
-    <color name="green_status">#2EA058</color>
     <color name="red_status">#F53C37</color>
 
 
-    <color name="orange_text">#FBBC12</color>
-
-    <color name="orange_btn">#F99613</color>
-    <color name="orange_btn_pressed">#E98603</color>
-
-    <color name="orange_dark">#F96f01</color>
-
-    <color name="yellow_text">#FABB15</color>
-    <color name="grey_text">#232323</color>
-    <color name="grey_text_alpha">#77232323</color>
-
-
     <color name="red">#F23A30</color>
-    <color name="red_alpha">#99F23A30</color>
     <color name="red_dark">#EA452F</color>
     <color name="red_dark_alpha">#99EA452F</color>
     <color name="red_alert_no_address">#ff0437</color>
@@ -132,15 +81,11 @@
 
 
     <color name="yellow">#F9BC14</color>
-    <color name="yellow_alpha">#99F9BC14</color>
-
-    <color name="yellow_orange">#F48C27</color>
 
 
     <color name="white">#FFFFFF</color>
     <color name="white_alpha">#99FFFFFF</color>
     <color name="white_light_grey">#FFFFFF</color>
-    <color name="white_light_more_grey">#F3F3F3</color>
 
 
     <color name="black_text">#242424
@@ -148,58 +93,39 @@
 
     </color>
     <color name="black_text_alpha">#99242424</color>
-    <color name="black_text_grey">#4C4C4C</color>
 
 
     <color name="grey_light_more_alpha">#88BBBBBB</color>
     <color name="grey_light_more">#BBBBBB</color>
-    <color name="grey_dark_title">#6E6E6E</color>
     <color name="grey_light">#DDDDDD</color>
     <color name="grey_light_alpha">#99DDDDDD</color>
     <color name="grey_alpha_50">#80bcbcbc</color>
     <color name="grey_dark_less">#A3A3A3</color>
     <color name="grey_dark">#838383</color>
     <color name="grey_dark_more">#5D5D5D</color>
-    <color name="grey_dark_more_receipt">#5F5F5F</color>
-    <color name="grey_black">#232323</color>
     <color name="grey_black_light">#3E3E3E</color>
-    <color name="grey_jugnoo_line">#414141</color>
-    <color name="notification_text_color">#262626</color>
     <color name="offer_popup_item_color">#F5F5F5</color>
 
 
     <color name="blue_light">#4E75D8</color>
-    <color name="blue_light_alpha">#994E75D8</color>
 
 
     <color name="green_transaction_type">#46B82F</color>
 
-    <color name="dialog_border_color">#AA7E7D78</color>
-
     <!--colors used in activity_add_jugnoo_cash-->
-    <color name="color_payment_mode">#484848</color>
-    <color name="color_jugnoo_cash_note">#4E4E4E</color>
-    <color name="color_card_details">#7D7C7C</color>
-    <color name="wallet_text_amount">#0D0D0D</color>
 
-    <color name="grey_lightest">#ffe8e8e8</color>
     <color name="leaderboard_activity_text_color">#9D9D9D</color>
 
     <!-- share lb colors-->
     <color name="grey_lb_list">#f6f6f6</color>
-    <color name="white_60">#9AFFFFFF</color>
-    <color name="white_40">#66FFFFFF</color>
-    <color name="white_20">#33FFFFFF</color>
 
     <!-- NEW LOOK COLORS -->
     <color name="theme_color">#FD7945</color>
-    <color name="theme_color_dark">#ED6935</color>
     <color name="theme_color_start">#FC644F</color>
     <color name="theme_color_end">#FF9339</color>
     <color name="theme_color_pressed">#99F17B47</color>
     <color name="theme_color_alpha">#99FD7945</color>
     <color name="text_color_less_light">#9d9d9d</color>
-    <color name="jeanie_color">#FD9244</color>
     <color name="text_color_dark">#494958</color>
     <color name="text_color">#595968</color>
     <color name="grey_icon_color">#595968</color>
@@ -208,38 +134,28 @@
     <color name="theme_red_color">#F54646</color>
     <color name="text_color_light">#A4A4A4</color>
     <color name="text_color_light_less">#9d9da3</color>
-    <color name="white_alpha_33">#33FFFFFF</color>
     <color name="sliding_bottom_bg_color">#FAFBFC</color>
     <color name="text_color_hint">#BCBCBC</color>
     <color name="nl_white_dark">#E0E0E0</color>
     <color name="menu_item_selector_color">#EEEEEE</color>
-    <color name="fab_bg">#ebeeeeee</color>
     <color name="menu_item_selector_color_F7">#F7F7F7</color>
-    <color name="ride_history_item_text_color">#0EB2CE</color>
     <color name="google_path_polyline_color">#0889da</color>
     <color name="bar_color">#EBEBEB</color>
 
     <color name="text_green_color">#22BD21</color>
 
 
-    <color name="red_google">#CF5D3A</color>
-    <color name="red_google_alpha">#99CF5D3A</color>
-
     <!-- Leaderboard Rank Colors -->
-    <color name="rank_1">#FDFDFD</color>
     <color name="rank_2">#F7F7F7</color>
     <color name="rank_3">#ECECEC</color>
     <color name="rank_4">#E4E4E4</color>
     <color name="rank_5">#D7D7D7</color>
-    <color name="rank_6">#CBCBCB</color>
     <color name="order_status_green">#14c52a</color>
 
     <color name="stroke_color_light">#CDCDCD</color>
     <color name="stroke_color_dark">#858585</color>
 
     <color name="view_account_text_color">#A5A5A5</color>
-    <color name="view_account_stroke_color">#B4B4B4</color>
-    <color name="view_account_name_color">#FF8162</color>
 
 
     <integer-array name="gplus_colors">
@@ -249,26 +165,11 @@
         <item>@color/transparent</item>
     </integer-array>
 
-    <color name="apply_btn_normal">#d8d8d8</color>
-    <color name="apply_btn_pressed">#C8C8C8</color>
-
-
-
-
-
-
-
-
-
-
-
-    <color name="cart_price">#303d39</color>
 
     <color name="divider_color">#d9d9d9</color>
     <color name="dotted_color">#9d9d9d</color>
     <color name="divider_color_dark">#acacac</color>
 
-    <color name="address_stoke">#EF8F2C</color>
     <color name="off_text">#FF0000</color>
     <color name="search_view_bg">#f0f0f0</color>
     <color name="search_view_radius">#d5d5d5</color>
@@ -276,7 +177,6 @@
     <color name="text_color_red">#DE5B5B</color>
 
     <color name="stroke_light_grey">#979797</color>
-    <color name="stroke_light_grey_50_alpha">#80979797</color>
     <color name="stroke_light_grey_alpha">#33979797</color>
     <color name="stroke_light_grey_alpha_less">#88979797</color>
     <color name="no_internet_text_color">#979797</color>
@@ -294,18 +194,14 @@
     <color name="color_menus_border">#f8e81c</color>
     <color name="color_pay_border">#cf9df6</color>
 
-    <color name="color_restaurant_close_time">#d9f5a523</color>
     <color name="color_menu_item_desc">#7e7e8e</color>
     <color name="dialog_color_menus_customize_item">#ff7d49</color>
-    <color name="dialog_color_menus_customize">#f4f4f4</color>
 
     <color name="brown_marker_text">#8D6E63</color>
     <color name="location_text_color">#a7a7a7</color>
     <color name="cart_bg_color">#ff834e</color>
     <color name="cart_bg_color_pressed">#eb6f3a</color>
 
-    <color name="green_button">#18ca3c</color>
-    <color name="green_button_alpha">#9918ca3c</color>
     <color name="slider_green">#5ecd93</color>
 
     <color name="red_very_light">#ffe9e9</color>
@@ -331,7 +227,6 @@
 
 
     <color name="feed_grey_text">#595968</color>
-    <color name="feed_pink_delete">#f6767f</color>
     <color name="feed_color_accent">#ef6692</color>
   <color name="feed_grey_text_heading">#474655</color>
     <color name="feed_grey_hint_color">#a4a4a4</color>
@@ -346,11 +241,9 @@
     <color name="feed_grey_tab_dark">#b8b8b8</color>
     <color name="feed_grey_border">#CCcdcdcd</color>
     <color name="feed_red">#d0021b</color>
-    <color name="feed_grey_edt_border">#4D979797</color>
     <color name="feed_comment_background">#fafafa</color>
 
 
-    <color name="feed_color_like_active">#ef6692</color>
     <color name="feed_disabled_grey">#f7f7f7</color>
 
     <color name="purple_text_color">#b368a9</color>
@@ -367,13 +260,8 @@
     <color name="pale_orange">#fffcf2</color>
 
     <color name="green_light">#FD7945</color>
-    <color name="green_light_dark">#ED6935</color>
-    <color name="text_color_20alpha">#33595968</color>
     <color name="text_color_30alpha">#4E595968</color>
 
-    <color name="pink_light">#fff5f5</color>
-    <color name="pink_dark">#ffdede</color>
-    <color name="red_dark_text_color">#dc4b3d</color>
     <color name="grey_969696">#969696</color>
 
     <color name="yellow_promo_count">#fffab0</color>

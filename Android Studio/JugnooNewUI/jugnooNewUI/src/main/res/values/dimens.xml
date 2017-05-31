@@ -1,245 +1,282 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="nav_header_vertical_spacing">16dp</dimen>
-    <dimen name="nav_header_height">160dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="toolbar_text_size">20sp</dimen>
-    <dimen name="btn_height">45dp</dimen>
-    <dimen name="btn_width">200dp</dimen>
-    <dimen name="btn_text_size">17sp</dimen>
-    <dimen name="text_size_10">10sp</dimen>
-    <dimen name="et_text_size">12.5sp</dimen>
-    <dimen name="text_view_size">15.4sp</dimen>
-    <dimen name="nav_text_view_size">17.4sp</dimen>
-    <dimen name="normal_text_view_size">13.4sp</dimen>
-    <dimen name="small_text_view_size">12.3sp</dimen>
-    <dimen name="large_text_view_size">23sp</dimen>
-    <dimen name="medium_text_view_size">20.2sp</dimen>
+    <dimen name="fab_margin">
+        16dp
+    </dimen>
+    <dimen name="toolbar_text_size">
+        20sp
+    </dimen>
+    <dimen name="btn_height">
+        45dp
+    </dimen>
+    <dimen name="btn_width">
+        200dp
+    </dimen>
+    <dimen name="btn_text_size">
+        17sp
+    </dimen>
+    <dimen name="text_view_size">
+        15.4sp
+    </dimen>
+    <dimen name="small_text_view_size">
+        12.3sp
+    </dimen>
 
 
-    // for country spinner
-    <dimen name="spinner_height">300dp</dimen>
-    <dimen name="spinner_width">72dp</dimen>
-    <dimen name="text_size">16sp</dimen>
-    <dimen name="flag_size">24dp</dimen>
-    <dimen name="margin_large">16dp</dimen>
-    <dimen name="margin_medium">8dp</dimen>
-    <dimen name="padding_large">16dp</dimen>
-    <dimen name="padding_medium">8dp</dimen>
+    // for
+    country
+    spinner
 
-    //layout margin
-    <dimen name="layout_margin">43dp</dimen>
-    <dimen name="other_layout_margin">20dp</dimen>
+    //layout
+    margin
 
 
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="shadow_width">30dp</dimen>
-    <dimen name="actionbar_home_width">30dp</dimen>
+    <dimen name="activity_horizontal_margin">
+        16dp
+    </dimen>
+    <dimen name="activity_vertical_margin">
+        16dp
+    </dimen>
 
-    <dimen name="screen_width">720px</dimen>
-    <dimen name="screen_height">1134px</dimen>
+    <dimen name="screen_width">
+        720px
+    </dimen>
 
-    <dimen name="top_bar_height">96px</dimen>
+    <dimen name="top_bar_height">
+        96px
+    </dimen>
 
-    <dimen name="top_bar_title_text_size">40px</dimen>
+    <dimen name="top_bar_title_text_size">
+        40px
+    </dimen>
 
 
-    <dimen name="button_corner_radius">3dp</dimen>
-    <dimen name="button_corner_radius_more">7dp</dimen>
-    <dimen name="wallet_button_corner_radius">2dp</dimen>
-    <dimen name="image_bg_corner_radius">5dp</dimen>
-    <dimen name="image_bg_stroke">1dp</dimen>
-    <dimen name="button_text_size">34px</dimen>
-    <dimen name="button_small_text_size">30px</dimen>
-    <dimen name="menu_width">495px</dimen>
-
-    <dimen name="add_paytm_button_text_size">32px</dimen>
+    <dimen name="button_corner_radius">
+        3dp
+    </dimen>
+    <dimen name="button_text_size">
+        34px
+    </dimen>
+    <dimen name="button_small_text_size">
+        30px
+    </dimen>
 
 
     <!--dimens used in activity_add_jugnoo_cash-->
-    <dimen name="select_payment_layout_height">75px</dimen>
-    <dimen name="select_payment_text_size">24px</dimen>
-    <dimen name="select_payment_left_margin">30px</dimen>
-    <dimen name="select_payment_divider_height">2px</dimen>
-
-    <dimen name="payment_mode_layout_min_height">83px</dimen>
-
-    <dimen name="payment_mode_selector">25px</dimen>
-    <dimen name="payment_modes_divider_height">1px</dimen>
-    <dimen name="payment_modes_text_size">31px</dimen>
-
-    <dimen name="add_amount_top_margin">43px</dimen>
-    <dimen name="add_amount_text_size">24px</dimen>
-    <dimen name="add_amount_value_top_margin">30px</dimen>
-    <dimen name="add_amount_value_text_size">64px</dimen>
-
-    <dimen name="pay_now_top_margin">30px</dimen>
-
-    <dimen name="jugnoo_cash_note">16px</dimen>
-    <dimen name="jugnoo_cash_note_top_margin">43px</dimen>
-
-    <dimen name="card_details_layout_height">81px</dimen>
-    <dimen name="card_details_text_size">31px</dimen>
-    <dimen name="card_details_left_padding">20px</dimen>
-
-    <dimen name="save_card_margin_top">15px</dimen>
-    <dimen name="save_card_icon_size">25px</dimen>
-    <dimen name="save_card_details_text_size">15.37px</dimen>
-
-    <dimen name="redirect_bank_text_size">19.21px</dimen>
 
 
     <!-- payment option dialog dimensions -->
-    <dimen name="payment_option_dialog_margin">70px</dimen>
-    <dimen name="payment_option_dialog_title_text_size">28px</dimen>
-    <dimen name="payment_option_dialog_title_margin_lr">25px</dimen>
-    <dimen name="payment_option_dialog_title_margin_tb">20px</dimen>
-    <dimen name="payment_option_selection_icon_width">40px</dimen>
-    <dimen name="payment_option_selection_icon_height">40px</dimen>
-    <dimen name="payment_option_selection_icon_margin_left">10px</dimen>
-    <dimen name="payment_option_text_margin_left">10px</dimen>
-    <dimen name="payment_option_text_size">30px</dimen>
-    <dimen name="payment_option_rl_width">530px</dimen>
-    <dimen name="payment_option_paytm_rl_height">88px</dimen>
-    <dimen name="payment_option_cash_rl_height">90px</dimen>
-    <dimen name="payment_option_paytm_balance_text_width">340px</dimen>
-    <dimen name="payment_option_paytm_balance_text_right_margin">10px</dimen>
-    <dimen name="payment_option_paytm_balance_text_text_size">30px</dimen>
+    <dimen name="payment_option_cash_rl_height">
+        90px
+    </dimen>
 
 
-    <dimen name="line_width">2px</dimen>
-
-    <dimen name="dialog_border_width">2px</dimen>
-    <dimen name="button_width">400px</dimen>
-    <dimen name="button_height">80px</dimen>
-    <dimen name="button_big_width">576px</dimen>
-    <dimen name="button_big_height">88px</dimen>
-
-
-    <dimen name="social_button_width">282px</dimen>
-    <dimen name="social_button_height">86px</dimen>
-    <dimen name="social_button_google_left_margin">60px</dimen>
+    <dimen name="button_width">
+        400px
+    </dimen>
+    <dimen name="button_height">
+        80px
+    </dimen>
+    <dimen name="button_big_width">
+        576px
+    </dimen>
+    <dimen name="button_big_height">
+        88px
+    </dimen>
 
 
     <!-- end ride screen dimensions -->
-    <dimen name="end_ride_fare_value_text_size">80px</dimen>
-    <dimen name="end_ride_fare_title_text_size">26px</dimen>
+    <dimen name="end_ride_fare_value_text_size">
+        80px
+    </dimen>
+    <dimen name="end_ride_fare_title_text_size">
+        26px
+    </dimen>
 
 
     <!-- share activity screen -->
-    <dimen name="share_activity_bar_height">200px</dimen>
-    <dimen name="share_activity_text_size">40px</dimen>
-    <dimen name="share_activity_number_text_size">54px</dimen>
-    <dimen name="share_activity_text_size_small">28px</dimen>
-    <dimen name="share_activity_text_margin_left">38px</dimen>
-    <dimen name="share_activity_text_margin_right">45px</dimen>
-    <dimen name="share_activity_text_margin_top">62px</dimen>
-    <dimen name="share_activity_data_text_margin_top">62px</dimen>
-    <dimen name="share_activity_first_rl_margin_top">62px</dimen>
+    <dimen name="share_activity_text_margin_left">
+        38px
+    </dimen>
+    <dimen name="share_activity_text_margin_right">
+        45px
+    </dimen>
+    <dimen name="share_activity_data_text_margin_top">
+        62px
+    </dimen>
 
 
     <!-- share leaderboard screen-->
-    <dimen name="share_lb_button_width">310px</dimen>
-    <dimen name="share_lb_button_height">80px</dimen>
-    <dimen name="leaderboard_activity_item_height">245px</dimen>
-    <dimen name="leaderboard_activity_item_value_height">185px</dimen>
-    <dimen name="share_lb_text_view_layout_height">80px</dimen>
-    <dimen name="text_size_120">120px</dimen>
-    <dimen name="text_size_68">68px</dimen>
-    <dimen name="text_size_60">60px</dimen>
-    <dimen name="text_size_54">54px</dimen>
-    <dimen name="text_size_50">50px</dimen>
-    <dimen name="text_size_46">46px</dimen>
-    <dimen name="text_size_40">40px</dimen>
-    <dimen name="text_size_42">42px</dimen>
-    <dimen name="text_size_44">44px</dimen>
-    <dimen name="text_size_38">38px</dimen>
-    <dimen name="text_size_36">36px</dimen>
-    <dimen name="text_size_34">34px</dimen>
-    <dimen name="text_size_32">32px</dimen>
-    <dimen name="text_size_30">30px</dimen>
-    <dimen name="text_size_28">28px</dimen>
-    <dimen name="text_size_26">26px</dimen>
-    <dimen name="text_size_24">24px</dimen>
-    <dimen name="text_size_22">22px</dimen>
-    <dimen name="text_size_20">20px</dimen>
-    <dimen name="text_size_18">18px</dimen>
-    <dimen name="text_size_15">15px</dimen>
-
-    <dimen name="text_size_11sp">11sp</dimen>
-    <dimen name="padding_2dp">2dp</dimen>
-    <dimen name="padding_4dp">4dp</dimen>
+    <dimen name="leaderboard_activity_item_height">
+        245px
+    </dimen>
+    <dimen name="leaderboard_activity_item_value_height">
+        185px
+    </dimen>
+    <dimen name="share_lb_text_view_layout_height">
+        80px
+    </dimen>
+    <dimen name="text_size_68">
+        68px
+    </dimen>
+    <dimen name="text_size_54">
+        54px
+    </dimen>
+    <dimen name="text_size_50">
+        50px
+    </dimen>
+    <dimen name="text_size_46">
+        46px
+    </dimen>
+    <dimen name="text_size_40">
+        40px
+    </dimen>
+    <dimen name="text_size_42">
+        42px
+    </dimen>
+    <dimen name="text_size_44">
+        44px
+    </dimen>
+    <dimen name="text_size_38">
+        38px
+    </dimen>
+    <dimen name="text_size_36">
+        36px
+    </dimen>
+    <dimen name="text_size_34">
+        34px
+    </dimen>
+    <dimen name="text_size_32">
+        32px
+    </dimen>
+    <dimen name="text_size_30">
+        30px
+    </dimen>
+    <dimen name="text_size_28">
+        28px
+    </dimen>
+    <dimen name="text_size_26">
+        26px
+    </dimen>
+    <dimen name="text_size_24">
+        24px
+    </dimen>
+    <dimen name="text_size_22">
+        22px
+    </dimen>
+    <dimen name="text_size_20">
+        20px
+    </dimen>
+    <dimen name="text_size_18">
+        18px
+    </dimen>
 
 
     <!-- NL dimensions-->
-    <dimen name="button_stroke_width">1dp</dimen>
-    <dimen name="nl_sliding_bottom_without_tabs">306px</dimen>
-    <dimen name="nl_button_size">87px</dimen>
+    <dimen name="button_stroke_width">
+        1dp
+    </dimen>
+    <dimen name="nl_sliding_bottom_without_tabs">
+        306px
+    </dimen>
+    <dimen name="nl_button_size">
+        87px
+    </dimen>
 
     <!-- NL splash screen-->
-    <dimen name="splash_button_width">473px</dimen>
-    <dimen name="splash_button_height">96px</dimen>
+    <dimen name="splash_button_width">
+        473px
+    </dimen>
+    <dimen name="splash_button_height">
+        96px
+    </dimen>
 
-    <dimen name="jugnoo_anim_loading_width">198px</dimen>
-    <dimen name="jugnoo_anim_loading_height">92px</dimen>
+    <dimen name="jugnoo_anim_loading_height">
+        92px
+    </dimen>
 
-    <dimen name="menu_text_margin_left">121px</dimen>
-    <dimen name="menu_text_margin_left_category">151px</dimen>
-    <dimen name="menu_text_margin_offerings">30px</dimen>
+    <dimen name="menu_text_margin_left">
+        121px
+    </dimen>
+    <dimen name="menu_text_margin_offerings">
+        30px
+    </dimen>
 
-    <item name="radius" format="float" type="dimen">326</item>
+    <dimen name="dropshadow_width">
+        0.5dp
+    </dimen>
+    <dimen name="dropshadow_width_minus">
+        0.5dp
+    </dimen>
 
-    <dimen name="dropshadow_width">0.5dp</dimen>
-    <dimen name="dropshadow_width_minus">0.5dp</dimen>
-
-    <dimen name="marker_eta_text_size">24px</dimen>
-    <dimen name="map_padding_assigning">136px</dimen>
-    <dimen name="map_padding_request_final">170px</dimen>
-    <dimen name="map_padding_request_final_extra">70px</dimen>
+    <dimen name="marker_eta_text_size">
+        24px
+    </dimen>
+    <dimen name="map_padding_assigning">
+        136px
+    </dimen>
+    <dimen name="map_padding_request_final">
+        170px
+    </dimen>
+    <dimen name="map_padding_request_final_extra">
+        70px
+    </dimen>
 
 
     <!--For fresh Application-->
 
 
-    <dimen name="activity_margin">16dp</dimen>
-    <dimen name="ab_height">48dp</dimen>
-    <dimen name="margin_xxxx_small">1dp</dimen>
-    <dimen name="margin_xxx_small">2dp</dimen>
-    <dimen name="margin_xx_small">4dp</dimen>
-    <dimen name="margin_x_small">8dp</dimen>
-    <dimen name="margin_minimum">12dp</dimen>
-    <dimen name="margin_tag_spinner">28dp</dimen>
-    <dimen name="margin_huge">32dp</dimen>
-    <dimen name="bar_height">48dp</dimen>
-    <dimen name="wall_image_height">175dp</dimen>
-    <dimen name="user_post_top_margin">233dp</dimen>
-    <dimen name="post_on_wall_grid_height">100dp</dimen>
-
-    <dimen name="checkout_margin">54px</dimen>
-    <dimen name="payment_hearder_30">30px</dimen>
-    <dimen name="payment_margin">36px</dimen>
-    <dimen name="px_25">25px</dimen>
-    <dimen name="px_48">48px</dimen>
-    <dimen name="px_124">124px</dimen>
-    <dimen name="px_50">50px</dimen>
-    <dimen name="px_30">30px</dimen>
-    <dimen name="px_05">5px</dimen>
-    <dimen name="px_10">10px</dimen>
-    <dimen name="px_20">20px</dimen>
-    <dimen name="px_100">100px</dimen>
-    <dimen name="px_32">32px</dimen>
-    <dimen name="px_8">8px</dimen>
-    <dimen name="px_96">96px</dimen>
-    <dimen name="px_42">42px</dimen>
-    <dimen name="px_24">24px</dimen>
-    <dimen name="px_36">36px</dimen>
-    <dimen name="px_26">26px</dimen>
-    <dimen name="px_35">35px</dimen>
-    <dimen name="px_40">40px</dimen>
+    <dimen name="px_25">
+        25px
+    </dimen>
+    <dimen name="px_48">
+        48px
+    </dimen>
+    <dimen name="px_50">
+        50px
+    </dimen>
+    <dimen name="px_30">
+        30px
+    </dimen>
+    <dimen name="px_10">
+        10px
+    </dimen>
+    <dimen name="px_20">
+        20px
+    </dimen>
+    <dimen name="px_100">
+        100px
+    </dimen>
+    <dimen name="px_32">
+        32px
+    </dimen>
+    <dimen name="px_8">
+        8px
+    </dimen>
+    <dimen name="px_96">
+        96px
+    </dimen>
+    <dimen name="px_42">
+        42px
+    </dimen>
+    <dimen name="px_24">
+        24px
+    </dimen>
+    <dimen name="px_36">
+        36px
+    </dimen>
+    <dimen name="px_26">
+        26px
+    </dimen>
+    <dimen name="px_35">
+        35px
+    </dimen>
+    <dimen name="px_40">
+        40px
+    </dimen>
     <dimen name="px_6">
         6px
     </dimen>
@@ -255,12 +292,6 @@
     <dimen name="px_480">
         480px
     </dimen>
-    <dimen name="px_680">
-        680px
-    </dimen>
-    <dimen name="px_760">
-        760px
-    </dimen>
     <dimen name="px_2">
         2px
     </dimen>
@@ -273,8 +304,9 @@
     <dimen name="px_15">
         15px
     </dimen>
-    <dimen name="px_200">200px</dimen>
-    <dimen name="px_55">55px</dimen>
+    <dimen name="px_200">
+        200px
+    </dimen>
 
     <dimen name="px_550">
         550px
@@ -282,13 +314,13 @@
     <dimen name="dp_363">
         363dp
     </dimen>
-    <dimen name="text_size_52">52px</dimen>
+    <dimen name="text_size_52">
+        52px
+    </dimen>
 
-    <dimen name="icon_cross">23dp</dimen>
-    <dimen name="label_title_size">14sp</dimen>
-    <dimen name="padding_label_view">10dp</dimen>
-    <dimen name="margin_between_labels">3dp</dimen>
-    <dimen name="padding_icon_cross">5dp</dimen>
+    <dimen name="label_title_size">
+        14sp
+    </dimen>
     <dimen name="sp_14">
         14sp
     </dimen>
@@ -319,51 +351,83 @@
     <dimen name="sp_19">
         19sp
     </dimen>
-    <dimen name="px_16">16px</dimen>
-    <dimen name="px_70">70px</dimen>
-    <dimen name="px_46">46px</dimen>
-    <dimen name="px_34">34px</dimen>
-    <dimen name="px_72">72px</dimen>
-    <dimen name="px_180">180px</dimen>
-    <dimen name="px_404">404px</dimen>
-    <dimen name="px_22">22px</dimen>
-    <dimen name="px_17">17px</dimen>
-    <dimen name="px_270">270px</dimen>
-    <dimen name="px_135">135px</dimen>
-    <dimen name="px_28">28px</dimen>
-    <dimen name="px_75">75px</dimen>
-    <dimen name="px_45">45px</dimen>
-    <dimen name="px_52">52px</dimen>
-    <dimen name="px_64">64px</dimen>
-    <dimen name="px_160">160px</dimen>
-    <dimen name="px_150">150px</dimen>
-    <dimen name="px_170">170px</dimen>
-    <dimen name="px_300">300px</dimen>
-    <dimen name="px_280">280px</dimen>
-    <dimen name="px_290">290px</dimen>
-    <dimen name="px_5">5px</dimen>
-    <dimen name="px_130">130px</dimen>
-    <dimen name="px_88">88px</dimen>
-    <dimen name="px_4">4px</dimen>
-    <dimen name="px_108">108px</dimen>
-    <dimen name="px_94">94px</dimen>
-    <dimen name="px_38">38px</dimen>
-    <dimen name="px_62">62px</dimen>
-    <dimen name="px_18">18px</dimen>
-    <dimen name="px_384">
-        384px
+    <dimen name="px_16">
+        16px
     </dimen>
-    <dimen name="px_210">
-        210px
+    <dimen name="px_70">
+        70px
+    </dimen>
+    <dimen name="px_46">
+        46px
+    </dimen>
+    <dimen name="px_34">
+        34px
+    </dimen>
+    <dimen name="px_72">
+        72px
+    </dimen>
+    <dimen name="px_180">
+        180px
+    </dimen>
+    <dimen name="px_404">
+        404px
+    </dimen>
+    <dimen name="px_22">
+        22px
+    </dimen>
+    <dimen name="px_17">
+        17px
+    </dimen>
+    <dimen name="px_135">
+        135px
+    </dimen>
+    <dimen name="px_28">
+        28px
+    </dimen>
+    <dimen name="px_75">
+        75px
+    </dimen>
+    <dimen name="px_45">
+        45px
+    </dimen>
+    <dimen name="px_52">
+        52px
+    </dimen>
+    <dimen name="px_64">
+        64px
+    </dimen>
+    <dimen name="px_160">
+        160px
+    </dimen>
+    <dimen name="px_150">
+        150px
+    </dimen>
+    <dimen name="px_300">
+        300px
+    </dimen>
+    <dimen name="px_5">
+        5px
+    </dimen>
+    <dimen name="px_130">
+        130px
+    </dimen>
+    <dimen name="px_88">
+        88px
+    </dimen>
+    <dimen name="px_4">
+        4px
+    </dimen>
+    <dimen name="px_94">
+        94px
+    </dimen>
+    <dimen name="px_38">
+        38px
+    </dimen>
+    <dimen name="px_18">
+        18px
     </dimen>
     <dimen name="px_0">
         0px
-    </dimen>
-    <dimen name="px_900">
-        900px
-    </dimen>
-    <dimen name="px_908">
-        908px
     </dimen>
     <dimen name="px_80">
         80px
@@ -374,27 +438,25 @@
     <dimen name="px_120">
         120px
     </dimen>
-    <dimen name="px_460">
-        460px
-    </dimen>
     <dimen name="px_82">
         82px
     </dimen>
     <dimen name="px_12">
         12px
     </dimen>
-    <dimen name="px_450">
-        450px
+    <dimen name="px_7">
+        7px
     </dimen>
-    <dimen name="px_420">
-        420px
-    </dimen>
-    <dimen name="px_7">7px</dimen>
 
-    <dimen name="shadow_new_height">14px</dimen>
-    <dimen name="shadow_height">6px</dimen>
-    <dimen name="px_27">27px</dimen>
-    <dimen name="px_13">13px</dimen>
+    <dimen name="shadow_new_height">
+        14px
+    </dimen>
+    <dimen name="px_27">
+        27px
+    </dimen>
+    <dimen name="px_13">
+        13px
+    </dimen>
     <dimen name="px_360">
         360px
     </dimen>
@@ -416,7 +478,6 @@
     <dimen name="px_90">
         90px
     </dimen>
-    <dimen name="px_510">510px</dimen>
     <dimen name="dp_2">
         2dp
     </dimen>
@@ -426,17 +487,17 @@
     <dimen name="dp_3">
         3dp
     </dimen>
-    <dimen name="px_144">144px</dimen>
-    <dimen name="px_54">54px</dimen>
-    <dimen name="px_76">76px</dimen>
-    <dimen name="px_154">154px</dimen>
-    <dimen name="px_66">66px</dimen>
-    <dimen name="px_19">19px</dimen>
-    <dimen name="px_350">
-        350px
+    <dimen name="px_54">
+        54px
     </dimen>
-    <dimen name="px_777">
-        777px
+    <dimen name="px_76">
+        76px
+    </dimen>
+    <dimen name="px_154">
+        154px
+    </dimen>
+    <dimen name="px_66">
+        66px
     </dimen>
     <dimen name="px_56">
         56px
@@ -444,56 +505,113 @@
     <dimen name="px_310">
         310px
     </dimen>
-    <dimen name="px_644">
-        644px
+    <dimen name="px_86">
+        86px
     </dimen>
-    <dimen name="px_86">86px</dimen>
-    <dimen name="px_68">68px</dimen>
-    <dimen name="px_340">340px</dimen>
-    <dimen name="px_250">250px</dimen>
-    <dimen name="px_387">387px</dimen>
-    <dimen name="px_97">97px</dimen>
-    <dimen name="px_110">110px</dimen>
-    <dimen name="px_112">112px</dimen>
-    <dimen name="px_240">240px</dimen>
-    <dimen name="px_235">235px</dimen>
-    <dimen name="px_585">585px</dimen>
-    <dimen name="px_84">84px</dimen>
-    <dimen name="px_106">106px</dimen>
-    <dimen name="px_176">176px</dimen>
-    <dimen name="px_504">504px</dimen>
-    <dimen name="px_147">147px</dimen>
+    <dimen name="px_340">
+        340px
+    </dimen>
+    <dimen name="px_387">
+        387px
+    </dimen>
+    <dimen name="px_97">
+        97px
+    </dimen>
+    <dimen name="px_110">
+        110px
+    </dimen>
+    <dimen name="px_240">
+        240px
+    </dimen>
+    <dimen name="px_235">
+        235px
+    </dimen>
+    <dimen name="px_585">
+        585px
+    </dimen>
+    <dimen name="px_84">
+        84px
+    </dimen>
+    <dimen name="px_176">
+        176px
+    </dimen>
+    <dimen name="px_504">
+        504px
+    </dimen>
+    <dimen name="px_147">
+        147px
+    </dimen>
 
 
-    <dimen name="spacing_huge">30dp</dimen>
-    <dimen name="spacing_extra_huge">35dp</dimen>
-    <dimen name="spacing_extra_large">25dp</dimen>
-    <dimen name="spacing_large">20dp</dimen>
-    <dimen name="spacing_normal">15dp</dimen>
-    <dimen name="spacing_small">10dp</dimen>
-    <dimen name="spacing_tiny">5dp</dimen>
-    <dimen name="spacing_extra_tiny">7dp</dimen>
-    <dimen name="spacing_dimin">3.5dp</dimen>
+    <dimen name="spacing_huge">
+        30dp
+    </dimen>
+    <dimen name="spacing_extra_huge">
+        35dp
+    </dimen>
+    <dimen name="spacing_extra_large">
+        25dp
+    </dimen>
+    <dimen name="spacing_large">
+        20dp
+    </dimen>
+    <dimen name="spacing_normal">
+        15dp
+    </dimen>
+    <dimen name="spacing_small">
+        10dp
+    </dimen>
+    <dimen name="spacing_tiny">
+        5dp
+    </dimen>
+    <dimen name="spacing_extra_tiny">
+        7dp
+    </dimen>
+    <dimen name="spacing_dimin">
+        3.5dp
+    </dimen>
 
 
+    <dimen name="font_huge">
+        20sp
+    </dimen>
+    <dimen name="font_extra_large">
+        17sp
+    </dimen>
+    <dimen name="font_large">
+        16sp
+    </dimen>
+    <dimen name="font_medium">
+        15sp
+    </dimen>
+    <dimen name="font_normal">
+        14sp
+    </dimen>
+    <dimen name="font_extra_small">
+        12sp
+    </dimen>
+    <dimen name="font_small">
+        13.4sp
+    </dimen>
+    <dimen name="font_tiny">
+        10sp
+    </dimen>
 
-    <dimen name="font_extra_huge">22sp</dimen>
-    <dimen name="font_huge">20sp</dimen>
-    <dimen name="font_extra_large">17sp</dimen>
-    <dimen name="font_large">16sp</dimen>
-    <dimen name="font_medium">15sp</dimen>
-    <dimen name="font_normal">14sp</dimen>
-    <dimen name="font_extra_small">12sp</dimen>
-    <dimen name="font_small">13.4sp</dimen>
-    <dimen name="font_tiny">10sp</dimen>
-
-    <dimen name="image_height_feed">110dp</dimen>
-    <dimen name="height_tabs_add_post">45dp</dimen>
+    <dimen name="image_height_feed">
+        110dp
+    </dimen>
+    <dimen name="height_tabs_add_post">
+        45dp
+    </dimen>
 
 
-    <dimen name="feed_badge_text_size">9sp</dimen>
+    <dimen name="feed_badge_text_size">
+        9sp
+    </dimen>
 
-    <dimen name="dp_20">20dp</dimen>
+    <dimen name="dp_20">
+        20dp
+    </dimen>
     <dimen name="dp_36">
         36dp
     </dimen>
@@ -502,9 +620,6 @@
     </dimen>
     <dimen name="dp_8">
         8dp
-    </dimen>
-    <dimen name="dp_26">
-        26dp
     </dimen>
     <dimen name="dp_7">
         7dp
@@ -517,9 +632,6 @@
     </dimen>
     <dimen name="dp_10">
         10dp
-    </dimen>
-    <dimen name="dp_44">
-        44dp
     </dimen>
     <dimen name="dp_40">
         40dp
@@ -536,15 +648,27 @@
     <dimen name="dp_30">
         30dp
     </dimen>
-    <dimen name="px_238">238px</dimen>
-    <dimen name="px_305">305px</dimen>
-    <dimen name="dp_28">28dp</dimen>
-    <dimen name="dp_16">16dp</dimen>
-    <dimen name="dp_1">1dp</dimen>
-    <dimen name="dp_6">6dp</dimen>
-    <dimen name="dp_12">12dp</dimen>
-    <dimen name="dp_15">15dp</dimen>
-    <dimen name="dp_23">23dp</dimen>
+    <dimen name="px_238">
+        238px
+    </dimen>
+    <dimen name="dp_28">
+        28dp
+    </dimen>
+    <dimen name="dp_16">
+        16dp
+    </dimen>
+    <dimen name="dp_1">
+        1dp
+    </dimen>
+    <dimen name="dp_6">
+        6dp
+    </dimen>
+    <dimen name="dp_12">
+        12dp
+    </dimen>
+    <dimen name="dp_15">
+        15dp
+    </dimen>
     <dimen name="dp_52">
         52dp
     </dimen>
@@ -560,14 +684,9 @@
     <dimen name="dp_48">
         48dp
     </dimen>
-    <dimen name="dp_17">
-        17dp
-    </dimen>
     <dimen name="sp_24">
         24sp
     </dimen>
-    <dimen name="dp_342">342dp</dimen>
-    <dimen name="dp_283">283dp</dimen>
     <dimen name="dp_302">
         302dp
     </dimen>
@@ -578,12 +697,8 @@
         -40dp
     </dimen>
 
-    <dimen name="feed_gps_icon_height">21dp</dimen>
     <dimen name="dp_45">
         45dp
-    </dimen>
-    <dimen name="dp_100">
-        100dp
     </dimen>
     <dimen name="dp_162">
         162dp
@@ -594,30 +709,14 @@
     <dimen name="dp_32">
         32dp
     </dimen>
-    <dimen name="dp_35">
-        35dp
-    </dimen>
     <dimen name="dp_14">
         14dp
     </dimen>
     <dimen name="dp_264">
         264dp
     </dimen>
-    <dimen name="dp_31">
-        31dp
-    </dimen>
     <dimen name="dp_54">
         54dp
-    </dimen>
-    <dimen name="dp_89">
-        89dp
-    </dimen>
-    <dimen name="dp_96">
-        96dp
-    </dimen>
-    <dimen name="dp_51">51dp</dimen>
-    <dimen name="px_102">
-        102px
     </dimen>
     <dimen name="dp_24">
         24dp
@@ -635,13 +734,9 @@
     <dimen name="dp_64">
         64dp
     </dimen>
-    <dimen name="dp_90">
-        90dp
+    <dimen name="dp_70">
+        70dp
     </dimen>
-    <dimen name="dp_68">
-        68dp
-    </dimen>
-    <dimen name="dp_70">70dp</dimen>
     <dimen name="sp_9">
         9sp
     </dimen>
@@ -654,11 +749,15 @@
     <dimen name="dp_58">
         58dp
     </dimen>
-    <dimen name="sp_25">25sp</dimen>
+    <dimen name="sp_25">
+        25sp
+    </dimen>
     <dimen name="dp_9">
         9dp
     </dimen>
-<dimen name="height_popup_edit_feed">100dp</dimen>
+    <dimen name="height_popup_edit_feed">
+        100dp
+    </dimen>
     <dimen name="dp_50">
         50dp
     </dimen>
@@ -674,9 +773,6 @@
     <dimen name="dp_155">
         155dp
     </dimen>
-    <dimen name="dp_322">
-        322dp
-    </dimen>
     <dimen name="dp_11">
         11dp
     </dimen>
@@ -686,23 +782,32 @@
     <dimen name="dp_110">
         110dp
     </dimen>
-    <dimen name="dp_150">
-        150dp
+    <dimen name="padding_bottom_menu_labels">
+        23dp
     </dimen>
-    <dimen name="padding_bottom_menu_labels">23dp</dimen>
-    <dimen name="height_strip_offers">35dp</dimen>
-    <dimen name="padding_left_menu_labels">20dp</dimen>
-    <dimen name="dp_300">
-        300dp
+    <dimen name="height_strip_offers">
+        35dp
     </dimen>
-    <dimen name="dp_310">
-        310dp
+    <dimen name="padding_left_menu_labels">
+        20dp
     </dimen>
     <dimen name="dp_280">
         280dp
     </dimen>
     <dimen name="dp_290">
         290dp
+    </dimen>
+    <dimen name="dp_72">
+        72dp
+    </dimen>
+    <dimen name="dp_212">
+        212dp
+    </dimen>
+    <dimen name="dp_172">
+        172dp
+    </dimen>
+    <dimen name="dp_100">
+        100dp
     </dimen>
 
 </resources>

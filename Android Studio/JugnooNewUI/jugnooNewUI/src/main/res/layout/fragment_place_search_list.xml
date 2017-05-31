@@ -14,7 +14,6 @@
         />
 
     <RelativeLayout
-        android:id="@+id/relativeLayoutSearchBar"
         android:layout_width="match_parent"
         android:layout_height="100px"
         android:layout_marginTop="23px"
@@ -86,7 +85,6 @@
         android:visibility="gone">
 
         <LinearLayout
-            android:id="@+id/linearLayoutScrollSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -119,7 +117,6 @@
             </android.support.v7.widget.CardView>
 
             <ImageView
-                android:id="@+id/imageViewPoweredByGoogleSearch"
                 android:layout_width="240px"
                 android:layout_height="28px"
                 android:layout_gravity="center_horizontal"
@@ -129,7 +126,6 @@
                 android:src="@drawable/powered_by_google_light"/>
 
             <TextView
-                android:id="@+id/textViewScrollSearch"
                 android:layout_width="10px"
                 android:layout_height="10px"
                 android:textSize="28px" />

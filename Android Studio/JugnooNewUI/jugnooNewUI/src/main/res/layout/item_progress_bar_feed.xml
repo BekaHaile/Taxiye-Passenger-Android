@@ -8,8 +8,7 @@
 
     <product.clicklabs.jugnoo.utils.ProgressWheel xmlns:wheel="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pBar_pagination"
-        android:layout_width="28dp"
+                                                  android:layout_width="28dp"
         android:layout_height="28dp"
 
         android:layout_gravity="center"

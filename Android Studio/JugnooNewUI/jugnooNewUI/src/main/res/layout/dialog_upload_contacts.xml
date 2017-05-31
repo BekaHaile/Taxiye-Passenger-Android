@@ -7,7 +7,6 @@
     android:splitMotionEvents="false">
 
     <RelativeLayout
-        android:id="@+id/innerRl"
         android:layout_width="666px"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -19,7 +19,6 @@
         android:visibility="visible" />
 
     <RelativeLayout
-        android:id="@+id/rlConfirmBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/specialPickupLocationBtn"
@@ -127,7 +126,6 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rlSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="94px"
                     android:background="@color/menu_item_selector_color_F7">
