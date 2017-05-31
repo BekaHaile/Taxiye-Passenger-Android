@@ -388,7 +388,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     editTextEmail.setError(null);
                     editTextPhone.setError(null);
                     if (editTextUserName.isEnabled()) {
-                        String nameChanged = Utils.capEachWord(editTextUserName.getText().toString().trim());
+                        String nameChanged = editTextUserName.getText().toString().trim();
                         String emailChanged = editTextEmail.getText().toString().trim();
                         String phoneNoChanged = editTextPhone.getText().toString().trim();
                         phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
@@ -413,7 +413,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                             editTextUserName.requestFocus();
                             editTextUserName.setError(getResources().getString(R.string.nothing_changed));
                         } else {
-                            updateUserProfileAPI(AccountActivity.this, nameChanged, emailChanged, "+91" + phoneNoChanged,
+                            updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), emailChanged, "+91" + phoneNoChanged,
                                     !Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged));
                         }
                     } else {
@@ -817,6 +817,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 			editTextUserName.setEnabled(false); editTextUserName.setBackgroundResource(R.drawable.background_white);
             editTextEmail.setEnabled(false); editTextEmail.setBackgroundResource(R.drawable.background_white);
             editTextPhone.setEnabled(false); linearLayoutPhone.setBackgroundResource(R.drawable.background_white);
+            editTextUserName.setError(null);
+            editTextEmail.setError(null);
+            editTextPhone.setError(null);
 
             if(!Data.userData.userName.equalsIgnoreCase("User")) {
                 editTextUserName.setText(Data.userData.userName);
