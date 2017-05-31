@@ -238,8 +238,7 @@
 
                     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
                         xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/progressBarInAppCampaignRequest"
-                        android:layout_width="match_parent"
+                                                                               android:layout_width="match_parent"
                         android:layout_height="10px"
                         android:layout_alignParentTop="true"
                         android:indeterminate="true"

@@ -330,7 +330,6 @@
 
             <!-- Surge view circle -->
             <RelativeLayout
-                android:id="@+id/relativeLayoutPriorityTipMS"
                 android:layout_width="94px"
                 android:layout_height="94px"
                 android:layout_alignTop="@+id/linearLayoutOptionsMultipleSupply"

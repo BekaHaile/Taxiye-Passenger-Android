@@ -283,7 +283,6 @@
                 android:textSize="@dimen/text_size_32" />
 
             <ImageView
-                android:id="@+id/imageViewPayArrow"
                 style="@style/forward_image"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10px" />
@@ -322,7 +321,6 @@
                 android:textSize="@dimen/text_size_32" />
 
             <ImageView
-                android:id="@+id/imageViewWalletArrow"
                 style="@style/forward_image"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10px" />

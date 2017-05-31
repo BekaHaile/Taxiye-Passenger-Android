@@ -27,7 +27,6 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.TrackOrderActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.RestaurantSearchResponse;
@@ -67,7 +66,7 @@ import retrofit.client.Response;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
 
     private String TAG = "Menus Screen";
@@ -82,12 +81,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private boolean searchApiHitOnce = false;
     private RecyclerView recyclerView;
     private List<MenusResponse.BannerInfo> bannerInfos;
+    private MenusResponse.StripInfo stripInfo;
 
     private static final int MAIN_ITEM = 0;
     private static final int FORM_ITEM = 1;
     private static final int STATUS_ITEM = 3;
     private static final int NO_VENDORS_ITEM = 4;
     private static final int OFFERS_PAGER_ITEM = 5;
+    private static final int OFFER_STRIP_ITEM = 6;
+
 
 
     public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors,
@@ -151,7 +153,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         callback.onNotify(vendorsToShow.size());
     }
 
-    public void setList(ArrayList<MenusResponse.Vendor> vendors, List<MenusResponse.BannerInfo> bannerInfos) {
+    public void setList(ArrayList<MenusResponse.Vendor> vendors, List<MenusResponse.BannerInfo> bannerInfos,
+                        MenusResponse.StripInfo stripInfo, boolean showBanner) {
         this.vendorsComplete = vendors;
         this.vendorsFiltered.clear();
         this.vendorsFiltered.addAll(vendors);
@@ -159,8 +162,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.vendorsToShow.clear();
         this.vendorsToShow.addAll(vendors);
 
-        this.bannerInfos = bannerInfos;
-
+        this.bannerInfos = showBanner ? bannerInfos : null;
+        this.stripInfo = showBanner ? null : stripInfo;
         applyFilter();
     }
 
@@ -285,7 +288,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return new ViewNoVenderItem(v, activity);
         } else if(viewType == OFFERS_PAGER_ITEM){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_offers_pager, parent, false);
-            return new ViewHolderOffers(v, activity);
+            return new ViewHolderOffers(v);
+        } else if(viewType == OFFER_STRIP_ITEM){
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.textview_min_order, parent, false);
+            return new ViewHolderOfferStrip(v, this);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
@@ -293,6 +299,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         try {
+            if(offerStripSize() > 0 && position > 0){
+                position--;
+            }
             if(offerVendorsSize() > 0 && position > 0){
                 position--;
             }
@@ -522,6 +531,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 } else{
                     holderOffers.tabDots.setVisibility(View.VISIBLE);
                 }
+            } else if (holder instanceof ViewHolderOfferStrip){
+                ViewHolderOfferStrip holderStrip = (ViewHolderOfferStrip) holder;
+                holderStrip.textViewMinOrder.setText((stripInfo != null && !TextUtils.isEmpty(stripInfo.getText())) ? stripInfo.getText() : "");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -620,6 +632,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
+        if(offerStripSize() > 0){
+            if(position == 0){
+                return OFFER_STRIP_ITEM;
+            } else {
+                position--;
+            }
+        }
         if(offerVendorsSize() > 0){
             if(position == 0) {
                 return OFFERS_PAGER_ITEM;
@@ -652,7 +671,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemCount() {
 //        int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
         int formItem = (recentOrdersSize() > 0 || vendorsCompleteCount() > 0) ? 1 : 0;
-        return (offerVendorsSize() > 0 ? 1 : 0) + recentOrdersSize() + vendorsToShowCount() + formItem;
+        return offerStripSize() + (offerVendorsSize() > 0 ? 1 : 0)
+                + recentOrdersSize() + vendorsToShowCount() + formItem;
     }
 
     private int recentOrdersSize() {
@@ -661,6 +681,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private int offerVendorsSize(){
         return bannerInfos == null || vendorsCompleteCount() == 0 ? 0 : bannerInfos.size();
+    }
+
+    private int offerStripSize(){
+        return stripInfo == null || vendorsCompleteCount() == 0 ? 0 : 1;
     }
 
     private int vendorsToShowCount() {
@@ -1047,18 +1071,26 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 int pos = (int) v.getTag();
                 RecentOrder order = recentOrders.get(pos);
                 if(order.getShowLiveTracking() == 1 && order.getDeliveryId() > 0) {
-                    Intent intent = new Intent(activity, TrackOrderActivity.class);
-                    intent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                    intent.putExtra(Constants.KEY_ORDER_ID, order.getOrderId());
-                    intent.putExtra(Constants.KEY_DELIVERY_ID, order.getDeliveryId());
-                    intent.putExtra(Constants.KEY_PICKUP_LATITUDE, order.getPickupLatitude());
-                    intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, order.getPickupLongitude());
-                    intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
-                    intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
-                    intent.putExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, order.getShowDeliveryRoute());
-                    intent.putExtra(Constants.KEY_DRIVER_PHONE_NO, order.getDriverPhoneNo());
+                    Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                    intent.putExtra(Constants.KEY_ORDER_ID, recentOrders.get(pos).getOrderId());
+                    intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MENUS.getOrdinal());
+                    intent.putExtra(Constants.KEY_OPEN_LIVE_TRACKING, 1);
                     activity.startActivity(intent);
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+
+//                    Intent intent = new Intent(activity, TrackOrderActivity.class);
+//                    intent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+//                    intent.putExtra(Constants.KEY_ORDER_ID, order.getOrderId());
+//                    intent.putExtra(Constants.KEY_DELIVERY_ID, order.getDeliveryId());
+//                    intent.putExtra(Constants.KEY_PICKUP_LATITUDE, order.getPickupLatitude());
+//                    intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, order.getPickupLongitude());
+//                    intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
+//                    intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
+//                    intent.putExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, order.getShowDeliveryRoute());
+//                    intent.putExtra(Constants.KEY_DRIVER_PHONE_NO, order.getDriverPhoneNo());
+//                    activity.startActivity(intent);
+//                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 } else {
                     Utils.showToast(activity, !TextUtils.isEmpty(order.getTrackDeliveryMessage()) ?
                             order.getTrackDeliveryMessage() : activity.getString(R.string.tracking_not_available_message));
@@ -1080,7 +1112,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         public ViewPager pagerMenusVendorOffers;
         public TabLayout tabDots;
 
-        public ViewHolderOffers(View view, Context context) {
+        public ViewHolderOffers(View view) {
             super(view);
             pagerMenusVendorOffers = (ViewPager) view.findViewById(R.id.pagerMenusVendorOffers);
             tabDots = (TabLayout) view.findViewById(R.id.tabDots);
@@ -1089,12 +1121,48 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 public void onBannerInfoClick(MenusResponse.BannerInfo bannerInfo) {
                     if(bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1){
                         callback.onBannerInfoDeepIndexClick(bannerInfo.getDeepIndex());
-                    } else {
+                    } else if(bannerInfo.getRestaurantId() != -1 && bannerInfo.getDeepIndex() == -1){
                         callback.onRestaurantSelected(bannerInfo.getRestaurantId());
                     }
                 }
             });
             pagerMenusVendorOffers.setAdapter(menusVendorOffersAdapter);
+        }
+    }
+
+    public class ViewHolderOfferStrip extends RecyclerView.ViewHolder {
+        public TextView textViewMinOrder;
+        public ViewHolderOfferStrip(final View view, final ItemListener itemListener){
+            super(view);
+            textViewMinOrder = (TextView) view.findViewById(R.id.textViewMinOrder);
+			ViewGroup.LayoutParams params = textViewMinOrder.getLayoutParams();
+			params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+			textViewMinOrder.setLayoutParams(params);
+
+			textViewMinOrder.setVisibility(View.VISIBLE);
+            textViewMinOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(v, view);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onClickItem(View viewClicked, View parentView) {
+        int pos = recyclerView.getChildLayoutPosition(parentView);
+        switch(viewClicked.getId()){
+            case R.id.textViewMinOrder:
+                if(stripInfo != null) {
+                    if (stripInfo.getRestaurantId() == -1 && stripInfo.getDeepIndex() != -1) {
+                        callback.onBannerInfoDeepIndexClick(stripInfo.getDeepIndex());
+                    } else if (stripInfo.getRestaurantId() != -1 && stripInfo.getDeepIndex() == -1) {
+                        callback.onRestaurantSelected(stripInfo.getRestaurantId());
+                    }
+                }
+                break;
+
         }
     }
 

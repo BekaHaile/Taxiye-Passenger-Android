@@ -35,7 +35,6 @@
         android:layout_marginLeft="@dimen/px_12"
         android:gravity="right"
         android:layout_toRightOf="@id/textViewMenu"
-        android:id="@+id/linearLayoutNewContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

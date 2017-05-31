@@ -48,7 +48,6 @@
                 android:background="@drawable/background_white_yellow_selector" >
 
                 <ImageView
-                    android:id="@+id/ivRateUs"
                     android:layout_width="43px"
                     android:layout_height="43px"
                     android:src="@drawable/ic_about_rateus"
@@ -86,7 +85,6 @@
                 android:background="@drawable/background_white_yellow_selector" >
 
                 <ImageView
-                    android:id="@+id/ivLikeUs"
                     android:layout_width="42px"
                     android:layout_height="40px"
                     android:src="@drawable/ic_about_like"
@@ -123,7 +121,6 @@
                 android:background="@drawable/background_white_yellow_selector" >
 
                 <ImageView
-                    android:id="@+id/ivTNC"
                     android:layout_width="40px"
                     android:layout_height="43px"
                     android:src="@drawable/ic_about_tnc"
@@ -160,7 +157,6 @@
                 android:background="@drawable/background_white_yellow_selector" >
 
                 <ImageView
-                    android:id="@+id/ivPrivacy"
                     android:layout_width="34px"
                     android:layout_height="46px"
                     android:src="@drawable/ic_about_privacy"
@@ -197,7 +193,6 @@
                 android:background="@drawable/background_white_yellow_selector" >
 
                 <ImageView
-                    android:id="@+id/ivAbout"
                     android:layout_width="43px"
                     android:layout_height="43px"
                     android:src="@drawable/ic_about_who_we_are"

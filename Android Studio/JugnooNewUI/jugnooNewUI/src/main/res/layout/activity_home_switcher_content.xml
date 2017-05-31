@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:minHeight="@dimen/dp_363"
-                android:id="@+id/relativeLayoutHomeData">
+                >
                 <product.clicklabs.jugnoo.utils.NonScrollGridView
                     android:id="@+id/gridView"
                     android:layout_width="@dimen/px_550"

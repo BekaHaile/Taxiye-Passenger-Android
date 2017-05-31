@@ -9404,6 +9404,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onNoRetry(View view) {
 
                 }
+
+                @Override
+                public void onFinish() {
+
+                }
             });
         }
         return apiFetchUserAddress;

@@ -77,7 +77,6 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/tvWelcomToJugnoo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_signup_with"
@@ -110,7 +109,6 @@
                     android:textSize="@dimen/text_size_34" />
 
                 <TextView
-                    android:id="@+id/tvMobileNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mobile_string"
@@ -184,7 +182,6 @@
                         android:textSize="@dimen/text_size_34" />
 
                     <TextView
-                        android:id="@+id/tvFacebook"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/nl_login_facebook"
@@ -219,7 +216,6 @@
                         android:textSize="@dimen/text_size_34" />
 
                     <TextView
-                        android:id="@+id/tvGoogle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/nl_login_google"

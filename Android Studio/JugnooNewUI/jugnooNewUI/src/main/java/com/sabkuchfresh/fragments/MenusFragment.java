@@ -56,7 +56,6 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.http.HEAD;
 import retrofit.mime.TypedByteArray;
 
 /**
@@ -350,7 +349,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     status.clear();
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
-                                    menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos());
+                                    menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos(),
+                                            menusResponse.getStripInfo(), menusResponse.getShowBanner());
                                     applyFilter(false);
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);

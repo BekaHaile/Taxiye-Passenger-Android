@@ -491,6 +491,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                                     String message = jObj.getString("message");
                                     DialogPopup.dialogBanner(activity, message);
                                     getCouponsAndPromotions(activity);
+                                    editTextPromoCode.setText("");
 
                                     new ApiFetchWalletBalance(activity, new ApiFetchWalletBalance.Callback() {
                                         @Override

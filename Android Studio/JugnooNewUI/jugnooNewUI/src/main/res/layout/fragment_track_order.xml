@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rlMapContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <fragment
+        android:id="@+id/googleMap"
+        class="product.clicklabs.jugnoo.utils.TouchableMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/tvTrackingInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="14dp"
+        android:background="@drawable/background_black_80_r"
+        android:padding="10dp"
+        android:text="some text"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        app:font="maven"
+        />
+
+
+    <TextView
+        android:id="@+id/tvETA"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/circle_white_stroke_alpha_border"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="1\nmin"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/sp_24"
+        app:font="maven"
+        />
+
+    <ImageView
+        android:id="@+id/bMyLocation"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:contentDescription="@string/move_to_your_location"
+        android:src="@drawable/mylocation_btn_selector"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/bCallDriver"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_45"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:background="@drawable/capsule_theme_color_selector"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_track_order_call"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:text="@string/call_driver"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:font="maven"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

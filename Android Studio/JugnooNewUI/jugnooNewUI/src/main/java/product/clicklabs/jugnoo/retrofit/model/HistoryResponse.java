@@ -213,12 +213,6 @@ public class HistoryResponse {
         @SerializedName("restaurant_phone_no")
         @Expose
         private String restaurantPhoneNo;
-        @SerializedName("delivery_latitude")
-        @Expose
-        private Double deliveryLatitude;
-        @SerializedName("delivery_longitude")
-        @Expose
-        private Double deliveryLongitude;
         @SerializedName("address_id")
         @Expose
         private Integer addressId;
@@ -239,6 +233,10 @@ public class HistoryResponse {
         private double orderAdjustment;
 
 
+
+        @SerializedName("live_tracking")
+        @Expose
+        private LiveTracking liveTracking;
 
 
 
@@ -750,22 +748,6 @@ public class HistoryResponse {
         }
 
 
-        public Double getDeliveryLatitude() {
-            return deliveryLatitude;
-        }
-
-        public void setDeliveryLatitude(Double deliveryLatitude) {
-            this.deliveryLatitude = deliveryLatitude;
-        }
-
-        public Double getDeliveryLongitude() {
-            return deliveryLongitude;
-        }
-
-        public void setDeliveryLongitude(Double deliveryLongitude) {
-            this.deliveryLongitude = deliveryLongitude;
-        }
-
         public Integer getAddressId() {
             if(addressId == null){
                 return 0;
@@ -851,6 +833,11 @@ public class HistoryResponse {
 
         public void setOrderAdjustment(double orderAdjustment) {
             this.orderAdjustment = orderAdjustment;
+        }
+
+
+        public LiveTracking getLiveTracking() {
+            return liveTracking;
         }
     }
 
@@ -964,5 +951,73 @@ public class HistoryResponse {
         public void setItemUnitPrice(double itemUnitPrice) {
             this.itemUnitPrice = itemUnitPrice;
         }
+    }
+
+
+    public class LiveTracking{
+        @SerializedName("pickup_latitude")
+        @Expose
+        private double pickupLatitude;
+        @SerializedName("pickup_longitude")
+        @Expose
+        private double pickupLongitude;
+        @SerializedName("delivery_latitude")
+        @Expose
+        private double deliveryLatitude;
+        @SerializedName("delivery_longitude")
+        @Expose
+        private double deliveryLongitude;
+        @SerializedName("show_live_tracking")
+        @Expose
+        private int showLiveTracking;
+        @SerializedName("delivery_id")
+        @Expose
+        private int deliveryId;
+        @SerializedName("show_delivery_route")
+        @Expose
+        private int showDeliveryRoute;
+        @SerializedName("driver_phone_no")
+        @Expose
+        private String driverPhoneNo;
+        @SerializedName("track_delivery_message")
+        @Expose
+        private String trackDeliveryMessage;
+
+        public double getPickupLatitude() {
+            return pickupLatitude;
+        }
+
+        public double getPickupLongitude() {
+            return pickupLongitude;
+        }
+
+        public int getShowLiveTracking() {
+            return showLiveTracking;
+        }
+
+        public int getDeliveryId() {
+            return deliveryId;
+        }
+
+        public int getShowDeliveryRoute() {
+            return showDeliveryRoute;
+        }
+
+        public String getDriverPhoneNo() {
+            return driverPhoneNo;
+        }
+
+        public String getTrackDeliveryMessage() {
+            return trackDeliveryMessage;
+        }
+
+        public double getDeliveryLatitude() {
+            return deliveryLatitude;
+        }
+
+        public double getDeliveryLongitude() {
+            return deliveryLongitude;
+        }
+
     }
 }

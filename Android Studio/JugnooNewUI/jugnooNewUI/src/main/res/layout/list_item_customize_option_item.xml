@@ -15,7 +15,6 @@
         card_view:cardCornerRadius="@dimen/button_corner_radius">
 
         <RelativeLayout
-            android:id="@+id/rlCustomizeOptionItem"
             android:layout_width="match_parent"
             android:layout_height="94px"
             android:background="@drawable/bg_transparent_menu_item_selector">
