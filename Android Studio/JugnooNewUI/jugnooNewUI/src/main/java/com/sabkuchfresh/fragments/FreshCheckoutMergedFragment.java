@@ -706,7 +706,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        setSlideInitial();
 
 
         return rootView;
@@ -3145,7 +3145,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     // razor pay back from service callback
     public void razorpayServiceCallback(JSONObject jsonObject){
         try {
-            setSlideInitial();
             int flag = jsonObject.getInt(Constants.KEY_FLAG);
             String message = JSONParser.getServerMessage(jsonObject);
             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
@@ -3159,6 +3158,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 			}
 			else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
 				 DialogPopup.alertPopup(activity, "", message);
+                setSlideInitial();
 			}
         } catch (Exception e) {
             e.printStackTrace();
