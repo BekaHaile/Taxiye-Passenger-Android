@@ -158,9 +158,10 @@ public class Data {
 
 			facebookUserData = null;
             previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
-			
+
 			AccessTokenGenerator.saveLogoutToken(context);
 			clearSPLabelPrefs(context);
+			FuguConfig.clearFuguData();
 
 		} catch(Exception e){
 			e.printStackTrace();
