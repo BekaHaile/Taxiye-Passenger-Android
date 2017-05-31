@@ -52,6 +52,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.apis.ApiGoogleDirectionWaypoints;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
@@ -327,15 +328,19 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 								&& (PushFlags.STATUS_CHANGED.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag)) {
-							activity.finish();
-							new Handler().postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									Intent intent1 = new Intent(Data.LOCAL_BROADCAST);
-									intent1.putExtra(Constants.KEY_FLAG, flag);
-									LocalBroadcastManager.getInstance(activity).sendBroadcast(intent1);
-								}
-							}, 200);
+							if(activity instanceof RideTransactionsActivity) {
+								((RideTransactionsActivity) activity).performBackPressed();
+								new Handler().postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										Intent intent1 = new Intent(Data.LOCAL_BROADCAST);
+										intent1.putExtra(Constants.KEY_FLAG, flag);
+										LocalBroadcastManager.getInstance(activity).sendBroadcast(intent1);
+									}
+								}, 200);
+							} else {
+								activity.onBackPressed();
+							}
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -443,8 +448,11 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 													new View.OnClickListener() {
 														@Override
 														public void onClick(View v) {
-															activity.finish();
-															activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+															if(activity instanceof RideTransactionsActivity) {
+																((RideTransactionsActivity) activity).performBackPressed();
+															} else {
+																activity.onBackPressed();
+															}
 														}
 													});
 										}

@@ -428,7 +428,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             try {
-                float marginBottom = 50f;
+                float marginBottom = 60f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
 
                 createAppCart(lastClientId);
@@ -2003,7 +2003,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             return;
         }
 
-        if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() >= 2 && !getFeedbackFragment().isUpbuttonClicked) {
+        if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finishWithToast();
             return;
         }

@@ -397,6 +397,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				updateDeliveryTimeUI();
 				setFiltersText();
 
+				applyRealTimeFilters();
 				GAUtils.event(GAAction.MENUS, GAAction.FILTERS, GAAction.RESET_BUTTON + GAAction.CLICKED);
 
 			}

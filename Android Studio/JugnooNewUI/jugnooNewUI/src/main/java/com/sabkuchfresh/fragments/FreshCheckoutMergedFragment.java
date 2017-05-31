@@ -96,7 +96,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -1756,9 +1755,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         try {
             chargeDetails.put("Charged ID", placeOrderResponse.getOrderId());
             MyApplication.getInstance().charged(chargeDetails, items);
-            if(activity.getVendorOpened() != null) {
-                MyApplication.getInstance().updateUserDataAddInMultiValue(Events.RESTAURANT_NAMES, activity.getVendorOpened().getName());
-            }
+//            if(activity.getVendorOpened() != null) {
+//                MyApplication.getInstance().updateUserDataAddInMultiValue(Events.RESTAURANT_NAMES, activity.getVendorOpened().getName());
+//            }
 
             ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
 					.setTransactionId(String.valueOf(placeOrderResponse.getOrderId()))

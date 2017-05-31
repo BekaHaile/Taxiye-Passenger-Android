@@ -684,7 +684,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     private int offerStripSize(){
-        return stripInfo == null || vendorsCompleteCount() == 0 ? 0 : 1;
+        return stripInfo == null || vendorsCompleteCount() == 0 || TextUtils.isEmpty(stripInfo.getText()) ? 0 : 1;
     }
 
     private int vendorsToShowCount() {
