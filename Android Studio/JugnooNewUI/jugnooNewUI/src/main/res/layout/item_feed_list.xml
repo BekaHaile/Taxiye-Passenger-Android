@@ -180,7 +180,7 @@
            android:textColor="@color/feed_grey_text"
            android:autoLink="all"
            android:textIsSelectable="true"
-           android:textColorLink="@color/yellow_jugnoo"
+           android:textColorLink="@color/theme_color"
            android:textSize="@dimen/font_small"
            app:font="maven" />
     <ImageView

@@ -52,6 +52,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
+import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -233,7 +234,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private View topView;
     private FetchFeedbackResponse.Review currentReview;
-
+    private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();
     /**
      * this holds the reference for the Otto Bus which we declared in LavocalApplication
      */
@@ -275,7 +276,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_fresh);
@@ -547,6 +549,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }, 500);
 
         backPressedCount = 0;
+
+        if(Data.getFuguChatBundle()!=null) {
+            fuguNotificationConfig.handleFuguPushNotification(FreshActivity.this, Data.getFuguChatBundle());
+            Data.setFuguChatBundle(null);
+        }
 
     }
 

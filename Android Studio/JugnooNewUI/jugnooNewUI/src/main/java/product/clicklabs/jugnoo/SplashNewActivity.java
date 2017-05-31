@@ -345,6 +345,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		try {
 
 			Fabric.with(this, new Crashlytics());
+			Data.setFuguChatBundle(getIntent().getExtras());
 
 			try {
 				if (getIntent().hasExtra("deep_link_class")) {

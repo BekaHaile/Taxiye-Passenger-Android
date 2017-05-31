@@ -54,7 +54,7 @@
             android:textSize="@dimen/font_normal"
             android:autoLink="all"
             android:textIsSelectable="true"
-            android:textColorLink="@color/yellow_jugnoo"
+            android:textColorLink="@color/theme_color"
             app:font="@string/maven_r" />
 
         <!-- <TextView

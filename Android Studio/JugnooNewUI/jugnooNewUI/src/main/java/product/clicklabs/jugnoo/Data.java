@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.fugu.CaptureUserData;
@@ -144,7 +145,7 @@ public class Data {
 	public static String currentActivity = null;
 	public static boolean activityResumed = false;
 	private static CaptureUserData fuguUserData;
-
+	private static boolean isFuguChatEnabled;
 
 	public static void clearDataOnLogout(Context context){
 		try{
@@ -589,4 +590,23 @@ public class Data {
 	public static void setFuguUserData(CaptureUserData userData){
 		fuguUserData = userData;
 	}
+
+	public static boolean isFuguChatEnabled() {
+		return isFuguChatEnabled;
+	}
+
+	public static void setIsFuguChatEnabled(boolean isFuguChatEnabled) {
+		Data.isFuguChatEnabled = isFuguChatEnabled;
+	}
+
+	private static Bundle fuguChatBundle;
+	public static Bundle getFuguChatBundle() {
+		return fuguChatBundle;
+	}
+
+	public static void setFuguChatBundle(Bundle fuguChatBundle) {
+		Data.fuguChatBundle = fuguChatBundle;
+	}
+
+
 }
