@@ -869,7 +869,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedAddressType("");
 
                     Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
-                    setIsAddressConfirmed(false);
                 }
                 // else if selected address is updated by user, updating address related local variables
                 // from SP search result
@@ -3425,16 +3424,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     private HomeUtil homeUtil = new HomeUtil();
-
-    private boolean isAddressConfirmed = false;
-
-    public boolean isAddressConfirmed() {
-        return isAddressConfirmed;
-    }
-
-    public void setIsAddressConfirmed(boolean isAddressConfirmed) {
-        this.isAddressConfirmed = isAddressConfirmed;
-    }
 
     private LatLng menuRefreshLatLng;
 
