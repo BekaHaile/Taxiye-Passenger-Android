@@ -92,7 +92,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewRadioMobikwik, imageViewAddMobikwik,
             imageViewRadioFreeCharge, imageViewAddFreeCharge, ivRadio1, ivRadio2;
     private TextView textViewPaytmValue, textViewMobikwikValue, textViewFreeChargeValue;
-    private PaymentOption paymentOption;
+    private PaymentOption paymentOption = PaymentOption.CASH;
     private LinearLayout linearLayoutWalletContainer;
     private SubscriptionData.Subscription subscription;
     private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
@@ -264,7 +264,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             listViewOffers.setAdapter(promoCouponsAdapter);
 
 
-            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+//            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
 
             fetchWalletBalance();
             updateCouponsDataView();
@@ -361,13 +361,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     case R.id.bPlaceOrder:
 
 
-                        if(paymentOption.getOrdinal() != 0 && paymentOption.getOrdinal() != 1) {
+                        if(paymentOption==null || (paymentOption.getOrdinal() != 0 && paymentOption.getOrdinal() != 1)) {
                             placeOrder();
                             GAUtils.event(SIDE_MENU, JUGNOO+STAR+CHECKOUT, PAY_NOW+CLICKED);
                         } else{
-                            if(paySlider.isSliderInIntialStage())
-                                paySlider.fullAnimate();
-                            Utils.showToast(activity, "Please select payment option");
+                            paySlider.setSlideInitial();
+                            Utils.showToast(activity,activity.getString(R.string.star_checkout_wallet_not_selected));
                         }
                         break;
                     case R.id.relativeLayoutPaytm:
@@ -421,7 +420,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     case R.id.rlUPI:
                         isRazorUPI = true;
                         callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
-
+                break;
                     case R.id.rlOtherModesToPay:
                         callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
                         break;
@@ -434,9 +433,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     };
 
     private void placeOrder() {
-        if(paymentOption==null)
+        if(paymentOption==null || paymentOption==PaymentOption.CASH)
         {
             Toast.makeText(activity, R.string.star_checkout_wallet_not_selected, Toast.LENGTH_SHORT).show();
+            paySlider.setSlideInitial();
             return;
         }
 
@@ -594,14 +594,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     }
 
     public PaymentOption getPaymentOption() {
-     /*   if(paymentOption == null){
+        if(paymentOption == null){
             return PaymentOption.CASH;
-        }*/
+        }
         return paymentOption;
     }
 
     public void setPaymentOption(PaymentOption paymentOption) {
-        if(paymentOption!=PaymentOption.CASH)
            this.paymentOption = paymentOption;
     }
 
