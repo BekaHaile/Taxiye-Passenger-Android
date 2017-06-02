@@ -350,7 +350,15 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
         bottomSheetBehavior = BottomSheetBehavior.from(scrollViewSuggestions);
         setSavedPlaces();
-        getApiFetchUserAddress().hit(false);
+        if(!Data.isRecentAddressesFetched()) {
+            getApiFetchUserAddress().hit(false);
+        }
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                getApiCallback().onFinish();
+            }
+        });
 
         ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap)).getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -781,9 +789,18 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
 
     private ApiFetchUserAddress apiFetchUserAddress;
+    private ApiFetchUserAddress.Callback apiCallback;
     private ApiFetchUserAddress getApiFetchUserAddress(){
         if(apiFetchUserAddress == null){
-            apiFetchUserAddress = new ApiFetchUserAddress(activity, new ApiFetchUserAddress.Callback() {
+
+            apiFetchUserAddress = new ApiFetchUserAddress(activity, getApiCallback());
+        }
+        return apiFetchUserAddress;
+    }
+
+    private ApiFetchUserAddress.Callback getApiCallback(){
+        if(apiCallback == null){
+            apiCallback = new ApiFetchUserAddress.Callback() {
                 @Override
                 public void onSuccess() {
                 }
@@ -808,9 +825,9 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     setSavedPlaces();
                     moveCameraToCurrent();
                 }
-            });
+            };
         }
-        return apiFetchUserAddress;
+        return apiCallback;
     }
 
     @Override

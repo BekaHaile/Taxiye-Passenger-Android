@@ -666,7 +666,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             activity.sliderText.setVisibility(View.VISIBLE);
                             float percent = (event.getRawX()-getRelativeSliderLeftMargin()) / (activity.relativeLayoutSlider.getWidth()-activity.tvSlide.getWidth());
                             activity.viewAlpha.setAlpha(percent);
-                            Log.v("slide percent","--> "+percent);
                             if(percent > 0.6f){
                                 activity.sliderText.setVisibility(View.GONE);
                             } else{
@@ -1560,7 +1559,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Log.v("redirect value","redirect value"+redirect);
                                                 if(emptyCart == 1){
                                                     clearMenusCartAndGoToMenusFragment();
                                                 } else if(type == AppConstant.ApplicationType.MENUS

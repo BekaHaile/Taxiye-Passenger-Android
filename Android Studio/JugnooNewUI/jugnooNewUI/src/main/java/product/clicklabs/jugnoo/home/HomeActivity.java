@@ -7364,6 +7364,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.autoData.setPickupAddress("");
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
+            Data.setRecentAddressesFetched(false);
             dropLocationSet = false;
             zoomedForSearch = false;
             confirmedScreenOpened = false;

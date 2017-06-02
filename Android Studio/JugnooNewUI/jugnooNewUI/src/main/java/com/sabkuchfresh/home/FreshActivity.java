@@ -1850,6 +1850,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         slotToSelect = null;
         paymentOption = null;
         setPlaceOrderResponse(null);
+        Data.setRecentAddressesFetched(false);
 
         setSelectedAddress("");
         setSelectedLatLng(null);
