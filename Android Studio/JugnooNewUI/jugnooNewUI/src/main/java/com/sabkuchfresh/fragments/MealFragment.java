@@ -374,6 +374,11 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
                                         activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
                                     }
+                                    if(productsResponse.getCategories() == null || productsResponse.getCategories().size() == 0){
+                                        noMealsView.setVisibility(View.VISIBLE);
+                                        activity.llCheckoutBarSetVisibilityDirect(View.GONE);
+                                        return;
+                                    }
                                     int sortedBy = jObj.optInt(Constants.SORTED_BY);
                                     mealsData.clear();
                                     mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());

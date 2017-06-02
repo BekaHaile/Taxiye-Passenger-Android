@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.tsengvn.typekit.TypekitContextWrapper;
@@ -18,7 +19,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 /**
  * Created by clicklabs on 7/3/15.
  */
-public class BaseFragmentActivity extends BaseAppCompatActivity {
+public class BaseFragmentActivity extends FragmentActivity {
 
     @Override
     public void startActivity(Intent intent) {
