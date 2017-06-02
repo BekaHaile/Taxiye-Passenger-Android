@@ -96,7 +96,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -353,8 +352,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         try {
             if(Data.getDatumToReOrder() != null){
-				activity.setSelectedAddress(Data.getDatumToReOrder().getDeliveryAddress());
-				activity.setSelectedLatLng(new LatLng(Data.getDatumToReOrder().getDeliveryLatitude(), Data.getDatumToReOrder().getDeliveryLongitude()));
+//				activity.setSelectedAddress(Data.getDatumToReOrder().getDeliveryAddress());
+//				activity.setSelectedLatLng(new LatLng(Data.getDatumToReOrder().getDeliveryLatitude(), Data.getDatumToReOrder().getDeliveryLongitude()));
                 ArrayList<SearchResult> searchResults = new HomeUtil().getSavedPlacesWithHomeWork(activity);
                 for(SearchResult searchResult : searchResults){
                     if(Data.getDatumToReOrder().getAddressId().equals(searchResult.getId())){
@@ -706,7 +705,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        setSlideInitial();
 
 
         return rootView;
@@ -1756,9 +1755,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         try {
             chargeDetails.put("Charged ID", placeOrderResponse.getOrderId());
             MyApplication.getInstance().charged(chargeDetails, items);
-            if(activity.getVendorOpened() != null) {
-                MyApplication.getInstance().updateUserDataAddInMultiValue(Events.RESTAURANT_NAMES, activity.getVendorOpened().getName());
-            }
+//            if(activity.getVendorOpened() != null) {
+//                MyApplication.getInstance().updateUserDataAddInMultiValue(Events.RESTAURANT_NAMES, activity.getVendorOpened().getName());
+//            }
 
             ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
 					.setTransactionId(String.valueOf(placeOrderResponse.getOrderId()))
@@ -3145,7 +3144,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     // razor pay back from service callback
     public void razorpayServiceCallback(JSONObject jsonObject){
         try {
-            setSlideInitial();
             int flag = jsonObject.getInt(Constants.KEY_FLAG);
             String message = JSONParser.getServerMessage(jsonObject);
             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
@@ -3159,6 +3157,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 			}
 			else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
 				 DialogPopup.alertPopup(activity, "", message);
+                setSlideInitial();
 			}
         } catch (Exception e) {
             e.printStackTrace();

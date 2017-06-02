@@ -415,7 +415,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             public void onClick(View v) {
 //                getOrderData();
                 new TransactionUtils().openOrderStatusFragment(activity,
-                        activity.getRelativeLayoutContainer(), Integer.parseInt(orderId), productType.getOrdinal());
+                        activity.getRelativeLayoutContainer(), Integer.parseInt(orderId), productType.getOrdinal(), 0);
             }
         });
 
@@ -692,7 +692,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
                                     new TransactionUtils().openOrderStatusFragment(activity,
                                             activity.getRelativeLayoutContainer(), historyResponse.getData().get(0).getOrderId(),
-                                            historyResponse.getData().get(0).getProductType());
+                                            historyResponse.getData().get(0).getProductType(), 0);
                                 } else {
                                     updateListData(message);
                                 }
@@ -744,16 +744,21 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
 
     private void backPressed(boolean goodRating) {
-        activity.setRefreshCart(true);
-        try {
-            activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            activity.getSupportFragmentManager().popBackStackImmediate();
-        }
+        this.goodRating = goodRating;
+        if(fragResumed) {
+            activity.setRefreshCart(true);
+            try {
+                activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            } catch (Exception e) {
+                e.printStackTrace();
+                activity.getSupportFragmentManager().popBackStackImmediate();
+            }
 
-        if (goodRating && rateApp == 1) {
-            getRateAppDialog().show(rateAppDialogContent);
+            if (goodRating && rateApp == 1) {
+                getRateAppDialog().show(rateAppDialogContent);
+            }
+        } else {
+            backPressCalled = true;
         }
     }
 
@@ -839,4 +844,21 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 });
     }
 
+
+    boolean fragResumed, backPressCalled, goodRating;
+    @Override
+    public void onResume() {
+        super.onResume();
+        fragResumed = true;
+        if(backPressCalled){
+            backPressed(goodRating);
+            backPressCalled = false;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        fragResumed = false;
+    }
 }

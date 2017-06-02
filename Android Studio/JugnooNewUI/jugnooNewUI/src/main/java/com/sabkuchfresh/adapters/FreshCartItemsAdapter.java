@@ -122,7 +122,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 				e.printStackTrace();
 			}
 
-			if(!TextUtils.isEmpty(subItem.getBaseUnit())) {
+			if(appType == AppConstant.ApplicationType.FRESH && !TextUtils.isEmpty(subItem.getBaseUnit())) {
 				mHolder.textViewItemUnit.setVisibility(View.VISIBLE);
 				mHolder.textViewItemUnit.setText(subItem.getBaseUnit()+" x "+subItem.getSubItemQuantitySelected());
 			} else {

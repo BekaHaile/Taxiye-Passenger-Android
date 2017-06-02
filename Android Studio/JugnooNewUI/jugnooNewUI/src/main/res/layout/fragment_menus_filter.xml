@@ -133,7 +133,6 @@
                 />
 
             <LinearLayout
-                android:id="@+id/cardViewQuickFilter"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30px"
@@ -323,7 +322,6 @@
 
 
             <LinearLayout
-                android:id="@+id/cardViewSort"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30px"
@@ -585,7 +583,6 @@
                 />
 
             <LinearLayout
-                android:id="@+id/cardViewMinimumOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -717,7 +714,6 @@
 
 
             <LinearLayout
-                android:id="@+id/cardViewDeliveryTime"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

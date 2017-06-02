@@ -267,7 +267,7 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 					}
 					else if(activity instanceof SupportActivity && datum != null){
 						new TransactionUtils().openOrderStatusFragment(activity,
-								((SupportActivity) activity).getContainer(), datum.getOrderId(), datum.getProductType());
+								((SupportActivity) activity).getContainer(), datum.getOrderId(), datum.getProductType(), 0);
 
 					}
 				}

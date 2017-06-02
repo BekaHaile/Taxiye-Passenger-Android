@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    android:id="@+id/textViewMinOrder"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/height_strip_offers"
+    android:minHeight="@dimen/height_strip_offers"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/text_color"
+    android:gravity="center"
+    android:paddingLeft="@dimen/dp_7"
+    android:paddingRight="@dimen/dp_7"
+    android:paddingTop="@dimen/dp_4"
+    android:padding="@dimen/dp_4"
+    android:text=""
+    android:textColor="@color/white"
+    android:textSize="@dimen/sp_13"
+    android:visibility="gone"
+    app:font="maven"
+    android:tag="@string/dont_touch_me"
+    />

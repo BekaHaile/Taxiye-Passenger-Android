@@ -7,7 +7,6 @@
     android:splitMotionEvents="false" >
 
     <RelativeLayout
-        android:id="@+id/topBarEmpty"
         android:layout_width="@dimen/screen_width"
         android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"

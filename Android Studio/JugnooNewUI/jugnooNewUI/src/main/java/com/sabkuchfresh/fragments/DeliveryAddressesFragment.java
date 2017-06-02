@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -108,6 +109,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     Button bNext;
     @Bind(R.id.rlMain)
     RelativeLayout rlMain;
+    @Bind(R.id.llLocationsContainer)
+    LinearLayout llLocationsContainer;
 
 
     public double current_latitude = 0.0;
@@ -241,16 +244,12 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            setSavedPlaces();
-            getApiFetchUserAddress().hit(true);
         }
         else if(activity instanceof AddPlaceActivity){
             listViewRecentAddresses.setVisibility(View.GONE);
             listViewSavedLocations.setVisibility(View.GONE);
             scrollViewSuggestions.setVisibility(View.GONE);
         }
-        setupMapAndButtonMargins();
 
 
 
@@ -350,7 +349,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
 
         bottomSheetBehavior = BottomSheetBehavior.from(scrollViewSuggestions);
-        bottomSheetBehavior.setPeekHeight(activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
+        setSavedPlaces();
+        getApiFetchUserAddress().hit(false);
 
         ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap)).getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -362,13 +362,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     googleMap.getUiSettings().setMyLocationButtonEnabled(false);
                     googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
                             activity.getResources().getDimensionPixelSize(R.dimen.dp_162) : 0);
-                    if(activity instanceof AddPlaceActivity
-                            && ((AddPlaceActivity)activity).isEditThisAddress()
-                            && ((AddPlaceActivity)activity).getSearchResult() != null){
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((AddPlaceActivity)activity).getSearchResult().getLatLng(), 14));
-                    } else {
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
-                    }
+                    moveCameraToCurrent();
 
 
 
@@ -421,6 +415,19 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         return rootView;
     }
 
+    private void moveCameraToCurrent(){
+        if(googleMap != null) {
+            if (activity instanceof AddPlaceActivity
+                    && ((AddPlaceActivity) activity).isEditThisAddress()
+                    && ((AddPlaceActivity) activity).getSearchResult() != null) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((AddPlaceActivity) activity).getSearchResult().getLatLng(), 14));
+            } else {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
+                zoomToCurrentLocation();
+            }
+        }
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -430,21 +437,37 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         }
     }
 
-    private void setupMapAndButtonMargins(){
+    private void setupMapAndButtonMargins() {
         RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
         RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
-        if(scrollViewSuggestions.getVisibility() == View.VISIBLE){
-            paramsRL.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_162));
-            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+        int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_162);
+//        if (savedPlacesAdapter.getCount() + savedPlacesAdapterRecent.getCount() <= 5) {
+//            ViewGroup.LayoutParams layoutParams = scrollViewSuggestions.getLayoutParams();
+//            layoutParams.height = llLocationsContainer.getMeasuredHeight() + activity.getResources().getDimensionPixelSize(R.dimen.dp_8);
+//            scrollViewSuggestions.setLayoutParams(layoutParams);
+//            height = layoutParams.height;
+//        }
+        if (scrollViewSuggestions.getVisibility() == View.VISIBLE) {
+            if (savedPlacesAdapter.getCount() >= 3) {
+                height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
+                paramsRL.setMargins(0, 0, 0, height);
+                paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_290));
+            } else {
+                paramsRL.setMargins(0, 0, 0, height);
+                paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+            }
         } else {
             paramsRL.setMargins(0, 0, 0, 0);
             paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
         }
         rlMarkerPin.setLayoutParams(paramsRL);
         bNext.setLayoutParams(paramsB);
-        if(googleMap != null){
+        if (googleMap != null) {
             googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
-                    activity.getResources().getDimensionPixelSize(R.dimen.dp_162) : 0);
+                    height : 0);
+        }
+        if (bottomSheetBehavior != null) {
+            bottomSheetBehavior.setPeekHeight(height);
         }
     }
 
@@ -473,7 +496,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         super.onHiddenChanged(hidden);
         if(!hidden && (activity instanceof FreshActivity)) {
             ((FreshActivity) activity).fragmentUISetup(this);
-            setSavedPlaces();
+//            setSavedPlaces();
             tvDeliveryAddressSetVisibility(View.VISIBLE);
             ((FreshActivity)activity).getTopBar().imageViewDelete.setVisibility(View.GONE);
         } else if(!hidden && (activity instanceof AddPlaceActivity)){
@@ -759,7 +782,6 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             apiFetchUserAddress = new ApiFetchUserAddress(activity, new ApiFetchUserAddress.Callback() {
                 @Override
                 public void onSuccess() {
-                    setSavedPlaces();
                 }
 
                 @Override
@@ -775,6 +797,12 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 @Override
                 public void onNoRetry(View view) {
 
+                }
+
+                @Override
+                public void onFinish() {
+                    setSavedPlaces();
+                    moveCameraToCurrent();
                 }
             });
         }

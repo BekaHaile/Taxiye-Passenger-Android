@@ -703,4 +703,5 @@ public interface Constants {
     String ALL_CRAZY = "all_crazy";
 
     String KEY_SP_IS_VEG_TOGGLE = "is_veg_toggle";
+    String KEY_OPEN_LIVE_TRACKING = "open_live_tracking";
 }

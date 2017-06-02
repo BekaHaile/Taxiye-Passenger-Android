@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_add_beneficiary_account"
-    android:layout_width="match_parent"
+              android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white">
@@ -54,7 +53,6 @@
                 android:background="@drawable/background_white_rounded_bordered">
 
                 <EditText
-                    android:id="@+id/etIfscCode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/transparent"
@@ -97,7 +95,6 @@
                 android:background="@drawable/background_white_rounded_bordered">
 
                 <EditText
-                    android:id="@+id/etAccountHolderName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/transparent"
@@ -120,7 +117,6 @@
                 android:background="@drawable/background_white_rounded_bordered">
 
                 <EditText
-                    android:id="@+id/etAccountNumber"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/transparent"
@@ -143,7 +139,6 @@
                 android:background="@drawable/background_white_rounded_bordered">
 
                 <EditText
-                    android:id="@+id/etConfirmAccountNumber"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/transparent"
@@ -160,7 +155,6 @@
             </RelativeLayout>
 
             <Button
-                android:id="@+id/btnAddBeneficiary"
                 android:layout_width="@dimen/btn_width"
                 android:layout_height="@dimen/btn_height"
                 android:layout_gravity="center_horizontal"

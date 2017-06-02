@@ -178,6 +178,9 @@
            android:layout_marginBottom="@dimen/spacing_small"
            android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
            android:textColor="@color/feed_grey_text"
+           android:autoLink="all"
+           android:textIsSelectable="true"
+           android:textColorLink="@color/theme_color"
            android:textSize="@dimen/font_small"
            app:font="maven" />
     <ImageView
@@ -243,7 +246,7 @@
         android:paddingBottom="@dimen/spacing_tiny"
         android:paddingRight="13dp"
         android:background="@drawable/bg_black_80_botom_right_rounded"
-        android:drawableLeft="@drawable/location_icon"
+        android:drawableLeft="@drawable/ic_restaurant_location"
         android:maxLines="1"
         android:maxWidth="250dp"
         android:textColor="@color/white"
@@ -379,6 +382,9 @@
                android:layout_marginBottom="2.5dp"
                android:textSize="14sp"
                android:ellipsize="end"
+               android:autoLink="all"
+               android:textIsSelectable="true"
+               android:textColorLink="@color/yellow_jugnoo"
                android:maxLines="2"
                app:font="@string/maven_r" />
 

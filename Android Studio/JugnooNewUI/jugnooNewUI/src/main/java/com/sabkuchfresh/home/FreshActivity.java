@@ -52,6 +52,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
+import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -233,7 +234,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private View topView;
     private FetchFeedbackResponse.Review currentReview;
-
+    private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();
     /**
      * this holds the reference for the Otto Bus which we declared in LavocalApplication
      */
@@ -275,7 +276,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_fresh);
@@ -358,6 +360,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Utils.hideKeyboard(FreshActivity.this);
                     if(drawerView.equals(llRightDrawer)){
                         applyRealTimeFilters();
+                        if(getMenusFilterFragment() != null){
+                            getMenusFilterFragment().performBackPress(false);
+                        }
                     }
                 }
 
@@ -423,7 +428,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             try {
-                float marginBottom = 50f;
+                float marginBottom = 60f;
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
 
                 createAppCart(lastClientId);
@@ -544,6 +549,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }, 500);
 
         backPressedCount = 0;
+
+        if(Data.getFuguChatBundle()!=null) {
+            fuguNotificationConfig.handleFuguPushNotification(FreshActivity.this, Data.getFuguChatBundle());
+            Data.setFuguChatBundle(null);
+        }
 
     }
 
@@ -1977,7 +1987,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         if(drawerLayout.isDrawerOpen(GravityCompat.END)){
             if(getMenusFilterFragment() != null) {
-                getMenusFilterFragment().performBackPress();
+                getMenusFilterFragment().performBackPress(true);
                 return;
             }
         }
@@ -1993,7 +2003,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             return;
         }
 
-        if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() >= 2 && !getFeedbackFragment().isUpbuttonClicked) {
+        if (getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finishWithToast();
             return;
         }

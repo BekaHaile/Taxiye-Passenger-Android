@@ -138,7 +138,7 @@ public class TransactionUtils {
 		}
 	}
 
-	public void openOrderStatusFragment(FragmentActivity activity, View container, int orderId, int productType) {
+	public void openOrderStatusFragment(FragmentActivity activity, View container, int orderId, int productType, int openLiveTracking) {
 		if(!checkIfFragmentAdded(activity, OrderStatusFragment.class.getName())) {
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -147,6 +147,7 @@ public class TransactionUtils {
 			Bundle bundle = new Bundle();
 			bundle.putInt(Constants.KEY_ORDER_ID, orderId);
 			bundle.putInt(Constants.KEY_PRODUCT_TYPE, productType);
+			bundle.putInt(Constants.KEY_OPEN_LIVE_TRACKING, openLiveTracking);
 
 			orderStatusFragment.setArguments(bundle);
 			fragmentTransaction.add(container.getId(),

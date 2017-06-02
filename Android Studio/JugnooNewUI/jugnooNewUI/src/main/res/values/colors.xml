@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple">
-        #95108e
-    </color>
 
     <color name="color_inactive_dot">#f3f3f3</color>
     <color name="color_active_dot">#ff7d49</color>
-    <color name="opaque_black">#99000000</color>
     <color name="opaque_black_strong">#B3000000</color>
     <color name="strike_color_red">#d0021b</color>
 

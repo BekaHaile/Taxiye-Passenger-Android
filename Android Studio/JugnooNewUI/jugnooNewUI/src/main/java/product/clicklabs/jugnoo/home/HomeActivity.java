@@ -67,6 +67,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
+import com.fugu.FuguNotificationConfig;
 import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.google.android.gms.analytics.ecommerce.Product;
@@ -488,6 +489,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private TransactionUtils transactionUtils;
     private RelativeLayout relativeLayoutContainer;
     private FrameLayout coordinatorLayout;
+    private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();;
 
 
     @SuppressLint("NewApi")
@@ -1699,6 +1701,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
         }, 500);
+
+        if(Data.getFuguChatBundle()!=null) {
+            fuguNotificationConfig.handleFuguPushNotification(HomeActivity.this, Data.getFuguChatBundle());
+            Data.setFuguChatBundle(null);
+        }
+
     }
 
     public TransactionUtils getTransactionUtils() {
@@ -9402,6 +9410,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onNoRetry(View view) {
+
+                }
+
+                @Override
+                public void onFinish() {
 
                 }
             });

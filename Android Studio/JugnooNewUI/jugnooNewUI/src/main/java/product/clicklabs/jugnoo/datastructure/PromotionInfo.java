@@ -77,6 +77,9 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 
 	@Override
 	public String getTitle() {
+		if(title == null){
+			title = "";
+		}
 		return title;
 	}
 

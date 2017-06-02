@@ -263,6 +263,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this);
             listViewOffers.setAdapter(promoCouponsAdapter);
 
+
             setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
 
             fetchWalletBalance();
@@ -435,7 +436,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private void placeOrder() {
         if(paymentOption==null)
         {
-            Toast.makeText(activity, "Please select a payment mode.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.star_checkout_wallet_not_selected, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -593,14 +594,15 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     }
 
     public PaymentOption getPaymentOption() {
-        if(paymentOption == null){
+     /*   if(paymentOption == null){
             return PaymentOption.CASH;
-        }
+        }*/
         return paymentOption;
     }
 
     public void setPaymentOption(PaymentOption paymentOption) {
-        this.paymentOption = paymentOption;
+        if(paymentOption!=PaymentOption.CASH)
+           this.paymentOption = paymentOption;
     }
 
     private ApiFetchWalletBalance apiFetchWalletBalance = null;

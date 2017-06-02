@@ -29,7 +29,6 @@
 
 
     <ImageView
-        android:id="@+id/imageViewShadowBelow"
         android:layout_above="@+id/ll_anonymous"
         android:layout_width="match_parent"
         android:layout_height="@dimen/spacing_extra_tiny"
@@ -104,6 +103,8 @@
             android:textSize="@dimen/font_medium"
             android:maxLength="500"
             android:hint="@string/add_a_reply"
+            android:autoLink="all"
+            android:textColorLink="@color/theme_color"
             android:textColorHighlight="@color/yellow_jugnoo_alpha"
             android:textCursorDrawable="@drawable/cursor_black"
             android:textColorHint="@color/feed_grey_hint_color"

@@ -88,7 +88,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     }
                 }
                 if(itemsInSubCategories == 0){
-                    subItems.remove(item);
+                    subItems.remove(subItems.size()-1);
                 }
             }
         } else if(category.getItems() != null){

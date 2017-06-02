@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/drawable_image_loading" />
+        android:src="@drawable/loader_new_frame_anim" />
 
     <View
         android:id="@+id/swipe_view"
