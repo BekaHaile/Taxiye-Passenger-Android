@@ -566,10 +566,8 @@ public class Data {
 		if(userData==null)
 			return null;
 
-		if(fuguUserData==null) {
-			fuguUserData = new CaptureUserData.Builder().userUniqueKey(userData.userIdentifier).fullName(userData.userName).email(userData.userEmail).phoneNumber(userData.phoneNo).build();
-		}
-		return fuguUserData;
+
+		return  new CaptureUserData.Builder().userUniqueKey(userData.userIdentifier).fullName(userData.userName).email(userData.userEmail).phoneNumber(userData.phoneNo).build();
 
 
 
