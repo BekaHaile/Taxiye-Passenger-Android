@@ -2339,20 +2339,38 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                     setSlideInitial();
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                     final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
-                                    DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if(emptyCart == 1){
-                                                clearMenusCartAndGoToMenusFragment();
-                                            } else if(redirect == 1) {
-                                                if(activity.getFreshSearchFragment() != null){
+                                    if(type == AppConstant.ApplicationType.MENUS && emptyCart == 1){
+                                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+                                                activity.getString(R.string.clear_cart),
+                                                activity.getString(R.string.cancel),
+                                                new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        clearMenusCartAndGoToMenusFragment();
+                                                    }
+                                                },
+                                                new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        activity.setDeliveryAddressModelToSelectedAddress(true);
+                                                        getCheckoutDataAPI(selectedSubscription);
+                                                    }
+                                                }, false, false);
+                                    } else {
+                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if(emptyCart == 1){
+                                                    clearMenusCartAndGoToMenusFragment();
+                                                } else if(redirect == 1) {
+                                                    if(activity.getFreshSearchFragment() != null){
+                                                        activity.performBackPressed(false);
+                                                    }
                                                     activity.performBackPressed(false);
                                                 }
-                                                activity.performBackPressed(false);
-
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                     activity.buttonPlaceOrder.setText(activity.getString(R.string.connection_lost_try_again));
                                 }
                             }

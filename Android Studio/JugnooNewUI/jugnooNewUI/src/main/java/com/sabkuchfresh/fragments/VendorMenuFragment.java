@@ -426,6 +426,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     }
 
                     setUpCollapseToolbarData();
+                    activity.saveDeliveryAddressModel();
                 }
             }
         } catch (Exception exception) {

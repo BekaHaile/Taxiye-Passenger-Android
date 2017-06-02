@@ -3438,8 +3438,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setRefreshCart(true);
                     GAUtils.event(getGaCategory(), DELIVERY_ADDRESS, MODIFIED);
                 }
-                int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
-                setAddressAndFetchOfferingData(appType);
+                int appType = getAppType();
+                if(!event.dontRefresh) {
+                    setAddressAndFetchOfferingData(appType);
+                }
                 saveOfferingLastAddress(appType);
                 if (getFreshCheckoutMergedFragment() != null && (getDeliveryAddressesFragment() != null || getAddToAddressBookFragmentDirect() != null)) {
                     getFreshCheckoutMergedFragment().setDeliveryAddressUpdated(true);
@@ -3676,7 +3678,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setDeliveryAddressModelToSelectedAddress();
+                            setDeliveryAddressModelToSelectedAddress(false);
                             callback.onNoClick();
                         }
                     }, false, false);
@@ -3719,13 +3721,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         deliveryAddressModel = new DeliveryAddressModel(getSelectedAddress(), getSelectedLatLng(),
                 getSelectedAddressId(), getSelectedAddressType());
         try {
-            Prefs.with(this).save(Constants.SP_FRESH_CART_ADDRESS, gson.toJson(deliveryAddressModel,
-                    DeliveryAddressModel.class));
-        } catch (Exception e) {
-        }
+            Prefs.with(this).save(getAppType() == AppConstant.ApplicationType.MENUS ?
+                    Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
+                    gson.toJson(deliveryAddressModel, DeliveryAddressModel.class));
+        } catch (Exception e) {}
     }
 
-    private void setDeliveryAddressModelToSelectedAddress() {
+    public void setDeliveryAddressModelToSelectedAddress(boolean dontRefresh) {
         if (deliveryAddressModel == null) {
             try {
                 deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(Constants.SP_FRESH_CART_ADDRESS,
@@ -3738,7 +3740,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             setSelectedLatLng(deliveryAddressModel.getLatLng());
             setSelectedAddressId(deliveryAddressModel.getId());
             setSelectedAddressType(deliveryAddressModel.getType());
-            onAddressUpdated(new AddressAdded(true));
+            onAddressUpdated(new AddressAdded(true, dontRefresh));
         }
     }
 

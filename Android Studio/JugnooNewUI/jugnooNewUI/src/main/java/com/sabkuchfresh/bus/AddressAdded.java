@@ -6,8 +6,15 @@ package com.sabkuchfresh.bus;
 public class AddressAdded {
 
     public boolean flag;
+    public boolean dontRefresh = false;
 
     public AddressAdded(boolean flag) {
         this.flag = flag;
+        this.dontRefresh = false;
+    }
+
+    public AddressAdded(boolean flag, boolean dontRefresh){
+        this.flag = flag;
+        this.dontRefresh = dontRefresh;
     }
 }
