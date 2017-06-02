@@ -315,10 +315,34 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             resetAddressFields();
 
+            String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+
             if (getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)) {
-                Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
-                setSelectedLatLng(new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude),
-                        getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude)));
+                if (lastClientId != null && lastClientId.equalsIgnoreCase(Config.getFeedClientId())){
+                    SearchResult searchResult = getGson().fromJson(Prefs.with(this).getString(Constants.SP_ASKLOCAL_LAST_ADDRESS_OBJ,
+                            Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+                    if(searchResult.getLatitude() != null && searchResult.getLongitude() != null){
+                        setSelectedLatLng(searchResult.getLatLng());
+                    } else {
+                        setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
+                    }
+                } else {
+                    LatLng latLng;
+                    if(getAppType() == AppConstant.ApplicationType.FEED){
+                        SearchResult searchResult = getGson().fromJson(Prefs.with(this).getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ,
+                                Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+                        if(searchResult.getLatitude() != null && searchResult.getLongitude() != null){
+                            latLng = searchResult.getLatLng();
+                        } else {
+                            latLng = new LatLng(Data.latitude, Data.longitude);
+                        }
+                    } else {
+                        latLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude),
+                                getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude));
+                    }
+                    Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
+                    setSelectedLatLng(latLng);
+                }
             }
 
             textViewMinOrder = (TextView) findViewById(R.id.textViewMinOrder);
@@ -429,7 +453,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             try {
                 float marginBottom = 60f;
-                String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
 
                 createAppCart(lastClientId);
 
@@ -3365,7 +3388,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     getSelectedLatLng().latitude, getSelectedLatLng().longitude);
             searchResultLocality.setId(getSelectedAddressId());
             searchResultLocality.setIsConfirmed(1);
-            Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+            if(appType == AppConstant.ApplicationType.FEED){
+                Prefs.with(this).save(Constants.SP_ASKLOCAL_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+            } else {
+                Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3375,7 +3402,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             Gson gson = new Gson();
             SearchResult searchResultLocality = gson.fromJson(Prefs.with(this)
-                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+                    .getString((appType == AppConstant.ApplicationType.FEED ?
+                            Constants.SP_ASKLOCAL_LAST_ADDRESS_OBJ :
+                            Constants.SP_FRESH_LAST_ADDRESS_OBJ), Constants.EMPTY_JSON_OBJECT), SearchResult.class);
             if (searchResultLocality != null && !TextUtils.isEmpty(searchResultLocality.getAddress())) {
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {

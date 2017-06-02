@@ -1,14 +1,14 @@
 package product.clicklabs.jugnoo.utils;
 
-import android.app.Activity;
 import android.os.Bundle;
 
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.R;
 
 /**
  * Created by socomo20 on 12/11/15.
  */
-public class CallActivity extends Activity {
+public class CallActivity extends BaseAppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
