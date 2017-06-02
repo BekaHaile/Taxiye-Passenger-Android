@@ -438,36 +438,38 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     }
 
     private void setupMapAndButtonMargins() {
-        RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
-        RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
-        int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_162);
+        if(getView() != null) {
+            RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
+            RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
+            int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_162);
 //        if (savedPlacesAdapter.getCount() + savedPlacesAdapterRecent.getCount() <= 5) {
 //            ViewGroup.LayoutParams layoutParams = scrollViewSuggestions.getLayoutParams();
 //            layoutParams.height = llLocationsContainer.getMeasuredHeight() + activity.getResources().getDimensionPixelSize(R.dimen.dp_8);
 //            scrollViewSuggestions.setLayoutParams(layoutParams);
 //            height = layoutParams.height;
 //        }
-        if (scrollViewSuggestions.getVisibility() == View.VISIBLE) {
-            if (savedPlacesAdapter.getCount() >= 3) {
-                height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
-                paramsRL.setMargins(0, 0, 0, height);
-                paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_290));
+            if (scrollViewSuggestions.getVisibility() == View.VISIBLE) {
+                if (savedPlacesAdapter.getCount() >= 3) {
+                    height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
+                    paramsRL.setMargins(0, 0, 0, height);
+                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_290));
+                } else {
+                    paramsRL.setMargins(0, 0, 0, height);
+                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+                }
             } else {
-                paramsRL.setMargins(0, 0, 0, height);
-                paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+                paramsRL.setMargins(0, 0, 0, 0);
+                paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
             }
-        } else {
-            paramsRL.setMargins(0, 0, 0, 0);
-            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
-        }
-        rlMarkerPin.setLayoutParams(paramsRL);
-        bNext.setLayoutParams(paramsB);
-        if (googleMap != null) {
-            googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
-                    height : 0);
-        }
-        if (bottomSheetBehavior != null) {
-            bottomSheetBehavior.setPeekHeight(height);
+            rlMarkerPin.setLayoutParams(paramsRL);
+            bNext.setLayoutParams(paramsB);
+            if (googleMap != null) {
+                googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+                        height : 0);
+            }
+            if (bottomSheetBehavior != null) {
+                bottomSheetBehavior.setPeekHeight(height);
+            }
         }
     }
 
@@ -704,33 +706,35 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
 
     private void setSavedPlaces() {
-        if(savedPlacesAdapter != null) {
-            savedPlacesAdapter.setList(homeUtil.getSavedPlacesWithHomeWork(activity));
-            if(savedPlacesAdapter.getCount() > 0) {
-                textViewSavedPlaces.setVisibility(View.VISIBLE);
-                listViewSavedLocations.setVisibility(View.VISIBLE);
-                textViewSavedPlaces.setText(savedPlacesAdapter.getCount() == 1 ? R.string.saved_location : R.string.saved_locations);
-            } else {
-                textViewSavedPlaces.setVisibility(View.GONE);
-                listViewSavedLocations.setVisibility(View.GONE);
+        if(getView() != null) {
+            if (savedPlacesAdapter != null) {
+                savedPlacesAdapter.setList(homeUtil.getSavedPlacesWithHomeWork(activity));
+                if (savedPlacesAdapter.getCount() > 0) {
+                    textViewSavedPlaces.setVisibility(View.VISIBLE);
+                    listViewSavedLocations.setVisibility(View.VISIBLE);
+                    textViewSavedPlaces.setText(savedPlacesAdapter.getCount() == 1 ? R.string.saved_location : R.string.saved_locations);
+                } else {
+                    textViewSavedPlaces.setVisibility(View.GONE);
+                    listViewSavedLocations.setVisibility(View.GONE);
+                }
             }
-        }
 
-        if(savedPlacesAdapterRecent != null) {
-            savedPlacesAdapterRecent.notifyDataSetChanged();
-            if (savedPlacesAdapterRecent.getCount() > 0) {
-                textViewRecentAddresses.setVisibility(View.VISIBLE);
-                listViewRecentAddresses.setVisibility(View.VISIBLE);
-                textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
-            } else {
-                textViewRecentAddresses.setVisibility(View.GONE);
-                listViewRecentAddresses.setVisibility(View.GONE);
+            if (savedPlacesAdapterRecent != null) {
+                savedPlacesAdapterRecent.notifyDataSetChanged();
+                if (savedPlacesAdapterRecent.getCount() > 0) {
+                    textViewRecentAddresses.setVisibility(View.VISIBLE);
+                    listViewRecentAddresses.setVisibility(View.VISIBLE);
+                    textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
+                } else {
+                    textViewRecentAddresses.setVisibility(View.GONE);
+                    listViewRecentAddresses.setVisibility(View.GONE);
+                }
             }
-        }
 
-        scrollViewSuggestions.setVisibility((listViewSavedLocations.getVisibility() == View.GONE
-                && listViewRecentAddresses.getVisibility() == View.GONE) ? View.GONE : View.VISIBLE);
-        setupMapAndButtonMargins();
+            scrollViewSuggestions.setVisibility((listViewSavedLocations.getVisibility() == View.GONE
+                    && listViewRecentAddresses.getVisibility() == View.GONE) ? View.GONE : View.VISIBLE);
+            setupMapAndButtonMargins();
+        }
     }
 
 

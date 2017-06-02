@@ -460,7 +460,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {
