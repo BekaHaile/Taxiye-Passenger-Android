@@ -42,6 +42,13 @@ public class ProductsResponse {
 	@SerializedName("delivery_stores")
 	@Expose
 	private List<DeliveryStore> deliveryStores = new ArrayList<DeliveryStore>();
+	@SerializedName("show_bulk_order_option")
+	@Expose
+	private int showBulkOrderOption;
+	@SerializedName("bulk_order_image")
+	@Expose
+	private String bulkOrderImage;
+
 
 	/**
 	 *
@@ -153,4 +160,14 @@ public class ProductsResponse {
 	public void setDeliveryStores(List<DeliveryStore> deliveryStores) {
 		this.deliveryStores = deliveryStores;
 	}
+
+
+	public int getShowBulkOrderOption() {
+		return showBulkOrderOption;
+	}
+
+	public String getBulkOrderImage() {
+		return bulkOrderImage;
+	}
+
 }
