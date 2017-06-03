@@ -6,8 +6,8 @@
         <item name="colorPrimaryDark">@color/white_less_dark</item>
         <item name="colorAccent">@color/white_less_dark</item>
         <item name="colorControlNormal">#e2e2e2</item>
-        <item name="colorControlActivated">@color/yellow_jugnoo</item>
-        <item name="colorControlHighlight">@color/white_less_dark</item>
+        <item name="colorControlActivated">@color/theme_color</item>
+        <item name="colorControlHighlight">@color/theme_color</item>
         <item name="android:textColorHint">#595968</item>
         <item name="android:windowContentTransitions">true</item>
     </style>

@@ -179,6 +179,7 @@
            android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
            android:textColor="@color/feed_grey_text"
            android:autoLink="all"
+           android:textColorHighlight="@color/theme_color"
            android:textIsSelectable="true"
            android:textColorLink="@color/theme_color"
            android:textSize="@dimen/font_small"

@@ -50,6 +50,7 @@
             android:layout_toRightOf="@id/iv_profile_pic"
             android:text="Jesse Cennedy"
             android:lineSpacingExtra="3dp"
+            android:textColorHighlight="@color/theme_color"
             android:textColor="@color/feed_grey_text_heading"
             android:textSize="@dimen/font_normal"
             android:autoLink="all"
