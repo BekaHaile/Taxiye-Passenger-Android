@@ -111,7 +111,7 @@
                    android:clickable="true"
                    android:layout_marginBottom="@dimen/spacing_tiny"
                    android:text="@string/dummy_text_2"
-                   android:textColorHighlight="@color/feed_grey_text_heading"
+                   android:textColorHighlight="@color/blue_selection_color"
                    android:textColor="@color/feed_grey_text_heading"
                    android:textSize="15.4sp"
                    app:font="maven" />
@@ -179,7 +179,7 @@
            android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
            android:textColor="@color/feed_grey_text"
            android:autoLink="all"
-           android:textColorHighlight="@color/theme_color"
+           android:textColorHighlight="@color/blue_selection_color"
            android:textIsSelectable="true"
            android:textColorLink="@color/theme_color"
            android:textSize="@dimen/font_small"
