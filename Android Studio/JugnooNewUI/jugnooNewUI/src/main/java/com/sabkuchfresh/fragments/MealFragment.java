@@ -413,7 +413,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                                     recyclerViewCategoryItems.smoothScrollToPosition(0);
 
-                                    if(mealsData.size()+recentOrder.size()>0) {
+                                    if(mealAdapter.getItemCount()>0) {
                                         noMealsView.setVisibility(View.GONE);
                                         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                                         activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);

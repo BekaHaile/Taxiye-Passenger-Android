@@ -339,11 +339,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 ViewHolderBulkOrder holderBulkOrder = (ViewHolderBulkOrder) holder;
                 if(!TextUtils.isEmpty(bulkOrderImage)) {
                     Picasso.with(activity).load(bulkOrderImage)
-                            .placeholder(R.drawable.ic_fresh_item_placeholder)
-                            .error(R.drawable.ic_fresh_item_placeholder)
+                            .placeholder(R.drawable.ic_fresh_new_placeholder)
+                            .error(R.drawable.ic_fresh_new_placeholder)
                             .into(holderBulkOrder.ivBulkOrder);
                 } else {
-                    Picasso.with(activity).load(R.drawable.ic_fresh_item_placeholder).into(holderBulkOrder.ivBulkOrder);
+                    Picasso.with(activity).load(R.drawable.ic_fresh_new_placeholder).into(holderBulkOrder.ivBulkOrder);
                 }
             }
         } catch (Exception e) {
@@ -431,11 +431,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     @Override
     public int getItemViewType(int position) {
-        if(position < recentOrders.size()){
+        int recentOrdersSize = recentOrders == null ? 0 : recentOrders.size();
+        int subItemsSize = subItems == null ? 0 : subItems.size();
+        if(position < recentOrdersSize){
             return STATUS_ITEM;
-        } else if(position >= recentOrders.size() && position < recentOrders.size() + subItems.size()) {
+        } else if(position >= recentOrdersSize && position < recentOrdersSize + subItemsSize) {
             return MAIN_ITEM;
-        } else if(showBulkOrderOption == 1 && position == getItemCount()-2){
+        } else if(showBulkOrderOption == 1 && position == getItemCount()-((recentOrdersSize + subItemsSize) > 0 ? 2 : 1)){
             return BULK_ORDER_ITEM;
         } else {
             return BLANK_ITEM;
