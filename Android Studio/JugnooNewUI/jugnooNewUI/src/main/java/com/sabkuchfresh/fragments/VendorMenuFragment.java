@@ -108,9 +108,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         RelativeLayout rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore);
         rlSelectedStore.setVisibility(View.GONE);
 
-        // TODO: 24/05/17 check this
-//        Prefs.with(activity).save(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
-
         mBus = (activity).getBus();
         activity.setSwipeAvailable(false);
 

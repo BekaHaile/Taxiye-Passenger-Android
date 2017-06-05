@@ -163,10 +163,13 @@ public class ProductsResponse {
 
 
 	public int getShowBulkOrderOption() {
+		// TODO: 05/06/17 remove this
+		showBulkOrderOption = 1;
 		return showBulkOrderOption;
 	}
 
 	public String getBulkOrderImage() {
+		bulkOrderImage = "http://www.hdwallpapers.in/download/game_of_thrones_season_7_winter_has_come_4k-1280x720.jpg";
 		return bulkOrderImage;
 	}
 

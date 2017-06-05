@@ -3417,7 +3417,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void setFabViewAtRide(PassengerScreenMode mode){
         //fabViewTest.setFABMenuDrawable();
-        float containerHeight = 165f;
+        float containerHeight = 160f;
         //fabViewTest.setRelativeLayoutFABVisibility(mode);
         if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
             containerHeight = containerHeight + 50f;

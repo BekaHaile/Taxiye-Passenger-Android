@@ -514,7 +514,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 // Set Jeanie Padding Bottom if Offering strip shown so that they do not overlap.
                 if(getAppType()== AppConstant.ApplicationType.MEALS &&  Data.getMealsData()!=null
                         && Data.getMealsData().getOfferStripMeals()!=null && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())) {
-                    marginBottom += getResources().getDimensionPixelSize(R.dimen.height_strip_offers);
+                    marginBottom += 35f;
                 }
 
                 fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
