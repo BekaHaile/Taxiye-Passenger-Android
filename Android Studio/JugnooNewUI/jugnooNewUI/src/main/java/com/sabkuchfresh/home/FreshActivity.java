@@ -156,6 +156,7 @@ import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.DeleteCacheIntentService;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
@@ -2187,6 +2188,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     @Override
     protected void onDestroy() {
+        startService(new Intent(this, DeleteCacheIntentService.class));
         try {
             mBus.unregister(this);
         } catch (Exception e) {

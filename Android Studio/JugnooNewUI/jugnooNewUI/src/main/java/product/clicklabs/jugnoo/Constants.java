@@ -706,4 +706,5 @@ public interface Constants {
     String KEY_OPEN_LIVE_TRACKING = "open_live_tracking";
     String SP_ASKLOCAL_LAST_ADDRESS_OBJ = "sp_asklocal_last_address_obj";
     String SP_MENUS_CART_ADDRESS = "sp_menus_cart_address";
+    String SP_CACHE_CLEAR_TIME = "sp_cache_clear_time";
 }
