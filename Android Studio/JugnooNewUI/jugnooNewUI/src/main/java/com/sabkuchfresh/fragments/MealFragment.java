@@ -85,8 +85,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<SubItem> mealsData = new ArrayList<>();
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
-    private int showBulkOrderOption;
-    private String bulkOrderImage;
+    private ProductsResponse.MealsBulkBanner mealsBulkBanner;
     private boolean resumed = false;
     private RelativeLayout relativeLayoutNoMenus;
     private TextView textViewNothingFound;
@@ -386,15 +385,14 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     recentOrder.addAll(productsResponse.getRecentOrders());
                                     status.clear();
                                     status.addAll(productsResponse.getRecentOrdersPossibleStatus());
-                                    showBulkOrderOption = productsResponse.getShowBulkOrderOption();
-                                    bulkOrderImage = productsResponse.getBulkOrderImage();
+                                    mealsBulkBanner = productsResponse.getMealsBulkBanner();
                                     activity.setProductsResponse(productsResponse);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
                                     setSortingList();
                                     if (activity.mealSort == -1) {
                                         slots.get(sortedBy).setCheck(true);
                                         activity.mealSort = sortedBy;
-                                        mealAdapter.setList(mealsData, recentOrder, status, showBulkOrderOption, bulkOrderImage);
+                                        mealAdapter.setList(mealsData, recentOrder, status, mealsBulkBanner);
                                     } else {
                                         slots.get(activity.mealSort).setCheck(true);
                                         onSortEvent(activity.mealSort);
@@ -410,8 +408,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                         }
 
                                     }
-
-                                    recyclerViewCategoryItems.smoothScrollToPosition(0);
 
                                     if(mealAdapter.getItemCount()>0) {
                                         noMealsView.setVisibility(View.GONE);
@@ -539,7 +535,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 Collections.sort(mealsData, new SubItemComparePriceHighToLow());
                 break;
         }
-        mealAdapter.setList(mealsData, recentOrder, status, showBulkOrderOption, bulkOrderImage);
+        mealAdapter.setList(mealsData, recentOrder, status, mealsBulkBanner);
     }
 
     public MealAdapter getMealAdapter(){
