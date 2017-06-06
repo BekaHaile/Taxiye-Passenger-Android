@@ -121,6 +121,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             try {
                 applyFilter();
                 if (timerHandler != null) {
+                    Log.v(TAG, "notifying automaically");
                     timerHandler.postDelayed(timerRunnable, 60000); //run every minute
                 }
             } catch (Exception e) {
@@ -391,7 +392,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 } else {
                     // restaurant about to close
                     if (minutes <= vendor.getBufferTime() && minutes > 0) {
-                        mHolder.textViewRestaurantCloseTime.setText("Closes in " + minutes + " min");
+                        mHolder.textViewRestaurantCloseTime.setText("Closing in " + minutes + (minutes>1?" mins":" min"));
                         paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 14f), paramsDelivery.rightMargin,
                                 (int)(ASSL.Yscale() * 14f));
                     }
