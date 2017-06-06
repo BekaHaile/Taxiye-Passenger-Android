@@ -666,7 +666,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             activity.sliderText.setVisibility(View.VISIBLE);
                             float percent = (event.getRawX()-getRelativeSliderLeftMargin()) / (activity.relativeLayoutSlider.getWidth()-activity.tvSlide.getWidth());
                             activity.viewAlpha.setAlpha(percent);
-                            Log.v("slide percent","--> "+percent);
                             if(percent > 0.6f){
                                 activity.sliderText.setVisibility(View.GONE);
                             } else{
@@ -1560,7 +1559,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Log.v("redirect value","redirect value"+redirect);
                                                 if(emptyCart == 1){
                                                     clearMenusCartAndGoToMenusFragment();
                                                 } else if(type == AppConstant.ApplicationType.MENUS
@@ -2339,20 +2337,39 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                     setSlideInitial();
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                     final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
-                                    DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if(emptyCart == 1){
-                                                clearMenusCartAndGoToMenusFragment();
-                                            } else if(redirect == 1) {
-                                                if(activity.getFreshSearchFragment() != null){
+                                    final int outOfRange = jObj.optInt(Constants.KEY_OUT_OF_RANGE, 0);
+                                    if(type == AppConstant.ApplicationType.MENUS && outOfRange == 1){
+                                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+                                                activity.getString(R.string.continue_text),
+                                                activity.getString(R.string.cancel),
+                                                new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        clearMenusCartAndGoToMenusFragment();
+                                                    }
+                                                },
+                                                new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        activity.setDeliveryAddressModelToSelectedAddress(true);
+                                                        getCheckoutDataAPI(selectedSubscription);
+                                                    }
+                                                }, false, false);
+                                    } else {
+                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if(emptyCart == 1){
+                                                    clearMenusCartAndGoToMenusFragment();
+                                                } else if(redirect == 1) {
+                                                    if(activity.getFreshSearchFragment() != null){
+                                                        activity.performBackPressed(false);
+                                                    }
                                                     activity.performBackPressed(false);
                                                 }
-                                                activity.performBackPressed(false);
-
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                     activity.buttonPlaceOrder.setText(activity.getString(R.string.connection_lost_try_again));
                                 }
                             }

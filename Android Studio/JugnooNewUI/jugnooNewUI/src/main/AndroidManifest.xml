@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
 
     <permission
         android:name="product.clicklabs.jugnoo.permission.MAPS_RECEIVE"
@@ -514,6 +515,10 @@
 
         <service
             android:name="com.sabkuchfresh.home.RazorpayCallbackService"
+            android:enabled="true"/>
+
+        <service
+            android:name="product.clicklabs.jugnoo.DeleteCacheIntentService"
             android:enabled="true"/>
 
     </application>

@@ -42,6 +42,13 @@ public class ProductsResponse {
 	@SerializedName("delivery_stores")
 	@Expose
 	private List<DeliveryStore> deliveryStores = new ArrayList<DeliveryStore>();
+	@SerializedName("show_bulk_order_option")
+	@Expose
+	private int showBulkOrderOption;
+	@SerializedName("bulk_order_image")
+	@Expose
+	private String bulkOrderImage;
+
 
 	/**
 	 *
@@ -153,4 +160,17 @@ public class ProductsResponse {
 	public void setDeliveryStores(List<DeliveryStore> deliveryStores) {
 		this.deliveryStores = deliveryStores;
 	}
+
+
+	public int getShowBulkOrderOption() {
+		// TODO: 05/06/17 remove this
+		showBulkOrderOption = 1;
+		return showBulkOrderOption;
+	}
+
+	public String getBulkOrderImage() {
+		bulkOrderImage = "http://www.hdwallpapers.in/download/game_of_thrones_season_7_winter_has_come_4k-1280x720.jpg";
+		return bulkOrderImage;
+	}
+
 }

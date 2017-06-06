@@ -156,6 +156,7 @@ import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.DeleteCacheIntentService;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
@@ -315,10 +316,34 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             resetAddressFields();
 
+            String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+
             if (getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)) {
-                Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
-                setSelectedLatLng(new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude),
-                        getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude)));
+                if (lastClientId != null && lastClientId.equalsIgnoreCase(Config.getFeedClientId())){
+                    SearchResult searchResult = getGson().fromJson(Prefs.with(this).getString(Constants.SP_ASKLOCAL_LAST_ADDRESS_OBJ,
+                            Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+                    if(searchResult.getLatitude() != null && searchResult.getLongitude() != null){
+                        setSelectedLatLng(searchResult.getLatLng());
+                    } else {
+                        setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
+                    }
+                } else {
+                    LatLng latLng;
+                    if(getAppType() == AppConstant.ApplicationType.FEED){
+                        SearchResult searchResult = getGson().fromJson(Prefs.with(this).getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ,
+                                Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+                        if(searchResult.getLatitude() != null && searchResult.getLongitude() != null){
+                            latLng = searchResult.getLatLng();
+                        } else {
+                            latLng = new LatLng(Data.latitude, Data.longitude);
+                        }
+                    } else {
+                        latLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude),
+                                getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude));
+                    }
+                    Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
+                    setSelectedLatLng(latLng);
+                }
             }
 
             textViewMinOrder = (TextView) findViewById(R.id.textViewMinOrder);
@@ -429,7 +454,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             try {
                 float marginBottom = 60f;
-                String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
 
                 createAppCart(lastClientId);
 
@@ -491,7 +515,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 // Set Jeanie Padding Bottom if Offering strip shown so that they do not overlap.
                 if(getAppType()== AppConstant.ApplicationType.MEALS &&  Data.getMealsData()!=null
                         && Data.getMealsData().getOfferStripMeals()!=null && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())) {
-                    marginBottom += getResources().getDimensionPixelSize(R.dimen.height_strip_offers);
+                    marginBottom += 35f;
                 }
 
                 fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
@@ -1827,6 +1851,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         slotToSelect = null;
         paymentOption = null;
         setPlaceOrderResponse(null);
+        Data.setRecentAddressesFetched(false);
 
         setSelectedAddress("");
         setSelectedLatLng(null);
@@ -2163,6 +2188,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     @Override
     protected void onDestroy() {
+        startService(new Intent(this, DeleteCacheIntentService.class));
         try {
             mBus.unregister(this);
         } catch (Exception e) {
@@ -3365,7 +3391,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     getSelectedLatLng().latitude, getSelectedLatLng().longitude);
             searchResultLocality.setId(getSelectedAddressId());
             searchResultLocality.setIsConfirmed(1);
-            Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+            if(appType == AppConstant.ApplicationType.FEED){
+                Prefs.with(this).save(Constants.SP_ASKLOCAL_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+            } else {
+                Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3375,7 +3405,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             Gson gson = new Gson();
             SearchResult searchResultLocality = gson.fromJson(Prefs.with(this)
-                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+                    .getString((appType == AppConstant.ApplicationType.FEED ?
+                            Constants.SP_ASKLOCAL_LAST_ADDRESS_OBJ :
+                            Constants.SP_FRESH_LAST_ADDRESS_OBJ), Constants.EMPTY_JSON_OBJECT), SearchResult.class);
             if (searchResultLocality != null && !TextUtils.isEmpty(searchResultLocality.getAddress())) {
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {
@@ -3409,8 +3441,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setRefreshCart(true);
                     GAUtils.event(getGaCategory(), DELIVERY_ADDRESS, MODIFIED);
                 }
-                int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
-                setAddressAndFetchOfferingData(appType);
+                int appType = getAppType();
+                if(!event.dontRefresh) {
+                    setAddressAndFetchOfferingData(appType);
+                }
                 saveOfferingLastAddress(appType);
                 if (getFreshCheckoutMergedFragment() != null && (getDeliveryAddressesFragment() != null || getAddToAddressBookFragmentDirect() != null)) {
                     getFreshCheckoutMergedFragment().setDeliveryAddressUpdated(true);
@@ -3647,7 +3681,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setDeliveryAddressModelToSelectedAddress();
+                            setDeliveryAddressModelToSelectedAddress(false);
                             callback.onNoClick();
                         }
                     }, false, false);
@@ -3690,13 +3724,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         deliveryAddressModel = new DeliveryAddressModel(getSelectedAddress(), getSelectedLatLng(),
                 getSelectedAddressId(), getSelectedAddressType());
         try {
-            Prefs.with(this).save(Constants.SP_FRESH_CART_ADDRESS, gson.toJson(deliveryAddressModel,
-                    DeliveryAddressModel.class));
-        } catch (Exception e) {
-        }
+            Prefs.with(this).save(getAppType() == AppConstant.ApplicationType.MENUS ?
+                    Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
+                    gson.toJson(deliveryAddressModel, DeliveryAddressModel.class));
+        } catch (Exception e) {}
     }
 
-    private void setDeliveryAddressModelToSelectedAddress() {
+    public void setDeliveryAddressModelToSelectedAddress(boolean dontRefresh) {
         if (deliveryAddressModel == null) {
             try {
                 deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(Constants.SP_FRESH_CART_ADDRESS,
@@ -3709,7 +3743,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             setSelectedLatLng(deliveryAddressModel.getLatLng());
             setSelectedAddressId(deliveryAddressModel.getId());
             setSelectedAddressType(deliveryAddressModel.getType());
-            onAddressUpdated(new AddressAdded(true));
+            onAddressUpdated(new AddressAdded(true, dontRefresh));
         }
     }
 

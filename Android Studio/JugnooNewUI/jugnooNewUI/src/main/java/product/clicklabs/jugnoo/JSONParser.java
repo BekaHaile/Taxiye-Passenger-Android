@@ -706,6 +706,7 @@ public class JSONParser implements Constants {
         loginAnalyticEvents(context, loginVia);
 
         Prefs.with(context).save(SP_FRESH_LAST_ADDRESS_OBJ, EMPTY_JSON_OBJECT);
+        Prefs.with(context).save(SP_ASKLOCAL_LAST_ADDRESS_OBJ, EMPTY_JSON_OBJECT);
         Data.setLatLngOfJeanieLastShown(latLng);
 
         resetMenusFilters(context);

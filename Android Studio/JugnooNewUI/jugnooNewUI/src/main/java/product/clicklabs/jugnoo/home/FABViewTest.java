@@ -449,12 +449,18 @@ public class FABViewTest implements GACategory, GAAction {
         rlGenieHelp.setLayoutParams(params);
     }
 
+    /**
+     * @param paddingBottom in pixels without scale
+     */
     public void setMenuLabelsRightTestPadding(float paddingBottom){
         float scale = activity.getResources().getDisplayMetrics().density;
         int dpAsPixels = (int) (paddingBottom * scale + 0.5f);
         setMenuLabelsRightTestPadding(dpAsPixels);
     }
 
+    /**
+     * @param paddingBottom in pixels with scale or absolute
+     */
     public void setMenuLabelsRightTestPadding(int paddingBottom){
         menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, paddingBottom);
         setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
