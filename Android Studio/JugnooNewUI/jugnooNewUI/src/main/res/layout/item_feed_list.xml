@@ -402,7 +402,7 @@
                android:lineSpacingExtra="2dp"
                android:layout_marginLeft="@dimen/spacing_normal"
                android:layout_marginRight="@dimen/spacing_normal"
-               android:textColor="@color/feed_grey_text_secondary"
+               android:textColor="@color/feed_grey_text"
                android:layout_marginBottom="2.5dp"
                android:textSize="14sp"
                android:ellipsize="end"

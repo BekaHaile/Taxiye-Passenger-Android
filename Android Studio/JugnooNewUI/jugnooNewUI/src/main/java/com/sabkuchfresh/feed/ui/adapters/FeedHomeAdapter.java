@@ -383,6 +383,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             //Set Content
             holder.tvFeedDescription.setText(feedDetail.getContent());
+            holder.tvFeedDescription.setVisibility(TextUtils.isEmpty(feedDetail.getContent())?View.GONE:View.VISIBLE);
 
             //Show User Activity Layout such as Person A commented on Person B's post
             if (showUserActivity && !isViewingDetail) {
