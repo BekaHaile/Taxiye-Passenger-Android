@@ -19,6 +19,8 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.text.util.Linkify;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +50,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -76,6 +79,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int ITEM_FOOTER_BLANK = 122;
     public static final int ITEM_PROGRESS_BAR = 123;
     private static Typeface FONT_STAR;
+    private static final Pattern PATTERN_PHONE_NUMBER_LOCAL_PATTERN = Pattern.compile("([0-9]|\\+91|\\+91-)\\d{9,}$");
 
 
 
@@ -542,6 +546,11 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.layoutComment.setVisibility(showCommentLayout?View.VISIBLE:View.GONE);
 
 
+            Linkify.addLinks(holder.tvFeedDescription,PATTERN_PHONE_NUMBER_LOCAL_PATTERN,"tel: ");
+            Linkify.addLinks(holder.tvFeedDescription,Patterns.EMAIL_ADDRESS,"mailto: ");
+            Linkify.addLinks(holder.tvFeedDescription,Patterns.WEB_URL,"http:// ");
+
+
 
         }
 
@@ -758,6 +767,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
+
     public static class ViewHolderReviewImage extends RecyclerView.ViewHolder {
         @Bind(R.id.iv_owner_profile_pic)
         ImageView ivFeedOwnerPic;
@@ -828,7 +838,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             return commentTouchListener;
         }
-      public CommentTouchListener getLikeTouchListener() {
+        public CommentTouchListener getLikeTouchListener() {
             if(likeTouchListener==null) {
                 likeTouchListener =   new CommentTouchListener(viewLike,likeButtonAnimate);
             }
