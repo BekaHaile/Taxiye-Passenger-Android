@@ -2594,7 +2594,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     public boolean addressSelectedNotValid(){
-        return (!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType()));
+        return TextUtils.isEmpty(activity.getSelectedAddressType());
     }
 
     public void updateAddressView(){

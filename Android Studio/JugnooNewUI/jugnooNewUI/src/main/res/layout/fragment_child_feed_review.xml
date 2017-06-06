@@ -166,7 +166,7 @@
                 android:minHeight="50dp"
                 android:background="@null"
                 android:gravity="left"
-                android:textColorHighlight="@color/yellow_jugnoo_alpha"
+                android:textColorHighlight="@color/blue_selection_color"
                 android:hint="@string/ask_a_question"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLength="500"

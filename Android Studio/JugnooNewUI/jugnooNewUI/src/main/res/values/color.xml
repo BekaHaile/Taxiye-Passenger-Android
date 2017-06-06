@@ -224,6 +224,7 @@
 
     <color name="grey_feed_fab">#7194d2</color>
     <color name="grey_feed_fab_pressed">#6187cb</color>
+    <color name="blue_selection_color">#667194d2</color>
 
 
     <color name="feed_grey_text">#595968</color>

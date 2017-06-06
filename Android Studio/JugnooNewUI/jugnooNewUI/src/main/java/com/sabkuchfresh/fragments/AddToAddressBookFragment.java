@@ -151,9 +151,6 @@ public class AddToAddressBookFragment extends Fragment {
                     Utils.hideSoftKeyboard(activity, editTextLabel);
                     String localAddress = getAddressFromForm();
                     if (checkFields()) {
-                        if(activity instanceof FreshActivity){
-                            ((FreshActivity)activity).setIsAddressConfirmed(true);
-                        }
                         saveAddressFromForm(localAddress, -1, -1);
                     }
                 }
