@@ -79,7 +79,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int ITEM_FOOTER_BLANK = 122;
     public static final int ITEM_PROGRESS_BAR = 123;
     private static Typeface FONT_STAR;
-    private static final Pattern PATTERN_PHONE_NUMBER_LOCAL_PATTERN = Pattern.compile("([0-9]|\\+91|\\+91-)\\d{9,}$");
+    public static final Pattern PATTERN_PHONE_NUMBER_LOCAL_PATTERN = Pattern.compile("([0-9]|\\+91|\\+91-)\\d{9,}$");
 
 
 
@@ -546,9 +546,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.layoutComment.setVisibility(showCommentLayout?View.VISIBLE:View.GONE);
 
 
-            Linkify.addLinks(holder.tvFeedDescription,PATTERN_PHONE_NUMBER_LOCAL_PATTERN,"tel: ");
-            Linkify.addLinks(holder.tvFeedDescription,Patterns.EMAIL_ADDRESS,"mailto: ");
-            Linkify.addLinks(holder.tvFeedDescription,Patterns.WEB_URL,"http:// ");
+            linkifyTextView(holder.tvFeedDescription);
 
 
 
@@ -556,6 +554,13 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
+    }
+
+    public static void linkifyTextView(TextView textView) {
+
+        Linkify.addLinks(textView,PATTERN_PHONE_NUMBER_LOCAL_PATTERN,"tel: ");
+        Linkify.addLinks(textView, Patterns.EMAIL_ADDRESS,"mailto: ");
+        Linkify.addLinks(textView,Patterns.WEB_URL,"http:// ");
     }
 
     @Override

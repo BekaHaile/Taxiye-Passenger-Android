@@ -216,6 +216,7 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
 
                 }
 
+                FeedHomeAdapter.linkifyTextView(userCommentViewHolder.tvUserNameAndComment);
             }
         } catch (Exception e) {
             e.printStackTrace();
