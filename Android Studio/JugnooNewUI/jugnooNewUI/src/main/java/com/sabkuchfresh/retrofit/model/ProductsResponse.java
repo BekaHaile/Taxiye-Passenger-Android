@@ -42,12 +42,9 @@ public class ProductsResponse {
 	@SerializedName("delivery_stores")
 	@Expose
 	private List<DeliveryStore> deliveryStores = new ArrayList<DeliveryStore>();
-	@SerializedName("show_bulk_order_option")
+	@SerializedName("meals_bulk_banner")
 	@Expose
-	private int showBulkOrderOption;
-	@SerializedName("bulk_order_image")
-	@Expose
-	private String bulkOrderImage;
+	private MealsBulkBanner mealsBulkBanner;
 
 
 	/**
@@ -161,16 +158,29 @@ public class ProductsResponse {
 		this.deliveryStores = deliveryStores;
 	}
 
-
-	public int getShowBulkOrderOption() {
-		// TODO: 05/06/17 remove this
-		showBulkOrderOption = 1;
-		return showBulkOrderOption;
+	public MealsBulkBanner getMealsBulkBanner() {
+		return mealsBulkBanner;
 	}
 
-	public String getBulkOrderImage() {
-		bulkOrderImage = "http://www.hdwallpapers.in/download/game_of_thrones_season_7_winter_has_come_4k-1280x720.jpg";
-		return bulkOrderImage;
+	public class MealsBulkBanner {
+		@SerializedName("image_url_2x")
+		private String imageUrl2X;
+		@SerializedName("image_url_3x")
+		private String imageUrl3X;
+		@SerializedName("meals_banner_enabled")
+		private int mealsBannerEnabled;
+
+		public String getImageUrl2X() {
+			return imageUrl2X;
+		}
+
+		public String getImageUrl3X() {
+			return imageUrl3X;
+		}
+
+		public int getMealsBannerEnabled() {
+			return mealsBannerEnabled;
+		}
 	}
 
 }

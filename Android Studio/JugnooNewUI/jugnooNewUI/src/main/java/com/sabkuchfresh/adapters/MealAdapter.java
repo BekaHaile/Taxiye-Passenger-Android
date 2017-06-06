@@ -17,6 +17,7 @@ import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.squareup.picasso.Picasso;
@@ -44,7 +45,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private ArrayList<RecentOrder> recentOrders;
     private ArrayList<String> possibleStatus;
     private int showBulkOrderOption;
-    private String bulkOrderImage;
+    private ProductsResponse.MealsBulkBanner mealsBulkBanner;
 
     private int listType = 0;
 
@@ -69,12 +70,12 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.callback = callback;
     }
 
-    public void setList(ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, int showBulkOrderOption, String bulkOrderImage) {
+    public void setList(ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, ProductsResponse.MealsBulkBanner mealsBulkBanner) {
         this.subItems = subItems;
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
-        this.showBulkOrderOption = !TextUtils.isEmpty(bulkOrderImage) ? showBulkOrderOption : 0;
-        this.bulkOrderImage = bulkOrderImage;
+        this.showBulkOrderOption = (mealsBulkBanner != null && !TextUtils.isEmpty(mealsBulkBanner.getImageUrl2X())) ? 1 : 0;
+        this.mealsBulkBanner = mealsBulkBanner;
         notifyDataSetChanged();
     }
 
@@ -337,8 +338,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 titleholder.relative.setBackgroundColor(activity.getResources().getColor(R.color.white));
             } else if(holder instanceof ViewHolderBulkOrder){
                 ViewHolderBulkOrder holderBulkOrder = (ViewHolderBulkOrder) holder;
-                if(!TextUtils.isEmpty(bulkOrderImage)) {
-                    Picasso.with(activity).load(bulkOrderImage)
+                if(mealsBulkBanner != null && !TextUtils.isEmpty(mealsBulkBanner.getImageUrl2X())) {
+                    Picasso.with(activity).load(mealsBulkBanner.getImageUrl2X())
                             .placeholder(R.drawable.ic_fresh_new_placeholder)
                             .error(R.drawable.ic_fresh_new_placeholder)
                             .into(holderBulkOrder.ivBulkOrder);
