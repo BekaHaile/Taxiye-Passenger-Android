@@ -2337,9 +2337,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                     setSlideInitial();
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                     final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
-                                    if(type == AppConstant.ApplicationType.MENUS && emptyCart == 1){
+                                    final int outOfRange = jObj.optInt(Constants.KEY_OUT_OF_RANGE, 0);
+                                    if(type == AppConstant.ApplicationType.MENUS && outOfRange == 1){
                                         DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
-                                                activity.getString(R.string.clear_cart),
+                                                activity.getString(R.string.continue_text),
                                                 activity.getString(R.string.cancel),
                                                 new View.OnClickListener() {
                                                     @Override
