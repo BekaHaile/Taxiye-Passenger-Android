@@ -1556,29 +1556,33 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                         final int isEmpty = jObj.optInt(Constants.KEY_IS_EMPTY, 0);
                                         final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
-                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                if(emptyCart == 1){
-                                                    clearMenusCartAndGoToMenusFragment();
-                                                } else if(type == AppConstant.ApplicationType.MENUS
-                                                        && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag
-                                                        && isEmpty == 1) {
-                                                    activity.clearMenusCart();
-                                                    activity.setRefreshCart(true);
-                                                    activity.performBackPressed(false);
-                                                    activity.setRefreshCart(true);
-                                                    activity.performBackPressed(false);
+                                        final int outOfRange = jObj.optInt(Constants.KEY_OUT_OF_RANGE, 0);
+                                        if(type == AppConstant.ApplicationType.MENUS && outOfRange == 1){
+                                            outOfRangeDialog(message);
+                                        } else {
+                                            DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    if (emptyCart == 1) {
+                                                        clearMenusCartAndGoToMenusFragment();
+                                                    } else if (type == AppConstant.ApplicationType.MENUS
+                                                            && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag
+                                                            && isEmpty == 1) {
+                                                        activity.clearMenusCart();
+                                                        activity.setRefreshCart(true);
+                                                        activity.performBackPressed(false);
+                                                        activity.setRefreshCart(true);
+                                                        activity.performBackPressed(false);
+                                                    } else if (redirect == 1) {
+                                                        activity.setRefreshCart(true);
+                                                        activity.performBackPressed(false);
+                                                        activity.setRefreshCart(true);
+                                                        activity.performBackPressed(false);
+                                                        // activity.performBackPressed();
+                                                    }/*activity.performBackPressed();*/
                                                 }
-                                                else if(redirect == 1) {
-                                                    activity.setRefreshCart(true);
-                                                    activity.performBackPressed(false);
-                                                    activity.setRefreshCart(true);
-                                                    activity.performBackPressed(false);
-                                                   // activity.performBackPressed();
-                                                }/*activity.performBackPressed();*/
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -2339,22 +2343,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                     final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
                                     final int outOfRange = jObj.optInt(Constants.KEY_OUT_OF_RANGE, 0);
                                     if(type == AppConstant.ApplicationType.MENUS && outOfRange == 1){
-                                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
-                                                activity.getString(R.string.continue_text),
-                                                activity.getString(R.string.cancel),
-                                                new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        clearMenusCartAndGoToMenusFragment();
-                                                    }
-                                                },
-                                                new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        activity.setDeliveryAddressModelToSelectedAddress(true);
-                                                        getCheckoutDataAPI(selectedSubscription);
-                                                    }
-                                                }, false, false);
+                                        outOfRangeDialog(message);
                                     } else {
                                         DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                             @Override
@@ -3184,4 +3173,24 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
     private HashMap<String, String> paramsPlaceOrder;
+
+    private void outOfRangeDialog(String message){
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+                activity.getString(R.string.continue_text),
+                activity.getString(R.string.cancel),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        clearMenusCartAndGoToMenusFragment();
+                    }
+                },
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.setDeliveryAddressModelToSelectedAddress(true);
+                        getCheckoutDataAPI(selectedSubscription);
+                    }
+                }, false, false);
+    }
+
 }
