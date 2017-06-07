@@ -368,8 +368,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                     googleMap.setMyLocationEnabled(true);
                     googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-                    googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
-                            activity.getResources().getDimensionPixelSize(R.dimen.dp_162) : 0);
+                    setupMapAndButtonMargins();
                     moveCameraToCurrent();
 
 

@@ -3176,8 +3176,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private void outOfRangeDialog(String message){
         DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
-                activity.getString(R.string.continue_text),
-                activity.getString(R.string.cancel),
+                activity.getString(R.string.change),
+                activity.getString(R.string.back),
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
