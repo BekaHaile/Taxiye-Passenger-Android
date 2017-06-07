@@ -35,6 +35,7 @@ import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.ui.fragments.FeedImagesPagerDialog;
+import com.sabkuchfresh.feed.ui.views.NoScrollTextView;
 import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
@@ -548,6 +549,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             linkifyTextView(holder.tvFeedDescription);
+            linkifyTextView(holder.tvUserCommentedName);
 
 
 
@@ -700,7 +702,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                     break;
                 case R.id.view_action_comment:
-
+                case R.id.layout_comment:
+                case R.id.tv_user_commented_name:
                     feedPostCallback.onCommentClick(feedDetail, position);
                     break;
                 case R.id.root_layout_item:
@@ -786,7 +789,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Bind(R.id.line_below_images_pager)
         View lineBelowImagesPager;
         @Bind(R.id.tv_user_commented_name)
-        TextView tvUserCommentedName;
+        NoScrollTextView tvUserCommentedName;
 
         @Bind(R.id.tv_action_comment)
         TextView tvComment;
@@ -895,6 +898,18 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
                     onClickView.onClickItem(tvMore, view);
+                }
+            });
+            layoutComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickView.onClickItem(layoutComment,view);
+                }
+            });
+            tvUserCommentedName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickView.onClickItem(tvUserCommentedName,view);
                 }
             });
             tabDots.setupWithViewPager(vpReviewImages, true);
@@ -1119,4 +1134,6 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static class ProgressBarItem{
 
     }
+
+
 }

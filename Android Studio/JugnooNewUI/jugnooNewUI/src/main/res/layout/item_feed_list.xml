@@ -391,7 +391,7 @@
            </LinearLayout>
 
 
-           <TextView
+           <com.sabkuchfresh.feed.ui.views.NoScrollTextView
                android:layout_gravity="center"
                android:layout_below="@id/view_virtual"
                android:id="@+id/tv_user_commented_name"
@@ -406,9 +406,8 @@
                android:layout_marginBottom="2.5dp"
                android:textSize="14sp"
                android:ellipsize="end"
-               android:autoLink="all"
                android:textIsSelectable="true"
-               android:textColorLink="@color/yellow_jugnoo"
+               android:textColorLink="@color/theme_color"
                android:maxLines="2"
                app:font="@string/maven_r" />
 
