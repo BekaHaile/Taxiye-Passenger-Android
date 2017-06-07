@@ -74,7 +74,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.subItems = subItems;
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
-        this.showBulkOrderOption = (mealsBulkBanner != null && !TextUtils.isEmpty(mealsBulkBanner.getImageUrl2X())) ? 1 : 0;
+        this.showBulkOrderOption = (mealsBulkBanner != null) ? mealsBulkBanner.getMealsBannerEnabled() : 0;
         this.mealsBulkBanner = mealsBulkBanner;
         notifyDataSetChanged();
     }
