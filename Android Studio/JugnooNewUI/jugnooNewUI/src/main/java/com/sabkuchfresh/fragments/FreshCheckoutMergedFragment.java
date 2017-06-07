@@ -3182,6 +3182,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     @Override
                     public void onClick(View v) {
                         clearMenusCartAndGoToMenusFragment();
+                        Utils.showToast(activity, activity.getString(R.string.your_cart_has_been_cleared));
                     }
                 },
                 new View.OnClickListener() {
