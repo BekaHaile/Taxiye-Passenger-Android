@@ -5,6 +5,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
+
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Constants;
@@ -44,7 +46,17 @@ public class MenusCartSelectedLayout {
 		ivDeleteCart.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				activity.deleteCart();
+				new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
+					@Override
+					public void onPositiveClick() {
+						activity.clearMenusCart();
+						activity.getMenusCartSelectedLayout().checkForVisibility();
+					}
+
+					@Override
+					public void onNegativeClick() {
+					}
+				}, R.style.Feed_Popup_Theme, activity, activity.getString(R.string.discard_all_items_in_cart)).show();
 			}
 		});
 

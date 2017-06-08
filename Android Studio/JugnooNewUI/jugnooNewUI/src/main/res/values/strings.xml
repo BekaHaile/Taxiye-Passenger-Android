@@ -1294,6 +1294,7 @@
     <string name="your_cart_has_been_cleared">Your cart has been cleared.</string>
     <string name="you_have_items_saved_in_cart">You have items saved in your cart</string>
     <string name="view">View</string>
+    <string name="discard_all_items_in_cart">Discard all items in the cart?</string>
 
 
 </resources>

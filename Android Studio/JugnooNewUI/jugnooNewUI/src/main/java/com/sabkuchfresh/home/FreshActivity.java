@@ -1776,7 +1776,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             clearGroceryCart();
                         } else if (type == AppConstant.ApplicationType.MENUS) {
                             clearMenusCart();
-                            menusCartSelectedLayout.checkForVisibility();
                         } else {
                             clearMealCart();
                         }
