@@ -364,6 +364,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             topBar.etSearch.addTextChangedListener(textWatcher);
 
+            menusCartSelectedLayout = new MenusCartSelectedLayout(this);
+            final View rootf = findViewById(R.id.vMenusCartSaved);
+            menusCartSelectedLayout.init(rootf);
+
+
             drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
                 @Override
                 public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -1771,6 +1776,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             clearGroceryCart();
                         } else if (type == AppConstant.ApplicationType.MENUS) {
                             clearMenusCart();
+                            menusCartSelectedLayout.checkForVisibility();
                         } else {
                             clearMealCart();
                         }
@@ -4193,7 +4199,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     private ApiFetchRestaurantMenu apiFetchRestaurantMenu;
-    public void fetchRestaurantMenuAPI(final int restaurantId){
+    public void fetchRestaurantMenuAPI(int restaurantId){
         if(apiFetchRestaurantMenu == null){
             apiFetchRestaurantMenu = new ApiFetchRestaurantMenu(this, new ApiFetchRestaurantMenu.Callback() {
                 @Override
@@ -4207,7 +4213,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
 
                 @Override
-                public void onRetry(View view) {
+                public void onRetry(View view, int restaurantId) {
                     fetchRestaurantMenuAPI(restaurantId);
                 }
 
@@ -4647,6 +4653,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if(getMenusFragment() != null) {
             getMenusFragment().applyFilter(filtersChanged);
         }
+    }
+
+    private MenusCartSelectedLayout menusCartSelectedLayout;
+    public MenusCartSelectedLayout getMenusCartSelectedLayout(){
+        return menusCartSelectedLayout;
     }
 
 }

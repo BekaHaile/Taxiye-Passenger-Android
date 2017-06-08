@@ -252,7 +252,14 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         keyboardLayoutListener.setResizeTextView(false);
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
-
+		llRoot.post(new Runnable() {
+			@Override
+			public void run() {
+				if(getView() != null){
+					activity.getMenusCartSelectedLayout().checkForVisibility();
+				}
+			}
+		});
 
         return rootView;
     }
@@ -291,6 +298,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 						activity.setRefreshCart(false);
 					}
 				}, 300);
+				activity.getMenusCartSelectedLayout().checkForVisibility();
+			} else {
+				activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
 			}
         } catch (Exception e) {
         }

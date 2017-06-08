@@ -101,24 +101,24 @@ public class ApiFetchRestaurantMenu {
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
 						DialogPopup.dismissLoadingDialog();
-						retryDialogVendorData(DialogErrorType.CONNECTION_LOST);
+						retryDialogVendorData(DialogErrorType.CONNECTION_LOST, restaurantId);
 					}
 				});
 			} else {
-				retryDialogVendorData(DialogErrorType.NO_NET);
+				retryDialogVendorData(DialogErrorType.NO_NET, restaurantId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void retryDialogVendorData(DialogErrorType dialogErrorType) {
+	private void retryDialogVendorData(DialogErrorType dialogErrorType, final int restaurantId) {
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
 				new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
-						callback.onRetry(view);
+						callback.onRetry(view, restaurantId);
 					}
 
 					@Override
@@ -137,7 +137,7 @@ public class ApiFetchRestaurantMenu {
 	public interface Callback{
 		void onSuccess();
 		void onFailure();
-		void onRetry(View view);
+		void onRetry(View view, int restaurantId);
 		void onNoRetry(View view);
 	}
 

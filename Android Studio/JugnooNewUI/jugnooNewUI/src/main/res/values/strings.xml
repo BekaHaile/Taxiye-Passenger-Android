@@ -1149,6 +1149,7 @@
     <string name="previous_plan">Previous plan</string>
     <string name="star_info_text">Shows the total amount you\'ve saved by subscribing to star</string>
     <string name="delivery_from">Delivery from</string>
+    <string name="maven">maven</string>
     <string name="maven_r">maven_regular</string>
     <string name="view_more">View more</string>
     <string name="view_less">View less</string>
@@ -1291,6 +1292,8 @@
     <string name="back">Back</string>
     <string name="change">Change</string>
     <string name="your_cart_has_been_cleared">Your cart has been cleared.</string>
+    <string name="you_have_items_saved_in_cart">You have items saved in your cart</string>
+    <string name="view">View</string>
 
 
 </resources>
