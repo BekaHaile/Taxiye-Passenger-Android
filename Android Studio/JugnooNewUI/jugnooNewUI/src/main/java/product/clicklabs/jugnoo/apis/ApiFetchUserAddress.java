@@ -64,6 +64,7 @@ public class ApiFetchUserAddress {
 							String message = JSONParser.getServerMessage(jObj);
 							if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 								new JSONParser().parseSavedAddressesFromNew(activity, fetchUserAddressResponse);
+								Data.setRecentAddressesFetched(true);
 								callback.onSuccess();
 							} else {
 								DialogPopup.alertPopup(activity, "", message);

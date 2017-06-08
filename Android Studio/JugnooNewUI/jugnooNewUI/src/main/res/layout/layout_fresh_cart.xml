@@ -76,6 +76,7 @@
                         android:textAllCaps="true"
                         android:textColor="@color/text_color_light"
                         android:textSize="@dimen/text_size_32"
+                        android:visibility="gone"
                         />
 
 

@@ -42,6 +42,10 @@ public class ProductsResponse {
 	@SerializedName("delivery_stores")
 	@Expose
 	private List<DeliveryStore> deliveryStores = new ArrayList<DeliveryStore>();
+	@SerializedName("meals_bulk_banner")
+	@Expose
+	private MealsBulkBanner mealsBulkBanner;
+
 
 	/**
 	 *
@@ -153,4 +157,30 @@ public class ProductsResponse {
 	public void setDeliveryStores(List<DeliveryStore> deliveryStores) {
 		this.deliveryStores = deliveryStores;
 	}
+
+	public MealsBulkBanner getMealsBulkBanner() {
+		return mealsBulkBanner;
+	}
+
+	public class MealsBulkBanner {
+		@SerializedName("image_url_2x")
+		private String imageUrl2X;
+		@SerializedName("image_url_3x")
+		private String imageUrl3X;
+		@SerializedName("meals_banner_enabled")
+		private int mealsBannerEnabled;
+
+		public String getImageUrl2X() {
+			return imageUrl2X;
+		}
+
+		public String getImageUrl3X() {
+			return imageUrl3X;
+		}
+
+		public int getMealsBannerEnabled() {
+			return mealsBannerEnabled;
+		}
+	}
+
 }

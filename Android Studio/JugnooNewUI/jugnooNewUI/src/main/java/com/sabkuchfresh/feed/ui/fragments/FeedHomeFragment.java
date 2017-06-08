@@ -90,6 +90,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private MenuItem itemCart;
     private long notificationsSeenCount = 0;
     private int UPDATE_NOTIFICATION_COUNT_INTERVAL = 15 * 1000;
+    private boolean isResumed;
 
 
     public FeedHomeFragment() {
@@ -353,7 +354,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
             isFragmentHidden = true;
             activity.fragmentUISetup(this);
-
             activity.getFeedHomeAddPostView().setVisibility(relativeLayoutNotAvailable.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             activity.getHandler().postDelayed(new Runnable() {
                 @Override
@@ -378,6 +378,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     @Override
     public void onResume() {
         super.onResume();
+        isResumed = true;
         setUpNotificationCountAPI(1000);
     }
 
@@ -389,6 +390,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     @Override
     public void onPause() {
         super.onPause();
+        isResumed = false;
         activity.getHandler().removeCallbacks(runnableNotificationCount);
         activity.getTvAddPost().clearAnimAndSetText();
         activity.getHandler().removeCallbacks(showAddPostOnIdleStateOfScroll);
@@ -459,7 +461,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
 
                 //Set Data for Add Post View
-                if(animateAddPostText && activity.getTopFragment() instanceof FeedHomeFragment){
+                if(animateAddPostText && isResumed && activity.getTopFragment() instanceof FeedHomeFragment){
                     activity.getTvAddPost().animateText(feedbackResponse.getAddPostText());
 
                 }else{

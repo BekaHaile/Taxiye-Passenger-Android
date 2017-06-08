@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SubItem;
-import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,12 +44,15 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private Callback callback;
     private ArrayList<RecentOrder> recentOrders;
     private ArrayList<String> possibleStatus;
+    private int showBulkOrderOption;
+    private ProductsResponse.MealsBulkBanner mealsBulkBanner;
 
     private int listType = 0;
 
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
     private static final int STATUS_ITEM = 2;
+    private static final int BULK_ORDER_ITEM = 3;
 
 
     public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems) {
@@ -65,8 +70,12 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.callback = callback;
     }
 
-    public void setList(ArrayList<SubItem> subItems) {
+    public void setList(ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, ProductsResponse.MealsBulkBanner mealsBulkBanner) {
         this.subItems = subItems;
+        this.recentOrders = recentOrders;
+        this.possibleStatus = possibleStatus;
+        this.showBulkOrderOption = (mealsBulkBanner != null) ? mealsBulkBanner.getMealsBannerEnabled() : 0;
+        this.mealsBulkBanner = mealsBulkBanner;
         notifyDataSetChanged();
     }
 
@@ -96,6 +105,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
             ASSL.DoMagic(v);
             return new ViewTitleHolder(v);
+        } else if (viewType == BULK_ORDER_ITEM) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_bulk_order, parent, false);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+            int margin = activity.getResources().getDimensionPixelSize(R.dimen.dp_12);
+            layoutParams.setMargins(margin, margin, margin, margin);
+            v.setLayoutParams(layoutParams);
+            return new ViewHolderBulkOrder(v);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
@@ -320,6 +336,16 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
                 titleholder.relative.setVisibility(View.VISIBLE);
                 titleholder.relative.setBackgroundColor(activity.getResources().getColor(R.color.white));
+            } else if(holder instanceof ViewHolderBulkOrder){
+                ViewHolderBulkOrder holderBulkOrder = (ViewHolderBulkOrder) holder;
+                if(mealsBulkBanner != null && !TextUtils.isEmpty(mealsBulkBanner.getImageUrl2X())) {
+                    Picasso.with(activity).load(mealsBulkBanner.getImageUrl2X())
+                            .placeholder(R.drawable.ic_fresh_new_placeholder)
+                            .error(R.drawable.ic_fresh_new_placeholder)
+                            .into(holderBulkOrder.ivBulkOrder);
+                } else {
+                    Picasso.with(activity).load(R.drawable.ic_fresh_new_placeholder).into(holderBulkOrder.ivBulkOrder);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -406,25 +432,24 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     @Override
     public int getItemViewType(int position) {
-        if(position < recentOrders.size()){
+        int recentOrdersSize = recentOrders == null ? 0 : recentOrders.size();
+        int subItemsSize = subItems == null ? 0 : subItems.size();
+        if(position < recentOrdersSize){
             return STATUS_ITEM;
-        } else if(position >= recentOrders.size() && position < recentOrders.size() + subItems.size()) {
+        } else if(position >= recentOrdersSize && position < recentOrdersSize + subItemsSize) {
             return MAIN_ITEM;
-        } else{
+        } else if(showBulkOrderOption == 1 && position == getItemCount()-((recentOrdersSize + subItemsSize) > 0 ? 2 : 1)){
+            return BULK_ORDER_ITEM;
+        } else {
             return BLANK_ITEM;
         }
-//        return slots.get(position).getSlotViewType().getOrdinal();
     }
 
     @Override
     public int getItemCount() {
-        if (listType == AppConstant.ListType.HOME) {
-            int recentOrdersSize = recentOrders == null ? 0 : recentOrders.size();
-            int subItemsSize = subItems == null ? 0 : subItems.size();
-            return ((recentOrdersSize + subItemsSize) > 0) ? (recentOrdersSize + subItemsSize + 1) : 0;
-        } else {
-            return subItems == null ? 0 : subItems.size();
-        }
+        int recentOrdersSize = recentOrders == null ? 0 : recentOrders.size();
+        int subItemsSize = subItems == null ? 0 : subItems.size();
+        return (((recentOrdersSize + subItemsSize) > 0) ? (recentOrdersSize + subItemsSize + 1) : 0) + showBulkOrderOption;
     }
 
 //    @Override
@@ -528,4 +553,20 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     }
 
+
+    class ViewHolderBulkOrder extends RecyclerView.ViewHolder {
+
+        public ImageView ivBulkOrder;
+
+        public ViewHolderBulkOrder(View itemView) {
+            super(itemView);
+            ivBulkOrder = (ImageView) itemView.findViewById(R.id.ivBulkOrder);
+            ivBulkOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FuguConfig.getInstance().showConversations(activity);
+                }
+            });
+        }
+    }
 }

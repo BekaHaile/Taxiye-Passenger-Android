@@ -122,6 +122,7 @@ import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.DeleteCacheIntentService;
 import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
@@ -3417,7 +3418,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void setFabViewAtRide(PassengerScreenMode mode){
         //fabViewTest.setFABMenuDrawable();
-        float containerHeight = 165f;
+        float containerHeight = 160f;
         //fabViewTest.setRelativeLayoutFABVisibility(mode);
         if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
             containerHeight = containerHeight + 50f;
@@ -4721,6 +4722,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public void onDestroy() {
         try {
+            startService(new Intent(this, DeleteCacheIntentService.class));
 
             GCMIntentService.clearNotifications(HomeActivity.this);
 
@@ -7364,6 +7366,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.autoData.setPickupAddress("");
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
+            Data.setRecentAddressesFetched(false);
             dropLocationSet = false;
             zoomedForSearch = false;
             confirmedScreenOpened = false;

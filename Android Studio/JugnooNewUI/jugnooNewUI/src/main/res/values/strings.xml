@@ -1288,6 +1288,9 @@
     <string name="start_typing_a_cuisine">Start typing a cuisine…</string>
     <string name="minimum_order_amount">Minimum Order Amount</string>
     <string name="star_checkout_wallet_not_selected">Please select a wallet.</string>
+    <string name="back">Back</string>
+    <string name="change">Change</string>
+    <string name="your_cart_has_been_cleared">Your cart has been cleared.</string>
 
 
 </resources>

@@ -14,7 +14,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.UUID;
 
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.apis.ApiTrackPush;
@@ -607,5 +606,11 @@ public class Data {
 		Data.fuguChatBundle = fuguChatBundle;
 	}
 
-
+	private static boolean recentAddressesFetched = false;
+	public static boolean isRecentAddressesFetched() {
+		return recentAddressesFetched;
+	}
+	public static void setRecentAddressesFetched(boolean recentAddressesFetched) {
+		Data.recentAddressesFetched = recentAddressesFetched;
+	}
 }

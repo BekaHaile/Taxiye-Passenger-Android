@@ -350,7 +350,15 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
         bottomSheetBehavior = BottomSheetBehavior.from(scrollViewSuggestions);
         setSavedPlaces();
-        getApiFetchUserAddress().hit(false);
+        if(!Data.isRecentAddressesFetched()) {
+            getApiFetchUserAddress().hit(false);
+        }
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                getApiCallback().onFinish();
+            }
+        });
 
         ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap)).getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -360,8 +368,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                     googleMap.setMyLocationEnabled(true);
                     googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-                    googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
-                            activity.getResources().getDimensionPixelSize(R.dimen.dp_162) : 0);
+                    setupMapAndButtonMargins();
                     moveCameraToCurrent();
 
 
@@ -438,36 +445,38 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     }
 
     private void setupMapAndButtonMargins() {
-        RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
-        RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
-        int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_162);
+        if(getView() != null) {
+            RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
+            RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
+            int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_162);
 //        if (savedPlacesAdapter.getCount() + savedPlacesAdapterRecent.getCount() <= 5) {
 //            ViewGroup.LayoutParams layoutParams = scrollViewSuggestions.getLayoutParams();
 //            layoutParams.height = llLocationsContainer.getMeasuredHeight() + activity.getResources().getDimensionPixelSize(R.dimen.dp_8);
 //            scrollViewSuggestions.setLayoutParams(layoutParams);
 //            height = layoutParams.height;
 //        }
-        if (scrollViewSuggestions.getVisibility() == View.VISIBLE) {
-            if (savedPlacesAdapter.getCount() >= 3) {
-                height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
-                paramsRL.setMargins(0, 0, 0, height);
-                paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_290));
+            if (scrollViewSuggestions.getVisibility() == View.VISIBLE) {
+                if (savedPlacesAdapter.getCount() >= 3) {
+                    height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
+                    paramsRL.setMargins(0, 0, 0, height);
+                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_290));
+                } else {
+                    paramsRL.setMargins(0, 0, 0, height);
+                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+                }
             } else {
-                paramsRL.setMargins(0, 0, 0, height);
-                paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+                paramsRL.setMargins(0, 0, 0, 0);
+                paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
             }
-        } else {
-            paramsRL.setMargins(0, 0, 0, 0);
-            paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
-        }
-        rlMarkerPin.setLayoutParams(paramsRL);
-        bNext.setLayoutParams(paramsB);
-        if (googleMap != null) {
-            googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
-                    height : 0);
-        }
-        if (bottomSheetBehavior != null) {
-            bottomSheetBehavior.setPeekHeight(height);
+            rlMarkerPin.setLayoutParams(paramsRL);
+            bNext.setLayoutParams(paramsB);
+            if (googleMap != null) {
+                googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+                        height : 0);
+            }
+            if (bottomSheetBehavior != null) {
+                bottomSheetBehavior.setPeekHeight(height);
+            }
         }
     }
 
@@ -779,9 +788,18 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
 
     private ApiFetchUserAddress apiFetchUserAddress;
+    private ApiFetchUserAddress.Callback apiCallback;
     private ApiFetchUserAddress getApiFetchUserAddress(){
         if(apiFetchUserAddress == null){
-            apiFetchUserAddress = new ApiFetchUserAddress(activity, new ApiFetchUserAddress.Callback() {
+
+            apiFetchUserAddress = new ApiFetchUserAddress(activity, getApiCallback());
+        }
+        return apiFetchUserAddress;
+    }
+
+    private ApiFetchUserAddress.Callback getApiCallback(){
+        if(apiCallback == null){
+            apiCallback = new ApiFetchUserAddress.Callback() {
                 @Override
                 public void onSuccess() {
                 }
@@ -806,9 +824,9 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     setSavedPlaces();
                     moveCameraToCurrent();
                 }
-            });
+            };
         }
-        return apiFetchUserAddress;
+        return apiCallback;
     }
 
     @Override
