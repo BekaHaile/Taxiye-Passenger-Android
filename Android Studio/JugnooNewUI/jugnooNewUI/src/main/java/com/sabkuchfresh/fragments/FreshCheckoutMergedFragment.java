@@ -2084,11 +2084,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             PromoCoupon pcOld = activity.getSelectedPromoCoupon();
             activity.setSelectedPromoCoupon(noSelectionCoupon);
 
+            boolean pcOldReturned = false;
             for (PromoCoupon promoCoupon : promoCoupons) {
                 if (pcOld.getId() == promoCoupon.getId()) {
                     pcOld = promoCoupon;
+                    pcOldReturned = true;
                     break;
                 }
+            }
+            if(!pcOldReturned){
+                pcOld = null;
             }
 
             for (PromoCoupon promoCoupon : promoCoupons) {
