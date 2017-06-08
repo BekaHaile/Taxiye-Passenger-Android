@@ -88,7 +88,7 @@
                 android:layout_marginTop="@dimen/dp_5"
                 android:background="@drawable/background_white_rounded_bordered"
                 android:gravity="left"
-                android:hint="Please specify the reason"
+                android:hint="Tell us more..."
                 android:maxLength="250"
                 android:minHeight="@dimen/dp_80"
                 android:padding="@dimen/dp_10"
@@ -96,6 +96,8 @@
                 android:textCursorDrawable="@drawable/cursor_black"
                 app:font="maven"
                 android:visibility="gone"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/text_color_hint"
                 />
 
             <TextView
