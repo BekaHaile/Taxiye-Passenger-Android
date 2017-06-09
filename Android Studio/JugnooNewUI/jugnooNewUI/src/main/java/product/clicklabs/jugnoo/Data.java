@@ -263,7 +263,7 @@ public class Data {
 			Prefs.with(context).remove(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED);
 
 
-			Prefs.with(context).remove(Constants.SP_MENUS_CART);
+//			Prefs.with(context).remove(Constants.SP_MENUS_CART);
 			Prefs.with(context).remove(Constants.SP_FRESH_CHECKOUT_SAVE_DATA);
 			Prefs.with(context).remove(Constants.SP_MEALS_CHECKOUT_SAVE_DATA);
 			Prefs.with(context).remove(Constants.SP_GROCERY_CHECKOUT_SAVE_DATA);
@@ -278,7 +278,7 @@ public class Data {
 			Paper.book().delete(PaperDBKeys.DB_FRESH_CART);
 			Paper.book().delete(PaperDBKeys.DB_MEALS_CART);
 			Paper.book().delete(PaperDBKeys.DB_PREVIOUS_VENDOR);
-
+			Paper.book().delete(PaperDBKeys.DB_MENUS_CART);
 
 		} catch (Exception e) {
 			e.printStackTrace();

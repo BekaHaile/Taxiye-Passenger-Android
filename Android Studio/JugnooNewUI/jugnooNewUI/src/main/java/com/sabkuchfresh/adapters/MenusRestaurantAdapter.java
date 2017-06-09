@@ -1210,7 +1210,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                 ShowPanelResponse.Item item = new ShowPanelResponse.Item();
                                 item.setActionType(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal());
                                 item.setSupportId(123);
-                                item.setParentId(12);
                                 item.setText("Need any help, type in comment box");
                                 item.setViewType(ViewType.TEXT_BOX.getOrdinal());
 

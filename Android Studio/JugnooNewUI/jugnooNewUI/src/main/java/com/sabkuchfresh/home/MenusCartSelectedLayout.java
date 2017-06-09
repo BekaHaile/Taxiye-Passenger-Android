@@ -7,11 +7,7 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by shankar on 08/06/17.
@@ -55,15 +51,25 @@ public class MenusCartSelectedLayout {
 
 	public void checkForVisibility(){
 		try {
-			JSONObject jsonSavedCart = new JSONObject(Prefs.with(activity).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
-			vendorId = jsonSavedCart.optInt(Constants.KEY_RESTAURANT_ID, -1);
-			if(vendorId > 0){
-				String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
+			RestaurantCart restaurantCart = activity.getMenusCart().getRestaurantCartFilled();
+			if(restaurantCart != null){
+				vendorId = restaurantCart.getRestaurant().getRestaurantId();
+				String oldRestaurantName = restaurantCart.getRestaurant().getName();
 				rlMenusCartSelected.setVisibility(View.VISIBLE);
 				tvRestName.setText(oldRestaurantName);
 			} else {
 				rlMenusCartSelected.setVisibility(View.GONE);
 			}
+
+//			JSONObject jsonSavedCart = new JSONObject(Prefs.with(activity).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
+//			vendorId = jsonSavedCart.optInt(Constants.KEY_RESTAURANT_ID, -1);
+//			if(vendorId > 0){
+//				String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
+//				rlMenusCartSelected.setVisibility(View.VISIBLE);
+//				tvRestName.setText(oldRestaurantName);
+//			} else {
+//				rlMenusCartSelected.setVisibility(View.GONE);
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

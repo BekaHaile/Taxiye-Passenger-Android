@@ -2412,6 +2412,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                 }
                                 if (jsonArrayItem.length() > 0) {
                                     jCart.put(String.valueOf(item.getRestaurantItemId()), jsonArrayItem);
+                                    getMenusCart().putItemForRestaurant(getVendorOpened(), item);
                                 }
                             }
                         }
@@ -2425,21 +2426,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             }
                             if (jsonArrayItem.length() > 0) {
                                 jCart.put(String.valueOf(item.getRestaurantItemId()), jsonArrayItem);
+                                getMenusCart().putItemForRestaurant(getVendorOpened(), item);
                             }
                         }
                     }
                 }
             }
-            if (getVendorOpened() != null) {
-                JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
-                if (getVendorOpened().getRestaurantId().equals(jsonSavedCart.optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))) {
-                    if (jCart.length() > 0) {
-                        jCart.put(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId());
-                        jCart.put(Constants.KEY_RESTAURANT_NAME, getVendorOpened().getName());
-                    }
-                    Prefs.with(this).save(Constants.SP_MENUS_CART, jCart.toString());
-                }
-            }
+//            if (getVendorOpened() != null) {
+//                JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
+//                if (getVendorOpened().getRestaurantId().equals(jsonSavedCart.optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))) {
+//                    if (jCart.length() > 0) {
+//                        jCart.put(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId());
+//                        jCart.put(Constants.KEY_RESTAURANT_NAME, getVendorOpened().getName());
+//                    }
+//                    Prefs.with(this).save(Constants.SP_MENUS_CART, jCart.toString());
+//                }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2500,46 +2502,51 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private void updateItemListFromSPMenus() {
         try {
-            Gson gson = new Gson();
-            JSONObject jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
+//            Gson gson = new Gson();
+//            JSONObject jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
             if (getMenuProductsResponse() != null
                     && getMenuProductsResponse().getCategories() != null) {
                 for (com.sabkuchfresh.retrofit.model.menus.Category category : getMenuProductsResponse().getCategories()) {
                     if (category.getSubcategories() != null) {
                         for (Subcategory subcategory : category.getSubcategories()) {
                             for (Item item : subcategory.getItems()) {
-                                item.getItemSelectedList().clear();
-                                JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
-                                if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
-                                    for (int i = 0; i < jsonArrayItem.length(); i++) {
-                                        try {
-                                            ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
-                                            if (itemSelected.getQuantity() > 0) {
-												itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
-                                                item.getItemSelectedList().add(itemSelected);
-                                            }
-                                        } catch (Exception e) {
-                                        }
-                                    }
-                                }
+//                                item.getItemSelectedList().clear();
+//                                JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
+//                                if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
+//                                    for (int i = 0; i < jsonArrayItem.length(); i++) {
+//                                        try {
+//                                            ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
+//                                            if (itemSelected.getQuantity() > 0) {
+//												itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
+//                                                item.getItemSelectedList().add(itemSelected);
+//                                            }
+//                                        } catch (Exception e) {
+//                                        }
+//                                    }
+//                                }
+
+                                getMenusCart().updateItemForRestaurant(getVendorOpened(), item);
+
                             }
                         }
                     } else if (category.getItems() != null) {
                         for (Item item : category.getItems()) {
-                            item.getItemSelectedList().clear();
-                            JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
-                            if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
-                                for (int i = 0; i < jsonArrayItem.length(); i++) {
-                                    try {
-                                        ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
-                                        if (itemSelected.getQuantity() > 0) {
-											itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
-                                            item.getItemSelectedList().add(itemSelected);
-                                        }
-                                    } catch (Exception e) {
-                                    }
-                                }
-                            }
+//                            item.getItemSelectedList().clear();
+//                            JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
+//                            if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
+//                                for (int i = 0; i < jsonArrayItem.length(); i++) {
+//                                    try {
+//                                        ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
+//                                        if (itemSelected.getQuantity() > 0) {
+//											itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
+//                                            item.getItemSelectedList().add(itemSelected);
+//                                        }
+//                                    } catch (Exception e) {
+//                                    }
+//                                }
+//                            }
+
+                            getMenusCart().updateItemForRestaurant(getVendorOpened(), item);
                         }
                     }
                 }
@@ -2569,7 +2576,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     public void clearMenusCart() {
-        Prefs.with(this).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
+//        Prefs.with(this).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
+        Paper.book().delete(DB_MENUS_CART);
+        createAppCart(Config.getMenusClientId());
     }
 
     @Subscribe
@@ -3069,6 +3078,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void setVendorOpened(MenusResponse.Vendor vendorOpened) {
         this.vendorOpened = vendorOpened;
+        getMenusCart().updateRestaurant(vendorOpened);
     }
 
 
@@ -3254,11 +3264,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public boolean checkForAdd(final int position, final Item item, final MenusCategoryItemsAdapter.CallbackCheckForAdd callbackCheckForAdd) {
         try {
-            JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
-            if (getVendorOpened() != null
-                    && !getVendorOpened().getRestaurantId().equals(jsonSavedCart
-                    .optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))) {
-                String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
+            RestaurantCart restaurantCart = getMenusCart().getRestaurantCartFilled();
+
+//            JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
+            if (getVendorOpened() != null && restaurantCart != null
+                    && !getVendorOpened().getRestaurantId().equals(restaurantCart.getRestaurant().getRestaurantId())) {
+                String oldRestaurantName = restaurantCart.getRestaurant().getName();
                 DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
                         getString(R.string.previous_vendor_cart_message_format, oldRestaurantName),
                         getString(R.string.ok), getString(R.string.cancel),
@@ -4247,6 +4258,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
             appCart = Paper.book().read(DB_MEALS_CART, new AppCart());
         }
+        else if(clientId.equalsIgnoreCase(Config.getMenusClientId())){
+            menusCart = Paper.book().read(DB_MENUS_CART, new MenusCart());
+        }
     }
     private void saveAppCart(String clientId){
         if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
@@ -4261,6 +4275,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 Paper.book().write(DB_MEALS_CART, appCart);
             } else {
                 Paper.book().delete(DB_MEALS_CART);
+            }
+        }
+        else if(clientId.equalsIgnoreCase(Config.getMenusClientId())){
+            if(menusCart != null) {
+                Paper.book().write(DB_MENUS_CART, menusCart);
+            } else {
+                Paper.book().delete(DB_MENUS_CART);
             }
         }
     }
@@ -4668,4 +4689,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return menusCartSelectedLayout;
     }
 
+
+    private MenusCart menusCart;
+    public MenusCart getMenusCart(){
+        return menusCart;
+    }
 }
