@@ -131,7 +131,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
 
                 holder.textViewValue.setVisibility(View.GONE);
-//                holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
                 LinearLayout.LayoutParams paramsP = (LinearLayout.LayoutParams) holder.textViewValue.getLayoutParams();
                 paramsP.width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 holder.textViewValue.setLayoutParams(paramsP);

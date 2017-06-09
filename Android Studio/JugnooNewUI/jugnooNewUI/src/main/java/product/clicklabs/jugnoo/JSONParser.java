@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.datastructure.FreshData;
 import product.clicklabs.jugnoo.datastructure.GroceryData;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.MealsData;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PayData;
@@ -715,7 +716,17 @@ public class JSONParser implements Constants {
         resetIsVegToggle(context);
 
         try {
-            if(Data.getFuguUserData()!=null) {
+
+            Data.setIsFuguChatEnabled(false);
+            ArrayList<MenuInfo> itemsToShow = Data.userData.getMenuInfoList();
+            for(MenuInfo menuInfo: itemsToShow){
+               if (MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                   Data.setIsFuguChatEnabled(true);
+               }
+            }
+
+
+            if(Data.isFuguChatEnabled() && Data.getFuguUserData()!=null) {
                 FuguNotificationConfig.updateFcmRegistrationToken(MyApplication.getInstance().getDeviceToken());
                 FuguConfig.getInstance().registerIdentifiedUser((Activity) context, Data.getFuguUserData());
 
