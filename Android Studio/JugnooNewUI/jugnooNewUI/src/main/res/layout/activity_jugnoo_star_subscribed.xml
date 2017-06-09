@@ -472,6 +472,7 @@
         android:textAllCaps="true"
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
+        android:textSize="@dimen/px_34"
         android:text="@string/upgrade_now" />
 
     <RelativeLayout
