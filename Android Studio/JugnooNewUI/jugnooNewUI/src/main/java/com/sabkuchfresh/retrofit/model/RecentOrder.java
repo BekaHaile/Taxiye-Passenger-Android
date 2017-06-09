@@ -239,11 +239,14 @@ public class RecentOrder {
         this.trackDeliveryMessage = trackDeliveryMessage;
     }
 
+    // TODO: 09/06/17 remove this
     public int getOrderNotDeliveredYet() {
+        orderNotDeliveredYet = 1;
         return orderNotDeliveredYet;
     }
 
     public String getOrderNotDeliveredMessage() {
+        orderNotDeliveredMessage = "It seems your order is not delivered yet, want some help?";
         return orderNotDeliveredMessage;
     }
 }

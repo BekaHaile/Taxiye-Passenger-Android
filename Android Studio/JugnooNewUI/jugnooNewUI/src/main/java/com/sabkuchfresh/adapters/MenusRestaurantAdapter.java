@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
@@ -56,7 +55,10 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.TransactionUtils;
+import product.clicklabs.jugnoo.support.models.ActionType;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -1189,7 +1191,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         public void onClick(View v) {
             try {
                 int pos = (int) v.getTag();
-                RecentOrder order = recentOrders.get(pos);
+                final RecentOrder order = recentOrders.get(pos);
                 if(order.getOrderNotDeliveredYet() == 1) {
                     getDialogPopupTwoButtonCapsule().show(new DialogPopupTwoButtonCapsule.DialogCallback() {
                         @Override
@@ -1198,12 +1200,28 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                         @Override
                         public void onRightClick() {
-                            if(Data.isFuguChatEnabled()){
-                                FuguConfig.getInstance().showConversations(activity);
-                            } else {
-                                activity.startActivity(new Intent(activity, SupportActivity.class));
-                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                            }
+                            // TODO: 09/06/17 remove this
+//                            if(Data.isFuguChatEnabled()){
+//                                FuguConfig.getInstance().showConversations(activity);
+//                            } else {
+//                                activity.startActivity(new Intent(activity, SupportActivity.class));
+//                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+                                ShowPanelResponse.Item item = new ShowPanelResponse.Item();
+                                item.setActionType(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal());
+                                item.setSupportId(123);
+                                item.setParentId(12);
+                                item.setText("Need any help, type in comment box");
+                                item.setViewType(ViewType.TEXT_BOX.getOrdinal());
+
+                                new TransactionUtils().openItemInFragment(activity,
+                                        activity.getRelativeLayoutContainer(),
+                                        -1, "", activity.getString(R.string.how_can_we_help),
+                                        item, "",
+                                        order.getOrderId(), order.getExpectedDeliveryDate(),
+                                        Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
+
+//                            }
                         }
                     }, order.getOrderNotDeliveredMessage(), activity.getString(R.string.cancel), activity.getString(R.string.get_help));
                 }

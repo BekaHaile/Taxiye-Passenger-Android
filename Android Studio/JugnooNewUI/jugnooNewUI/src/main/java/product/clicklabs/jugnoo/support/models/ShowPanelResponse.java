@@ -715,7 +715,7 @@ public class ShowPanelResponse {
 		}
 	}
 
-	public class Item {
+	public static class Item {
 
 		@SerializedName("support_id")
 		@Expose

@@ -326,7 +326,7 @@
             android:layout_height="wrap_content"
             android:tag="@string/dont_touch_me"
             android:layout_below="@+id/rlTrackViewOrder"
-            android:background="@color/yellow"
+            android:background="@color/grey_alpha_50"
             android:visibility="gone"
             >
 
@@ -334,7 +334,7 @@
                 android:id="@+id/tvOrderNotDelivered"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/text_color_light"
                 android:textSize="@dimen/sp_12"
                 android:layout_margin="@dimen/dp_7"
                 android:layout_centerInParent="true"
