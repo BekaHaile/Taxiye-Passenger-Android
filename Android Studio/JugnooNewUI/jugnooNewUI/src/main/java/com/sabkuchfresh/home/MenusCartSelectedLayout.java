@@ -46,17 +46,7 @@ public class MenusCartSelectedLayout {
 		ivDeleteCart.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
-					@Override
-					public void onPositiveClick() {
-						activity.clearMenusCart();
-						activity.getMenusCartSelectedLayout().checkForVisibility();
-					}
-
-					@Override
-					public void onNegativeClick() {
-					}
-				}, R.style.Feed_Popup_Theme, activity, activity.getString(R.string.discard_all_items_in_cart)).show();
+				getDialogPopupTwoButtonCapsule().show();
 			}
 		});
 
@@ -87,4 +77,21 @@ public class MenusCartSelectedLayout {
 		}
 	}
 
+	private DialogPopupTwoButtonCapsule dialogPopupTwoButtonCapsule;
+	private DialogPopupTwoButtonCapsule getDialogPopupTwoButtonCapsule(){
+		if(dialogPopupTwoButtonCapsule == null){
+			dialogPopupTwoButtonCapsule = new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
+				@Override
+				public void onLeftClick() {
+					activity.clearMenusCart();
+					activity.getMenusCartSelectedLayout().checkForVisibility();
+				}
+
+				@Override
+				public void onRightClick() {
+				}
+			}, R.style.Feed_Popup_Theme, activity, activity.getString(R.string.discard_all_items_in_cart));
+		}
+		return dialogPopupTwoButtonCapsule;
+	}
 }

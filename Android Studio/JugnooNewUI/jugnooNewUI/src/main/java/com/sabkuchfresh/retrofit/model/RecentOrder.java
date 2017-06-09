@@ -58,6 +58,12 @@ public class RecentOrder {
     @Expose
     private String trackDeliveryMessage;
 
+    @SerializedName("order_not_delivered_yet")
+    @Expose
+    private int orderNotDeliveredYet;
+    @SerializedName("order_not_delivered_message")
+    @Expose
+    private String orderNotDeliveredMessage;
 
     /**
      *
@@ -231,5 +237,13 @@ public class RecentOrder {
 
     public void setTrackDeliveryMessage(String trackDeliveryMessage) {
         this.trackDeliveryMessage = trackDeliveryMessage;
+    }
+
+    public int getOrderNotDeliveredYet() {
+        return orderNotDeliveredYet;
+    }
+
+    public String getOrderNotDeliveredMessage() {
+        return orderNotDeliveredMessage;
     }
 }

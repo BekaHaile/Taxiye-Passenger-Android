@@ -667,12 +667,12 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
     public void showDialogPopupTwoButtonCapsule(String message, final FeedDetail feedDetail, final int pos){
         new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
             @Override
-            public void onPositiveClick() {
+            public void onLeftClick() {
                 onDelete(feedDetail, pos);
             }
 
             @Override
-            public void onNegativeClick() {
+            public void onRightClick() {
             }
         }, R.style.Feed_Popup_Theme, activity, message).show();
     }
