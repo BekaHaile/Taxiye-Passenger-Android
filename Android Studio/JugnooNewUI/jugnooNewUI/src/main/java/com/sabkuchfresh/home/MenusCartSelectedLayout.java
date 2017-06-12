@@ -34,7 +34,7 @@ public class MenusCartSelectedLayout {
 			@Override
 			public void onClick(View v) {
 				if(vendorId > 0) {
-					activity.fetchRestaurantMenuAPI(vendorId);
+					activity.fetchRestaurantMenuAPI(vendorId, true);
 				}
 			}
 		});

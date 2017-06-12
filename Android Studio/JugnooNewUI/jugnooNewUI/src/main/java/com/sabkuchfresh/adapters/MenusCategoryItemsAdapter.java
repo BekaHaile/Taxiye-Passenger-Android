@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -353,6 +354,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     ((FreshActivity) context).openMenusItemCustomizeFragment(item1.getCategoryPos(), item1.getSubCategoryPos(), item1.getItemPos());
                 }
             } else {
+                long time = System.currentTimeMillis();
                 boolean isNewItemAdded =false;
                 if (item1.getItemSelectedList().size() > 0) {
                     item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
@@ -367,6 +369,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 }
                 notifyDataSetChanged();
                 callback.onPlusClicked(pos, item1, isNewItemAdded);
+                Log.e("MenusCategoryItemsAdapter", "=> "+(System.currentTimeMillis() - time));
             }
         } else {
             Utils.showToast(context, context.getString(R.string.order_quantity_limited));

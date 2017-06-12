@@ -4218,7 +4218,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     private ApiFetchRestaurantMenu apiFetchRestaurantMenu;
-    public void fetchRestaurantMenuAPI(int restaurantId){
+    public void fetchRestaurantMenuAPI(int restaurantId, boolean directCheckout){
         if(apiFetchRestaurantMenu == null){
             apiFetchRestaurantMenu = new ApiFetchRestaurantMenu(this, new ApiFetchRestaurantMenu.Callback() {
                 @Override
@@ -4232,8 +4232,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
 
                 @Override
-                public void onRetry(View view, int restaurantId) {
-                    fetchRestaurantMenuAPI(restaurantId);
+                public void onRetry(View view, int restaurantId, boolean directCheckout) {
+                    fetchRestaurantMenuAPI(restaurantId, directCheckout);
                 }
 
                 @Override
@@ -4243,7 +4243,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             });
         }
         apiFetchRestaurantMenu.hit(restaurantId, getSelectedLatLng().latitude,
-                getSelectedLatLng().longitude);
+                getSelectedLatLng().longitude, directCheckout);
     }
 
 

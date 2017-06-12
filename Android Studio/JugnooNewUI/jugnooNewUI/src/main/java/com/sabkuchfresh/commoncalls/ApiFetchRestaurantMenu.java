@@ -45,7 +45,7 @@ public class ApiFetchRestaurantMenu {
 		this.callback = callback;
 	}
 
-	public void hit(final int restaurantId, final double latitude, final double longitude) {
+	public void hit(final int restaurantId, final double latitude, final double longitude, final boolean directCheckout) {
 		try {
 			if (MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
@@ -84,7 +84,16 @@ public class ApiFetchRestaurantMenu {
 										activity.clearMenusCart();
 									}
 									GAUtils.event(GACategory.MENUS, GAAction.HOME + GAAction.RESTAURANT_CLICKED, activity.getVendorOpened().getName());
-									activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+
+									activity.updateItemListFromSPDB();
+									activity.updateCartValuesGetTotalPrice();
+									activity.saveDeliveryAddressModel();
+									if(directCheckout){
+										activity.openCart(AppConstant.ApplicationType.MENUS);
+									} else {
+										activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+									}
+
 									activity.getFabViewTest().hideJeanieHelpInSession();
 									callback.onSuccess();
 								} else {
@@ -101,24 +110,24 @@ public class ApiFetchRestaurantMenu {
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
 						DialogPopup.dismissLoadingDialog();
-						retryDialogVendorData(DialogErrorType.CONNECTION_LOST, restaurantId);
+						retryDialogVendorData(DialogErrorType.CONNECTION_LOST, restaurantId, directCheckout);
 					}
 				});
 			} else {
-				retryDialogVendorData(DialogErrorType.NO_NET, restaurantId);
+				retryDialogVendorData(DialogErrorType.NO_NET, restaurantId, directCheckout);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void retryDialogVendorData(DialogErrorType dialogErrorType, final int restaurantId) {
+	private void retryDialogVendorData(DialogErrorType dialogErrorType, final int restaurantId, final boolean directCheckout) {
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
 				new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
-						callback.onRetry(view, restaurantId);
+						callback.onRetry(view, restaurantId, directCheckout);
 					}
 
 					@Override
@@ -137,7 +146,7 @@ public class ApiFetchRestaurantMenu {
 	public interface Callback{
 		void onSuccess();
 		void onFailure();
-		void onRetry(View view, int restaurantId);
+		void onRetry(View view, int restaurantId, boolean directCheckout);
 		void onNoRetry(View view);
 	}
 
