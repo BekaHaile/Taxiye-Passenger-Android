@@ -1,7 +1,7 @@
 package com.sabkuchfresh.home;
 
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,9 +16,9 @@ import product.clicklabs.jugnoo.R;
 public class MenusCartSelectedLayout {
 
 	private FreshActivity activity;
-	private RelativeLayout rlMenusCartSelected;
+	private RelativeLayout rlMenusCartSelected, rlMenusCartSelectedInner;
 	private TextView tvRestName;
-	private ImageView ivDeleteCart;
+	private LinearLayout llDeleteCart;
 	private int vendorId;
 
 	public MenusCartSelectedLayout(FreshActivity activity){
@@ -27,10 +27,11 @@ public class MenusCartSelectedLayout {
 
 	public void init(View root){
 		rlMenusCartSelected = (RelativeLayout) root;
+		rlMenusCartSelectedInner = (RelativeLayout) root.findViewById(R.id.rlMenusCartSelectedInner);
 		tvRestName = (TextView) root.findViewById(R.id.tvRestName);
-		ivDeleteCart = (ImageView) root.findViewById(R.id.ivDeleteCart);
+		llDeleteCart = (LinearLayout) root.findViewById(R.id.llDeleteCart);
 
-		rlMenusCartSelected.setOnClickListener(new View.OnClickListener() {
+		rlMenusCartSelectedInner.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(vendorId > 0) {
@@ -39,7 +40,7 @@ public class MenusCartSelectedLayout {
 			}
 		});
 
-		ivDeleteCart.setOnClickListener(new View.OnClickListener() {
+		llDeleteCart.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getDialogPopupTwoButtonCapsule().show();

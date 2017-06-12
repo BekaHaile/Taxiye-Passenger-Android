@@ -7,52 +7,48 @@
     android:tag="@string/dont_touch_me"
     android:background="@drawable/bg_theme_color_selector"
     android:id="@+id/rlMenusCartSelected"
-    android:visibility="gone"
+    android:visibility="visible"
     >
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/rlMenusCartSelectedInner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toLeftOf="@+id/llViewDeleteCart"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/dp_19"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_11"
-            android:textColor="@color/white"
-            android:text="@string/you_have_items_saved_in_cart"
-            app:font="@string/maven"
-            />
-
-        <TextView
-            android:id="@+id/tvRestName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_15"
-            android:textColor="@color/white"
-            android:text="Resto"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:font="@string/maven"
-            />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/llViewDeleteCart"
-        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/dp_12"
-        android:gravity="center_vertical"
-        >
+        android:layout_toLeftOf="@+id/llDeleteCart"
+        android:background="@drawable/bg_transparent_black_alpha_selector">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/tvViewCart"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_19"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp_11"
+                android:textColor="@color/white"
+                android:text="@string/you_have_items_saved_in_cart"
+                app:font="@string/maven"
+                />
+
+            <TextView
+                android:id="@+id/tvRestName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp_15"
+                android:textColor="@color/white"
+                android:text="Resto"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:font="@string/maven"
+                />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvViewCart"
@@ -63,8 +59,26 @@
             android:text="@string/view"
             app:font="@string/maven"
             android:padding="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_6"
             android:textAllCaps="true"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             />
+
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/llDeleteCart"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_transparent_black_alpha_selector"
+        >
 
         <View
             android:layout_width="0.5dp"
