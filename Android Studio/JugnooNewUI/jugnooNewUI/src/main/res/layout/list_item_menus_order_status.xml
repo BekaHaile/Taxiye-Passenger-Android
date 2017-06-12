@@ -351,7 +351,8 @@
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_13"
                 android:layout_margin="@dimen/dp_14"
-                android:text="Our system shows that your delivery is late. Have you received your order? "
+                android:text=""
+                android:layout_centerHorizontal="true"
                 android:gravity="center"
                 app:font="@string/maven"
                 android:layout_below="@+id/tvOrderDeliveredDigIn"
@@ -374,7 +375,7 @@
                     android:layout_width="@dimen/dp_14"
                     android:layout_height="@dimen/dp_13"
                     android:src="@drawable/ic_restaurant_chat"
-                    android:layout_marginRight="@dimen/dp_6"
+                    android:layout_marginRight="@dimen/dp_10"
                     />
 
                 <TextView
@@ -385,7 +386,6 @@
                     android:textColor="@color/text_color_selector"
                     android:text="@string/yes"
                     android:gravity="center"
-                    android:textAllCaps="true"
                     app:font="maven"
                     />
             </LinearLayout>
@@ -419,7 +419,6 @@
                     android:textColor="@color/text_color_selector"
                     android:text="@string/no"
                     android:gravity="center"
-                    android:textAllCaps="true"
                     app:font="maven"
                     />
             </LinearLayout>
@@ -430,7 +429,7 @@
                 android:layout_height="@dimen/dp_32"
                 android:layout_marginTop="@dimen/dp_7"
                 android:layout_centerHorizontal="true"
-                android:background="@color/nl_white_dark"
+                android:background="@color/stroke_light_grey_alpha"
                 android:layout_below="@+id/tvOrderNotDelivered"
                 />
 
@@ -440,7 +439,7 @@
                 android:layout_height="1dp"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
-                android:background="@color/nl_white_dark"
+                android:background="@color/stroke_light_grey_alpha"
                 android:layout_below="@+id/tvOrderNotDelivered"/>
 
 

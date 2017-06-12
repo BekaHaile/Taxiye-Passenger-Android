@@ -378,8 +378,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             statusHolder.tvOrderNotDelivered.setText(recentOrder.getDeliveryNotDoneMsg());
                             statusHolder.ivOrderDeliveredYes.setVisibility(View.GONE);
                             statusHolder.ivOrderDeliveredNo.setVisibility(View.GONE);
-                            statusHolder.tvOrderDeliveredYes.setText(R.string.yes); statusHolder.tvOrderDeliveredYes.setTextSize(14);
-                            statusHolder.tvOrderDeliveredNo.setText(R.string.no); statusHolder.tvOrderDeliveredNo.setTextSize(14);
+                            statusHolder.tvOrderDeliveredYes.setText(activity.getString(R.string.yes).toUpperCase()); statusHolder.tvOrderDeliveredYes.setTextSize(14);
+                            statusHolder.tvOrderDeliveredNo.setText(activity.getString(R.string.no).toUpperCase()); statusHolder.tvOrderDeliveredNo.setTextSize(14);
                         }
                         else if(recentOrder.getDeliveryConfirmation() == 0){ // no case
                             statusHolder.tvOrderNotDelivered.setText(recentOrder.getDeliveryConfirmationMsg());
