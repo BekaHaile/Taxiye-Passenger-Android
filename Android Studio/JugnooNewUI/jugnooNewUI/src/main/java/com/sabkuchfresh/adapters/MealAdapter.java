@@ -513,7 +513,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public TextView tvOrderId, tvOrderIdValue,tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
         public View lineStatus1, lineStatus2, lineStatus3;
-        private RelativeLayout rlRestaurantInfo, rlTrackViewOrder;
 
         public ViewTitleStatus(View itemView, Context context) {
             super(itemView);
@@ -532,11 +531,9 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             ivStatus1 = (ImageView) itemView.findViewById(R.id.ivStatus1);
             ivStatus2 = (ImageView) itemView.findViewById(R.id.ivStatus2);
             ivStatus3 = (ImageView) itemView.findViewById(R.id.ivStatus3);
-            lineStatus1 = (View) itemView.findViewById(R.id.lineStatus1);
-            lineStatus2 = (View) itemView.findViewById(R.id.lineStatus2);
-            lineStatus3 = (View) itemView.findViewById(R.id.lineStatus3);
-            rlRestaurantInfo = (RelativeLayout) itemView.findViewById(R.id.rlRestaurantInfo); rlRestaurantInfo.setVisibility(View.GONE);
-            rlTrackViewOrder = (RelativeLayout) itemView.findViewById(R.id.rlTrackViewOrder); rlTrackViewOrder.setVisibility(View.GONE);
+            lineStatus1 = itemView.findViewById(R.id.lineStatus1);
+            lineStatus2 = itemView.findViewById(R.id.lineStatus2);
+            lineStatus3 = itemView.findViewById(R.id.lineStatus3);
         }
     }
 

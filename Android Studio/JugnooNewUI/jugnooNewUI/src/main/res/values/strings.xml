@@ -1297,6 +1297,8 @@
     <string name="discard_all_items_in_cart">Discard all items in the cart?</string>
     <string name="get_help">Get Help</string>
     <string name="how_can_we_help">How can we help?</string>
+    <string name="dig_in_enjoy_food">Dig in! Enjoy your food.</string>
+    <string name="dig_in_enjoy_food_experience_feedback">We care about your experience. Once you are done eating, we’ll follow up for feedback</string>
 
 
 </resources>

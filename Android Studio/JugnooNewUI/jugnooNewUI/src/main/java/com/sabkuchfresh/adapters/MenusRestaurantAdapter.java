@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
-import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -279,7 +278,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return new ViewHolderRestaurantForm(v, activity);
         }
         else if (viewType == STATUS_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_order_status, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_order_status, parent, false);
 
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
@@ -349,11 +348,20 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(recentOrder.getOrderAmount())));
                     }
 
-                    if(recentOrder.getOrderNotDeliveredYet() == 1){
+                    if(recentOrder.isDeliveryNotDone()){
                         statusHolder.rlOrderNotDelivered.setVisibility(View.VISIBLE);
-                        statusHolder.tvOrderNotDelivered.setText(recentOrder.getOrderNotDeliveredMessage());
-                        statusHolder.rlOrderNotDelivered.setTag(position);
-                        statusHolder.rlOrderNotDelivered.setOnClickListener(orderNotDeliveredListener);
+                        statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
+                        statusHolder.llOrderDeliveredYes.setTag(position);
+                        statusHolder.llOrderDeliveredNo.setTag(position);
+                        statusHolder.llOrderDeliveredYes.setOnClickListener(orderNotDeliveredListenerYes);
+                        statusHolder.llOrderDeliveredNo.setOnClickListener(orderNotDeliveredListenerNo);
+                        if(recentOrder.getDeliveryMarked() == RecentOrder.DeliveryMarkedFlag.DELIVERY_NOT_MARKED.getOrdinal()){
+
+                        } else if(recentOrder.getDeliveryMarked() == RecentOrder.DeliveryMarkedFlag.DELIVERY_MARKED_NO.getOrdinal()){
+
+                        } else if(recentOrder.getDeliveryMarked() == RecentOrder.DeliveryMarkedFlag.DELIVERY_MARKED_YES.getOrdinal()){
+
+                        }
                     } else {
                         statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
                     }
@@ -793,8 +801,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         View lineStatus1, lineStatus2, lineStatus3;
         RelativeLayout rlRestaurantInfo, rlTrackViewOrder;
         TextView tvRestaurantName, tvOrderAmount, tvTrackOrder, tvViewOrder;
+
         RelativeLayout rlOrderNotDelivered;
-        TextView tvOrderNotDelivered;
+        TextView tvOrderDeliveredDigIn, tvOrderNotDelivered, tvOrderDeliveredYes, tvOrderDeliveredNo;
+        LinearLayout llOrderDeliveredYes, llOrderDeliveredNo;
+        ImageView ivOrderDeliveredYes, ivOrderDeliveredNo;
+        View vOrderDeliveredMidSep;
 
         ViewTitleStatus(View itemView, Context context) {
             super(itemView);
@@ -824,14 +836,24 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             lineStatus1 = itemView.findViewById(R.id.lineStatus1);
             lineStatus2 = itemView.findViewById(R.id.lineStatus2);
             lineStatus3 = itemView.findViewById(R.id.lineStatus3);
+
             rlRestaurantInfo = (RelativeLayout) itemView.findViewById(R.id.rlRestaurantInfo);
             rlTrackViewOrder = (RelativeLayout) itemView.findViewById(R.id.rlTrackViewOrder);
             tvRestaurantName = (TextView) itemView.findViewById(R.id.tvRestaurantName);
             tvOrderAmount = (TextView) itemView.findViewById(R.id.tvOrderAmount);
             tvTrackOrder = (TextView) itemView.findViewById(R.id.tvTrackOrder); tvTrackOrder.setTypeface(tvTrackOrder.getTypeface(), Typeface.BOLD);
             tvViewOrder = (TextView) itemView.findViewById(R.id.tvViewOrder); tvViewOrder.setTypeface(tvViewOrder.getTypeface(), Typeface.BOLD);
+
             rlOrderNotDelivered = (RelativeLayout) itemView.findViewById(R.id.rlOrderNotDelivered);
             tvOrderNotDelivered = (TextView) itemView.findViewById(R.id.tvOrderNotDelivered);
+            tvOrderDeliveredDigIn = (TextView) itemView.findViewById(R.id.tvOrderDeliveredDigIn); tvOrderDeliveredDigIn.setTypeface(tvOrderDeliveredDigIn.getTypeface(), Typeface.BOLD);
+            tvOrderDeliveredYes = (TextView) itemView.findViewById(R.id.tvOrderDeliveredYes); tvOrderDeliveredYes.setTypeface(tvOrderDeliveredYes.getTypeface(), Typeface.BOLD);
+            tvOrderDeliveredNo = (TextView) itemView.findViewById(R.id.tvOrderDeliveredNo); tvOrderDeliveredNo.setTypeface(tvOrderDeliveredNo.getTypeface(), Typeface.BOLD);
+            llOrderDeliveredYes = (LinearLayout) itemView.findViewById(R.id.llOrderDeliveredYes);
+            llOrderDeliveredNo = (LinearLayout) itemView.findViewById(R.id.llOrderDeliveredNo);
+            ivOrderDeliveredYes = (ImageView) itemView.findViewById(R.id.ivOrderDeliveredYes);
+            ivOrderDeliveredNo = (ImageView) itemView.findViewById(R.id.ivOrderDeliveredNo);
+            vOrderDeliveredMidSep = itemView.findViewById(R.id.vOrderDeliveredMidSep);
         }
     }
 
@@ -1186,43 +1208,47 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
-    private View.OnClickListener orderNotDeliveredListener = new View.OnClickListener() {
+    private View.OnClickListener orderNotDeliveredListenerYes = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             try {
                 int pos = (int) v.getTag();
                 final RecentOrder order = recentOrders.get(pos);
-                if(order.getOrderNotDeliveredYet() == 1) {
-                    getDialogPopupTwoButtonCapsule().show(new DialogPopupTwoButtonCapsule.DialogCallback() {
-                        @Override
-                        public void onLeftClick() {
-                        }
 
-                        @Override
-                        public void onRightClick() {
-                            // TODO: 09/06/17 remove this
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private View.OnClickListener orderNotDeliveredListenerNo = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            try {
+                int pos = (int) v.getTag();
+                final RecentOrder order = recentOrders.get(pos);
+                if(order.isDeliveryNotDone()) {
+                    // TODO: 09/06/17 remove this
 //                            if(Data.isFuguChatEnabled()){
 //                                FuguConfig.getInstance().showConversations(activity);
 //                            } else {
 //                                activity.startActivity(new Intent(activity, SupportActivity.class));
 //                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
-                                ShowPanelResponse.Item item = new ShowPanelResponse.Item();
-                                item.setActionType(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal());
-                                item.setSupportId(123);
-                                item.setText("Need any help, type in comment box");
-                                item.setViewType(ViewType.TEXT_BOX.getOrdinal());
+                    ShowPanelResponse.Item item = new ShowPanelResponse.Item();
+                    item.setActionType(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal());
+                    item.setSupportId(123);
+                    item.setText("Need any help, type in comment box");
+                    item.setViewType(ViewType.TEXT_BOX.getOrdinal());
 
-                                new TransactionUtils().openItemInFragment(activity,
-                                        activity.getRelativeLayoutContainer(),
-                                        -1, "", activity.getString(R.string.how_can_we_help),
-                                        item, "",
-                                        order.getOrderId(), order.getExpectedDeliveryDate(),
-                                        Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
+                    new TransactionUtils().openItemInFragment(activity,
+                            activity.getRelativeLayoutContainer(),
+                            -1, "", activity.getString(R.string.how_can_we_help),
+                            item, "",
+                            order.getOrderId(), order.getExpectedDeliveryDate(),
+                            Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
 
 //                            }
-                        }
-                    }, order.getOrderNotDeliveredMessage(), activity.getString(R.string.cancel), activity.getString(R.string.get_help));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1230,13 +1256,5 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     };
 
-
-    private DialogPopupTwoButtonCapsule dialogPopupTwoButtonCapsule;
-    private DialogPopupTwoButtonCapsule getDialogPopupTwoButtonCapsule(){
-        if(dialogPopupTwoButtonCapsule == null){
-            dialogPopupTwoButtonCapsule = new DialogPopupTwoButtonCapsule(R.style.Feed_Popup_Theme, activity);
-        }
-        return dialogPopupTwoButtonCapsule;
-    }
 
 }

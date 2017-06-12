@@ -58,12 +58,20 @@ public class RecentOrder {
     @Expose
     private String trackDeliveryMessage;
 
-    @SerializedName("order_not_delivered_yet")
+    @SerializedName("delivery_not_done")
     @Expose
-    private int orderNotDeliveredYet;
-    @SerializedName("order_not_delivered_message")
+    private boolean deliveryNotDone;
+    @SerializedName("delivery_not_done_msg")
     @Expose
-    private String orderNotDeliveredMessage;
+    private String deliveryNotDoneMsg;
+    @SerializedName("restaurant_number")
+    @Expose
+    private String restaurantNumber;
+    @SerializedName("delivery_marked")
+    @Expose
+    private int deliveryMarked; // 0 for not marked, 1 for merked yes, 2 for marked no
+
+
 
     /**
      *
@@ -239,14 +247,35 @@ public class RecentOrder {
         this.trackDeliveryMessage = trackDeliveryMessage;
     }
 
-    // TODO: 09/06/17 remove this
-    public int getOrderNotDeliveredYet() {
-        orderNotDeliveredYet = 1;
-        return orderNotDeliveredYet;
+    // TODO: 12/06/17 remove this
+    public boolean isDeliveryNotDone() {
+        deliveryNotDone = true;
+        return deliveryNotDone;
     }
 
-    public String getOrderNotDeliveredMessage() {
-        orderNotDeliveredMessage = "It seems your order is not delivered yet, want some help?";
-        return orderNotDeliveredMessage;
+    public String getDeliveryNotDoneMsg() {
+        deliveryNotDoneMsg = "Our system shows that your delivery is late. Have you received your order?";
+        return deliveryNotDoneMsg;
+    }
+
+    public String getRestaurantNumber() {
+        return restaurantNumber;
+    }
+
+    public int getDeliveryMarked() {
+        return deliveryMarked;
+    }
+
+    public enum DeliveryMarkedFlag{
+        DELIVERY_NOT_MARKED(0), DELIVERY_MARKED_YES(1), DELIVERY_MARKED_NO(2);
+
+        private int ordinal;
+        DeliveryMarkedFlag(int ordinal){
+            this.ordinal = ordinal;
+        }
+
+        public int getOrdinal() {
+            return ordinal;
+        }
     }
 }
