@@ -179,7 +179,7 @@
                             android:layout_marginRight="@dimen/px_20"
                             android:layout_marginTop="@dimen/px_25"
                             android:text="Res"
-                            android:textColor="@color/text_color_light_selector"
+                            android:textColor="@color/text_color"
                             android:textSize="30px"
                             app:font="maven" />
 
