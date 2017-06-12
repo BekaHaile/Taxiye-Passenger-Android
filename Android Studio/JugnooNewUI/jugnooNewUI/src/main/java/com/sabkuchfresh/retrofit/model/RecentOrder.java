@@ -67,9 +67,22 @@ public class RecentOrder {
     @SerializedName("restaurant_number")
     @Expose
     private String restaurantNumber;
-    @SerializedName("delivery_marked")
+    @SerializedName("delivery_confirmation")
     @Expose
-    private int deliveryMarked; // 0 for not marked, 1 for merked yes, 2 for marked no
+    private int deliveryConfirmation = -1;
+    @SerializedName("delivery_confirmation_msg")
+    @Expose
+    private String deliveryConfirmationMsg;
+    @SerializedName("support_id")
+    @Expose
+    private int supportId;
+    @SerializedName("support_title")
+    @Expose
+    private String supportTitle;
+    @SerializedName("support_text")
+    @Expose
+    private String supportText;
+
 
 
 
@@ -247,14 +260,11 @@ public class RecentOrder {
         this.trackDeliveryMessage = trackDeliveryMessage;
     }
 
-    // TODO: 12/06/17 remove this
     public boolean isDeliveryNotDone() {
-        deliveryNotDone = true;
         return deliveryNotDone;
     }
 
     public String getDeliveryNotDoneMsg() {
-        deliveryNotDoneMsg = "Our system shows that your delivery is late. Have you received your order?";
         return deliveryNotDoneMsg;
     }
 
@@ -262,20 +272,31 @@ public class RecentOrder {
         return restaurantNumber;
     }
 
-    public int getDeliveryMarked() {
-        return deliveryMarked;
+    public int getSupportId() {
+        return supportId;
     }
 
-    public enum DeliveryMarkedFlag{
-        DELIVERY_NOT_MARKED(0), DELIVERY_MARKED_YES(1), DELIVERY_MARKED_NO(2);
+    public String getSupportTitle() {
+        return supportTitle;
+    }
 
-        private int ordinal;
-        DeliveryMarkedFlag(int ordinal){
-            this.ordinal = ordinal;
-        }
+    public String getSupportText() {
+        return supportText;
+    }
 
-        public int getOrdinal() {
-            return ordinal;
-        }
+    public int getDeliveryConfirmation() {
+        return deliveryConfirmation;
+    }
+
+    public void setDeliveryConfirmation(int deliveryConfirmation) {
+        this.deliveryConfirmation = deliveryConfirmation;
+    }
+
+    public String getDeliveryConfirmationMsg() {
+        return deliveryConfirmationMsg;
+    }
+
+    public void setDeliveryConfirmationMsg(String deliveryConfirmationMsg) {
+        this.deliveryConfirmationMsg = deliveryConfirmationMsg;
     }
 }

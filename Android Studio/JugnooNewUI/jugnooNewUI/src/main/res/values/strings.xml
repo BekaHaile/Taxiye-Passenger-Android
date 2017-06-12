@@ -1299,6 +1299,10 @@
     <string name="how_can_we_help">How can we help?</string>
     <string name="dig_in_enjoy_food">Dig in! Enjoy your food.</string>
     <string name="dig_in_enjoy_food_experience_feedback">We care about your experience. Once you are done eating, we’ll follow up for feedback</string>
+    <string name="menus_order_not_delivered_message">We apologise for the inconvenience. Our executive will get in touch with you soon.</string>
+    <string name="report_issue">Report Issue</string>
+    <string name="chat_with_fugu">Chat with FUGU</string>
+    <string name="call_restaurant">Call Restaurant</string>
 
 
 </resources>

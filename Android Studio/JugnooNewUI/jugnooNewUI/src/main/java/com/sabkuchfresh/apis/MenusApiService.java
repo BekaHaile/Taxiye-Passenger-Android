@@ -107,4 +107,9 @@ public interface MenusApiService {
 	@POST("/razorpay_place_order_callback")
 	Response razorpayPlaceOrderCallback(@FieldMap Map<String, String> params);
 
+	@FormUrlEncoded
+	@POST("/confirm_delivery_by_user")
+	void confirmDeliveryByUser(@FieldMap Map<String, String> params,
+						   Callback<SettleUserDebt> callback);
+
 }

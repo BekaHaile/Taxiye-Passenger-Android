@@ -330,13 +330,6 @@
             android:layout_below="@+id/rlTrackViewOrder"
             android:visibility="visible"
             >
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
-                android:background="@color/nl_white_dark"/>
-
             <TextView
                 android:id="@+id/tvOrderDeliveredDigIn"
                 android:layout_width="wrap_content"
@@ -442,6 +435,7 @@
                 />
 
             <View
+                android:id="@+id/vOrderDeliveredTopSep"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="@dimen/dp_20"

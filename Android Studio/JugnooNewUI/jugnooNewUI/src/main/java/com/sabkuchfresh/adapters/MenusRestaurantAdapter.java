@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
@@ -54,6 +55,7 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -314,6 +316,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
                 try {
                     RecentOrder recentOrder = recentOrders.get(position);
+                    statusHolder.relativeStatusBar.setVisibility(View.VISIBLE);
                     for (int i = 0; i < statusHolder.relativeStatusBar.getChildCount(); i++) {
                         if (statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup) {
                             ViewGroup viewGroup = (ViewGroup) (statusHolder.relativeStatusBar.getChildAt(i));
@@ -328,12 +331,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     statusHolder.tvOrderIdValue.setText("#"+recentOrder.getOrderId().toString());
                     statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
 
-                    statusHolder.container.setTag(position);
                     statusHolder.tvViewOrder.setTag(position);
                     statusHolder.tvTrackOrder.setTag(position);
-                    statusHolder.container.setOnClickListener(viewOrderOnClickListener);
                     statusHolder.tvViewOrder.setOnClickListener(viewOrderOnClickListener);
                     statusHolder.tvTrackOrder.setOnClickListener(trackOrderOnClickListener);
+                    statusHolder.tvDeliveryTime.setOnClickListener(null);
+                    statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
 
                     statusHolder.rlTrackViewOrder.setVisibility(View.VISIBLE);
                     if(recentOrder.getShowLiveTracking() == 1 && recentOrder.getDeliveryId() > 0){
@@ -348,20 +351,49 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(recentOrder.getOrderAmount())));
                     }
 
-                    if(recentOrder.isDeliveryNotDone()){
+                    if(recentOrder.isDeliveryNotDone() ||
+                            recentOrder.getDeliveryConfirmation() == 1 || recentOrder.getDeliveryConfirmation() == 0){
                         statusHolder.rlOrderNotDelivered.setVisibility(View.VISIBLE);
                         statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
+                        statusHolder.relativeStatusBar.setVisibility(View.GONE);
                         statusHolder.llOrderDeliveredYes.setTag(position);
                         statusHolder.llOrderDeliveredNo.setTag(position);
                         statusHolder.llOrderDeliveredYes.setOnClickListener(orderNotDeliveredListenerYes);
                         statusHolder.llOrderDeliveredNo.setOnClickListener(orderNotDeliveredListenerNo);
-                        if(recentOrder.getDeliveryMarked() == RecentOrder.DeliveryMarkedFlag.DELIVERY_NOT_MARKED.getOrdinal()){
+                        Utils.setTextUnderline(statusHolder.tvDeliveryTime, activity.getString(R.string.view_order));
+                        statusHolder.tvDeliveryTime.setTag(position);
+                        statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColorStateList(activity, R.color.text_color_selector));
+                        statusHolder.tvDeliveryTime.setOnClickListener(viewOrderOnClickListener);
 
-                        } else if(recentOrder.getDeliveryMarked() == RecentOrder.DeliveryMarkedFlag.DELIVERY_MARKED_NO.getOrdinal()){
+                        RelativeLayout.LayoutParams paramsTV = (RelativeLayout.LayoutParams) statusHolder.tvOrderNotDelivered.getLayoutParams();
+                        boolean deliveryMarkedYes = recentOrder.getDeliveryConfirmation() == 1;
+                        int marginTop = activity.getResources().getDimensionPixelSize(deliveryMarkedYes ? R.dimen.dp_8 : R.dimen.dp_14);
+                        statusHolder.tvOrderDeliveredDigIn.setVisibility(deliveryMarkedYes ? View.VISIBLE : View.GONE);
+                        statusHolder.llOrderDeliveredYes.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+                        statusHolder.llOrderDeliveredNo.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+                        statusHolder.vOrderDeliveredMidSep.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+                        statusHolder.vOrderDeliveredTopSep.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
 
-                        } else if(recentOrder.getDeliveryMarked() == RecentOrder.DeliveryMarkedFlag.DELIVERY_MARKED_YES.getOrdinal()){
-
+                        if(recentOrder.isDeliveryNotDone() && recentOrder.getDeliveryConfirmation() < 0){
+                            statusHolder.tvOrderNotDelivered.setText(recentOrder.getDeliveryNotDoneMsg());
+                            statusHolder.ivOrderDeliveredYes.setVisibility(View.GONE);
+                            statusHolder.ivOrderDeliveredNo.setVisibility(View.GONE);
+                            statusHolder.tvOrderDeliveredYes.setText(R.string.yes); statusHolder.tvOrderDeliveredYes.setTextSize(14);
+                            statusHolder.tvOrderDeliveredNo.setText(R.string.no); statusHolder.tvOrderDeliveredNo.setTextSize(14);
                         }
+                        else if(recentOrder.getDeliveryConfirmation() == 0){ // no case
+                            statusHolder.tvOrderNotDelivered.setText(recentOrder.getDeliveryConfirmationMsg());
+                            statusHolder.ivOrderDeliveredYes.setVisibility(View.VISIBLE);
+                            statusHolder.ivOrderDeliveredYes.setImageResource(Data.isFuguChatEnabled()?R.drawable.ic_restaurant_chat:R.drawable.ic_restaurant_report);
+                            statusHolder.ivOrderDeliveredNo.setVisibility(View.VISIBLE);
+                            statusHolder.tvOrderDeliveredYes.setText(Data.isFuguChatEnabled()?R.string.chat_with_fugu:R.string.report_issue); statusHolder.tvOrderDeliveredYes.setTextSize(12);
+                            statusHolder.tvOrderDeliveredNo.setText(R.string.call_restaurant); statusHolder.tvOrderDeliveredNo.setTextSize(12);
+                        }
+                        else if(deliveryMarkedYes){ // yes local case
+                            statusHolder.tvOrderNotDelivered.setText(R.string.dig_in_enjoy_food_experience_feedback);
+                        }
+                        paramsTV.setMargins(paramsTV.leftMargin, marginTop, paramsTV.rightMargin, paramsTV.bottomMargin);
+                        statusHolder.tvOrderNotDelivered.setLayoutParams(paramsTV);
                     } else {
                         statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
                     }
@@ -806,7 +838,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView tvOrderDeliveredDigIn, tvOrderNotDelivered, tvOrderDeliveredYes, tvOrderDeliveredNo;
         LinearLayout llOrderDeliveredYes, llOrderDeliveredNo;
         ImageView ivOrderDeliveredYes, ivOrderDeliveredNo;
-        View vOrderDeliveredMidSep;
+        View vOrderDeliveredMidSep, vOrderDeliveredTopSep;
 
         ViewTitleStatus(View itemView, Context context) {
             super(itemView);
@@ -854,6 +886,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ivOrderDeliveredYes = (ImageView) itemView.findViewById(R.id.ivOrderDeliveredYes);
             ivOrderDeliveredNo = (ImageView) itemView.findViewById(R.id.ivOrderDeliveredNo);
             vOrderDeliveredMidSep = itemView.findViewById(R.id.vOrderDeliveredMidSep);
+            vOrderDeliveredTopSep = itemView.findViewById(R.id.vOrderDeliveredTopSep);
         }
     }
 
@@ -1208,53 +1241,107 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
-    private View.OnClickListener orderNotDeliveredListenerYes = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            try {
-                int pos = (int) v.getTag();
-                final RecentOrder order = recentOrders.get(pos);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
     private View.OnClickListener orderNotDeliveredListenerNo = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             try {
                 int pos = (int) v.getTag();
                 final RecentOrder order = recentOrders.get(pos);
-                if(order.isDeliveryNotDone()) {
-                    // TODO: 09/06/17 remove this
-//                            if(Data.isFuguChatEnabled()){
-//                                FuguConfig.getInstance().showConversations(activity);
-//                            } else {
-//                                activity.startActivity(new Intent(activity, SupportActivity.class));
-//                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-
-                    ShowPanelResponse.Item item = new ShowPanelResponse.Item();
-                    item.setActionType(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal());
-                    item.setSupportId(123);
-                    item.setText("Need any help, type in comment box");
-                    item.setViewType(ViewType.TEXT_BOX.getOrdinal());
-
-                    new TransactionUtils().openItemInFragment(activity,
-                            activity.getRelativeLayoutContainer(),
-                            -1, "", activity.getString(R.string.how_can_we_help),
-                            item, "",
-                            order.getOrderId(), order.getExpectedDeliveryDate(),
-                            Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
-
-//                            }
+                if(order.isDeliveryNotDone() && order.getDeliveryConfirmation() < 0) {
+                    apiConfirmDelivery(order.getOrderId(), 0, pos);
+                } else {
+                    Utils.openCallIntent(activity, order.getRestaurantNumber());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     };
+
+    private View.OnClickListener orderNotDeliveredListenerYes = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            try {
+                int pos = (int) v.getTag();
+                final RecentOrder order = recentOrders.get(pos);
+                if(order.isDeliveryNotDone() && order.getDeliveryConfirmation() < 0) {
+                    apiConfirmDelivery(order.getOrderId(), 1, pos);
+                } else {
+                    if (Data.isFuguChatEnabled()) {
+                        FuguConfig.getInstance().showConversations(activity);
+                    } else {
+                        activity.startActivity(new Intent(activity, SupportActivity.class));
+                        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+                        ShowPanelResponse.Item item = new ShowPanelResponse.Item();
+                        item.setActionType(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal());
+                        item.setSupportId(order.getSupportId());
+                        item.setText(order.getSupportText());
+                        item.setViewType(ViewType.TEXT_BOX.getOrdinal());
+
+                        new TransactionUtils().openItemInFragment(activity,
+                                activity.getRelativeLayoutContainer(),
+                                -1, "", order.getSupportTitle(),
+                                item, "",
+                                order.getOrderId(), order.getExpectedDeliveryDate(),
+                                Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    private void apiConfirmDelivery(int orderId, final int isDelivered, final int position) {
+        try {
+            if (MyApplication.getInstance().isOnline()) {
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_ORDER_ID, String.valueOf(orderId));
+                params.put(Constants.KEY_IS_DELIVERED, String.valueOf(isDelivered));
+
+                DialogPopup.showLoadingDialog(activity, "");
+
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getMenusApiService().confirmDeliveryByUser(params, new retrofit.Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt productsResponse, Response response) {
+                        try {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
+                                    RecentOrder order = recentOrders.get(position);
+                                    order.setDeliveryConfirmation(isDelivered);
+                                    order.setDeliveryConfirmationMsg(productsResponse.getMessage());
+                                    notifyDataSetChanged();
+                                } else {
+                                    DialogPopup.alertPopup(activity, "", productsResponse.getMessage());
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        DialogPopup.dismissLoadingDialog();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    }
+                });
+            } else {
+                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 }
