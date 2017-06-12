@@ -4694,4 +4694,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public MenusCart getMenusCart(){
         return menusCart;
     }
+
+    public boolean openVendorMenuFragmentOnBack;
 }

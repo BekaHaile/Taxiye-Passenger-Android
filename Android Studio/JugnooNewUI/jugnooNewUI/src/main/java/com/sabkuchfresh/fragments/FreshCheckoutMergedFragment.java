@@ -525,11 +525,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rlDeliveryFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(activity.getVendorMenuFragment() != null) {
-                    if (getActivity() instanceof FreshActivity && ((FreshActivity) getActivity()).getAppType() == AppConstant.ApplicationType.MENUS)
-                        GAUtils.event(GACategory.MENUS, GAAction.CHECKOUT, GAAction.DELIVERY_FROM + GAAction.CLICKED);
-                    activity.performBackPressed(false);
-                }
+                if (getActivity() instanceof FreshActivity && ((FreshActivity) getActivity()).getAppType() == AppConstant.ApplicationType.MENUS)
+                    GAUtils.event(GACategory.MENUS, GAAction.CHECKOUT, GAAction.DELIVERY_FROM + GAAction.CLICKED);
+                activity.openVendorMenuFragmentOnBack = true;
+                activity.performBackPressed(false);
             }
         });
         rlDeliveryFrom.setMinimumHeight((int)(ASSL.Yscale() * 116f));
@@ -3149,7 +3148,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             } else {
                 tvRestAddress.setText(address);
             }
-            rlDeliveryFrom.setBackgroundResource(activity.getVendorMenuFragment() != null ? R.drawable.bg_transparent_menu_item_selector : R.drawable.background_transparent);
         } else {
             llDeliveryFrom.setVisibility(View.GONE);
         }
