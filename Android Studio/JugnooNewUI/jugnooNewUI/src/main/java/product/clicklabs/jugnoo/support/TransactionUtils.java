@@ -55,9 +55,11 @@ public class TransactionUtils {
 		else if(ActionType.NEXT_LEVEL.getOrdinal() == item.getActionType()) {
 			if(item.getItems() != null && item.getItems().size() > 1){
 				if(!checkIfFragmentAdded(activity, SupportFAQItemsListFragment.class.getName()+item.getSupportId())) {
-					activity.getSupportFragmentManager().beginTransaction()
-							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-							.add(container.getId(),
+					FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+					if(!(activity instanceof FreshActivity)){
+						fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+					}
+					fragmentTransaction.add(container.getId(),
 									SupportFAQItemsListFragment.newInstance(engagementId, rideDate, item, phoneNumber, orderId, orderDate, supportNumber, productType),
 									SupportFAQItemsListFragment.class.getName()+item.getSupportId())
 							.addToBackStack(SupportFAQItemsListFragment.class.getName()+item.getSupportId())
@@ -78,12 +80,9 @@ public class TransactionUtils {
 				|| singleItemToOpen.getItems() == null)){
 			if(!checkIfFragmentAdded(activity, SupportFAQItemFragment.class.getName())) {
 				FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
-				if(activity instanceof FreshActivity){
-					fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out);
-				} else {
+				if(!(activity instanceof FreshActivity)){
 					fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
 				}
-
 				fragmentTransaction.add(container.getId(),
 								SupportFAQItemFragment.newInstance(engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate, supportNumber, productType),
 								SupportFAQItemFragment.class.getName())
@@ -105,7 +104,7 @@ public class TransactionUtils {
 	public void openRideIssuesFragment(FragmentActivity activity, View container, int engagementId, int orderId,
 									   EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items,
 									   int fromBadFeedback, boolean rideCancelled, int autosStatus,
-									   HistoryResponse.Datum datum) {
+									   HistoryResponse.Datum datum, int supportCategory, int productType, String orderDate) {
 		if(!checkIfFragmentAdded(activity, SupportRideIssuesFragment.class.getName())) {
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -113,7 +112,7 @@ public class TransactionUtils {
 				fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
 			}
 			fragmentTransaction.add(container.getId(),
-					SupportRideIssuesFragment.newInstance(engagementId, orderId, endRideData, items, rideCancelled, autosStatus, datum),
+					SupportRideIssuesFragment.newInstance(engagementId, orderId, endRideData, items, rideCancelled, autosStatus, datum, supportCategory, productType, orderDate),
 					SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName());
 			if(fromBadFeedback == 0 && fragmentManager.getBackStackEntryCount() > 0){

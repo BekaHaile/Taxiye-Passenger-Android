@@ -115,7 +115,7 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 										new TransactionUtils().openRideIssuesFragment(activity,
 												((SupportActivity) activity).getContainer(),
 												historyData.getEngagementId(), -1, null, null, 0, historyData.getIsCancelledRide() == 1, historyData.getAutosStatus(),
-												null);
+												null, -1, -1, "");
 									}
 								} else {
 									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -132,7 +132,7 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 									new TransactionUtils().openRideIssuesFragment(activity,
 											((SupportActivity) activity).getContainer(),
 											-1, historyData.getOrderId(), null, null, 0, false, 0,
-											historyData);
+											historyData, -1, -1, "");
 								}
 							}
 

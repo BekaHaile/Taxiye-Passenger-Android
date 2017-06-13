@@ -55,11 +55,9 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
-import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -1270,22 +1268,21 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     if (Data.isFuguChatEnabled()) {
                         FuguConfig.getInstance().showConversations(activity);
                     } else {
-                        activity.startActivity(new Intent(activity, SupportActivity.class));
-                        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        ArrayList<ShowPanelResponse.Item> items = MyApplication.getInstance().getDatabase2().getSupportDataItems(order.getSupportCategory());
+                        if(items.size() > 0) {
+                            ShowPanelResponse.Item item = new ShowPanelResponse.Item();
+                            item.setItems(items);
+                            item.setActionType(ActionType.NEXT_LEVEL.getOrdinal());
+                            item.setSupportId(order.getSupportCategory());
+                            item.setText(activity.getString(R.string.need_help));
 
-                        ShowPanelResponse.Item item = new ShowPanelResponse.Item();
-                        item.setActionType(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal());
-                        item.setSupportId(order.getSupportId());
-                        item.setText(order.getSupportText());
-                        item.setViewType(ViewType.TEXT_BOX.getOrdinal());
-
-                        new TransactionUtils().openItemInFragment(activity,
-                                activity.getRelativeLayoutContainer(),
-                                -1, "", order.getSupportTitle(),
-                                item, "",
-                                order.getOrderId(), order.getExpectedDeliveryDate(),
-                                Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
-
+                            new TransactionUtils().openItemInFragment(activity, activity.getRelativeLayoutContainer(), -1, "",
+                                    activity.getResources().getString(R.string.support_main_title), item, "",
+                                    order.getOrderId(), order.getExpectedDeliveryDate(),
+                                    Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
+                        } else {
+                            Utils.showToast(activity, activity.getString(R.string.no_issues_found));
+                        }
                     }
                 }
             } catch (Exception e) {

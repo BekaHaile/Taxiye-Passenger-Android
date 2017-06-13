@@ -1305,6 +1305,7 @@
     <string name="call_restaurant">Call Restaurant</string>
     <string name="accepts_online_payment">Accepts Online Payment</string>
     <string name="reviews">Reviews</string>
+    <string name="no_issues_found">No issues found</string>
 
 
 </resources>
