@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -59,7 +60,9 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
+import com.sabkuchfresh.dialogs.CheckoutRequestPaymentDialog;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
+import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -707,7 +710,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
         setSlideInitial();
 
-
+        showRequestPaymentDialog(null,"dsa");
         return rootView;
     }
 
@@ -3203,4 +3206,21 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }, false, false);
     }
 
+
+    private CheckoutRequestPaymentDialog checkoutRequestPaymentDialog;
+    private void showRequestPaymentDialog(String labelRequest,String timeLeft){
+
+        CheckoutRequestPaymentDialog.init(activity).setData("Kuch bhi set kardo yaar", System.currentTimeMillis(),1000*60*1,null, new CheckoutRequestPaymentDialog.CheckoutRequestPaymentListener() {
+            @Override
+            public void onCancelAttempt() {
+
+            }
+
+            @Override
+            public void onExpired() {
+
+            }
+        }).showDialog();
+
+    }
 }

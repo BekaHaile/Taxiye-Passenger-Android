@@ -148,11 +148,7 @@ public class EditPostPopup extends Dialog {
             getWindow().getDecorView().setScaleX(0.3f);
             getWindow().getDecorView().setScaleY(0.3f);
             getWindow().setAttributes(wlp);
-            getWindow().getDecorView().
-                    animate().
-                    scaleX(1f).
-                    scaleY(1f).
-                    setDuration(250);
+            getWindow().getDecorView().animate().scaleX(1f).scaleY(1f).setDuration(250);
 //                   .setInterpolator(new AccelerateInterpolator());
 
         }
