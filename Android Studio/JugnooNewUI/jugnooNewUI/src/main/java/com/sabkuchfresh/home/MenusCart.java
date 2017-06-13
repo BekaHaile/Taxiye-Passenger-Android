@@ -29,9 +29,7 @@ public class MenusCart {
 			if (item.getTotalQuantity() == 0) {
 				getRestaurantCart(vendor).getItemHashMap().remove(item.getRestaurantItemId());
 			} else {
-				if (!getRestaurantCart(vendor).getItemHashMap().containsKey(item.getRestaurantItemId())) {
-					getRestaurantCart(vendor).getItemHashMap().put(item.getRestaurantItemId(), item);
-				}
+				getRestaurantCart(vendor).getItemHashMap().put(item.getRestaurantItemId(), item);
 			}
 		}
 	}

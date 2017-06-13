@@ -27,6 +27,7 @@ public class MenusCartSelectedLayout {
 
 	public void init(View root){
 		rlMenusCartSelected = (RelativeLayout) root;
+		rlMenusCartSelected.setVisibility(View.GONE);
 		rlMenusCartSelectedInner = (RelativeLayout) root.findViewById(R.id.rlMenusCartSelectedInner);
 		tvRestName = (TextView) root.findViewById(R.id.tvRestName);
 		llDeleteCart = (LinearLayout) root.findViewById(R.id.llDeleteCart);

@@ -4491,6 +4491,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             vCheckoutShadow.clearAnimation();
             getHandler().removeCallbacks(runnableLlCheckoutBarGone);
 			llCheckoutBar.setVisibility(View.VISIBLE);
+            saveDeliveryAddressModel();
             vCheckoutShadow.setVisibility(View.VISIBLE);
 
             Animation animation = new TranslateAnimation(0, 0, llCheckoutBar.getMeasuredHeight(), 0);
@@ -4625,7 +4626,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         Spannable spannable = new SpannableString(getString(R.string.back_arrow));
         spannable.setSpan(new CustomTypeFaceSpan("", Fonts.iconsFont(FreshActivity.this)), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new RelativeSizeSpan(0.7f), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvFeedHyperLink.setText(R.string.feed);
+        tvFeedHyperLink.setText(R.string.reviews);
         tvFeedHyperLink.append(" ");
         tvFeedHyperLink.append(spannable);
     }

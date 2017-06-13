@@ -87,7 +87,6 @@ public class ApiFetchRestaurantMenu {
 
 									activity.updateItemListFromSPDB();
 									activity.updateCartValuesGetTotalPrice();
-									activity.saveDeliveryAddressModel();
 									if(directCheckout){
 										activity.openCart(AppConstant.ApplicationType.MENUS);
 									} else {

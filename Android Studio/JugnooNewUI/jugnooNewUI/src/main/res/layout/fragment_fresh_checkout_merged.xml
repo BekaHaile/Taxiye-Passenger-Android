@@ -178,7 +178,7 @@
                             android:layout_marginLeft="@dimen/px_80"
                             android:layout_marginRight="@dimen/px_20"
                             android:layout_marginTop="@dimen/px_25"
-                            android:text="Res"
+                            android:text=""
                             android:textColor="@color/text_color"
                             android:textSize="30px"
                             app:font="maven" />
@@ -192,7 +192,7 @@
                             android:layout_marginLeft="@dimen/px_80"
                             android:layout_marginRight="@dimen/px_20"
                             android:layout_marginTop="4px"
-                            android:text="Add"
+                            android:text=""
                             android:textColor="@color/text_color_light"
                             android:textSize="26px"
                             app:font="@string/maven_r" />
