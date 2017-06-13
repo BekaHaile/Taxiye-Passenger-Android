@@ -3197,6 +3197,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     @Override
                     public void onClick(View v) {
                         activity.setDeliveryAddressModelToSelectedAddress(true);
+						deliveryAddressUpdated = true;
                         getCheckoutDataAPI(selectedSubscription);
                     }
                 }, false, false);

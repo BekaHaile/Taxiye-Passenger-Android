@@ -3758,7 +3758,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setDeliveryAddressModelToSelectedAddress(boolean dontRefresh) {
         if (deliveryAddressModel == null) {
             try {
-                deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(Constants.SP_FRESH_CART_ADDRESS,
+                deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(getAppType() == AppConstant.ApplicationType.MENUS ?
+                                Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
                         Constants.EMPTY_JSON_OBJECT), DeliveryAddressModel.class);
             } catch (Exception e) {
             }
@@ -4491,7 +4492,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             vCheckoutShadow.clearAnimation();
             getHandler().removeCallbacks(runnableLlCheckoutBarGone);
 			llCheckoutBar.setVisibility(View.VISIBLE);
-            saveDeliveryAddressModel();
             vCheckoutShadow.setVisibility(View.VISIBLE);
 
             Animation animation = new TranslateAnimation(0, 0, llCheckoutBar.getMeasuredHeight(), 0);

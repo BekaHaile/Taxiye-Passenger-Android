@@ -121,6 +121,9 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 						new FreshCategoryItemsAdapter.Callback() {
 							@Override
 							public void onPlusClicked(int position, SubItem subItem) {
+								if(activity.getTotalPrice() <= 0){
+									activity.saveDeliveryAddressModel();
+								}
 								activity.saveSubItemToDeliveryStoreCart(subItem);
 								activity.updateCartValuesGetTotalPrice();
 								if(activity.getFreshFragment() != null && activity.getFreshFragment().getSuperCategory() != null) {
