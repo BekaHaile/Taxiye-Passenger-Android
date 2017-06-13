@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.sabkuchfresh.home.FreshActivity;
@@ -30,13 +30,13 @@ import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerVie
 @SuppressLint("ValidFragment")
 public class SupportFAQItemsListFragment extends Fragment implements  Constants {
 
-	private LinearLayout root;
+	private RelativeLayout root;
 
 	private CardView cardViewRecycler;
 	private RecyclerView recyclerViewItems;
 	private SupportFAQItemsAdapter supportFAQItemsAdapter;
 
-	private View rootView;
+	private View rootView, vShadow;
     private FragmentActivity activity;
 
 	private int engagementId, orderId, productType;
@@ -83,9 +83,7 @@ public class SupportFAQItemsListFragment extends Fragment implements  Constants 
 
         activity = getActivity();
 
-		setActivityTitle();
-
-		root = (LinearLayout) rootView.findViewById(R.id.root);
+		root = (RelativeLayout) rootView.findViewById(R.id.root);
 		try {
 			if(root != null) {
 				new ASSL(activity, root, 1134, 720, false);
@@ -100,20 +98,25 @@ public class SupportFAQItemsListFragment extends Fragment implements  Constants 
 		recyclerViewItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewItems.setHasFixedSize(false);
 
+		vShadow = rootView.findViewById(R.id.vShadow); vShadow.setVisibility(View.GONE);
+
+		setActivityTitle();
+
 		supportFAQItemsAdapter = new SupportFAQItemsAdapter((ArrayList<ShowPanelResponse.Item>) item.getItems(),
 				activity, R.layout.list_item_support_faq,
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
+						View container = null;
 						if(activity instanceof SupportActivity){
-							new TransactionUtils().openItemInFragment(activity,
-									((SupportActivity)activity).getContainer(),
-									engagementId, rideDate, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber,
-									orderId, orderDate, supportNumber, productType);
-
+							container = ((SupportActivity)activity).getContainer();
 						} else if(activity instanceof RideTransactionsActivity){
-							new TransactionUtils().openItemInFragment(activity,
-									((RideTransactionsActivity)activity).getContainer(),
+							container = ((RideTransactionsActivity)activity).getContainer();
+						} else if(activity instanceof FreshActivity){
+							container = ((FreshActivity)activity).getRelativeLayoutContainer();
+						}
+						if(container != null) {
+							new TransactionUtils().openItemInFragment(activity, container,
 									engagementId, rideDate, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber,
 									orderId, orderDate, supportNumber, productType);
 						}
@@ -139,6 +142,7 @@ public class SupportFAQItemsListFragment extends Fragment implements  Constants 
 			} else if(activity instanceof FreshActivity){
 				((FreshActivity)activity).getTopBar().title.setText(item.getText());
 				((FreshActivity)activity).fragmentUISetup(this);
+				vShadow.setVisibility(View.VISIBLE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

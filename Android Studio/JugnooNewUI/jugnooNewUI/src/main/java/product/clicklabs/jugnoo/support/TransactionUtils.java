@@ -55,9 +55,11 @@ public class TransactionUtils {
 		else if(ActionType.NEXT_LEVEL.getOrdinal() == item.getActionType()) {
 			if(item.getItems() != null && item.getItems().size() > 1){
 				if(!checkIfFragmentAdded(activity, SupportFAQItemsListFragment.class.getName()+item.getSupportId())) {
-					activity.getSupportFragmentManager().beginTransaction()
-							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-							.add(container.getId(),
+					FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+					if(!(activity instanceof FreshActivity)){
+						fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+					}
+					fragmentTransaction.add(container.getId(),
 									SupportFAQItemsListFragment.newInstance(engagementId, rideDate, item, phoneNumber, orderId, orderDate, supportNumber, productType),
 									SupportFAQItemsListFragment.class.getName()+item.getSupportId())
 							.addToBackStack(SupportFAQItemsListFragment.class.getName()+item.getSupportId())
@@ -78,12 +80,9 @@ public class TransactionUtils {
 				|| singleItemToOpen.getItems() == null)){
 			if(!checkIfFragmentAdded(activity, SupportFAQItemFragment.class.getName())) {
 				FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
-				if(activity instanceof FreshActivity){
-					fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out);
-				} else {
+				if(!(activity instanceof FreshActivity)){
 					fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
 				}
-
 				fragmentTransaction.add(container.getId(),
 								SupportFAQItemFragment.newInstance(engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate, supportNumber, productType),
 								SupportFAQItemFragment.class.getName())
