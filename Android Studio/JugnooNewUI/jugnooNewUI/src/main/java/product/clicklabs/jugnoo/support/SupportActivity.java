@@ -180,7 +180,7 @@ public class SupportActivity extends BaseAppCompatActivity {
 				new TransactionUtils().openRideIssuesFragment(this,
 						getContainer(),
 						engagementId, orderId, endRideData, items, fromBadFeedback, false, autosStatus,
-						datum);
+						datum, -1, -1, "");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

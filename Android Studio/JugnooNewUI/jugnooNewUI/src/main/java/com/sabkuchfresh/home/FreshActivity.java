@@ -185,6 +185,8 @@ import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
+import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
+import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
 import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -1452,7 +1454,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof SupportFAQItemFragment) {
+            } else if (fragment instanceof SupportFAQItemFragment
+                    || fragment instanceof SupportRideIssuesFragment || fragment instanceof SupportFAQItemsListFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 llSearchCartVis = View.GONE;

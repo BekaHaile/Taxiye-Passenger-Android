@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
+import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.ArrayList;
 
@@ -42,16 +43,6 @@ public class SupportFAQItemsListFragment extends Fragment implements  Constants 
 	private ShowPanelResponse.Item item;
 	private String phoneNumber, rideDate, orderDate, supportNumber;
 
-
-	@Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-		super.onStop();
-    }
 
 	private static final String ITEM = "item";
 
@@ -145,6 +136,9 @@ public class SupportFAQItemsListFragment extends Fragment implements  Constants 
 				((RideTransactionsActivity)activity).setTitle(item.getText());
 			} else if(activity instanceof SupportActivity){
 				((SupportActivity)activity).setTitle(item.getText());
+			} else if(activity instanceof FreshActivity){
+				((FreshActivity)activity).getTopBar().title.setText(item.getText());
+				((FreshActivity)activity).fragmentUISetup(this);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

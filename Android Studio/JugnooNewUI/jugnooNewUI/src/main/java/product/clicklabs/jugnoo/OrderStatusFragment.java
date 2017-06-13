@@ -935,7 +935,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             } else {
                 new TransactionUtils().openRideIssuesFragment(activity,
                         ((RideTransactionsActivity) activity).getContainer(),
-                        -1, -1, null, null, 0, false, 0, datum1);
+                        -1, -1, null, null, 0, false, 0, datum1, -1, -1, "");
             }
         } else {
             activity.onBackPressed();

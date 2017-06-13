@@ -55,11 +55,7 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
-import product.clicklabs.jugnoo.support.models.ActionType;
-import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
-import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -1270,22 +1266,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     if (Data.isFuguChatEnabled()) {
                         FuguConfig.getInstance().showConversations(activity);
                     } else {
-                        activity.startActivity(new Intent(activity, SupportActivity.class));
-                        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-
-                        ShowPanelResponse.Item item = new ShowPanelResponse.Item();
-                        item.setActionType(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal());
-                        item.setSupportId(order.getSupportId());
-                        item.setText(order.getSupportText());
-                        item.setViewType(ViewType.TEXT_BOX.getOrdinal());
-
-                        new TransactionUtils().openItemInFragment(activity,
+                        new TransactionUtils().openRideIssuesFragment(activity,
                                 activity.getRelativeLayoutContainer(),
-                                -1, "", order.getSupportTitle(),
-                                item, "",
-                                order.getOrderId(), order.getExpectedDeliveryDate(),
-                                Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
-
+                                -1, order.getOrderId(), null, null, -1, false, -1, null,
+                                order.getSupportCategory(), ProductType.MENUS.getOrdinal(),
+                                order.getExpectedDeliveryDate());
                     }
                 }
             } catch (Exception e) {

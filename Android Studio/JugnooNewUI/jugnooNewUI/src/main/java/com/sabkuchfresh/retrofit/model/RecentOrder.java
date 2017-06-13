@@ -73,15 +73,9 @@ public class RecentOrder {
     @SerializedName("delivery_confirmation_msg")
     @Expose
     private String deliveryConfirmationMsg;
-    @SerializedName("support_id")
+    @SerializedName("support_category")
     @Expose
-    private int supportId;
-    @SerializedName("support_title")
-    @Expose
-    private String supportTitle;
-    @SerializedName("support_text")
-    @Expose
-    private String supportText;
+    private int supportCategory;
 
 
 
@@ -272,17 +266,6 @@ public class RecentOrder {
         return restaurantNumber;
     }
 
-    public int getSupportId() {
-        return supportId;
-    }
-
-    public String getSupportTitle() {
-        return supportTitle;
-    }
-
-    public String getSupportText() {
-        return supportText;
-    }
 
     public int getDeliveryConfirmation() {
         return deliveryConfirmation;
@@ -298,5 +281,9 @@ public class RecentOrder {
 
     public void setDeliveryConfirmationMsg(String deliveryConfirmationMsg) {
         this.deliveryConfirmationMsg = deliveryConfirmationMsg;
+    }
+
+    public int getSupportCategory() {
+        return supportCategory;
     }
 }

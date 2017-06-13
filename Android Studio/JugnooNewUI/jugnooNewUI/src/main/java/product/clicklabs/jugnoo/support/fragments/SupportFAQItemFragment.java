@@ -75,16 +75,6 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 	private String parentName, phoneNumber, rideDate, orderDate, supportNumber;
 	private ShowPanelResponse.Item item;
 
-	@Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-		super.onStop();
-    }
-
 	private static final String PARENT_NAME = "parentName", ITEM = "item";
 
 	public static SupportFAQItemFragment newInstance(int engagementId, String rideDate, String parentName,
@@ -246,6 +236,7 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 			if(activity instanceof FreshActivity){
 				((FreshActivity)activity).fragmentUISetup(this);
 				rootView.findViewById(R.id.vShadow).setVisibility(View.VISIBLE);
+				setActivityTitle();
 			} else {
 				rootView.findViewById(R.id.vShadow).setVisibility(View.GONE);
 			}
@@ -262,6 +253,8 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 			((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.support_main_title));
 		} else if(activity instanceof SupportActivity){
 			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.support_main_title));
+		} else if (activity instanceof FreshActivity) {
+			((FreshActivity)activity).getTopBar().title.setText(activity.getResources().getString(R.string.support_main_title));
 		}
 	}
 

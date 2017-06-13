@@ -718,4 +718,5 @@ public interface Constants {
 
 
     String KEY_IS_DELIVERED = "is_delivered";
+    String KEY_SUPPORT_CATEGORY = "support_category";
 }
