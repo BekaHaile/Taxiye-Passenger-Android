@@ -1,5 +1,8 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.config.ConfigMode;
+
 /**
  * Created by socomo20 on 12/11/15.
  */
@@ -713,8 +716,9 @@ public interface Constants {
      * Fugu Channels
      */
 
-    long CHANNEL_ID_FUGU_ISSUE_ORDER = 56;
-    long CHANNEL_ID_FUGU_BULK_MEALS = 556;
+    long CHANNEL_ID_FUGU_ISSUE_ORDER = Config.getConfigMode()== ConfigMode.LIVE?56:437;
+    long CHANNEL_ID_FUGU_BULK_MEALS = Config.getConfigMode()== ConfigMode.LIVE?556:435;
+
 
 
     String KEY_IS_DELIVERED = "is_delivered";
