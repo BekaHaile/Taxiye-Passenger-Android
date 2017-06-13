@@ -525,8 +525,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rlDeliveryFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getActivity() instanceof FreshActivity && ((FreshActivity)getActivity()).getAppType()==AppConstant.ApplicationType.MENUS)
-                     GAUtils.event(GACategory.MENUS, GAAction.CHECKOUT, GAAction.DELIVERY_FROM + GAAction.CLICKED);
+                if (getActivity() instanceof FreshActivity && ((FreshActivity) getActivity()).getAppType() == AppConstant.ApplicationType.MENUS)
+                    GAUtils.event(GACategory.MENUS, GAAction.CHECKOUT, GAAction.DELIVERY_FROM + GAAction.CLICKED);
+                activity.openVendorMenuFragmentOnBack = true;
                 activity.performBackPressed(false);
             }
         });
@@ -1569,8 +1570,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                             && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag
                                                             && isEmpty == 1) {
                                                         activity.clearMenusCart();
-                                                        activity.setRefreshCart(true);
-                                                        activity.performBackPressed(false);
+                                                        if(activity.getVendorMenuFragment() != null) {
+                                                            activity.setRefreshCart(true);
+                                                            activity.performBackPressed(false);
+                                                        }
                                                         activity.setRefreshCart(true);
                                                         activity.performBackPressed(false);
                                                     } else if (redirect == 1) {
@@ -2084,11 +2087,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             PromoCoupon pcOld = activity.getSelectedPromoCoupon();
             activity.setSelectedPromoCoupon(noSelectionCoupon);
 
+            boolean pcOldReturned = false;
             for (PromoCoupon promoCoupon : promoCoupons) {
                 if (pcOld.getId() == promoCoupon.getId()) {
                     pcOld = promoCoupon;
+                    pcOldReturned = true;
                     break;
                 }
+            }
+            if(!pcOldReturned){
+                pcOld = null;
             }
 
             for (PromoCoupon promoCoupon : promoCoupons) {
@@ -2412,7 +2420,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private boolean checkoutApiDoneOnce = false;
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
-//        try {
+        try {
 //            if(!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType())) {
 //                if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
 //                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
@@ -2441,9 +2449,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 //                    activity.setSelectedAddressType("");
 //                }
 //            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {
@@ -3189,6 +3197,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     @Override
                     public void onClick(View v) {
                         activity.setDeliveryAddressModelToSelectedAddress(true);
+						deliveryAddressUpdated = true;
                         getCheckoutDataAPI(selectedSubscription);
                     }
                 }, false, false);

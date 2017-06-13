@@ -240,7 +240,7 @@ public class Data {
             Prefs.with(context).remove(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED);
 
 
-            Prefs.with(context).remove(Constants.SP_MENUS_CART);
+//            Prefs.with(context).remove(Constants.SP_MENUS_CART);
             Prefs.with(context).remove(Constants.SP_FRESH_CHECKOUT_SAVE_DATA);
             Prefs.with(context).remove(Constants.SP_MEALS_CHECKOUT_SAVE_DATA);
             Prefs.with(context).remove(Constants.SP_GROCERY_CHECKOUT_SAVE_DATA);

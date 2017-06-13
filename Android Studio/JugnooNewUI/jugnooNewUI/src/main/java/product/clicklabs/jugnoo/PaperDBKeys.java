@@ -11,4 +11,5 @@ public interface PaperDBKeys {
 	String DB_PREVIOUS_VENDOR = "db_previous_vendor";
 	String DB_PLACE_ORDER_RESP = "db_place_order_resp";
 	String DB_STAR_PURCHASE_RESP = "db_star_purchase_resp";
+	String DB_MENUS_CART = "db_menus_cart";
 }

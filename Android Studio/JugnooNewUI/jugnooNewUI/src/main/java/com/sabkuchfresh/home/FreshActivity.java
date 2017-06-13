@@ -184,6 +184,7 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -363,6 +364,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }, 1000);
 
             topBar.etSearch.addTextChangedListener(textWatcher);
+
+            menusCartSelectedLayout = new MenusCartSelectedLayout(this);
+            final View rootf = findViewById(R.id.vMenusCartSaved);
+            menusCartSelectedLayout.init(rootf);
+
 
             drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
                 @Override
@@ -1446,6 +1452,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof SupportFAQItemFragment) {
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
+
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getString(R.string.need_help));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
@@ -2398,6 +2412,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                 }
                                 if (jsonArrayItem.length() > 0) {
                                     jCart.put(String.valueOf(item.getRestaurantItemId()), jsonArrayItem);
+                                    getMenusCart().putItemForRestaurant(getVendorOpened(), item);
                                 }
                             }
                         }
@@ -2411,21 +2426,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             }
                             if (jsonArrayItem.length() > 0) {
                                 jCart.put(String.valueOf(item.getRestaurantItemId()), jsonArrayItem);
+                                getMenusCart().putItemForRestaurant(getVendorOpened(), item);
                             }
                         }
                     }
                 }
             }
-            if (getVendorOpened() != null) {
-                JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
-                if (getVendorOpened().getRestaurantId().equals(jsonSavedCart.optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))) {
-                    if (jCart.length() > 0) {
-                        jCart.put(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId());
-                        jCart.put(Constants.KEY_RESTAURANT_NAME, getVendorOpened().getName());
-                    }
-                    Prefs.with(this).save(Constants.SP_MENUS_CART, jCart.toString());
-                }
-            }
+//            if (getVendorOpened() != null) {
+//                JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
+//                if (getVendorOpened().getRestaurantId().equals(jsonSavedCart.optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))) {
+//                    if (jCart.length() > 0) {
+//                        jCart.put(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId());
+//                        jCart.put(Constants.KEY_RESTAURANT_NAME, getVendorOpened().getName());
+//                    }
+//                    Prefs.with(this).save(Constants.SP_MENUS_CART, jCart.toString());
+//                }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2486,46 +2502,51 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private void updateItemListFromSPMenus() {
         try {
-            Gson gson = new Gson();
-            JSONObject jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
+//            Gson gson = new Gson();
+//            JSONObject jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
             if (getMenuProductsResponse() != null
                     && getMenuProductsResponse().getCategories() != null) {
                 for (com.sabkuchfresh.retrofit.model.menus.Category category : getMenuProductsResponse().getCategories()) {
                     if (category.getSubcategories() != null) {
                         for (Subcategory subcategory : category.getSubcategories()) {
                             for (Item item : subcategory.getItems()) {
-                                item.getItemSelectedList().clear();
-                                JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
-                                if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
-                                    for (int i = 0; i < jsonArrayItem.length(); i++) {
-                                        try {
-                                            ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
-                                            if (itemSelected.getQuantity() > 0) {
-												itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
-                                                item.getItemSelectedList().add(itemSelected);
-                                            }
-                                        } catch (Exception e) {
-                                        }
-                                    }
-                                }
+//                                item.getItemSelectedList().clear();
+//                                JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
+//                                if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
+//                                    for (int i = 0; i < jsonArrayItem.length(); i++) {
+//                                        try {
+//                                            ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
+//                                            if (itemSelected.getQuantity() > 0) {
+//												itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
+//                                                item.getItemSelectedList().add(itemSelected);
+//                                            }
+//                                        } catch (Exception e) {
+//                                        }
+//                                    }
+//                                }
+
+                                getMenusCart().updateItemForRestaurant(getVendorOpened(), item);
+
                             }
                         }
                     } else if (category.getItems() != null) {
                         for (Item item : category.getItems()) {
-                            item.getItemSelectedList().clear();
-                            JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
-                            if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
-                                for (int i = 0; i < jsonArrayItem.length(); i++) {
-                                    try {
-                                        ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
-                                        if (itemSelected.getQuantity() > 0) {
-											itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
-                                            item.getItemSelectedList().add(itemSelected);
-                                        }
-                                    } catch (Exception e) {
-                                    }
-                                }
-                            }
+//                            item.getItemSelectedList().clear();
+//                            JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
+//                            if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
+//                                for (int i = 0; i < jsonArrayItem.length(); i++) {
+//                                    try {
+//                                        ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
+//                                        if (itemSelected.getQuantity() > 0) {
+//											itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
+//                                            item.getItemSelectedList().add(itemSelected);
+//                                        }
+//                                    } catch (Exception e) {
+//                                    }
+//                                }
+//                            }
+
+                            getMenusCart().updateItemForRestaurant(getVendorOpened(), item);
                         }
                     }
                 }
@@ -2555,7 +2576,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     public void clearMenusCart() {
-        Prefs.with(this).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
+//        Prefs.with(this).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
+        Paper.book().delete(DB_MENUS_CART);
+        createAppCart(Config.getMenusClientId());
     }
 
     @Subscribe
@@ -3055,6 +3078,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void setVendorOpened(MenusResponse.Vendor vendorOpened) {
         this.vendorOpened = vendorOpened;
+        getMenusCart().updateRestaurant(vendorOpened);
     }
 
 
@@ -3240,11 +3264,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public boolean checkForAdd(final int position, final Item item, final MenusCategoryItemsAdapter.CallbackCheckForAdd callbackCheckForAdd) {
         try {
-            JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
-            if (getVendorOpened() != null
-                    && !getVendorOpened().getRestaurantId().equals(jsonSavedCart
-                    .optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))) {
-                String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
+            RestaurantCart restaurantCart = getMenusCart().getRestaurantCartFilled();
+
+//            JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
+            if (getVendorOpened() != null && restaurantCart != null
+                    && !getVendorOpened().getRestaurantId().equals(restaurantCart.getRestaurant().getRestaurantId())) {
+                String oldRestaurantName = restaurantCart.getRestaurant().getName();
                 DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
                         getString(R.string.previous_vendor_cart_message_format, oldRestaurantName),
                         getString(R.string.ok), getString(R.string.cancel),
@@ -3733,7 +3758,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setDeliveryAddressModelToSelectedAddress(boolean dontRefresh) {
         if (deliveryAddressModel == null) {
             try {
-                deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(Constants.SP_FRESH_CART_ADDRESS,
+                deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(getAppType() == AppConstant.ApplicationType.MENUS ?
+                                Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
                         Constants.EMPTY_JSON_OBJECT), DeliveryAddressModel.class);
             } catch (Exception e) {
             }
@@ -4193,7 +4219,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     private ApiFetchRestaurantMenu apiFetchRestaurantMenu;
-    public void fetchRestaurantMenuAPI(final int restaurantId){
+    public void fetchRestaurantMenuAPI(int restaurantId, boolean directCheckout){
         if(apiFetchRestaurantMenu == null){
             apiFetchRestaurantMenu = new ApiFetchRestaurantMenu(this, new ApiFetchRestaurantMenu.Callback() {
                 @Override
@@ -4207,8 +4233,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
 
                 @Override
-                public void onRetry(View view) {
-                    fetchRestaurantMenuAPI(restaurantId);
+                public void onRetry(View view, int restaurantId, boolean directCheckout) {
+                    fetchRestaurantMenuAPI(restaurantId, directCheckout);
                 }
 
                 @Override
@@ -4218,7 +4244,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             });
         }
         apiFetchRestaurantMenu.hit(restaurantId, getSelectedLatLng().latitude,
-                getSelectedLatLng().longitude);
+                getSelectedLatLng().longitude, directCheckout);
     }
 
 
@@ -4232,6 +4258,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
         else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
             appCart = Paper.book().read(DB_MEALS_CART, new AppCart());
+        }
+        else if(clientId.equalsIgnoreCase(Config.getMenusClientId())){
+            menusCart = Paper.book().read(DB_MENUS_CART, new MenusCart());
         }
     }
     private void saveAppCart(String clientId){
@@ -4247,6 +4276,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 Paper.book().write(DB_MEALS_CART, appCart);
             } else {
                 Paper.book().delete(DB_MEALS_CART);
+            }
+        }
+        else if(clientId.equalsIgnoreCase(Config.getMenusClientId())){
+            if(menusCart != null) {
+                Paper.book().write(DB_MENUS_CART, menusCart);
+            } else {
+                Paper.book().delete(DB_MENUS_CART);
             }
         }
     }
@@ -4590,7 +4626,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         Spannable spannable = new SpannableString(getString(R.string.back_arrow));
         spannable.setSpan(new CustomTypeFaceSpan("", Fonts.iconsFont(FreshActivity.this)), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new RelativeSizeSpan(0.7f), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvFeedHyperLink.setText(R.string.feed);
+        tvFeedHyperLink.setText(R.string.reviews);
         tvFeedHyperLink.append(" ");
         tvFeedHyperLink.append(spannable);
     }
@@ -4649,4 +4685,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
+    private MenusCartSelectedLayout menusCartSelectedLayout;
+    public MenusCartSelectedLayout getMenusCartSelectedLayout(){
+        return menusCartSelectedLayout;
+    }
+
+
+    private MenusCart menusCart;
+    public MenusCart getMenusCart(){
+        return menusCart;
+    }
+
+    public boolean openVendorMenuFragmentOnBack;
 }

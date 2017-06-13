@@ -242,7 +242,7 @@
                         android:layout_marginTop="26px"
                         android:layout_toRightOf="@+id/imageViewAcceptOnline"
                         android:gravity="center_vertical"
-                        android:text="@string/online_payment"
+                        android:text="@string/accepts_online_payment"
                         android:textColor="@color/text_color_selector"
                         android:textSize="@dimen/text_size_28"
                         android:visibility="visible"

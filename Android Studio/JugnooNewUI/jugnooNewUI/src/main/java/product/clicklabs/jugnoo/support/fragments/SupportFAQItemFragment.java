@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.home.FreshActivity;
 
 import org.json.JSONObject;
 
@@ -241,6 +242,13 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 				});
 		keyboardLayoutListener.setResizeTextView(false);
 		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
+			if(activity instanceof FreshActivity){
+				((FreshActivity)activity).fragmentUISetup(this);
+				rootView.findViewById(R.id.vShadow).setVisibility(View.VISIBLE);
+			} else {
+				rootView.findViewById(R.id.vShadow).setVisibility(View.GONE);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -192,7 +191,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             @Override
             public void onRestaurantClick(int restaurantId) {
                 if (restaurantId > 0) {
-                    activity.fetchRestaurantMenuAPI(restaurantId);
+                    activity.fetchRestaurantMenuAPI(restaurantId, false);
                 }
             }
 
@@ -656,12 +655,12 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     public void showDialogPopupTwoButtonCapsule(String message, final FeedDetail feedDetail, final int pos) {
         new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
             @Override
-            public void onPositiveClick() {
+            public void onLeftClick() {
                 onDelete(feedDetail, pos);
             }
 
             @Override
-            public void onNegativeClick() {
+            public void onRightClick() {
             }
         }, R.style.Feed_Popup_Theme, activity, message).show();
     }

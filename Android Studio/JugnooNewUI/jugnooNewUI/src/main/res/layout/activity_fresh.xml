@@ -96,6 +96,9 @@
             <include layout="@layout/layout_fresh_checkout_bar"/>
 
             <include layout="@layout/layout_menus_customize_add_to_cart"/>
+            <include
+                android:id="@+id/vMenusCartSaved"
+                layout="@layout/layout_menus_cart_selected"/>
         </LinearLayout>
 
         <include layout="@layout/layout_fresh_pay_action_container"/>

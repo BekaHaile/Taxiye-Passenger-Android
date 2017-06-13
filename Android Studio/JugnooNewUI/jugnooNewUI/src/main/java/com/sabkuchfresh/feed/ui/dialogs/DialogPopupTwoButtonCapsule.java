@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
@@ -21,9 +22,13 @@ import product.clicklabs.jugnoo.R;
 public class DialogPopupTwoButtonCapsule extends Dialog {
 
     private DialogCallback callback;
+    private String message, leftText, rightText;
 
+    public DialogPopupTwoButtonCapsule(@StyleRes int themeResId, Activity context) {
+        this(null, themeResId, context, "");
+    }
 
-    public <T extends DialogCallback> DialogPopupTwoButtonCapsule(@NonNull T callback, @StyleRes int themeResId, Activity context, String message) {
+    public <T extends DialogCallback> DialogPopupTwoButtonCapsule(T callback, @StyleRes int themeResId, Activity context, String message) {
         super(context, themeResId);
         this.callback = callback;
         setContentView(R.layout.dialog_two_buttons_capsule);
@@ -31,18 +36,22 @@ public class DialogPopupTwoButtonCapsule extends Dialog {
             @Override
             public void onClick(View v) {
                 DialogPopupTwoButtonCapsule.super.dismiss();
-                DialogPopupTwoButtonCapsule.this.callback.onPositiveClick();
+                if(DialogPopupTwoButtonCapsule.this.callback != null) {
+                    DialogPopupTwoButtonCapsule.this.callback.onLeftClick();
+                }
             }
         });
         findViewById(R.id.bNegative).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogPopupTwoButtonCapsule.super.dismiss();
-                DialogPopupTwoButtonCapsule.this.callback.onNegativeClick();
+                if(DialogPopupTwoButtonCapsule.this.callback != null) {
+                    DialogPopupTwoButtonCapsule.this.callback.onRightClick();
+                }
             }
         });
-        ((TextView)findViewById(R.id.tvMessage)).setText(message);
 
+        this.message = message;
 
         Window window = getWindow();
         WindowManager.LayoutParams wlp = getWindow().getAttributes();
@@ -59,12 +68,34 @@ public class DialogPopupTwoButtonCapsule extends Dialog {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));*/
 
+    }
 
+    @Override
+    public void show() {
+        ((TextView)findViewById(R.id.tvMessage)).setText(message);
+
+        if(!TextUtils.isEmpty(leftText)) {
+            ((Button)findViewById(R.id.bPositive)).setText(leftText);
+        }
+
+        if(!TextUtils.isEmpty(rightText)) {
+            ((Button)findViewById(R.id.bNegative)).setText(rightText);
+        }
+
+        super.show();
+    }
+
+    public void show(DialogCallback callback, String message, String leftText, String rightText){
+        this.callback = callback;
+        this.message = message;
+        this.leftText = leftText;
+        this.rightText = rightText;
+        show();
     }
 
     public interface DialogCallback {
-        void onPositiveClick();
-        void onNegativeClick();
+        void onLeftClick();
+        void onRightClick();
     }
 
 }

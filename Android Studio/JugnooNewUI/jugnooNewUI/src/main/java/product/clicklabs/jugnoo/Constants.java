@@ -591,7 +591,7 @@ public interface Constants {
     String KEY_PAYMENT_PREFERENCE = "payment_preference";
     String KEY_AUTOS_BENEFIT_ID = "autos_benefit_id";
 
-    double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 150d;
+    double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 200d;
     String KEY_OPTIONS = "options";
     String KEY_CUSTOMISATIONS = "customisations";
     String KEY_SUPER_CATEGORY_ID = "super_category_id";
@@ -717,4 +717,5 @@ public interface Constants {
     long CHANNEL_ID_FUGU_BULK_MEALS = 556;
 
 
+    String KEY_IS_DELIVERED = "is_delivered";
 }
