@@ -708,4 +708,13 @@ public interface Constants {
     String SP_MENUS_CART_ADDRESS = "sp_menus_cart_address";
     String SP_CACHE_CLEAR_TIME = "sp_cache_clear_time";
     String KEY_OUT_OF_RANGE = "out_of_range";
+
+    /**
+     * Fugu Channels
+     */
+
+    long CHANNEL_ID_FUGU_ISSUE_ORDER = 56;
+    long CHANNEL_ID_FUGU_BULK_MEALS = 556;
+
+
 }

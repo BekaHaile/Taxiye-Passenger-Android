@@ -564,7 +564,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             ivBulkOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FuguConfig.getInstance().showConversations(activity);
+                    FuguConfig.getInstance().openChat(activity,Constants.CHANNEL_ID_FUGU_BULK_MEALS);
                 }
             });
         }

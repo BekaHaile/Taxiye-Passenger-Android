@@ -364,6 +364,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			Data.getDeepLinkIndexFromIntent(this, getIntent());
 
 			MyApplication.getInstance().initializeServerURL(this);
+			Data.initializeFuguHandler(this);
 
 
 			try {
