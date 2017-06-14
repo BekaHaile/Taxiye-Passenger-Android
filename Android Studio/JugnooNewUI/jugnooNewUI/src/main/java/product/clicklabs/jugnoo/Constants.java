@@ -1,5 +1,8 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.config.ConfigMode;
+
 /**
  * Created by socomo20 on 12/11/15.
  */
@@ -591,7 +594,7 @@ public interface Constants {
     String KEY_PAYMENT_PREFERENCE = "payment_preference";
     String KEY_AUTOS_BENEFIT_ID = "autos_benefit_id";
 
-    double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 150d;
+    double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 200d;
     String KEY_OPTIONS = "options";
     String KEY_CUSTOMISATIONS = "customisations";
     String KEY_SUPER_CATEGORY_ID = "super_category_id";
@@ -708,4 +711,12 @@ public interface Constants {
     String SP_MENUS_CART_ADDRESS = "sp_menus_cart_address";
     String SP_CACHE_CLEAR_TIME = "sp_cache_clear_time";
     String KEY_OUT_OF_RANGE = "out_of_range";
+
+
+
+    String KEY_IS_DELIVERED = "is_delivered";
+    String KEY_SUPPORT_CATEGORY = "support_category";
+    String SP_PAYTM_LAST_BALANCE = "sp_paytm_last_balance";
+    String SP_MOBIKWIK_LAST_BALANCE = "sp_mobikwik_last_balance";
+    String SP_FREECHARGE_LAST_BALANCE = "sp_freecharge_last_balance";
 }

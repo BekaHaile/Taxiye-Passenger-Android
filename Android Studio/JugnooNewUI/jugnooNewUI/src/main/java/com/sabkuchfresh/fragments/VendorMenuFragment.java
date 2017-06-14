@@ -36,7 +36,6 @@ import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -189,7 +188,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
         activity.setSortingList(this);
 
-        success(activity.getMenuProductsResponse());
+        success();
 
 
         return rootView;
@@ -386,11 +385,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         return menusCategoryFragmentsAdapter;
     }
 
-    void success(VendorMenuResponse productsResponse) {
+    void success() {
         try {
             noFreshsView.setVisibility(View.GONE);
             mainLayout.setVisibility(View.VISIBLE);
-            activity.setMenuProductsResponse(productsResponse);
 
             if (activity.getMenuProductsResponse() != null) {
 
@@ -399,8 +397,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     ivShadowAboveTab.setVisibility(View.VISIBLE);
                     ivShadowBelowTab.setVisibility(View.VISIBLE);
 
-                    activity.updateItemListFromSPDB();
-                    activity.updateCartValuesGetTotalPrice();
                     menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories());
                     tabs.setViewPager(viewPager);
                     viewPager.setCurrentItem(Data.tabLinkIndex);
@@ -423,7 +419,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     }
 
                     setUpCollapseToolbarData();
-                    activity.saveDeliveryAddressModel();
                 }
             }
         } catch (Exception exception) {
@@ -450,7 +445,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 activity.llCollapRatingStars.setVisibility(View.VISIBLE);
                 activity.setRestaurantRatingStarsToLL(activity.llCollapRatingStars, activity.tvCollapRestaurantRating, activity.getVendorOpened().getRating());
             } else {
-                activity.llCollapRatingStars.setVisibility(View.GONE);
+                activity.llCollapRatingStars.setVisibility(View.INVISIBLE);
             }
 
             tvSwitchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);

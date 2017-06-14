@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -220,6 +221,7 @@ public class UserData {
 
 	public void setPaytmBalance(double paytmBalance) {
 		this.paytmBalance = paytmBalance;
+		Prefs.with(MyApplication.getInstance()).save(Constants.SP_PAYTM_LAST_BALANCE, String.valueOf(paytmBalance));
 	}
 
 	public double getTotalWalletBalance() {
@@ -253,7 +255,7 @@ public class UserData {
 
 	public void deletePaytm(){
 		this.paytmEnabled = 0;
-		this.paytmBalance = -1;
+		this.setPaytmBalance(-1);
 	}
 
 	public String getBranchDesktopUrl() {
@@ -505,6 +507,7 @@ public class UserData {
 
 	public void setMobikwikBalance(double mobikwikBalance) {
 		this.mobikwikBalance = mobikwikBalance;
+		Prefs.with(MyApplication.getInstance()).save(Constants.SP_MOBIKWIK_LAST_BALANCE, String.valueOf(mobikwikBalance));
 	}
 
 	public int getMobikwikBalanceColor(Context context){
@@ -517,7 +520,7 @@ public class UserData {
 
 	public void deleteMobikwik(){
 		this.mobikwikEnabled = 0;
-		this.mobikwikBalance = -1;
+		this.setMobikwikBalance(-1);
 	}
 
 
@@ -548,6 +551,7 @@ public class UserData {
 
     public void setFreeChargeBalance(double freeChargeBalance) {
         this.freeChargeBalance = freeChargeBalance;
+		Prefs.with(MyApplication.getInstance()).save(Constants.SP_FREECHARGE_LAST_BALANCE, String.valueOf(freeChargeBalance));
     }
 
     public int getFreeChargeBalanceColor(Context context){
@@ -560,7 +564,7 @@ public class UserData {
 
     public void deleteFreeCharge(){
         this.freeChargeEnabled = 0;
-        this.freeChargeBalance = -1;
+        this.setFreeChargeBalance(-1);
     }
 
 
@@ -576,7 +580,9 @@ public class UserData {
 		try {
 			setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE, getJugnooBalance()));
 			if(jObj.has(Constants.KEY_PAYTM_BALANCE)){
-				setPaytmBalance(jObj.optDouble(Constants.KEY_PAYTM_BALANCE, getPaytmBalance()));
+				double spBalance = Double.parseDouble(Prefs.with(MyApplication.getInstance()).getString(Constants.SP_PAYTM_LAST_BALANCE, "-1"));
+				double serverBalance = jObj.optDouble(Constants.KEY_PAYTM_BALANCE, getPaytmBalance());
+				setPaytmBalance(serverBalance > -1 ? serverBalance : spBalance);
 				if(getPaytmBalance() > 0 || removeWalletIfNoKey) {
 					setPaytmEnabled(1);
 				}
@@ -587,7 +593,9 @@ public class UserData {
 			}
 
 			if(jObj.has(Constants.KEY_MOBIKWIK_BALANCE)){
-				setMobikwikBalance(jObj.optDouble(Constants.KEY_MOBIKWIK_BALANCE, getMobikwikBalance()));
+				double spBalance = Double.parseDouble(Prefs.with(MyApplication.getInstance()).getString(Constants.SP_MOBIKWIK_LAST_BALANCE, "-1"));
+				double serverBalance = jObj.optDouble(Constants.KEY_MOBIKWIK_BALANCE, getMobikwikBalance());
+				setMobikwikBalance(serverBalance > -1 ? serverBalance : spBalance);
 				if(getMobikwikBalance() > 0 || removeWalletIfNoKey) {
 					setMobikwikEnabled(1);
 				}
@@ -598,7 +606,9 @@ public class UserData {
 			}
 
             if(jObj.has(Constants.KEY_FREECHARGE_BALANCE)) {
-                setFreeChargeBalance(jObj.optDouble(Constants.KEY_FREECHARGE_BALANCE, getFreeChargeBalance()));
+				double spBalance = Double.parseDouble(Prefs.with(MyApplication.getInstance()).getString(Constants.SP_FREECHARGE_LAST_BALANCE, "-1"));
+				double serverBalance = jObj.optDouble(Constants.KEY_FREECHARGE_BALANCE, getFreeChargeBalance());
+				setFreeChargeBalance(serverBalance > -1 ? serverBalance : spBalance);
                 if(getFreeChargeBalance() > 0 || removeWalletIfNoKey) {
                     setFreeChargeEnabled(1);
                 }

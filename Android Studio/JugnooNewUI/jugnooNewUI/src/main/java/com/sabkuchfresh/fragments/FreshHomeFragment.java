@@ -273,7 +273,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
 
 
     private void setSuperCategoriesDataToUI(SuperCategoriesData superCategoriesData){
-        activity.saveDeliveryAddressModel();
         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
         activity.setSuperCategoriesData(superCategoriesData);
         activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);

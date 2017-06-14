@@ -277,7 +277,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
 					if (activity instanceof RideTransactionsActivity) {
 						new TransactionUtils().openRideIssuesFragment(activity,
 								((RideTransactionsActivity) activity).getContainer(),
-								engagementId, -1, endRideData, items, 0, false, autosStatus, null);
+								engagementId, -1, endRideData, items, 0, false, autosStatus, null, -1, -1, "");
 					} else {
 						performBackPressed();
 					}

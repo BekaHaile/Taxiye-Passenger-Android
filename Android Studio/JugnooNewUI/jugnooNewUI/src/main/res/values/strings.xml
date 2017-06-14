@@ -1150,6 +1150,7 @@
     <string name="star_info_text">Shows the total amount you\'ve saved by subscribing to star</string>
     <string name="delivery_from">Delivery from</string>
     <string name="maven_r">maven_regular</string>
+    <string name="maven">maven</string>
     <string name="view_more">View more</string>
     <string name="view_less">View less</string>
     <string name="or_login_with">Or login with</string>
@@ -1291,6 +1292,24 @@
     <string name="back">Back</string>
     <string name="change">Change</string>
     <string name="your_cart_has_been_cleared">Your cart has been cleared.</string>
+    <string name="you_have_items_saved_in_cart">You have items saved in your cart</string>
+    <string name="view">View</string>
+    <string name="discard_all_items_in_cart">Discard all items in the cart?</string>
+    <string name="get_help">Get Help</string>
+    <string name="how_can_we_help">How can we help?</string>
+    <string name="dig_in_enjoy_food">Dig in! Enjoy your food.</string>
+    <string name="dig_in_enjoy_food_experience_feedback">We care about your experience. Once you are done eating, we’ll follow up for feedback</string>
+    <string name="menus_order_not_delivered_message">We apologise for the inconvenience. Our executive will get in touch with you soon.</string>
+    <string name="report_issue">Report Issue</string>
+    <string name="chat_with_fugu">Chat with FUGU</string>
+    <string name="call_restaurant">Call Restaurant</string>
+    <string name="accepts_online_payment">Accepts Online Payment</string>
+    <string name="reviews">Reviews</string>
+    <string name="no_issues_found">No issues found</string>
+    <string name="order_is_late">Order is late</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="no_reviews_yet">No reviews yet!</string>
+    <string name="be_the_first_one_to_add">Be the first one to add…</string>
 
 
 </resources>

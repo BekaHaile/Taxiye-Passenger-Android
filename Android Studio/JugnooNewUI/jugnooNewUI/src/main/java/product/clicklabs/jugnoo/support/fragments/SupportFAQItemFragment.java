@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.home.FreshActivity;
 
 import org.json.JSONObject;
 
@@ -73,16 +74,6 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 	private int engagementId, orderId, productType;
 	private String parentName, phoneNumber, rideDate, orderDate, supportNumber;
 	private ShowPanelResponse.Item item;
-
-	@Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-		super.onStop();
-    }
 
 	private static final String PARENT_NAME = "parentName", ITEM = "item";
 
@@ -242,6 +233,14 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 		keyboardLayoutListener.setResizeTextView(false);
 		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
+			if(activity instanceof FreshActivity){
+				((FreshActivity)activity).fragmentUISetup(this);
+				rootView.findViewById(R.id.vShadow).setVisibility(View.VISIBLE);
+				setActivityTitle();
+			} else {
+				rootView.findViewById(R.id.vShadow).setVisibility(View.GONE);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -254,6 +253,8 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 			((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.support_main_title));
 		} else if(activity instanceof SupportActivity){
 			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.support_main_title));
+		} else if (activity instanceof FreshActivity) {
+			((FreshActivity)activity).getTopBar().title.setText(activity.getResources().getString(R.string.support_main_title));
 		}
 	}
 
@@ -327,8 +328,6 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 										if(activity instanceof SupportActivity && ((SupportActivity)activity).fromBadFeedback == 1){
 											activity.finish();
 											activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-										} else {
-											getActivity().getSupportFragmentManager().popBackStack(SupportRideIssuesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 										}
 									} catch (Exception e) {
 										e.printStackTrace();
@@ -336,6 +335,13 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 
 								}
 							});
+							if(!(activity instanceof SupportActivity) || ((SupportActivity)activity).fromBadFeedback != 1){
+								if(getActivity().getSupportFragmentManager().findFragmentByTag(SupportRideIssuesFragment.class.getName()) != null){
+									getActivity().getSupportFragmentManager().popBackStack(SupportRideIssuesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+								} else {
+									getActivity().onBackPressed();
+								}
+							}
 						} else {
 							DialogPopup.alertPopup(activity, "", message);
 						}

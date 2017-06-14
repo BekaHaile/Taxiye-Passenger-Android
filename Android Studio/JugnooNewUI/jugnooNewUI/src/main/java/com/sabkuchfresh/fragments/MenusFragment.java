@@ -140,7 +140,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int vendorId) {
-                activity.fetchRestaurantMenuAPI(vendorId);
+                activity.fetchRestaurantMenuAPI(vendorId, false);
                 Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
             }
 
@@ -252,7 +252,14 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         keyboardLayoutListener.setResizeTextView(false);
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
-
+		llRoot.post(new Runnable() {
+			@Override
+			public void run() {
+				if(getView() != null){
+					activity.getMenusCartSelectedLayout().checkForVisibility();
+				}
+			}
+		});
 
         return rootView;
     }
@@ -272,6 +279,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         super.onHiddenChanged(hidden);
         try {
             if (!hidden) {
+                if(activity.openVendorMenuFragmentOnBack){
+                    activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+                    activity.openVendorMenuFragmentOnBack = false;
+                    return;
+                }
 				activity.fragmentUISetup(this);
 				activity.setAddressTextToLocationPlaceHolder();
 				activity.resumeMethod();
@@ -291,6 +303,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 						activity.setRefreshCart(false);
 					}
 				}, 300);
+				activity.getMenusCartSelectedLayout().checkForVisibility();
+			} else {
+				activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
 			}
         } catch (Exception e) {
         }
@@ -376,7 +391,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                             int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""));
                                             for (MenusResponse.Vendor vendor : vendors) {
                                                 if (restId == vendor.getRestaurantId()) {
-                                                    activity.fetchRestaurantMenuAPI(vendor.getRestaurantId());
+                                                    activity.fetchRestaurantMenuAPI(vendor.getRestaurantId(), false);
                                                     break;
                                                 }
                                             }

@@ -36,7 +36,7 @@
             android:layout_marginTop="@dimen/dp_40"
             android:gravity="center"
             android:lineSpacingExtra="5dp"
-            android:text="Feed is empty!\nBE FIRST ONE TO ADD..."
+            android:text="No reviews yet!\nBe the first one to add..."
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_18"
             app:font="maven"
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_388"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/bg_no_reviews"
+            android:src="@drawable/bg_menus_no_reviews"
             />
 
     </RelativeLayout>

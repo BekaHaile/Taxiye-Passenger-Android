@@ -58,6 +58,27 @@ public class RecentOrder {
     @Expose
     private String trackDeliveryMessage;
 
+    @SerializedName("delivery_not_done")
+    @Expose
+    private boolean deliveryNotDone;
+    @SerializedName("delivery_not_done_msg")
+    @Expose
+    private String deliveryNotDoneMsg;
+    @SerializedName("restaurant_number")
+    @Expose
+    private String restaurantNumber;
+    @SerializedName("delivery_confirmation")
+    @Expose
+    private int deliveryConfirmation = -1;
+    @SerializedName("delivery_confirmation_msg")
+    @Expose
+    private String deliveryConfirmationMsg;
+    @SerializedName("support_category")
+    @Expose
+    private int supportCategory;
+
+
+
 
     /**
      *
@@ -231,5 +252,38 @@ public class RecentOrder {
 
     public void setTrackDeliveryMessage(String trackDeliveryMessage) {
         this.trackDeliveryMessage = trackDeliveryMessage;
+    }
+
+    public boolean isDeliveryNotDone() {
+        return deliveryNotDone;
+    }
+
+    public String getDeliveryNotDoneMsg() {
+        return deliveryNotDoneMsg;
+    }
+
+    public String getRestaurantNumber() {
+        return restaurantNumber;
+    }
+
+
+    public int getDeliveryConfirmation() {
+        return deliveryConfirmation;
+    }
+
+    public void setDeliveryConfirmation(int deliveryConfirmation) {
+        this.deliveryConfirmation = deliveryConfirmation;
+    }
+
+    public String getDeliveryConfirmationMsg() {
+        return deliveryConfirmationMsg;
+    }
+
+    public void setDeliveryConfirmationMsg(String deliveryConfirmationMsg) {
+        this.deliveryConfirmationMsg = deliveryConfirmationMsg;
+    }
+
+    public int getSupportCategory() {
+        return supportCategory;
     }
 }

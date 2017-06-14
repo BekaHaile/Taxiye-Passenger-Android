@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.support.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
@@ -19,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +31,10 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.RideOrderShortView;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -62,24 +66,15 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 	private HistoryResponse.Datum datum;
 	private ArrayList<ShowPanelResponse.Item> items;
 	private boolean rideCancelled;
-	private int autosStatus;
-
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-	}
+	private int autosStatus, supportCategory, productType;
+	private String orderDate;
 
 
 	private static final String ITEM_ARRAY = "itemArray", END_RIDE_DATA = "endRideData", RIDE_CANCELLED = "rideCancelled",
 		AUTO_STATUS = "autosStatus", DATUM = "datum";
 
 	public static SupportRideIssuesFragment newInstance(int engagementId, int orderId, EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items,
-														boolean rideCancelled, int autosStatus, HistoryResponse.Datum datum){
+														boolean rideCancelled, int autosStatus, HistoryResponse.Datum datum, int supportCategory, int productType, String orderDate){
 		SupportRideIssuesFragment fragment = new SupportRideIssuesFragment();
 
 		Gson gson = new Gson();
@@ -98,6 +93,9 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 		if(datum != null){
 			bundle.putString(DATUM, gson.toJson(datum, HistoryResponse.Datum.class));
 		}
+		bundle.putInt(Constants.KEY_SUPPORT_CATEGORY, supportCategory);
+		bundle.putInt(Constants.KEY_PRODUCT_TYPE, productType);
+		bundle.putString(Constants.KEY_ORDER_DATE, orderDate);
 		fragment.setArguments(bundle);
 
 		return fragment;
@@ -121,6 +119,9 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 		if(!Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(datumStr)){
 			datum = gson.fromJson(datumStr, HistoryResponse.Datum.class);
 		}
+		supportCategory = getArguments().getInt(Constants.KEY_SUPPORT_CATEGORY, -1);
+		productType = getArguments().getInt(Constants.KEY_PRODUCT_TYPE, -1);
+		orderDate = getArguments().getString(Constants.KEY_ORDER_DATE, "");
 	}
 
 	@Override
@@ -188,6 +189,14 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 										datum.getOrderId(), DateOperations.convertDateViaFormat(DateOperations
 												.utcToLocalTZ(datum.getOrderTime())), datum.getSupportNumber(), datum.getProductType());
 							}
+						} else if(supportCategory != -1) {
+							if(activity instanceof FreshActivity){
+								new TransactionUtils().openItemInFragment(activity,
+										((FreshActivity) activity).getRelativeLayoutContainer(),
+										-1, "",
+										activity.getResources().getString(R.string.support_main_title), item, "",
+										orderId, orderDate, Config.getSupportNumber(activity), productType);
+							}
 						}
 						GAUtils.event(SIDE_MENU, GAAction.SELECT_AN_ISSUE, item.getText());
 					}
@@ -219,7 +228,19 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 					}
 				}
 				updateIssuesList(items);
-			} else {
+			}
+			else if(supportCategory != -1){
+				linearLayoutRideShortInfo.setVisibility(View.GONE);
+				items = MyApplication.getInstance().getDatabase2().getSupportDataItems(supportCategory);
+				updateIssuesList(items);
+				if(items.size() == 1){
+					goForwardToSingleItem();
+				} else if(items.size() == 0) {
+					cardViewRecycler.setVisibility(View.GONE);
+					getRideSummaryAPI(activity, -1, -1, supportCategory, false, new HomeUtil().getProductType(productType));
+				}
+			}
+			else {
 				linearLayoutRideShortInfo.setVisibility(View.GONE);
 				cardViewRecycler.setVisibility(View.GONE);
 				getRideSummaryAPI(activity, engagementId, orderId, autosStatus, false, ProductType.AUTO);
@@ -235,8 +256,18 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if (!hidden) {
+			if(items != null && items.size() == 1){
+				cardViewRecycler.setVisibility(View.GONE);
+				new Handler().post(new Runnable() {
+					@Override
+					public void run() {
+						getActivity().onBackPressed();
+					}
+				});
+				return;
+			}
 			setActivityTitle();
-			if(Data.isOrderCancelled) {
+			if(Data.isOrderCancelled && datum != null) {
 				int orderId = datum.getOrderId();
 				int supportCategory = datum.getSupportCategory();
 				if(datum.getProductType() == ProductType.FRESH.getOrdinal()
@@ -272,6 +303,8 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 					}
 				}
 			});
+		} else if(activity instanceof FreshActivity){
+			((FreshActivity)activity).fragmentUISetup(this);
 		}
 	}
 
@@ -295,6 +328,7 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 
 	private void setRideData() {
 		try {
+			linearLayoutRideShortInfo.setVisibility(endRideData != null ? View.VISIBLE : View.GONE);
 			try {
 				rideOrderShortView.updateData(endRideData, datum);
 			} catch (Exception e) {
@@ -323,8 +357,9 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 							}
 							setRideData();
 							updateIssuesList(items);
-							linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
-							cardViewRecycler.setVisibility(View.VISIBLE);
+							if(items != null && items.size() == 1){
+								goForwardToSingleItem();
+							}
 						}
 
 						@Override
@@ -357,6 +392,26 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 			((SupportActivity) activity).performBackPressed();
 		} else if (activity instanceof RideTransactionsActivity) {
 			((RideTransactionsActivity) activity).performBackPressed();
+		} else if (activity instanceof FreshActivity){
+			((FreshActivity)activity).performBackPressed(false);
+		}
+	}
+
+	private void goForwardToSingleItem(){
+		try {
+			new TransactionUtils().openItemInFragment(activity,
+					((FreshActivity) activity).getRelativeLayoutContainer(),
+					-1, "",
+					activity.getResources().getString(R.string.order_is_late), items.get(0), "",
+					orderId, orderDate, Config.getSupportNumber(activity), productType);
+//			new Handler().postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					activity.getSupportFragmentManager().beginTransaction().remove(SupportRideIssuesFragment.this).commit();
+//				}
+//			}, 500);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

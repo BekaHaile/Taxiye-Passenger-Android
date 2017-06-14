@@ -1,15 +1,10 @@
 package com.sabkuchfresh.home;
 
-import android.view.MotionEvent;
-import android.view.View;
-
-import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.retrofit.model.SubItem;
 
 import java.util.Collection;
 import java.util.HashMap;
 
-import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Log;
 
 /**
@@ -27,10 +22,6 @@ public class AppCart {
 
 	public HashMap<Integer, HashMap<Integer, SubItem>> getVendorCartHashMap() {
 		return vendorCartHashMap;
-	}
-
-	public void setVendorCartHashMap(HashMap<Integer, HashMap<Integer, SubItem>> vendorCartHashMap) {
-		this.vendorCartHashMap = vendorCartHashMap;
 	}
 
 	public void saveSubItemToStore(Integer vendorId, SubItem subItem){

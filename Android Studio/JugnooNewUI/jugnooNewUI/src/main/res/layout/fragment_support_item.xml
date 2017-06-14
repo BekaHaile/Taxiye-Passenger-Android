@@ -15,6 +15,13 @@
         android:animateLayoutChanges="true"
         >
 
+        <View
+            android:id="@+id/vShadow"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_7"
+            android:background="@drawable/shadow_down_new"
+            android:tag="@string/dont_touch_me"
+            />
 
         <TextView
             android:id="@+id/textViewSubtitle"

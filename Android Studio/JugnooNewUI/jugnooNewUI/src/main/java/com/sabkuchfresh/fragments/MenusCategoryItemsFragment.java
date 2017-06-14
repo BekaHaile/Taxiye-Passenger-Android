@@ -122,6 +122,9 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                             @Override
                             public void onPlusClicked(int position, Item item, boolean isNewItemAdded) {
                                 //This method is only called when item is not customisable
+                                if(activity.getTotalPrice() <= 0){
+                                    activity.saveDeliveryAddressModel();
+                                }
                                 activity.updateCartValuesGetTotalPrice();
                                 if (activity.getAppType() == AppConstant.ApplicationType.MENUS){
                                     if(isNewItemAdded)

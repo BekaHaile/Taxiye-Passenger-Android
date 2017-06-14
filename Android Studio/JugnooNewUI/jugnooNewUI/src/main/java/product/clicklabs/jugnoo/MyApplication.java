@@ -104,7 +104,7 @@ public class MyApplication extends Application {
 //		LeakCanary.install(this);
 
 		Paper.init(this);
-        Data.initializeFuguHandler(getApplicationContext());
+
 
         try {
             Fabric.with(this, new Crashlytics());
