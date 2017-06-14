@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ProductType;
@@ -561,7 +562,12 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             ivBulkOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FuguConfig.getInstance().openChat(activity,Constants.CHANNEL_ID_FUGU_BULK_MEALS);
+                    try {
+                        FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_BULK_MEALS());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
+                    }
                 }
             });
         }

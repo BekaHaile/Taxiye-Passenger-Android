@@ -586,4 +586,17 @@ public class Data {
     public static void setRecentAddressesFetched(boolean recentAddressesFetched) {
         Data.recentAddressesFetched = recentAddressesFetched;
     }
+
+    public static long CHANNEL_ID_FUGU_ISSUE_ORDER(){
+        return Config.getConfigMode()==ConfigMode.LIVE?56:437;
+    }
+
+    public static long CHANNEL_ID_FUGU_BULK_MEALS(){
+        return Config.getConfigMode()==ConfigMode.LIVE?556:435;
+    }
+
+    public static long CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE(){
+        return Config.getConfigMode()==ConfigMode.LIVE?19:19;
+    }
+
 }

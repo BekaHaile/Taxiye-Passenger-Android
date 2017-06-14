@@ -1306,6 +1306,8 @@
     <string name="accepts_online_payment">Accepts Online Payment</string>
     <string name="reviews">Reviews</string>
     <string name="no_issues_found">No issues found</string>
+    <string name="order_is_late">Order is late</string>
+    <string name="something_went_wrong">Something went wrong</string>
 
 
 </resources>

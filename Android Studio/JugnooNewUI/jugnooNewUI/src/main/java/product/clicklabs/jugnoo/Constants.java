@@ -712,13 +712,6 @@ public interface Constants {
     String SP_CACHE_CLEAR_TIME = "sp_cache_clear_time";
     String KEY_OUT_OF_RANGE = "out_of_range";
 
-    /**
-     * Fugu Channels
-     */
-
-    long CHANNEL_ID_FUGU_ISSUE_ORDER = Config.getConfigMode()== ConfigMode.LIVE?56:437;
-    long CHANNEL_ID_FUGU_BULK_MEALS = Config.getConfigMode()== ConfigMode.LIVE?556:435;
-
 
 
     String KEY_IS_DELIVERED = "is_delivered";

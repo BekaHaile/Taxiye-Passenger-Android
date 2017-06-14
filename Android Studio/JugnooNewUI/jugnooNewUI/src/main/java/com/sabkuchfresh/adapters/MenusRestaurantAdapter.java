@@ -1266,7 +1266,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     apiConfirmDelivery(order.getOrderId(), 1, pos);
                 } else {
                     if (Data.isFuguChatEnabled()) {
-                        FuguConfig.getInstance().showConversations(activity);
+                        try {
+                            FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
+                        }
+
                     } else {
                         ArrayList<ShowPanelResponse.Item> items = MyApplication.getInstance().getDatabase2().getSupportDataItems(order.getSupportCategory());
                         if(items.size() > 0) {
@@ -1274,7 +1280,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             item.setItems(items);
                             item.setActionType(ActionType.NEXT_LEVEL.getOrdinal());
                             item.setSupportId(order.getSupportCategory());
-                            item.setText(activity.getString(R.string.need_help));
+                            item.setText(activity.getString(R.string.order_is_late));
 
                             new TransactionUtils().openItemInFragment(activity, activity.getRelativeLayoutContainer(), -1, "",
                                     activity.getResources().getString(R.string.support_main_title), item, "",

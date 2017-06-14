@@ -930,7 +930,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private void needHelpClick() {
         if (activity instanceof RideTransactionsActivity) {
             if (Data.isFuguChatEnabled()) {
-                FuguConfig.getInstance().openChat(getActivity(),Constants.CHANNEL_ID_FUGU_ISSUE_ORDER);;
+                try {
+                    FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
+                }
 
             } else {
                 new TransactionUtils().openRideIssuesFragment(activity,
