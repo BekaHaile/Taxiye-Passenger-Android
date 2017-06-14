@@ -445,7 +445,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 activity.llCollapRatingStars.setVisibility(View.VISIBLE);
                 activity.setRestaurantRatingStarsToLL(activity.llCollapRatingStars, activity.tvCollapRestaurantRating, activity.getVendorOpened().getRating());
             } else {
-                activity.llCollapRatingStars.setVisibility(View.GONE);
+                activity.llCollapRatingStars.setVisibility(View.INVISIBLE);
             }
 
             tvSwitchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);

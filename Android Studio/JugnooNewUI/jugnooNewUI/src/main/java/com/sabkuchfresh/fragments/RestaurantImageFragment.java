@@ -179,7 +179,7 @@ public class RestaurantImageFragment extends Fragment {
                     llCollapRatingStars.setVisibility(View.VISIBLE);
                     activity.setRestaurantRatingStarsToLL(llCollapRatingStars, tvCollapRestaurantRating, activity.getVendorOpened().getRating());
                 } else {
-                    llCollapRatingStars.setVisibility(View.GONE);
+                    llCollapRatingStars.setVisibility(View.INVISIBLE);
                 }
 
 
