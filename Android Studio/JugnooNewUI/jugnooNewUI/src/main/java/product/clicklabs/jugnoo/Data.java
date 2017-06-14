@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.fugu.CaptureUserData;
@@ -551,6 +552,7 @@ public class Data {
         }
 
         fuguConfig.configActionBar("#ffffff", "#595968", R.drawable.ic_back_selector);
+        fuguConfig.configThemeColor("#FD7945");
 
 
     }
