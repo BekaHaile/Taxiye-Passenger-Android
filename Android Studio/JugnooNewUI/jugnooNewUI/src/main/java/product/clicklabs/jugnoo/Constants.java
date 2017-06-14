@@ -723,4 +723,7 @@ public interface Constants {
 
     String KEY_IS_DELIVERED = "is_delivered";
     String KEY_SUPPORT_CATEGORY = "support_category";
+    String SP_PAYTM_LAST_BALANCE = "sp_paytm_last_balance";
+    String SP_MOBIKWIK_LAST_BALANCE = "sp_mobikwik_last_balance";
+    String SP_FREECHARGE_LAST_BALANCE = "sp_freecharge_last_balance";
 }
