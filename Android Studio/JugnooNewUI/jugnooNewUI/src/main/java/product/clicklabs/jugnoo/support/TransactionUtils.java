@@ -112,7 +112,8 @@ public class TransactionUtils {
 				fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
 			}
 			fragmentTransaction.add(container.getId(),
-					SupportRideIssuesFragment.newInstance(engagementId, orderId, endRideData, items, rideCancelled, autosStatus, datum, supportCategory, productType, orderDate),
+					SupportRideIssuesFragment.newInstance(engagementId, orderId, endRideData, items, rideCancelled,
+							autosStatus, datum, supportCategory, productType, orderDate),
 					SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName());
 			if(fromBadFeedback == 0 && fragmentManager.getBackStackEntryCount() > 0){

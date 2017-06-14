@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
@@ -339,6 +340,26 @@ public class HomeUtil {
 				}
 				markersPointsOfInterest.clear();
 			}
+		}
+	}
+
+	public ProductType getProductType(int productType){
+		if(productType == ProductType.AUTO.getOrdinal()){
+			return ProductType.AUTO;
+		} else if(productType == ProductType.FRESH.getOrdinal()){
+			return ProductType.FRESH;
+		} else if(productType == ProductType.MEALS.getOrdinal()){
+			return ProductType.MEALS;
+		} else if(productType == ProductType.GROCERY.getOrdinal()){
+			return ProductType.GROCERY;
+		} else if(productType == ProductType.MENUS.getOrdinal()){
+			return ProductType.MENUS;
+		} else if(productType == ProductType.PAY.getOrdinal()){
+			return ProductType.PAY;
+		} else if(productType == ProductType.FEED.getOrdinal()){
+			return ProductType.FEED;
+		} else {
+			return ProductType.MEALS;
 		}
 	}
 

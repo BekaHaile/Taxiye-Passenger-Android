@@ -1287,7 +1287,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                     order.getOrderId(), order.getExpectedDeliveryDate(),
                                     Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
                         } else {
-                            Utils.showToast(activity, activity.getString(R.string.no_issues_found));
+                            new TransactionUtils().openRideIssuesFragment(activity, activity.getRelativeLayoutContainer(),
+                                    -1, order.getOrderId(), null, null, 0, false, 0, null,
+                                    order.getSupportCategory(), ProductType.MENUS.getOrdinal(), order.getExpectedDeliveryDate());
                         }
                     }
                 }
