@@ -144,8 +144,8 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);
         bAddReview = (Button) rootView.findViewById(R.id.bAddReview);
 
-        tvFeedEmpty.setText(activity.getString(R.string.feed_is_empty));
-        SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_first_one_to_add));
+        tvFeedEmpty.setText(activity.getString(R.string.no_reviews_yet));
+        SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_the_first_one_to_add));
         ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvFeedEmpty.append("\n");
         tvFeedEmpty.append(ssb);

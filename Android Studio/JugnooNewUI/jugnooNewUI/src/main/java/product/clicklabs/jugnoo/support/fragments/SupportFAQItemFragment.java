@@ -328,8 +328,6 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 										if(activity instanceof SupportActivity && ((SupportActivity)activity).fromBadFeedback == 1){
 											activity.finish();
 											activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-										} else {
-											getActivity().getSupportFragmentManager().popBackStack(SupportRideIssuesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 										}
 									} catch (Exception e) {
 										e.printStackTrace();
@@ -337,6 +335,13 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 
 								}
 							});
+							if(!(activity instanceof SupportActivity) || ((SupportActivity)activity).fromBadFeedback != 1){
+								if(getActivity().getSupportFragmentManager().findFragmentByTag(SupportRideIssuesFragment.class.getName()) != null){
+									getActivity().getSupportFragmentManager().popBackStack(SupportRideIssuesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+								} else {
+									getActivity().onBackPressed();
+								}
+							}
 						} else {
 							DialogPopup.alertPopup(activity, "", message);
 						}

@@ -596,7 +596,7 @@ public class Data {
     }
 
     public static long CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE(){
-        return Config.getConfigMode()==ConfigMode.LIVE?19:19;
+        return Config.getConfigMode()==ConfigMode.LIVE?57:19;
     }
 
 }
