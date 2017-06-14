@@ -733,6 +733,8 @@ public class WalletCore {
 			return PaymentOption.RAZOR_PAY;
 		} else if(PaymentOption.UPI_RAZOR_PAY.getOrdinal() == paymentOption){
 			return PaymentOption.UPI_RAZOR_PAY;
+		} else if(PaymentOption.ICICI_UPI.getOrdinal() == paymentOption){
+			return PaymentOption.ICICI_UPI;
 		}else{
 			return PaymentOption.CASH;
 		}

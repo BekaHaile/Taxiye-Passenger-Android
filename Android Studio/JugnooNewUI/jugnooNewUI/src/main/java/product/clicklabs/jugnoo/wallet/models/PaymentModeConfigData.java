@@ -40,6 +40,8 @@ public class PaymentModeConfigData {
 		}
 		else if(Constants.KEY_UPI_RAZORPAY.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.UPI_RAZOR_PAY.getOrdinal();
+		}else if(Constants.KEY_ICICI_UPI.equalsIgnoreCase(name)){
+			paymentOption = PaymentOption.ICICI_UPI.getOrdinal();
 		}
 		this.priority = 0;
 	}

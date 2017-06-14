@@ -18,8 +18,7 @@
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/px_20"
-            >
+            android:paddingBottom="@dimen/px_20">
 
             <!-- Delivery Address view -->
             <LinearLayout
@@ -56,8 +55,8 @@
                         android:id="@+id/relativeLayoutDeliveryAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="58dp"
-                        android:background="@drawable/bg_transparent_menu_item_selector">
+                        android:background="@drawable/bg_transparent_menu_item_selector"
+                        android:minHeight="58dp">
 
                         <ImageView
                             android:id="@+id/imageViewAddressType"
@@ -74,8 +73,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="10px"
-                            android:layout_marginTop="25px"
                             android:layout_marginRight="25px"
+                            android:layout_marginTop="25px"
                             android:layout_toRightOf="@+id/imageViewAddressType"
                             android:orientation="vertical">
 
@@ -100,15 +99,16 @@
 
                         <TextView
                             android:id="@+id/tv_no_address_alert"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:tag="@string/dont_touch_me"
+                            android:text="Please confirm delivery address."
+                            android:textColor="@color/red_alert_no_address"
                             android:textSize="14.5sp"
                             android:visibility="gone"
-                            android:textColor="@color/red_alert_no_address"
-                            app:font="@string/maven_r"
-                            android:tag="@string/dont_touch_me"
-                            android:layout_centerInParent="true"
-                            android:text="Please confirm delivery address."
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            app:font="@string/maven_r" />
+
                         <ImageView
                             android:id="@+id/imageViewDeliveryAddressForward"
                             style="@style/back_image"
@@ -411,6 +411,70 @@
                                 android:tag="mwar" />
 
                         </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlIciciUpi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/px_30"
+                            android:layout_marginRight="@dimen/px_30"
+                            android:paddingTop="@dimen/px_20"
+                            android:paddingBottom="@dimen/px_20"
+                            android:background="@drawable/bg_transparent_menu_item_selector"
+                            android:visibility="visible">
+
+
+                            <LinearLayout
+                                android:id="@+id/layout_select_upi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/ivRadioIciciUpi"
+                                    style="@style/ic_radio_button_style"
+                                    />
+
+                                <ImageView
+                                    android:layout_width="123px"
+                                    android:layout_height="28px"
+                                    android:layout_marginLeft="24px"
+                                    android:src="@drawable/ic_refresh"
+                                    android:tag="mwar" />
+
+
+                            </LinearLayout>
+
+                            <EditText
+                                android:id="@+id/edtIciciVpa"
+                                android:layout_below="@id/layout_select_upi"
+                                android:layout_marginTop="@dimen/spacing_small"
+                                android:layout_marginBottom="@dimen/spacing_small"
+                                app:font="maven"
+                                android:textColor="@color/text_color"
+                                android:textColorHint="@color/text_color_hint"
+                                android:hint="Please add UPI Address"
+                                android:textSize="@dimen/px_24"
+                                android:padding="@dimen/px_20"
+                                android:background="@drawable/capsule_white_grey_border_selector"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/px_10"
+                                android:layout_marginRight="@dimen/px_10"
+                                android:text="@string/label_below_icici_payment_edt"
+                                android:layout_below="@id/edtIciciVpa"
+                                android:textColor="@color/text_color"
+                                android:layout_width="wrap_content"
+                                app:font="maven"
+                                android:textSize="@dimen/px_22"
+                                android:layout_height="wrap_content" />
+
+                        </RelativeLayout>
+
 
                         <RelativeLayout
                             android:id="@+id/relativeLayoutFreeCharge"
@@ -739,9 +803,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_7"
-        android:background="@drawable/shadow_up_new"
-        android:tag="@string/dont_touch_me"
         android:layout_alignParentBottom="true"
-        />
+        android:background="@drawable/shadow_up_new"
+        android:tag="@string/dont_touch_me" />
 
 </RelativeLayout>

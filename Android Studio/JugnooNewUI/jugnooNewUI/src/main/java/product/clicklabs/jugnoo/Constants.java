@@ -711,12 +711,10 @@ public interface Constants {
     String SP_MENUS_CART_ADDRESS = "sp_menus_cart_address";
     String SP_CACHE_CLEAR_TIME = "sp_cache_clear_time";
     String KEY_OUT_OF_RANGE = "out_of_range";
-
-
-
     String KEY_IS_DELIVERED = "is_delivered";
     String KEY_SUPPORT_CATEGORY = "support_category";
     String SP_PAYTM_LAST_BALANCE = "sp_paytm_last_balance";
     String SP_MOBIKWIK_LAST_BALANCE = "sp_mobikwik_last_balance";
     String SP_FREECHARGE_LAST_BALANCE = "sp_freecharge_last_balance";
+    String KEY_ICICI_UPI = "icici_upi";
 }
