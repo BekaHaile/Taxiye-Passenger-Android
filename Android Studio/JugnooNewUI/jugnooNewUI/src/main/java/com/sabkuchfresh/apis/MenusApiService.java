@@ -5,6 +5,7 @@ import com.sabkuchfresh.retrofit.model.OrderCancelReasonsResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.RestaurantSearchResponse;
@@ -81,6 +82,11 @@ public interface MenusApiService {
 	@POST("/place_order_callback")
 	void placeOrderCallback(@FieldMap Map<String, String> params,
 							Callback<SendMoneyCallbackResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/check_payment_status")
+	void checkPaymentStatus(@FieldMap Map<String, String> params,
+							Callback<IciciPaymentRequestStatus> callback);
 
 
 	@FormUrlEncoded

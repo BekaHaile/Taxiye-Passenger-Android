@@ -72,6 +72,7 @@ import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SlotViewType;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
@@ -955,32 +956,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     };
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        try {
-            activity.getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    orderPaymentModes();
-                    setPaymentOptionUI();
 
-                    if (dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
-                        getCheckoutDataAPI(selectedSubscription);
-                    }
-                }
-            }, 150);
-            if (Data.userData != null) {
-                if (Data.userData.isSubscriptionActive()) {
-                    cvBecomeStar.setVisibility(View.GONE);
-                }
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void setSubscriptionView() {
         if (Data.userData.getShowSubscriptionData() == 1 && !Data.userData.isSubscriptionActive() && activity.getUserCheckoutResponse().getShowStarSubscriptions() == 1) {
@@ -1510,9 +1486,25 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT), isRazorUPI);
                                         doSlideInitial = false;
                                     } else {
-                                        paramsPlaceOrder = params;
-                                        orderPlacedSuccess(placeOrderResponse);
-                                        doSlideInitial = false;
+
+
+                                        if(Integer.parseInt(placeOrderResponse.getPaymentMode())==PaymentOption.ICICI_UPI.getOrdinal()){
+                                            //Icici Upi Payment Initiated
+
+                                            if(placeOrderResponse.getIcici()!=null){
+
+                                                onIciciUpiPaymentInitiated(placeOrderResponse.getIcici(),String.valueOf(placeOrderResponse.getAmount()));
+
+                                            }else{
+                                                Toast.makeText(activity, "Something went wrong.Please try again later.", Toast.LENGTH_SHORT).show();
+                                            }
+
+
+                                        }else{
+                                            paramsPlaceOrder = params;
+                                            orderPlacedSuccess(placeOrderResponse);
+                                            doSlideInitial = false;
+                                        }
                                     }
                                 } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
                                     final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
@@ -2273,7 +2265,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                     getCheckoutDataAPI(selectedSubscription);
                                                 }
                                             })) {
+
+
                                     } else {
+
+
+
                                         activity.setUserCheckoutResponse(userCheckoutResponse);
                                         if (activity.getUserCheckoutResponse() != null
                                                 && activity.getUserCheckoutResponse().getSubscriptionInfo() != null
@@ -3200,7 +3197,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (checkoutRequestPaymentDialog == null) {
             checkoutRequestPaymentDialog = CheckoutRequestPaymentDialog.init(activity);
         }
-        checkoutRequestPaymentDialog.setData(amount, System.currentTimeMillis(), 1000 * 60 * 1, null, new CheckoutRequestPaymentDialog.CheckoutRequestPaymentListener() {
+        checkoutRequestPaymentDialog.setData(amount, System.currentTimeMillis(), expiryTimeLeft, null, new CheckoutRequestPaymentDialog.CheckoutRequestPaymentListener() {
             @Override
             public void onCancelAttempt() {
 
@@ -3208,37 +3205,133 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
             @Override
             public void onExpired() {
-                isIciciUpiPaymentExpired = true;
-                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
 
             }
         }).showDialog();
 
     }
 
-    private void onIciciUpiPaymentInitiated() {
-        isIciciUpiPaymentExpired = false;
-        showRequestPaymentDialog("500", EXPIRY_ICICI_UPI_STATUS_CHECK);
-        activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable,DELAY_ICICI_UPI_STATUS_CHECK);
+    private void onIciciUpiPaymentInitiated(PlaceOrderResponse.IciciUpi icici,String amount) {
+        isGetIciciPaymentStatusInProgress = true;
+        TOTAL_EXPIRY_TIME_ICICI_UPI = icici.getExpirationTime();
+        DELAY_ICICI_UPI_STATUS_CHECK = icici.getPollingTime();
+        showRequestPaymentDialog(amount, TOTAL_EXPIRY_TIME_ICICI_UPI);
+        activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable, DELAY_ICICI_UPI_STATUS_CHECK);
 
     }
 
-    private int DELAY_ICICI_UPI_STATUS_CHECK = 30 * 1000;
-    private int EXPIRY_ICICI_UPI_STATUS_CHECK = 4 * 60 * 1000;
-    private boolean isIciciUpiPaymentExpired;
-    private Runnable checkIciciUpiPaymentStatusRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (!isIciciUpiPaymentExpired) {
-                activity.getHandler().postDelayed(this, DELAY_ICICI_UPI_STATUS_CHECK);
-
-            } else {
+    private static final int ICICI_PAYMENT_STATUS_FAILED = 0;
+    private static final int ICICI_PAYMENT_STATUS_EXPIRED = 1;
+    private  boolean isGetIciciPaymentStatusInProgress;
+    private void onIciciStatusResponseCancelled(int status) {
+        switch (status) {
+            case ICICI_PAYMENT_STATUS_FAILED:
+                isGetIciciPaymentStatusInProgress = false;
+                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
                 if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
                     checkoutRequestPaymentDialog.dismiss();
                 }
-                Toast.makeText(activity, "Payment status expired", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Payment failed", Toast.LENGTH_SHORT).show();
 
-            }
+                break;
+            case ICICI_PAYMENT_STATUS_EXPIRED:
+                isGetIciciPaymentStatusInProgress = false;
+                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
+
+                if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
+                    checkoutRequestPaymentDialog.dismiss();
+                }
+                Toast.makeText(activity, "Payment Expired", Toast.LENGTH_SHORT).show();
+
+                break;
+        }
+
+    }
+
+
+    private long DELAY_ICICI_UPI_STATUS_CHECK = 30 * 1000;
+    private long TOTAL_EXPIRY_TIME_ICICI_UPI = 4 * 60 * 1000;
+    private Runnable checkIciciUpiPaymentStatusRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+                if (MyApplication.getInstance().isOnline()) {
+                    HashMap<String, String> params = new HashMap<>();
+                    HomeUtil.addDefaultParams(params);
+                    params.put(Constants.KEY_ORDER_ID, String.valueOf(activity.getPlaceOrderResponse().getOrderId()));
+                    params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                    params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+
+
+                    Callback<IciciPaymentRequestStatus> callback = new Callback<IciciPaymentRequestStatus>() {
+                        @Override
+                        public void success(IciciPaymentRequestStatus commonResponse, Response response) {
+                              if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, commonResponse.getFlag(),commonResponse.getError()
+                       ,commonResponse.getMessage())) {
+
+                                if (commonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                    orderPlacedSuccess(activity.getPlaceOrderResponse());
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                        }
+                    };
+                    if (isMenusOpen()) {
+                        RestClient.getMenusApiService().checkPaymentStatus(params, callback);
+                    } else {
+                        RestClient.getFreshApiService().checkPaymentStatus(params, callback);
+                    }
+                } {
+                   Log.e("TAG","No net tried to hit get status icici api");
+                }
+
+
+
+            activity.getHandler().postDelayed(this, DELAY_ICICI_UPI_STATUS_CHECK);
+
+
         }
     };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            activity.getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    orderPaymentModes();
+                    setPaymentOptionUI();
+
+                    if (dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
+                        getCheckoutDataAPI(selectedSubscription);
+                    }
+                }
+            }, 150);
+            if (Data.userData != null) {
+                if (Data.userData.isSubscriptionActive()) {
+                    cvBecomeStar.setVisibility(View.GONE);
+                }
+            }
+
+            if(isGetIciciPaymentStatusInProgress){
+                activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable,1 * 1000);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

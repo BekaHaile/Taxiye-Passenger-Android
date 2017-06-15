@@ -8,6 +8,7 @@ import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 
 import java.util.Map;
 
@@ -76,6 +77,11 @@ public interface FreshApiService {
 	@POST("/place_order_callback")
 	void placeOrderCallback(@FieldMap Map<String, String> params,
 							Callback<SendMoneyCallbackResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/check_payment_status")
+	void checkPaymentStatus(@FieldMap Map<String, String> params,
+							Callback<IciciPaymentRequestStatus> callback);
 
 
 	@FormUrlEncoded

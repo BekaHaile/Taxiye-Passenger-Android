@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.jugnoo.pay.models.SendMoneyResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
@@ -53,7 +54,44 @@ public class PlaceOrderResponse {
 	@SerializedName("order_placed_message")
 	@Expose
 	private String orderPlacedMessage;
+	@SerializedName("icici")
+	@Expose
+	private IciciUpi icici;
 
+	public IciciUpi getIcici() {
+		return icici;
+	}
+
+	public class IciciUpi {
+		@SerializedName("expiration_time")
+		private long expirationTime;
+
+
+		@SerializedName("polling_time")
+		private long pollingTime;
+
+		@SerializedName("reason_list")
+		private ArrayList<String> reasonList;
+
+		@SerializedName("jugnoo_vpa")
+		private String jugnooVpa;
+
+		public long getExpirationTime() {
+			return expirationTime;
+		}
+
+		public long getPollingTime() {
+			return pollingTime;
+		}
+
+		public ArrayList<String> getReasonList() {
+			return reasonList;
+		}
+
+		public String getJugnooVpa() {
+			return jugnooVpa;
+		}
+	}
 	/**
 	 *
 	 * @return

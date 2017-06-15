@@ -171,6 +171,12 @@ public class HomeUtil {
 		params.put(Constants.KEY_LOGIN_TYPE, String.valueOf(0));
 	}
 
+	public static void addDefaultParams(Map<String, String> params){
+		params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
+		params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
+		params.put(Constants.KEY_LOGIN_TYPE, String.valueOf(0));
+	}
+
 	public void putDefaultParamsMultipart(MultipartTypedOutput multipartTypedOutput){
 		multipartTypedOutput.addPart(Constants.KEY_APP_VERSION, new TypedString(String.valueOf(MyApplication.getInstance().appVersion())));
 		multipartTypedOutput.addPart(Constants.KEY_DEVICE_TYPE, new TypedString(String.valueOf(Data.DEVICE_TYPE)));

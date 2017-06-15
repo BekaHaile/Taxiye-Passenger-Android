@@ -7,8 +7,8 @@ public enum PaymentOption {
     FREECHARGE(4),
 	JUGNOO_PAY(5), // payment gateway
 	RAZOR_PAY(6),
-	UPI_RAZOR_PAY(7),
-	ICICI_UPI(8);
+	UPI_RAZOR_PAY(786),
+	ICICI_UPI(7);
 
 	private int ordinal;
 

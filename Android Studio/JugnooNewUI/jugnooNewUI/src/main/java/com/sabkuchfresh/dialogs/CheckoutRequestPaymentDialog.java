@@ -111,10 +111,10 @@ public class CheckoutRequestPaymentDialog extends Dialog {
 
     }
 
-    public CheckoutRequestPaymentDialog setData(String amount, long timerStartedAt, int expiryTimeMilliSecs, ArrayList<String> cancellationReasons, CheckoutRequestPaymentListener checkoutRequestPaymentListener) {
+    public CheckoutRequestPaymentDialog setData(String amount, long timerStartedAt, long expiryTimeMilliSecs, ArrayList<String> cancellationReasons, CheckoutRequestPaymentListener checkoutRequestPaymentListener) {
         this.timerStartedAt = timerStartedAt;
         this.expiryTimeMilliSecs = expiryTimeMilliSecs;
-        progressBar.setMax(expiryTimeMilliSecs);
+        progressBar.setMax((int)expiryTimeMilliSecs);
         tvLabelRequest.setText(activity.getString(R.string.label_checkout_request, amount));
         setTime();
         setCancellationAdapter();

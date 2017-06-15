@@ -613,10 +613,13 @@ public class WalletCore {
 		if(paymentGatewayModeConfigs != null) {
 			this.paymentGatewayModeConfigs.addAll(paymentGatewayModeConfigs);
 			for(PaymentGatewayModeConfig config : paymentGatewayModeConfigs){
-				if(Data.userData != null && !TextUtils.isEmpty(config.getUpiHandle())){
-					Data.userData.setUpiHandle(config.getUpiHandle());
-					break;
+				if(config!=null){
+					if(Data.userData != null && !TextUtils.isEmpty(config.getUpiHandle())){
+						Data.userData.setUpiHandle(config.getUpiHandle());
+						break;
+					}
 				}
+
 			}
 		}
 	}
