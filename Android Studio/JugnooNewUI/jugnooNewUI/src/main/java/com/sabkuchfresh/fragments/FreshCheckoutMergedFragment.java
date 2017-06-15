@@ -722,7 +722,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
         setSlideInitial();
 
-        showRequestPaymentDialog(null, "dsa");
         return rootView;
     }
 
@@ -1229,8 +1228,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }
             if (goAhead) {
-                if(activity.getPaymentOption()==PaymentOption.ICICI_UPI && TextUtils.isEmpty(edtIciciVpa.getText().toString().trim())){
-                    Utils.showToast(activity,activity.getString(R.string.error_enter_virtual_payment_address));
+                if (activity.getPaymentOption() == PaymentOption.ICICI_UPI && TextUtils.isEmpty(edtIciciVpa.getText().toString().trim())) {
+                    Utils.showToast(activity, activity.getString(R.string.error_enter_virtual_payment_address));
                     setSlideInitial();
                     return;
                 }
@@ -3196,9 +3195,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private CheckoutRequestPaymentDialog checkoutRequestPaymentDialog;
 
-    private void showRequestPaymentDialog(String labelRequest, String timeLeft) {
+    private void showRequestPaymentDialog(String amount, long expiryTimeLeft) {
 
-        CheckoutRequestPaymentDialog.init(activity).setData("Kuch bhi set kardo yaar", System.currentTimeMillis(), 1000 * 60 * 1, null, new CheckoutRequestPaymentDialog.CheckoutRequestPaymentListener() {
+        if (checkoutRequestPaymentDialog == null) {
+            checkoutRequestPaymentDialog = CheckoutRequestPaymentDialog.init(activity);
+        }
+        checkoutRequestPaymentDialog.setData(amount, System.currentTimeMillis(), 1000 * 60 * 1, null, new CheckoutRequestPaymentDialog.CheckoutRequestPaymentListener() {
             @Override
             public void onCancelAttempt() {
 
@@ -3206,9 +3208,37 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
             @Override
             public void onExpired() {
+                isIciciUpiPaymentExpired = true;
+                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
 
             }
         }).showDialog();
 
     }
+
+    private void onIciciUpiPaymentInitiated() {
+        isIciciUpiPaymentExpired = false;
+        showRequestPaymentDialog("500", EXPIRY_ICICI_UPI_STATUS_CHECK);
+        activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable,DELAY_ICICI_UPI_STATUS_CHECK);
+
+    }
+
+    private int DELAY_ICICI_UPI_STATUS_CHECK = 30 * 1000;
+    private int EXPIRY_ICICI_UPI_STATUS_CHECK = 4 * 60 * 1000;
+    private boolean isIciciUpiPaymentExpired;
+    private Runnable checkIciciUpiPaymentStatusRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!isIciciUpiPaymentExpired) {
+                activity.getHandler().postDelayed(this, DELAY_ICICI_UPI_STATUS_CHECK);
+
+            } else {
+                if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
+                    checkoutRequestPaymentDialog.dismiss();
+                }
+                Toast.makeText(activity, "Payment status expired", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    };
 }

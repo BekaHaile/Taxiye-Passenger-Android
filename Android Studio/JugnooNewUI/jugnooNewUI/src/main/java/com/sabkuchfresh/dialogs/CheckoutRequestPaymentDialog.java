@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.StyleRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -153,7 +154,7 @@ public class CheckoutRequestPaymentDialog extends Dialog {
 
 
         int timeDiff = (int) (System.currentTimeMillis() - timerStartedAt);
-        tvValueExpiry.setText(getTime((int) (expiryTimeMilliSecs - timeDiff) / 1000));
+        tvValueExpiry.setText(getTime(((int) (expiryTimeMilliSecs - timeDiff) / 1000) +1));
         progressBar.setProgress((timeDiff));
 
 
@@ -173,17 +174,20 @@ public class CheckoutRequestPaymentDialog extends Dialog {
     }
 
     private String getTime(int seconds) {
+        Log.i("timecheck", "getTime: "+seconds );
 
         int hours = seconds / 3600;
         int min = seconds / 60 - hours * 60;
         int secs = seconds % 60;
 
+
         if (hours > 0)
             return hours == 1 && min == 0 && secs == 0 ? hours + ":" + min + ":" + secs + " hour" : hours + ":" + min + ":" + secs + " hours";
         else if (min > 0)
-            return secs <= 0 && min == 1 ? min + ":" + secs + " minute" : min + ":" + secs + " minutes";
+            return secs <= 0 && min == 1 ? min  + " minute" : min + ":" + secs + " minutes";
         else
             return seconds <= 1 ? secs + " second" : secs + " seconds";
+
 
 
     }
