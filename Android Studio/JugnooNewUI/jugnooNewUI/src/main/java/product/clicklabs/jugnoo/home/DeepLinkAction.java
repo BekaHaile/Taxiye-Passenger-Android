@@ -103,6 +103,11 @@ public class DeepLinkAction {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.FEED.getTag());
 				}
 			}
+			else if(AppLinkIndex.PROS_PAGE.getOrdinal() == Data.deepLinkIndex){
+				if(Data.userData.getProsEnabled() == 1) {
+					menuBar.menuAdapter.onClickAction(MenuInfoTags.PROS.getTag());
+				}
+			}
 
 		} catch(Exception e){
 			e.printStackTrace();

@@ -106,6 +106,7 @@ import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
+import com.sabkuchfresh.pros.ui.fragments.ProsHomeFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.retrofit.model.DeliveryStore;
@@ -368,9 +369,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             topBar.etSearch.addTextChangedListener(textWatcher);
 
-            menusCartSelectedLayout = new MenusCartSelectedLayout(this);
-            final View rootf = findViewById(R.id.vMenusCartSaved);
-            menusCartSelectedLayout.init(rootf);
+            menusCartSelectedLayout = new MenusCartSelectedLayout(this, findViewById(R.id.vMenusCartSaved));
 
 
             drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -511,6 +510,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
                     lastClientId = Config.getFeedClientId();
 
+                } else if (lastClientId.equalsIgnoreCase(Config.getProsClientId())) {
+                    addProsHomeFragment();
+                    Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.PROS);
                 } else {
                     openCart();
                     addFreshHomeFragment();
@@ -908,7 +910,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())
                             || (getFeedReserveSpotFragment() != null && !getFeedReserveSpotFragment().isHidden())
                             || (getFeedSpotReservedSharingFragment() != null && !getFeedSpotReservedSharingFragment().isHidden())
-							|| (getFeedClaimHandleFragment() != null && !getFeedClaimHandleFragment().isHidden())) {
+							|| (getFeedClaimHandleFragment() != null && !getFeedClaimHandleFragment().isHidden())
+                            || (getProsHomeFragment() != null && !getProsHomeFragment().isHidden())
+                            ) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
                     }
@@ -1070,6 +1074,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private FeedbackFragment getFeedbackFragment() {
         return (FeedbackFragment) getSupportFragmentManager().findFragmentByTag(FeedbackFragment.class.getName());
+    }
+
+    public ProsHomeFragment getProsHomeFragment() {
+        return (ProsHomeFragment) getSupportFragmentManager().findFragmentByTag(MealFragment.class.getName());
     }
 
 
@@ -1500,6 +1508,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getString(R.string.bulk_order));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof ProsHomeFragment) {
+                llCartContainerVis = View.GONE;
+                llSearchCartVis = View.GONE;
+                topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                topBar.imageViewBack.setVisibility(View.GONE);
+
+                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                }
+
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getResources().getString(R.string.pros));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             }
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
@@ -2019,6 +2040,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     .addToBackStack(FeedSpotReservedSharingFragment.class.getName())
                     .commitAllowingStateLoss();
         }
+    }
+
+
+    private void addProsHomeFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new ProsHomeFragment(),
+                        ProsHomeFragment.class.getName())
+                .addToBackStack(ProsHomeFragment.class.getName())
+                .commitAllowingStateLoss();
     }
 
 
@@ -3436,6 +3466,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     getMenusFragment().getAllMenus(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
                     getFeedHomeFragment().fetchFeedsApi(true, true, true);
+                } else if (appType == AppConstant.ApplicationType.PROS && getProsHomeFragment() != null) {
+                    getProsHomeFragment().getAllProducts(true, getSelectedLatLng());
                 }
             }
         } catch (Exception e) {
@@ -4242,6 +4274,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 gaCategory = GACategory.MEALS;
             } else if(type == AppConstant.ApplicationType.MENUS){
                 gaCategory = GACategory.MENUS;
+            } else if(type == AppConstant.ApplicationType.PROS){
+                gaCategory = GACategory.PROS;
             } else {
                 gaCategory = GACategory.FRESH;
             }

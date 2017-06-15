@@ -412,6 +412,9 @@ public class ApiFindADriver {
 			if(findADriverResponse.getFeedEnabled() != null) {
 				Data.userData.setFeedEnabled(findADriverResponse.getFeedEnabled());
 			}
+			if(findADriverResponse.getProsEnabled() != null) {
+				Data.userData.setProsEnabled(findADriverResponse.getProsEnabled());
+			}
 
 		} catch (Exception exception) {
 			exception.printStackTrace();

@@ -478,22 +478,48 @@
         <item name="com_accountkit_secondary_text_color">
             ?attr/com_accountkit_primary_text_color
         </item>
-        <item name="com_accountkit_status_bar_color">@android:color/black</item>
-        <item name="com_accountkit_button_background_color">@color/theme_color</item>
-        <item name="com_accountkit_button_text_color">@android:color/white</item>
-        <item name="com_accountkit_icon_color">@color/theme_color</item>
-        <item name="com_accountkit_toolbar_elevation">8dp</item>
+        <item name="com_accountkit_status_bar_color">
+            @android:color/black
+        </item>
+        <item name="com_accountkit_button_background_color">
+            @color/theme_color
+        </item>
+        <item name="com_accountkit_button_text_color">
+            @android:color/white
+        </item>
+        <item name="com_accountkit_icon_color">
+            @color/theme_color
+        </item>
+        <item name="com_accountkit_toolbar_elevation">
+            8dp
+        </item>
     </style>
 
     <style name="TransparentTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/transparent</item>
-        <item name="colorPrimaryDark">@color/white_less_dark</item>
-        <item name="colorAccent">@color/white_less_dark</item>
-        <item name="colorControlNormal">@color/white_less_dark</item>
-        <item name="colorControlActivated">@color/theme_color</item>
-        <item name="colorControlHighlight">@color/white_less_dark</item>
-        <item name="android:textColorHint">#595968</item>
-        <item name="android:windowContentTransitions">true</item>
+        <item name="colorPrimary">
+            @color/transparent
+        </item>
+        <item name="colorPrimaryDark">
+            @color/white_less_dark
+        </item>
+        <item name="colorAccent">
+            @color/white_less_dark
+        </item>
+        <item name="colorControlNormal">
+            @color/white_less_dark
+        </item>
+        <item name="colorControlActivated">
+            @color/theme_color
+        </item>
+        <item name="colorControlHighlight">
+            @color/white_less_dark
+        </item>
+        <item name="android:textColorHint">
+            #595968
+        </item>
+        <item name="android:windowContentTransitions">
+            true
+        </item>
     </style>
 
 

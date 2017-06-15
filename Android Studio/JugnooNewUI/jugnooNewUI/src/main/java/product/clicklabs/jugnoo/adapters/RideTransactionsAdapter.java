@@ -132,7 +132,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     || orderHistory.getProductType() == ProductType.MEALS.getOrdinal()
                     || orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()
                     || orderHistory.getProductType() == ProductType.MENUS.getOrdinal()
-                    || orderHistory.getProductType() == ProductType.PAY.getOrdinal()) {
+                    || orderHistory.getProductType() == ProductType.PAY.getOrdinal()
+                    || orderHistory.getProductType() == ProductType.PROS.getOrdinal()) {
                 holder.textViewStatus.setText(R.string.status_colon);
                 holder.textViewStatusValue.setText(orderHistory.getOrderStatus());
                 try{
@@ -164,6 +165,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.imageViewProductType.setImageResource(R.drawable.ic_menus_grey);
                 } else if(orderHistory.getProductType() == ProductType.PAY.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_pay_grey);
+                } else if(orderHistory.getProductType() == ProductType.PROS.getOrdinal()) {
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_pros_grey);
                 }
                 holder.relativeLayoutTo.setVisibility(View.GONE);
             }

@@ -87,6 +87,9 @@ public class FreshOrderCompleteDialog {
 					textView.setText(Utils.trimHTML(Utils.fromHtml(placeOrderResponse.getOrderPlacedMessage())));
 				}
 			}
+			else if(type == AppConstant.ApplicationType.PROS) {
+				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_pros));
+			}
 
 			TextView textViewOrderId = (TextView) dialog.findViewById(R.id.textViewOrderId);
 			textViewOrderId.setTypeface(Fonts.mavenRegular(activity));

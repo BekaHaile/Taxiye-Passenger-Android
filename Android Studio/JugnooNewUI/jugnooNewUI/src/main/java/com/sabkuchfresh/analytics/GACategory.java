@@ -10,6 +10,7 @@ public interface GACategory {
 	String MENUS = "Menus ";
 	String RIDES = "Rides ";
 	String JUGNOO = "Jugnoo ";
+	String PROS = "Pros ";
 	String SIDE_MENU= "Side Menu ";
 	String PAY = "Pay ";
 	String SPLASH = "Splash ";

@@ -225,6 +225,8 @@
 
     <color name="grey_feed_fab">#7194d2</color>
     <color name="grey_feed_fab_pressed">#6187cb</color>
+    <color name="pink_pros_fab">#ef6692</color>
+    <color name="pink_pros_fab_pressed">#db527e</color>
     <color name="blue_selection_color">#667194d2</color>
 
 

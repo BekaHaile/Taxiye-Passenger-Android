@@ -1323,6 +1323,12 @@
     <string name="discount_slabs">Discount Slabs</string>
     <string name="place_bulk_order">Place a Bulk Order</string>
     <string name="bulk_order">Bulk Order</string>
+    <string
+        name="title_activity_pros">
+        ProsActivity
+    </string>
+    <string name="pros">Pros</string>
+    <string name="thank_you_for_placing_order_pros">Thank you for placing your order\nwith Jugnoo Pros!</string>
 
 
 </resources>

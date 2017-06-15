@@ -52,6 +52,7 @@ public class FABViewTest implements GACategory, GAAction {
     public FloatingActionButton fabMenusTest;
     public FloatingActionButton fabPayTest;
     public FloatingActionButton fabFeedTest;
+    public FloatingActionButton fabProsTest;
     public View view;
     private boolean isOpened;
     private final String GENIE_OPEN = "Genie Open";
@@ -80,6 +81,7 @@ public class FABViewTest implements GACategory, GAAction {
             fabMenusTest = (FloatingActionButton) view.findViewById(R.id.fabMenusTest);
             fabPayTest = (FloatingActionButton) view.findViewById(R.id.fabPayTest);
             fabFeedTest = (FloatingActionButton) view.findViewById(R.id.fabFeedTest);
+            fabProsTest = (FloatingActionButton) view.findViewById(R.id.fabProsTest);
             menuLabelsRightTest.setIconAnimated(true);
             menuLabelsRightTest.setClosedOnTouchOutside(true);
             fabMealsTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
@@ -88,12 +90,14 @@ public class FABViewTest implements GACategory, GAAction {
             fabAutosTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabPayTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabFeedTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
+            fabProsTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabMenusTest.setOnClickListener(clickListener);
             fabPayTest.setOnClickListener(clickListener);
             fabMealsTest.setOnClickListener(clickListener);
             fabFreshTest.setOnClickListener(clickListener);
             fabAutosTest.setOnClickListener(clickListener);
             fabFeedTest.setOnClickListener(clickListener);
+            fabProsTest.setOnClickListener(clickListener);
             relativeLayoutFABTest.setVisibility(View.GONE);
             menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
             menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
@@ -221,6 +225,7 @@ public class FABViewTest implements GACategory, GAAction {
                     && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
                     && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
                     && (Data.userData.getFeedEnabled() == 0)
+                    && Data.userData.getProsEnabled() == 0
                     && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 relativeLayoutFABTest.setVisibility(View.GONE);
             } else {
@@ -265,6 +270,14 @@ public class FABViewTest implements GACategory, GAAction {
                     }
                 }
 
+                if (Data.userData.getProsEnabled() != 1) {
+                    fabProsTest.setVisibility(View.GONE);
+                } else {
+                    if(isOpened) {
+                        fabProsTest.setVisibility(View.VISIBLE);
+                    }
+                }
+
                 setRlGenieHelpVisibility();
             }
         } catch (Exception e) {
@@ -294,6 +307,10 @@ public class FABViewTest implements GACategory, GAAction {
 
             if (Data.userData.getFeedEnabled() == 1) {
                 fabFeedTest.setVisibility(View.VISIBLE);
+            }
+
+            if (Data.userData.getProsEnabled() == 1) {
+                fabProsTest.setVisibility(View.VISIBLE);
             }
 
         } catch (Exception e) {
@@ -380,7 +397,15 @@ public class FABViewTest implements GACategory, GAAction {
                     }, 300);
                     selectedOffering = FEED;
                     break;
-
+                case R.id.fabProsTest:
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getProsClientId(), finalLatLng, false);
+                        }
+                    }, 300);
+                    selectedOffering = PROS;
+                    break;
             }
             GAUtils.event(JUGNOO, GENIE+OPEN, selectedOffering+SELECTED);
 
@@ -493,6 +518,8 @@ public class FABViewTest implements GACategory, GAAction {
             return PAY;
         } else if (clientId.equalsIgnoreCase(Config.getFeedClientId())) {
             return FEED;
+        }  else if (clientId.equalsIgnoreCase(Config.getProsClientId())) {
+            return PROS;
         } else {
             return RIDES;
         }

@@ -37,6 +37,14 @@ public class LoginResponse {
 		this.feed = feed;
 	}
 
+	public Pros getPros() {
+		return pros;
+	}
+
+	public void setPros(Pros pros) {
+		this.pros = pros;
+	}
+
 	public class Cancellation {
 
 		@SerializedName("message")
@@ -126,6 +134,9 @@ public class LoginResponse {
 	@SerializedName("delivery")
 	@Expose
 	private Delivery delivery;
+	@SerializedName("pros")
+	@Expose
+	private Pros pros;
 	/**
 	 * @return The flag
 	 */
@@ -905,6 +916,9 @@ public class LoginResponse {
 		@SerializedName("delivery_enabled")
 		@Expose
 		private Integer deliveryEnabled;
+		@SerializedName("pros_enabled")
+		@Expose
+		private Integer prosEnabled;
 		@SerializedName("referral_message")
 		@Expose
 		private String referralMessage;
@@ -1157,6 +1171,18 @@ public class LoginResponse {
 		public int getShowJugnooStarInAccount() {
 			return showJugnooStarInAccount;
 		}
+
+		public Integer getProsEnabled() {
+			return prosEnabled;
+		}
+
+		public void setProsEnabled(Integer prosEnabled) {
+			this.prosEnabled = prosEnabled;
+		}
+	}
+
+	public class Pros{
+
 	}
 
 }

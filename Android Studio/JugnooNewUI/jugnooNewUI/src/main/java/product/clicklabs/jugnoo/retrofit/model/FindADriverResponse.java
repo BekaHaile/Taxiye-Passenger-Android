@@ -78,6 +78,9 @@ public class FindADriverResponse {
     @SerializedName("feed_enabled")
     @Expose
     private Integer feedEnabled = 0;
+    @SerializedName("pros_enabled")
+    @Expose
+    private Integer prosEnabled = 0;
     @SerializedName("integrated_jugnoo_enabled")
     @Expose
     private Integer integratedJugnooEnabled;
@@ -530,5 +533,13 @@ public class FindADriverResponse {
 
     public void setFeedEnabled(Integer feedEnabled) {
         this.feedEnabled = feedEnabled;
+    }
+
+    public Integer getProsEnabled() {
+        return prosEnabled;
+    }
+
+    public void setProsEnabled(Integer prosEnabled) {
+        this.prosEnabled = prosEnabled;
     }
 }

@@ -364,8 +364,10 @@ public class HomeUtil {
 			return ProductType.PAY;
 		} else if(productType == ProductType.FEED.getOrdinal()){
 			return ProductType.FEED;
+		} else if(productType == ProductType.PROS.getOrdinal()){
+			return ProductType.PROS;
 		} else {
-			return ProductType.MEALS;
+			return ProductType.NOT_SURE;
 		}
 	}
 
