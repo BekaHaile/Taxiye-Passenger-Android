@@ -76,8 +76,8 @@ public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
-        activity.getTopBar().title.setText(superCategory.getTitle());
         parseArguments();
+        activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
 
         rvProducts = (RecyclerView) rootView.findViewById(R.id.rvProducts);
         rvProducts.setLayoutManager(new LinearLayoutManager(activity));
