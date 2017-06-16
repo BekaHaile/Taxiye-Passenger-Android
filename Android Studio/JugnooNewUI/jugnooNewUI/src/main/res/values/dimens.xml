@@ -854,5 +854,8 @@
     <dimen name="dp_44">
         44dp
     </dimen>
+    <dimen name="dp_97">
+        97dp
+    </dimen>
 
 </resources>

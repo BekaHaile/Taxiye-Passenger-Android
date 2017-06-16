@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/white"
+    >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvProducts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical"
+        android:splitMotionEvents="false"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_7"
+        android:background="@drawable/shadow_down_new"
+        />
+
+</RelativeLayout>

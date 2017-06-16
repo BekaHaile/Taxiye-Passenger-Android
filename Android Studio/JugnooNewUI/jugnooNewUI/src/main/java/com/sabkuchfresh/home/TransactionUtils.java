@@ -28,6 +28,7 @@ import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
+import com.sabkuchfresh.pros.ui.fragments.ProsProductsFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -425,6 +426,18 @@ public class TransactionUtils {
                     .add(relativeLayoutContainer.getId(), MealsBulkOrderFragment.newInstance(url),
                             MealsBulkOrderFragment.class.getName())
                     .addToBackStack(MealsBulkOrderFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void addProsProductsFragment(FragmentActivity activity, View container, SuperCategoriesData.SuperCategory superCategory) {
+        if (!checkIfFragmentAdded(activity, ProsProductsFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .add(container.getId(), ProsProductsFragment.newInstance(superCategory),
+                            ProsProductsFragment.class.getName())
+                    .addToBackStack(ProsProductsFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

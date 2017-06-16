@@ -85,7 +85,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 				if(superCategory.getIsEnabled() == 0){
 					Utils.showToast(activity, getString(R.string.coming_soon_to_your_city));
 				} else {
-					activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
+					activity.getTransactionUtils().addProsProductsFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
 					activity.getFabViewTest().hideJeanieHelpInSession();
 				}
 				try {

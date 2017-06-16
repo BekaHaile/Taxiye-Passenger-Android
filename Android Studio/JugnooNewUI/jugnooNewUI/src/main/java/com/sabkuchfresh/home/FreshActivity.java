@@ -107,6 +107,7 @@ import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsHomeFragment;
+import com.sabkuchfresh.pros.ui.fragments.ProsProductsFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.retrofit.model.DeliveryStore;
@@ -1522,6 +1523,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.pros));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+            } else if (fragment instanceof ProsProductsFragment) {
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
+
+                topBar.title.setVisibility(View.VISIBLE);
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
