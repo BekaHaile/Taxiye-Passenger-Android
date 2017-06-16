@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_menus_nothing_found"
-    android:visibility="gone">
+    android:visibility="gone"
+    android:tag="@string/dont_touch_me">
 
     <ImageView
         android:id="@+id/imageViewShadow"
         android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:background="@drawable/shadow_down"
+        android:layout_height="@dimen/dp_7"
+        android:background="@drawable/shadow_down_new"
         android:visibility="visible" />
 
 
@@ -19,10 +20,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="110px"
+        android:layout_marginTop="@dimen/dp_55"
         android:text="@string/oh_snap"
         android:textColor="@color/theme_color"
-        android:textSize="@dimen/text_size_52" />
+        android:textSize="@dimen/sp_26" />
 
     <TextView
         android:id="@+id/textViewNothingFound"
@@ -30,24 +31,24 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewOhSnap"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="40px"
-        android:layout_marginRight="40px"
-        android:layout_marginTop="20px"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_10"
         android:gravity="center"
         android:text="@string/nothing_found_near_you"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/text_size_32"
+        android:textSize="@dimen/sp_16"
 
         />
 
     <ImageView
         android:id="@+id/imageViewArrow"
-        android:layout_width="73px"
-        android:layout_height="88px"
+        android:layout_width="@dimen/dp_36"
+        android:layout_height="@dimen/dp_44"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="80px"
+        android:layout_marginLeft="@dimen/dp_40"
         android:scaleX="-1"
-        android:layout_marginTop="50px"
+        android:layout_marginTop="@dimen/dp_25"
         android:src="@drawable/ic_curved_up_arrow"
         android:tag="mwar" />
 

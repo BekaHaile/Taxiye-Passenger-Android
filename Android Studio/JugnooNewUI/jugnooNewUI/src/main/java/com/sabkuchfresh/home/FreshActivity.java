@@ -466,7 +466,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 createAppCart(lastClientId);
 
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
-                    addMealFragment();
+                    // TODO: 16/06/17  revert to meals
+                    addProsHomeFragment();
+//                    addMealFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
                 } else if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
                     openCart();
@@ -1510,7 +1512,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             } else if (fragment instanceof ProsHomeFragment) {
                 llCartContainerVis = View.GONE;
-                llSearchCartVis = View.GONE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
 
@@ -3467,7 +3468,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
                     getFeedHomeFragment().fetchFeedsApi(true, true, true);
                 } else if (appType == AppConstant.ApplicationType.PROS && getProsHomeFragment() != null) {
-                    getProsHomeFragment().getAllProducts(true, getSelectedLatLng());
+                    getProsHomeFragment().getSuperCategoriesAPI(true);
                 }
             }
         } catch (Exception e) {

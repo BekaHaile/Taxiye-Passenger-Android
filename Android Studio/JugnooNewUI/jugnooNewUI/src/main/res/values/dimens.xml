@@ -848,5 +848,11 @@
     <dimen name="dp_260">
         260dp
     </dimen>
+    <dimen name="dp_17">
+        17dp
+    </dimen>
+    <dimen name="dp_44">
+        44dp
+    </dimen>
 
 </resources>
