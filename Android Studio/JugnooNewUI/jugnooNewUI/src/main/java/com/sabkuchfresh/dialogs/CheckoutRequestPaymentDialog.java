@@ -56,6 +56,8 @@ public class CheckoutRequestPaymentDialog extends Dialog {
     private long timerStartedAt;
     private long expiryTimeMilliSecs;
     private Activity activity;
+    private ArrayList<String> cancellationReasons;
+    private CheckoutRequestPaymentListener checkoutRequestPaymentListener;
 
 
     // TODO: 12/06/17 Handle Automatic TimeZone not set case if any
@@ -92,7 +94,8 @@ public class CheckoutRequestPaymentDialog extends Dialog {
                 break;
             case R.id.btn_submit:
                 if(checkoutRequestCancellationAdapter!=null && checkoutRequestCancellationAdapter.getSelectedItem()!=null){
-                    Toast.makeText(activity, "Cancel api because "+ checkoutRequestCancellationAdapter.getSelectedItem(), Toast.LENGTH_SHORT).show();
+                    checkoutRequestPaymentListener.onCancelClick(checkoutRequestCancellationAdapter.getSelectedItem());
+//                    Toast.makeText(activity, "Cancel api because "+ checkoutRequestCancellationAdapter.getSelectedItem(), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -101,21 +104,23 @@ public class CheckoutRequestPaymentDialog extends Dialog {
     public interface CheckoutRequestPaymentListener {
 
 
-        void onCancelAttempt();
+        void onCancelClick(String reason);
 
         void onExpired();
     }
 
     public static CheckoutRequestPaymentDialog init(Activity activity) {
-        return new CheckoutRequestPaymentDialog(R.style.Feed_Popup_Theme, activity);
+        return new CheckoutRequestPaymentDialog(R.style.Checkout_Icici_Popup_Theme, activity);
 
     }
 
     public CheckoutRequestPaymentDialog setData(String amount, long timerStartedAt, long expiryTimeMilliSecs, ArrayList<String> cancellationReasons, CheckoutRequestPaymentListener checkoutRequestPaymentListener) {
         this.timerStartedAt = timerStartedAt;
+        this.checkoutRequestPaymentListener = checkoutRequestPaymentListener;
         this.expiryTimeMilliSecs = expiryTimeMilliSecs;
         progressBar.setMax((int)expiryTimeMilliSecs);
         tvLabelRequest.setText(activity.getString(R.string.label_checkout_request, amount));
+        this.cancellationReasons = cancellationReasons;
         setTime();
         setCancellationAdapter();
         return this;
@@ -141,11 +146,13 @@ public class CheckoutRequestPaymentDialog extends Dialog {
         ButterKnife.bind(this, getWindow().getDecorView());
         Window window = getWindow();
         WindowManager.LayoutParams wlp = getWindow().getAttributes();
+        setCancelable(false);
         wlp.gravity = Gravity.LEFT | Gravity.TOP;
         wlp.height = WindowManager.LayoutParams.MATCH_PARENT;
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//to avoid black background during animation
         window.setAttributes(wlp);
+
 
 
     }
@@ -174,7 +181,6 @@ public class CheckoutRequestPaymentDialog extends Dialog {
     }
 
     private String getTime(int seconds) {
-        Log.i("timecheck", "getTime: "+seconds );
 
         int hours = seconds / 3600;
         int min = seconds / 60 - hours * 60;
@@ -195,15 +201,9 @@ public class CheckoutRequestPaymentDialog extends Dialog {
     private CheckoutRequestCancellationAdapter checkoutRequestCancellationAdapter;
 
     public void setCancellationAdapter() {
-        ArrayList<String> reasons = new ArrayList<>();
-        reasons.add("Guri Kang!");
-        reasons.add("Guri Kang!");
-        reasons.add("Guri Kang!");
-        reasons.add("Guri Kang!!!!");
-        reasons.add("Guri Kang!!!!");
-        reasons.add("Guri Kang!!");
+
         recyclerCancellationReasons.setLayoutManager(new LinearLayoutManager(activity));
-        checkoutRequestCancellationAdapter = new CheckoutRequestCancellationAdapter(activity, reasons, recyclerCancellationReasons, btnSubmit);
+        checkoutRequestCancellationAdapter = new CheckoutRequestCancellationAdapter(activity, cancellationReasons, recyclerCancellationReasons, btnSubmit);
         recyclerCancellationReasons.setAdapter(checkoutRequestCancellationAdapter);
         btnSubmit.setEnabled(checkoutRequestCancellationAdapter.getSelectedItem() != null);
 

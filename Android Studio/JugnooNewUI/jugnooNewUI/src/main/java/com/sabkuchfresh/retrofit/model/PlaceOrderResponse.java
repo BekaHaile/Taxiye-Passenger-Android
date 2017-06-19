@@ -70,18 +70,18 @@ public class PlaceOrderResponse {
 		@SerializedName("polling_time")
 		private long pollingTime;
 
-		@SerializedName("reason_list")
+		@SerializedName("cancellation_reasons")
 		private ArrayList<String> reasonList;
 
 		@SerializedName("jugnoo_vpa")
 		private String jugnooVpa;
 
-		public long getExpirationTime() {
-			return expirationTime;
+		public long getExpirationTimeMillis() {
+			return expirationTime*1000;
 		}
 
-		public long getPollingTime() {
-			return pollingTime;
+		public long getPollingTimeMillis() {
+			return pollingTime*1000;
 		}
 
 		public ArrayList<String> getReasonList() {

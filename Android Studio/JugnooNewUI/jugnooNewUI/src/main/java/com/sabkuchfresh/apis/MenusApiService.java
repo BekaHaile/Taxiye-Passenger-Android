@@ -84,7 +84,7 @@ public interface MenusApiService {
 							Callback<SendMoneyCallbackResponse> callback);
 
 	@FormUrlEncoded
-	@POST("/check_payment_status")
+	@POST("/menus/check_payment_status")
 	void checkPaymentStatus(@FieldMap Map<String, String> params,
 							Callback<IciciPaymentRequestStatus> callback);
 

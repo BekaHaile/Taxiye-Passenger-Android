@@ -57,10 +57,12 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
+import com.sabkuchfresh.commoncalls.ApiCancelOrder;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.dialogs.CheckoutRequestPaymentDialog;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
+import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -1490,6 +1492,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                                         if(Integer.parseInt(placeOrderResponse.getPaymentMode())==PaymentOption.ICICI_UPI.getOrdinal()){
                                             //Icici Upi Payment Initiated
+                                            activity.setPlaceOrderResponse(placeOrderResponse);
 
                                             if(placeOrderResponse.getIcici()!=null){
 
@@ -3191,16 +3194,43 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
     private CheckoutRequestPaymentDialog checkoutRequestPaymentDialog;
+    private ApiCancelOrder apiCancelOrder;
 
-    private void showRequestPaymentDialog(String amount, long expiryTimeLeft) {
+    private void showRequestPaymentDialog(String amount, long expiryTimeLeft, ArrayList<String> reasonList) {
 
         if (checkoutRequestPaymentDialog == null) {
             checkoutRequestPaymentDialog = CheckoutRequestPaymentDialog.init(activity);
         }
-        checkoutRequestPaymentDialog.setData(amount, System.currentTimeMillis(), expiryTimeLeft, null, new CheckoutRequestPaymentDialog.CheckoutRequestPaymentListener() {
+        checkoutRequestPaymentDialog.setData(amount, System.currentTimeMillis(), expiryTimeLeft, reasonList, new CheckoutRequestPaymentDialog.CheckoutRequestPaymentListener() {
             @Override
-            public void onCancelAttempt() {
+            public void onCancelClick(String reason) {
+                if(activity.getPlaceOrderResponse()!=null){
+                    if(apiCancelOrder ==null){
+                        apiCancelOrder = new ApiCancelOrder(getActivity(), new ApiCancelOrder.Callback() {
+                            @Override
+                            public void onSuccess(String message) {
+                                onIciciStatusResponse(IciciPaymentOrderStatus.CANCELLED);
+                            }
 
+                            @Override
+                            public void onFailure() {
+
+                            }
+
+                            @Override
+                            public void onRetry(View view) {
+
+                            }
+
+                            @Override
+                            public void onNoRetry(View view) {
+
+                            }
+                        });
+                    }
+                    apiCancelOrder.hit(activity.getPlaceOrderResponse().getOrderId(),Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
+                            -1,isMenusOpen()?ProductType.MENUS.getOrdinal():ProductType.FRESH.getOrdinal(),reason,"");
+                }
             }
 
             @Override
@@ -3213,19 +3243,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private void onIciciUpiPaymentInitiated(PlaceOrderResponse.IciciUpi icici,String amount) {
         isGetIciciPaymentStatusInProgress = true;
-        TOTAL_EXPIRY_TIME_ICICI_UPI = icici.getExpirationTime();
-        DELAY_ICICI_UPI_STATUS_CHECK = icici.getPollingTime();
-        showRequestPaymentDialog(amount, TOTAL_EXPIRY_TIME_ICICI_UPI);
+        TOTAL_EXPIRY_TIME_ICICI_UPI = icici.getExpirationTimeMillis();
+        DELAY_ICICI_UPI_STATUS_CHECK = icici.getPollingTimeMillis();
+        showRequestPaymentDialog(amount, TOTAL_EXPIRY_TIME_ICICI_UPI,icici.getReasonList());
         activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable, DELAY_ICICI_UPI_STATUS_CHECK);
 
     }
 
-    private static final int ICICI_PAYMENT_STATUS_FAILED = 0;
-    private static final int ICICI_PAYMENT_STATUS_EXPIRED = 1;
+
     private  boolean isGetIciciPaymentStatusInProgress;
-    private void onIciciStatusResponseCancelled(int status) {
+    private void onIciciStatusResponse(IciciPaymentOrderStatus status) {
         switch (status) {
-            case ICICI_PAYMENT_STATUS_FAILED:
+            case FAILURE:
                 isGetIciciPaymentStatusInProgress = false;
                 activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
                 if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
@@ -3234,7 +3263,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 Toast.makeText(activity, "Payment failed", Toast.LENGTH_SHORT).show();
 
                 break;
-            case ICICI_PAYMENT_STATUS_EXPIRED:
+            case EXPIRED:
                 isGetIciciPaymentStatusInProgress = false;
                 activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
 
@@ -3244,33 +3273,67 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 Toast.makeText(activity, "Payment Expired", Toast.LENGTH_SHORT).show();
 
                 break;
+            case SUCCESSFUL:
+
+                isGetIciciPaymentStatusInProgress = false;
+                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
+
+                if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
+                    checkoutRequestPaymentDialog.dismiss();
+                }
+                Toast.makeText(activity, "Payment Successful", Toast.LENGTH_SHORT).show();
+                orderPlacedSuccess(activity.getPlaceOrderResponse());
+
+                break;
+            case CANCELLED:
+                isGetIciciPaymentStatusInProgress = false;
+                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
+
+                if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
+                    checkoutRequestPaymentDialog.dismiss();
+                }
+                Toast.makeText(activity, "Order Cancelled Successfully.", Toast.LENGTH_SHORT).show();
+                orderPlacedSuccess(activity.getPlaceOrderResponse());
+                break;
+            case PENDING:
+                //Keep waiting for next status
+                break;
         }
 
     }
 
 
+
     private long DELAY_ICICI_UPI_STATUS_CHECK = 30 * 1000;
     private long TOTAL_EXPIRY_TIME_ICICI_UPI = 4 * 60 * 1000;
+    private   Callback<IciciPaymentRequestStatus> iciciPaymentStatusCallback;
+
     private Runnable checkIciciUpiPaymentStatusRunnable = new Runnable() {
         @Override
         public void run() {
 
-                if (MyApplication.getInstance().isOnline()) {
-                    HashMap<String, String> params = new HashMap<>();
-                    HomeUtil.addDefaultParams(params);
-                    params.put(Constants.KEY_ORDER_ID, String.valueOf(activity.getPlaceOrderResponse().getOrderId()));
-                    params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                    params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+            if (MyApplication.getInstance().isOnline()) {
+                HashMap<String, String> params = new HashMap<>();
+                HomeUtil.addDefaultParams(params);
+                params.put(Constants.KEY_ORDER_ID, String.valueOf(activity.getPlaceOrderResponse().getOrderId()));
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                if (iciciPaymentStatusCallback == null) {
 
-
-                    Callback<IciciPaymentRequestStatus> callback = new Callback<IciciPaymentRequestStatus>() {
+                    iciciPaymentStatusCallback = new Callback<IciciPaymentRequestStatus>() {
                         @Override
                         public void success(IciciPaymentRequestStatus commonResponse, Response response) {
-                              if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, commonResponse.getFlag(),commonResponse.getError()
-                       ,commonResponse.getMessage())) {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, commonResponse.getFlag(), commonResponse.getError()
+                                    , commonResponse.getMessage())) {
 
                                 if (commonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    orderPlacedSuccess(activity.getPlaceOrderResponse());
+
+
+                                    onIciciStatusResponse(commonResponse.getStatus());
+
+
+
+
                                 }
                             }
 
@@ -3280,14 +3343,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         public void failure(RetrofitError error) {
                         }
                     };
-                    if (isMenusOpen()) {
-                        RestClient.getMenusApiService().checkPaymentStatus(params, callback);
-                    } else {
-                        RestClient.getFreshApiService().checkPaymentStatus(params, callback);
-                    }
-                } {
-                   Log.e("TAG","No net tried to hit get status icici api");
                 }
+
+                if (isMenusOpen()) {
+
+
+                    RestClient.getMenusApiService().checkPaymentStatus(params, iciciPaymentStatusCallback);
+                } else {
+
+
+                    RestClient.getFreshApiService().checkPaymentStatus(params, iciciPaymentStatusCallback);
+                }
+            }else{
+                Log.e("TAG", "No net tried to hit get status icici api");
+            }
 
 
 
