@@ -4697,15 +4697,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
             });
         }
-
-        if(bRequestBooking != null){
-            bRequestBooking.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-        }
     }
 
 

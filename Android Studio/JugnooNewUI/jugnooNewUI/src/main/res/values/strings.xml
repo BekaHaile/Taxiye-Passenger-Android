@@ -1328,12 +1328,14 @@
         ProsActivity
     </string>
     <string name="pros">Pros</string>
-    <string name="thank_you_for_placing_order_pros">Thank you for placing your order\nwith Jugnoo Pros!</string>
+    <string name="your_service_request_confirm_message">Your service request will be\nconfirmed within the next 30 mins.</string>
     <string name="service_address">Service Address</string>
     <string name="select_date">Select Date</string>
     <string name="select_time_slot">Select Time Slot</string>
     <string name="request_booking">Request Booking</string>
     <string name="service_name">Service Name</string>
+    <string name="service_id_hash">Service ID: #</string>
+    <string name="date_and_time">Date &amp; Time</string>
 
 
 </resources>

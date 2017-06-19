@@ -1756,8 +1756,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }).show(String.valueOf(placeOrderResponse.getOrderId()),
                     deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
-                    placeOrderResponse);
-            GAUtils.trackScreenView(productType + ORDER_PLACED);
+                    placeOrderResponse, type);
+            GAUtils.trackScreenView(productType+ORDER_PLACED);
         } else {
             dialogOrderComplete = new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
                 @Override

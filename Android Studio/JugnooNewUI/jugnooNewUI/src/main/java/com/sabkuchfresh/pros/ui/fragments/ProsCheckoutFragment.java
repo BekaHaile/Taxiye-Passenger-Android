@@ -1,10 +1,13 @@
 package com.sabkuchfresh.pros.ui.fragments;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,7 +16,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.utils.AppConstant;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -55,7 +61,6 @@ public class ProsCheckoutFragment extends Fragment {
 	RelativeLayout linearLayoutRoot;
 	@Bind(R.id.tvProductName)
 	TextView tvProductName;
-	private View rootView;
 	private FreshActivity activity;
 	private SubItem subItem;
 
@@ -73,7 +78,7 @@ public class ProsCheckoutFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.fragment_pros_product_checkout, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_pros_product_checkout, container, false);
 
 		activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
@@ -81,6 +86,20 @@ public class ProsCheckoutFragment extends Fragment {
 		ButterKnife.bind(this, rootView);
 
 		tvProductName.setText(subItem.getSubItemName());
+
+		activity.bRequestBooking.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Dialog dialogOrderComplete = new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+					@Override
+					public void onDismiss() {
+						activity.orderComplete();
+					}
+				}).show(String.valueOf(2334),
+						"02:00PM - 06:00PM", "24 June,17", true, "",
+						null, AppConstant.ApplicationType.PROS);
+			}
+		});
 
 		return rootView;
 	}
@@ -108,11 +127,26 @@ public class ProsCheckoutFragment extends Fragment {
 			case R.id.relativeLayoutDeliveryAddress:
 				break;
 			case R.id.tvSelectDate:
+				getDatePickerFragment().show(getChildFragmentManager(), "datePicker", new DatePickerDialog.OnDateSetListener(){
+					@Override
+					public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+						tvSelectDate.setText(year+":"+(month+1)+":"+dayOfMonth);
+					}
+				});
 				break;
 			case R.id.tvSelectTimeSlot:
 				break;
 			case R.id.relativeLayoutCash:
 				break;
 		}
+	}
+
+
+	private DatePickerFragment datePickerFragment;
+	private DatePickerFragment getDatePickerFragment(){
+		if(datePickerFragment == null){
+			datePickerFragment = new DatePickerFragment();
+		}
+		return datePickerFragment;
 	}
 }

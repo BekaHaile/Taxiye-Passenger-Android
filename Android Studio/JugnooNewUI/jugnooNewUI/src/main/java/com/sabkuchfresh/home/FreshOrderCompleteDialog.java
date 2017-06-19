@@ -18,14 +18,11 @@ import android.widget.TextView;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.utils.AppConstant;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JugnooStarActivity;
-import product.clicklabs.jugnoo.utils.Fonts;
-
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -43,7 +40,8 @@ public class FreshOrderCompleteDialog {
 		this.callback = callback;
 	}
 
-	public Dialog show(String orderId, String deliverySlot, String deliveryDay, boolean showDeliverySlot, String restaurantName, PlaceOrderResponse placeOrderResponse) {
+	public Dialog show(String orderId, String deliverySlot, String deliveryDay, boolean showDeliverySlot,
+					   String restaurantName, PlaceOrderResponse placeOrderResponse, int appType) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -65,52 +63,79 @@ public class FreshOrderCompleteDialog {
 			TextView tvDescription = (TextView) dialog.findViewById(R.id.tvDescription); tvDescription.setTypeface(Fonts.mavenRegular(activity));
 			TextView tvClickToFindOut = (TextView) dialog.findViewById(R.id.tvClickToFindOut); tvClickToFindOut.setTypeface(Fonts.mavenMedium(activity));
 
-			if(Data.userData.getShowSubscriptionData() == 1 && placeOrderResponse.getSubscriptionMessage() != null){
+			if(Data.userData.getShowSubscriptionData() == 1
+					&& placeOrderResponse != null
+					&& placeOrderResponse.getSubscriptionMessage() != null){
 				rlStarContainer.setVisibility(View.VISIBLE);
 				tvDidYou.setText(placeOrderResponse.getSubscriptionMessage().getHeading());
 				tvDescription.setText(placeOrderResponse.getSubscriptionMessage().getContent());
 				tvClickToFindOut.setText(placeOrderResponse.getSubscriptionMessage().getLinkText());
-			} else{
+			} else {
 				rlStarContainer.setVisibility(View.GONE);
 			}
 
 
-			int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-			if(type == AppConstant.ApplicationType.MEALS)
+			if(appType == AppConstant.ApplicationType.MEALS) {
 				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_meals));
-			else if(type == AppConstant.ApplicationType.GROCERY)
+			}
+			else if(appType == AppConstant.ApplicationType.GROCERY) {
 				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_grocery));
-			else if(type == AppConstant.ApplicationType.MENUS) {
-				if(TextUtils.isEmpty(placeOrderResponse.getOrderPlacedMessage())) {
+			}
+			else if(appType == AppConstant.ApplicationType.MENUS) {
+				if(placeOrderResponse == null || TextUtils.isEmpty(placeOrderResponse.getOrderPlacedMessage())) {
 					textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_menus_format, restaurantName));
 				} else {
 					textView.setText(Utils.trimHTML(Utils.fromHtml(placeOrderResponse.getOrderPlacedMessage())));
 				}
 			}
-			else if(type == AppConstant.ApplicationType.PROS) {
-				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_pros));
+			else if(appType == AppConstant.ApplicationType.PROS) {
+				if(placeOrderResponse == null || TextUtils.isEmpty(placeOrderResponse.getOrderPlacedMessage())) {
+					textView.setText(activity.getResources().getString(R.string.your_service_request_confirm_message));
+				} else {
+					textView.setText(Utils.trimHTML(Utils.fromHtml(placeOrderResponse.getOrderPlacedMessage())));
+				}
 			}
 
 			TextView textViewOrderId = (TextView) dialog.findViewById(R.id.textViewOrderId);
 			textViewOrderId.setTypeface(Fonts.mavenRegular(activity));
 			TextView textViewOrderDeliverySlot = (TextView) dialog.findViewById(R.id.textViewOrderDeliverySlot);
 			textViewOrderDeliverySlot.setTypeface(Fonts.mavenRegular(activity));
-			if(showDeliverySlot) {
-				textViewOrderDeliverySlot.setText(deliverySlot);
-				textViewOrderDeliverySlot.append("\n");
-				textViewOrderDeliverySlot.append(deliveryDay);
+
+			if(appType == AppConstant.ApplicationType.PROS){
+				textViewOrderId.setText(activity.getResources().getString(R.string.service_id_hash));
+				final SpannableStringBuilder sb = new SpannableStringBuilder(orderId);
+				sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				textViewOrderId.append(sb);
+
+				if (showDeliverySlot) {
+					final SpannableStringBuilder sb1 = new SpannableStringBuilder(activity.getString(R.string.date_and_time));
+					sb1.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, sb1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewOrderDeliverySlot.setText(sb1);
+					textViewOrderDeliverySlot.append("\n");
+					textViewOrderDeliverySlot.append(deliverySlot);
+					textViewOrderDeliverySlot.append("\n");
+					textViewOrderDeliverySlot.append(deliveryDay);
+				}
+
+			} else {
+				if (showDeliverySlot) {
+					textViewOrderDeliverySlot.setText(deliverySlot);
+					textViewOrderDeliverySlot.append("\n");
+					textViewOrderDeliverySlot.append(deliveryDay);
+				}
+
+				textViewOrderId.setText(activity.getResources().getString(R.string.your_order_id));
+
+				final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+				final SpannableStringBuilder sb = new SpannableStringBuilder(orderId);
+				sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				textViewOrderId.append(sb);
+				if (showDeliverySlot) {
+					textViewOrderId.append("\n");
+					textViewOrderId.append(activity.getResources().getString(R.string.will_be_delivered_between));
+				}
 			}
 
-			textViewOrderId.setText(activity.getResources().getString(R.string.your_order_id));
-
-			final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-			final SpannableStringBuilder sb = new SpannableStringBuilder(orderId);
-			sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			textViewOrderId.append(sb);
-			if(showDeliverySlot) {
-				textViewOrderId.append("\n");
-				textViewOrderId.append(activity.getResources().getString(R.string.will_be_delivered_between));
-			}
 			RelativeLayout relativeslot = (RelativeLayout) dialog.findViewById(R.id.relativeslot);
 			if(!showDeliverySlot){
 				relativeslot.setVisibility(View.GONE);
@@ -162,7 +187,7 @@ public class FreshOrderCompleteDialog {
 		return dialog;
 	}
 
-    public Dialog show() {
+    public Dialog showNoDeliveryDialog() {
         try {
             dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
             dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;

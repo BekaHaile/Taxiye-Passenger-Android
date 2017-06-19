@@ -274,7 +274,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             public void onDismiss() {
                 //activity.orderComplete();
             }
-        }).show();
+        }).showNoDeliveryDialog();
 
     }
 
