@@ -28,7 +28,9 @@ import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
+import com.sabkuchfresh.pros.ui.fragments.ProsCheckoutFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsProductsFragment;
+import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -443,6 +445,19 @@ public class TransactionUtils {
                     .commitAllowingStateLoss();
         }
     }
+
+    public void addProsCheckoutFragment(FragmentActivity activity, View container, SubItem subItem) {
+        if (!checkIfFragmentAdded(activity, ProsCheckoutFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .add(container.getId(), ProsCheckoutFragment.newInstance(subItem),
+                            ProsCheckoutFragment.class.getName())
+                    .addToBackStack(ProsCheckoutFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
 
 }
 

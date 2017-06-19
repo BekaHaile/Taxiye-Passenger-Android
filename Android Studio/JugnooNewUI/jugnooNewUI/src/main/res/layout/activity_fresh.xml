@@ -99,6 +99,19 @@
             <include
                 android:id="@+id/vMenusCartSaved"
                 layout="@layout/layout_menus_cart_selected"/>
+            
+            <Button
+                android:id="@+id/bRequestBooking"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:background="@drawable/background_theme_gradient_selector"
+                android:textSize="@dimen/sp_15"
+                android:textColor="@color/white"
+                android:text="@string/request_booking"
+                app:font="@string/maven"
+                android:visibility="gone"
+                />
+            
         </LinearLayout>
 
         <include layout="@layout/layout_fresh_pay_action_container"/>

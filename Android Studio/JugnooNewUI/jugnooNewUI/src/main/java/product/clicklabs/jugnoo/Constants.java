@@ -725,4 +725,5 @@ public interface Constants {
     String KEY_VENDOR = "vendor";
 
     String SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK = "sp_restaurant_feedback_id_to_deep_link";
+    String KEY_SUB_ITEM = "sub_item";
 }

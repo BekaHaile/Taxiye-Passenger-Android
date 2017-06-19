@@ -86,7 +86,7 @@ public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout
         productsAdapter = new ProsProductsAdapter(activity, subItems, new ProsProductsAdapter.Callback() {
             @Override
             public void onProductClick(int position, SubItem subItem) {
-
+                activity.getTransactionUtils().addProsCheckoutFragment(activity, activity.getRelativeLayoutContainer(), subItem);
             }
         }, rvProducts);
         rvProducts.setAdapter(productsAdapter);
@@ -101,6 +101,7 @@ public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
         }
     }
 

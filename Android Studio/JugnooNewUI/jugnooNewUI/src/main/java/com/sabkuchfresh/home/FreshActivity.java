@@ -106,6 +106,7 @@ import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
+import com.sabkuchfresh.pros.ui.fragments.ProsCheckoutFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsHomeFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsProductsFragment;
 import com.sabkuchfresh.retrofit.model.Category;
@@ -1260,6 +1261,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 			int llAddToCartVis = View.GONE;
             int llPayViewContainerVis = View.GONE;
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
+            bRequestBooking.setVisibility(View.GONE);
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -1530,7 +1532,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 topBar.title.setVisibility(View.VISIBLE);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof ProsCheckoutFragment) {
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
+
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getResources().getString(R.string.checkout));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                bRequestBooking.setVisibility(View.VISIBLE);
             }
+
+
+
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
             if(visMinOrder != 1) {
@@ -4684,6 +4698,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             });
         }
 
+        if(bRequestBooking != null){
+            bRequestBooking.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
     }
 
 
@@ -4711,6 +4733,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public Button buttonPlaceOrder;
     @Bind(R.id.tvFeedHyperLink)
     public TextView tvFeedHyperLink;
+    @Bind(R.id.bRequestBooking) public Button bRequestBooking;
 
     public void setFeedArrowToTextView(TextView tvFeedHyperLink){
         Spannable spannable = new SpannableString(getString(R.string.back_arrow));
