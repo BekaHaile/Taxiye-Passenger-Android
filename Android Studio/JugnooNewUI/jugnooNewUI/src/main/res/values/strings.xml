@@ -1336,6 +1336,11 @@
     <string name="service_name">Service Name</string>
     <string name="service_id_hash">Service ID: #</string>
     <string name="date_and_time">Date &amp; Time</string>
+    <string name="service_type_colon">Service Type:</string>
+    <string name="service_time_colon">Service Time:</string>
+    <string name="service_address_colon">Service Address:</string>
+    <string name="paid_via">Paid via</string>
+    <string name="view_details">View Details</string>
 
 
 </resources>

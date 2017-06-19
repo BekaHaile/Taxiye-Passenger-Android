@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -380,6 +381,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                     status.clear();
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
+
+                                    // TODO: 19/06/17 remove this
+                                    Paper.book().write("recent", recentOrder);
+                                    Paper.book().write("status", status);
 
                                     menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos(),
                                             menusResponse.getStripInfo(), menusResponse.getShowBanner());

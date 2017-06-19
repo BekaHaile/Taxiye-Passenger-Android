@@ -21,11 +21,14 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
+import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -78,10 +81,25 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 		rvProsMain = (RecyclerView) rootView.findViewById(R.id.rvProsMain);
 		rvProsMain.setItemAnimator(new DefaultItemAnimator());
 		final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
+
+		gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
+			@Override
+			public int getSpanSize(int position) {
+				switch (categoriesAdapter.getItemViewType(position)){
+					case ProsSuperCategoriesAdapter.ORDER_ITEM:
+						return 3;
+					case ProsSuperCategoriesAdapter.MAIN_ITEM:
+						return 1;
+					default:
+						return 1;
+				}
+			}
+		});
+
 		rvProsMain.setLayoutManager(gridLayoutManager);
 		categoriesAdapter = new ProsSuperCategoriesAdapter(activity, new ProsSuperCategoriesAdapter.Callback() {
 			@Override
-			public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
+			public void onItemClick(SuperCategoriesData.SuperCategory superCategory) {
 				if(superCategory.getIsEnabled() == 0){
 					Utils.showToast(activity, getString(R.string.coming_soon_to_your_city));
 				} else {
@@ -93,6 +111,16 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}
+
+			@Override
+			public void onNeedHelpClick(RecentOrder recentOrder) {
+
+			}
+
+			@Override
+			public void onViewDetailsClick(RecentOrder recentOrder) {
+				activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer());
 			}
 		}, rvProsMain);
 
@@ -249,7 +277,8 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 		activity.updateCartValuesGetTotalPrice();
 		stopOhSnap();
 		rvProsMain.smoothScrollToPosition(0);
-		categoriesAdapter.setList(superCategoriesData.getSuperCategories());
+		// TODO: 19/06/17 remove this
+		categoriesAdapter.setList(superCategoriesData.getSuperCategories(), (ArrayList<RecentOrder>) Paper.book().read("recent"), (ArrayList<String>) Paper.book().read("status"));
 	}
 
 

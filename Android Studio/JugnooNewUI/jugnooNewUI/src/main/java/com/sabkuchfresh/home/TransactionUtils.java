@@ -29,6 +29,7 @@ import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsCheckoutFragment;
+import com.sabkuchfresh.pros.ui.fragments.ProsOrderStatusFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsProductsFragment;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
@@ -458,6 +459,17 @@ public class TransactionUtils {
         }
     }
 
+    public void addProsOrderStatusFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, ProsOrderStatusFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .add(container.getId(), ProsOrderStatusFragment.newInstance(),
+                            ProsOrderStatusFragment.class.getName())
+                    .addToBackStack(ProsOrderStatusFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
 
 }
 

@@ -116,6 +116,7 @@ public class ProsCheckoutFragment extends Fragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		ButterKnife.unbind(this);
+		activity.bRequestBooking.setOnClickListener(null);
 	}
 
 	@OnClick({R.id.tvRateCard, R.id.relativeLayoutDeliveryAddress,

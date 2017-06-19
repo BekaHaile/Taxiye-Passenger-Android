@@ -316,7 +316,7 @@
                                 android:layout_width="@dimen/dp_14"
                                 android:layout_height="@dimen/dp_14"
                                 android:layout_marginLeft="@dimen/dp_15"
-                                android:src="@drawable/ic_radio_button_off"/>
+                                android:src="@drawable/ic_radio_button_selected"/>
 
                             <ImageView
                                 android:layout_width="@dimen/dp_24"
