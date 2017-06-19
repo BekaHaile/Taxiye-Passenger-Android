@@ -1292,6 +1292,7 @@
     <string name="back">Back</string>
     <string name="change">Change</string>
     <string name="your_cart_has_been_cleared">Your cart has been cleared.</string>
+<<<<<<< ad32da508c98b5f23a25a05aa3c751e57844a5fa
     <string name="you_have_items_saved_in_cart">You have items saved in your cart</string>
     <string name="view">View</string>
     <string name="discard_all_items_in_cart">Discard all items in the cart?</string>
@@ -1310,10 +1311,13 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="no_reviews_yet">No reviews yet!</string>
     <string name="be_the_first_one_to_add">Be the first one to add…</string>
-    <string name="label_checkout_request">Please accept a collect request of %s from jugnoo@icici in your UPI app.</string>
+    <string name="label_checkout_request">Please accept a collect request of <b>\u20B9 %s</b> from jugnoo@icici in your UPI app.</string>
     <string name="label_cancel_payment">Please give us a reason before we cancel the payment.</string>
     <string name="label_below_icici_payment_edt">You will receive a collect request from jugnoo@icici in the UPI app you used to create your VPA.</string>
     <string name="error_enter_virtual_payment_address">Please enter a virtual payment address.</string>
+    <string name="label_waiting_connection">Waiting for connection...</string>
+    <string name="label_request_expired">Your request has expired.</string>
+    <string name="waiting_for_response">Waiting for response...</string>
 
 
 </resources>

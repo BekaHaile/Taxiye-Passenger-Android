@@ -65,18 +65,34 @@
             android:layout_marginBottom="@dimen/spacing_large"
             android:gravity="center_horizontal"
             android:text="02:39 minutes"
-            app:font="maven"
             android:textColor="@color/text_color"
-            android:textSize="17.3sp" />
+            android:textSize="17.3sp"
+            app:font="maven" />
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="230dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:progress="0"
             android:progressDrawable="@drawable/custom_progressbar" />
+
+        <Button
+            android:id="@+id/btn_try_again"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/capsule_theme_color_selector"
+            android:minWidth="100dp"
+            android:text="Try Again"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:font="maven" />
+
+
     </LinearLayout>
 
     <LinearLayout

@@ -44,11 +44,22 @@ public class IciciPaymentRequestStatus {
                 return IciciPaymentOrderStatus.FAILURE;
             else if (status==3)
                 return IciciPaymentOrderStatus.CANCELLED;
+            else if(status==1||status==0)
+                return IciciPaymentOrderStatus.SUCCESSFUL;
+            else
+                return IciciPaymentOrderStatus.PROCESSED;
+
+        }else{
+            if(status==10)
+                return IciciPaymentOrderStatus.PENDING;
+            else if(status <0)
+                return IciciPaymentOrderStatus.FAILURE;
+            else if (status>=0)
+                return IciciPaymentOrderStatus.SUCCESSFUL;
             else
                 return IciciPaymentOrderStatus.PENDING;
+        }
 
-        }else
-            return IciciPaymentOrderStatus.CANCELLED;
 
 
 

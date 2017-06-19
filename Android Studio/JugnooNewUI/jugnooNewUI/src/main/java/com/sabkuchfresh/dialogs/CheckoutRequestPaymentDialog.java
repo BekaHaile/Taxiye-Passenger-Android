@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.StyleRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -16,10 +15,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sabkuchfresh.adapters.CheckoutRequestCancellationAdapter;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -53,11 +52,14 @@ public class CheckoutRequestPaymentDialog extends Dialog {
     Button btnBack;
     @Bind(R.id.btn_submit)
     Button btnSubmit;
+    @Bind(R.id.btn_try_again)
+    Button btnTryAgain;
     private long timerStartedAt;
     private long expiryTimeMilliSecs;
     private Activity activity;
     private ArrayList<String> cancellationReasons;
     private CheckoutRequestPaymentListener checkoutRequestPaymentListener;
+    private boolean isTimerExpired;
 
 
     // TODO: 12/06/17 Handle Automatic TimeZone not set case if any
@@ -71,8 +73,14 @@ public class CheckoutRequestPaymentDialog extends Dialog {
                 progressBar.postDelayed(this, 100);
                 setTime();
             } else {
+                isTimerExpired = true;
                 tvValueExpiry.setText(null);
-                tvLabelExpiryTime.setText("Your request has expired.");
+                tvLabelExpiryTime.setText(R.string.waiting_for_response);
+                btnTryAgain.setVisibility(View.VISIBLE);
+                btnTryAgain.setEnabled(false);
+                progressBar.setVisibility(View.GONE);
+                checkoutRequestPaymentListener.onTimerComplete();
+
             }
         }
     };
@@ -101,12 +109,18 @@ public class CheckoutRequestPaymentDialog extends Dialog {
         }
     }
 
+    public void enableRetryButton() {
+        btnTryAgain.setEnabled(true);
+    }
+
     public interface CheckoutRequestPaymentListener {
 
 
         void onCancelClick(String reason);
 
-        void onExpired();
+        void onTimerComplete();
+
+        void onRetryClick();
     }
 
     public static CheckoutRequestPaymentDialog init(Activity activity) {
@@ -119,7 +133,17 @@ public class CheckoutRequestPaymentDialog extends Dialog {
         this.checkoutRequestPaymentListener = checkoutRequestPaymentListener;
         this.expiryTimeMilliSecs = expiryTimeMilliSecs;
         progressBar.setMax((int)expiryTimeMilliSecs);
-        tvLabelRequest.setText(activity.getString(R.string.label_checkout_request, amount));
+        String formattedAmount = null;
+        try {
+            Double amountInDouble = Double.parseDouble(amount);
+            formattedAmount = new DecimalFormat("#.00").format(amountInDouble);
+            tvLabelRequest.setText(activity.getString(R.string.label_checkout_request, formattedAmount));
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            tvLabelRequest.setText(activity.getString(R.string.label_checkout_request, amount));
+
+        }
         this.cancellationReasons = cancellationReasons;
         setTime();
         setCancellationAdapter();
@@ -152,6 +176,13 @@ public class CheckoutRequestPaymentDialog extends Dialog {
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//to avoid black background during animation
         window.setAttributes(wlp);
+        btnTryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnTryAgain.setEnabled(false);
+                checkoutRequestPaymentListener.onRetryClick();
+            }
+        });
 
 
 
@@ -161,7 +192,7 @@ public class CheckoutRequestPaymentDialog extends Dialog {
 
 
         int timeDiff = (int) (System.currentTimeMillis() - timerStartedAt);
-        tvValueExpiry.setText(getTime(((int) (expiryTimeMilliSecs - timeDiff) / 1000) +1));
+        tvValueExpiry.setText(timeDiff<0?null:getTime(((int) (expiryTimeMilliSecs - timeDiff) / 1000) +1));
         progressBar.setProgress((timeDiff));
 
 
@@ -188,11 +219,11 @@ public class CheckoutRequestPaymentDialog extends Dialog {
 
 
         if (hours > 0)
-            return hours == 1 && min == 0 && secs == 0 ? hours + ":" + min + ":" + secs + " hour" : hours + ":" + min + ":" + secs + " hours";
+            return hours == 1 && min == 0 && secs == 0 ? hours + ":0" + min + ":" + secs + " hour" : hours + ":" + min + ":0" + secs + " hours";
         else if (min > 0)
-            return secs <= 0 && min == 1 ? min  + " minute" : min + ":" + secs + " minutes";
+            return secs <= 0 && min == 1 ? min  + " minute" :secs>=0 && secs<10? min + ":0" +  secs + " minutes"  :  min + ":" +  secs + " minutes";
         else
-            return seconds <= 1 ? secs + " second" : secs + " seconds";
+            return   seconds <= 1 ? secs + " second" : secs + " seconds";
 
 
 
@@ -209,5 +240,36 @@ public class CheckoutRequestPaymentDialog extends Dialog {
 
 
     }
+    public void toggleConnectionState(boolean isAvailable){
+        if(isAvailable){
+            tvValueExpiry.setVisibility(View.VISIBLE);
+            btnTryAgain.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+            tvLabelExpiryTime.setText(R.string.label_request_expired);
+        } else{
 
+            tvValueExpiry.setVisibility(View.INVISIBLE);
+            btnTryAgain.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            tvLabelExpiryTime.setText(R.string.label_waiting_connection);
+        }
+
+
+    }
+
+    public void stopTimer(){
+        if(progressBar!=null)
+           progressBar.removeCallbacks(updateProgressRunnable);
+    }
+
+    public void resumeTimer(){
+        if (progressBar!=null) {
+            setTime();
+            startTimer();
+        }
+    }
+
+    public boolean isTimerExpired(){
+        return isTimerExpired;
+    }
 }

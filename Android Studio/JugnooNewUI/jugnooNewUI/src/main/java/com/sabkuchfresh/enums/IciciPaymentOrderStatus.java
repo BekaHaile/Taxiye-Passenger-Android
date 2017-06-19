@@ -5,5 +5,5 @@ package com.sabkuchfresh.enums;
  */
 
 public enum IciciPaymentOrderStatus {
-    PENDING,FAILURE,SUCCESSFUL,CANCELLED,EXPIRED
+    PENDING,FAILURE,SUCCESSFUL,CANCELLED,EXPIRED,PROCESSED
 }

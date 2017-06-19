@@ -70,7 +70,7 @@ public class PlaceOrderResponse {
 		@SerializedName("polling_time")
 		private long pollingTime;
 
-		@SerializedName("cancellation_reasons")
+		@SerializedName("reason_list")
 		private ArrayList<String> reasonList;
 
 		@SerializedName("jugnoo_vpa")
