@@ -22,7 +22,9 @@ public class IciciPaymentRequestStatus {
     @SerializedName("toast_message")
     private String toastMessage;
 
-
+    public String getToastMessage() {
+        return toastMessage;
+    }
 
     public boolean getIsMenus() {
         return isMenus==1;

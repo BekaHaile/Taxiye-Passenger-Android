@@ -62,6 +62,10 @@ public class PlaceOrderResponse {
 		return icici;
 	}
 
+
+
+
+
 	public class IciciUpi {
 		@SerializedName("expiration_time")
 		private long expirationTime;
@@ -91,6 +95,17 @@ public class PlaceOrderResponse {
 		public String getJugnooVpa() {
 			return jugnooVpa;
 		}
+
+		private Long timerStartedAt;
+
+		public Long getTimerStartedAt() {
+			return timerStartedAt;
+		}
+
+		public void setTimerStartedAt(Long timerStartedAt) {
+			this.timerStartedAt = timerStartedAt;
+		}
+
 	}
 	/**
 	 *

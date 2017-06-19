@@ -192,7 +192,7 @@ public class CheckoutRequestPaymentDialog extends Dialog {
 
 
         int timeDiff = (int) (System.currentTimeMillis() - timerStartedAt);
-        tvValueExpiry.setText(timeDiff<0?null:getTime(((int) (expiryTimeMilliSecs - timeDiff) / 1000) +1));
+        tvValueExpiry.setText(getTime(((int) (expiryTimeMilliSecs - timeDiff) / 1000) +1));
         progressBar.setProgress((timeDiff));
 
 
@@ -222,8 +222,10 @@ public class CheckoutRequestPaymentDialog extends Dialog {
             return hours == 1 && min == 0 && secs == 0 ? hours + ":0" + min + ":" + secs + " hour" : hours + ":" + min + ":0" + secs + " hours";
         else if (min > 0)
             return secs <= 0 && min == 1 ? min  + " minute" :secs>=0 && secs<10? min + ":0" +  secs + " minutes"  :  min + ":" +  secs + " minutes";
-        else
+        else if (secs > 0)
             return   seconds <= 1 ? secs + " second" : secs + " seconds";
+        else
+            return null;
 
 
 

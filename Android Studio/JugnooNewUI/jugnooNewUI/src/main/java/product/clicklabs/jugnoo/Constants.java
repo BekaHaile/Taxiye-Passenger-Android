@@ -717,4 +717,5 @@ public interface Constants {
     String SP_MOBIKWIK_LAST_BALANCE = "sp_mobikwik_last_balance";
     String SP_FREECHARGE_LAST_BALANCE = "sp_freecharge_last_balance";
     String KEY_ICICI_UPI = "icici_upi";
+    String PLACE_ORDER_DATA = "place_order_response";
 }

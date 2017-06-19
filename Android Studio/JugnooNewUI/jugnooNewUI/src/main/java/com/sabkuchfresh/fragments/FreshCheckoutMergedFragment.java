@@ -1492,6 +1492,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                                         if(Integer.parseInt(placeOrderResponse.getPaymentMode())==PaymentOption.ICICI_UPI.getOrdinal()){
                                             //Icici Upi Payment Initiated
+
                                             activity.setPlaceOrderResponse(placeOrderResponse);
 
                                             if(placeOrderResponse.getIcici()!=null){
@@ -3198,12 +3199,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private CheckoutRequestPaymentDialog checkoutRequestPaymentDialog;
     private ApiCancelOrder apiCancelOrder;
 
-    private void showRequestPaymentDialog(String amount, long expiryTimeLeft, ArrayList<String> reasonList) {
+    private void showRequestPaymentDialog(String amount, long expiryTimeLeft, ArrayList<String> reasonList,Long timerStartedAt) {
 
         if (checkoutRequestPaymentDialog == null) {
             checkoutRequestPaymentDialog = CheckoutRequestPaymentDialog.init(activity);
         }
-        checkoutRequestPaymentDialog.setData(amount, System.currentTimeMillis(), expiryTimeLeft, reasonList, new CheckoutRequestPaymentDialog.CheckoutRequestPaymentListener() {
+        checkoutRequestPaymentDialog.setData(amount, timerStartedAt, expiryTimeLeft, reasonList, new CheckoutRequestPaymentDialog.CheckoutRequestPaymentListener() {
             @Override
             public void onCancelClick(String reason) {
                 if(activity.getPlaceOrderResponse()!=null){
@@ -3211,7 +3212,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         apiCancelOrder = new ApiCancelOrder(getActivity(), new ApiCancelOrder.Callback() {
                             @Override
                             public void onSuccess(String message) {
-                                onIciciStatusResponse(IciciPaymentOrderStatus.CANCELLED);
+                                onIciciStatusResponse(IciciPaymentOrderStatus.CANCELLED,"Order Cancelled Successfully");
                             }
 
                             @Override
@@ -3255,36 +3256,31 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         isIciciPaymentRunnableInProgress = true;
         TOTAL_EXPIRY_TIME_ICICI_UPI = icici.getExpirationTimeMillis();
         DELAY_ICICI_UPI_STATUS_CHECK = icici.getPollingTimeMillis();
-        showRequestPaymentDialog(amount, TOTAL_EXPIRY_TIME_ICICI_UPI,icici.getReasonList());
+        Long timerStartedAt = icici.getTimerStartedAt()==null?System.currentTimeMillis():icici.getTimerStartedAt();
+        icici.setTimerStartedAt(timerStartedAt);
+        Data.saveCurrentIciciUpiTransaction(activity.getPlaceOrderResponse());
+        showRequestPaymentDialog(amount, TOTAL_EXPIRY_TIME_ICICI_UPI,icici.getReasonList(),icici.getTimerStartedAt()==null?System.currentTimeMillis():icici.getTimerStartedAt());
         activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable, DELAY_ICICI_UPI_STATUS_CHECK);
 
     }
 
 
     private  boolean isIciciPaymentRunnableInProgress;
-    private void onIciciStatusResponse(IciciPaymentOrderStatus status) {
+    private void onIciciStatusResponse(IciciPaymentOrderStatus status,String toastMessage) {
         switch (status) {
             case FAILURE:
+            case EXPIRED:
+            case CANCELLED:
                 isIciciPaymentRunnableInProgress = false;
                 activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
                 if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
                     checkoutRequestPaymentDialog.dismiss();
                 }
                 Toast.makeText(activity, "Payment failed", Toast.LENGTH_SHORT).show();
-
-                break;
-            case EXPIRED:
-                isIciciPaymentRunnableInProgress = false;
-                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
-
-                if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
-                    checkoutRequestPaymentDialog.dismiss();
-                }
-                Toast.makeText(activity, "Payment Expired", Toast.LENGTH_SHORT).show();
-
+                Data.deleteCurrentIciciUpiTransaction();
                 break;
             case SUCCESSFUL:
-
+            case PROCESSED:
                 isIciciPaymentRunnableInProgress = false;
                 activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
 
@@ -3293,21 +3289,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
                 Toast.makeText(activity, "Payment Successful", Toast.LENGTH_SHORT).show();
                 orderPlacedSuccess(activity.getPlaceOrderResponse());
+                Data.deleteCurrentIciciUpiTransaction();
 
-                break;
-            case CANCELLED:
-                isIciciPaymentRunnableInProgress = false;
-                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
-
-                if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
-                    checkoutRequestPaymentDialog.dismiss();
-                }
-                Toast.makeText(activity, "Order Cancelled Successfully.", Toast.LENGTH_SHORT).show();
-                orderPlacedSuccess(activity.getPlaceOrderResponse());
                 break;
             case PENDING:
                 //Keep waiting for next status
                 break;
+
+
+
         }
 
     }
@@ -3346,7 +3336,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, commonResponse.getFlag(), commonResponse.getError(), commonResponse.getMessage())) {
 
                             if (commonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                onIciciStatusResponse(commonResponse.getStatus());
+                                onIciciStatusResponse(commonResponse.getStatus(),commonResponse.getToastMessage());
 
 
 
