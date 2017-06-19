@@ -221,7 +221,7 @@ public class JSONParser implements Constants {
         int menusEnabled = userData.optInt(KEY_MENUS_ENABLED, 0);
         int payEnabled = userData.optInt(KEY_PAY_ENABLED, 0);
         int feedEnabled = userData.optInt(KEY_FEED_ENABLED, 0);
-        int prosEnabled = userData.optInt(KEY_PROS_ENABLED, 1); // TODO: 15/06/17 default to 0
+        int prosEnabled = userData.optInt(KEY_PROS_ENABLED, 0);
         String defaultClientId = userData.optString(KEY_DEFAULT_CLIENT_ID, Config.getAutosClientId());
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);

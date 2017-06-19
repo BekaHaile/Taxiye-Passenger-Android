@@ -136,6 +136,15 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 								}
 							} else if(historyData.getProductType() == ProductType.PROS.getOrdinal()){
 								// TODO: 15/06/17 open order summary page
+								View container = null;
+								if (activity instanceof RideTransactionsActivity) {
+									container = ((RideTransactionsActivity) activity).getContainer();
+								} else if(activity instanceof SupportActivity) {
+									container = ((SupportActivity) activity).getContainer();
+								}
+								if(container != null) {
+									new com.sabkuchfresh.home.TransactionUtils().addProsOrderStatusFragment(activity, container);
+								}
 							}
 
 						} catch (Exception e) {

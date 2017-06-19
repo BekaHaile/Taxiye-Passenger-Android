@@ -1,5 +1,6 @@
 package com.sabkuchfresh.pros.ui.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.support.SupportActivity;
 
 /**
  * Created by shankar on 19/06/17.
@@ -43,7 +46,7 @@ public class ProsOrderStatusFragment extends Fragment {
 	TextView tvPaidViaValue;
 	@Bind(R.id.bNeedHelp)
 	Button bNeedHelp;
-	private FreshActivity activity;
+	private Activity activity;
 
 	public static ProsOrderStatusFragment newInstance() {
 		ProsOrderStatusFragment fragment = new ProsOrderStatusFragment();
@@ -60,14 +63,14 @@ public class ProsOrderStatusFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_pros_order_status, container, false);
 
-		activity = (FreshActivity) getActivity();
-		activity.fragmentUISetup(this);
+		activity = getActivity();
 		parseArguments();
+		setActivityUI();
 
 
 		ButterKnife.bind(this, rootView);
 
-		activity.getTopBar().title.setText(activity.getString(R.string.order_id_format, String.valueOf(123)));
+
 
 		return rootView;
 	}
@@ -76,8 +79,7 @@ public class ProsOrderStatusFragment extends Fragment {
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if (!hidden) {
-			activity.fragmentUISetup(this);
-			activity.getTopBar().title.setText(activity.getString(R.string.order_id_format, String.valueOf(123)));
+			setActivityUI();
 		}
 	}
 
@@ -95,4 +97,16 @@ public class ProsOrderStatusFragment extends Fragment {
 				break;
 		}
 	}
+
+	private void setActivityUI(){
+		if(activity instanceof FreshActivity) {
+			((FreshActivity)activity).fragmentUISetup(this);
+			((FreshActivity)activity).getTopBar().title.setText(activity.getString(R.string.order_id_format, String.valueOf(123)));
+		} else if (activity instanceof RideTransactionsActivity) {
+			((RideTransactionsActivity) activity).setTitle("Order #" + "123");
+		} else if (activity instanceof SupportActivity) {
+			((SupportActivity) activity).setTitle("Order #" + "123");
+		}
+	}
+
 }
