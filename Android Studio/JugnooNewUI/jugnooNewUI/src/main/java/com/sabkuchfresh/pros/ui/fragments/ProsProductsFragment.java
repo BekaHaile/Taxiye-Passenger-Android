@@ -15,22 +15,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.pros.models.ProsCatalogueData;
+import com.sabkuchfresh.pros.models.ProsProductData;
 import com.sabkuchfresh.pros.ui.adapters.ProsProductsAdapter;
-import com.sabkuchfresh.retrofit.model.ProductsResponse;
-import com.sabkuchfresh.retrofit.model.SubItem;
-import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -54,20 +47,18 @@ public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout
     private View rootView;
     private FreshActivity activity;
 
-    private ArrayList<SubItem> subItems = new ArrayList<>();
+    private ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum;
 
-    private SuperCategoriesData.SuperCategory superCategory;
-
-    public static ProsProductsFragment newInstance(SuperCategoriesData.SuperCategory superCategory){
+    public static ProsProductsFragment newInstance(ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum){
         ProsProductsFragment fragment = new ProsProductsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.KEY_SUPER_CATEGORY, superCategory);
+        bundle.putSerializable(Constants.KEY_CATALOGUE_DATUM, prosCatalogueDatum);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     private void parseArguments(){
-        superCategory = (SuperCategoriesData.SuperCategory) getArguments().getSerializable(Constants.KEY_SUPER_CATEGORY);
+        prosCatalogueDatum = (ProsCatalogueData.ProsCatalogueDatum) getArguments().getSerializable(Constants.KEY_CATALOGUE_DATUM);
     }
 
     @Override
@@ -77,16 +68,16 @@ public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
         parseArguments();
-        activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
+        activity.getTopBar().title.setText(prosCatalogueDatum.getName());
 
         rvProducts = (RecyclerView) rootView.findViewById(R.id.rvProducts);
         rvProducts.setLayoutManager(new LinearLayoutManager(activity));
         rvProducts.setItemAnimator(new DefaultItemAnimator());
         rvProducts.setHasFixedSize(false);
-        productsAdapter = new ProsProductsAdapter(activity, subItems, new ProsProductsAdapter.Callback() {
+        productsAdapter = new ProsProductsAdapter(activity, new ProsProductsAdapter.Callback() {
             @Override
-            public void onProductClick(int position, SubItem subItem) {
-                activity.getTransactionUtils().addProsCheckoutFragment(activity, activity.getRelativeLayoutContainer(), subItem);
+            public void onProductClick(ProsProductData.ProsProductDatum prosProductDatum) {
+                activity.getTransactionUtils().addProsCheckoutFragment(activity, activity.getRelativeLayoutContainer(), prosProductDatum);
             }
         }, rvProducts);
         rvProducts.setAdapter(productsAdapter);
@@ -101,7 +92,7 @@ public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
-            activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
+            activity.getTopBar().title.setText(prosCatalogueDatum.getName());
         }
     }
 
@@ -118,28 +109,29 @@ public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout
                     progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
-                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                // TODO: 20/06/17 change params
+                params.put(Constants.KEY_ACCESS_TOKEN, "b2a6c2db3010725ed08c7fd46bf23845");
+                params.put(Constants.KEY_FORM_ID, "292");
+                params.put(Constants.KEY_USER_ID, "1717");
+                params.put(Constants.KEY_DEVICE_TOKEN, MyApplication.getInstance().getDeviceToken());
+                params.put(Constants.KEY_APP_VERSION, "101");
+                params.put(Constants.KEY_APP_ACCESS_TOKEN, "b2a6c2db3010725ed08c7fd46bf23845");
+                params.put(Constants.KEY_APP_DEVICE_TYPE, "68");
+                params.put(Constants.KEY_PARENT_CATEGORY_ID, String.valueOf(prosCatalogueDatum.getCatalogueId()));
+
                 params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
-                params.put(Constants.STORE_ID, "" + 2);
-                params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
-                params.put(Constants.INTERATED, "1");
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
                 new HomeUtil().putDefaultParams(params);
                 final ProgressDialog finalProgressDialog = progressDialog;
-                RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
+                RestClient.getProsApiService().getProductsForCategory(params, new Callback<ProsProductData>() {
                     @Override
-                    public void success(ProductsResponse productsResponse, Response response) {
+                    public void success(ProsProductData productsResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                subItems.clear();
-                                subItems.addAll(productsResponse.getCategories().get(0).getSubItems());
-                                productsAdapter.setResults(subItems);
-                            }
+                            productsAdapter.setResults(productsResponse.getData());
                         } catch (Exception e) {
                             e.printStackTrace();
                             retryDialog(DialogErrorType.SERVER_ERROR);

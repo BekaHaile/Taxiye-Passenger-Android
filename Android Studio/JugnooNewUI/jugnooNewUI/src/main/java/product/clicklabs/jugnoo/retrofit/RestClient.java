@@ -5,6 +5,7 @@ import com.jugnoo.pay.retrofit.PayApiService;
 import com.sabkuchfresh.apis.FeedApiService;
 import com.sabkuchfresh.apis.FreshApiService;
 import com.sabkuchfresh.apis.MenusApiService;
+import com.sabkuchfresh.pros.api.ProsApi;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +29,7 @@ public class RestClient {
     private static MenusApiService MENUS_API_SERVICE = null;
     private static PayApiService PAY_API_SERVICE = null;
     private static FeedApiService FEED_API_SERVICE = null;
+    private static ProsApi PROS_API = null;
 
     static {
         setupRestClient();
@@ -37,6 +39,7 @@ public class RestClient {
         setupMenusApiRestClient();
         setupPayApiRestClient();
         setupFeedApiRestClient();
+        setupProsApiRestClient();
     }
 
     private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure){
@@ -95,6 +98,7 @@ public class RestClient {
         MENUS_API_SERVICE = null;
         PAY_API_SERVICE = null;
         FEED_API_SERVICE = null;
+        PROS_API = null;
     }
 
     public static void setupAllClients(){
@@ -104,6 +108,7 @@ public class RestClient {
         setupMenusApiRestClient();
         setupPayApiRestClient();
         setupFeedApiRestClient();
+        setupProsApiRestClient();
     }
 
 
@@ -238,5 +243,24 @@ public class RestClient {
 
     public static FeedApiService getFeedApiService() {
         return FEED_API_SERVICE;
+    }
+
+
+
+    private static void setupProsApiRestClient() {
+        if(PROS_API == null) {
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getProsServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient(false)))
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+            setLogger(builder);
+
+            RestAdapter restAdapter = builder.build();
+            PROS_API = restAdapter.create(ProsApi.class);
+        }
+    }
+
+    public static ProsApi getProsApiService() {
+        return PROS_API;
     }
 }

@@ -11,10 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.ItemListener;
-import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.pros.models.ProsProductData;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
@@ -26,7 +25,7 @@ import product.clicklabs.jugnoo.R;
 public class ProsProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
     private Context context;
-    private List<SubItem> subItems;
+    private List<ProsProductData.ProsProductDatum> prosProductData;
     private Callback callback;
     private RecyclerView recyclerView;
 
@@ -34,15 +33,14 @@ public class ProsProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int BLANK_ITEM = 1;
 
 
-    public ProsProductsAdapter(Context context, ArrayList<SubItem> subItems, Callback callback, RecyclerView recyclerView) {
+    public ProsProductsAdapter(Context context, Callback callback, RecyclerView recyclerView) {
         this.context = context;
-        this.subItems = subItems;
         this.callback = callback;
         this.recyclerView = recyclerView;
     }
 
-    public synchronized void setResults(ArrayList<SubItem> subItems){
-        this.subItems = subItems;
+    public synchronized void setResults(List<ProsProductData.ProsProductDatum> prosProductData){
+        this.prosProductData = prosProductData;
         notifyDataSetChanged();
     }
 
@@ -64,7 +62,7 @@ public class ProsProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        if(position == subItems.size()) {
+        if(position == prosProductData.size()) {
             return BLANK_ITEM;
         }
         return MAIN_ITEM;
@@ -75,11 +73,11 @@ public class ProsProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MainViewHolder) {
             MainViewHolder mHolder = ((MainViewHolder) holder);
-            SubItem subItem = subItems.get(position);
-            mHolder.tvItemName.setText(subItem.getSubItemName());
+            ProsProductData.ProsProductDatum prosProductDatum = prosProductData.get(position);
+            mHolder.tvItemName.setText(prosProductDatum.getName());
             try {
-                if (!TextUtils.isEmpty(subItem.getSubItemImage())) {
-                    Picasso.with(context).load(subItem.getSubItemImage())
+                if (!TextUtils.isEmpty(prosProductDatum.getImageUrl())) {
+                    Picasso.with(context).load(prosProductDatum.getImageUrl())
                             .placeholder(R.drawable.ic_fresh_item_placeholder)
                             .fit()
                             .centerCrop()
@@ -99,7 +97,7 @@ public class ProsProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return subItems == null ? 0 : subItems.size()+1;
+        return prosProductData == null ? 0 : prosProductData.size()+1;
     }
 
 
@@ -132,7 +130,7 @@ public class ProsProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public interface Callback{
-        void onProductClick(int position, SubItem subItem);
+        void onProductClick(ProsProductData.ProsProductDatum prosProductDatum);
     }
 
     @Override
@@ -141,7 +139,7 @@ public class ProsProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(pos != RecyclerView.NO_POSITION){
             switch(viewClicked.getId()){
                 case R.id.relative:
-                    callback.onProductClick(pos, subItems.get(pos));
+                    callback.onProductClick(prosProductData.get(pos));
                     break;
             }
         }

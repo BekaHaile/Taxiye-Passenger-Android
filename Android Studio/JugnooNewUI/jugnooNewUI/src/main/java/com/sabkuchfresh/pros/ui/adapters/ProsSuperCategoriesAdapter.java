@@ -13,8 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.ItemListener;
+import com.sabkuchfresh.pros.models.ProsCatalogueData;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
-import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import product.clicklabs.jugnoo.R;
 public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
 	private Context context;
-	private List<SuperCategoriesData.SuperCategory> superCategories;
+	private List<ProsCatalogueData.ProsCatalogueDatum> prosCatalogueDatumList;
 	private ArrayList<RecentOrder> recentOrders;
 	private ArrayList<String> possibleStatus;
 	private Callback callback;
@@ -45,9 +45,9 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 		this.recyclerView = recyclerView;
 	}
 
-	public synchronized void setList(List<SuperCategoriesData.SuperCategory> elements,
+	public synchronized void setList(List<ProsCatalogueData.ProsCatalogueDatum> elements,
 									 ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus) {
-		this.superCategories = elements;
+		this.prosCatalogueDatumList = elements;
 		this.recentOrders = recentOrders;
 		this.possibleStatus = possibleStatus;
 		notifyDataSetChanged();
@@ -109,13 +109,13 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 
 		} else if(mholder instanceof ViewHolderCategory) {
 			position = position - getRecentOrdersSize();
-			SuperCategoriesData.SuperCategory superCategory = superCategories.get(position);
+			ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum = prosCatalogueDatumList.get(position);
 			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
-			holder.tvSuperCategoryName.setText(superCategory.getSuperCategoryName());
+			holder.tvSuperCategoryName.setText(prosCatalogueDatum.getName());
 
 			try {
-				if (!TextUtils.isEmpty(superCategory.getSuperCategoryImage())) {
-					Picasso.with(context).load(superCategory.getSuperCategoryImage())
+				if (!TextUtils.isEmpty(prosCatalogueDatum.getImageUrl())) {
+					Picasso.with(context).load(prosCatalogueDatum.getImageUrl())
 							.placeholder(R.drawable.ic_fresh_new_placeholder)
 							.error(R.drawable.ic_fresh_new_placeholder)
 							.into(holder.ivSuperCategoryImage);
@@ -127,7 +127,7 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 						.into(holder.ivSuperCategoryImage);
 			}
 
-			if (superCategory.getIsEnabled() == 0) {
+			if (prosCatalogueDatum.getIsEnabled() == 0) {
 				holder.viewBG.setBackgroundResource(R.drawable.bg_white_60_selector_color);
 			} else {
 				holder.viewBG.setBackgroundResource(R.drawable.bg_transparent_white_60_selector);
@@ -137,7 +137,7 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 
 	@Override
 	public int getItemCount() {
-		return getRecentOrdersSize() + (superCategories == null ? 0 : superCategories.size());
+		return getRecentOrdersSize() + (prosCatalogueDatumList == null ? 0 : prosCatalogueDatumList.size());
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 	}
 
 	public interface Callback {
-		void onItemClick(SuperCategoriesData.SuperCategory superCategory);
+		void onItemClick(ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum);
 		void onViewDetailsClick(RecentOrder recentOrder);
 		void onNeedHelpClick(RecentOrder recentOrder);
 	}
@@ -165,7 +165,7 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 		if (pos != RecyclerView.NO_POSITION) {
 			switch (viewClicked.getId()) {
 				case R.id.llRoot:
-					callback.onItemClick(superCategories.get(pos-getRecentOrdersSize()));
+					callback.onItemClick(prosCatalogueDatumList.get(pos-getRecentOrdersSize()));
 					break;
 
 				case R.id.tvNeedHelp:

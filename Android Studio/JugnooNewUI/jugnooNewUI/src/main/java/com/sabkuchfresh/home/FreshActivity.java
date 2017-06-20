@@ -469,7 +469,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 createAppCart(lastClientId);
 
                 if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
-                    addMealFragment();
+//                    addMealFragment();
+                    addProsHomeFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
                 } else if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
                     openCart();

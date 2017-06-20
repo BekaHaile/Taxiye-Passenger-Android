@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.pros.models.ProsProductData;
 import com.sabkuchfresh.pros.utils.DatePickerFragment;
-import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
 
 import butterknife.Bind;
@@ -62,18 +62,18 @@ public class ProsCheckoutFragment extends Fragment {
 	@Bind(R.id.tvProductName)
 	TextView tvProductName;
 	private FreshActivity activity;
-	private SubItem subItem;
+	private ProsProductData.ProsProductDatum prosProductDatum;
 
-	public static ProsCheckoutFragment newInstance(SubItem subItem) {
+	public static ProsCheckoutFragment newInstance(ProsProductData.ProsProductDatum prosProductDatum) {
 		ProsCheckoutFragment fragment = new ProsCheckoutFragment();
 		Bundle bundle = new Bundle();
-		bundle.putSerializable(Constants.KEY_SUB_ITEM, subItem);
+		bundle.putSerializable(Constants.KEY_PRODUCT_DATUM, prosProductDatum);
 		fragment.setArguments(bundle);
 		return fragment;
 	}
 
 	private void parseArguments() {
-		subItem = (SubItem) getArguments().getSerializable(Constants.KEY_SUB_ITEM);
+		prosProductDatum = (ProsProductData.ProsProductDatum) getArguments().getSerializable(Constants.KEY_PRODUCT_DATUM);
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class ProsCheckoutFragment extends Fragment {
 		parseArguments();
 		ButterKnife.bind(this, rootView);
 
-		tvProductName.setText(subItem.getSubItemName());
+		tvProductName.setText(prosProductDatum.getName());
 
 		activity.bRequestBooking.setOnClickListener(new View.OnClickListener() {
 			@Override

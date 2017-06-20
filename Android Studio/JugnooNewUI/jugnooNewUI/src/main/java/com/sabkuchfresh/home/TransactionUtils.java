@@ -28,6 +28,8 @@ import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
+import com.sabkuchfresh.pros.models.ProsCatalogueData;
+import com.sabkuchfresh.pros.models.ProsProductData;
 import com.sabkuchfresh.pros.ui.fragments.ProsCheckoutFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsOrderStatusFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsProductsFragment;
@@ -435,10 +437,10 @@ public class TransactionUtils {
         }
     }
 
-    public void addProsProductsFragment(FragmentActivity activity, View container, SuperCategoriesData.SuperCategory superCategory) {
+    public void addProsProductsFragment(FragmentActivity activity, View container, ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum) {
         if (!checkIfFragmentAdded(activity, ProsProductsFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .add(container.getId(), ProsProductsFragment.newInstance(superCategory),
+                    .add(container.getId(), ProsProductsFragment.newInstance(prosCatalogueDatum),
                             ProsProductsFragment.class.getName())
                     .addToBackStack(ProsProductsFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -447,10 +449,10 @@ public class TransactionUtils {
         }
     }
 
-    public void addProsCheckoutFragment(FragmentActivity activity, View container, SubItem subItem) {
+    public void addProsCheckoutFragment(FragmentActivity activity, View container, ProsProductData.ProsProductDatum prosProductDatum) {
         if (!checkIfFragmentAdded(activity, ProsCheckoutFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .add(container.getId(), ProsCheckoutFragment.newInstance(subItem),
+                    .add(container.getId(), ProsCheckoutFragment.newInstance(prosProductDatum),
                             ProsCheckoutFragment.class.getName())
                     .addToBackStack(ProsCheckoutFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

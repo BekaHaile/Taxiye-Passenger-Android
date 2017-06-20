@@ -20,21 +20,17 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.pros.models.ProsCatalogueData;
 import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
-import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import io.paperdb.Paper;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -99,15 +95,15 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 		rvProsMain.setLayoutManager(gridLayoutManager);
 		categoriesAdapter = new ProsSuperCategoriesAdapter(activity, new ProsSuperCategoriesAdapter.Callback() {
 			@Override
-			public void onItemClick(SuperCategoriesData.SuperCategory superCategory) {
-				if(superCategory.getIsEnabled() == 0){
+			public void onItemClick(ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum) {
+				if(prosCatalogueDatum.getIsEnabled() == 0){
 					Utils.showToast(activity, getString(R.string.coming_soon_to_your_city));
 				} else {
-					activity.getTransactionUtils().addProsProductsFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
+					activity.getTransactionUtils().addProsProductsFragment(activity, activity.getRelativeLayoutContainer(), prosCatalogueDatum);
 					activity.getFabViewTest().hideJeanieHelpInSession();
 				}
 				try {
-					GAUtils.event(FRESH, HOME+SUPER+CATEGORY+CLICKED, superCategory.getSuperCategoryName());
+					GAUtils.event(FRESH, HOME+SUPER+CATEGORY+CLICKED, prosCatalogueDatum.getName());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -196,49 +192,53 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 				final ProgressDialog finalProgressDialog = progressDialog;
 
 				HashMap<String, String> params = new HashMap<>();
-				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				// TODO: 20/06/17 change params
+				params.put(Constants.KEY_ACCESS_TOKEN, "b2a6c2db3010725ed08c7fd46bf23845");
+				params.put(Constants.KEY_FORM_ID, "292");
+				params.put(Constants.KEY_USER_ID, "1717");
+				params.put(Constants.KEY_DEVICE_TOKEN, MyApplication.getInstance().getDeviceToken());
+				params.put(Constants.KEY_APP_VERSION, "101");
+				params.put(Constants.KEY_APP_ACCESS_TOKEN, "b2a6c2db3010725ed08c7fd46bf23845");
+				params.put(Constants.KEY_APP_DEVICE_TYPE, "68");
+
 				params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
-				params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
-				params.put(Constants.INTERATED, "1");
-
-				params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getLastCartVendorId()));
 
 				new HomeUtil().putDefaultParams(params);
-				RestClient.getFreshApiService().getSuperCategories(params, new Callback<SuperCategoriesData>() {
+				RestClient.getProsApiService().getAppCatalogue(params, new Callback<ProsCatalogueData>() {
 					@Override
-					public void success(final SuperCategoriesData superCategoriesData, Response response) {
+					public void success(final ProsCatalogueData prosCatalogueData, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						if(finalProgressDialog != null){
 							finalProgressDialog.dismiss();
 						}
 						try {
-							if(superCategoriesData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
-								oSnapNotAvailableCase(superCategoriesData.getMessage());
-							} else if(superCategoriesData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-								if(activity.getCartCityId() == -1){
-									activity.setCartCityId(superCategoriesData.getDeliveryInfo().getCityId());
-								}
-
-								if(!activity.checkForCityChange(superCategoriesData.getDeliveryInfo().getCityId(),
-										new FreshActivity.CityChangeCallback() {
-											@Override
-											public void onYesClick() {
-												setSuperCategoriesDataToUI(superCategoriesData);
-											}
-
-											@Override
-											public void onNoClick() {
-
-											}
-										})){
-									setSuperCategoriesDataToUI(superCategoriesData);
-								}
-
-							} else {
-								DialogPopup.alertPopup(activity, "", superCategoriesData.getMessage());
-								stopOhSnap();
-							}
+//							if(superCategoriesData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
+//								oSnapNotAvailableCase(superCategoriesData.getMessage());
+//							} else if(superCategoriesData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+//								if(activity.getCartCityId() == -1){
+//									activity.setCartCityId(superCategoriesData.getDeliveryInfo().getCityId());
+//								}
+//
+//								if(!activity.checkForCityChange(superCategoriesData.getDeliveryInfo().getCityId(),
+//										new FreshActivity.CityChangeCallback() {
+//											@Override
+//											public void onYesClick() {
+//												setSuperCategoriesDataToUI(superCategoriesData);
+//											}
+//
+//											@Override
+//											public void onNoClick() {
+//
+//											}
+//										})){
+									setDataToUI(prosCatalogueData);
+//								}
+//
+//							} else {
+//								DialogPopup.alertPopup(activity, "", superCategoriesData.getMessage());
+//								stopOhSnap();
+//							}
 						} catch (Exception exception) {
 							exception.printStackTrace();
 							retryDialogSuperCategoriesAPI(DialogErrorType.SERVER_ERROR);
@@ -269,16 +269,17 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 	}
 
 
-	private void setSuperCategoriesDataToUI(SuperCategoriesData superCategoriesData){
+	private void setDataToUI(ProsCatalogueData prosCatalogueData){
 		activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
-		activity.setSuperCategoriesData(superCategoriesData);
+//		activity.setSuperCategoriesData(superCategoriesData);
 		activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
 
 		activity.updateCartValuesGetTotalPrice();
 		stopOhSnap();
 		rvProsMain.smoothScrollToPosition(0);
 		// TODO: 19/06/17 remove this
-		categoriesAdapter.setList(superCategoriesData.getSuperCategories(), (ArrayList<RecentOrder>) Paper.book().read("recent"), (ArrayList<String>) Paper.book().read("status"));
+		categoriesAdapter.setList(prosCatalogueData.getData().get(prosCatalogueData.getData().size()-1), null, null);
+//				(ArrayList<RecentOrder>) Paper.book().read("recent"), (ArrayList<String>) Paper.book().read("status"));
 	}
 
 

@@ -726,4 +726,11 @@ public interface Constants {
 
     String SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK = "sp_restaurant_feedback_id_to_deep_link";
     String KEY_SUB_ITEM = "sub_item";
+
+    String KEY_FORM_ID = "form_id";
+    String KEY_APP_ACCESS_TOKEN = "app_access_token";
+    String KEY_APP_DEVICE_TYPE = "app_device_type";
+    String KEY_CATALOGUE_DATUM = "catalogue_datum";
+    String KEY_PARENT_CATEGORY_ID = "parent_category_id";
+    String KEY_PRODUCT_DATUM = "product_datum";
 }
