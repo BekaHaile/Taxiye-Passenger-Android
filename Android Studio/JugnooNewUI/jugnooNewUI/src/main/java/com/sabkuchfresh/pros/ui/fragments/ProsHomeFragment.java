@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -255,6 +256,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 						retryDialogSuperCategoriesAPI(DialogErrorType.CONNECTION_LOST);
 						stopOhSnap();
 						swipeContainer.setRefreshing(false);
+						Log.e("getAppCatalogue", "error>"+error);
 					}
 				});
 			}

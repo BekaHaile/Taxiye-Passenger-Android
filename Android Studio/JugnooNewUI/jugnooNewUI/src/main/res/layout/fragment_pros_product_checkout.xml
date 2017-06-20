@@ -30,8 +30,8 @@
                 android:paddingLeft="@dimen/dp_24"
                 android:text="@string/service_name"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/sp_14"
-                app:font="@string/maven_r"
+                android:textSize="@dimen/sp_16"
+                app:font="@string/maven"
                 />
 
 
@@ -71,7 +71,9 @@
                 android:layout_marginRight="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_14"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/dp_5">
+                card_view:cardCornerRadius="@dimen/dp_5"
+                android:visibility="gone"
+                >
 
                 <TextView
                     android:id="@+id/tvRateCard"
@@ -242,7 +244,7 @@
                 android:layout_marginTop="@dimen/dp_14"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/dp_24"
-                android:text="@string/select_time_slot"
+                android:text="@string/select_time"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_hint"
                 android:textSize="@dimen/sp_11"
@@ -264,7 +266,7 @@
                     android:layout_height="@dimen/dp_42"
                     android:background="@drawable/bg_transp_menu_color_selector"
                     android:drawableRight="@drawable/ic_arrow_grey"
-                    android:hint="Select Time Slot"
+                    android:hint="@string/select_time"
                     android:paddingBottom="@dimen/dp_12"
                     android:paddingLeft="@dimen/dp_12"
                     android:paddingRight="@dimen/dp_16"

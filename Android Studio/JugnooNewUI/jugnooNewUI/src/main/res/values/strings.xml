@@ -1341,6 +1341,7 @@
     <string name="service_address_colon">Service Address:</string>
     <string name="paid_via">Paid via</string>
     <string name="view_details">View Details</string>
+    <string name="select_time">Select Time</string>
 
 
 </resources>

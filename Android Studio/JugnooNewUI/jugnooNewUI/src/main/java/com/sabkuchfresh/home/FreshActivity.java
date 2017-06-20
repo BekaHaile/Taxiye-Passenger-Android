@@ -1081,7 +1081,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public ProsHomeFragment getProsHomeFragment() {
-        return (ProsHomeFragment) getSupportFragmentManager().findFragmentByTag(MealFragment.class.getName());
+        return (ProsHomeFragment) getSupportFragmentManager().findFragmentByTag(ProsHomeFragment.class.getName());
     }
 
 
@@ -1525,14 +1525,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.pros));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-            } else if (fragment instanceof ProsProductsFragment) {
+            }
+            else if (fragment instanceof ProsProductsFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 llSearchCartVis = View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof ProsCheckoutFragment) {
+            }
+            else if (fragment instanceof ProsCheckoutFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 llSearchCartVis = View.GONE;
@@ -1541,7 +1543,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setText(getResources().getString(R.string.checkout));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 bRequestBooking.setVisibility(View.VISIBLE);
-            } else if(fragment instanceof ProsOrderStatusFragment){
+            }
+            else if(fragment instanceof ProsOrderStatusFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 llSearchCartVis = View.GONE;

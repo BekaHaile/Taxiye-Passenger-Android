@@ -198,7 +198,7 @@ public class ProsCheckoutFragment extends Fragment {
 		textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
 		if(!addressSelectedNotValid() && !TextUtils.isEmpty(activity.getSelectedAddress())) {
 			textViewAddressValue.setVisibility(View.VISIBLE);          tvNoAddressAlert.setVisibility(View.GONE);
-			imageViewDeliveryAddressForward.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_back_pay_selector));
+			imageViewDeliveryAddressForward.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_arrow_grey));
 			imageViewDeliveryAddressForward.setVisibility(View.VISIBLE);
 			textViewAddressValue.setText(activity.getSelectedAddress());
 			imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
