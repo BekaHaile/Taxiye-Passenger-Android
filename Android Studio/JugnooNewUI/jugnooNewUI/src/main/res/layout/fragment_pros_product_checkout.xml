@@ -176,6 +176,17 @@
                         android:src="@drawable/ic_arrow_grey"
                         />
 
+                    <TextView
+                        android:id="@+id/tvNoAddressAlert"
+                        android:textSize="@dimen/sp_14"
+                        android:visibility="gone"
+                        android:textColor="@color/red_alert_no_address"
+                        app:font="@string/maven_r"
+                        android:layout_centerInParent="true"
+                        android:text="Please confirm delivery address."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
                 </RelativeLayout>
 
 

@@ -537,4 +537,17 @@ public class DateOperations {
 		return hrSec + minSec + ((long)calendar.get(Calendar.SECOND));
 	}
 
+	public static String getDateFormatted(String dateYYYYMMDD) {
+
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, YYYY");
+		try {
+			Date myDate = sdfFrom.parse(dateYYYYMMDD);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return dateYYYYMMDD;
+		}
+	}
+
 }
