@@ -52,7 +52,9 @@ public class ApiCurrentStatusIciciUpi {
 
                         if (commonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 
-                            if (commonResponse.getStatus() == IciciPaymentOrderStatus.PENDING) {
+                            if (commonResponse.getStatus() == IciciPaymentOrderStatus.PENDING
+                                   ||commonResponse.getStatus()==IciciPaymentOrderStatus.FAILURE
+                                    ||commonResponse.getStatus()==IciciPaymentOrderStatus.EXPIRED ) {
                                 PlaceOrderResponse placeOrderResponse = Data.getCurrentIciciUpiTransaction();
                                 if(placeOrderResponse.getIcici()!=null) {
                                     placeOrderResponse.getIcici().setIciciPaymentOrderStatus(commonResponse.getStatus());
@@ -113,6 +115,6 @@ public class ApiCurrentStatusIciciUpi {
                     @Override
                     public void negativeClick(View view) {
                     }
-                });
+                },false);
     }
 }

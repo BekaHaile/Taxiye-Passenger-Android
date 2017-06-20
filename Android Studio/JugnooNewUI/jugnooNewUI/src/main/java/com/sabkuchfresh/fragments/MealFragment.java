@@ -22,6 +22,8 @@ import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
+import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
@@ -426,6 +428,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 }
                             }
                             activity.setMinOrderAmountText(MealFragment.this);
+                            checkPendingTransaction();
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
@@ -463,6 +466,20 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }
 
+    private void checkPendingTransaction() {
+
+        if(Data.getCurrentIciciUpiTransaction()!=null){
+            activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction());
+            ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, false, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
+                @Override
+                public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
+                    activity.openCart(AppConstant.ApplicationType.MEALS);
+                }
+            });
+        }
+
+    }
+
     private void retryDialog(DialogErrorType dialogErrorType) {
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
@@ -480,7 +497,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     @Override
                     public void negativeClick(View view) {
                     }
-                });
+                },false);
     }
 
     @Override

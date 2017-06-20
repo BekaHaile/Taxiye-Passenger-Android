@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
-            android:text="Your request will expire in "
+            android:text="@string/label_request_expires_in"
             android:textColor="@color/text_color"
             android:textSize="14.4sp"
             app:font="maven" />

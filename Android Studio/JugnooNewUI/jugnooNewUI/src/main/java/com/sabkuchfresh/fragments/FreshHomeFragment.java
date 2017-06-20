@@ -21,6 +21,8 @@ import com.sabkuchfresh.adapters.FreshSuperCategoriesAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
+import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
@@ -248,6 +250,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                             stopOhSnap();
                         }
                         swipeContainer.setRefreshing(false);
+                        checkPendingTransaction();
                     }
 
                     @Override
@@ -302,7 +305,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                     @Override
                     public void negativeClick(View view) {
                     }
-                });
+                },false);
     }
 
     public void oSnapNotAvailableCase(String message){
@@ -337,5 +340,19 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
 
     public RecyclerView getRvFreshSuper(){
         return rvFreshSuper;
+    }
+
+    private void checkPendingTransaction() {
+
+        if(Data.getCurrentIciciUpiTransaction()!=null){
+            activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction());
+            ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, false, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
+                @Override
+                public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
+                    activity.openCart(AppConstant.ApplicationType.FRESH);
+                }
+            });
+        }
+
     }
 }

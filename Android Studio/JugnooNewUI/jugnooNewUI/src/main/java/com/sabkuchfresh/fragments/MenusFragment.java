@@ -414,10 +414,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                         activity.getMenusFilterFragment().setCuisinesList();
                                     }
 
-                                    if(Data.getCurrentIciciUpiTransaction()!=null){
-                                                 activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction());
+
                                                 checkIciciPaymentStatusApi(activity);
-                                    }
+
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -476,7 +475,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     @Override
                     public void negativeClick(View view) {
                     }
-                });
+                },false);
     }
 
 
@@ -565,11 +564,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private static void checkIciciPaymentStatusApi(final FreshActivity activity) {
-        ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, true, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
-            @Override
-            public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
-                            activity.getMenusCartSelectedLayout().getRlMenusCartSelectedInner().performClick();
-            }
-        });
+        if(Data.getCurrentIciciUpiTransaction()!=null){
+            activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction());
+            ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, true, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
+                @Override
+                public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
+                    activity.getMenusCartSelectedLayout().getRlMenusCartSelectedInner().performClick();
+                }
+            });
+        }
+
     }
 }

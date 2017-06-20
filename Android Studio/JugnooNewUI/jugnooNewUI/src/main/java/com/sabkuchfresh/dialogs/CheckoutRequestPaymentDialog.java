@@ -131,6 +131,7 @@ public class CheckoutRequestPaymentDialog extends Dialog {
     }
 
     public CheckoutRequestPaymentDialog setData(String amount, long timerStartedAt, long expiryTimeMilliSecs, ArrayList<String> cancellationReasons, CheckoutRequestPaymentListener checkoutRequestPaymentListener) {
+        isTimerExpired = false;
         this.timerStartedAt = timerStartedAt;
         this.checkoutRequestPaymentListener = checkoutRequestPaymentListener;
         this.expiryTimeMilliSecs = expiryTimeMilliSecs;
@@ -146,9 +147,13 @@ public class CheckoutRequestPaymentDialog extends Dialog {
             tvLabelRequest.setText(activity.getString(R.string.label_checkout_request, amount));
 
         }
+        tvLabelExpiryTime.setText(R.string.label_request_expires_in);
         this.cancellationReasons = cancellationReasons;
         setTime();
         setCancellationAdapter();
+        btnTryAgain.setVisibility(View.GONE);
+        btnTryAgain.setEnabled(true);
+        progressBar.setVisibility(View.VISIBLE);
         return this;
 
     }

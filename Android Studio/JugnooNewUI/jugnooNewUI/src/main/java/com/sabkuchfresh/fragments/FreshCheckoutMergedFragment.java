@@ -123,7 +123,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -142,7 +141,7 @@ import retrofit.mime.TypedByteArray;
 public class FreshCheckoutMergedFragment extends Fragment implements GAAction, DeliverySlotsAdapter.Callback,
         FreshCartItemsAdapter.Callback, PromoCouponsAdapter.Callback, MenusCartItemsAdapter.Callback {
 
-    // TODO: 19/06/17  call dialog showing method on success of checkout data api.
+
     private final String TAG = FreshCheckoutMergedFragment.class.getSimpleName();
     private RelativeLayout linearLayoutRoot;
 
@@ -644,29 +643,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         linearLayoutCartExpansion.setVisibility(View.VISIBLE);
         imageViewDeleteCart.setVisibility(View.GONE);
 
-        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-            @Override
-            public void keyboardOpened() {
-                activity.getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            scrollView.scrollTo(0, rootView.findViewById(R.id.linearLayoutDeliveryInstructions).getBottom());
-                        } catch (Exception e) {
-                        }
-                    }
-                }, 100);
-
-            }
-
-            @Override
-            public void keyBoardClosed() {
-                editTextDeliveryInstructions.clearFocus();
-            }
-        });
-        keyboardLayoutListener.setResizeTextView(false);
-        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
-
         checkoutApiDoneOnce = false;
 
         activity.tvSlide.setOnTouchListener(new View.OnTouchListener() {
@@ -725,9 +701,27 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             e.printStackTrace();
         }
         setSlideInitial();
-
         return rootView;
     }
+
+    TextWatcher selectIciciPaymentTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if(activity.getPaymentOption()==null || activity.getPaymentOption()!= PaymentOption.ICICI_UPI)
+                callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.ICICI_UPI);
+        }
+    };
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -1936,7 +1930,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             tvUPI.setText(paymentModeConfigData.getDisplayName());
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutIcici);
+                            edtIciciVpa.removeTextChangedListener(selectIciciPaymentTextWatcher);
                             edtIciciVpa.setText(paymentModeConfigData.getUpiHandle());
+                            edtIciciVpa.addTextChangedListener(selectIciciPaymentTextWatcher);
 
 
                         }
@@ -2480,7 +2476,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     @Override
                     public void negativeClick(View view) {
                     }
-                });
+                },false);
     }
 
 

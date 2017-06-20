@@ -1317,6 +1317,7 @@
     <string name="label_waiting_connection">Waiting for connection...</string>
     <string name="label_request_expired">Your request has expired.</string>
     <string name="waiting_for_response">Waiting for response...</string>
+    <string name="label_request_expires_in">Your request will expire in</string>
 
 
 </resources>
