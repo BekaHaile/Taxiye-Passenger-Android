@@ -20,6 +20,7 @@
     <LinearLayout
         android:id="@+id/layout_payment_status"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@android:color/white"
@@ -87,6 +88,7 @@
             android:layout_gravity="center"
             android:background="@drawable/capsule_theme_color_selector"
             android:minWidth="100dp"
+            android:layout_marginBottom="@dimen/dp_5"
             android:text="Try Again"
             android:textColor="@color/white"
             android:textSize="14sp"
@@ -129,6 +131,7 @@
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
+            android:paddingBottom="@dimen/dp_5"
             android:layout_height="wrap_content">
 
             <Button
@@ -141,7 +144,8 @@
                 android:textColor="@color/white"
                 android:background="@drawable/capsule_theme_color_selector"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                />
             <Button
                 android:id="@+id/btn_submit"
                 android:text="SUBMIT"
@@ -150,6 +154,7 @@
                 app:font="maven"
                 android:textColor="@color/white"
                 android:background="@drawable/capsule_theme_color_selector"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

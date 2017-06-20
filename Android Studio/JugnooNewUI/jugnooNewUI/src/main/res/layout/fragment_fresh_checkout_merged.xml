@@ -455,8 +455,8 @@
                                 app:font="maven"
                                 android:textColor="@color/text_color"
                                 android:textColorHint="@color/text_color_hint"
-                                android:hint="Please add UPI Address"
-                                android:textSize="@dimen/px_24"
+                                android:hint="@string/hint_add_upi"
+                                android:textSize="@dimen/px_28"
                                 android:padding="@dimen/px_20"
                                 android:background="@drawable/capsule_white_grey_border_selector"
                                 android:layout_width="match_parent"
@@ -470,7 +470,7 @@
                                 android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 app:font="maven"
-                                android:textSize="@dimen/px_22"
+                                android:textSize="@dimen/px_24"
                                 android:layout_height="wrap_content" />
 
                         </RelativeLayout>

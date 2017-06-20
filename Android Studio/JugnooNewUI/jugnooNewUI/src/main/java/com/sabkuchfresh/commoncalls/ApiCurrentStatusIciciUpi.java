@@ -52,23 +52,30 @@ public class ApiCurrentStatusIciciUpi {
 
                         if (commonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 
-                            if (commonResponse.getStatus() == IciciPaymentOrderStatus.PENDING
-                                   ||commonResponse.getStatus()==IciciPaymentOrderStatus.FAILURE
-                                    ||commonResponse.getStatus()==IciciPaymentOrderStatus.EXPIRED ) {
-                                PlaceOrderResponse placeOrderResponse = Data.getCurrentIciciUpiTransaction();
-                                if(placeOrderResponse.getIcici()!=null) {
-                                    placeOrderResponse.getIcici().setIciciPaymentOrderStatus(commonResponse.getStatus());
+                            if (commonResponse.getStatus() == IciciPaymentOrderStatus.PENDING || commonResponse.getStatus() == IciciPaymentOrderStatus.FAILURE || commonResponse.getStatus() == IciciPaymentOrderStatus.EXPIRED) {
+
+                                if (commonResponse.getStatus() == IciciPaymentOrderStatus.PENDING) {
+
+                                    PlaceOrderResponse placeOrderResponse = Data.getCurrentIciciUpiTransaction();
+
+                                    if (placeOrderResponse.getIcici() != null) {
+                                        placeOrderResponse.getIcici().setIciciPaymentOrderStatus(commonResponse.getStatus());
+                                    }
+                                } else {
+                                    Data.deleteCurrentIciciUpiTransaction();
                                 }
                                 apiCurrentStatusListener.onGoToCheckout(commonResponse.getStatus());
 
 
-
                             } else {
+
+
+                                activity.clearAllCartAtOrderComplete();
                                 Data.deleteCurrentIciciUpiTransaction();
                             }
 
-                        }else{
-                            retryDialog(DialogErrorType.CONNECTION_LOST,activity,isMenus,apiCurrentStatusListener);
+                        } else {
+                            retryDialog(DialogErrorType.CONNECTION_LOST, activity, isMenus, apiCurrentStatusListener);
                         }
 
                     }
@@ -78,7 +85,7 @@ public class ApiCurrentStatusIciciUpi {
 
                 @Override
                 public void failure(RetrofitError error) {
-                 retryDialog(DialogErrorType.CONNECTION_LOST,activity,isMenus,apiCurrentStatusListener);
+                    retryDialog(DialogErrorType.CONNECTION_LOST, activity, isMenus, apiCurrentStatusListener);
                 }
 
             };
@@ -94,7 +101,7 @@ public class ApiCurrentStatusIciciUpi {
                 RestClient.getFreshApiService().checkPaymentStatus(params, iciciPaymentStatusCallback);
             }
         } else {
-            retryDialog(DialogErrorType.NO_NET,activity,isMenus,apiCurrentStatusListener);
+            retryDialog(DialogErrorType.NO_NET, activity, isMenus, apiCurrentStatusListener);
         }
     }
 
@@ -104,7 +111,7 @@ public class ApiCurrentStatusIciciUpi {
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        checkIciciPaymentStatusApi(activity,isMenus,apiCurrentStatusListener);
+                        checkIciciPaymentStatusApi(activity, isMenus, apiCurrentStatusListener);
                     }
 
                     @Override
@@ -115,6 +122,6 @@ public class ApiCurrentStatusIciciUpi {
                     @Override
                     public void negativeClick(View view) {
                     }
-                },false);
+                }, false);
     }
 }
