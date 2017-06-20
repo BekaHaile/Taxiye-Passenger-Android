@@ -79,7 +79,7 @@ public interface FreshApiService {
 							Callback<SendMoneyCallbackResponse> callback);
 
 	@FormUrlEncoded
-	@POST("/check_payment_status")
+	@POST("/order_status")
 	void checkPaymentStatus(@FieldMap Map<String, String> params,
 							Callback<IciciPaymentRequestStatus> callback);
 

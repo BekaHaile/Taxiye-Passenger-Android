@@ -111,6 +111,8 @@ public class CheckoutRequestPaymentDialog extends Dialog {
 
     public void enableRetryButton() {
         btnTryAgain.setEnabled(true);
+        tvLabelExpiryTime.setText(R.string.waiting_for_response);
+
     }
 
     public interface CheckoutRequestPaymentListener {

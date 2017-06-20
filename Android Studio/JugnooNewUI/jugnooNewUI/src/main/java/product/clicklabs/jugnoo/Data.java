@@ -554,8 +554,6 @@ public class Data {
 
         fuguConfig.configActionBar("#ffffff", "#595968", R.drawable.ic_back_selector);
         fuguConfig.configThemeColor("#FD7945");
-
-
     }
 
     public static void setFuguUserData(CaptureUserData userData) {

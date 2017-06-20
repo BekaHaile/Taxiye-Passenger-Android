@@ -568,7 +568,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, true, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
             @Override
             public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
-
+                            activity.getMenusCartSelectedLayout().getRlMenusCartSelectedInner().performClick();
             }
         });
     }

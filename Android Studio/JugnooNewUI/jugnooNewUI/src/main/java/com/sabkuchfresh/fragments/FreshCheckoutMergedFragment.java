@@ -1935,12 +1935,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             linearLayoutWalletContainer.addView(rlUPI);
                             tvUPI.setText(paymentModeConfigData.getDisplayName());
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal()) {
-//                            linearLayoutWalletContainer.addView(relativeLayoutIcici);
+                            linearLayoutWalletContainer.addView(relativeLayoutIcici);
+                            edtIciciVpa.setText(paymentModeConfigData.getUpiHandle());
+
+
                         }
 
                     }
                 }
-                linearLayoutWalletContainer.addView(relativeLayoutIcici);
 
 
                 // for pay only in fresh and meals
@@ -3220,7 +3222,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         apiCancelOrder = new ApiCancelOrder(getActivity(), new ApiCancelOrder.Callback() {
                             @Override
                             public void onSuccess(String message) {
-                                onIciciStatusResponse(IciciPaymentOrderStatus.CANCELLED,"Order Cancelled Successfully");
+                                onIciciStatusResponse(IciciPaymentOrderStatus.CANCELLED,message);
                             }
 
                             @Override
@@ -3284,7 +3286,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
                     checkoutRequestPaymentDialog.dismiss();
                 }
-                Toast.makeText(activity, "Payment failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show();
                 Data.deleteCurrentIciciUpiTransaction();
                 break;
             case SUCCESSFUL:
@@ -3295,7 +3297,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
                     checkoutRequestPaymentDialog.dismiss();
                 }
-                Toast.makeText(activity, "Payment Successful", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(activity,toastMessage, Toast.LENGTH_SHORT).show();
                 orderPlacedSuccess(activity.getPlaceOrderResponse());
                 Data.deleteCurrentIciciUpiTransaction();
 
