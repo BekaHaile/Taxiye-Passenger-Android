@@ -142,6 +142,7 @@ import retrofit.mime.TypedByteArray;
 public class FreshCheckoutMergedFragment extends Fragment implements GAAction, DeliverySlotsAdapter.Callback,
         FreshCartItemsAdapter.Callback, PromoCouponsAdapter.Callback, MenusCartItemsAdapter.Callback {
 
+    // TODO: 19/06/17  call dialog showing method on success of checkout data api.
     private final String TAG = FreshCheckoutMergedFragment.class.getSimpleName();
     private RelativeLayout linearLayoutRoot;
 
@@ -2370,6 +2371,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             e.printStackTrace();
                                         }
                                         cartChangedRefreshCheckout = false;
+                                    }
+
+                                    if(Data.getCurrentIciciUpiTransaction()!=null){
+                                        activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction());
+                                        onIciciUpiPaymentInitiated(Data.getCurrentIciciUpiTransaction().getIcici(),String.valueOf(Data.getCurrentIciciUpiTransaction().getAmount()));
+
+
                                     }
                                 } else {
                                     setSlideInitial();

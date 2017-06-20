@@ -3,6 +3,7 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.jugnoo.pay.models.SendMoneyResponse;
+import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +98,16 @@ public class PlaceOrderResponse {
 		}
 
 		private Long timerStartedAt;
+
+		private IciciPaymentOrderStatus currentStatus;
+
+		public IciciPaymentOrderStatus getIciciPaymentOrderStatus() {
+			return currentStatus;
+		}
+
+		public void setIciciPaymentOrderStatus(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
+			this.currentStatus = iciciPaymentOrderStatus;
+		}
 
 		public Long getTimerStartedAt() {
 			return timerStartedAt;

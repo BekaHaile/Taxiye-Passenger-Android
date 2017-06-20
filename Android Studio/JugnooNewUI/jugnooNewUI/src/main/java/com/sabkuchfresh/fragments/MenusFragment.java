@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -413,7 +415,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     }
 
                                     if(Data.getCurrentIciciUpiTransaction()!=null){
-
+                                                 activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction());
+                                                checkIciciPaymentStatusApi(activity);
                                     }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -561,56 +564,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
-    private void checkIciciPaymentStatusApi() {
-        if (MyApplication.getInstance().isOnline()) {
-            HashMap<String, String> params = new HashMap<>();
-            HomeUtil.addDefaultParams(params);
-            params.put(Constants.KEY_ORDER_ID, String.valueOf(activity.getPlaceOrderResponse().getOrderId()));
-            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-            params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-            Callback<IciciPaymentRequestStatus>  iciciPaymentStatusCallback = new Callback<IciciPaymentRequestStatus>() {
-                    @Override
-                    public void success(IciciPaymentRequestStatus commonResponse, Response response) {
-                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, commonResponse.getFlag(), commonResponse.getError(), commonResponse.getMessage())) {
+    private static void checkIciciPaymentStatusApi(final FreshActivity activity) {
+        ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, true, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
+            @Override
+            public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
 
-                            if (commonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-
-                                if(commonResponse.getStatus()== IciciPaymentOrderStatus.PENDING){
-                                    // TODO: 19/06/17 Go to checkout
-
-                                }else{
-                                    Data.deleteCurrentIciciUpiTransaction();
-                                }
-
-                            }
-
-                        }
-
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-// TODO: 19/06/17
-                       //show retry button
-                    }
-
-                };
-
-
-            if (true) {
-
-
-                RestClient.getMenusApiService().checkPaymentStatus(params, iciciPaymentStatusCallback);
-            } else {
-
-
-                RestClient.getFreshApiService().checkPaymentStatus(params, iciciPaymentStatusCallback);
             }
-        }else{
-            // TODO: 19/06/17
-                //Show Retry Dialog
-            Log.e("TAG", "No net tried to hit get status icici api");
-        }
+        });
     }
 }
