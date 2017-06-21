@@ -123,7 +123,8 @@ public class ApiFareEstimate {
     /**
      * ASync for calculating fare estimate from server
      */
-    public void getFareEstimate(final Activity activity, final LatLng sourceLatLng, final LatLng desLatLng, final double distanceValue, final double timeValue, final int isPooled, final Region region) {
+    public void getFareEstimate(final Activity activity, final LatLng sourceLatLng, final LatLng desLatLng,
+                                final double distanceValue, final double timeValue, final int isPooled, final Region region) {
         if (!HomeActivity.checkIfUserDataNull(activity)) {
             if (MyApplication.getInstance().isOnline()) {
                 HashMap<String, String> params = new HashMap<>();
