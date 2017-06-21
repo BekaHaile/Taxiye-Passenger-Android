@@ -3442,10 +3442,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Integer orderStatus  = intent.getIntExtra(ORDER_STATUS,Constants.NO_VALID_STATUS);
+            Integer orderStatus  = intent.getIntExtra(Constants.ICICI_ORDER_STATUS,Constants.NO_VALID_STATUS);
             if(orderStatus!=Constants.NO_VALID_STATUS){
                     //Only if the payment is processing corresponding to that order ID
-                if(activity.getPlaceOrderResponse()!=null && activity.getPlaceOrderResponse().getOrderId()==intent.getIntExtra(Constants.ORDER_ID,0)) {
+                if(activity.getPlaceOrderResponse()!=null && activity.getPlaceOrderResponse().getOrderId()==intent.getIntExtra(Constants.KEY_ORDER_ID,0)) {
                     onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS, false), orderStatus),
                             intent.hasExtra(Constants.KEY_MESSAGE) ? intent.getStringExtra(Constants.KEY_MESSAGE) : "");
                 }

@@ -741,6 +741,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
 						int orderId = jObj.optInt(KEY_ORDER_ID, 0);
+						int orderStatus = jObj.optInt(Constants.ORDER_STATUS,Constants.NO_VALID_STATUS);
 						if(!TextUtils.isEmpty(phoneNo)){
 							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, clientId);
 						} else{
@@ -749,8 +750,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Intent intent = new Intent(Data.LOCAL_BROADCAST);
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_ORDER_ID, orderId);
-						intent.putExtra(Constants.KEY_MESSAGE, message);
+						intent.putExtra(Constants.KEY_MESSAGE, message1);
 						intent.putExtra(KEY_CLIENT_ID, clientId);
+						if(orderStatus!=Constants.NO_VALID_STATUS){
+							intent.putExtra(Constants.ICICI_ORDER_STATUS, orderStatus);
+						}
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
 					else if (PushFlags.MENUS_STATUS.getOrdinal() == flag
@@ -768,7 +772,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 						Intent intent = new Intent(Data.LOCAL_BROADCAST);
 						intent.putExtra(Constants.KEY_FLAG, flag);
-						intent.putExtra(Constants.KEY_MESSAGE, message);
+						intent.putExtra(Constants.KEY_MESSAGE, message1);
 						intent.putExtra(Constants.KEY_ORDER_ID, orderId);
 						intent.putExtra(Constants.KEY_CLOSE_TRACKING, closeTracking);
 						intent.putExtra(KEY_CLIENT_ID, clientId);

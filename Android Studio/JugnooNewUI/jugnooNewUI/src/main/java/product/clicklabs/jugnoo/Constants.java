@@ -354,7 +354,7 @@ public interface Constants {
     String PHONE_AUTOFILLED_FB = "Phone autofilled FB";
     String NAME_EMAIL_AUTOFILLED_EDITED = "Name/email autofilled edited";
     String NAME_EMAIL_AUTOFILLED_UNEDITED = "Name/email autofilled unedited";
-    String ORDER_STATUS = "Order status";
+    String ORDER_STATUS = "order_status";
     String SKIP_BOTTOM = "Skip bottom";
     String SKIP_TOP = "Skip top";
 
