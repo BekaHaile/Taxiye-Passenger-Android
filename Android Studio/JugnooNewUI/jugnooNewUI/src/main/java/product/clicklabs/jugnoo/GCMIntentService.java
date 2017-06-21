@@ -757,6 +757,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						int orderId = jObj.optInt(KEY_ORDER_ID, 0);
 						int closeTracking = jObj.optInt(KEY_CLOSE_TRACKING, 0);
 						int productType = jObj.optInt(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
+						int orderStatus = jObj.optInt(Constants.ORDER_STATUS,Constants.NO_VALID_STATUS);
 						message1 = jObj.optString(KEY_MESSAGE, "");
 						if(!TextUtils.isEmpty(message1)) {
 							notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
@@ -769,6 +770,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_ORDER_ID, orderId);
 						intent.putExtra(Constants.KEY_CLOSE_TRACKING, closeTracking);
 						intent.putExtra(KEY_CLIENT_ID, clientId);
+						if(orderStatus!=Constants.NO_VALID_STATUS){
+							intent.putExtra(Constants.ICICI_ORDER_STATUS, orderStatus);
+						}
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
 					else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){

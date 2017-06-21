@@ -39,7 +39,15 @@ public class IciciPaymentRequestStatus {
     }
 
     public IciciPaymentOrderStatus getStatus() {
-        if(getIsMenus()){
+        return parseStatus(getIsMenus(),status);
+
+
+
+
+    }
+
+    public static IciciPaymentOrderStatus parseStatus(boolean isMenus,int status){
+        if(isMenus){
             if(status==-8)
                 return IciciPaymentOrderStatus.PENDING;
             else if(status ==-7)
@@ -61,10 +69,6 @@ public class IciciPaymentRequestStatus {
             else
                 return IciciPaymentOrderStatus.PENDING;
         }
-
-
-
-
     }
 
     public String getError() {

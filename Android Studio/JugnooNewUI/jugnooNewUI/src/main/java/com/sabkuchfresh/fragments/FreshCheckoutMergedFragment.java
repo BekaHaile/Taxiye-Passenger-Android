@@ -209,6 +209,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private Dialog dialogOrderComplete;
     private RelativeLayout relativeLayoutIcici;
     private ImageView imageViewIcici;
+    private final static IntentFilter ICICI_STATUS_BROADCAST_FILTER = new IntentFilter(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE);
+
 
     public FreshCheckoutMergedFragment() {
     }
@@ -3394,6 +3396,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if(checkoutRequestPaymentDialog!=null){
             checkoutRequestPaymentDialog.stopTimer();
         }
+        try {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(iciciStatusBroadcast);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -3426,9 +3433,24 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 checkoutRequestPaymentDialog.resumeTimer();
             }
 
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(iciciStatusBroadcast, ICICI_STATUS_BROADCAST_FILTER);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    private BroadcastReceiver iciciStatusBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Integer orderStatus  = intent.getIntExtra(ORDER_STATUS,Constants.NO_VALID_STATUS);
+            if(orderStatus!=Constants.NO_VALID_STATUS){
+                onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS,false),orderStatus),
+                        intent.hasExtra(Constants.KEY_MESSAGE)?intent.getStringExtra(Constants.KEY_MESSAGE):"");
+
+
+            }
+
+        }
+    };
 
 }

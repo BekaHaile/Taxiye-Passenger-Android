@@ -384,7 +384,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             statusHolder.ivOrderDeliveredYes.setVisibility(View.VISIBLE);
                             statusHolder.ivOrderDeliveredYes.setImageResource(Data.isFuguChatEnabled()?R.drawable.ic_restaurant_chat:R.drawable.ic_restaurant_report);
                             statusHolder.ivOrderDeliveredNo.setVisibility(View.VISIBLE);
-                            statusHolder.tvOrderDeliveredYes.setText(Data.isFuguChatEnabled()?R.string.chat_with_fugu:R.string.report_issue); statusHolder.tvOrderDeliveredYes.setTextSize(12);
+                            statusHolder.tvOrderDeliveredYes.setText(Data.isFuguChatEnabled()?R.string.chat_with_us :R.string.report_issue); statusHolder.tvOrderDeliveredYes.setTextSize(12);
                             statusHolder.tvOrderDeliveredNo.setText(R.string.call_restaurant); statusHolder.tvOrderDeliveredNo.setTextSize(12);
                         }
                         else if(deliveryMarkedYes){ // yes local case

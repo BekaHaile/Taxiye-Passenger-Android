@@ -552,6 +552,7 @@ public interface Constants {
 
     String KEY_VALID_STOCK_COUNT = "valid_stock_count";
     String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
+    String INTENT_ICICI_PAYMENT_STATUS_UPDATE = "INTENT_ICICI_PAYMENT_STATUS_UPDATE";
     String INTENT_ACTION_CHAT_CLOSE = "intent_action_chat_close";
     String KEY_CHAT_COUNT = "chat_count";
 
@@ -688,7 +689,7 @@ public interface Constants {
     String KEY_FEED_RANK = "feed_rank";
     String KEY_HANDLE = "handle";
     String IS_ANONYMOUS = "is_anonymous";
-    String KEY_IS_READ = "is_read";
+    String KEY_IS_READ = "is_read"
     String DEFAULT_IMAGE_URL = "http://tablabar.s3.amazonaws.com/brand_images/user.png";
     String SP_POST_ID_TO_OPEN = "sp_post_id_to_open";
     String SP_POST_NOTIFICATION_ID_TO_OPEN = "sp_post_notification_id_to_open";
@@ -718,4 +719,7 @@ public interface Constants {
     String SP_FREECHARGE_LAST_BALANCE = "sp_freecharge_last_balance";
     String KEY_ICICI_UPI = "upi_icici";
     String PLACE_ORDER_DATA = "place_order_response";
+    String ICICI_ORDER_STATUS = "order_status";
+    int NO_VALID_STATUS = -1001;
+    String IS_MENUS = "is_menus";
 }

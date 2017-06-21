@@ -125,7 +125,7 @@ public class Data {
     private static CaptureUserData fuguUserData;
     private static boolean isFuguChatEnabled;
 
-    public static void clearDataOnLogout(Context context) {
+    public static void clearDataOnLogout(Activity context) {
         try {
             userData = null;
             autoData = null;
@@ -139,7 +139,7 @@ public class Data {
 
             AccessTokenGenerator.saveLogoutToken(context);
             clearSPLabelPrefs(context);
-            FuguConfig.clearFuguData();
+            FuguConfig.clearFuguData(context);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -545,15 +545,17 @@ public class Data {
 
     public static void initializeFuguHandler(Activity context) {
 
-        FuguConfig fuguConfig;
+
         if (Config.getConfigMode() == ConfigMode.LIVE) {
-            fuguConfig = new FuguConfig(context.getString(R.string.fugu_key), context, "live");
+            FuguConfig.init(context.getString(R.string.fugu_key), context, "live");
         } else {
-            fuguConfig = new FuguConfig(context.getString(R.string.fugu_key_test), context, "test");
+            FuguConfig.init(context.getString(R.string.fugu_key_test), context, "test");
         }
 
-        fuguConfig.configActionBar("#ffffff", "#595968", R.drawable.ic_back_selector);
-        fuguConfig.configThemeColor("#FD7945");
+        FuguConfig.getInstance().configActionBar("#ffffff", "#595968", R.drawable.ic_back_selector);
+        FuguConfig.getInstance().configThemeColor("#ff7d49");
+
+
     }
 
     public static void setFuguUserData(CaptureUserData userData) {

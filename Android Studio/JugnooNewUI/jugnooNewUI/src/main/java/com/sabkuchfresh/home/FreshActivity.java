@@ -773,6 +773,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                     } else if (PushFlags.STATUS_CHANGED.getOrdinal() == flag) {
                                         String clientId = intent.getStringExtra(Constants.KEY_CLIENT_ID);
                                         Fragment fragment = getTopFragment();
+                                        if(fragment instanceof FreshCheckoutMergedFragment && intent.hasExtra(Constants.ICICI_ORDER_STATUS)){
+                                            LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(
+                                                    new Intent(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE)
+                                                            .putExtra(Constants.ICICI_ORDER_STATUS,intent.getIntExtra(Constants.ICICI_ORDER_STATUS,Constants.NO_VALID_STATUS))
+                                                            .putExtra(Constants.IS_MENUS,false)
+                                                            .putExtra(Constants.KEY_MESSAGE,intent.getStringExtra(Constants.KEY_MESSAGE)));
+                                        }
+
                                         if (fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()) {
                                             ((MealFragment) fragment).getAllProducts(true, getSelectedLatLng());
                                         } else {
@@ -786,6 +794,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         Fragment fragment = getMenusFragment();
                                         if (fragment != null && FreshActivity.this.hasWindowFocus()) {
                                             ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng());
+                                            if(getTopFragment() instanceof FreshCheckoutMergedFragment && intent.hasExtra(Constants.ICICI_ORDER_STATUS)){
+                                                LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(
+                                               new Intent(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE)
+                                               .putExtra(Constants.ICICI_ORDER_STATUS,intent.getIntExtra(Constants.ICICI_ORDER_STATUS,Constants.NO_VALID_STATUS))
+                                               .putExtra(Constants.IS_MENUS,true)
+                                               .putExtra(Constants.KEY_MESSAGE,intent.getStringExtra(Constants.KEY_MESSAGE)));
+                                            }
+
                                         } else {
                                             Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                             intent1.putExtra(Constants.KEY_FLAG, flag);
