@@ -30,12 +30,28 @@ import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Log;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * Created by shankar on 19/06/17.
@@ -43,6 +59,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 
 public class ProsCheckoutFragment extends Fragment {
 
+	private final String TAG = ProsCheckoutFragment.class.getSimpleName();
 	@Bind(R.id.editTextDeliveryInstructions)
 	EditText editTextDeliveryInstructions;
 	@Bind(R.id.tvRateCard)
@@ -246,6 +263,79 @@ public class ProsCheckoutFragment extends Fragment {
 	public void onStop() {
 		mBus.unregister(this);
 		super.onStop();
+	}
+
+	public void apiCreateTask(final String jobDescription, final String jobPickupDateTime, final String jobDeliveryDateTime, final String timeZoneDiff) {
+		try {
+			if (MyApplication.getInstance().isOnline()) {
+				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+				params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+				params.put(Constants.KEY_CUSTOMER_ADDRESS, activity.getSelectedAddress());
+				params.put(Constants.KEY_CUSTOMER_EMAIL, Data.userData.userEmail);
+				params.put(Constants.KEY_CUSTOMER_USERNAME, Data.userData.userName);
+				params.put(Constants.KEY_CUSTOMER_PHONE, Data.userData.phoneNo);
+				params.put(Constants.KEY_JOB_DESCRIPTION, jobDescription);
+				params.put(Constants.KEY_JOB_PICKUP_DATETIME, jobPickupDateTime);
+				params.put(Constants.KEY_JOB_DELIVERY_DATETIME, jobDeliveryDateTime);
+				params.put(Constants.KEY_TIMEZONE, timeZoneDiff);
+				params.put(Constants.KEY_CUSTOM_FIELD_TEMPLATE, Constants.KEY_JUGNOO_PROS);
+
+				JSONArray jsonArray = new JSONArray();
+				JSONObject jObj1 = new JSONObject();
+				jObj1.put(Constants.KEY_LABEL, Constants.KEY_PRODUCT_ID);
+				jObj1.put(Constants.KEY_DATA, prosProductDatum.getProductId());
+				jsonArray.put(jObj1);
+				JSONObject jObj2 = new JSONObject();
+				jObj2.put(Constants.KEY_LABEL, Constants.KEY_PRODUCT_NAME);
+				jObj2.put(Constants.KEY_DATA, prosProductDatum.getName());
+				jsonArray.put(jObj2);
+				params.put(Constants.KEY_META_DATA, String.valueOf(jsonArray));
+
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getProsApiService().createTaskViaVendor(params, new Callback<ProsProductData>() {
+					@Override
+					public void success(ProsProductData productsResponse, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "getAllProducts response = " + responseStr);
+						DialogPopup.dismissLoadingDialog();
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						DialogPopup.dismissLoadingDialog();
+						retryDialog(DialogErrorType.CONNECTION_LOST, jobDescription, jobPickupDateTime, jobDeliveryDateTime, timeZoneDiff);
+					}
+				});
+			} else {
+				retryDialog(DialogErrorType.NO_NET, jobDescription, jobPickupDateTime, jobDeliveryDateTime, timeZoneDiff);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void retryDialog(DialogErrorType dialogErrorType, final String jobDescription, final String jobPickupDateTime, final String jobDeliveryDateTime, final String timeZoneDiff) {
+		DialogPopup.dialogNoInternet(activity,
+				dialogErrorType,
+				new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick(View view) {
+						apiCreateTask(jobDescription, jobPickupDateTime, jobDeliveryDateTime, timeZoneDiff);
+					}
+
+					@Override
+					public void neutralClick(View view) {
+
+					}
+
+					@Override
+					public void negativeClick(View view) {
+					}
+				});
 	}
 
 }

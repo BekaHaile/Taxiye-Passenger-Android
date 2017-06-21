@@ -26,4 +26,9 @@ public interface ProsApi {
 	void getProductsForCategory(@FieldMap Map<String, String> params,
 						 Callback<ProsProductData> callback);
 
+	@FormUrlEncoded
+	@POST("/create_task_via_vendor")
+	void createTaskViaVendor(@FieldMap Map<String, String> params,
+								Callback<ProsProductData> callback);
+
 }

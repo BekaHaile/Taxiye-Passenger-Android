@@ -135,7 +135,6 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 											historyData, -1, -1, "");
 								}
 							} else if(historyData.getProductType() == ProductType.PROS.getOrdinal()){
-								// TODO: 15/06/17 open order summary page
 								View container = null;
 								if (activity instanceof RideTransactionsActivity) {
 									container = ((RideTransactionsActivity) activity).getContainer();

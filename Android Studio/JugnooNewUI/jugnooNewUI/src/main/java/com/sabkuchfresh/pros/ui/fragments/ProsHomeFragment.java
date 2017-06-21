@@ -193,14 +193,8 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 				final ProgressDialog finalProgressDialog = progressDialog;
 
 				HashMap<String, String> params = new HashMap<>();
-				// TODO: 20/06/17 change params
-				params.put(Constants.KEY_ACCESS_TOKEN, "b2a6c2db3010725ed08c7fd46bf23845");
-				params.put(Constants.KEY_FORM_ID, "292");
-				params.put(Constants.KEY_USER_ID, "1717");
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_DEVICE_TOKEN, MyApplication.getInstance().getDeviceToken());
-				params.put(Constants.KEY_APP_VERSION, "101");
-				params.put(Constants.KEY_APP_ACCESS_TOKEN, "b2a6c2db3010725ed08c7fd46bf23845");
-				params.put(Constants.KEY_APP_DEVICE_TYPE, "68");
 
 				params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
@@ -273,15 +267,12 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 	private void setDataToUI(ProsCatalogueData prosCatalogueData){
 		activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
-//		activity.setSuperCategoriesData(superCategoriesData);
 		activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
 
 		activity.updateCartValuesGetTotalPrice();
 		stopOhSnap();
 		rvProsMain.smoothScrollToPosition(0);
-		// TODO: 19/06/17 remove this
 		categoriesAdapter.setList(prosCatalogueData.getData().get(prosCatalogueData.getData().size()-1), null, null);
-//				(ArrayList<RecentOrder>) Paper.book().read("recent"), (ArrayList<String>) Paper.book().read("status"));
 	}
 
 

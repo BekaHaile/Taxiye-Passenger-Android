@@ -22,6 +22,7 @@ import com.sabkuchfresh.pros.ui.adapters.ProsProductsAdapter;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -109,14 +110,8 @@ public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout
                     progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
-                // TODO: 20/06/17 change params
-                params.put(Constants.KEY_ACCESS_TOKEN, "b2a6c2db3010725ed08c7fd46bf23845");
-                params.put(Constants.KEY_FORM_ID, "292");
-                params.put(Constants.KEY_USER_ID, "1717");
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_DEVICE_TOKEN, MyApplication.getInstance().getDeviceToken());
-                params.put(Constants.KEY_APP_VERSION, "101");
-                params.put(Constants.KEY_APP_ACCESS_TOKEN, "b2a6c2db3010725ed08c7fd46bf23845");
-                params.put(Constants.KEY_APP_DEVICE_TYPE, "68");
                 params.put(Constants.KEY_PARENT_CATEGORY_ID, String.valueOf(prosCatalogueDatum.getCatalogueId()));
 
                 params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));

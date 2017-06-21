@@ -733,4 +733,18 @@ public interface Constants {
     String KEY_CATALOGUE_DATUM = "catalogue_datum";
     String KEY_PARENT_CATEGORY_ID = "parent_category_id";
     String KEY_PRODUCT_DATUM = "product_datum";
+    String KEY_CUSTOMER_ADDRESS = "customer_address";
+    String KEY_CUSTOMER_EMAIL = "customer_email";
+    String KEY_CUSTOMER_USERNAME = "customer_username";
+    String KEY_CUSTOMER_PHONE = "customer_phone";
+    String KEY_JOB_DESCRIPTION = "job_description";
+    String KEY_JOB_PICKUP_DATETIME = "job_pickup_datetime";
+    String KEY_JOB_DELIVERY_DATETIME = "job_delivery_datetime";
+    String KEY_TIMEZONE = "timezone";
+    String KEY_CUSTOM_FIELD_TEMPLATE = "custom_field_template";
+    String KEY_META_DATA = "meta_data";
+    String KEY_LABEL = "label";
+    String KEY_JUGNOO_PROS = "jugnoo_pros";
+    String KEY_PRODUCT_ID = "product_id";
+    String KEY_PRODUCT_NAME = "product_name";
 }
