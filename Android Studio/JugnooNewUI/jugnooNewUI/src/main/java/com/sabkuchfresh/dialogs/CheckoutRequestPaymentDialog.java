@@ -132,7 +132,7 @@ public class CheckoutRequestPaymentDialog extends Dialog {
 
     }
 
-    public CheckoutRequestPaymentDialog setData(String amount, long timerStartedAt, long expiryTimeMilliSecs, ArrayList<String> cancellationReasons, CheckoutRequestPaymentListener checkoutRequestPaymentListener) {
+    public CheckoutRequestPaymentDialog setData(String amount, long timerStartedAt, long expiryTimeMilliSecs, ArrayList<String> cancellationReasons, CheckoutRequestPaymentListener checkoutRequestPaymentListener, String jugnooVpaHandle) {
         isTimerExpired = false;
         this.timerStartedAt = timerStartedAt;
         this.checkoutRequestPaymentListener = checkoutRequestPaymentListener;
@@ -142,11 +142,11 @@ public class CheckoutRequestPaymentDialog extends Dialog {
         try {
             Double amountInDouble = Double.parseDouble(amount);
             formattedAmount = new DecimalFormat("#.00").format(amountInDouble);
-            tvLabelRequest.setText(activity.getString(R.string.label_checkout_request, formattedAmount));
+            tvLabelRequest.setText(activity.getString(R.string.label_checkout_request, formattedAmount,jugnooVpaHandle));
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            tvLabelRequest.setText(activity.getString(R.string.label_checkout_request, amount));
+            tvLabelRequest.setText(activity.getString(R.string.label_checkout_request, amount,jugnooVpaHandle));
 
         }
         tvLabelExpiryTime.setText(R.string.label_request_expires_in);

@@ -13,13 +13,15 @@ public class PaymentModeConfigData {
 	private int paymentOption;
 	private int priority;
 	private String offerText, displayName, upiHandle;
+	private String jugnooVpaHandle;
 
-	public PaymentModeConfigData(String name, int enabled, String offerText, String displayName, String upiHandle){
+	public PaymentModeConfigData(String name, int enabled, String offerText, String displayName, String upiHandle,String jugnooVpaHanlde){
 		this.name = name;
 		this.enabled = enabled;
 		this.offerText = offerText;
 		this.displayName = displayName;
 		this.upiHandle = upiHandle;
+		this.jugnooVpaHandle = jugnooVpaHanlde;
 		if(Constants.KEY_PAYTM.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.PAYTM.getOrdinal();
 		}
@@ -104,5 +106,9 @@ public class PaymentModeConfigData {
 
 	public void setUpiHandle(String upiHandle) {
 		this.upiHandle = upiHandle;
+	}
+
+	public String getJugnooVpaHandle() {
+		return jugnooVpaHandle;
 	}
 }

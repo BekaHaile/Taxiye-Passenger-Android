@@ -210,6 +210,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private RelativeLayout relativeLayoutIcici;
     private ImageView imageViewIcici;
     private final static IntentFilter ICICI_STATUS_BROADCAST_FILTER = new IntentFilter(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE);
+    private TextView tvLabelIciciUpi;
 
 
     public FreshCheckoutMergedFragment() {
@@ -241,6 +242,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private boolean couponManuallySelected;
     private boolean isRazorUPI;
     private EditText edtIciciVpa;
+    private String jugnooVpaHandle;
 
     @Override
     public void onStart() {
@@ -471,6 +473,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         relativeLayoutJugnooPay = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutJugnooPay);
         relativeLayoutCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCash);
         edtIciciVpa = (EditText) rootView.findViewById(R.id.edtIciciVpa);
+        tvLabelIciciUpi = (TextView) rootView.findViewById(R.id.tv_label_below_edt_icici);
         imageViewPaytmRadio = (ImageView) rootView.findViewById(R.id.imageViewPaytmRadio);
         imageViewAddPaytm = (ImageView) rootView.findViewById(R.id.imageViewAddPaytm);
         imageViewRadioMobikwik = (ImageView) rootView.findViewById(R.id.imageViewRadioMobikwik);
@@ -1925,6 +1928,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             edtIciciVpa.removeTextChangedListener(selectIciciPaymentTextWatcher);
                             edtIciciVpa.setText(paymentModeConfigData.getUpiHandle());
                             edtIciciVpa.addTextChangedListener(selectIciciPaymentTextWatcher);
+                            jugnooVpaHandle =  paymentModeConfigData.getJugnooVpaHandle();
+                            tvLabelIciciUpi.setText(activity.getString(R.string.label_below_icici_payment_edt, jugnooVpaHandle));
+
 
 
                         }
@@ -3246,7 +3252,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             public void onRetryClick() {
                 checkIciciPaymentStatusApi();
             }
-        }).showDialog();
+        }, jugnooVpaHandle).showDialog();
 
     }
 
