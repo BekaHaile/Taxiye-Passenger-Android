@@ -564,8 +564,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private static void checkIciciPaymentStatusApi(final FreshActivity activity) {
-        if(Data.getCurrentIciciUpiTransaction()!=null){
-            activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction());
+        if(Data.getCurrentIciciUpiTransaction(activity.getAppType())!=null){
+            activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(activity.getAppType()));
             ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, true, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
                 @Override
                 public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {

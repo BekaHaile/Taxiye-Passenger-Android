@@ -2,12 +2,14 @@ package com.sabkuchfresh.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.StyleRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -149,11 +151,27 @@ public class CheckoutRequestPaymentDialog extends Dialog {
         }
         tvLabelExpiryTime.setText(R.string.label_request_expires_in);
         this.cancellationReasons = cancellationReasons;
+        layoutPaymentStatus.setVisibility(View.VISIBLE);
+        layoutCancelPayment.setVisibility(View.GONE);
         setTime();
         setCancellationAdapter();
         btnTryAgain.setVisibility(View.GONE);
         btnTryAgain.setEnabled(true);
         progressBar.setVisibility(View.VISIBLE);
+        setOnKeyListener(new Dialog.OnKeyListener() {
+
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    onViewClicked(dismissView);
+                    return true;
+                }
+                return false;
+
+            }
+
+
+        });
         return this;
 
     }

@@ -344,8 +344,8 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
 
     private void checkPendingTransaction() {
 
-        if(Data.getCurrentIciciUpiTransaction()!=null){
-            activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction());
+        if(Data.getCurrentIciciUpiTransaction(activity.getAppType())!=null){
+            activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(activity.getAppType()));
             ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, false, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
                 @Override
                 public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {

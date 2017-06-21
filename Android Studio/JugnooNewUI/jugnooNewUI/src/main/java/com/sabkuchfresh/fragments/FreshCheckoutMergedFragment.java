@@ -2373,9 +2373,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         cartChangedRefreshCheckout = false;
                                     }
 
-                                    if(Data.getCurrentIciciUpiTransaction()!=null){
-                                        activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction());
-                                        onIciciUpiPaymentInitiated(Data.getCurrentIciciUpiTransaction().getIcici(),String.valueOf(Data.getCurrentIciciUpiTransaction().getAmount()));
+                                    if(Data.getCurrentIciciUpiTransaction(activity.getAppType())!=null){
+                                        activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(activity.getAppType()));
+                                        onIciciUpiPaymentInitiated(Data.getCurrentIciciUpiTransaction(activity.getAppType()).getIcici(),String.valueOf(Data.getCurrentIciciUpiTransaction(activity.getAppType()).getAmount()));
 
 
                                     }
@@ -3266,7 +3266,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         DELAY_ICICI_UPI_STATUS_CHECK = icici.getPollingTimeMillis();
         Long timerStartedAt = icici.getTimerStartedAt()==null?System.currentTimeMillis():icici.getTimerStartedAt();
         icici.setTimerStartedAt(timerStartedAt);
-        Data.saveCurrentIciciUpiTransaction(activity.getPlaceOrderResponse());
+        Data.saveCurrentIciciUpiTransaction(activity.getPlaceOrderResponse(), activity.getAppType());
         showRequestPaymentDialog(amount, TOTAL_EXPIRY_TIME_ICICI_UPI,icici.getReasonList(),icici.getTimerStartedAt()==null?System.currentTimeMillis():icici.getTimerStartedAt());
         activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable, DELAY_ICICI_UPI_STATUS_CHECK);
 
@@ -3285,7 +3285,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     checkoutRequestPaymentDialog.dismiss();
                 }
                 Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show();
-                Data.deleteCurrentIciciUpiTransaction();
+                Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
                 break;
             case SUCCESSFUL:
             case PROCESSED:
@@ -3297,7 +3297,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
 //                Toast.makeText(activity,toastMessage, Toast.LENGTH_SHORT).show();
                 orderPlacedSuccess(activity.getPlaceOrderResponse());
-                Data.deleteCurrentIciciUpiTransaction();
+                Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
 
                 break;
             case PENDING:
@@ -3444,13 +3444,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
             Integer orderStatus  = intent.getIntExtra(ORDER_STATUS,Constants.NO_VALID_STATUS);
             if(orderStatus!=Constants.NO_VALID_STATUS){
-                onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS,false),orderStatus),
-                        intent.hasExtra(Constants.KEY_MESSAGE)?intent.getStringExtra(Constants.KEY_MESSAGE):"");
+                    //Only if the payment is processing corresponding to that order ID
+                if(activity.getPlaceOrderResponse()!=null && activity.getPlaceOrderResponse().getOrderId()==intent.getIntExtra(Constants.ORDER_ID,0)) {
+                    onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS, false), orderStatus),
+                            intent.hasExtra(Constants.KEY_MESSAGE) ? intent.getStringExtra(Constants.KEY_MESSAGE) : "");
+                }
 
 
             }
 
         }
     };
+
 
 }

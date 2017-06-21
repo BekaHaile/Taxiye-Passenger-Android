@@ -6,6 +6,7 @@ import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.HashMap;
 
@@ -56,22 +57,29 @@ public class ApiCurrentStatusIciciUpi {
 
                                 if (commonResponse.getStatus() == IciciPaymentOrderStatus.PENDING) {
 
-                                    PlaceOrderResponse placeOrderResponse = Data.getCurrentIciciUpiTransaction();
+                                    PlaceOrderResponse placeOrderResponse = Data.getCurrentIciciUpiTransaction(activity.getAppType());
 
                                     if (placeOrderResponse.getIcici() != null) {
                                         placeOrderResponse.getIcici().setIciciPaymentOrderStatus(commonResponse.getStatus());
                                     }
                                 } else {
-                                    Data.deleteCurrentIciciUpiTransaction();
+                                    Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
                                 }
                                 apiCurrentStatusListener.onGoToCheckout(commonResponse.getStatus());
 
 
                             } else {
 
-
+                                activity.saveCheckoutData(true);
                                 activity.clearAllCartAtOrderComplete();
-                                Data.deleteCurrentIciciUpiTransaction();
+                                if(activity.getAppType()== AppConstant.ApplicationType.MENUS){
+                                    activity.getMenusCartSelectedLayout().checkForVisibility();
+                                } else if (activity.getProductsResponse() != null
+                                        && activity.getProductsResponse().getCategories() != null) {
+                                    activity.updateItemListFromSPDB(); // this is necessary
+                                    activity.updateCartValuesGetTotalPrice();
+                                }
+                                Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
                             }
 
                         } else {

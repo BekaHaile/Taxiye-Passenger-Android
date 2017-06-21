@@ -779,6 +779,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                     tvPaymentMethodVal.setText(R.string.other_payment_mode);
                 }
                 params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
+            } else if(datum1.getPaymentMode()==PaymentOption.ICICI_UPI.getOrdinal()){
+                params.setMargins((int) (ASSL.Xscale() * 34f), 0, 0, 0);
+                params.height= (int) (ASSL.minRatio() * 35f);
+                params.width= (int) (ASSL.minRatio() * 90f);
+                tvPaymentMethodVal.setBackgroundResource(R.drawable.upi_logo);
             }
             tvPaymentMethodVal.setLayoutParams(params);
 

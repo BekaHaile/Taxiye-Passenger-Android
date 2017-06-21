@@ -13,6 +13,7 @@ import com.fugu.FuguConfig;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -603,22 +604,24 @@ public class Data {
     }
 
 
-	public static void saveCurrentIciciUpiTransaction(PlaceOrderResponse placeOrderResponse){
+	public static void saveCurrentIciciUpiTransaction(PlaceOrderResponse placeOrderResponse, int applicationType){
 
-    	Paper.book().write(Constants.PLACE_ORDER_DATA,placeOrderResponse);
-
-
-	}
-	public static PlaceOrderResponse getCurrentIciciUpiTransaction(){
-
-		return Paper.book().read(Constants.PLACE_ORDER_DATA,null);
+        Paper.book().write(Constants.PLACE_ORDER_DATA + applicationType,placeOrderResponse);
 
 
 	}
+	public static PlaceOrderResponse getCurrentIciciUpiTransaction(int applicationType){
 
-	public static void deleteCurrentIciciUpiTransaction(){
 
-    	Paper.book().delete(Constants.PLACE_ORDER_DATA);
+
+		return Paper.book().read(Constants.PLACE_ORDER_DATA+applicationType,null);
+
+
+	}
+
+	public static void deleteCurrentIciciUpiTransaction(int applicationType){
+
+    	Paper.book().delete(Constants.PLACE_ORDER_DATA+ applicationType);
 
 
 	}

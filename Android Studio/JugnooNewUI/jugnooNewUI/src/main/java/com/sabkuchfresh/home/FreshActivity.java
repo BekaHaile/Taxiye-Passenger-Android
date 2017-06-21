@@ -778,7 +778,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                                     new Intent(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE)
                                                             .putExtra(Constants.ICICI_ORDER_STATUS,intent.getIntExtra(Constants.ICICI_ORDER_STATUS,Constants.NO_VALID_STATUS))
                                                             .putExtra(Constants.IS_MENUS,false)
-                                                            .putExtra(Constants.KEY_MESSAGE,intent.getStringExtra(Constants.KEY_MESSAGE)));
+                                                            .putExtra(Constants.KEY_MESSAGE,intent.getStringExtra(Constants.KEY_MESSAGE))
+                                                            .putExtra(Constants.ORDER_ID,intent.getIntExtra(Constants.ORDER_ID,0)));
                                         }
 
                                         if (fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()) {
@@ -799,7 +800,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                                new Intent(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE)
                                                .putExtra(Constants.ICICI_ORDER_STATUS,intent.getIntExtra(Constants.ICICI_ORDER_STATUS,Constants.NO_VALID_STATUS))
                                                .putExtra(Constants.IS_MENUS,true)
-                                               .putExtra(Constants.KEY_MESSAGE,intent.getStringExtra(Constants.KEY_MESSAGE)));
+                                               .putExtra(Constants.KEY_MESSAGE,intent.getStringExtra(Constants.KEY_MESSAGE))
+                                                .putExtra(Constants.ORDER_ID,intent.getIntExtra(Constants.ORDER_ID,0)));
+
                                             }
 
                                         } else {
@@ -2216,7 +2219,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 			}
         } catch (Exception e) {
         }
-        performBackPressed(true);
+
+         performBackPressed(true);
+
+
     }
 
     @Override
