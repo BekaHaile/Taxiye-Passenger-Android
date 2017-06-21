@@ -1485,21 +1485,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT), isRazorUPI);
                                         doSlideInitial = false;
                                     } else {
-
-
-                                        if(Integer.parseInt(placeOrderResponse.getPaymentMode())==PaymentOption.ICICI_UPI.getOrdinal()){
+                                        if(Integer.parseInt(placeOrderResponse.getPaymentMode())==PaymentOption.ICICI_UPI.getOrdinal() &&
+                                                placeOrderResponse.getIcici()!=null ){
                                             //Icici Upi Payment Initiated
-
                                             activity.setPlaceOrderResponse(placeOrderResponse);
-
-                                            if(placeOrderResponse.getIcici()!=null){
-
-                                                onIciciUpiPaymentInitiated(placeOrderResponse.getIcici(),String.valueOf(placeOrderResponse.getAmount()));
-
-                                            }else{
-                                                Toast.makeText(activity, "Something went wrong.Please try again later.", Toast.LENGTH_SHORT).show();
-                                            }
-
+                                            onIciciUpiPaymentInitiated(placeOrderResponse.getIcici(),String.valueOf(placeOrderResponse.getAmount()));
 
                                         }else{
                                             paramsPlaceOrder = params;
