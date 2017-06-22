@@ -64,6 +64,9 @@ public class Region {
 	@SerializedName("deepindex")
 	@Expose
 	private Integer deepindex;
+	@SerializedName("show_fare_estimate")
+	@Expose
+	private int showFareEstimate;
 
 	private boolean isDefault = false;
 
@@ -89,6 +92,15 @@ public class Region {
 
 	public void setIsDefault(boolean isDefault) {
 		this.isDefault = isDefault;
+	}
+
+	public int getShowFareEstimate() {
+		showFareEstimate = 1; // TODO: 22/06/17 remove this
+		return showFareEstimate;
+	}
+
+	public void setShowFareEstimate(int showFareEstimate) {
+		this.showFareEstimate = showFareEstimate;
 	}
 
 	public class OfferTexts {

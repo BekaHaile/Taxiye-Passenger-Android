@@ -7927,9 +7927,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void fareEstimateForPool(){
         if(Data.autoData.getDropLatLng() != null){
             int isPooled = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() ? 1 : 0;
-            boolean callFareEstimate = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() ? true : false;
+            boolean callFareEstimate = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
+                    ||
+                    (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)
+                    ? true : false;
             // TODO: 21/06/17 drop latlng check
-            callFareEstimate = true;
             new ApiFareEstimate(HomeActivity.this, new ApiFareEstimate.Callback() {
                 @Override
                 public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue) {
@@ -8466,8 +8468,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
 					switchPassengerScreen(passengerScreenMode);
 
-					if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
-							shakeAnim > 0 && !updateSpecialPickupScreen()){
+                    // TODO: 22/06/17 drop latlng check
+					if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
+							shakeAnim > 0 && !updateSpecialPickupScreen())
+                            ||
+                            (!specialPickupScreenOpened && !confirmedScreenOpened && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)){
 						imageViewRideNow.performClick();
 					}
                     GAUtils.event(RIDES, HOME, DESTINATION+LOCATION+ENTERED);
@@ -9101,7 +9106,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             float padding = 150f;
             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
-                    || Data.autoData.getDropLatLng() != null){ // TODO: 21/06/17 drop latlng check
+                    ||
+                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1){ // TODO: 21/06/17 drop latlng check
                 relativeLayoutTotalFare.setVisibility(View.VISIBLE);
                 textVieGetFareEstimateConfirm.setVisibility(View.GONE);
                 padding = padding + 80f;
@@ -9151,11 +9157,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         openConfirmRequestView();
                     }
                 } else {
+                    rlSpecialPickup.setVisibility(View.VISIBLE);
                     destinationRequiredShake();
                 }
             } else {
                 if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
                         .getRegionSelected().getDestinationMandatory() == 1) {
+                    rlSpecialPickup.setVisibility(View.VISIBLE);
                     destinationRequiredShake();
                 } else {
                     if(updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()){
@@ -9170,7 +9178,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     }
                     // TODO: 21/06/17 drop latlng check
-                    else if(Data.autoData.getDropLatLng() != null) {
+                    else if(Data.autoData.getDropLatLng() != null
+                            && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1) {
                         specialPickupScreenOpened = false;
                         removeSpecialPickupMarkers();
                         rlSpecialPickup.setVisibility(View.GONE);
