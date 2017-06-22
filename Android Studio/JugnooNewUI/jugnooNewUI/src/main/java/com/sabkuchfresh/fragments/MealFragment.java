@@ -497,7 +497,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     @Override
                     public void negativeClick(View view) {
                     }
-                },false);
+                },Data.getCurrentIciciUpiTransaction(activity.getAppType())==null);
     }
 
     @Override

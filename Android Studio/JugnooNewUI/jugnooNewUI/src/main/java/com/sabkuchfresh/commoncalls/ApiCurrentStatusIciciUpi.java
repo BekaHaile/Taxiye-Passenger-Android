@@ -130,6 +130,6 @@ public class ApiCurrentStatusIciciUpi {
                     @Override
                     public void negativeClick(View view) {
                     }
-                }, false);
+                }, Data.getCurrentIciciUpiTransaction(activity.getAppType())==null);
     }
 }

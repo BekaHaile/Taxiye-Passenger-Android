@@ -475,7 +475,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     @Override
                     public void negativeClick(View view) {
                     }
-                },false);
+                },Data.getCurrentIciciUpiTransaction(activity.getAppType())==null);
     }
 
 

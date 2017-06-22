@@ -20,7 +20,6 @@
     <LinearLayout
         android:id="@+id/layout_payment_status"
         android:layout_width="match_parent"
-
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@android:color/white"
@@ -141,8 +140,8 @@
                 android:minWidth="100dp"
                 app:font="maven"
                 android:layout_marginRight="@dimen/spacing_small"
-                android:textColor="@color/white"
-                android:background="@drawable/capsule_theme_color_selector"
+                android:textColor="@color/text_selector_back_icici"
+                android:background="@drawable/selector_back_icici"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 />
@@ -154,7 +153,6 @@
                 app:font="maven"
                 android:textColor="@color/white"
                 android:background="@drawable/capsule_theme_color_selector"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

@@ -1154,9 +1154,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 ivUPI.setImageResource(R.drawable.ic_radio_button_selected);
             } else if (activity.getPaymentOption() == PaymentOption.ICICI_UPI) {
                 imageViewIcici.setImageResource(R.drawable.ic_radio_button_selected);
+
             } else {
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
             }
+            edtIciciVpa.setVisibility(activity.getPaymentOption() == PaymentOption.ICICI_UPI?View.VISIBLE:View.GONE);
+            tvLabelIciciUpi.setVisibility(activity.getPaymentOption() == PaymentOption.ICICI_UPI?View.VISIBLE:View.GONE);
             updateCartDataView();
         } catch (Exception e) {
             e.printStackTrace();
@@ -2474,7 +2477,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     @Override
                     public void negativeClick(View view) {
                     }
-                },false);
+                },Data.getCurrentIciciUpiTransaction(activity.getAppType())==null);
     }
 
 

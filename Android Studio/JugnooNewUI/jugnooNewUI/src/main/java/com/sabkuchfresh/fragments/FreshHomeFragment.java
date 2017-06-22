@@ -305,7 +305,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                     @Override
                     public void negativeClick(View view) {
                     }
-                },false);
+                },Data.getCurrentIciciUpiTransaction(activity.getAppType())==null);
     }
 
     public void oSnapNotAvailableCase(String message){

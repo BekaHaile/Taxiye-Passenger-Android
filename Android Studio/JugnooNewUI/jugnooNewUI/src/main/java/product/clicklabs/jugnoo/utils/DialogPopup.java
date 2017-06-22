@@ -203,7 +203,7 @@ public class DialogPopup {
 
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
 			ImageView btnClose = (ImageView)dialog.findViewById(R.id.close);
-
+		    btnClose.setVisibility(closeOnNegative?View.VISIBLE:View.GONE);
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {

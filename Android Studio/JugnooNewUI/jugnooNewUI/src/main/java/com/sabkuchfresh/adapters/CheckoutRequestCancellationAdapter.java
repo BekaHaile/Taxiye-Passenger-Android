@@ -25,11 +25,13 @@ public class CheckoutRequestCancellationAdapter extends RecyclerView.Adapter<Che
     private int recentSelectedPosition = RecyclerView.NO_POSITION;
     private RecyclerView recyclerView;
     private Button submitButton;
-    public CheckoutRequestCancellationAdapter(Activity activity, ArrayList<String> cancellationReason, RecyclerView recyclerView,Button submitButton) {
+    private Button backButton;
+    public CheckoutRequestCancellationAdapter(Activity activity, ArrayList<String> cancellationReason, RecyclerView recyclerView, Button submitButton, Button backButton) {
         layoutInflater = LayoutInflater.from(activity);
         this.cancellationReason = cancellationReason;
         this.recyclerView = recyclerView;
         this.submitButton  = submitButton;
+        this.backButton  = backButton;
     }
 
     @Override
@@ -57,6 +59,7 @@ public class CheckoutRequestCancellationAdapter extends RecyclerView.Adapter<Che
                 togglePosition(true,position);
                 recentSelectedPosition = position;
                 submitButton.setEnabled(true);
+                backButton.setSelected(submitButton.isEnabled());
 
             }
 

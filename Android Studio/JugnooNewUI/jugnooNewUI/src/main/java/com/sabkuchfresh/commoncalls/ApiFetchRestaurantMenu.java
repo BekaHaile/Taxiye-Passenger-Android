@@ -138,7 +138,7 @@ public class ApiFetchRestaurantMenu {
 					public void negativeClick(View view) {
 						callback.onNoRetry(view);
 					}
-				},false);
+				},Data.getCurrentIciciUpiTransaction(activity.getAppType())==null);
 	}
 
 

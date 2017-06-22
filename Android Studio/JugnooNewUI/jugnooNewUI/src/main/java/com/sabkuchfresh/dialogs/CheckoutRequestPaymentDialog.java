@@ -261,9 +261,10 @@ public class CheckoutRequestPaymentDialog extends Dialog {
     public void setCancellationAdapter() {
 
         recyclerCancellationReasons.setLayoutManager(new LinearLayoutManager(activity));
-        checkoutRequestCancellationAdapter = new CheckoutRequestCancellationAdapter(activity, cancellationReasons, recyclerCancellationReasons, btnSubmit);
+        checkoutRequestCancellationAdapter = new CheckoutRequestCancellationAdapter(activity, cancellationReasons, recyclerCancellationReasons, btnSubmit,btnBack );
         recyclerCancellationReasons.setAdapter(checkoutRequestCancellationAdapter);
         btnSubmit.setEnabled(checkoutRequestCancellationAdapter.getSelectedItem() != null);
+        btnBack.setSelected(btnSubmit.isEnabled());
 
 
     }
