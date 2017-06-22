@@ -183,7 +183,7 @@ public class MenusResponse implements Serializable {
 	}
 
 
-	public class Vendor {
+	public class Vendor implements Serializable{
 
 		@SerializedName("restaurant_id")
 		@Expose

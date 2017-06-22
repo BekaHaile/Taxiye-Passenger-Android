@@ -184,7 +184,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         }
 
         activity.tvCollapRestaurantDeliveryTime.setText("");
-        activity.clearRestaurantRatingStars(activity.llCollapRatingStars, activity.tvCollapRestaurantRating);
+        activity.clearRestaurantRatingStars(activity.llCollapRatingStars, activity.tvCollapRestaurantRating, null);
 
         activity.setSortingList(this);
 
@@ -443,7 +443,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
             if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
                 activity.llCollapRatingStars.setVisibility(View.VISIBLE);
-                activity.setRestaurantRatingStarsToLL(activity.llCollapRatingStars, activity.tvCollapRestaurantRating, activity.getVendorOpened().getRating());
+                activity.setRestaurantRatingStarsToLL(activity.llCollapRatingStars, activity.tvCollapRestaurantRating,
+                        activity.getVendorOpened().getRating(),
+                        R.drawable.ic_half_star_green_white, R.drawable.ic_star_white, null, 0);
             } else {
                 activity.llCollapRatingStars.setVisibility(View.INVISIBLE);
             }

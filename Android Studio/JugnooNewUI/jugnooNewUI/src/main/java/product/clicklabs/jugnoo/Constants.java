@@ -723,4 +723,5 @@ public interface Constants {
     String ICICI_ORDER_STATUS = "order_status";
     int NO_VALID_STATUS = -1001;
     String IS_MENUS = "is_menus";
+    String KEY_VENDOR = "vendor";
 }

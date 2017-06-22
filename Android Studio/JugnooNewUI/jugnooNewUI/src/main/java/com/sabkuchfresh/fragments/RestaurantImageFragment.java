@@ -128,7 +128,7 @@ public class RestaurantImageFragment extends Fragment {
 
         if (activity != null) {
             tvCollapRestaurantDeliveryTime.setText("");
-            activity.clearRestaurantRatingStars(llCollapRatingStars, tvCollapRestaurantRating);
+            activity.clearRestaurantRatingStars(llCollapRatingStars, tvCollapRestaurantRating, null);
 
             shadowView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.opaque_black_strong));
 
@@ -177,7 +177,9 @@ public class RestaurantImageFragment extends Fragment {
 
                 if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
                     llCollapRatingStars.setVisibility(View.VISIBLE);
-                    activity.setRestaurantRatingStarsToLL(llCollapRatingStars, tvCollapRestaurantRating, activity.getVendorOpened().getRating());
+                    activity.setRestaurantRatingStarsToLL(llCollapRatingStars, tvCollapRestaurantRating,
+                            activity.getVendorOpened().getRating(),
+                            R.drawable.ic_half_star_green_white, R.drawable.ic_star_white, null, 0);
                 } else {
                     llCollapRatingStars.setVisibility(View.INVISIBLE);
                 }
