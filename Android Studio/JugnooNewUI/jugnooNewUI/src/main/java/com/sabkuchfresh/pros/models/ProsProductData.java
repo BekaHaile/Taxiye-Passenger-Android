@@ -15,9 +15,12 @@ public class ProsProductData{
 	@SerializedName("message")
 	@Expose
 	private String message;
-	@SerializedName("status")
+	@SerializedName("error")
 	@Expose
-	private int status;
+	private String error;
+	@SerializedName("flag")
+	@Expose
+	private int flag;
 	@SerializedName("data")
 	@Expose
 	private List<ProsProductDatum> data = null;
@@ -30,20 +33,28 @@ public class ProsProductData{
 		this.message = message;
 	}
 
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
 	public List<ProsProductDatum> getData() {
 		return data;
 	}
 
 	public void setData(List<ProsProductDatum> data) {
 		this.data = data;
+	}
+
+	public int getFlag() {
+		return flag;
+	}
+
+	public void setFlag(int flag) {
+		this.flag = flag;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
 	}
 
 	public static class ProsProductDatum implements Serializable{

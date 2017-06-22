@@ -1342,6 +1342,8 @@
     <string name="paid_via">Paid via</string>
     <string name="view_details">View Details</string>
     <string name="select_time">Select Time</string>
+    <string name="please_select_date">Please select date</string>
+    <string name="please_select_time">Please select time</string>
 
 
 </resources>

@@ -31,6 +31,8 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -104,7 +106,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 					activity.getFabViewTest().hideJeanieHelpInSession();
 				}
 				try {
-					GAUtils.event(FRESH, HOME+SUPER+CATEGORY+CLICKED, prosCatalogueDatum.getName());
+					GAUtils.event(PROS, HOME+SUPER+CATEGORY+CLICKED, prosCatalogueDatum.getName());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -130,20 +132,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 			}
 		});
 
-		activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
-
-		try {
-			if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
-				activity.getHandler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						activity.openFeedback();
-					}
-				}, 300);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.PROS);
 
 		return rootView;
 	}
@@ -156,21 +145,6 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 				categoriesAdapter.notifyDataSetChanged();
 				activity.setAddressTextToLocationPlaceHolder();
 				activity.fragmentUISetup(this);
-				if(activity.getCartChangedAtCheckout()){
-					activity.updateItemListFromSPDB();
-					activity.updateCartValuesGetTotalPrice();
-				}
-				activity.setCartChangedAtCheckout(false);
-				activity.getHandler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						if(activity.isRefreshCart() || activity.refreshCart2){
-							activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
-						}
-						activity.setRefreshCart(false);
-						activity.refreshCart2 = false;
-					}
-				}, 300);
 			}
 
 			if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
@@ -208,32 +182,16 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 							finalProgressDialog.dismiss();
 						}
 						try {
-//							if(superCategoriesData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
-//								oSnapNotAvailableCase(superCategoriesData.getMessage());
-//							} else if(superCategoriesData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-//								if(activity.getCartCityId() == -1){
-//									activity.setCartCityId(superCategoriesData.getDeliveryInfo().getCityId());
-//								}
-//
-//								if(!activity.checkForCityChange(superCategoriesData.getDeliveryInfo().getCityId(),
-//										new FreshActivity.CityChangeCallback() {
-//											@Override
-//											public void onYesClick() {
-//												setSuperCategoriesDataToUI(superCategoriesData);
-//											}
-//
-//											@Override
-//											public void onNoClick() {
-//
-//											}
-//										})){
+							if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, prosCatalogueData.getFlag(), prosCatalogueData.getError(), prosCatalogueData.getMessage())) {
+								if (prosCatalogueData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()) {
+									oSnapNotAvailableCase(prosCatalogueData.getMessage());
+								} else if (prosCatalogueData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 									setDataToUI(prosCatalogueData);
-//								}
-//
-//							} else {
-//								DialogPopup.alertPopup(activity, "", superCategoriesData.getMessage());
-//								stopOhSnap();
-//							}
+								} else {
+									DialogPopup.alertPopup(activity, "", prosCatalogueData.getMessage());
+									stopOhSnap();
+								}
+							}
 						} catch (Exception exception) {
 							exception.printStackTrace();
 							retryDialogSuperCategoriesAPI(DialogErrorType.SERVER_ERROR);
@@ -269,7 +227,6 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 		activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
 		activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
 
-		activity.updateCartValuesGetTotalPrice();
 		stopOhSnap();
 		rvProsMain.smoothScrollToPosition(0);
 		categoriesAdapter.setList(prosCatalogueData.getData().get(prosCatalogueData.getData().size()-1), null, null);
@@ -322,7 +279,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 	public void onResume() {
 		super.onResume();
 		if(!isHidden() && resumed) {
-			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
+			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.PROS);
 		}
 		resumed = true;
 	}

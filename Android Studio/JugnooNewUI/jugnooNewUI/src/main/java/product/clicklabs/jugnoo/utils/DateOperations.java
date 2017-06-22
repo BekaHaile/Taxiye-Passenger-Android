@@ -538,7 +538,6 @@ public class DateOperations {
 	}
 
 	public static String getDateFormatted(String dateYYYYMMDD) {
-
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, YYYY");
 		try {
@@ -548,6 +547,26 @@ public class DateOperations {
 			e1.printStackTrace();
 			return dateYYYYMMDD;
 		}
+	}
+
+	public static String addHoursToDateTime(String dateTime, int numberOfHours){
+		try{
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date1 = format.parse(dateTime);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date1);
+			calendar.add(Calendar.HOUR, numberOfHours);
+			return format.format(calendar.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dateTime;
+		}
+	}
+
+	public static int getTimezoneDiffWithUTC(){
+		TimeZone tz = TimeZone.getDefault();
+		Date now = new Date();
+		return tz.getOffset(now.getTime()) / 60000;
 	}
 
 }

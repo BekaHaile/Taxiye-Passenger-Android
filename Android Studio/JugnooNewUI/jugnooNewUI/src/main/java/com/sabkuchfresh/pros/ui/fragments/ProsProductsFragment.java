@@ -3,7 +3,6 @@ package com.sabkuchfresh.pros.ui.fragments;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +24,8 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -39,7 +40,7 @@ import retrofit.mime.TypedByteArray;
  * Created by shankar on 15/06/17.
  */
 
-public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction, GACategory {
+public class ProsProductsFragment extends Fragment implements GAAction, GACategory {
     private final String TAG = ProsProductsFragment.class.getSimpleName();
 
     private ProsProductsAdapter productsAdapter;
@@ -97,11 +98,6 @@ public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout
         }
     }
 
-    @Override
-    public void onRefresh() {
-        getAllProducts(false, activity.getSelectedLatLng());
-    }
-
     public void getAllProducts(final boolean loader, final LatLng latLng) {
         try {
             if (MyApplication.getInstance().isOnline()) {
@@ -126,7 +122,13 @@ public class ProsProductsFragment extends Fragment implements SwipeRefreshLayout
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
-                            productsAdapter.setResults(productsResponse.getData());
+                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
+                                if (productsResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                    productsAdapter.setResults(productsResponse.getData());
+                                } else {
+                                    DialogPopup.alertPopup(activity, "", productsResponse.getMessage());
+                                }
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                             retryDialog(DialogErrorType.SERVER_ERROR);

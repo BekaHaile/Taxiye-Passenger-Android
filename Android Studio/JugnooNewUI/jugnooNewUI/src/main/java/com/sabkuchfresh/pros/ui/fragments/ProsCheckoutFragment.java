@@ -1,11 +1,11 @@
 package com.sabkuchfresh.pros.ui.fragments;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,10 +23,12 @@ import android.widget.TimePicker;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.pros.models.CreateTaskData;
 import com.sabkuchfresh.pros.models.ProsProductData;
 import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.pros.utils.TimePickerFragment;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -42,6 +44,8 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -95,6 +99,7 @@ public class ProsCheckoutFragment extends Fragment {
 	private FreshActivity activity;
 	private ProsProductData.ProsProductDatum prosProductDatum;
 	private Bus mBus;
+	private String selectedDate, selectedTime;
 
 	public static ProsCheckoutFragment newInstance(ProsProductData.ProsProductDatum prosProductDatum) {
 		ProsCheckoutFragment fragment = new ProsCheckoutFragment();
@@ -123,14 +128,17 @@ public class ProsCheckoutFragment extends Fragment {
 		activity.bRequestBooking.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Dialog dialogOrderComplete = new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
-					@Override
-					public void onDismiss() {
-						activity.orderComplete();
-					}
-				}).show(String.valueOf(2334),
-						"02:00PM - 06:00PM", "24 June,17", true, "",
-						null, AppConstant.ApplicationType.PROS);
+				if(TextUtils.isEmpty(selectedDate)){
+					Utils.showToast(activity, activity.getString(R.string.please_select_date));
+					return;
+				} else if(TextUtils.isEmpty(selectedTime)){
+					Utils.showToast(activity, activity.getString(R.string.please_select_time));
+					return;
+				}
+				String finalDateTime = selectedDate+" "+selectedTime;
+				apiCreateTask(editTextDeliveryInstructions.getText().toString().trim(),
+						finalDateTime, DateOperations.addHoursToDateTime(finalDateTime, 1),
+						String.valueOf(-1*DateOperations.getTimezoneDiffWithUTC()));
 			}
 		});
 
@@ -185,7 +193,8 @@ public class ProsCheckoutFragment extends Fragment {
 	private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
 		@Override
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-			tvSelectDate.setText(DateOperations.getDateFormatted(year+"-"+(month+1)+"-"+dayOfMonth));
+			selectedDate = year+"-"+(month+1)+"-"+dayOfMonth;
+			tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
 		}
 	};
 
@@ -200,6 +209,7 @@ public class ProsCheckoutFragment extends Fragment {
 	private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			selectedTime = hourOfDay+":"+minute+":00";
 			tvSelectTimeSlot.setText(DateOperations.convertDayTimeAPViaFormat(hourOfDay+":"+minute+":00"));
 		}
 	};
@@ -265,7 +275,8 @@ public class ProsCheckoutFragment extends Fragment {
 		super.onStop();
 	}
 
-	public void apiCreateTask(final String jobDescription, final String jobPickupDateTime, final String jobDeliveryDateTime, final String timeZoneDiff) {
+	public void apiCreateTask(final String jobDescription, final String jobPickupDateTime, final String jobDeliveryDateTime,
+							  final String timeZoneDiff) {
 		try {
 			if (MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
@@ -296,11 +307,32 @@ public class ProsCheckoutFragment extends Fragment {
 				params.put(Constants.KEY_META_DATA, String.valueOf(jsonArray));
 
 				new HomeUtil().putDefaultParams(params);
-				RestClient.getProsApiService().createTaskViaVendor(params, new Callback<ProsProductData>() {
+				RestClient.getProsApiService().createTaskViaVendor(params, new Callback<CreateTaskData>() {
 					@Override
-					public void success(ProsProductData productsResponse, Response response) {
+					public void success(CreateTaskData productsResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
+						try {
+							if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
+								if (productsResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+									new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+										@Override
+										public void onDismiss() {
+											activity.getSupportFragmentManager().popBackStack(ProsProductsFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+										}
+									}).show(String.valueOf(productsResponse.getData().getJobId()),
+											tvSelectTimeSlot.getText().toString(),
+											tvSelectDate.getText().toString(), true, "",
+											null, AppConstant.ApplicationType.PROS);
+								} else {
+									DialogPopup.alertPopup(activity, "", productsResponse.getMessage());
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+
 						DialogPopup.dismissLoadingDialog();
 					}
 

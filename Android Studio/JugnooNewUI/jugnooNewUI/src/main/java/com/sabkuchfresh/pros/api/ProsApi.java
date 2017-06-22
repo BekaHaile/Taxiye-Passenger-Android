@@ -1,5 +1,6 @@
 package com.sabkuchfresh.pros.api;
 
+import com.sabkuchfresh.pros.models.CreateTaskData;
 import com.sabkuchfresh.pros.models.ProsCatalogueData;
 import com.sabkuchfresh.pros.models.ProsProductData;
 
@@ -29,6 +30,6 @@ public interface ProsApi {
 	@FormUrlEncoded
 	@POST("/create_task_via_vendor")
 	void createTaskViaVendor(@FieldMap Map<String, String> params,
-								Callback<ProsProductData> callback);
+								Callback<CreateTaskData> callback);
 
 }
