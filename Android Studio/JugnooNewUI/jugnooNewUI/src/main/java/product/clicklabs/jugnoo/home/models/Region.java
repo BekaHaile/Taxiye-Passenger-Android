@@ -95,7 +95,6 @@ public class Region {
 	}
 
 	public int getShowFareEstimate() {
-		showFareEstimate = 1; // TODO: 22/06/17 remove this
 		return showFareEstimate;
 	}
 

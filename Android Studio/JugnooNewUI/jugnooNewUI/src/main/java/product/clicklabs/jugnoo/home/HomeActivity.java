@@ -8473,7 +8473,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							shakeAnim > 0 && !updateSpecialPickupScreen())
                             ||
                             (!specialPickupScreenOpened && !confirmedScreenOpened && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)){
-						imageViewRideNow.performClick();
+                        textViewTotalFareValue.setText("");
+                        imageViewRideNow.performClick();
 					}
                     GAUtils.event(RIDES, HOME, DESTINATION+LOCATION+ENTERED);
 				}
