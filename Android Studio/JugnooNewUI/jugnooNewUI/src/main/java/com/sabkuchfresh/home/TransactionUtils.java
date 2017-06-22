@@ -33,7 +33,6 @@ import com.sabkuchfresh.pros.models.ProsProductData;
 import com.sabkuchfresh.pros.ui.fragments.ProsCheckoutFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsOrderStatusFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsProductsFragment;
-import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -461,10 +460,10 @@ public class TransactionUtils {
         }
     }
 
-    public void addProsOrderStatusFragment(FragmentActivity activity, View container) {
+    public void addProsOrderStatusFragment(FragmentActivity activity, View container, int orderId) {
         if (!checkIfFragmentAdded(activity, ProsOrderStatusFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .add(container.getId(), ProsOrderStatusFragment.newInstance(),
+                    .add(container.getId(), ProsOrderStatusFragment.newInstance(orderId),
                             ProsOrderStatusFragment.class.getName())
                     .addToBackStack(ProsOrderStatusFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

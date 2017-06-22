@@ -3591,6 +3591,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     private HomeUtil homeUtil = new HomeUtil();
+    public HomeUtil getHomeUtil(){
+        return homeUtil;
+    }
 
     private LatLng menuRefreshLatLng;
 

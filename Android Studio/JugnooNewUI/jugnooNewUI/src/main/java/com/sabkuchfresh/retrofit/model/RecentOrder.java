@@ -3,11 +3,13 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by ankit on 26/10/16.
  */
 
-public class RecentOrder {
+public class RecentOrder implements Serializable{
 
     @SerializedName("order_id")
     @Expose

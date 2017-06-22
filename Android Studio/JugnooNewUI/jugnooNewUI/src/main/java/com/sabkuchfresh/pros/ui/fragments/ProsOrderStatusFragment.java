@@ -3,6 +3,7 @@ package com.sabkuchfresh.pros.ui.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,10 @@ import com.sabkuchfresh.home.FreshActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.support.SupportActivity;
 
 /**
@@ -48,15 +51,21 @@ public class ProsOrderStatusFragment extends Fragment {
 	Button bNeedHelp;
 	private Activity activity;
 
-	public static ProsOrderStatusFragment newInstance() {
+	private int orderId;
+	private int supportCategory;
+	private String date;
+
+
+	public static ProsOrderStatusFragment newInstance(int orderId) {
 		ProsOrderStatusFragment fragment = new ProsOrderStatusFragment();
 		Bundle bundle = new Bundle();
-
+		bundle.putInt(Constants.KEY_ORDER_ID, orderId);
 		fragment.setArguments(bundle);
 		return fragment;
 	}
 
 	private void parseArguments() {
+		orderId = getArguments().getInt(Constants.KEY_ORDER_ID, -1);
 	}
 
 	@Override
@@ -70,6 +79,9 @@ public class ProsOrderStatusFragment extends Fragment {
 
 		ButterKnife.bind(this, rootView);
 
+		if (activity instanceof SupportActivity) {
+			bNeedHelp.setVisibility(View.GONE);
+		}
 
 
 		return rootView;
@@ -93,7 +105,18 @@ public class ProsOrderStatusFragment extends Fragment {
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.bNeedHelp:
-
+				View container = null;
+				if(activity instanceof FreshActivity) {
+					container = ((FreshActivity)activity).getRelativeLayoutContainer();
+				} else if (activity instanceof RideTransactionsActivity) {
+					container = ((RideTransactionsActivity) activity).getContainer();
+				} else if (activity instanceof SupportActivity) {
+					container = ((SupportActivity) activity).getContainer();
+				}
+				if(container != null) {
+					homeUtil.openFuguOrSupport((FragmentActivity) activity, container,
+							orderId, supportCategory, date);
+				}
 				break;
 		}
 	}
@@ -101,12 +124,14 @@ public class ProsOrderStatusFragment extends Fragment {
 	private void setActivityUI(){
 		if(activity instanceof FreshActivity) {
 			((FreshActivity)activity).fragmentUISetup(this);
-			((FreshActivity)activity).getTopBar().title.setText(activity.getString(R.string.order_id_format, String.valueOf(123)));
+			((FreshActivity)activity).getTopBar().title.setText(activity.getString(R.string.order_id_format, String.valueOf(orderId)));
 		} else if (activity instanceof RideTransactionsActivity) {
-			((RideTransactionsActivity) activity).setTitle("Order #" + "123");
+			((RideTransactionsActivity) activity).setTitle(activity.getString(R.string.order_id_format, String.valueOf(orderId)));
 		} else if (activity instanceof SupportActivity) {
-			((SupportActivity) activity).setTitle("Order #" + "123");
+			((SupportActivity) activity).setTitle(activity.getString(R.string.order_id_format, String.valueOf(orderId)));
 		}
 	}
+
+	private HomeUtil homeUtil = new HomeUtil();
 
 }

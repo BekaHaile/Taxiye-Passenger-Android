@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.view.View;
 
+import com.fugu.FuguConfig;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -28,6 +31,7 @@ import product.clicklabs.jugnoo.GCMIntentService;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -35,11 +39,15 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
+import product.clicklabs.jugnoo.support.TransactionUtils;
+import product.clicklabs.jugnoo.support.models.ActionType;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedString;
 
@@ -368,6 +376,36 @@ public class HomeUtil {
 			return ProductType.PROS;
 		} else {
 			return ProductType.NOT_SURE;
+		}
+	}
+
+	public void openFuguOrSupport(FragmentActivity activity, View container, int orderId, int supportCategory, String deliveryDate){
+		if (Data.isFuguChatEnabled()) {
+			try {
+				FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
+			} catch (Exception e) {
+				e.printStackTrace();
+				Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
+			}
+
+		} else {
+			ArrayList<ShowPanelResponse.Item> items = MyApplication.getInstance().getDatabase2().getSupportDataItems(supportCategory);
+			if(items.size() > 0) {
+				ShowPanelResponse.Item item = new ShowPanelResponse.Item();
+				item.setItems(items);
+				item.setActionType(ActionType.NEXT_LEVEL.getOrdinal());
+				item.setSupportId(supportCategory);
+				item.setText(activity.getString(R.string.order_is_late));
+
+				new TransactionUtils().openItemInFragment(activity, container, -1, "",
+						activity.getResources().getString(R.string.support_main_title), item, "",
+						orderId, deliveryDate,
+						Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
+			} else {
+				new TransactionUtils().openRideIssuesFragment(activity, container,
+						-1, orderId, null, null, 0, false, 0, null,
+						supportCategory, ProductType.MENUS.getOrdinal(), deliveryDate);
+			}
 		}
 	}
 

@@ -128,7 +128,10 @@ public class ProsCheckoutFragment extends Fragment {
 		activity.bRequestBooking.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(TextUtils.isEmpty(selectedDate)){
+				if (addressSelectedNotValid() || TextUtils.isEmpty(activity.getSelectedAddress())) {
+					Utils.showToast(activity, activity.getString(R.string.please_select_a_delivery_address));
+					return;
+				} else if(TextUtils.isEmpty(selectedDate)){
 					Utils.showToast(activity, activity.getString(R.string.please_select_date));
 					return;
 				} else if(TextUtils.isEmpty(selectedTime)){

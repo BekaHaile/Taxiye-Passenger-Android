@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
@@ -55,9 +54,6 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.support.TransactionUtils;
-import product.clicklabs.jugnoo.support.models.ActionType;
-import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -1265,33 +1261,35 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 if(order.isDeliveryNotDone() && order.getDeliveryConfirmation() < 0) {
                     apiConfirmDelivery(order.getOrderId(), 1, pos);
                 } else {
-                    if (Data.isFuguChatEnabled()) {
-                        try {
-                            FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
-                        }
-
-                    } else {
-                        ArrayList<ShowPanelResponse.Item> items = MyApplication.getInstance().getDatabase2().getSupportDataItems(order.getSupportCategory());
-                        if(items.size() > 0) {
-                            ShowPanelResponse.Item item = new ShowPanelResponse.Item();
-                            item.setItems(items);
-                            item.setActionType(ActionType.NEXT_LEVEL.getOrdinal());
-                            item.setSupportId(order.getSupportCategory());
-                            item.setText(activity.getString(R.string.order_is_late));
-
-                            new TransactionUtils().openItemInFragment(activity, activity.getRelativeLayoutContainer(), -1, "",
-                                    activity.getResources().getString(R.string.support_main_title), item, "",
-                                    order.getOrderId(), order.getExpectedDeliveryDate(),
-                                    Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
-                        } else {
-                            new TransactionUtils().openRideIssuesFragment(activity, activity.getRelativeLayoutContainer(),
-                                    -1, order.getOrderId(), null, null, 0, false, 0, null,
-                                    order.getSupportCategory(), ProductType.MENUS.getOrdinal(), order.getExpectedDeliveryDate());
-                        }
-                    }
+                    activity.getHomeUtil().openFuguOrSupport(activity, activity.getRelativeLayoutContainer(),
+                            order.getOrderId(), order.getSupportCategory(), order.getExpectedDeliveryDate());
+//                    if (Data.isFuguChatEnabled()) {
+//                        try {
+//                            FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
+//                        }
+//
+//                    } else {
+//                        ArrayList<ShowPanelResponse.Item> items = MyApplication.getInstance().getDatabase2().getSupportDataItems(order.getSupportCategory());
+//                        if(items.size() > 0) {
+//                            ShowPanelResponse.Item item = new ShowPanelResponse.Item();
+//                            item.setItems(items);
+//                            item.setActionType(ActionType.NEXT_LEVEL.getOrdinal());
+//                            item.setSupportId(order.getSupportCategory());
+//                            item.setText(activity.getString(R.string.order_is_late));
+//
+//                            new TransactionUtils().openItemInFragment(activity, activity.getRelativeLayoutContainer(), -1, "",
+//                                    activity.getResources().getString(R.string.support_main_title), item, "",
+//                                    order.getOrderId(), order.getExpectedDeliveryDate(),
+//                                    Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
+//                        } else {
+//                            new TransactionUtils().openRideIssuesFragment(activity, activity.getRelativeLayoutContainer(),
+//                                    -1, order.getOrderId(), null, null, 0, false, 0, null,
+//                                    order.getSupportCategory(), ProductType.MENUS.getOrdinal(), order.getExpectedDeliveryDate());
+//                        }
+//                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
