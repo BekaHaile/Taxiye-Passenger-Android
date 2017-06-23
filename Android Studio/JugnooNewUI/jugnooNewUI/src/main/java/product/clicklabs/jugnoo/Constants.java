@@ -354,7 +354,7 @@ public interface Constants {
     String PHONE_AUTOFILLED_FB = "Phone autofilled FB";
     String NAME_EMAIL_AUTOFILLED_EDITED = "Name/email autofilled edited";
     String NAME_EMAIL_AUTOFILLED_UNEDITED = "Name/email autofilled unedited";
-    String ORDER_STATUS = "Order status";
+    String ORDER_STATUS = "order_status";
     String SKIP_BOTTOM = "Skip bottom";
     String SKIP_TOP = "Skip top";
 
@@ -552,6 +552,7 @@ public interface Constants {
 
     String KEY_VALID_STOCK_COUNT = "valid_stock_count";
     String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
+    String INTENT_ICICI_PAYMENT_STATUS_UPDATE = "INTENT_ICICI_PAYMENT_STATUS_UPDATE";
     String INTENT_ACTION_CHAT_CLOSE = "intent_action_chat_close";
     String KEY_CHAT_COUNT = "chat_count";
 
@@ -694,6 +695,7 @@ public interface Constants {
     String SP_POST_NOTIFICATION_ID_TO_OPEN = "sp_post_notification_id_to_open";
     String KEY_DRIVER_PHONE_NO = "driver_phone_no";
     String KEY_UPI_HANDLE = "upi_handle";
+    String KEY_JUGNOO_VPA_HANDLE = "jugnoo_vpa_handle";
     String PAGE_COUNT = "pageCount";
     String COUNT_RECORDS = "count_records";
     String KEY_CLOSE_TRACKING = "close_tracking";
@@ -711,12 +713,14 @@ public interface Constants {
     String SP_MENUS_CART_ADDRESS = "sp_menus_cart_address";
     String SP_CACHE_CLEAR_TIME = "sp_cache_clear_time";
     String KEY_OUT_OF_RANGE = "out_of_range";
-
-
-
     String KEY_IS_DELIVERED = "is_delivered";
     String KEY_SUPPORT_CATEGORY = "support_category";
     String SP_PAYTM_LAST_BALANCE = "sp_paytm_last_balance";
     String SP_MOBIKWIK_LAST_BALANCE = "sp_mobikwik_last_balance";
     String SP_FREECHARGE_LAST_BALANCE = "sp_freecharge_last_balance";
+    String KEY_ICICI_UPI = "upi_icici";
+    String PLACE_ORDER_DATA = "place_order_response";
+    String ICICI_ORDER_STATUS = "order_status";
+    int NO_VALID_STATUS = -1001;
+    String IS_MENUS = "is_menus";
 }

@@ -21,6 +21,10 @@ public class MenusCartSelectedLayout {
 	private LinearLayout llDeleteCart;
 	private int vendorId;
 
+	public RelativeLayout getRlMenusCartSelectedInner() {
+		return rlMenusCartSelectedInner;
+	}
+
 	public MenusCartSelectedLayout(FreshActivity activity){
 		this.activity = activity;
 	}

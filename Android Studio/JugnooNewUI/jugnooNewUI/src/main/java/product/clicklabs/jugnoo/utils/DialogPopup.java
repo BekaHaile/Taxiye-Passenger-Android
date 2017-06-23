@@ -55,7 +55,7 @@ public class DialogPopup {
 								negativeListener.onClick(v);
 							}
 						}
-					}, cancellable);
+					}, cancellable, true);
 			return false;
 		}
 		else if(message.contains(Data.SERVER_NOT_RESOPNDING_MSG)){
@@ -79,7 +79,7 @@ public class DialogPopup {
 								negativeListener.onClick(v);
 							}
 						}
-					}, cancellable);
+					}, cancellable, true);
 			return false;
 		}
 		else if(message.contains(Data.SERVER_ERROR_MSG)){
@@ -103,7 +103,7 @@ public class DialogPopup {
 								negativeListener.onClick(v);
 							}
 						}
-					}, cancellable);
+					}, cancellable, true);
 			return false;
 		} else{
 			return true;
@@ -169,12 +169,12 @@ public class DialogPopup {
 
 	public static void dialogNoInternet(Activity activity, String title, String message,
 										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface){
-		dialogNoInternet(activity, title, message, alertCallBackWithButtonsInterface, false);
+		dialogNoInternet(activity, title, message, alertCallBackWithButtonsInterface, false, true);
 	}
 
 	public static void dialogNoInternet(Activity activity, String title, String message,
 										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface,
-										final boolean cancellable) {
+										final boolean cancellable, final boolean closeOnNegative) {
 		try {
 			dismissAlertPopup();
 
@@ -203,7 +203,7 @@ public class DialogPopup {
 
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
 			ImageView btnClose = (ImageView)dialog.findViewById(R.id.close);
-
+		    btnClose.setVisibility(closeOnNegative?View.VISIBLE:View.GONE);
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -217,7 +217,9 @@ public class DialogPopup {
 			btnClose.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					dialog.dismiss();
+					if(closeOnNegative) {
+						dialog.dismiss();
+					}
 					if(alertCallBackWithButtonsInterface != null) {
 						alertCallBackWithButtonsInterface.negativeClick(v);
 					}
@@ -259,6 +261,22 @@ public class DialogPopup {
 			text = activity.getResources().getString(R.string.server_error_text);
 		}
 		dialogNoInternet(activity, title, text, alertCallBackWithButtonsInterface);
+	}
+
+
+	public static void dialogNoInternet(Activity activity, DialogErrorType dialogErrorType,
+										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface,boolean closeOnNegative) {
+		String title = activity.getResources().getString(R.string.no_net_title);
+		String text = activity.getResources().getString(R.string.no_net_text);
+		if(dialogErrorType.getOrdinal() == DialogErrorType.CONNECTION_LOST.getOrdinal()){
+			title = activity.getResources().getString(R.string.conn_lost_title);
+			text = activity.getResources().getString(R.string.conn_lost_text);
+		}
+		else if(dialogErrorType.getOrdinal() == DialogErrorType.SERVER_ERROR.getOrdinal()){
+			title = activity.getResources().getString(R.string.server_error_title);
+			text = activity.getResources().getString(R.string.server_error_text);
+		}
+		dialogNoInternet(activity, title, text, alertCallBackWithButtonsInterface, false,closeOnNegative);
 	}
 
 

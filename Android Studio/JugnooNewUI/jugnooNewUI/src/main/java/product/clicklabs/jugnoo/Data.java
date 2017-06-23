@@ -12,6 +12,8 @@ import com.fugu.CaptureUserData;
 import com.fugu.FuguConfig;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -124,7 +126,7 @@ public class Data {
     private static CaptureUserData fuguUserData;
     private static boolean isFuguChatEnabled;
 
-    public static void clearDataOnLogout(Context context) {
+    public static void clearDataOnLogout(Activity context) {
         try {
             userData = null;
             autoData = null;
@@ -138,7 +140,7 @@ public class Data {
 
             AccessTokenGenerator.saveLogoutToken(context);
             clearSPLabelPrefs(context);
-            FuguConfig.clearFuguData();
+            FuguConfig.clearFuguData(context);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -544,15 +546,15 @@ public class Data {
 
     public static void initializeFuguHandler(Activity context) {
 
-        FuguConfig fuguConfig;
+
         if (Config.getConfigMode() == ConfigMode.LIVE) {
-            fuguConfig = new FuguConfig(context.getString(R.string.fugu_key), context, "live");
+            FuguConfig.init(context.getString(R.string.fugu_key), context, "live");
         } else {
-            fuguConfig = new FuguConfig(context.getString(R.string.fugu_key_test), context, "test");
+            FuguConfig.init(context.getString(R.string.fugu_key), context, "test");
         }
 
-        fuguConfig.configActionBar("#ffffff", "#595968", R.drawable.ic_back_selector);
-        fuguConfig.configThemeColor("#FD7945");
+        FuguConfig.getInstance().configActionBar("#ffffff", "#595968", R.drawable.ic_back_selector);
+        FuguConfig.getInstance().configThemeColor("#ff7d49");
 
 
     }
@@ -590,15 +592,39 @@ public class Data {
     }
 
     public static long CHANNEL_ID_FUGU_ISSUE_ORDER(){
-        return Config.getConfigMode()==ConfigMode.LIVE?56:437;
+        return Config.getConfigMode()==ConfigMode.LIVE?56:56;
     }
 
     public static long CHANNEL_ID_FUGU_BULK_MEALS(){
-        return Config.getConfigMode()==ConfigMode.LIVE?556:435;
+        return Config.getConfigMode()==ConfigMode.LIVE?556:556;
     }
 
     public static long CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE(){
-        return Config.getConfigMode()==ConfigMode.LIVE?57:19;
+        return Config.getConfigMode()==ConfigMode.LIVE?57:57;
     }
+
+
+	public static void saveCurrentIciciUpiTransaction(PlaceOrderResponse placeOrderResponse, int applicationType){
+
+        Paper.book().write(Constants.PLACE_ORDER_DATA + applicationType,placeOrderResponse);
+
+
+	}
+	public static PlaceOrderResponse getCurrentIciciUpiTransaction(int applicationType){
+
+
+
+		return Paper.book().read(Constants.PLACE_ORDER_DATA+applicationType,null);
+
+
+	}
+
+	public static void deleteCurrentIciciUpiTransaction(int applicationType){
+
+    	Paper.book().delete(Constants.PLACE_ORDER_DATA+ applicationType);
+
+
+	}
+
 
 }

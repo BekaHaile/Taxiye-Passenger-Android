@@ -1965,6 +1965,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             switchUserScreen();
 
             startUIAfterGettingUserStatus();
+            if(Data.autoData.getDropLatLng() == null){
+                getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        relativeLayoutDestSearchBar.performClick();
+                    }
+                }, 500);
+            }
 
             if(Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")){
                 textViewCancellation.setVisibility(View.GONE);
@@ -7927,7 +7935,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void fareEstimateForPool(){
         if(Data.autoData.getDropLatLng() != null){
             int isPooled = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() ? 1 : 0;
-            boolean callFareEstimate = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() ? true : false;
+            boolean callFareEstimate = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
+                    ||
+                    (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)
+                    ? true : false;
+            // TODO: 21/06/17 drop latlng check
             new ApiFareEstimate(HomeActivity.this, new ApiFareEstimate.Callback() {
                 @Override
                 public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue) {
@@ -7982,6 +7994,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
                     try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+                    // TODO: 21/06/17 drop latlng check
+                    textViewTotalFare.setText(getString(R.string.total_fare_colon));
+                    textViewTotalFareValue.setText(getString(R.string.rupee) + "" + minFare + " - " +
+                            getString(R.string.rupee) + "" + maxFare);
+                    if (convenienceCharge > 0) {
+                        textViewIncludes.setVisibility(View.VISIBLE);
+                        textViewIncludes.setText("Convenience Charges "
+                                + getResources().getString(R.string.rupee)
+                                + " " + Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                    } else {
+                        textViewIncludes.setVisibility(View.GONE);
+                        textViewIncludes.setText("");
+                    }
                 }
 
                 @Override
@@ -7994,6 +8019,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
                     textViewTotalFareValue.setText(" " +String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
 
+                    textViewIncludes.setVisibility(View.VISIBLE);
                     textViewIncludes.setText(text);
                     try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                 }
@@ -8004,6 +8030,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
                     textViewTotalFareValue.setText("-");
 
+                    textViewIncludes.setVisibility(View.GONE);
                     textViewIncludes.setText("");
                     try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                 }
@@ -8014,6 +8041,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
                     textViewTotalFareValue.setText("-");
 
+                    textViewIncludes.setVisibility(View.GONE);
                     textViewIncludes.setText("");
                     try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                 }
@@ -8448,9 +8476,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
 					switchPassengerScreen(passengerScreenMode);
 
-					if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
-							shakeAnim > 0 && !updateSpecialPickupScreen()){
-						imageViewRideNow.performClick();
+                    // TODO: 22/06/17 drop latlng check
+					if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
+							shakeAnim > 0 && !updateSpecialPickupScreen())
+                            ||
+                            (!specialPickupScreenOpened && !confirmedScreenOpened && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)){
+                        textViewTotalFareValue.setText("");
+                        imageViewRideNow.performClick();
 					}
                     GAUtils.event(RIDES, HOME, DESTINATION+LOCATION+ENTERED);
 				}
@@ -9082,7 +9114,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void updateConfirmedStateFare(){
         try {
             float padding = 150f;
-            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
+                    ||
+                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1){ // TODO: 21/06/17 drop latlng check
                 relativeLayoutTotalFare.setVisibility(View.VISIBLE);
                 textVieGetFareEstimateConfirm.setVisibility(View.GONE);
                 padding = padding + 80f;
@@ -9132,11 +9166,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         openConfirmRequestView();
                     }
                 } else {
+                    rlSpecialPickup.setVisibility(View.VISIBLE);
                     destinationRequiredShake();
                 }
             } else {
                 if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
                         .getRegionSelected().getDestinationMandatory() == 1) {
+                    rlSpecialPickup.setVisibility(View.VISIBLE);
                     destinationRequiredShake();
                 } else {
                     if(updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()){
@@ -9149,7 +9185,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
                         spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
 
-                    } else {
+                    }
+                    // TODO: 21/06/17 drop latlng check
+                    else if(Data.autoData.getDropLatLng() != null
+                            && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1) {
+                        specialPickupScreenOpened = false;
+                        removeSpecialPickupMarkers();
+                        rlSpecialPickup.setVisibility(View.GONE);
+                        updateTopBar();
+                        openConfirmRequestView();
+                    }
+                    else {
                         removeSpecialPickupMarkers();
                         requestRideClick();
                         slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);

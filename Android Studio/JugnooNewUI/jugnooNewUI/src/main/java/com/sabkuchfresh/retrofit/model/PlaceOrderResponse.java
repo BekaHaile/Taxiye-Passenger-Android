@@ -3,7 +3,9 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.jugnoo.pay.models.SendMoneyResponse;
+import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
@@ -53,7 +55,69 @@ public class PlaceOrderResponse {
 	@SerializedName("order_placed_message")
 	@Expose
 	private String orderPlacedMessage;
+	@SerializedName("icici")
+	@Expose
+	private IciciUpi icici;
 
+	public IciciUpi getIcici() {
+		return icici;
+	}
+
+
+
+
+
+	public class IciciUpi {
+		@SerializedName("expiration_time")
+		private long expirationTime;
+
+
+		@SerializedName("polling_time")
+		private long pollingTime;
+
+		@SerializedName("reason_list")
+		private ArrayList<String> reasonList;
+
+		@SerializedName("jugnoo_vpa")
+		private String jugnooVpa;
+
+		public long getExpirationTimeMillis() {
+			return expirationTime*1000;
+		}
+
+		public long getPollingTimeMillis() {
+			return pollingTime*1000;
+		}
+
+		public ArrayList<String> getReasonList() {
+			return reasonList;
+		}
+
+		public String getJugnooVpa() {
+			return jugnooVpa;
+		}
+
+		private Long timerStartedAt;
+
+		private IciciPaymentOrderStatus currentStatus;
+
+		public IciciPaymentOrderStatus getIciciPaymentOrderStatus() {
+			return currentStatus;
+		}
+
+		public void setIciciPaymentOrderStatus(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
+			this.currentStatus = iciciPaymentOrderStatus;
+		}
+
+		public Long getTimerStartedAt() {
+			return timerStartedAt;
+		}
+
+		public void setTimerStartedAt(Long timerStartedAt) {
+			this.timerStartedAt = timerStartedAt;
+		}
+
+	}
 	/**
 	 *
 	 * @return

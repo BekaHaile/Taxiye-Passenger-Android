@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -23,9 +24,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
+import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
+import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
@@ -355,6 +359,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             String message = menusResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
+
+
+
+
                                     activity.setMenusResponse(menusResponse);
                                     vendors = (ArrayList<MenusResponse.Vendor>) menusResponse.getVendors();
 
@@ -405,6 +413,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     if(activity.getMenusFilterFragment() != null){
                                         activity.getMenusFilterFragment().setCuisinesList();
                                     }
+
+
+                                                checkIciciPaymentStatusApi(activity);
+
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -463,7 +475,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     @Override
                     public void negativeClick(View view) {
                     }
-                });
+                },Data.getCurrentIciciUpiTransaction(activity.getAppType())==null);
     }
 
 
@@ -551,4 +563,16 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
+    private static void checkIciciPaymentStatusApi(final FreshActivity activity) {
+        if(Data.getCurrentIciciUpiTransaction(activity.getAppType())!=null){
+            activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(activity.getAppType()));
+            ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, true, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
+                @Override
+                public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
+                    activity.getMenusCartSelectedLayout().getRlMenusCartSelectedInner().performClick();
+                }
+            });
+        }
+
+    }
 }
