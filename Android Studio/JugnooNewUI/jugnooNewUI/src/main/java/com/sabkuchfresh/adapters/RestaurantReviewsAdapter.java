@@ -21,6 +21,7 @@ import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
@@ -105,12 +106,12 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			}
 
 
-			RelativeLayout.LayoutParams paramsSep = (RelativeLayout.LayoutParams) holder.vSepBelowMessage.getLayoutParams();
+			RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) holder.rlRestaurantReply.getLayoutParams();
 			if (review.getImages() != null && review.getImages().size() > 0) {
 				if(review.getImages().size() > 1) {
 					holder.rvFeedImages.setVisibility(View.VISIBLE);
 					holder.ivFeedImageSingle.setVisibility(View.GONE);
-					paramsSep.addRule(RelativeLayout.BELOW, holder.rvFeedImages.getId());
+					paramsRL.addRule(RelativeLayout.BELOW, holder.rvFeedImages.getId());
 					if (holder.imagesAdapter == null) {
 						holder.imagesAdapter = new RestaurantReviewImagesAdapter(activity, review,
 								new RestaurantReviewImagesAdapter.Callback() {
@@ -133,7 +134,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				} else {
 					holder.rvFeedImages.setVisibility(View.GONE);
 					holder.ivFeedImageSingle.setVisibility(View.VISIBLE);
-					paramsSep.addRule(RelativeLayout.BELOW, holder.ivFeedImageSingle.getId());
+					paramsRL.addRule(RelativeLayout.BELOW, holder.ivFeedImageSingle.getId());
 					holder.imagesAdapter = null;
 					Picasso.with(activity).load(review.getImages().get(0).getUrl())
 							.resize((int) (ASSL.minRatio() * 644f), (int) (ASSL.minRatio() * 310f))
@@ -175,10 +176,10 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			} else {
 				holder.rvFeedImages.setVisibility(View.GONE);
 				holder.ivFeedImageSingle.setVisibility(View.GONE);
-				paramsSep.addRule(RelativeLayout.BELOW, holder.rvFeedImages.getId());
+				paramsRL.addRule(RelativeLayout.BELOW, holder.rvFeedImages.getId());
 				holder.imagesAdapter = null;
 			}
-			holder.vSepBelowMessage.setLayoutParams(paramsSep);
+			holder.rlRestaurantReply.setLayoutParams(paramsRL);
 			holder.tvReviewMessage.setTag(position);
 			holder.tvReviewMessage.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -200,6 +201,21 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 					}
 				}
 			});
+
+			if(!TextUtils.isEmpty(review.getReplyText())){
+				holder.rlRestaurantReply.setVisibility(View.VISIBLE);
+				holder.tvRestName.setText(callback.getVendor().getName());
+				holder.tvRestReply.setText(review.getReplyText());
+				holder.tvReplyDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getReplyTime(), activity.isTimeAutomatic));
+				Picasso.with(activity).load(callback.getVendor().getImage())
+						.resize(activity.getResources().getDimensionPixelSize(R.dimen.dp_50),
+								activity.getResources().getDimensionPixelSize(R.dimen.dp_50))
+						.centerCrop()
+						.transform(new CircleTransform())
+						.into(holder.ivRestImage);
+			} else {
+				holder.rlRestaurantReply.setVisibility(View.GONE);
+			}
 
 
 			StringBuilder likeCount = new StringBuilder();
@@ -374,6 +390,9 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		public LikeButton ivFeedLike;
 		public View vSepBelowMessage, vShadowDown;
 		public RestaurantReviewImagesAdapter imagesAdapter = null;
+		public RelativeLayout rlRestaurantReply;
+		public TextView tvRestName, tvRestReply, tvReplyDateTime;
+		public ImageView ivRestImage;
 
 		public ViewHolderReview(View itemView) {
 			super(itemView);
@@ -396,6 +415,11 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			ivFeedImageSingle = (ImageView) itemView.findViewById(R.id.ivFeedImageSingle);
 			vSepBelowMessage = itemView.findViewById(R.id.vSepBelowMessage);
 			vShadowDown = itemView.findViewById(R.id.vShadowDown);
+			rlRestaurantReply = (RelativeLayout) itemView.findViewById(R.id.rlRestaurantReply);
+			tvRestName = (TextView) itemView.findViewById(R.id.tvRestName);
+			tvRestReply = (TextView) itemView.findViewById(R.id.tvRestReply);
+			tvReplyDateTime = (TextView) itemView.findViewById(R.id.tvReplyDateTime);
+			ivRestImage = (ImageView) itemView.findViewById(R.id.ivRestImage);
 		}
 	}
 
@@ -424,6 +448,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		int getShareIsEnabled();
 		int getLikeIsEnabled();
 		RecyclerView getRecyclerView();
+		MenusResponse.Vendor getVendor();
 	}
 
 

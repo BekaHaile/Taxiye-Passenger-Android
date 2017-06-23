@@ -4672,7 +4672,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         for(int i=0; i<5; i++){
             ImageView star = new ImageView(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.dp_11), getResources().getDimensionPixelSize(R.dimen.dp_11));
-            params.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_1), 0, 0, 0);
+            if(i==0){
+                params.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_5), 0, 0, 0);
+            } else {
+                params.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_1), 0, 0, 0);
+            }
             if(i < ratingInt){
                 star.setImageResource(blankStarRes);
                 star.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(this, R.color.green_delivery_stores), PorterDuff.Mode.SRC_IN));

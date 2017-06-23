@@ -845,5 +845,8 @@
     <dimen name="dp_42">
         42dp
     </dimen>
+    <dimen name="dp_260">
+        260dp
+    </dimen>
 
 </resources>

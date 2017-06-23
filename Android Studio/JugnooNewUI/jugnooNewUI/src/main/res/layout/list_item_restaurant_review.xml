@@ -143,12 +143,90 @@
         android:tag="mwar"
         />
 
+    <RelativeLayout
+        android:id="@+id/rlRestaurantReply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rvFeedImages"
+        android:layout_marginTop="@dimen/dp_10"
+        >
+        <LinearLayout
+            android:id="@+id/llRestReplyInner"
+            android:layout_width="@dimen/dp_260"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:background="@drawable/bg_menu_item_color_f7_r"
+            >
+
+            <TextView
+                android:id="@+id/tvRestName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="Bittu Deluxe Dhaba"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_13"
+                app:font="@string/maven"
+                />
+
+            <TextView
+                android:id="@+id/tvRestReply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_4"
+                android:text="We are sorry for the cold food  and we promiss will take care next time you’ll order something."
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_12"
+                app:font="@string/maven"
+                />
+
+            <TextView
+                android:id="@+id/tvReplyDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_4"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:drawableLeft="@drawable/ic_clock"
+                android:drawablePadding="@dimen/dp_4"
+                android:text="12 hrs ago"
+                android:textColor="@color/document_layout_bordor_color"
+                android:textSize="@dimen/sp_10"
+                app:font="@string/maven"
+                />
+        </LinearLayout>
+        
+        <View
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_toRightOf="@+id/llRestReplyInner"
+            android:background="@drawable/triangle_grey_dr"
+            android:scaleY="-1"
+            android:layout_marginLeft="-18dp"
+            />
+        
+        <ImageView
+            android:id="@+id/ivRestImage"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dp_20"
+            />
+
+    </RelativeLayout>
+    
 
     <View
         android:id="@+id/vSepBelowMessage"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_1"
-        android:layout_below="@+id/rvFeedImages"
+        android:layout_below="@+id/rlRestaurantReply"
         android:layout_marginTop="@dimen/dp_10"
         android:background="@color/stroke_light_grey_alpha"
         />

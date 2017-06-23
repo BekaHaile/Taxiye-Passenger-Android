@@ -116,6 +116,11 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
             }
 
             @Override
+            public MenusResponse.Vendor getVendor() {
+                return vendor;
+            }
+
+            @Override
             public String getShareTextSelf() {
                 return fetchFeedbackResponse == null ? "" : fetchFeedbackResponse.getShareTextSelf();
             }
