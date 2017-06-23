@@ -81,7 +81,7 @@
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="-1dp"
-                    android:src="@color/text_color_hint" />
+                    android:src="@color/stroke_light_grey_alpha" />
 
                 <RelativeLayout
                     android:id="@+id/linearLayoutOfferConfirm"
@@ -132,7 +132,7 @@
                 android:layout_marginLeft="5px"
                 android:layout_marginRight="5px"
                 android:layout_marginTop="-1dp"
-                android:background="@color/text_color_hint" />
+                android:background="@color/stroke_light_grey_alpha" />
 
 
             <TextView
@@ -152,16 +152,14 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutTotalFare"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="110px"
                 android:layout_marginTop="-1dp"
-                android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector"
                 android:gravity="center">
 
                 <LinearLayout
                     android:id="@+id/linearLayoutTotalFare"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="22px"
                     android:gravity="center">
 
                     <TextView
@@ -181,6 +179,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text=""
+                        android:layout_marginLeft="10px"
                         android:textAllCaps="true"
                         android:textColor="@color/theme_color"
                         android:textSize="@dimen/text_size_32"
@@ -193,12 +192,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/linearLayoutTotalFare"
-                    android:layout_marginBottom="22px"
                     android:layout_marginTop="7px"
                     android:gravity="center"
-                    android:paddingLeft="5px"
-                    android:paddingRight="5px"
-                    android:text="@string/includes_priority_tip"
+                    android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_18"
                     android:visibility="visible" />
