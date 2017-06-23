@@ -1494,6 +1494,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         if(Integer.parseInt(placeOrderResponse.getPaymentMode())==PaymentOption.ICICI_UPI.getOrdinal() &&
                                                 placeOrderResponse.getIcici()!=null ){
                                             //Icici Upi Payment Initiated
+
                                             activity.setPlaceOrderResponse(placeOrderResponse);
                                             onIciciUpiPaymentInitiated(placeOrderResponse.getIcici(),String.valueOf(placeOrderResponse.getAmount()));
 
@@ -3260,6 +3261,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private void onIciciUpiPaymentInitiated(PlaceOrderResponse.IciciUpi icici,String amount) {
+        currentStatus=null;
         isIciciPaymentRunnableInProgress = true;
         TOTAL_EXPIRY_TIME_ICICI_UPI = icici.getExpirationTimeMillis();
         DELAY_ICICI_UPI_STATUS_CHECK = icici.getPollingTimeMillis();
@@ -3273,39 +3275,44 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
     private  boolean isIciciPaymentRunnableInProgress;
+    private IciciPaymentOrderStatus currentStatus ;
     private void onIciciStatusResponse(IciciPaymentOrderStatus status,String toastMessage) {
-        switch (status) {
-            case FAILURE:
-            case EXPIRED:
-            case CANCELLED:
-                isIciciPaymentRunnableInProgress = false;
-                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
-                if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
-                    checkoutRequestPaymentDialog.dismiss();
-                }
-                Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show();
-                Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
-                break;
-            case SUCCESSFUL:
-            case PROCESSED:
-                isIciciPaymentRunnableInProgress = false;
-                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
+        if (currentStatus==null || status!=currentStatus) {
+            switch (status) {
+                case FAILURE:
+                case EXPIRED:
+                case CANCELLED:
+                    isIciciPaymentRunnableInProgress = false;
+                    activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
+                    if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
+                        checkoutRequestPaymentDialog.dismiss();
+                    }
+                    Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show();
+                    Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
+                    break;
+                case SUCCESSFUL:
+                case PROCESSED:
+                    isIciciPaymentRunnableInProgress = false;
+                    activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
 
-                if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
-                    checkoutRequestPaymentDialog.dismiss();
-                }
-//                Toast.makeText(activity,toastMessage, Toast.LENGTH_SHORT).show();
-                orderPlacedSuccess(activity.getPlaceOrderResponse());
-                Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
+                    if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
+                        checkoutRequestPaymentDialog.dismiss();
+                    }
+    //                Toast.makeText(activity,toastMessage, Toast.LENGTH_SHORT).show();
+                    orderPlacedSuccess(activity.getPlaceOrderResponse());
+                    Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
 
-                break;
-            case PENDING:
-                //Keep waiting for next status
-                break;
+                    break;
+                case PENDING:
+                    //Keep waiting for next status
+                    break;
 
 
 
+            }
         }
+        currentStatus=status;
+
 
     }
 
@@ -3344,8 +3351,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                             if (commonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 onIciciStatusResponse(commonResponse.getStatus(),commonResponse.getToastMessage());
-
-
 
                             }
 
