@@ -1965,6 +1965,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             switchUserScreen();
 
             startUIAfterGettingUserStatus();
+            if(Data.autoData.getDropLatLng() == null){
+                getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        relativeLayoutDestSearchBar.performClick();
+                    }
+                }, 500);
+            }
 
             if(Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")){
                 textViewCancellation.setVisibility(View.GONE);
