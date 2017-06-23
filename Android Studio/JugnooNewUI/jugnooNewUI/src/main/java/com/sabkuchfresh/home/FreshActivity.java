@@ -4723,4 +4723,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public boolean openVendorMenuFragmentOnBack;
+    public void refreshMealsAdapter(){
+        if(getMealFragment()!=null &&  getMealFragment().getMealAdapter()!=null){
+         getMealFragment().getMealAdapter().notifyDataSetChanged();
+        }
+    }
 }

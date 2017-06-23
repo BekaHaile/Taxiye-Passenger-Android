@@ -62,6 +62,8 @@ public class IciciPaymentRequestStatus {
         }else{
             if(status==10)
                 return IciciPaymentOrderStatus.PENDING;
+            else if (status==3)
+                return IciciPaymentOrderStatus.CANCELLED;
             else if(status <0)
                 return IciciPaymentOrderStatus.FAILURE;
             else if (status>=0)

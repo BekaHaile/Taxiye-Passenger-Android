@@ -74,10 +74,12 @@ public class ApiCurrentStatusIciciUpi {
                                 activity.clearAllCartAtOrderComplete();
                                 if(activity.getAppType()== AppConstant.ApplicationType.MENUS){
                                     activity.getMenusCartSelectedLayout().checkForVisibility();
-                                } else if (activity.getProductsResponse() != null
-                                        && activity.getProductsResponse().getCategories() != null) {
+                                } else if (activity.getProductsResponse() != null && activity.getProductsResponse().getCategories() != null) {
                                     activity.updateItemListFromSPDB(); // this is necessary
                                     activity.updateCartValuesGetTotalPrice();
+                                    if(activity.getAppType()== AppConstant.ApplicationType.MEALS){
+                                        activity.refreshMealsAdapter();
+                                    }
                                 }
                                 Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
                             }
