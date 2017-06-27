@@ -103,7 +103,7 @@ public class ProsProductData{
 		private int baseUnitId;
 		@SerializedName("price")
 		@Expose
-		private int price;
+		private double price;
 		@SerializedName("unit_description")
 		@Expose
 		private String unitDescription;
@@ -229,11 +229,11 @@ public class ProsProductData{
 			this.baseUnitId = baseUnitId;
 		}
 
-		public int getPrice() {
+		public double getPrice() {
 			return price;
 		}
 
-		public void setPrice(int price) {
+		public void setPrice(double price) {
 			this.price = price;
 		}
 

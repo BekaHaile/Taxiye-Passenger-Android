@@ -748,4 +748,5 @@ public interface Constants {
     String KEY_PRODUCT_ID = "product_id";
     String KEY_PRODUCT_NAME = "product_name";
     String KEY_JOB_ID = "job_id";
+    String KEY_JOB_AMOUNT = "job_amount";
 }

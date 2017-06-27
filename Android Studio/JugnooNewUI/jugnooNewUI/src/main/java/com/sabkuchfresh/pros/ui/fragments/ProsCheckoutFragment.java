@@ -306,6 +306,10 @@ public class ProsCheckoutFragment extends Fragment {
 				jObj2.put(Constants.KEY_LABEL, Constants.KEY_PRODUCT_NAME);
 				jObj2.put(Constants.KEY_DATA, prosProductDatum.getName());
 				jsonArray.put(jObj2);
+				JSONObject jObj3 = new JSONObject();
+				jObj3.put(Constants.KEY_LABEL, Constants.KEY_JOB_AMOUNT);
+				jObj3.put(Constants.KEY_DATA, prosProductDatum.getPrice());
+				jsonArray.put(jObj3);
 				params.put(Constants.KEY_META_DATA, String.valueOf(jsonArray));
 
 				new HomeUtil().putDefaultParams(params);
