@@ -409,4 +409,14 @@ public class HomeUtil {
 		}
 	}
 
+	public int getSavedLocationIcon(String name){
+		int drawableRes = R.drawable.ic_loc_other;
+		if(name.equalsIgnoreCase(Constants.TYPE_HOME)){
+			drawableRes = R.drawable.ic_home;
+		} else if(name.equalsIgnoreCase(Constants.TYPE_WORK)){
+			drawableRes = R.drawable.ic_work;
+		}
+		return drawableRes;
+	}
+
 }

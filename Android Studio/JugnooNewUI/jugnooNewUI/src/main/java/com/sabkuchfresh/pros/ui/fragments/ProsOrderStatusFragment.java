@@ -13,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.home.FreshActivity;
-
-import org.json.JSONObject;
+import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
 
 import java.util.HashMap;
 
@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -32,9 +31,9 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
@@ -156,8 +155,6 @@ public class ProsOrderStatusFragment extends Fragment {
 		}
 	}
 
-	private HomeUtil homeUtil = new HomeUtil();
-
 	public void getOrderData(final Activity activity) {
 		try {
 			if (getInstance().isOnline()) {
@@ -166,23 +163,21 @@ public class ProsOrderStatusFragment extends Fragment {
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_JOB_ID, "" + jobId);
-				params.put(Constants.KEY_PRODUCT_TYPE, "" + ProductType.PROS.getOrdinal());
+				params.put(Constants.KEY_JOB_ID, String.valueOf(jobId));
+				params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(ProductType.PROS.getOrdinal()));
 				params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
-				Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
+				Callback<ProsOrderStatusResponse> callback = new Callback<ProsOrderStatusResponse>() {
 					@Override
-					public void success(HistoryResponse historyResponse, Response response) {
+					public void success(ProsOrderStatusResponse orderStatusResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i("Server response", "response = " + responseStr);
 						try {
-							JSONObject jObj = new JSONObject(responseStr);
-							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-								int flag = jObj.getInt("flag");
-								String message = JSONParser.getServerMessage(jObj);
-								if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, orderStatusResponse.getFlag(), orderStatusResponse.getError(), orderStatusResponse.getMessage())) {
+								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == orderStatusResponse.getFlag()) {
+									setDataToUI(orderStatusResponse);
 								} else {
-									retryDialogOrderData(message, DialogErrorType.SERVER_ERROR);
+									retryDialogOrderData(orderStatusResponse.getMessage(), DialogErrorType.SERVER_ERROR);
 								}
 							}
 						} catch (Exception exception) {
@@ -247,5 +242,33 @@ public class ProsOrderStatusFragment extends Fragment {
 		}
 	}
 
+
+	private void setDataToUI(ProsOrderStatusResponse orderStatusResponse){
+		if(orderStatusResponse != null && orderStatusResponse.getData() != null && orderStatusResponse.getData().size() > 0){
+			ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
+			for(ProsOrderStatusResponse.CustomField customField : datum.getFields().getCustomField()){
+				if(customField.getLabel().equalsIgnoreCase(Constants.KEY_PRODUCT_NAME)){
+					tvServiceType.setText(customField.getData());
+					break;
+				}
+			}
+			tvServiceTime.setText(datum.getJobPickupDatetime().replace("\\", ""));
+			SearchResult searchResult = homeUtil.getNearBySavedAddress(activity,
+					new LatLng(datum.getJobLatitude(), datum.getJobLongitude()),
+					Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+			if(searchResult != null && !TextUtils.isEmpty(searchResult.getName())){
+				llDeliveryPlace.setVisibility(View.VISIBLE);
+				ivDeliveryPlace.setImageResource(homeUtil.getSavedLocationIcon(searchResult.getName()));
+				tvDeliveryPlace.setText(searchResult.getName());
+				tvDeliveryToVal.setText(searchResult.getAddress());
+			} else {
+				llDeliveryPlace.setVisibility(View.GONE);
+				tvDeliveryToVal.setText(datum.getJobAddress());
+			}
+			date = datum.getJobPickupDatetime();
+		}
+	}
+
+	private HomeUtil homeUtil = new HomeUtil();
 
 }

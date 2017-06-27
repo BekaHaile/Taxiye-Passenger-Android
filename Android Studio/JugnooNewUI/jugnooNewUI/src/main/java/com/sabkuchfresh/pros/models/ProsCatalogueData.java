@@ -21,7 +21,7 @@ public class ProsCatalogueData {
 	@SerializedName("flag")
 	@Expose
 	private int flag;
-	@SerializedName("data")
+	@SerializedName("catalogue_data")
 	@Expose
 	private List<List<ProsCatalogueDatum>> data = null;
 

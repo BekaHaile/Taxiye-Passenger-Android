@@ -44,7 +44,7 @@
                     android:id="@+id/tvServiceType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Home services and Repairs\n(Architect)"
+                    android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_14"
                     app:font="@string/maven"
@@ -84,7 +84,7 @@
                     android:id="@+id/tvServiceTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="24 June 17, 12:30 - 02:30 PM"
+                    android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_14"
                     app:font="@string/maven"
@@ -131,7 +131,7 @@
                         android:layout_marginBottom="@dimen/dp_3"
                         android:gravity="bottom"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/ivDeliveryPlace"
@@ -157,7 +157,7 @@
                         android:id="@+id/tvDeliveryToVal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Plot5"
+                        android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_14"
                         app:font="@string/maven"/>
@@ -263,7 +263,7 @@
             <Button
                 android:id="@+id/bNeedHelp"
                 android:layout_width="@dimen/dp_250"
-                android:layout_height="@dimen/dp_42"
+                android:layout_height="@dimen/dp_50"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/dp_14"
                 android:layout_marginTop="@dimen/dp_14"
