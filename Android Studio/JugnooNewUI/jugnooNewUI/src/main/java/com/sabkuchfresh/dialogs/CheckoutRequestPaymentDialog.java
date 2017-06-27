@@ -64,8 +64,6 @@ public class CheckoutRequestPaymentDialog extends Dialog {
     private boolean isTimerExpired;
 
 
-    // TODO: 12/06/17 Handle Automatic TimeZone not set case if any
-
 
     private Runnable updateProgressRunnable = new Runnable() {
         @Override

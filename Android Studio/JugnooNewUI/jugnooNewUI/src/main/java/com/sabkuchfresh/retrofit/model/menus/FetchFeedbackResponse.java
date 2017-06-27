@@ -347,9 +347,7 @@ public class FetchFeedbackResponse {
 			return postTime;
 		}
 
-		// TODO: 23/06/17 remoe this
 		public String getReplyText() {
-			replyText = "The faithful in Islam believe that while it’s impossible to count the infinite blessings of Allah, an obvious blessing is the day of jumu’ah (congregational prayer for Muslims), the day also known as Jummah. The Messenger of Allah (peace and blessings be upon him) has said: “The best day the sun rises is Friday. On this day, Allah created Adam. On this day, he entered paradise, on this day, he was expelled from it, and the Last Hour will take place on no other day than Friday.”";
 			return replyText;
 		}
 
@@ -358,7 +356,6 @@ public class FetchFeedbackResponse {
 		}
 
 		public String getReplyTime() {
-			replyTime = postTime;
 			return replyTime;
 		}
 
