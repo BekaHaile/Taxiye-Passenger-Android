@@ -54,6 +54,37 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class SearchListAdapter extends BaseAdapter{
 
+    public TextWatcher getTextWatcherEditText() {
+        return textWatcherEditText;
+    }
+
+    private final TextWatcher textWatcherEditText = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            try {
+                SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString());
+                if (s.length() > 0) {
+                    getSearchResults(s.toString().trim(), SearchListAdapter.this.getPivotLatLng());
+                } else {
+                    searchResultsForSearch.clear();
+                    setResults(searchResultsForSearch);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }; ;
+
     class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress, textViewAddressUsed;
         ImageView imageViewType, imageViewSep;
@@ -99,33 +130,7 @@ public class SearchListAdapter extends BaseAdapter{
             this.searchListActionsHandler = searchListActionsHandler;
 			this.mGoogleApiClient = mGoogleApiClient;
             this.searchMode = searchMode;
-            this.editTextForSearch.addTextChangedListener(new TextWatcher() {
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count,
-                                              int after) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-					try {
-						SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString());
-						if (s.length() > 0) {
-							getSearchResults(s.toString().trim(), SearchListAdapter.this.getPivotLatLng());
-						}
-						else{
-							searchResultsForSearch.clear();
-							setResults(searchResultsForSearch);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-            });
+            this.editTextForSearch.addTextChangedListener(textWatcherEditText);
 
             this.editTextForSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 

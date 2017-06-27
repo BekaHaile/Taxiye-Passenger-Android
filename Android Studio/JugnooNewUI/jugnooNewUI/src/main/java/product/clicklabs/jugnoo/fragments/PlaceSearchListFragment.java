@@ -5,15 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,10 +25,21 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
+import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
+import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -39,12 +52,19 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.MapStateListener;
+import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class PlaceSearchListFragment extends Fragment implements  Constants {
@@ -77,7 +97,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private SearchListAdapter searchListAdapter;
 	private BottomSheetBehavior<NestedScrollView> bottomSheetBehaviour;
 	private int newState;
-
+	private RelativeLayout rootLayout;
+	private GoogleMap googleMap;
+	private RelativeLayout rlMarkerPin;
+	private Button bNext;
 	public static PlaceSearchListFragment newInstance(Bundle bundle){
 		PlaceSearchListFragment fragment = new PlaceSearchListFragment();
 		fragment.setArguments(bundle);
@@ -106,9 +129,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
         activity = getActivity();
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
-		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+		rootLayout = (RelativeLayout) rootView.findViewById(R.id.rootLayout);
+
+		new ASSL(activity, rootLayout, 1134, 720, false);
 
 
+		rlMarkerPin = (RelativeLayout) rootView.findViewById(R.id.rlMarkerPin);
+		bNext = (Button) rootView.findViewById(R.id.bNext);
 		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
 		editTextSearch.setTypeface(Fonts.mavenMedium(activity));
 		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
@@ -315,8 +342,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				;
 			}
 		});*/
+		setMap();
         return rootView;
 	}
+
 
 	private void showSearchLayout(){
 		String home = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
@@ -499,6 +528,201 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void setMap() {
+		((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap)).getMapAsync(new OnMapReadyCallback() {
+			@Override
+			public void onMapReady(GoogleMap googleMap) {
+				PlaceSearchListFragment.this.googleMap = googleMap;
+				if (googleMap != null) {
+					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+					googleMap.setMyLocationEnabled(true);
+					googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+					setupMapAndButtonMargins();
+					moveCameraToCurrent();
+
+
+
+					TouchableMapFragment mapFragment = ((TouchableMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap));
+					new MapStateListener(googleMap, mapFragment, activity) {
+
+						@Override
+						public void onMapTouched() {
+						}
+
+						@Override
+						public void onMapReleased() {
+						}
+
+						@Override
+						public void onMapUnsettled() {
+							/*mapSettledCanForward = false;
+							searchResultNearPin = null;*/
+						}
+
+						@Override
+						public void onMapSettled() {
+							fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target);
+//							autoCompleteResultClicked = false;
+						}
+
+						@Override
+						public void onCameraPositionChanged(CameraPosition cameraPosition) {
+						}
+					};
+
+				}
+			}
+		});
+	}
+	private void moveCameraToCurrent(){
+		if(getView() != null && googleMap != null) {
+			if (activity instanceof AddPlaceActivity
+					&& ((AddPlaceActivity) activity).isEditThisAddress()
+					&& ((AddPlaceActivity) activity).getSearchResult() != null) {
+				googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((AddPlaceActivity) activity).getSearchResult().getLatLng(), 14));
+			} else {
+				googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
+				zoomToCurrentLocation();
+			}
+		}
+	}
+	void zoomToCurrentLocation(){
+		try {
+			if(googleMap != null
+					&& MapUtils.distance(googleMap.getCameraPosition().target,
+					getCurrentLatLng()) > 10){
+				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14), 300, null);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private LatLng getCurrentLatLng(){
+		return new LatLng(Data.latitude, Data.longitude);
+	}
+
+	private void setupMapAndButtonMargins() {
+		if(getView() != null) {
+			RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
+			RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
+			int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_162);
+//        if (savedPlacesAdapter.getCount() + savedPlacesAdapterRecent.getCount() <= 5) {
+//            ViewGroup.LayoutParams layoutParams = scrollViewSuggestions.getLayoutParams();
+//            layoutParams.height = llLocationsContainer.getMeasuredHeight() + activity.getResources().getDimensionPixelSize(R.dimen.dp_8);
+//            scrollViewSuggestions.setLayoutParams(layoutParams);
+//            height = layoutParams.height;
+//        }
+			if (scrollViewSuggestions.getVisibility() == View.VISIBLE) {
+				if (savedPlacesAdapter.getCount() >= 3) {
+					height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
+					paramsRL.setMargins(0, 0, 0, height);
+					paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_290));
+				} else {
+					paramsRL.setMargins(0, 0, 0, height);
+					paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+				}
+			} else {
+				paramsRL.setMargins(0, 0, 0, 0);
+				paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
+			}
+			rlMarkerPin.setLayoutParams(paramsRL);
+//			bNext.setLayoutParams(paramsB);
+			if (googleMap != null) {
+				googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+						height : 0);
+			}
+			/*if (bottomSheetBehavior != null) {
+				bottomSheetBehavior.setPeekHeight(height);
+			}*/
+		}
+	}
+
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		mGoogleApiClient.connect();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		mGoogleApiClient.disconnect();
+	}
+	private void fillAddressDetails(final LatLng latLng) {
+		try {
+		/*
+			// we need to check if the autoCompleteResult clicked latLng is near some saved place,
+			// if yes this case will also behave like map pan near saved location case
+			if(autoCompleteResultClicked) {
+				mapSettledCanForward = true;
+				return;
+			}
+*/
+			/*if(isVisible() && !isRemoving()) {
+				progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
+			}*/
+			final Map<String, String> params = new HashMap<String, String>(6);
+
+			params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
+			params.put("language", Locale.getDefault().getCountry());
+			params.put("sensor", "false");
+
+			RestClient.getGoogleApiService().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
+				@Override
+				public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
+					try {
+						if(geocodeResponse.results != null && geocodeResponse.results.size() > 0){
+							double current_latitude = latLng.latitude;
+							double current_longitude = latLng.longitude;
+
+							String current_street = geocodeResponse.results.get(0).getStreetNumber();
+							String current_route = geocodeResponse.results.get(0).getRoute();
+							String current_area = geocodeResponse.results.get(0).getLocality();
+							String current_city = geocodeResponse.results.get(0).getCity();
+							String current_pincode = geocodeResponse.results.get(0).getCountry();
+
+							setFetchedAddressToTextView(current_street + (current_street.length()>0?", ":"")
+									+ current_route + (current_route.length()>0?", ":"")
+									+ geocodeResponse.results.get(0).getAddAddress()
+									+ ", " + current_city);
+						} else {
+							Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+							setFetchedAddressToTextView("");
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+						setFetchedAddressToTextView("");
+					}
+//					progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					product.clicklabs.jugnoo.utils.Log.e("DeliveryAddressFragment", "error=" + error.toString());
+					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+//					progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+					setFetchedAddressToTextView("");
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private void setFetchedAddressToTextView(String address){
+		if(searchListAdapter!=null){
+			editTextSearch.removeTextChangedListener(null);
+			editTextSearch.setText(address);
+			editTextSearch.addTextChangedListener(searchListAdapter.getTextWatcherEditText());
+		}else{
+			editTextSearch.setText(address);
+		}
+
+
 	}
 
 }
