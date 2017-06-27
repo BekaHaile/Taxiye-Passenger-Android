@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.fugu.CaptureUserData;
@@ -13,7 +12,6 @@ import com.fugu.FuguConfig;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
-import com.sabkuchfresh.utils.AppConstant;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -298,10 +296,10 @@ public class Data {
                     dontTryParsingDeeplink = true;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+                    Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
                 }
             } else {
-                Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+                Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
             }
 
 

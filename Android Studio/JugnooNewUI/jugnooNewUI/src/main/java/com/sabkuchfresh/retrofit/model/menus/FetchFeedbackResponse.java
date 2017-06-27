@@ -184,9 +184,9 @@ public class FetchFeedbackResponse {
 		@Expose
 		private String postTime;
 
-		@SerializedName("reply_text")
+		@SerializedName("reply")
 		@Expose
-		private String replyText;
+		private String reply;
 		@SerializedName("reply_time")
 		@Expose
 		private String replyTime;
@@ -347,12 +347,12 @@ public class FetchFeedbackResponse {
 			return postTime;
 		}
 
-		public String getReplyText() {
-			return replyText;
+		public String getReply() {
+			return reply;
 		}
 
-		public void setReplyText(String replyText) {
-			this.replyText = replyText;
+		public void setReply(String reply) {
+			this.reply = reply;
 		}
 
 		public String getReplyTime() {

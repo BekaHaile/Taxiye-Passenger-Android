@@ -202,10 +202,10 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				}
 			});
 
-			if(!TextUtils.isEmpty(review.getReplyText())){
+			if(!TextUtils.isEmpty(review.getReply())){
 				holder.rlRestaurantReply.setVisibility(View.VISIBLE);
 				holder.tvRestName.setText(callback.getVendor().getName());
-				holder.tvRestReply.setText(review.getReplyText());
+				holder.tvRestReply.setText(review.getReply());
 				holder.tvReplyDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getReplyTime(), activity.isTimeAutomatic));
 				Picasso.with(activity).load(callback.getVendor().getImage())
 						.resize(activity.getResources().getDimensionPixelSize(R.dimen.dp_50),

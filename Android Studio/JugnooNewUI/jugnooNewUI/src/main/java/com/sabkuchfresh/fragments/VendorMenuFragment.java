@@ -397,6 +397,15 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     }
 
                     setUpCollapseToolbarData();
+
+                    activity.getHandler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(Prefs.with(activity).getInt(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, -1) > 0){
+                                activity.openRestaurantReviewsListFragment();
+                            }
+                        }
+                    });
                 }
             }
         } catch (Exception exception) {

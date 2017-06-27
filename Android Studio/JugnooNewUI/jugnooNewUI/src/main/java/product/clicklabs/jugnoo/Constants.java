@@ -1,8 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.config.ConfigMode;
-
 /**
  * Created by socomo20 on 12/11/15.
  */
@@ -724,4 +721,6 @@ public interface Constants {
     int NO_VALID_STATUS = -1001;
     String IS_MENUS = "is_menus";
     String KEY_VENDOR = "vendor";
+
+    String SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK = "sp_restaurant_feedback_id_to_deep_link";
 }

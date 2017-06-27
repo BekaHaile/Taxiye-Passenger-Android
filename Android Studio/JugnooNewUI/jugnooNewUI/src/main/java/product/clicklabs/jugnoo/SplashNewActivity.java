@@ -249,7 +249,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						try {
 							if(referringParams.has(KEY_DEEPINDEX) && referringParams.has(KEY_RESTAURANT_ID)){
 								try {
-									Prefs.with(SplashNewActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, referringParams.optString(KEY_RESTAURANT_ID, ""));
+									Prefs.with(SplashNewActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, referringParams.optString(KEY_RESTAURANT_ID, "-1"));
 									Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
 									Intent intent = new Intent(Data.LOCAL_BROADCAST);
 									intent.putExtra(Constants.KEY_FLAG, OPEN_DEEP_INDEX);
@@ -257,10 +257,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 								} catch (Exception e) {
 									e.printStackTrace();
-									Prefs.with(SplashNewActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+									Prefs.with(SplashNewActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
 								}
 							} else {
-								Prefs.with(SplashNewActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
+								Prefs.with(SplashNewActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
 								if (referringParams.has("pickup_lat") && referringParams.has("pickup_lng")) {
 									Data.deepLinkPickup = 1;
 									Data.deepLinkPickupLatitude = Double.parseDouble(referringParams.optString("pickup_lat"));

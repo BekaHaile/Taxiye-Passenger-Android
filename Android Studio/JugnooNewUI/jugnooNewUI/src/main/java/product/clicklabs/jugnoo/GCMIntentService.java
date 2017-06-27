@@ -577,7 +577,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							}
 
 							// deep link to restaurant page
-							Prefs.with(this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, jObj.optString(KEY_RESTAURANT_ID, ""));
+							Prefs.with(this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, jObj.optString(KEY_RESTAURANT_ID, "-1"));
+
+							// deep link to restaurant review page particular feedback
+							Prefs.with(this).save(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, jObj.optInt(KEY_FEEDBACK_ID, -1));
+
 
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString(KEY_IMAGE, "");

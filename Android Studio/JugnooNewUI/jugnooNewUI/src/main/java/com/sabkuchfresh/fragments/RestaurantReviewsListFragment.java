@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by Shankar on 15/11/16.
@@ -201,14 +202,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                         if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
                             activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
                         }
-                        if (scrollToTop) {
-                            recyclerViewReviews.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    recyclerViewReviews.scrollToPosition(0);
-                                }
-                            });
-                        }
+                        scrollToFeedbackIfNeeded(scrollToTop);
                     }
                 }
 
@@ -229,6 +223,42 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
             });
         }
         apiRestaurantFetchFeedback.hit(vendor.getRestaurantId(), scrollToTop);
+    }
+
+
+
+    private void scrollToFeedbackIfNeeded(boolean scrollToTop){
+        try {
+            int feedbackId = Prefs.with(activity).getInt(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, -1);
+            if(feedbackId > 0){
+                for(int i=0; i<restaurantReviews.size(); i++){
+                    if(feedbackId == restaurantReviews.get(i).getFeedbackId()){
+                        final int finalI = i;
+                        scrollToTop = false;
+                        recyclerViewReviews.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerViewReviews.scrollToPosition(finalI);
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Prefs.with(activity).save(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, -1);
+        }
+
+        if (scrollToTop) {
+            recyclerViewReviews.post(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewReviews.scrollToPosition(0);
+                }
+            });
+        }
     }
 
 
