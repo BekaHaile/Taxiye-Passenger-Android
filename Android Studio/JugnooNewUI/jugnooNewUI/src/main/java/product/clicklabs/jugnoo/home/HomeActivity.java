@@ -118,6 +118,7 @@ import java.util.TimerTask;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -226,7 +227,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler,
+public class HomeActivity extends BaseAppCompatActivity implements AppInterruptHandler,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction{
@@ -286,7 +287,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
     Button initialCancelRideBtn;
-    RelativeLayout relativeLayoutAssigningDropLocationParent, linearLayoutAssigningButtons;
+    public RelativeLayout relativeLayoutAssigningDropLocationParent, linearLayoutAssigningButtons;
     private RelativeLayout relativeLayoutAssigningDropLocationClick, relativeLayoutDestinationHelp, relativeLayoutConfirmBottom, relativeLayoutConfirmRequest;
     private TextView textViewAssigningDropLocationClick, textViewDestHelp, textViewFellowRider;
     ProgressWheel progressBarAssigningDropLocation;

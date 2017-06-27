@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +64,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private NonScrollListView listViewSearch;
 	private CardView cardViewSearch;
 
-	private ScrollView scrollViewSuggestions;
+	private NestedScrollView scrollViewSuggestions;
 	private TextView textViewSavedPlaces, textViewRecentAddresses;
 	private NonScrollListView listViewSavedLocations, listViewRecentAddresses;
 	private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
@@ -71,6 +75,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private GoogleApiClient mGoogleApiClient;
 	private SearchListAdapter.SearchListActionsHandler searchListActionsHandler;
 	private SearchListAdapter searchListAdapter;
+	private BottomSheetBehavior<NestedScrollView> bottomSheetBehaviour;
+	private int newState;
 
 	public static PlaceSearchListFragment newInstance(Bundle bundle){
 		PlaceSearchListFragment fragment = new PlaceSearchListFragment();
@@ -99,7 +105,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 
         activity = getActivity();
-
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
 
@@ -114,7 +119,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
 
 
-		scrollViewSuggestions = (ScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
+		scrollViewSuggestions = (NestedScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
 		textViewSavedPlaces = (TextView) rootView.findViewById(R.id.textViewSavedPlaces); textViewSavedPlaces.setTypeface(Fonts.mavenMedium(activity));
 		textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
 		listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
@@ -293,7 +298,23 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			imageViewShadow.setVisibility(View.GONE);
 		}
 
+			bottomSheetBehaviour = BottomSheetBehavior.from(scrollViewSuggestions);
 
+		Log.i("TAG", "peekHeight: "+bottomSheetBehaviour.getPeekHeight());
+		bottomSheetBehaviour.setPeekHeight(0);
+		bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
+	/*	bottomSheetBehaviour.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+			@Override
+			public void onStateChanged(@NonNull View bottomSheet, int newState) {
+				Log.e("BottomSheetAutos", "onStateChanged: "+ newState);
+			}
+
+			@Override
+			public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+				Log.i("BottomSheetAutos", "onSlide: "+slideOffset);
+				;
+			}
+		});*/
         return rootView;
 	}
 
