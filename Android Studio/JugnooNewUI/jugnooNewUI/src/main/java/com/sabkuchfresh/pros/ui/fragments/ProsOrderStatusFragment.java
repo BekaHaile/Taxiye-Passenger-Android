@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +15,36 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
+
+import static product.clicklabs.jugnoo.MyApplication.getInstance;
 
 /**
  * Created by shankar on 19/06/17.
@@ -51,21 +74,21 @@ public class ProsOrderStatusFragment extends Fragment {
 	Button bNeedHelp;
 	private Activity activity;
 
-	private int orderId;
+	private int jobId;
 	private int supportCategory;
 	private String date;
 
 
-	public static ProsOrderStatusFragment newInstance(int orderId) {
+	public static ProsOrderStatusFragment newInstance(int jobId) {
 		ProsOrderStatusFragment fragment = new ProsOrderStatusFragment();
 		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.KEY_ORDER_ID, orderId);
+		bundle.putInt(Constants.KEY_JOB_ID, jobId);
 		fragment.setArguments(bundle);
 		return fragment;
 	}
 
 	private void parseArguments() {
-		orderId = getArguments().getInt(Constants.KEY_ORDER_ID, -1);
+		jobId = getArguments().getInt(Constants.KEY_JOB_ID, -1);
 	}
 
 	@Override
@@ -83,6 +106,7 @@ public class ProsOrderStatusFragment extends Fragment {
 			bNeedHelp.setVisibility(View.GONE);
 		}
 
+		getOrderData(activity);
 
 		return rootView;
 	}
@@ -115,7 +139,7 @@ public class ProsOrderStatusFragment extends Fragment {
 				}
 				if(container != null) {
 					homeUtil.openFuguOrSupport((FragmentActivity) activity, container,
-							orderId, supportCategory, date);
+							jobId, supportCategory, date);
 				}
 				break;
 		}
@@ -124,14 +148,104 @@ public class ProsOrderStatusFragment extends Fragment {
 	private void setActivityUI(){
 		if(activity instanceof FreshActivity) {
 			((FreshActivity)activity).fragmentUISetup(this);
-			((FreshActivity)activity).getTopBar().title.setText(activity.getString(R.string.order_id_format, String.valueOf(orderId)));
+			((FreshActivity)activity).getTopBar().title.setText(activity.getString(R.string.order_id_format, String.valueOf(jobId)));
 		} else if (activity instanceof RideTransactionsActivity) {
-			((RideTransactionsActivity) activity).setTitle(activity.getString(R.string.order_id_format, String.valueOf(orderId)));
+			((RideTransactionsActivity) activity).setTitle(activity.getString(R.string.order_id_format, String.valueOf(jobId)));
 		} else if (activity instanceof SupportActivity) {
-			((SupportActivity) activity).setTitle(activity.getString(R.string.order_id_format, String.valueOf(orderId)));
+			((SupportActivity) activity).setTitle(activity.getString(R.string.order_id_format, String.valueOf(jobId)));
 		}
 	}
 
 	private HomeUtil homeUtil = new HomeUtil();
+
+	public void getOrderData(final Activity activity) {
+		try {
+			if (getInstance().isOnline()) {
+
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_JOB_ID, "" + jobId);
+				params.put(Constants.KEY_PRODUCT_TYPE, "" + ProductType.PROS.getOrdinal());
+				params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+
+				Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
+					@Override
+					public void success(HistoryResponse historyResponse, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i("Server response", "response = " + responseStr);
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt("flag");
+								String message = JSONParser.getServerMessage(jObj);
+								if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
+								} else {
+									retryDialogOrderData(message, DialogErrorType.SERVER_ERROR);
+								}
+							}
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							retryDialogOrderData("", DialogErrorType.SERVER_ERROR);
+						}
+						DialogPopup.dismissLoadingDialog();
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
+						DialogPopup.dismissLoadingDialog();
+						retryDialogOrderData("", DialogErrorType.CONNECTION_LOST);
+					}
+				};
+
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getProsApiService().orderHistory(params, callback);
+			} else {
+				retryDialogOrderData("", DialogErrorType.NO_NET);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void retryDialogOrderData(String message, DialogErrorType dialogErrorType) {
+		if (TextUtils.isEmpty(message)) {
+			DialogPopup.dialogNoInternet(activity,
+					dialogErrorType,
+					new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+						@Override
+						public void positiveClick(View view) {
+							getOrderData(activity);
+						}
+
+						@Override
+						public void neutralClick(View view) {
+
+						}
+
+						@Override
+						public void negativeClick(View view) {
+						}
+					});
+		} else {
+			DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+					activity.getString(R.string.retry), activity.getString(R.string.cancel),
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							getOrderData(activity);
+						}
+					},
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							activity.onBackPressed();
+						}
+					}, false, false);
+		}
+	}
+
 
 }

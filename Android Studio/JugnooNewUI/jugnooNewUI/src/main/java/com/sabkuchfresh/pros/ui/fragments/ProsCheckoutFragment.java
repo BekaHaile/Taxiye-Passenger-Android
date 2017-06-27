@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -312,7 +311,7 @@ public class ProsCheckoutFragment extends Fragment {
 				new HomeUtil().putDefaultParams(params);
 				RestClient.getProsApiService().createTaskViaVendor(params, new Callback<CreateTaskData>() {
 					@Override
-					public void success(CreateTaskData productsResponse, Response response) {
+					public void success(final CreateTaskData productsResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
 						try {
@@ -321,7 +320,9 @@ public class ProsCheckoutFragment extends Fragment {
 									new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
 										@Override
 										public void onDismiss() {
-											activity.getSupportFragmentManager().popBackStack(ProsProductsFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+											// TODO: 27/06/17 revert this
+//											activity.getSupportFragmentManager().popBackStack(ProsProductsFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+											activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), productsResponse.getData().getJobId());
 										}
 									}).show(String.valueOf(productsResponse.getData().getJobId()),
 											tvSelectTimeSlot.getText().toString(),

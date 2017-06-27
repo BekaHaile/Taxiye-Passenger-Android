@@ -747,4 +747,5 @@ public interface Constants {
     String KEY_JUGNOO_PROS = "jugnoo_pros";
     String KEY_PRODUCT_ID = "product_id";
     String KEY_PRODUCT_NAME = "product_name";
+    String KEY_JOB_ID = "job_id";
 }

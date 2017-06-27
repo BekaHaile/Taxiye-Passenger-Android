@@ -6,6 +6,7 @@ import com.sabkuchfresh.pros.models.ProsProductData;
 
 import java.util.Map;
 
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -31,5 +32,10 @@ public interface ProsApi {
 	@POST("/create_task_via_vendor")
 	void createTaskViaVendor(@FieldMap Map<String, String> params,
 								Callback<CreateTaskData> callback);
+
+	@FormUrlEncoded
+	@POST("/order_history")
+	void orderHistory(@FieldMap Map<String, String> params,
+							 Callback<HistoryResponse> callback);
 
 }

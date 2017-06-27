@@ -460,10 +460,10 @@ public class TransactionUtils {
         }
     }
 
-    public void addProsOrderStatusFragment(FragmentActivity activity, View container, int orderId) {
+    public void addProsOrderStatusFragment(FragmentActivity activity, View container, int jobId) {
         if (!checkIfFragmentAdded(activity, ProsOrderStatusFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .add(container.getId(), ProsOrderStatusFragment.newInstance(orderId),
+                    .add(container.getId(), ProsOrderStatusFragment.newInstance(jobId),
                             ProsOrderStatusFragment.class.getName())
                     .addToBackStack(ProsOrderStatusFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
