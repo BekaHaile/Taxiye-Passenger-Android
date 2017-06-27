@@ -5167,7 +5167,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
                 double distance = MapUtils.distance(Data.autoData.getPickupLatLng(), driverLatLng);
                 if (distance <= 15000) {
-                    boundsBuilder.include(Data.autoData.getPickupLatLng()).include(driverLatLng);
+                    boundsBuilder
+                            //.include(Data.autoData.getPickupLatLng())
+                            .include(driverLatLng);
                     if(Data.autoData.getDropLatLng() != null && PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
                         boundsBuilder.include(Data.autoData.getDropLatLng());
                     }
@@ -5181,6 +5183,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                                         || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                                         && bounds != null) {
+                                    // TODO: 27/06/17 some change here
                                     map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
                                 }
                             } catch (Exception e) {

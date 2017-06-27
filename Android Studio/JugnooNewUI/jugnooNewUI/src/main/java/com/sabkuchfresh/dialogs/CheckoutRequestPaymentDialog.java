@@ -71,7 +71,7 @@ public class CheckoutRequestPaymentDialog extends Dialog {
         @Override
         public void run() {
 
-            if (progressBar.getProgress() < progressBar.getMax()) {
+            if (progressBar.getProgress() >0) {
                 progressBar.postDelayed(this, 100);
                 setTime();
             } else {
@@ -218,7 +218,7 @@ public class CheckoutRequestPaymentDialog extends Dialog {
 
         int timeDiff = (int) (System.currentTimeMillis() - timerStartedAt);
         tvValueExpiry.setText(getTime(((int) (expiryTimeMilliSecs - timeDiff) / 1000) +1));
-        progressBar.setProgress((timeDiff));
+        progressBar.setProgress(progressBar.getMax()- (timeDiff));
 
 
     }
