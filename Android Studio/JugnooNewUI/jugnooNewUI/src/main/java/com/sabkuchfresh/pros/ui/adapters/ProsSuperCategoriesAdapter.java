@@ -2,6 +2,7 @@ package com.sabkuchfresh.pros.ui.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -193,15 +194,7 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 		int selectedSize = context.getResources().getDimensionPixelSize(R.dimen.dp_17);
 
 		// status conversion
-		if(status == ProsOrderStatus.UPCOMING.getOrdinal() || status == ProsOrderStatus.UNASSIGNED.getOrdinal()){
-			status = 0;
-		} else if(status == ProsOrderStatus.ACCEPTED.getOrdinal() || status == ProsOrderStatus.ARRIVED.getOrdinal()){
-			status = 1;
-		} else if(status == ProsOrderStatus.STARTED.getOrdinal()){
-			status = 2;
-		} else if(status == ProsOrderStatus.ENDED.getOrdinal()){
-			status = 3;
-		}
+		status = getProsOrderState(status).first;
 
 		switch (possibleStatus.size()) {
 			case 4:
@@ -334,4 +327,42 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 			});
 		}
 	}
+
+
+	public static Pair<Integer, String> getProsOrderState(int status){
+		String statusName = "";
+		if(status == ProsOrderStatus.UPCOMING.getOrdinal() || status == ProsOrderStatus.UNASSIGNED.getOrdinal()){
+			status = 0;
+			statusName = "Booking Accepted";
+		} else if(status == ProsOrderStatus.ACCEPTED.getOrdinal() || status == ProsOrderStatus.ARRIVED.getOrdinal()){
+			status = 1;
+			statusName = "Pro Assigned";
+		} else if(status == ProsOrderStatus.STARTED.getOrdinal()){
+			status = 2;
+			statusName = "Job Started";
+		} else if(status == ProsOrderStatus.ENDED.getOrdinal()){
+			status = 3;
+			statusName = "Job Finished";
+		}
+		else if(status == ProsOrderStatus.FAILED.getOrdinal()){
+			statusName = "Job Failed";
+		}
+		else if(status == ProsOrderStatus.DECLINE.getOrdinal()){
+			statusName = "Job Declined";
+		}
+		else if(status == ProsOrderStatus.CANCEL.getOrdinal()){
+			statusName = "Job Cancelled";
+		}
+		else if(status == ProsOrderStatus.DELETED.getOrdinal()){
+			statusName = "Job Deleted";
+		}
+		else if(status == ProsOrderStatus.IGNORED.getOrdinal()){
+			statusName = "Job Ignored";
+		}
+		else if(status == ProsOrderStatus.SEEN_BY_AGENT.getOrdinal()){
+			statusName = "Job seen by agent";
+		}
+		return new Pair<>(status, statusName);
+	}
+
 }

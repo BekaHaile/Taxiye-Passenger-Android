@@ -10,7 +10,13 @@ public enum ProsOrderStatus {
 	STARTED(1),
 	ENDED(2),
 	ARRIVED(4),
-	UNASSIGNED(6)
+	UNASSIGNED(6),
+	FAILED(3),
+	DECLINE(8),
+	CANCEL(9),
+	DELETED(10),
+	IGNORED(11),
+	SEEN_BY_AGENT(12)
 	;
 
 	private int ordinal;
