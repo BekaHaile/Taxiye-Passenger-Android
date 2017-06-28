@@ -41,6 +41,9 @@ public class FetchFeedbackResponse {
 	@SerializedName("share_is_enabled")
 	@Expose
 	private Integer shareIsEnabled;
+	@SerializedName("restaurant_info")
+	@Expose
+	private RestaurantInfo restaurantInfo;
 
 
 	public Integer getFlag() {
@@ -127,6 +130,14 @@ public class FetchFeedbackResponse {
 
 	public void setShareIsEnabled(Integer shareIsEnabled) {
 		this.shareIsEnabled = shareIsEnabled;
+	}
+
+	public RestaurantInfo getRestaurantInfo() {
+		return restaurantInfo;
+	}
+
+	public void setRestaurantInfo(RestaurantInfo restaurantInfo) {
+		this.restaurantInfo = restaurantInfo;
 	}
 
 	public class Review {
@@ -437,6 +448,29 @@ public class FetchFeedbackResponse {
 
 		public void setHeight(Integer height) {
 			this.height = height;
+		}
+	}
+
+	public class RestaurantInfo{
+		@SerializedName("rating")
+		private double rating;
+		@SerializedName("review_count")
+		private long reviewCount;
+
+		public double getRating() {
+			return rating;
+		}
+
+		public void setRating(double rating) {
+			this.rating = rating;
+		}
+
+		public long getReviewCount() {
+			return reviewCount;
+		}
+
+		public void setReviewCount(long reviewCount) {
+			this.reviewCount = reviewCount;
 		}
 	}
 }

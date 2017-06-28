@@ -203,6 +203,17 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                             activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
                         }
                         scrollToFeedbackIfNeeded(scrollToTop);
+                        if(fetchFeedbackResponse.getRestaurantInfo() != null){
+                            vendor.setRating(fetchFeedbackResponse.getRestaurantInfo().getRating());
+                            vendor.setReviewCount(fetchFeedbackResponse.getRestaurantInfo().getReviewCount());
+                            if( activity.getVendorOpened() != null) {
+                                activity.getVendorOpened().setRating(fetchFeedbackResponse.getRestaurantInfo().getRating());
+                                activity.getVendorOpened().setReviewCount(fetchFeedbackResponse.getRestaurantInfo().getReviewCount());
+                            }
+                            activity.setRestaurantRatingStarsToLL(llRatingStars, tvRating,
+                                    vendor.getRating(), R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey, tvRatingCount, 0);
+                            tvRatingCount.setText("("+vendor.getReviewCount()+")");
+                        }
                     }
                 }
 
@@ -238,7 +249,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                         recyclerViewReviews.post(new Runnable() {
                             @Override
                             public void run() {
-                                recyclerViewReviews.scrollToPosition(finalI);
+                                recyclerViewReviews.smoothScrollToPosition(finalI);
                             }
                         });
                         break;

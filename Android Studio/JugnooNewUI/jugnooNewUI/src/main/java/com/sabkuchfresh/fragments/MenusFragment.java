@@ -223,6 +223,17 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             e.printStackTrace();
         }
 
+        try {
+            if (!"-1".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"))) {
+                int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"));
+                activity.fetchRestaurantMenuAPI(restId, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
+        }
+
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -396,16 +407,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                         activity.getMenusFilterFragment().setCuisinesList();
                                     }
 
-                                    try {
-                                        if (!"-1".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"))) {
-                                            int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"));
-                                            activity.fetchRestaurantMenuAPI(restId, false);
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    } finally {
-                                        Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
-                                    }
 
                                     checkIciciPaymentStatusApi(activity);
 
