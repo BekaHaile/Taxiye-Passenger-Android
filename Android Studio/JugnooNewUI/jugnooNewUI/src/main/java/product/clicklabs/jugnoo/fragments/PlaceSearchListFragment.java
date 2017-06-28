@@ -34,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.picker.image.util.Util;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.home.FreshActivity;
@@ -731,6 +732,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 
 	}
+	private Handler handler = new Handler();
+	private Runnable hideKeyboardRunnable = new Runnable() {
+		@Override
+		public void run() {
+			Utils.hideSoftKeyboard(activity,editTextSearch);
+		}
+	};
 	public void openSetLocationOnMapMode(){
 		bNext.setVisibility(View.VISIBLE);
 		if(bottomSheetBehaviour!=null && bottomSheetBehaviour.getState()!=BottomSheetBehavior.STATE_COLLAPSED){
@@ -738,6 +746,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 		rlMarkerPin.setVisibility(View.VISIBLE);
 		fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target);
+		handler.postDelayed(hideKeyboardRunnable,200);
+
 	}
 
 }
