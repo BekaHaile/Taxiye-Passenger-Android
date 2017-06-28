@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -330,9 +332,12 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		Log.i("TAG", "peekHeight: "+bottomSheetBehaviour.getPeekHeight());
 		bottomSheetBehaviour.setPeekHeight(0);
 		bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
-	/*	bottomSheetBehaviour.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+		bottomSheetBehaviour.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 			@Override
 			public void onStateChanged(@NonNull View bottomSheet, int newState) {
+				if(newState== BottomSheetBehavior.STATE_COLLAPSED){
+					openSetLocationOnMapMode();
+				}
 				Log.e("BottomSheetAutos", "onStateChanged: "+ newState);
 			}
 
@@ -341,7 +346,28 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				Log.i("BottomSheetAutos", "onSlide: "+slideOffset);
 				;
 			}
-		});*/
+		});
+		rootView.findViewById(R.id.tv_set_location_on_map).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				openSetLocationOnMapMode();
+			}
+		});
+		rootView.findViewById(R.id.bNext).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(mapSettledCanForward){
+					SearchResult autoCompleteSearchResult = new SearchResult("",editTextSearch.getText().toString(),"", lastLatFetched, lastLngFetched,0,1,0 );
+					searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+					searchListActionsHandler.onPlaceSearchPre();
+					searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult);
+				}else{
+					Utils.showToast(activity,activity.getString(R.string.please_wait));
+				}
+
+
+			}
+		});
 		setMap();
         return rootView;
 	}
@@ -530,6 +556,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 	}
 
+	private boolean mapSettledCanForward;
 	private void setMap() {
 		((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap)).getMapAsync(new OnMapReadyCallback() {
 			@Override
@@ -539,7 +566,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 					googleMap.setMyLocationEnabled(true);
 					googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-					setupMapAndButtonMargins();
+//					setupMapAndButtonMargins();
 					moveCameraToCurrent();
 
 
@@ -557,18 +584,21 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 						@Override
 						public void onMapUnsettled() {
+							mapSettledCanForward=false;
 							/*mapSettledCanForward = false;
 							searchResultNearPin = null;*/
 						}
 
 						@Override
 						public void onMapSettled() {
-							fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target);
+						if(bottomSheetBehaviour.getState()==BottomSheetBehavior.STATE_COLLAPSED)
+						  fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target);
 //							autoCompleteResultClicked = false;
 						}
 
 						@Override
 						public void onCameraPositionChanged(CameraPosition cameraPosition) {
+
 						}
 					};
 
@@ -603,41 +633,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		return new LatLng(Data.latitude, Data.longitude);
 	}
 
-	private void setupMapAndButtonMargins() {
-		if(getView() != null) {
-			RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
-			RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
-			int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_162);
-//        if (savedPlacesAdapter.getCount() + savedPlacesAdapterRecent.getCount() <= 5) {
-//            ViewGroup.LayoutParams layoutParams = scrollViewSuggestions.getLayoutParams();
-//            layoutParams.height = llLocationsContainer.getMeasuredHeight() + activity.getResources().getDimensionPixelSize(R.dimen.dp_8);
-//            scrollViewSuggestions.setLayoutParams(layoutParams);
-//            height = layoutParams.height;
-//        }
-			if (scrollViewSuggestions.getVisibility() == View.VISIBLE) {
-				if (savedPlacesAdapter.getCount() >= 3) {
-					height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
-					paramsRL.setMargins(0, 0, 0, height);
-					paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_290));
-				} else {
-					paramsRL.setMargins(0, 0, 0, height);
-					paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
-				}
-			} else {
-				paramsRL.setMargins(0, 0, 0, 0);
-				paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
-			}
-			rlMarkerPin.setLayoutParams(paramsRL);
-//			bNext.setLayoutParams(paramsB);
-			if (googleMap != null) {
-				googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
-						height : 0);
-			}
-			/*if (bottomSheetBehavior != null) {
-				bottomSheetBehavior.setPeekHeight(height);
-			}*/
-		}
-	}
 
 
 	@Override
@@ -651,6 +646,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		super.onStop();
 		mGoogleApiClient.disconnect();
 	}
+	private Double lastLatFetched ;
+	private Double lastLngFetched ;
 	private void fillAddressDetails(final LatLng latLng) {
 		try {
 		/*
@@ -664,6 +661,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			/*if(isVisible() && !isRemoving()) {
 				progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
 			}*/
+			progressBarSearch.setVisibility(View.VISIBLE);
 			final Map<String, String> params = new HashMap<String, String>(6);
 
 			params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
@@ -675,8 +673,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
 					try {
 						if(geocodeResponse.results != null && geocodeResponse.results.size() > 0){
-							double current_latitude = latLng.latitude;
-							double current_longitude = latLng.longitude;
+							 lastLatFetched = latLng.latitude;
+							 lastLngFetched = latLng.longitude;
 
 							String current_street = geocodeResponse.results.get(0).getStreetNumber();
 							String current_route = geocodeResponse.results.get(0).getRoute();
@@ -688,6 +686,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 									+ current_route + (current_route.length()>0?", ":"")
 									+ geocodeResponse.results.get(0).getAddAddress()
 									+ ", " + current_city);
+							mapSettledCanForward= true;
 						} else {
 							Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
 							setFetchedAddressToTextView("");
@@ -698,14 +697,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
 						setFetchedAddressToTextView("");
 					}
-//					progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+					progressBarSearch.setVisibility(View.GONE);
 				}
 
 				@Override
 				public void failure(RetrofitError error) {
 					product.clicklabs.jugnoo.utils.Log.e("DeliveryAddressFragment", "error=" + error.toString());
 					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-//					progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+					progressBarSearch.setVisibility(View.GONE);
 					setFetchedAddressToTextView("");
 				}
 			});
@@ -715,7 +714,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 	private void setFetchedAddressToTextView(String address){
 		if(searchListAdapter!=null){
-			editTextSearch.removeTextChangedListener(null);
+			editTextSearch.removeTextChangedListener(searchListAdapter.getTextWatcherEditText());
 			editTextSearch.setText(address);
 			editTextSearch.addTextChangedListener(searchListAdapter.getTextWatcherEditText());
 		}else{
@@ -723,6 +722,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 
 
+	}
+	public void openSetLocationOnMapMode(){
+		bNext.setVisibility(View.VISIBLE);
+		if(bottomSheetBehaviour!=null && bottomSheetBehaviour.getState()!=BottomSheetBehavior.STATE_COLLAPSED){
+			bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+		}
+		rlMarkerPin.setVisibility(View.VISIBLE);
+		fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target);
 	}
 
 }
