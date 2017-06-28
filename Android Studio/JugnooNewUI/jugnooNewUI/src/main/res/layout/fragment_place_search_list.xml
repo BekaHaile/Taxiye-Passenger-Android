@@ -218,7 +218,6 @@
                 android:id="@+id/scrollViewSuggestions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_gravity="top"
                 app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
@@ -236,6 +235,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16px"
                         android:layout_marginRight="16px"
+                        android:layout_marginBottom="20px"
                         card_view:cardBackgroundColor="@color/white"
                         card_view:cardCornerRadius="4px">
 
@@ -274,6 +274,8 @@
                                 android:textColor="@color/text_color_less_light"
                                 android:textSize="@dimen/text_size_24"
                                 android:visibility="visible" />
+
+
                             <product.clicklabs.jugnoo.utils.NonScrollListView
                                 android:id="@+id/listViewSavedLocations"
                                 android:layout_width="match_parent"
@@ -282,6 +284,31 @@
                                 android:dividerHeight="0px"
                                 android:splitMotionEvents="false" />
 
+                            <TextView
+                                android:id="@+id/textViewRecentAddresses"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40px"
+                                android:layout_marginLeft="30px"
+                                android:layout_marginTop="30px"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text="@string/recent_locations"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color_less_light"
+                                android:textSize="@dimen/text_size_24"
+                                android:visibility="visible" />
+
+                            <product.clicklabs.jugnoo.utils.NonScrollListView
+                                android:id="@+id/listViewRecentAddresses"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0px"
+                                android:fadeScrollbars="true"
+                                android:scrollbars="vertical"
+                                android:splitMotionEvents="false"
+                                android:visibility="visible" />
+
 
                         </LinearLayout>
 
@@ -289,19 +316,8 @@
                     </android.support.v7.widget.CardView>
 
 
-                    <TextView
-                        android:id="@+id/textViewRecentAddresses"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40px"
-                        android:layout_marginLeft="30px"
-                        android:layout_marginTop="30px"
-                        android:gravity="center_vertical"
-                        android:singleLine="true"
-                        android:text="@string/recent_locations"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_color_less_light"
-                        android:textSize="@dimen/text_size_24"
-                        android:visibility="visible" />
+
+<!--
 
                     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/cardViewRecentAddresses"
@@ -313,18 +329,10 @@
                         card_view:cardBackgroundColor="@color/white"
                         card_view:cardCornerRadius="4px">
 
-                        <product.clicklabs.jugnoo.utils.NonScrollListView
-                            android:id="@+id/listViewRecentAddresses"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:divider="@color/transparent"
-                            android:dividerHeight="0px"
-                            android:fadeScrollbars="true"
-                            android:scrollbars="vertical"
-                            android:splitMotionEvents="false"
-                            android:visibility="visible" />
+
 
                     </android.support.v7.widget.CardView>
+-->
 
 
                 </LinearLayout>

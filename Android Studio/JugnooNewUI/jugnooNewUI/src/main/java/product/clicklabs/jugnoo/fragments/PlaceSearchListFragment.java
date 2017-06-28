@@ -90,7 +90,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private TextView textViewSavedPlaces, textViewRecentAddresses;
 	private NonScrollListView listViewSavedLocations, listViewRecentAddresses;
 	private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
-	private CardView cardViewSavedPlaces, cvRecentAddresses;
+	private CardView cardViewSavedPlaces;
+//	, cvRecentAddresses;
 
 	private View rootView;
     private Activity activity;
@@ -154,7 +155,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
 		listViewRecentAddresses = (NonScrollListView) rootView.findViewById(R.id.listViewRecentAddresses);
 		cardViewSavedPlaces = (CardView) rootView.findViewById(R.id.cardViewSavedPlaces);
-		cvRecentAddresses = (CardView) rootView.findViewById(R.id.cardViewRecentAddresses);
+//		cvRecentAddresses = (CardView) rootView.findViewById(R.id.cardViewRecentAddresses);
 
 		imageViewSearchGPSIcon = (ImageView) rootView.findViewById(R.id.imageViewSearchGPSIcon);
 
@@ -357,6 +358,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			@Override
 			public void onClick(View v) {
 				if(mapSettledCanForward){
+					Utils.hideSoftKeyboard(activity, editTextSearch);
 					SearchResult autoCompleteSearchResult = new SearchResult("",editTextSearch.getText().toString(),"", lastLatFetched, lastLngFetched,0,1,0 );
 					searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
 					searchListActionsHandler.onPlaceSearchPre();
@@ -534,9 +536,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			}, false, false, false);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 			if(Data.userData.getSearchResultsRecent().size() > 0){
-				cvRecentAddresses.setVisibility(View.VISIBLE);
+//				cvRecentAddresses.setVisibility(View.VISIBLE);
+				textViewRecentAddresses.setVisibility(View.VISIBLE);
+				listViewRecentAddresses.setVisibility(View.VISIBLE);
 			} else{
-				cvRecentAddresses.setVisibility(View.GONE);
+//				cvRecentAddresses.setVisibility(View.GONE);
+				textViewRecentAddresses.setVisibility(View.GONE);
+				listViewRecentAddresses.setVisibility(View.GONE);
 			}
 
 			if(savedPlaces > 0) {
@@ -547,9 +553,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 			if (savedPlacesAdapterRecent.getCount() > 0) {
 				textViewRecentAddresses.setVisibility(View.VISIBLE);
+				listViewRecentAddresses.setVisibility(View.VISIBLE);
 				textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
 			} else {
 				textViewRecentAddresses.setVisibility(View.GONE);
+				listViewRecentAddresses.setVisibility(View.GONE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
