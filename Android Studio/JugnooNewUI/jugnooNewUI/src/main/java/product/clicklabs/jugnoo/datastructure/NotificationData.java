@@ -42,6 +42,12 @@ public class NotificationData {
     @SerializedName("post_notification_id")
     @Expose
     private int postNotificationId;
+    @SerializedName("restaurant_id")
+    @Expose
+    private int restaurantId;
+    @SerializedName("feedback_id")
+    @Expose
+    private int feedbackId;
 
     public NotificationData(int notificationId, String timePushArrived, String title, String message, int deepIndex,
                             String timeToDisplay, String timeTillDisplay, String notificationImage, String url) {
@@ -151,5 +157,21 @@ public class NotificationData {
 
     public void setPostNotificationId(int postNotificationId) {
         this.postNotificationId = postNotificationId;
+    }
+
+    public int getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(int restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public int getFeedbackId() {
+        return feedbackId;
+    }
+
+    public void setFeedbackId(int feedbackId) {
+        this.feedbackId = feedbackId;
     }
 }

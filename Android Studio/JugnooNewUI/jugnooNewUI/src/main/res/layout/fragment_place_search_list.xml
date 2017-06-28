@@ -1,233 +1,347 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutRoot"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sliding_bottom_bg_color"
-    android:orientation="vertical">
+    android:background="@color/sliding_bottom_bg_color">
 
-    <ImageView
-        android:id="@+id/imageViewShadow"
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:background="@drawable/shadow_down"
-        />
 
     <RelativeLayout
+        android:id="@+id/rlMain"
         android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:layout_marginTop="23px"
-        android:layout_marginRight="20px"
-        android:layout_marginLeft="20px"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="15px"
-        android:background="@drawable/background_white_rounded_bordered"
-        android:splitMotionEvents="false">
+        android:layout_height="match_parent"
+        android:tag="@string/dont_touch_me">
 
-        <ImageView
-            android:id="@+id/imageViewSearchGPSIcon"
-            android:layout_width="16px"
-            android:layout_height="16px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="37px"
-            android:src="@drawable/circle_red"
-            android:tag="mwar" />
+        <fragment
+            android:id="@+id/googleMap"
+            android:name="product.clicklabs.jugnoo.utils.TouchableMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <EditText
-            android:id="@+id/editTextSearch"
-            android:layout_width="470px"
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/rlMarkerPin"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="37px"
-            android:layout_toRightOf="@+id/imageViewSearchGPSIcon"
-            android:background="@color/transparent"
-            android:gravity="center_vertical"
-            android:hint="@string/set_pickup_location"
-            android:singleLine="true"
-            android:textColor="@color/text_color"
-            android:textCursorDrawable="@drawable/cursor_black"
-            android:textSize="30px"
-            android:paddingRight="20px"
-            />
+          >
 
-        <product.clicklabs.jugnoo.utils.ProgressWheel
-            xmlns:wheel="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/progressBarSearch"
-            android:layout_width="70px"
-            android:layout_height="70px"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="75px"
-            android:tag="mwar"
-            wheel:matProg_barColor="@color/theme_color"
-            wheel:matProg_barWidth="3dp"
-            wheel:matProg_fillRadius="true"
-            wheel:matProg_progressIndeterminate="true" />
+            <ImageView
+                android:layout_width="33dp"
+                android:layout_height="54dp"
+                android:layout_above="@+id/ivPivot"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="-4dp"
+                android:src="@drawable/ic_delivery_address_map" />
+
+            <ImageView
+                android:id="@+id/ivPivot"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+
+
 
         <ImageView
-            android:id="@+id/ivDeliveryAddressCross"
-            android:layout_width="70px"
-            android:layout_height="70px"
+            android:id="@+id/bMyLocation"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5px"
-            android:padding="16px"
-            android:src="@drawable/ic_cross_et_selector"
-            android:tag="mwar" />
-
+            android:layout_marginRight="10dp"
+            android:contentDescription="@string/move_to_your_location"
+            android:src="@drawable/mylocation_btn_selector" />
 
     </RelativeLayout>
 
-    <ScrollView
-        android:id="@+id/scrollViewSearch"
+
+ <!--   <View
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+
+        android:background="@color/red">
+
+
+    </View>-->
+    <Button
+        android:id="@+id/bNext"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_theme_selector"
+        android:text="@string/confirm"
+        android:tag="@string/dont_touch_me"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        app:font="maven" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/linearLayoutRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/imageViewShadow"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="6px"
+            android:background="@drawable/shadow_down" />
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardViewSearch"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16px"
-                android:layout_marginRight="16px"
-                android:layout_marginTop="20px"
-                android:layout_marginBottom="10px"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px"
-                >
-
-                <product.clicklabs.jugnoo.utils.NonScrollListView
-                    android:id="@+id/listViewSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@color/transparent"
-                    android:dividerHeight="0px"
-                    android:fadeScrollbars="true"
-                    android:scrollbars="vertical"
-                    android:splitMotionEvents="false"
-                    android:visibility="visible"
-                    />
-
-            </android.support.v7.widget.CardView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15px"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:layout_marginTop="23px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:splitMotionEvents="false">
 
             <ImageView
-                android:layout_width="240px"
-                android:layout_height="28px"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16px"
-                android:layout_marginTop="24px"
+                android:id="@+id/imageViewSearchGPSIcon"
+                android:layout_width="16px"
+                android:layout_height="16px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="37px"
+                android:src="@drawable/circle_red"
+                android:tag="mwar" />
+
+            <EditText
+                android:id="@+id/editTextSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="37px"
+                android:layout_toRightOf="@+id/imageViewSearchGPSIcon"
+                android:layout_toLeftOf="@+id/progressBarSearch"
+                android:background="@color/transparent"
+                android:gravity="center_vertical"
+                android:hint="@string/set_pickup_location"
+                android:paddingRight="20px"
+                android:singleLine="true"
+
+                android:textColor="@color/text_color"
+                android:textCursorDrawable="@drawable/cursor_black"
+                android:textSize="30px" />
+
+            <product.clicklabs.jugnoo.utils.ProgressWheel xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                android:id="@id/progressBarSearch"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="75px"
                 android:tag="mwar"
-                android:src="@drawable/powered_by_google_light"/>
+                wheel:matProg_barColor="@color/theme_color"
+                wheel:matProg_barWidth="3dp"
+                wheel:matProg_fillRadius="true"
+                wheel:matProg_progressIndeterminate="true" />
 
-            <TextView
-                android:layout_width="10px"
-                android:layout_height="10px"
-                android:textSize="28px" />
+            <ImageView
+                android:id="@+id/ivDeliveryAddressCross"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5px"
+                android:padding="16px"
+                android:src="@drawable/ic_cross_et_selector"
+                android:tag="mwar" />
 
-        </LinearLayout>
-    </ScrollView>
 
-    <ScrollView
-        android:id="@+id/scrollViewSuggestions"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        </RelativeLayout>
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/scrollViewSearch"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-            <TextView
-                android:id="@+id/textViewSavedPlaces"
-                android:layout_width="wrap_content"
-                android:layout_height="40px"
-                android:layout_marginLeft="30px"
-                android:layout_marginTop="30px"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="@string/saved_places"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color_less_light"
-                android:textSize="@dimen/text_size_24"
-                android:visibility="visible"
-                />
-
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardViewSavedPlaces"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16px"
-                android:layout_marginRight="16px"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px"
-                >
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <product.clicklabs.jugnoo.utils.NonScrollListView
-                    android:id="@+id/listViewSavedLocations"
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cardViewSearch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:divider="@color/transparent"
-                    android:dividerHeight="0px"
-                    android:splitMotionEvents="false"/>
+                    android:layout_marginBottom="10px"
+                    android:layout_marginLeft="16px"
+                    android:layout_marginRight="16px"
+                    android:layout_marginTop="20px"
+                    card_view:cardBackgroundColor="@color/white"
+                    card_view:cardCornerRadius="4px">
 
-            </android.support.v7.widget.CardView>
+                    <product.clicklabs.jugnoo.utils.NonScrollListView
+                        android:id="@+id/listViewSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@color/transparent"
+                        android:dividerHeight="0px"
+                        android:fadeScrollbars="true"
+                        android:scrollbars="vertical"
+                        android:splitMotionEvents="false"
+                        android:visibility="visible" />
 
+                </android.support.v7.widget.CardView>
 
-            <TextView
-                android:id="@+id/textViewRecentAddresses"
-                android:layout_width="wrap_content"
-                android:layout_height="40px"
-                android:layout_marginLeft="30px"
-                android:layout_marginTop="30px"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="@string/recent_locations"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color_less_light"
-                android:textSize="@dimen/text_size_24"
-                android:visibility="visible"
-                />
+                <ImageView
+                    android:layout_width="240px"
+                    android:layout_height="28px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="16px"
+                    android:layout_marginTop="24px"
+                    android:src="@drawable/powered_by_google_light"
+                    android:tag="mwar" />
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardViewRecentAddresses"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <TextView
+                    android:layout_width="10px"
+                    android:layout_height="10px"
+                    android:textSize="28px" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/scrollViewSuggestions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16px"
-                android:layout_marginRight="16px"
-                android:layout_marginBottom="20px"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px"
-                >
+                android:layout_gravity="top"
+                app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-                <product.clicklabs.jugnoo.utils.NonScrollListView
-                    android:id="@+id/listViewRecentAddresses"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:divider="@color/transparent"
-                    android:dividerHeight="0px"
-                    android:fadeScrollbars="true"
-                    android:scrollbars="vertical"
-                    android:splitMotionEvents="false"
-                    android:visibility="visible"
-                    />
-
-            </android.support.v7.widget.CardView>
+                    android:orientation="vertical">
 
 
-        </LinearLayout>
-
-    </ScrollView>
 
 
-</LinearLayout>
+                    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/cardViewSavedPlaces"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16px"
+                        android:layout_marginRight="16px"
+                        android:layout_marginBottom="20px"
+                        card_view:cardBackgroundColor="@color/white"
+                        card_view:cardCornerRadius="4px">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/tv_set_location_on_map"
+                                android:drawableLeft="@drawable/ic_loc_other"
+                                android:background="@android:color/white"
+                                android:layout_width="match_parent"
+                                android:drawablePadding="5dp"
+                                android:padding="8px"
+                                app:font="@string/maven"
+                                android:gravity="center|left"
+                                android:textSize="32px"
+                                android:textColor="@color/text_color"
+                                android:text="Set Location on Map"
+                                android:layout_height="wrap_content" />
+                            <View
+                                android:background="@color/text_color_less_light"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"/>
+                            <TextView
+                                android:id="@+id/textViewSavedPlaces"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40px"
+                                android:layout_marginLeft="30px"
+                                android:layout_marginTop="30px"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text="@string/saved_places"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color_less_light"
+                                android:textSize="@dimen/text_size_24"
+                                android:visibility="visible" />
+
+
+                            <product.clicklabs.jugnoo.utils.NonScrollListView
+                                android:id="@+id/listViewSavedLocations"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0px"
+                                android:splitMotionEvents="false" />
+
+                            <TextView
+                                android:id="@+id/textViewRecentAddresses"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40px"
+                                android:layout_marginLeft="30px"
+                                android:layout_marginTop="30px"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text="@string/recent_locations"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color_less_light"
+                                android:textSize="@dimen/text_size_24"
+                                android:visibility="visible" />
+
+                            <product.clicklabs.jugnoo.utils.NonScrollListView
+                                android:id="@+id/listViewRecentAddresses"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0px"
+                                android:fadeScrollbars="true"
+                                android:scrollbars="vertical"
+                                android:splitMotionEvents="false"
+                                android:visibility="visible" />
+
+
+                        </LinearLayout>
+
+
+                    </android.support.v7.widget.CardView>
+
+
+
+<!--
+
+                    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/cardViewRecentAddresses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20px"
+                        android:layout_marginLeft="16px"
+                        android:layout_marginRight="16px"
+                        card_view:cardBackgroundColor="@color/white"
+                        card_view:cardCornerRadius="4px">
+
+
+
+                    </android.support.v7.widget.CardView>
+-->
+
+
+                </LinearLayout>
+
+            </android.support.v4.widget.NestedScrollView>
+
+        </android.support.design.widget.CoordinatorLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

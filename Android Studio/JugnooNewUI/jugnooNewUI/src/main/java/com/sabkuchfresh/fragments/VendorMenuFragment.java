@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -45,6 +44,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -166,7 +166,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 } else {
                     Log.d(TAG, "onPageSelected = " + position);
                     GAUtils.event(GAAction.MENUS, GAAction.RESTAURANT_HOME , GAAction.TABS + GAAction.SLIDED);
-//                    FlurryEventLogger.eventGA(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.SWIPE);
                 }
             }
 
@@ -178,13 +177,13 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 
         try {
-            ((SwipeRefreshLayout)rootView.findViewById(R.id.swipe_container)).setEnabled(false);
+            rootView.findViewById(R.id.swipe_container).setEnabled(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         activity.tvCollapRestaurantDeliveryTime.setText("");
-        activity.clearRestaurantRatingStars(activity.llCollapRatingStars, activity.tvCollapRestaurantRating);
+        activity.clearRestaurantRatingStars(activity.llCollapRatingStars, activity.tvCollapRestaurantRating, null);
 
         activity.setSortingList(this);
 
@@ -194,54 +193,37 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         return rootView;
     }
 
-    private void setUpPromoDisplayView(String promoText,String TandC) {
+    private void setUpPromoDisplayView(final String promoText, final String TandC) {
         recyclerViewOffers = (RecyclerView) rootView.findViewById(R.id.recycler_view_offers);
         View.OnClickListener expandClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(recyclerViewOffers.getVisibility()==View.VISIBLE)
-                {
-                  /*  if( starCloseAnim ==null) {
-                        starCloseAnim = AnimationUtils.loadAnimation(activity, R.anim.recycler_offer_close_anim);
-                    }
-                    //                    recyclerViewOffers.startAnimation(starCloseAnim);*/
-                    recyclerViewOffers.setVisibility(View.GONE);
-                    ibArrow.animate().rotationBy(-180).translationYBy(-10).setDuration(0).start();
-
-
-                } else{
-
-                 /*   if(starOpenAnim ==null) {
-                        starOpenAnim = AnimationUtils.loadAnimation(activity, R.anim.recycler_offer_open_anim);
-                    }
-                    //                    recyclerViewOffers.startAnimation(starOpenAnim);*/
-
-                    recyclerViewOffers.setVisibility(View.VISIBLE);
-                    ibArrow.animate().rotationBy(180).translationYBy(10).setDuration(0).start();
-                }
-
-                if(handler ==null){
-                    handler = activity.getHandler();
-
-                }
-                if(startEnableStateRunnable ==null){
-                    startEnableStateRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            tvOfferTitle.setEnabled(true);
-                            ibArrow.setEnabled(true);
-                        }
-                    };
-
-                  GAUtils.event(GAAction.MENUS, GAAction.RESTAURANT_HOME , GAAction.OFFER + GAAction.EXPANDED);
-
-                }
-
-
-                tvOfferTitle.setEnabled(false);
-                ibArrow.setEnabled(false);
-                handler.postDelayed(startEnableStateRunnable,activity.getResources().getInteger(R.integer.anim_time_promo_recycler));
-
+//                if(recyclerViewOffers.getVisibility()==View.VISIBLE) {
+//                    recyclerViewOffers.setVisibility(View.GONE);
+//                    ibArrow.animate().rotationBy(-180).translationYBy(-10).setDuration(0).start();
+//                } else{
+//                    recyclerViewOffers.setVisibility(View.VISIBLE);
+//                    ibArrow.animate().rotationBy(180).translationYBy(10).setDuration(0).start();
+//                }
+//
+//                if(handler == null){
+//                    handler = activity.getHandler();
+//                }
+//                if(startEnableStateRunnable ==null){
+//                    startEnableStateRunnable = new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            tvOfferTitle.setEnabled(true);
+//                            ibArrow.setEnabled(true);
+//                        }
+//                    };
+//                    GAUtils.event(GAAction.MENUS, GAAction.RESTAURANT_HOME , GAAction.OFFER + GAAction.EXPANDED);
+//                }
+//                tvOfferTitle.setEnabled(false);
+//                ibArrow.setEnabled(false);
+//                handler.postDelayed(startEnableStateRunnable,activity.getResources().getInteger(R.integer.anim_time_promo_recycler));
+				DialogPopup.alertPopupLeftOriented(activity, promoText, TandC, true, true, true, true,
+						R.color.theme_color, 16, 13, Fonts.mavenMedium(activity));
             }
         };
 
@@ -250,7 +232,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         recyclerViewOffers.setAdapter(new DisplayOffersAdapter(activity,true,TandC));
         recyclerViewOffers.setLayoutManager(new LinearLayoutManager(activity));
         tvOfferTitle.setVisibility(View.VISIBLE);
-        ibArrow.setVisibility(View.VISIBLE);
+        ibArrow.setVisibility(View.GONE);
         tvOfferTitle.setText(setUpOfferTitle(promoText,null));
         rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.VISIBLE);
 
@@ -302,7 +284,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     public void run() {
                         try {
                             if (activity.isRefreshCart()) {
-
 							}
                             activity.setRefreshCart(false);
                             if(!activity.isOrderJustCompleted()) {
@@ -312,15 +293,12 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                         }
                     }
                 }, 200);
-			}
-			else{
-				if(recyclerViewOffers!=null && recyclerViewOffers.getVisibility()==View.VISIBLE)
-				{
+			} else {
+				if(recyclerViewOffers!=null && recyclerViewOffers.getVisibility()==View.VISIBLE) {
 					ibArrow.performClick();
 				}
 			}
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
 
@@ -419,6 +397,15 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     }
 
                     setUpCollapseToolbarData();
+
+                    activity.getHandler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(Prefs.with(activity).getInt(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, -1) > 0){
+                                activity.openRestaurantReviewsListFragment();
+                            }
+                        }
+                    });
                 }
             }
         } catch (Exception exception) {
@@ -443,7 +430,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
             if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
                 activity.llCollapRatingStars.setVisibility(View.VISIBLE);
-                activity.setRestaurantRatingStarsToLL(activity.llCollapRatingStars, activity.tvCollapRestaurantRating, activity.getVendorOpened().getRating());
+                activity.setRestaurantRatingStarsToLL(activity.llCollapRatingStars, activity.tvCollapRestaurantRating,
+                        activity.getVendorOpened().getRating(),
+                        R.drawable.ic_half_star_green_white, R.drawable.ic_star_white, null, 0);
             } else {
                 activity.llCollapRatingStars.setVisibility(View.INVISIBLE);
             }

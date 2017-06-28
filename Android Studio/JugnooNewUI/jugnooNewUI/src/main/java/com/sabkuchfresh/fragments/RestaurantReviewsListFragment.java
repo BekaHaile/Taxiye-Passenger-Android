@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,11 +24,13 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiRestaurantFetchFeedback;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by Shankar on 15/11/16.
@@ -40,17 +43,19 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
     private TextView tvFeedEmpty;
     private RestaurantReviewsAdapter reviewsAdapter;
     private Button bAddReview;
+    private LinearLayout llRatingStars;
+    private TextView tvRating, tvRatingCount;
 
     private View rootView;
     private FreshActivity activity;
     private ArrayList<FetchFeedbackResponse.Review> restaurantReviews;
-    private int restaurantId;
+    private MenusResponse.Vendor vendor;
     private FetchFeedbackResponse fetchFeedbackResponse;
 
-    public static RestaurantReviewsListFragment newInstance(int restaurantId){
+    public static RestaurantReviewsListFragment newInstance(MenusResponse.Vendor vendor){
         RestaurantReviewsListFragment fragment = new RestaurantReviewsListFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(Constants.KEY_RESTAURANT_ID, restaurantId);
+        bundle.putSerializable(Constants.KEY_VENDOR, vendor);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -58,7 +63,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
 
     private void fetchArguments(){
         Bundle bundle = getArguments();
-        restaurantId = bundle.getInt(Constants.KEY_RESTAURANT_ID, 0);
+        vendor = (MenusResponse.Vendor) bundle.getSerializable(Constants.KEY_VENDOR);
     }
 
     @Override
@@ -108,7 +113,12 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
 
             @Override
             public int getRestaurantId() {
-                return restaurantId;
+                return vendor.getRestaurantId();
+            }
+
+            @Override
+            public MenusResponse.Vendor getVendor() {
+                return vendor;
             }
 
             @Override
@@ -143,12 +153,19 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         rlNoReviews = (RelativeLayout) rootView.findViewById(R.id.rlNoReviews);
         tvFeedEmpty = (TextView) rootView.findViewById(R.id.tvFeedEmpty);
         bAddReview = (Button) rootView.findViewById(R.id.bAddReview);
+        llRatingStars = (LinearLayout) rootView.findViewById(R.id.llRatingStars);
+        tvRating = (TextView) rootView.findViewById(R.id.tvRating);
+        tvRatingCount = (TextView) rootView.findViewById(R.id.tvRatingCount);
 
         tvFeedEmpty.setText(activity.getString(R.string.no_reviews_yet));
         SpannableStringBuilder ssb = new SpannableStringBuilder(activity.getString(R.string.be_the_first_one_to_add));
         ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvFeedEmpty.append("\n");
         tvFeedEmpty.append(ssb);
+
+        activity.setRestaurantRatingStarsToLL(llRatingStars, tvRating,
+                vendor.getRating(), R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey, tvRatingCount, 0);
+        tvRatingCount.setText("("+vendor.getReviewCount()+")");
 
         fetchFeedback(false);
 
@@ -185,13 +202,17 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                         if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
                             activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
                         }
-                        if (scrollToTop) {
-                            recyclerViewReviews.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    recyclerViewReviews.scrollToPosition(0);
-                                }
-                            });
+                        scrollToFeedbackIfNeeded(scrollToTop);
+                        if(fetchFeedbackResponse.getRestaurantInfo() != null){
+                            vendor.setRating(fetchFeedbackResponse.getRestaurantInfo().getRating());
+                            vendor.setReviewCount(fetchFeedbackResponse.getRestaurantInfo().getReviewCount());
+                            if( activity.getVendorOpened() != null) {
+                                activity.getVendorOpened().setRating(fetchFeedbackResponse.getRestaurantInfo().getRating());
+                                activity.getVendorOpened().setReviewCount(fetchFeedbackResponse.getRestaurantInfo().getReviewCount());
+                            }
+                            activity.setRestaurantRatingStarsToLL(llRatingStars, tvRating,
+                                    vendor.getRating(), R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey, tvRatingCount, 0);
+                            tvRatingCount.setText("("+vendor.getReviewCount()+")");
                         }
                     }
                 }
@@ -212,7 +233,43 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                 }
             });
         }
-        apiRestaurantFetchFeedback.hit(restaurantId, scrollToTop);
+        apiRestaurantFetchFeedback.hit(vendor.getRestaurantId(), scrollToTop);
+    }
+
+
+
+    private void scrollToFeedbackIfNeeded(boolean scrollToTop){
+        try {
+            int feedbackId = Prefs.with(activity).getInt(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, -1);
+            if(feedbackId > 0){
+                for(int i=0; i<restaurantReviews.size(); i++){
+                    if(feedbackId == restaurantReviews.get(i).getFeedbackId()){
+                        final int finalI = i;
+                        scrollToTop = false;
+                        recyclerViewReviews.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerViewReviews.smoothScrollToPosition(finalI);
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Prefs.with(activity).save(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, -1);
+        }
+
+        if (scrollToTop) {
+            recyclerViewReviews.post(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewReviews.scrollToPosition(0);
+                }
+            });
+        }
     }
 
 

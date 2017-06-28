@@ -36,6 +36,7 @@ public class AutoData {
     private EndRideData endRideData;
     private LatLng pickupLatLng, dropLatLng;
     private String pickupAddress = "", dropAddress = "";
+    private int dropAddressId;
     private int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
     private CancelOptionsList cancelOptionsList;
     private ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();
@@ -473,5 +474,13 @@ public class AutoData {
 
     public void setReferralPopupContent(PlaceOrderResponse.ReferralPopupContent referralPopupContent) {
         this.referralPopupContent = referralPopupContent;
+    }
+
+    public int getDropAddressId() {
+        return dropAddressId;
+    }
+
+    public void setDropAddressId(int dropAddressId) {
+        this.dropAddressId = dropAddressId;
     }
 }

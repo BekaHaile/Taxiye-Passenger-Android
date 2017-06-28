@@ -29,6 +29,7 @@ import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.tutorials.NewUserCompleteProfileFragment;
@@ -272,11 +273,11 @@ public class TransactionUtils {
         }
     }
 
-    public void openRestaurantReviewsListFragment(FragmentActivity activity, View container, int restaurantId) {
+    public void openRestaurantReviewsListFragment(FragmentActivity activity, View container, MenusResponse.Vendor vendor) {
         if (!checkIfFragmentAdded(activity, RestaurantReviewsListFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in,0)
-                    .add(container.getId(), RestaurantReviewsListFragment.newInstance(restaurantId),
+                    .add(container.getId(), RestaurantReviewsListFragment.newInstance(vendor),
                             RestaurantReviewsListFragment.class.getName())
                     .addToBackStack(RestaurantReviewsListFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

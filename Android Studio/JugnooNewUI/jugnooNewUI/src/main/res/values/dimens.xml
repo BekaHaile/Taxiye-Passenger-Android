@@ -842,5 +842,11 @@
     <dimen name="dp_95">
         95dp
     </dimen>
+    <dimen name="dp_42">
+        42dp
+    </dimen>
+    <dimen name="dp_260">
+        260dp
+    </dimen>
 
 </resources>

@@ -1,6 +1,5 @@
 package com.sabkuchfresh.fragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
-import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
@@ -225,6 +223,17 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             e.printStackTrace();
         }
 
+        try {
+            if (!"-1".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"))) {
+                int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"));
+                activity.fetchRestaurantMenuAPI(restId, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
+        }
+
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -394,28 +403,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                         }
                                     }
 
-                                    try {
-                                        if (!TextUtils.isEmpty(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""))) {
-                                            int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""));
-                                            for (MenusResponse.Vendor vendor : vendors) {
-                                                if (restId == vendor.getRestaurantId()) {
-                                                    activity.fetchRestaurantMenuAPI(vendor.getRestaurantId(), false);
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    } finally {
-                                        Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "");
-                                    }
-
                                     if(activity.getMenusFilterFragment() != null){
                                         activity.getMenusFilterFragment().setCuisinesList();
                                     }
 
 
-                                                checkIciciPaymentStatusApi(activity);
+                                    checkIciciPaymentStatusApi(activity);
 
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);

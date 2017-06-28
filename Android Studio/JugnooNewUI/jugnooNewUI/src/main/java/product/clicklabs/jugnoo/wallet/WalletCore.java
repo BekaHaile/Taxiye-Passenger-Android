@@ -667,6 +667,9 @@ public class WalletCore {
 					} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()) {
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
+					}else if (paymentModeConfigData.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal()) {
+						paymentModeConfigDataDefault = paymentModeConfigData;
+						break;
 					}
 				}
 			}
