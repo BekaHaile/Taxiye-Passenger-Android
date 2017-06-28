@@ -34,7 +34,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.picker.image.util.Util;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.home.FreshActivity;
@@ -331,7 +330,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 			bottomSheetBehaviour = BottomSheetBehavior.from(scrollViewSuggestions);
 
-		Log.i("TAG", "peekHeight: "+bottomSheetBehaviour.getPeekHeight());
 		bottomSheetBehaviour.setPeekHeight(0);
 		bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
 		bottomSheetBehaviour.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -340,19 +338,17 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				if(newState== BottomSheetBehavior.STATE_COLLAPSED){
 					openSetLocationOnMapMode();
 				}
-				Log.e("BottomSheetAutos", "onStateChanged: "+ newState);
 			}
 
 			@Override
 			public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-				Log.i("BottomSheetAutos", "onSlide: "+slideOffset);
-				;
+
 			}
 		});
 		rootView.findViewById(R.id.tv_set_location_on_map).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				openSetLocationOnMapMode();
+				bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
 			}
 		});
 		rootView.findViewById(R.id.bNext).setOnClickListener(new View.OnClickListener() {
@@ -732,13 +728,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 
 	}
-	private Handler handler = new Handler();
-	private Runnable hideKeyboardRunnable = new Runnable() {
-		@Override
-		public void run() {
-			Utils.hideSoftKeyboard(activity,editTextSearch);
-		}
-	};
 	public void openSetLocationOnMapMode(){
 		bNext.setVisibility(View.VISIBLE);
 		if(bottomSheetBehaviour!=null && bottomSheetBehaviour.getState()!=BottomSheetBehavior.STATE_COLLAPSED){
@@ -746,8 +735,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 		rlMarkerPin.setVisibility(View.VISIBLE);
 		fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target);
-		handler.postDelayed(hideKeyboardRunnable,200);
-
+		Utils.hideSoftKeyboard(activity,editTextSearch);
 	}
 
 }
