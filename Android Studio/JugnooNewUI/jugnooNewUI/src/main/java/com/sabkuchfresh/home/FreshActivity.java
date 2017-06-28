@@ -761,7 +761,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                             if(getTopFragment() instanceof FeedHomeFragment) {
 //                                            getFeedHomeFragment().fetchFeedsApi(false, false);
                                             }
-                                        } else {
+                                        }
+                                        else if(intent.getIntExtra(Constants.KEY_DEEPINDEX, -1) == AppLinkIndex.MENUS_PAGE.getOrdinal()
+                                                && intent.getIntExtra(Constants.KEY_RESTAURANT_ID, -1) > 0
+                                                && intent.getIntExtra(Constants.KEY_FEEDBACK_ID, -1) > 0){
+                                            if(getRestaurantReviewsListFragment() != null){
+                                                getRestaurantReviewsListFragment().fetchFeedback(false);
+                                            }
+                                        }
+                                        else {
                                             // else normal case of displaying push dialog
                                             Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
                                             openPushDialog();

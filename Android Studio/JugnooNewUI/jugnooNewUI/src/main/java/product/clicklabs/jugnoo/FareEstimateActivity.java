@@ -444,6 +444,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements
         try {
             Data.autoData.setDropLatLng(searchResult.getLatLng());
             Data.autoData.setDropAddress(searchResult.getAddress());
+            Data.autoData.setDropAddressId(searchResult.getId());
             getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), searchResult.getLatLng());
             searchResultGlobal = searchResult;
         } catch (Exception e) {

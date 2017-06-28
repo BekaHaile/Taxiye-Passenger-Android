@@ -577,10 +577,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							}
 
 							// deep link to restaurant page
-							Prefs.with(this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, jObj.optString(KEY_RESTAURANT_ID, "-1"));
+							int restaurantId = jObj.optInt(KEY_RESTAURANT_ID, -1);
+							Prefs.with(this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""+restaurantId);
 
 							// deep link to restaurant review page particular feedback
-							Prefs.with(this).save(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, jObj.optInt(KEY_FEEDBACK_ID, -1));
+							int feedbackId = jObj.optInt(KEY_FEEDBACK_ID, -1);
+							Prefs.with(this).save(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, feedbackId);
 
 
 							if("".equalsIgnoreCase(picture)){
@@ -615,6 +617,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 								broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
 								broadcastIntent.putExtra(Constants.KEY_POST_ID, postId);
 								broadcastIntent.putExtra(Constants.KEY_POST_NOTIFICATION_ID, postNotificationId);
+							}
+							else if(deepindex == AppLinkIndex.MENUS_PAGE.getOrdinal() && restaurantId > 0 && feedbackId > 0){
+								broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
+								broadcastIntent.putExtra(Constants.KEY_RESTAURANT_ID, restaurantId);
+								broadcastIntent.putExtra(Constants.KEY_FEEDBACK_ID, feedbackId);
 							}
 							else if("".equalsIgnoreCase(url)){
 								deepindex = showDialog == 1 ? -1 : deepindex;
