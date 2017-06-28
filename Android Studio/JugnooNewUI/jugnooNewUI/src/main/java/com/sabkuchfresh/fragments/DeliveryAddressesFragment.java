@@ -498,6 +498,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     public void onResume() {
         super.onResume();
 
+
     }
 
     @Override

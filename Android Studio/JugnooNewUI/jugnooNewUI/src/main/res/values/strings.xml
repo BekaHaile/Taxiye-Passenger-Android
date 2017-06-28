@@ -1319,6 +1319,7 @@
     <string name="waiting_for_response">Waiting for response...</string>
     <string name="label_request_expires_in">Your request will expire in</string>
     <string name="hint_add_upi">Please add UPI Address</string>
+    <string name="please_wait">Please Wait...</string>
 
 
 </resources>
