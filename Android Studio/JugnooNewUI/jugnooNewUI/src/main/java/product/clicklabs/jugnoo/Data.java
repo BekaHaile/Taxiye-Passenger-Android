@@ -296,10 +296,7 @@ public class Data {
                     dontTryParsingDeeplink = true;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
                 }
-            } else {
-                Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
             }
 
 

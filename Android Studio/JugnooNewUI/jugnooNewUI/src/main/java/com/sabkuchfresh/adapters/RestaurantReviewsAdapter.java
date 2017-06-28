@@ -1,5 +1,6 @@
 package com.sabkuchfresh.adapters;
 
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -416,7 +417,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			vSepBelowMessage = itemView.findViewById(R.id.vSepBelowMessage);
 			vShadowDown = itemView.findViewById(R.id.vShadowDown);
 			rlRestaurantReply = (RelativeLayout) itemView.findViewById(R.id.rlRestaurantReply);
-			tvRestName = (TextView) itemView.findViewById(R.id.tvRestName);
+			tvRestName = (TextView) itemView.findViewById(R.id.tvRestName); tvRestName.setTypeface(tvRestName.getTypeface(), Typeface.BOLD);
 			tvRestReply = (TextView) itemView.findViewById(R.id.tvRestReply);
 			tvReplyDateTime = (TextView) itemView.findViewById(R.id.tvReplyDateTime);
 			ivRestImage = (ImageView) itemView.findViewById(R.id.ivRestImage);
