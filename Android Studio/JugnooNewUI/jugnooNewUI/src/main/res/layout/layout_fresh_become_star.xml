@@ -87,7 +87,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/px_20"
                     android:rotation="180"
-                    android:src="@drawable/triangle_grey"
+                    android:src="@drawable/triangle_grey_dr"
                     android:tag="mwar" />
 
 

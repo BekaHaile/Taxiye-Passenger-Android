@@ -5173,6 +5173,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if(Data.autoData.getDropLatLng() != null && PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
                         boundsBuilder.include(Data.autoData.getDropLatLng());
                     }
+                    if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                            || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
+                        boundsBuilder.include(Data.autoData.getPickupLatLng());
+                    }
                     final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder, FIX_ZOOM_DIAGONAL);
                     final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                     new Handler().postDelayed(new Runnable() {
@@ -5934,6 +5938,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             ArrayList<RidePath> ridePathsList = new ArrayList<>();
 
                                             JSONArray jsonArray = jObj.getJSONArray("locations");
+                                            LatLng lastLatLng = null;
                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                                 RidePath currentRidePath = new RidePath(
@@ -5953,10 +5958,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 polylineOptions.geodesic(false);
                                                 polylineOptions.add(start, end);
                                                 getPolylineOptionsInRideDriverPath().add(polylineOptions);
+                                                lastLatLng = end;
                                             }
                                             plotPolylineInRideDriverPath();
 
                                             try { MyApplication.getInstance().getDatabase2().createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
+
+                                            // TODO: 28/06/17 zoom progressively based on path traversed by driver
+                                            if(lastLatLng != null) {
+                                                Data.autoData.getAssignedDriverInfo().latLng = lastLatLng;
+                                                zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
+                                            }
+
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -6069,7 +6082,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return (PassengerScreenMode.P_IN_RIDE == passengerScreenMode);
     }
 
-    public void getDropLocationPathAndDisplay(final LatLng lastLatLng, final boolean zoomAfterDropSet) {
+    public void getDropLocationPathAndDisplay(final LatLng pickupLatLng, final boolean zoomAfterDropSet) {
         try {
             new Thread(new Runnable() {
                 @Override
@@ -6092,8 +6105,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                     });
                     try {
-                        if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && lastLatLng != null && toShowPathToDrop()) {
-                            Response response = RestClient.getGoogleApiService().getDirections(lastLatLng.latitude + "," + lastLatLng.longitude,
+                        if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
+                            Response response = RestClient.getGoogleApiService().getDirections(pickupLatLng.latitude + "," + pickupLatLng.longitude,
                                     Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
                             if (result != null) {
@@ -6107,8 +6120,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 if (toShowPathToDrop()) {
                                                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                                                    if(lastLatLng != null && Data.autoData.getDropLatLng() != null){
-                                                        builder.include(lastLatLng).include(Data.autoData.getDropLatLng());
+                                                    if(pickupLatLng != null && Data.autoData.getDropLatLng() != null){
+                                                        builder.include(pickupLatLng).include(Data.autoData.getDropLatLng());
                                                     }
 
                                                     pathToDropLocationPolylineOptions = new PolylineOptions();
@@ -7942,7 +7955,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     ||
                     (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)
                     ? true : false;
-            // TODO: 21/06/17 drop latlng check
             new ApiFareEstimate(HomeActivity.this, new ApiFareEstimate.Callback() {
                 @Override
                 public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue) {
@@ -7997,7 +8009,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
                     try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
-                    // TODO: 21/06/17 drop latlng check
                     textViewTotalFare.setText(getString(R.string.total_fare_colon));
                     textViewTotalFareValue.setText(getString(R.string.rupee) + "" + minFare + " - " +
                             getString(R.string.rupee) + "" + maxFare);
@@ -8479,7 +8490,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
 					switchPassengerScreen(passengerScreenMode);
 
-                    // TODO: 22/06/17 drop latlng check
 					if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
 							shakeAnim > 0 && !updateSpecialPickupScreen())
                             ||
@@ -9119,7 +9129,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             float padding = 150f;
             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
                     ||
-                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1){ // TODO: 21/06/17 drop latlng check
+                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1){
                 relativeLayoutTotalFare.setVisibility(View.VISIBLE);
                 textVieGetFareEstimateConfirm.setVisibility(View.GONE);
                 padding = padding + 80f;
@@ -9189,7 +9199,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
 
                     }
-                    // TODO: 21/06/17 drop latlng check
                     else if(Data.autoData.getDropLatLng() != null
                             && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1) {
                         specialPickupScreenOpened = false;

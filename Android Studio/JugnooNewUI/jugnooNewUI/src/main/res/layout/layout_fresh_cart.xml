@@ -59,7 +59,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20px"
                         android:layout_toRightOf="@+id/textViewCartItems"
-                        android:src="@drawable/triangle_grey"
+                        android:src="@drawable/triangle_grey_dr"
                         android:tag="mwar"
                         />
 

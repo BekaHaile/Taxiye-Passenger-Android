@@ -18,11 +18,15 @@
         android:background="?android:attr/selectableItemBackground"
         android:gravity="center|left"
         android:minHeight="42dp"
+        android:paddingLeft="20px"
         android:paddingRight="20px"
         android:paddingTop="5px"
         android:text="dsada"
         android:textColor="@color/text_color_grey_menus"
-        android:textSize="30px"/>
+        android:textSize="30px"
+        android:layout_alignWithParentIfMissing="true"
+        />
+    <!--"?android:attr/selectableItemBackground"-->
 
     <ImageButton
         android:id="@id/ib_arrow"
@@ -35,6 +39,7 @@
         android:paddingRight="36px"
         android:rotation="-90"
         android:src="@drawable/ic_back_pay_pressed"
+        android:visibility="gone"
 
         />
 

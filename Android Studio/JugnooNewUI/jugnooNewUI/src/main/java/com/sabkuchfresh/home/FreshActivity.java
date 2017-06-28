@@ -4168,7 +4168,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             llCheckoutBarSetVisibility(View.GONE);
             topBar.ivSearch.setVisibility(View.GONE);
             GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.FEED + GAAction.CLICKED);
-            getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
+            getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened());
         }
     }
 
@@ -4659,7 +4659,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
 
-    public void setRestaurantRatingStarsToLL(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating, Double rating){
+    public void setRestaurantRatingStarsToLL(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating,
+                                             Double rating, int halfStarRes, int blankStarRes,
+                                             TextView tvCollapRestaurantRatingCount, int ratingCount){
+        if(rating == null){
+            rating = 0d;
+        }
         llCollapRatingStars.removeAllViews();
         llCollapRatingStars.addView(tvCollapRestaurantRating);
         tvCollapRestaurantRating.setText(String.valueOf(rating));
@@ -4667,30 +4672,42 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         for(int i=0; i<5; i++){
             ImageView star = new ImageView(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.dp_11), getResources().getDimensionPixelSize(R.dimen.dp_11));
-            params.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_1), 0, 0, 0);
+            if(i==0){
+                params.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_5), 0, 0, 0);
+            } else {
+                params.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_1), 0, 0, 0);
+            }
             if(i < ratingInt){
-                star.setImageResource(R.drawable.ic_star_white);
+                star.setImageResource(blankStarRes);
                 star.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(this, R.color.green_delivery_stores), PorterDuff.Mode.SRC_IN));
             } else if(i == ratingInt){
                 double decimal = Math.round((rating - Math.floor(rating))*10.0)/10.0;
                 if(decimal < 0.3){
-                    star.setImageResource(R.drawable.ic_star_white);
+                    star.setImageResource(blankStarRes);
                 } else if(decimal < 0.8){
-                    star.setImageResource(R.drawable.ic_half_star_green_white);
+                    star.setImageResource(halfStarRes);
                 } else {
-                    star.setImageResource(R.drawable.ic_star_white);
+                    star.setImageResource(blankStarRes);
                     star.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(this, R.color.green_delivery_stores), PorterDuff.Mode.SRC_IN));
                 }
             } else {
-                star.setImageResource(R.drawable.ic_star_white);
+                star.setImageResource(blankStarRes);
             }
             llCollapRatingStars.addView(star, params);
         }
+        if(tvCollapRestaurantRatingCount != null){
+            llCollapRatingStars.addView(tvCollapRestaurantRatingCount);
+            tvCollapRestaurantRatingCount.setText(ratingCount > 0 ? "("+ratingCount+")" : "");
+        }
     }
 
-    public void clearRestaurantRatingStars(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating){
+    public void clearRestaurantRatingStars(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating,
+                                           TextView tvCollapRestaurantRatingCount){
         llCollapRatingStars.removeAllViews();
         tvCollapRestaurantRating.setText("");
+        if(tvCollapRestaurantRatingCount != null){
+            tvCollapRestaurantRatingCount.setText("");
+        }
     }
 
 

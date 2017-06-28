@@ -116,7 +116,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="@dimen/px_48"
-                            android:src="@drawable/triangle_grey"
+                            android:src="@drawable/triangle_grey_dr"
                             android:tag="mwar" />
                     </RelativeLayout>
 
@@ -148,7 +148,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/px_48"
                         android:rotation="0"
-                        android:src="@drawable/triangle_grey"
+                        android:src="@drawable/triangle_grey_dr"
                         android:tag="mwar" />
 
 

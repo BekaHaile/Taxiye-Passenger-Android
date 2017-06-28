@@ -184,6 +184,14 @@ public class FetchFeedbackResponse {
 		@Expose
 		private String postTime;
 
+		@SerializedName("reply")
+		@Expose
+		private String reply;
+		@SerializedName("reply_time")
+		@Expose
+		private String replyTime;
+
+
 		public Integer getOrderId() {
 			return orderId;
 		}
@@ -337,6 +345,22 @@ public class FetchFeedbackResponse {
 
 		public String getPostTime() {
 			return postTime;
+		}
+
+		public String getReply() {
+			return reply;
+		}
+
+		public void setReply(String reply) {
+			this.reply = reply;
+		}
+
+		public String getReplyTime() {
+			return replyTime;
+		}
+
+		public void setReplyTime(String replyTime) {
+			this.replyTime = replyTime;
 		}
 	}
 

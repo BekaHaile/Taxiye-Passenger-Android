@@ -8,10 +8,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
@@ -281,7 +283,14 @@ public class DialogPopup {
 
 
 	public static void alertPopupLeftOriented(Activity activity, String title, String message,
-											  boolean leftOriented, boolean applyMinDimens, boolean inHtml){
+											  boolean leftOriented, boolean applyMinDimens, boolean inHtml) {
+		alertPopupLeftOriented(activity, title, message, leftOriented, applyMinDimens, inHtml, false, -1, -1, -1, null);
+	}
+
+	public static void alertPopupLeftOriented(Activity activity, String title, String message,
+											  boolean leftOriented, boolean applyMinDimens, boolean inHtml,
+											  boolean showTitle, int titleTextColorRes, int titleTextSizeSP, int messageTextSizeSP,
+											  Typeface typeface){
 		try {
 			dismissAlertPopup();
 			if("".equalsIgnoreCase(title)){
@@ -335,7 +344,20 @@ public class DialogPopup {
 			}
 			
 			
-			textHead.setVisibility(View.GONE);
+			textHead.setVisibility(showTitle ? View.VISIBLE : View.GONE);
+			if(showTitle && titleTextColorRes > 0){
+				textHead.setTextColor(ContextCompat.getColor(activity, titleTextColorRes));
+			}
+			if(showTitle && titleTextSizeSP > 0){
+				textHead.setTextSize(titleTextSizeSP);
+			}
+			if(typeface != null){
+				textHead.setTypeface(typeface);
+				textMessage.setTypeface(typeface);
+			}
+			if(messageTextSizeSP > 0){
+				textMessage.setTextSize(messageTextSizeSP);
+			}
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
 			
