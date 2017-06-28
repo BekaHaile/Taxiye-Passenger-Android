@@ -165,6 +165,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
 
         activity.setRestaurantRatingStarsToLL(llRatingStars, tvRating,
                 vendor.getRating(), R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey, tvRatingCount, 0);
+        tvRatingCount.setText("("+vendor.getReviewCount()+")");
 
         fetchFeedback(false);
 
@@ -197,7 +198,6 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                         restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
                         reviewsAdapter.notifyDataSetChanged();
                         rlNoReviews.setVisibility(restaurantReviews.size() == 0 ? View.VISIBLE : View.GONE);
-                        tvRatingCount.setText(restaurantReviews.size() > 0 ? "("+restaurantReviews.size()+")" : "");
                         RestaurantReviewsListFragment.this.fetchFeedbackResponse = fetchFeedbackResponse;
                         if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
                             activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());

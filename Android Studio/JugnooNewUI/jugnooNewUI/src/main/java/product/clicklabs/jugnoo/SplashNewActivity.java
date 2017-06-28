@@ -1466,6 +1466,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		llContainer.setVisibility(View.GONE);
 		rlSplashLogo.setVisibility(View.GONE);
 		relativeLayoutLS.setVisibility(View.GONE);
+		rlLoginSignupNew.clearAnimation();
 		rlLoginSignupNew.setVisibility(View.GONE);
 		llSignupOnboarding.setVisibility(View.GONE);
 		int duration = 500;
