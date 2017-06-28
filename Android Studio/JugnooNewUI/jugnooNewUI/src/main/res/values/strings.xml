@@ -1344,6 +1344,7 @@
     <string name="select_time">Select Time</string>
     <string name="please_select_date">Please select date</string>
     <string name="please_select_time">Please select time</string>
+    <string name="service_date_colon_format">Service Date: %s</string>
 
 
 </resources>

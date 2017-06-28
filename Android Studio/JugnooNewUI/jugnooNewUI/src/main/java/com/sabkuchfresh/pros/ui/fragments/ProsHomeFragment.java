@@ -22,13 +22,11 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.models.ProsCatalogueData;
 import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
-import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import io.paperdb.Paper;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -115,14 +113,14 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 			}
 
 			@Override
-			public void onNeedHelpClick(RecentOrder recentOrder) {
+			public void onNeedHelpClick(ProsCatalogueData.CurrentOrder recentOrder) {
 				activity.getHomeUtil().openFuguOrSupport(activity, activity.getRelativeLayoutContainer(),
-						recentOrder.getOrderId(), recentOrder.getSupportCategory(), recentOrder.getExpectedDeliveryDate());
+						recentOrder.getJobId(), recentOrder.getSupportCategory(), recentOrder.getJobPickupDatetime());
 			}
 
 			@Override
-			public void onViewDetailsClick(RecentOrder recentOrder) {
-				activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), recentOrder.getOrderId());
+			public void onViewDetailsClick(ProsCatalogueData.CurrentOrder recentOrder) {
+				activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), recentOrder.getJobId());
 			}
 		}, rvProsMain);
 
@@ -234,7 +232,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 		rvProsMain.smoothScrollToPosition(0);
 		// TODO: 22/06/17 remove this
 		categoriesAdapter.setList(prosCatalogueData.getData().get(prosCatalogueData.getData().size()-1),
-				(ArrayList<RecentOrder>)Paper.book().read("recentOrder"), (ArrayList<String>)Paper.book().read("status"));
+				(ArrayList<ProsCatalogueData.CurrentOrder>) prosCatalogueData.getCurrentOrders());
 	}
 
 

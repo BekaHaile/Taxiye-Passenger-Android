@@ -1084,6 +1084,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (ProsHomeFragment) getSupportFragmentManager().findFragmentByTag(ProsHomeFragment.class.getName());
     }
 
+    public ProsCheckoutFragment getProsCheckoutFragment() {
+        return (ProsCheckoutFragment) getSupportFragmentManager().findFragmentByTag(ProsCheckoutFragment.class.getName());
+    }
+
 
     public Product product;
     public List<Product> productList = new ArrayList<>();
@@ -2907,6 +2911,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             if (getFreshCheckoutMergedFragment() != null) {
                                 getFreshCheckoutMergedFragment().updateAddressView();
                                 GAUtils.event(getGaCategory(), CHECKOUT, DELIVERY_ADDRESS+MODIFIED);
+                            } else if (getProsCheckoutFragment() != null) {
+                                getProsCheckoutFragment().updateAddressView();
+                                GAUtils.event(getGaCategory(), CHECKOUT, DELIVERY_ADDRESS+MODIFIED);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -3488,7 +3495,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setAddressAndFetchOfferingData(int appType) {
         try {
             setAddressTextToLocationPlaceHolder();
-            if (getFreshCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
+            if (getFreshCheckoutMergedFragment() == null && getFeedbackFragment() == null && getProsCheckoutFragment() == null) {
                 if (appType == AppConstant.ApplicationType.FRESH && getFreshHomeFragment() != null) {
                     getFreshHomeFragment().getSuperCategoriesAPI(true);
                 } else if (appType == AppConstant.ApplicationType.MEALS && getMealFragment() != null) {

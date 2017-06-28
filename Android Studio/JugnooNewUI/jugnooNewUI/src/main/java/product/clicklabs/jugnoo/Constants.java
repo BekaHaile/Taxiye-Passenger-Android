@@ -749,4 +749,5 @@ public interface Constants {
     String KEY_PRODUCT_NAME = "product_name";
     String KEY_JOB_ID = "job_id";
     String KEY_JOB_AMOUNT = "job_amount";
+    String SPLITTER_PRODUCT_NAME_DESCRIPTION = "####^^^^####";
 }

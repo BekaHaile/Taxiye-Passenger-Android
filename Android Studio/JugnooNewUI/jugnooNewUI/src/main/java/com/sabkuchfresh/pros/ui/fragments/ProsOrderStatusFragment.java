@@ -266,6 +266,8 @@ public class ProsOrderStatusFragment extends Fragment {
 				tvDeliveryToVal.setText(datum.getJobAddress());
 			}
 			date = datum.getJobPickupDatetime();
+			supportCategory = datum.getSupportCategory();
+			date = datum.getJobPickupDatetime();
 		}
 	}
 

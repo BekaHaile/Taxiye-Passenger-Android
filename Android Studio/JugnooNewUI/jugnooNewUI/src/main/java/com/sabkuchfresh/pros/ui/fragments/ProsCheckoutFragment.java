@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -291,7 +292,9 @@ public class ProsCheckoutFragment extends Fragment {
 				params.put(Constants.KEY_CUSTOMER_EMAIL, Data.userData.userEmail);
 				params.put(Constants.KEY_CUSTOMER_USERNAME, Data.userData.userName);
 				params.put(Constants.KEY_CUSTOMER_PHONE, Data.userData.phoneNo);
-				params.put(Constants.KEY_JOB_DESCRIPTION, jobDescription);
+				params.put(Constants.KEY_JOB_DESCRIPTION, prosProductDatum.getName()
+						+Constants.SPLITTER_PRODUCT_NAME_DESCRIPTION+
+						jobDescription);
 				params.put(Constants.KEY_JOB_PICKUP_DATETIME, jobPickupDateTime);
 				params.put(Constants.KEY_JOB_DELIVERY_DATETIME, jobDeliveryDateTime);
 				params.put(Constants.KEY_TIMEZONE, timeZoneDiff);
@@ -324,9 +327,8 @@ public class ProsCheckoutFragment extends Fragment {
 									new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
 										@Override
 										public void onDismiss() {
-											// TODO: 27/06/17 revert this
-//											activity.getSupportFragmentManager().popBackStack(ProsProductsFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-											activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), productsResponse.getData().getJobId());
+											activity.getSupportFragmentManager().popBackStack(ProsProductsFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//											activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), productsResponse.getData().getJobId());
 										}
 									}).show(String.valueOf(productsResponse.getData().getJobId()),
 											tvSelectTimeSlot.getText().toString(),

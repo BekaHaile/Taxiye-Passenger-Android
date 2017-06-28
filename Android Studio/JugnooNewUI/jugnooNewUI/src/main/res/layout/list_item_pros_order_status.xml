@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/ivPaidVia"
-                android:text="Architect (Order #2334)"
+                android:text=""
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_15"
                 app:font="@string/maven"

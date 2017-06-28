@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.ItemListener;
 import com.sabkuchfresh.pros.models.ProsCatalogueData;
-import com.sabkuchfresh.retrofit.model.RecentOrder;
+import com.sabkuchfresh.pros.models.ProsOrderStatus;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.DateOperations;
 
 /**
  * Created by shankar on 1/20/17.
@@ -32,7 +33,7 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 
 	private Context context;
 	private List<ProsCatalogueData.ProsCatalogueDatum> prosCatalogueDatumList;
-	private ArrayList<RecentOrder> recentOrders;
+	private ArrayList<ProsCatalogueData.CurrentOrder> recentOrders;
 	private ArrayList<String> possibleStatus;
 	private Callback callback;
 	public static final int MAIN_ITEM = 1;
@@ -43,13 +44,17 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 		this.context = context;
 		this.callback = callback;
 		this.recyclerView = recyclerView;
+		this.possibleStatus = new ArrayList<>();
+		this.possibleStatus.add("Booking Accepted");
+		this.possibleStatus.add("Pro Assigned");
+		this.possibleStatus.add("Job Started");
+		this.possibleStatus.add("Job Finished");
 	}
 
 	public synchronized void setList(List<ProsCatalogueData.ProsCatalogueDatum> elements,
-									 ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus) {
+									 ArrayList<ProsCatalogueData.CurrentOrder> recentOrders) {
 		this.prosCatalogueDatumList = elements;
 		this.recentOrders = recentOrders;
-		this.possibleStatus = possibleStatus;
 		notifyDataSetChanged();
 	}
 
@@ -91,7 +96,7 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 		if (mholder instanceof ViewHolderStatus) {
 			ViewHolderStatus statusHolder = ((ViewHolderStatus) mholder);
 			try {
-				RecentOrder recentOrder = recentOrders.get(position);
+				ProsCatalogueData.CurrentOrder recentOrder = recentOrders.get(position);
 				for(int i=0; i<statusHolder.relativeStatusBar.getChildCount(); i++) {
 					if(statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup) {
 						ViewGroup viewGroup = (ViewGroup)(statusHolder.relativeStatusBar.getChildAt(i));
@@ -102,7 +107,10 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 						statusHolder.relativeStatusBar.getChildAt(i).setVisibility(View.GONE);
 					}
 				}
-				showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
+				showPossibleStatus(possibleStatus, recentOrder.getJobStatus(), statusHolder);
+				statusHolder.tvServiceName.setText(recentOrder.getJobNameSplitted()+" (Order #"+recentOrder.getJobId()+")");
+				statusHolder.tvServiceDateTime.setText(context.getString(R.string.service_date_colon_format,
+						DateOperations.convertDateViaFormat(DateOperations.utcToLocalTZ(recentOrder.getJobPickupDatetime()))));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -155,8 +163,8 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 
 	public interface Callback {
 		void onItemClick(ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum);
-		void onViewDetailsClick(RecentOrder recentOrder);
-		void onNeedHelpClick(RecentOrder recentOrder);
+		void onViewDetailsClick(ProsCatalogueData.CurrentOrder recentOrder);
+		void onNeedHelpClick(ProsCatalogueData.CurrentOrder recentOrder);
 	}
 
 	@Override
@@ -183,6 +191,18 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 	private void showPossibleStatus(ArrayList<String> possibleStatus, int status, ViewHolderStatus statusHolder) {
 		setDefaultState(statusHolder);
 		int selectedSize = context.getResources().getDimensionPixelSize(R.dimen.dp_17);
+
+		// status conversion
+		if(status == ProsOrderStatus.UPCOMING.getOrdinal() || status == ProsOrderStatus.UNASSIGNED.getOrdinal()){
+			status = 0;
+		} else if(status == ProsOrderStatus.ACCEPTED.getOrdinal() || status == ProsOrderStatus.ARRIVED.getOrdinal()){
+			status = 1;
+		} else if(status == ProsOrderStatus.STARTED.getOrdinal()){
+			status = 2;
+		} else if(status == ProsOrderStatus.ENDED.getOrdinal()){
+			status = 3;
+		}
+
 		switch (possibleStatus.size()) {
 			case 4:
 				statusHolder.tvStatus3.setVisibility(View.VISIBLE);

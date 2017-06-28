@@ -100,6 +100,9 @@ public class ProsOrderStatusResponse {
 		@SerializedName("fields")
 		@Expose
 		private Fields fields;
+		@SerializedName("support_category")
+		@Expose
+		private int supportCategory;
 
 
 		public String getJobAddress() {
@@ -180,6 +183,14 @@ public class ProsOrderStatusResponse {
 
 		public void setJobLongitude(double jobLongitude) {
 			this.jobLongitude = jobLongitude;
+		}
+
+		public int getSupportCategory() {
+			return supportCategory;
+		}
+
+		public void setSupportCategory(int supportCategory) {
+			this.supportCategory = supportCategory;
 		}
 	}
 
