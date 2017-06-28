@@ -1197,6 +1197,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 Data.autoData.setDropLatLng(null);
                 Data.autoData.setDropAddress("");
+				Data.autoData.setDropAddressId(0);
                 dropLocationSet = false;
                 dropLocationSearched = false;
                 if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
@@ -2163,6 +2164,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void setDropAddressAndExpandFields(SearchResult searchResult){
         Data.autoData.setDropLatLng(searchResult.getLatLng());
         Data.autoData.setDropAddress(searchResult.getAddress());
+		Data.autoData.setDropAddressId(searchResult.getId());
         if(Data.autoData.getDropLatLng() != null){
             if(textViewDestSearch.getText().toString().isEmpty()
                     || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.enter_destination))
@@ -2319,6 +2321,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try{
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
+			Data.autoData.setDropAddressId(0);
             dropLocationSet = false;
             dropLocationSearched = false;
 
@@ -2833,6 +2836,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if(!dropLocationSet) {
                             Data.autoData.setDropLatLng(null);
                             Data.autoData.setDropAddress("");
+							Data.autoData.setDropAddressId(0);
                         }
                         Data.autoData.setAssignedDriverInfo(null);
 
@@ -4345,8 +4349,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(passengerScreenMode == PassengerScreenMode.P_INITIAL && Data.autoData.getDropLatLng() != null){
                     SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
                             Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
-                    if(searchResult == null){
-                        imageViewDropCross.performClick();
+                    if(searchResult == null && Data.autoData.getDropAddressId() > 0){
+						imageViewDropCross.performClick();
                     }
 
                 }
@@ -7390,6 +7394,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.autoData.setPickupAddress("");
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
+			Data.autoData.setDropAddressId(0);
             Data.setRecentAddressesFetched(false);
             dropLocationSet = false;
             zoomedForSearch = false;
@@ -8479,6 +8484,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					}
 					Data.autoData.setDropLatLng(searchResult.getLatLng());
 					Data.autoData.setDropAddress(searchResult.getAddress());
+					Data.autoData.setDropAddressId(searchResult.getId());
 					dropLocationSet = true;
 					relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
 					imageViewDropCross.setVisibility(View.VISIBLE);
