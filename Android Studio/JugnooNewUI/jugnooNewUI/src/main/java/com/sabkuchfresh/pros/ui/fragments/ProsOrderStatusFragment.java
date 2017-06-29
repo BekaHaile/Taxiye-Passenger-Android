@@ -138,7 +138,7 @@ public class ProsOrderStatusFragment extends Fragment {
 				}
 				if(container != null) {
 					homeUtil.openFuguOrSupport((FragmentActivity) activity, container,
-							jobId, supportCategory, date);
+							jobId, supportCategory, date, ProductType.PROS.getOrdinal());
 				}
 				break;
 		}

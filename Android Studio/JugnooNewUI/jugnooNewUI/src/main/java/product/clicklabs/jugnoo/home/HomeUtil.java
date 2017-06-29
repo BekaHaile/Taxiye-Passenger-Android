@@ -379,10 +379,14 @@ public class HomeUtil {
 		}
 	}
 
-	public void openFuguOrSupport(FragmentActivity activity, View container, int orderId, int supportCategory, String deliveryDate){
+	public void openFuguOrSupport(FragmentActivity activity, View container, int orderId, int supportCategory, String deliveryDate, int productType){
 		if (Data.isFuguChatEnabled()) {
 			try {
-				FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
+				if(productType == ProductType.MENUS.getOrdinal()){
+					FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
+				} else {
+					FuguConfig.getInstance().showConversations(activity);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				Utils.showToast(activity, activity.getString(R.string.something_went_wrong));

@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -116,7 +117,8 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 			@Override
 			public void onNeedHelpClick(ProsCatalogueData.CurrentOrder recentOrder) {
 				activity.getHomeUtil().openFuguOrSupport(activity, activity.getRelativeLayoutContainer(),
-						recentOrder.getJobId(), recentOrder.getSupportCategory(), recentOrder.getJobPickupDatetime());
+						recentOrder.getJobId(), recentOrder.getSupportCategory(), recentOrder.getJobPickupDatetime(),
+						ProductType.PROS.getOrdinal());
 			}
 
 			@Override

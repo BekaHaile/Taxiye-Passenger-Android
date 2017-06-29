@@ -1262,7 +1262,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     apiConfirmDelivery(order.getOrderId(), 1, pos);
                 } else {
                     activity.getHomeUtil().openFuguOrSupport(activity, activity.getRelativeLayoutContainer(),
-                            order.getOrderId(), order.getSupportCategory(), order.getExpectedDeliveryDate());
+                            order.getOrderId(), order.getSupportCategory(), order.getExpectedDeliveryDate(), ProductType.MENUS.getOrdinal());
 //                    if (Data.isFuguChatEnabled()) {
 //                        try {
 //                            FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
