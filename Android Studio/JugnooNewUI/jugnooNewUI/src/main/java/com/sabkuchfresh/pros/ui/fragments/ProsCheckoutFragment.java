@@ -100,6 +100,7 @@ public class ProsCheckoutFragment extends Fragment {
 	private ProsProductData.ProsProductDatum prosProductDatum;
 	private Bus mBus;
 	private String selectedDate, selectedTime;
+	private boolean openTimeDialogAfter;
 
 	public static ProsCheckoutFragment newInstance(ProsProductData.ProsProductDatum prosProductDatum) {
 		ProsCheckoutFragment fragment = new ProsCheckoutFragment();
@@ -138,7 +139,7 @@ public class ProsCheckoutFragment extends Fragment {
 					Utils.showToast(activity, activity.getString(R.string.please_select_time));
 					return;
 				}
-				String finalDateTime = getSelectedDateTime();
+				String finalDateTime = getFormattedDateTime(selectedDate, selectedTime);
 				apiCreateTask(editTextDeliveryInstructions.getText().toString().trim(),
 						finalDateTime,
 						DateOperations.addHoursToDateTime(finalDateTime, 1),
@@ -159,7 +160,7 @@ public class ProsCheckoutFragment extends Fragment {
 		}
 	}
 
-	private String getSelectedDateTime(){
+	private String getFormattedDateTime(String selectedDate, String selectedTime){
 		return DateOperations.addHoursToDateTime(selectedDate+" "+selectedTime, 0);
 	}
 
@@ -183,7 +184,13 @@ public class ProsCheckoutFragment extends Fragment {
 				getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
 				break;
 			case R.id.tvSelectTimeSlot:
-				getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
+				if(TextUtils.isEmpty(selectedDate)){
+					getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
+					openTimeDialogAfter = true;
+				} else {
+					getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
+					openTimeDialogAfter = false;
+				}
 				break;
 			case R.id.relativeLayoutCash:
 				break;
@@ -201,8 +208,17 @@ public class ProsCheckoutFragment extends Fragment {
 	private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
 		@Override
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-			selectedDate = year+"-"+(month+1)+"-"+dayOfMonth;
-			tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
+			String date = year + "-" + (month + 1) + "-" + dayOfMonth;
+			if(DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime), DateOperations.getCurrentTime()) > 0) {
+				selectedDate = date;
+				tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
+				if(openTimeDialogAfter){
+					getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
+				}
+				openTimeDialogAfter = false;
+			} else {
+				Utils.showToast(activity, activity.getString(R.string.please_select_date_from_today));
+			}
 		}
 	};
 
@@ -217,8 +233,9 @@ public class ProsCheckoutFragment extends Fragment {
 	private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			selectedTime = hourOfDay+":"+minute+":00";
-			if(DateOperations.getTimeDifference(getSelectedDateTime(), DateOperations.getCurrentTime()) > 0) {
+			String time = hourOfDay+":"+minute+":00";
+			if(DateOperations.getTimeDifference(getFormattedDateTime(selectedDate, time), DateOperations.getCurrentTime()) > 0) {
+				selectedTime = time;
 				tvSelectTimeSlot.setText(DateOperations.convertDayTimeAPViaFormat(hourOfDay + ":" + minute + ":00"));
 			} else {
 				Utils.showToast(activity, activity.getString(R.string.please_select_time_after_current_time));
