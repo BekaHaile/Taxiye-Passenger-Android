@@ -331,10 +331,12 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 
 	public static Pair<Integer, String> getProsOrderState(int status){
 		String statusName = "";
-		if(status == ProsOrderStatus.UPCOMING.getOrdinal() || status == ProsOrderStatus.UNASSIGNED.getOrdinal()){
+		if(status == ProsOrderStatus.UNASSIGNED.getOrdinal()){
 			status = 0;
 			statusName = "Booking Accepted";
-		} else if(status == ProsOrderStatus.ACCEPTED.getOrdinal() || status == ProsOrderStatus.ARRIVED.getOrdinal()){
+		} else if(status == ProsOrderStatus.UPCOMING.getOrdinal()
+				|| status == ProsOrderStatus.ACCEPTED.getOrdinal()
+				|| status == ProsOrderStatus.ARRIVED.getOrdinal()){
 			status = 1;
 			statusName = "Pro Assigned";
 		} else if(status == ProsOrderStatus.STARTED.getOrdinal()){

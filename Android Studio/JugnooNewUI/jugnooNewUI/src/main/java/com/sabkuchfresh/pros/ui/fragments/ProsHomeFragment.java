@@ -146,6 +146,11 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 				categoriesAdapter.notifyDataSetChanged();
 				activity.setAddressTextToLocationPlaceHolder();
 				activity.fragmentUISetup(this);
+
+				if(activity.isProsTaskCreated()){
+					activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.PROS);
+					activity.setProsTaskCreated(false);
+				}
 			}
 
 			if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
@@ -230,7 +235,6 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 		stopOhSnap();
 		rvProsMain.smoothScrollToPosition(0);
-		// TODO: 22/06/17 remove this
 		categoriesAdapter.setList(prosCatalogueData.getData().get(prosCatalogueData.getData().size()-1),
 				(ArrayList<ProsCatalogueData.CurrentOrder>) prosCatalogueData.getCurrentOrders());
 	}

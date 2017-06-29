@@ -4843,4 +4843,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
          getMealFragment().getMealAdapter().notifyDataSetChanged();
         }
     }
+
+    private boolean prosTaskCreated;
+
+    public boolean isProsTaskCreated() {
+        return prosTaskCreated;
+    }
+
+    public void setProsTaskCreated(boolean prosTaskCreated) {
+        this.prosTaskCreated = prosTaskCreated;
+    }
 }

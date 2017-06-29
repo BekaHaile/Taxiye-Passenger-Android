@@ -140,7 +140,8 @@ public class ProsCheckoutFragment extends Fragment {
 				}
 				String finalDateTime = selectedDate+" "+selectedTime;
 				apiCreateTask(editTextDeliveryInstructions.getText().toString().trim(),
-						finalDateTime, DateOperations.addHoursToDateTime(finalDateTime, 1),
+						DateOperations.addHoursToDateTime(finalDateTime, 0),
+						DateOperations.addHoursToDateTime(finalDateTime, 1),
 						String.valueOf(-1*DateOperations.getTimezoneDiffWithUTC()));
 			}
 		});
@@ -327,6 +328,7 @@ public class ProsCheckoutFragment extends Fragment {
 									new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
 										@Override
 										public void onDismiss() {
+											activity.setProsTaskCreated(true);
 											activity.getSupportFragmentManager().popBackStack(ProsProductsFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 //											activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), productsResponse.getData().getJobId());
 										}
