@@ -2,10 +2,13 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.pros.models.ProsOrderStatus;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by gurmail on 19/08/16.
@@ -878,6 +881,18 @@ public class HistoryResponse {
 
         public int getJobStatus() {
             return jobStatus;
+        }
+
+        public int getJobStatusColorRes() {
+            if(jobStatus == ProsOrderStatus.FAILED.getOrdinal()
+                    || jobStatus == ProsOrderStatus.DECLINE.getOrdinal()
+                    || jobStatus == ProsOrderStatus.CANCEL.getOrdinal()
+                    || jobStatus == ProsOrderStatus.DELETED.getOrdinal()
+                    || jobStatus == ProsOrderStatus.IGNORED.getOrdinal()){
+                return R.color.red_status;
+            } else {
+                return R.color.green_status;
+            }
         }
 
         public void setJobStatus(int jobStatus) {

@@ -175,7 +175,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 try{
                     holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
                 } catch (Exception e){
-                    holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, R.color.text_color_blue));
+                    holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, orderHistory.getJobStatusColorRes()));
                 }
                 holder.textViewId.setText(R.string.id_colon);
                 holder.textViewIdValue.setText(String.valueOf(orderHistory.getJobId()));

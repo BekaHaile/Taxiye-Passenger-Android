@@ -335,11 +335,11 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 			status = 0;
 			statusName = "Booking Accepted";
 		} else if(status == ProsOrderStatus.UPCOMING.getOrdinal()
-				|| status == ProsOrderStatus.ACCEPTED.getOrdinal()
-				|| status == ProsOrderStatus.ARRIVED.getOrdinal()){
+				|| status == ProsOrderStatus.ACCEPTED.getOrdinal()){
 			status = 1;
 			statusName = "Pro Assigned";
-		} else if(status == ProsOrderStatus.STARTED.getOrdinal()){
+		} else if(status == ProsOrderStatus.STARTED.getOrdinal()
+				|| status == ProsOrderStatus.ARRIVED.getOrdinal()){
 			status = 2;
 			statusName = "Job Started";
 		} else if(status == ProsOrderStatus.ENDED.getOrdinal()){
