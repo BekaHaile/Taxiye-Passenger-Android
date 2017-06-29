@@ -539,7 +539,7 @@ public class DateOperations {
 
 	public static String getDateFormatted(String dateYYYYMMDD) {
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, YYYY");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy");
 		try {
 			Date myDate = sdfFrom.parse(dateYYYYMMDD);
 			return sdfTo.format(myDate);

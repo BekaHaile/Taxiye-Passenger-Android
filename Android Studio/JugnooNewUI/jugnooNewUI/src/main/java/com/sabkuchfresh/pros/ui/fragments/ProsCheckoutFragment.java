@@ -138,9 +138,9 @@ public class ProsCheckoutFragment extends Fragment {
 					Utils.showToast(activity, activity.getString(R.string.please_select_time));
 					return;
 				}
-				String finalDateTime = selectedDate+" "+selectedTime;
+				String finalDateTime = getSelectedDateTime();
 				apiCreateTask(editTextDeliveryInstructions.getText().toString().trim(),
-						DateOperations.addHoursToDateTime(finalDateTime, 0),
+						finalDateTime,
 						DateOperations.addHoursToDateTime(finalDateTime, 1),
 						String.valueOf(-1*DateOperations.getTimezoneDiffWithUTC()));
 			}
@@ -157,6 +157,10 @@ public class ProsCheckoutFragment extends Fragment {
 		if (!hidden) {
 			activity.fragmentUISetup(this);
 		}
+	}
+
+	private String getSelectedDateTime(){
+		return DateOperations.addHoursToDateTime(selectedDate+" "+selectedTime, 0);
 	}
 
 	@Override
@@ -214,7 +218,11 @@ public class ProsCheckoutFragment extends Fragment {
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 			selectedTime = hourOfDay+":"+minute+":00";
-			tvSelectTimeSlot.setText(DateOperations.convertDayTimeAPViaFormat(hourOfDay+":"+minute+":00"));
+			if(DateOperations.getTimeDifference(getSelectedDateTime(), DateOperations.getCurrentTime()) > 0) {
+				tvSelectTimeSlot.setText(DateOperations.convertDayTimeAPViaFormat(hourOfDay + ":" + minute + ":00"));
+			} else {
+				Utils.showToast(activity, activity.getString(R.string.please_select_time_after_current_time));
+			}
 		}
 	};
 

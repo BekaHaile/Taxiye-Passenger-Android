@@ -66,6 +66,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 		activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
 		activity.setDeliveryAddressView(rootView);
+		activity.getDeliveryAddressView().tvDeliveryAddress.setText(R.string.service_address);
 
 		swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
 		swipeContainer.setOnRefreshListener(this);
