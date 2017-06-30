@@ -1498,7 +1498,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llSearchCartVis = View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(getString(R.string.discount_slabs));
+                topBar.title.setText(getString(R.string.bulk_order));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);

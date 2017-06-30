@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.fugu.FuguConfig;
@@ -43,7 +44,8 @@ public class MealsBulkOrderFragment extends Fragment {
 		activity.fragmentUISetup(this);
 
 		ImageView iv = (ImageView) rootView.findViewById(R.id.iv);
-		iv.setOnClickListener(new View.OnClickListener() {
+		Button bPlaceOrder = (Button) rootView.findViewById(R.id.bPlaceOrder);
+		bPlaceOrder.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
