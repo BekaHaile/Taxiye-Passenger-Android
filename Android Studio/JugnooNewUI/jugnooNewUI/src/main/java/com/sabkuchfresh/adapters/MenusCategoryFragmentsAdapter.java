@@ -79,6 +79,7 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 					}
 				}
 			}
+			category.setVegItemsCount(vegItemsCount);
 			if(isVegToggle == 0 || vegItemsCount > 0){
 				this.categories.add(category);
 			}

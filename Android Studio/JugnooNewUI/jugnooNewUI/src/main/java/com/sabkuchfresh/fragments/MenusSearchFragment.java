@@ -34,10 +34,12 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 @SuppressLint("ValidFragment")
@@ -53,9 +55,10 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
     private FreshActivity activity;
 	private ArrayList<Item> itemsInSearch;
 	private ArrayList<Category> categoriesSearched;
+	private int isVegToggle;
 
 
-    @Override
+	@Override
     public void onStart() {
         super.onStart();
     }
@@ -114,6 +117,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 		if(categoriesSearched == null){
 			categoriesSearched = new ArrayList<>();
 		}
+		isVegToggle = Prefs.with(activity).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
 
 		menusCategoryItemsAdapter = new MenusCategoryItemsAdapter(activity, itemsInSearch,
 				new MenusCategoryItemsAdapter.Callback() {
@@ -254,7 +258,8 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 						categoriesSearched.clear();
 						for (int i = 0; i < activity.getMenuProductsResponse().getCategories().size(); i++) {
 							Category category = activity.getMenuProductsResponse().getCategories().get(i);
-							if(category.getCategoryName().toLowerCase().contains(token)){
+							if(category.getCategoryName().toLowerCase().contains(token)
+									&& (isVegToggle == 0 || category.getVegItemsCount() > 0)){
 								Category category1 = new Category(category.getCategoryId(), category.getCategoryName(), i);
 								categoriesSearched.add(category1);
 							}
