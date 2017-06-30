@@ -32,6 +32,18 @@ public class Category {
 	@SerializedName("categoryPos")
 	private int categoryPos;
 
+	/**
+	 * constructor for category search
+	 * @param categoryId
+	 * @param categoryName
+	 * @param categoryPos
+	 */
+	public Category(Integer categoryId, String categoryName, int categoryPos){
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
+		this.categoryPos = categoryPos;
+	}
+
 
 	public Integer getCategoryId() {
 		return categoryId;

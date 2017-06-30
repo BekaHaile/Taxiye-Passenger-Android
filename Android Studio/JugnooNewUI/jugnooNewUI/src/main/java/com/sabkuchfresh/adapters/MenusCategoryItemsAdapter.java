@@ -51,10 +51,12 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     private int categoryPos;
     private Category category;
     private Callback callback;
+    private ArrayList<Category> categoriesSearched;
 
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
     private static final int SUB_CATEGORY_ITEM = 2;
+    private static final int SEARCHED_CATEGORY_ITEM = 3;
 
     public MenusCategoryItemsAdapter(Context context, int categoryPos, Category category, Callback callback) {
         this.context = context;
@@ -65,6 +67,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public void setSubItems(boolean notify){
+        categoriesSearched = null;
         if(subItems == null) {
             subItems = new ArrayList<>();
         }
@@ -113,10 +116,12 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         this.context = context;
         this.callback = callback;
         this.categoryPos = -1;
-        setList(items, false);
+        setList(items, false, null);
     }
 
-    public void setList(ArrayList<Item> items, boolean notify){
+    public void setList(ArrayList<Item> items, boolean notify, ArrayList<Category> categoriesSearched){
+        this.categoriesSearched = categoriesSearched;
+
         int isVegToggle = Prefs.with(context).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
         if(subItems == null) {
             subItems = new ArrayList<>();
@@ -158,20 +163,32 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             ASSL.DoMagic(v);
             return new ViewHolderBlank(v);
+        } else if (viewType == SEARCHED_CATEGORY_ITEM) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_search_category, parent, false);
+            return new CategoryViewHolder(v);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
 
 
+    private int categoriesCount(){
+        return categoriesSearched == null ? 0 : categoriesSearched.size();
+    }
 
     @Override
     public int getItemViewType(int position) {
-        if(position == subItems.size()) {
-            return BLANK_ITEM;
-        } else if(subItems.get(position).getIsSubCategory() == 1){
-            return SUB_CATEGORY_ITEM;
+        if (position < subItems.size()) {
+            if (subItems.get(position).getIsSubCategory() == 1) {
+                return SUB_CATEGORY_ITEM;
+            } else {
+                return MAIN_ITEM;
+            }
         } else {
-            return MAIN_ITEM;
+            if (categoriesCount() > 0 && position < subItems.size() + categoriesCount()) {
+                return SEARCHED_CATEGORY_ITEM;
+            } else {
+                return BLANK_ITEM;
+            }
         }
     }
 
@@ -342,6 +359,25 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             SubCategoryViewHolder subCategoryHolder = ((SubCategoryViewHolder) holder);
             subCategoryHolder.tvSubCategoryName.setText(subItems.get(position).getItemName().toUpperCase());
         }
+        else if(holder instanceof CategoryViewHolder) {
+            CategoryViewHolder categoryViewHolder = ((CategoryViewHolder) holder);
+            position = position - subItems.size();
+
+            categoryViewHolder.tvCategoryName.setText(categoriesSearched.get(position).getCategoryName().toUpperCase());
+
+            categoryViewHolder.relative.setTag(position);
+            categoryViewHolder.relative.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int pos = (int) v.getTag();
+                        callback.onCategoryClick(categoriesSearched.get(pos));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
 
 	}
 
@@ -378,7 +414,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemCount() {
-        return subItems == null ? 0 : subItems.size()+1;
+        return subItems == null ? 0 : subItems.size() + categoriesCount() + 1;
     }
 
 
@@ -423,12 +459,23 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+    class CategoryViewHolder extends RecyclerView.ViewHolder {
+        public LinearLayout relative;
+        public TextView tvCategoryName;
+        public CategoryViewHolder(View itemView) {
+            super(itemView);
+            relative = (LinearLayout) itemView.findViewById(R.id.relative);
+            tvCategoryName = (TextView) itemView.findViewById(R.id.tvCategoryName);
+        }
+    }
+
     public interface Callback{
         boolean checkForAdd(int position, Item item, CallbackCheckForAdd callbackCheckForAdd);
         void onPlusClicked(int position, Item item, boolean isNewItemAdded);
         void onMinusClicked(int position, Item item);
         void onMinusFailed(int position, Item item);
         MenusResponse.Vendor getVendorOpened();
+        void onCategoryClick(Category category);
     }
 
     public interface CallbackCheckForAdd{

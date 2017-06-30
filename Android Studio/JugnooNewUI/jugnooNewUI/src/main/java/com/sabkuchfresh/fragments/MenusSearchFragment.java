@@ -52,6 +52,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 	private View rootView;
     private FreshActivity activity;
 	private ArrayList<Item> itemsInSearch;
+	private ArrayList<Category> categoriesSearched;
 
 
     @Override
@@ -110,6 +111,9 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 		if(itemsInSearch == null) {
 			itemsInSearch = new ArrayList<>();
 		}
+		if(categoriesSearched == null){
+			categoriesSearched = new ArrayList<>();
+		}
 
 		menusCategoryItemsAdapter = new MenusCategoryItemsAdapter(activity, itemsInSearch,
 				new MenusCategoryItemsAdapter.Callback() {
@@ -149,6 +153,14 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 					@Override
 					public MenusResponse.Vendor getVendorOpened() {
 						return activity.getVendorOpened();
+					}
+
+					@Override
+					public void onCategoryClick(Category category) {
+						if(category != null){
+							activity.setScrollToCategoryId(category.getCategoryId());
+							activity.onBackPressed();
+						}
 					}
 				});
 		recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
@@ -238,6 +250,15 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 							listHashMap.remove(tokenSearched);
 						}
 						tokenSearched = token;
+
+						categoriesSearched.clear();
+						for (int i = 0; i < activity.getMenuProductsResponse().getCategories().size(); i++) {
+							Category category = activity.getMenuProductsResponse().getCategories().get(i);
+							if(category.getCategoryName().toLowerCase().contains(token)){
+								Category category1 = new Category(category.getCategoryId(), category.getCategoryName(), i);
+								categoriesSearched.add(category1);
+							}
+						}
 					}
 				}
 			} catch(Exception e){
@@ -250,7 +271,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 			try {
-				menusCategoryItemsAdapter.setList(itemsInSearch, true);
+				menusCategoryItemsAdapter.setList(itemsInSearch, true, categoriesSearched);
 				if(menusCategoryItemsAdapter.getItemCount() > 1){
 					textViewPlaceholder.setVisibility(View.GONE);
 				} else{

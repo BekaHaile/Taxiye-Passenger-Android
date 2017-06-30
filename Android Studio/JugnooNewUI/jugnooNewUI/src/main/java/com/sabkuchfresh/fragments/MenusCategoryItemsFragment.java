@@ -19,6 +19,7 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
@@ -165,6 +166,11 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                             @Override
                             public MenusResponse.Vendor getVendorOpened() {
                                 return activity.getVendorOpened();
+                            }
+
+                            @Override
+                            public void onCategoryClick(Category category) {
+
                             }
                         });
                 recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);

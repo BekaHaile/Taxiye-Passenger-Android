@@ -86,6 +86,17 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 		notifyDataSetChanged();
 	}
 
+	public int getCategoryPosition(int categoryId){
+		if(categories != null){
+			for(int i=0; i<categories.size(); i++){
+				if(categories.get(i).getCategoryId().equals(categoryId)){
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+
 	@Override
 	public Fragment getItem(int position) {
 		return MenusCategoryItemsFragment.newInstance(categories.get(position).getCategoryPos(), 1);

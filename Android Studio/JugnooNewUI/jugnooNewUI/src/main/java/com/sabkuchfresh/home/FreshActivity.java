@@ -4879,4 +4879,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         outState.putBoolean("showingEarlyBirdDiscount",showingEarlyBirdDiscount);
     }
 
+    private int scrollToCategoryId = -1;
+
+    public int getScrollToCategoryId() {
+        return scrollToCategoryId;
+    }
+
+    public void setScrollToCategoryId(int scrollToCategoryId) {
+        this.scrollToCategoryId = scrollToCategoryId;
+    }
 }
