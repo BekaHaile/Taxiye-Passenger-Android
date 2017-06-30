@@ -234,4 +234,6 @@ public interface GAAction {
 	String STORE = "Store ";
 	String ADD_POST = "Add Post ";
 	String NEXT = "Next ";
+	String BULK_ORDER = "Bulk Order 1";
+
 }
