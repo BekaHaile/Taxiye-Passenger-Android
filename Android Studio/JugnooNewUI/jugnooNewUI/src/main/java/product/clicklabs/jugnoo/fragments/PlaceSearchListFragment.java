@@ -345,7 +345,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 			}
 		});
-		rootView.findViewById(R.id.tv_set_location_on_map).setOnClickListener(new View.OnClickListener() {
+		rootView.findViewById(R.id.ll_set_location_on_map).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
