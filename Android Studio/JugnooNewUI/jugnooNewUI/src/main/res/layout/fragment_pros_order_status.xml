@@ -198,7 +198,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dp_10"
                         android:gravity="right"
-                        android:text="Upon Inspection"
+                        android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_15"
                         app:font="@string/maven"

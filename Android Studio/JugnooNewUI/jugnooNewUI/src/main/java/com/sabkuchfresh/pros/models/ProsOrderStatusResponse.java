@@ -203,6 +203,9 @@ public class ProsOrderStatusResponse {
 		@SerializedName("data")
 		@Expose
 		private String data;
+		@SerializedName("fleet_data")
+		@Expose
+		private String fleetData;
 
 		public String getLabel() {
 			return label;
@@ -220,5 +223,12 @@ public class ProsOrderStatusResponse {
 			this.data = data;
 		}
 
+		public String getFleetData() {
+			return fleetData;
+		}
+
+		public void setFleetData(String fleetData) {
+			this.fleetData = fleetData;
+		}
 	}
 }

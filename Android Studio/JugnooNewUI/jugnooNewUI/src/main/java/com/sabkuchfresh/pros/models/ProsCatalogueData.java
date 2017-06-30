@@ -287,7 +287,7 @@ public class ProsCatalogueData {
 
 	}
 
-	public class LayoutData {
+	public class LayoutData  {
 
 		@SerializedName("_id")
 		@Expose

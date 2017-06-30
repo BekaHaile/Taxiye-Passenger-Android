@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.pros.models.ProsOrderStatus;
 import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
 
 import java.util.HashMap;
@@ -244,12 +245,16 @@ public class ProsOrderStatusFragment extends Fragment {
 
 
 	private void setDataToUI(ProsOrderStatusResponse orderStatusResponse){
+		tvAmountValue.setText(R.string.upon_inspection);
 		if(orderStatusResponse != null && orderStatusResponse.getData() != null && orderStatusResponse.getData().size() > 0){
 			ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
 			for(ProsOrderStatusResponse.CustomField customField : datum.getFields().getCustomField()){
 				if(customField.getLabel().equalsIgnoreCase(Constants.KEY_PRODUCT_NAME)){
 					tvServiceType.setText(customField.getData());
-					break;
+				} else if(customField.getLabel().equalsIgnoreCase(Constants.KEY_JOB_AMOUNT)
+						&& datum.getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()
+						&& !TextUtils.isEmpty(customField.getFleetData())){
+					tvAmountValue.setText(activity.getString(R.string.rupees_value_format, customField.getFleetData()));
 				}
 			}
 			tvServiceTime.setText(datum.getJobPickupDatetime().replace("\\", ""));

@@ -10,6 +10,8 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 
+import product.clicklabs.jugnoo.Constants;
+
 /**
  * Created by shankar on 19/06/17.
  */
@@ -31,6 +33,7 @@ public class DatePickerFragment extends DialogFragment
 		// Create a new instance of DatePickerDialog and return it
 		DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day);
 		dialog.getDatePicker().setMinDate(c.getTimeInMillis());
+		dialog.getDatePicker().setMaxDate(c.getTimeInMillis()+ (Constants.DAY_MILLIS * 30));
 		return dialog;
 	}
 

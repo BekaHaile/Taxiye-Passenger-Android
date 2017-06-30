@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.home.FreshActivity;
@@ -54,13 +55,18 @@ public class ProsProductsFragment extends Fragment implements GAAction, GACatego
     public static ProsProductsFragment newInstance(ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum){
         ProsProductsFragment fragment = new ProsProductsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.KEY_CATALOGUE_DATUM, prosCatalogueDatum);
+
+        Gson gson = new Gson();
+        bundle.putString(Constants.KEY_CATALOGUE_DATUM, gson.toJson(prosCatalogueDatum,
+                ProsCatalogueData.ProsCatalogueDatum.class));
+
         fragment.setArguments(bundle);
         return fragment;
     }
 
     private void parseArguments(){
-        prosCatalogueDatum = (ProsCatalogueData.ProsCatalogueDatum) getArguments().getSerializable(Constants.KEY_CATALOGUE_DATUM);
+        Gson gson = new Gson();
+        prosCatalogueDatum = gson.fromJson(getArguments().getString(Constants.KEY_CATALOGUE_DATUM), ProsCatalogueData.ProsCatalogueDatum.class);
     }
 
     @Override

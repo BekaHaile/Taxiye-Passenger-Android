@@ -20,6 +20,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.gson.Gson;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -105,13 +106,17 @@ public class ProsCheckoutFragment extends Fragment {
 	public static ProsCheckoutFragment newInstance(ProsProductData.ProsProductDatum prosProductDatum) {
 		ProsCheckoutFragment fragment = new ProsCheckoutFragment();
 		Bundle bundle = new Bundle();
-		bundle.putSerializable(Constants.KEY_PRODUCT_DATUM, prosProductDatum);
+
+		Gson gson = new Gson();
+		bundle.putString(Constants.KEY_PRODUCT_DATUM, gson.toJson(prosProductDatum, ProsProductData.ProsProductDatum.class));
+
 		fragment.setArguments(bundle);
 		return fragment;
 	}
 
 	private void parseArguments() {
-		prosProductDatum = (ProsProductData.ProsProductDatum) getArguments().getSerializable(Constants.KEY_PRODUCT_DATUM);
+		Gson gson = new Gson();
+		prosProductDatum = gson.fromJson(getArguments().getString(Constants.KEY_PRODUCT_DATUM), ProsProductData.ProsProductDatum.class);
 	}
 
 	@Override
@@ -234,11 +239,12 @@ public class ProsCheckoutFragment extends Fragment {
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 			String time = hourOfDay+":"+minute+":00";
-			if(DateOperations.getTimeDifference(getFormattedDateTime(selectedDate, time), DateOperations.getCurrentTime()) > 0) {
+			if(DateOperations.getTimeDifference(getFormattedDateTime(selectedDate, time),
+					DateOperations.addHoursToDateTime(DateOperations.getCurrentTime(), 1)) > 0) {
 				selectedTime = time;
 				tvSelectTimeSlot.setText(DateOperations.convertDayTimeAPViaFormat(hourOfDay + ":" + minute + ":00"));
 			} else {
-				Utils.showToast(activity, activity.getString(R.string.please_select_time_after_current_time));
+				Utils.showToast(activity, activity.getString(R.string.please_select_time_after_one_hour_from_now));
 			}
 		}
 	};
