@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -173,7 +175,10 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 
 		getRecentRidesAPI(activity, true);
 		setActivityTitle();
-
+		if(activity instanceof RideTransactionsActivity){
+			((RideTransactionsActivity)activity).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+			((RideTransactionsActivity)activity).rlFilter.setVisibility(View.VISIBLE);
+		}
 
 		return rootView;
 	}
@@ -196,6 +201,24 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 				Data.isOrderCancelled = false;
 				getRecentRidesAPI(activity, true);
 			}
+			if(activity instanceof RideTransactionsActivity){
+				((RideTransactionsActivity)activity).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+				((RideTransactionsActivity)activity).rlFilter.setVisibility(View.VISIBLE);
+			}
+		} else {
+			if(activity instanceof RideTransactionsActivity){
+				((RideTransactionsActivity)activity).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+				((RideTransactionsActivity)activity).rlFilter.setVisibility(View.GONE);
+			}
+		}
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if(activity instanceof RideTransactionsActivity){
+			((RideTransactionsActivity)activity).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+			((RideTransactionsActivity)activity).rlFilter.setVisibility(View.GONE);
 		}
 	}
 
@@ -230,6 +253,14 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_START_FROM, "" + (refresh ? 0 : rideInfosList.size()));
 				params.put(Constants.SHOW_CUSTOM_FIELDS, "1");
+				if(activity instanceof RideTransactionsActivity
+						&& ((RideTransactionsActivity)activity).getProductTypedFiltered().size() > 0){
+					JSONArray jsonArray = new JSONArray();
+					for(Integer productType : ((RideTransactionsActivity)activity).getProductTypedFiltered()){
+						jsonArray.put(productType);
+					}
+					params.put(Constants.KEY_PRODUCT_TYPES, jsonArray.toString());
+				}
 
 				new HomeUtil().putDefaultParams(params);
 				RestClient.getApiService().getRecentRides(params, new Callback<HistoryResponse>() {

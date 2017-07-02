@@ -1,51 +1,100 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relative"
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawerLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sliding_bottom_bg_color" >
+    >
 
     <RelativeLayout
-        android:id="@+id/topBar"
-        android:layout_width="@dimen/screen_width"
-        android:layout_height="@dimen/top_bar_height"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/white"
-        android:animateLayoutChanges="true"
-        >
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/sliding_bottom_bg_color">
 
-        <TextView
-            android:id="@+id/textViewTitle"
-            android:text="@string/ride_history"
-            style="@style/title"
-            />
+        <RelativeLayout
+            android:id="@+id/topBar"
+            android:layout_width="@dimen/screen_width"
+            android:layout_height="@dimen/top_bar_height"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:animateLayoutChanges="true"
+            android:background="@color/white"
+            >
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                style="@style/title"
+                android:text="@string/ride_history"
+                />
+
+            <ImageView
+                android:id="@+id/imageViewBack"
+                style="@style/back_image"/>
+
+            <RelativeLayout
+                android:id="@+id/rlFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/px_20"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                >
+                <ImageView
+                    android:id="@+id/ivFilter"
+                    android:layout_width="62px"
+                    android:layout_height="62px"
+                    android:tag="mwar"
+                    android:src="@drawable/ic_menus_filters_selector" />
+
+                <ImageView
+                    android:id="@+id/ivFilterApplied"
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_alignRight="@+id/ivFilter"
+                    android:src="@drawable/tick"
+                    android:tag="mwar"
+                    android:visibility="visible" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/topBar"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:splitMotionEvents="false"
+            >
+        </RelativeLayout>
 
         <ImageView
-            android:id="@+id/imageViewBack"
-            style="@style/back_image" />
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:layout_below="@+id/topBar"
+            android:background="@drawable/shadow_down"
+            />
+
 
     </RelativeLayout>
 
 
-
-    <RelativeLayout
-        android:id="@+id/relativeLayoutContainer"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/llRightDrawer"
+        android:layout_width="@dimen/dp_295"
         android:layout_height="match_parent"
+        android:layout_gravity="end"
         android:background="@color/white"
         android:orientation="vertical"
         android:splitMotionEvents="false"
-        android:layout_below="@+id/topBar"
+        android:tag="@string/dont_touch_me"
         >
-    </RelativeLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:background="@drawable/shadow_down"
-        android:layout_below="@+id/topBar"
-        />
+        <include layout="@layout/layout_history_filter"/>
+
+    </LinearLayout>
 
 
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>
