@@ -818,6 +818,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         } else {
             chargesList.add(new Tax(activity.getString(R.string.delivery_charges), deliveryCharges()));
         }
+        if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getTaxes() != null){
+            chargesList.addAll(activity.getUserCheckoutResponse().getTaxes());
+        }
 
         if (totalAmount() > 0 && jcUsed() > 0) {
             chargesList.add(new Tax(activity.getString(R.string.jugnoo_cash), jcUsed()));

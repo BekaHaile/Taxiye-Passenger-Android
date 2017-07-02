@@ -3,6 +3,7 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
+import com.sabkuchfresh.retrofit.model.menus.Tax;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,9 @@ public class UserCheckoutResponse{
 	@SerializedName("refresh_on_cart_change")
 	@Expose
 	private Integer refreshOnCartChange;
+	@SerializedName("taxes")
+	@Expose
+	private List<Tax> taxes;
 
 	/**
 	 *
@@ -248,6 +252,14 @@ public class UserCheckoutResponse{
 
 	public void setRefreshOnCartChange(Integer refreshOnCartChange) {
 		this.refreshOnCartChange = refreshOnCartChange;
+	}
+
+	public List<Tax> getTaxes() {
+		return taxes;
+	}
+
+	public void setTaxes(List<Tax> taxes) {
+		this.taxes = taxes;
 	}
 
 	public class PaymentInfo{
