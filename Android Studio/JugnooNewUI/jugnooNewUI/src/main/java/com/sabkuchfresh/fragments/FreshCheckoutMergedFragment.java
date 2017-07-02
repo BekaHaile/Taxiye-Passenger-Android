@@ -1931,6 +1931,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             linearLayoutWalletContainer.addView(relativeLayoutIcici);
                             edtIciciVpa.removeTextChangedListener(selectIciciPaymentTextWatcher);
                             edtIciciVpa.setText(paymentModeConfigData.getUpiHandle());
+                            if(paymentModeConfigData.getUpiHandle()!=null && paymentModeConfigData.getUpiHandle().length()>0){
+                                edtIciciVpa.setSelection(paymentModeConfigData.getUpiHandle().length()-1);
+
+                            }
                             edtIciciVpa.addTextChangedListener(selectIciciPaymentTextWatcher);
                             jugnooVpaHandle =  paymentModeConfigData.getJugnooVpaHandle();
                             tvLabelIciciUpi.setText(activity.getString(R.string.label_below_icici_payment_edt, jugnooVpaHandle));
@@ -1983,6 +1987,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             relativeLayoutJugnooPay.setVisibility(View.GONE);
             rlOtherModesToPay.setVisibility(View.GONE);
             rlUPI.setVisibility(View.GONE);
+            relativeLayoutIcici.setVisibility(View.GONE);
         } else if (applicablePaymentMode == ApplicablePaymentMode.ONLINE.getOrdinal()) {
             relativeLayoutCash.setVisibility(View.GONE);
         }

@@ -47,7 +47,7 @@ import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class FareEstimateActivity extends BaseFragmentActivity implements
+public class FareEstimateActivity extends BaseAppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, GAAction, GACategory {
 
