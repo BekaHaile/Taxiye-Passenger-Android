@@ -262,6 +262,16 @@ public class UserCheckoutResponse{
 		this.taxes = taxes;
 	}
 
+	public double getTotalTaxValue(){
+		double totalTax = 0;
+		if(taxes != null){
+			for(Tax tax : taxes){
+				totalTax = totalTax + tax.getValue();
+			}
+		}
+		return totalTax;
+	}
+
 	public class PaymentInfo{
 		@SerializedName("applicable_payment_mode")
 		@Expose

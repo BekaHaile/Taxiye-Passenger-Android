@@ -2919,12 +2919,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 //        }
     }
 
+    private double getTotalTaxValue(){
+        if(activity.getUserCheckoutResponse() != null){
+            return activity.getUserCheckoutResponse().getTotalTaxValue();
+        } else {
+            return 0d;
+        }
+    }
+
 
     private double totalUndiscounted() {
         if (isMenusOpen()) {
-            return getSubTotalAmount(true) + totalTaxAmount;
+            return getSubTotalAmount(true) + totalTaxAmount + getTotalTaxValue();
         } else {
-            return getSubTotalAmount(true) + deliveryCharges();
+            return getSubTotalAmount(true) + deliveryCharges() + getTotalTaxValue();
         }
     }
 

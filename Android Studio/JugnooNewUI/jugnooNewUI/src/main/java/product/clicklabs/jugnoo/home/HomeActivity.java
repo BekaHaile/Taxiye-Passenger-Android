@@ -5192,7 +5192,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                                         || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                                         && bounds != null) {
-                                    // TODO: 27/06/17 some change here
                                     map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
                                 }
                             } catch (Exception e) {
@@ -5969,7 +5968,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
                                             try { MyApplication.getInstance().getDatabase2().createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
 
-                                            // TODO: 28/06/17 zoom progressively based on path traversed by driver
                                             if(lastLatLng != null) {
                                                 Data.autoData.getAssignedDriverInfo().latLng = lastLatLng;
                                                 zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
