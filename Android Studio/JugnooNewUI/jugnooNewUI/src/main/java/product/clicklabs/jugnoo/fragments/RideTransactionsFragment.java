@@ -259,7 +259,7 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 					for(Integer productType : ((RideTransactionsActivity)activity).getProductTypedFiltered()){
 						jsonArray.put(productType);
 					}
-					params.put(Constants.KEY_PRODUCT_TYPES, jsonArray.toString());
+					params.put(Constants.KEY_OFFERING_ARRAY, jsonArray.toString());
 				}
 
 				new HomeUtil().putDefaultParams(params);

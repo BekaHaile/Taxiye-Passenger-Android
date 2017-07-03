@@ -1343,6 +1343,7 @@
     <string name="order_id_colon">Order Id:</string>
     <string name="visiting_charges_may_apply">*Service rate will be determined after inspection. Minimum  visiting charges may apply.</string>
     <string name="service_id_colon">Service ID:</string>
+    <string name="select_offerings">Select Offerings</string>
 
 
 </resources>

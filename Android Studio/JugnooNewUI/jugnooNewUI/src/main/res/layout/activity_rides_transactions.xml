@@ -83,7 +83,7 @@
 
     <LinearLayout
         android:id="@+id/llRightDrawer"
-        android:layout_width="@dimen/dp_295"
+        android:layout_width="@dimen/dp_280"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="@color/white"
