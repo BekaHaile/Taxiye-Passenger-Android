@@ -78,7 +78,7 @@ public class ApiFetchRestaurantMenu {
 									}
 									activity.setMenuProductsResponse(productsResponse);
 									if (activity.menusSort == -1) {
-										activity.menusSort = jObj.getInt(Constants.SORTED_BY);
+										activity.menusSort = jObj.optInt(Constants.SORTED_BY, 0);
 									}
 									if (activity.getVendorOpened().getIsClosed() == 1) {
 										activity.clearMenusCart();
