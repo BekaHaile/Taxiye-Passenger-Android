@@ -148,11 +148,11 @@ public class ProsOrderStatusFragment extends Fragment {
 	private void setActivityUI(){
 		if(activity instanceof FreshActivity) {
 			((FreshActivity)activity).fragmentUISetup(this);
-			((FreshActivity)activity).getTopBar().title.setText(activity.getString(R.string.order_id_format, String.valueOf(jobId)));
+			((FreshActivity)activity).getTopBar().title.setText(activity.getString(R.string.order_hash_format, String.valueOf(jobId)));
 		} else if (activity instanceof RideTransactionsActivity) {
-			((RideTransactionsActivity) activity).setTitle(activity.getString(R.string.order_id_format, String.valueOf(jobId)));
+			((RideTransactionsActivity) activity).setTitle(activity.getString(R.string.order_hash_format, String.valueOf(jobId)));
 		} else if (activity instanceof SupportActivity) {
-			((SupportActivity) activity).setTitle(activity.getString(R.string.order_id_format, String.valueOf(jobId)));
+			((SupportActivity) activity).setTitle(activity.getString(R.string.order_hash_format, String.valueOf(jobId)));
 		}
 	}
 
@@ -272,7 +272,6 @@ public class ProsOrderStatusFragment extends Fragment {
 			}
 			date = datum.getJobPickupDatetime();
 			supportCategory = datum.getSupportCategory();
-			date = datum.getJobPickupDatetime();
 		}
 	}
 

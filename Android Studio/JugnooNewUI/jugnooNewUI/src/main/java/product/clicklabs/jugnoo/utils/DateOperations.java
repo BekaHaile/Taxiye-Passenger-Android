@@ -174,6 +174,20 @@ public class DateOperations {
 		}
 	}
 
+	public static String convertDateViaFormatTZ(String dateTime) {
+
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+		try {
+			dateTime = dateTime.replace("T", " ").split("\\.")[0];
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return convertDate(dateTime);
+		}
+	}
+
 	public static String convertDateViaFormatOnlyTime(String dateTime) {
 
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -111,7 +111,7 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 				showPossibleStatus(possibleStatus, recentOrder.getJobStatus(), statusHolder);
 				statusHolder.tvServiceName.setText(recentOrder.getJobNameSplitted()+" (Order #"+recentOrder.getJobId()+")");
 				statusHolder.tvServiceDateTime.setText(context.getString(R.string.service_date_colon_format,
-						DateOperations.convertDateViaFormat(DateOperations.utcToLocalTZ(recentOrder.getJobPickupDatetime()))));
+						DateOperations.convertDateViaFormatTZ(recentOrder.getJobPickupDatetime())));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -182,6 +182,10 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 					break;
 
 				case R.id.tvViewDetails:
+					callback.onViewDetailsClick(recentOrders.get(pos));
+					break;
+
+				case R.id.llMain:
 					callback.onViewDetailsClick(recentOrders.get(pos));
 					break;
 			}
@@ -309,6 +313,8 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 		TextView tvNeedHelp;
 		@Bind(R.id.tvViewDetails)
 		TextView tvViewDetails;
+		@Bind(R.id.llMain)
+		LinearLayout llMain;
 
 		ViewHolderStatus(final View view, final ItemListener itemListener) {
 			super(view);
@@ -323,6 +329,12 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 				@Override
 				public void onClick(View v) {
 					itemListener.onClickItem(tvViewDetails, view);
+				}
+			});
+			llMain.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					itemListener.onClickItem(llMain, view);
 				}
 			});
 		}

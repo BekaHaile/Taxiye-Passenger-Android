@@ -182,7 +182,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewFrom.setText(R.string.address_colon);
                 holder.textViewFromValue.setText(orderHistory.getJobAddress());
                 holder.textViewDetails.setText(R.string.details_colon);
-                holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getJobTime()))
+                holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormatTZ(orderHistory.getJobTime())
                 +", "+orderHistory.getJobNameSplitted());
 
                 holder.textViewAmount.setText(R.string.cash);
