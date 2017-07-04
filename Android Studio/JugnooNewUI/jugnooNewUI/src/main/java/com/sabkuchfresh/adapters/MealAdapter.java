@@ -565,10 +565,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     try {
                         if(mealsBulkBanner.getOpenNextPage() == 1){
                             activity.getTransactionUtils().openMealsBulkOrderFragment(activity, activity.getRelativeLayoutContainer(), mealsBulkBanner.getNextPageImage());
+                            GAUtils.event(activity.getGaCategory(), HOME, BULK_ORDER_NEXT_PAGE);
                         } else {
                             FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_BULK_MEALS());
+                            GAUtils.event(activity.getGaCategory(), HOME, BULK_ORDER);
                         }
-                        GAUtils.event(activity.getGaCategory(), HOME, BULK_ORDER);
                     } catch (Exception e) {
                         e.printStackTrace();
                         Utils.showToast(activity, activity.getString(R.string.something_went_wrong));

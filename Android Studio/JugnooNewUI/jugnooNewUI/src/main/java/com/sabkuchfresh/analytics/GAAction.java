@@ -235,5 +235,7 @@ public interface GAAction {
 	String ADD_POST = "Add Post ";
 	String NEXT = "Next ";
 	String BULK_ORDER = "Bulk Order 1";
+	String BULK_ORDER_NEXT_PAGE = "Bulk Order Next Page ";
+	String BULK_ORDER_CTA = "Bulk Order CTA ";
 
 }

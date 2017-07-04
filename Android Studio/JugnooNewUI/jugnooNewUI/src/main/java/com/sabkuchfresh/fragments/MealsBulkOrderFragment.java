@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.fugu.FuguConfig;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.picasso.Picasso;
 
@@ -23,7 +25,7 @@ import product.clicklabs.jugnoo.utils.Utils;
  * Created by shankar on 30/06/17.
  */
 
-public class MealsBulkOrderFragment extends Fragment {
+public class MealsBulkOrderFragment extends Fragment implements GAAction{
 
 	private FreshActivity activity;
 
@@ -50,6 +52,7 @@ public class MealsBulkOrderFragment extends Fragment {
 			public void onClick(View v) {
 				try {
 					FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_BULK_MEALS());
+					GAUtils.event(activity.getGaCategory(), HOME, BULK_ORDER_CTA+CLICKED);
 				} catch (Exception e) {
 					e.printStackTrace();
 					Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
