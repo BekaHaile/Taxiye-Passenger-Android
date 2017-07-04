@@ -171,7 +171,7 @@ public class ProductsResponse {
 		private int mealsBannerEnabled;
 		@SerializedName("open_next_page")
 		private int openNextPage;
-		@SerializedName("next_page_image")
+		@SerializedName("next_page_image_2x")
 		private String nextPageImage;
 
 		public String getImageUrl2X() {
