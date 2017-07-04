@@ -809,7 +809,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (isMenusOpen()) {
             totalTaxAmount = 0d;
             for (Charges charges1 : activity.getMenuProductsResponse().getCharges()) {
-                Tax tax = new Tax(charges1.getText(), getCalculatedCharges(subTotalAmount, charges1, activity.getMenuProductsResponse().getCharges()));
+                Tax tax = new Tax(charges1.getText(), getCalculatedCharges(subTotalAmount - getTotalPromoAmount(), charges1, activity.getMenuProductsResponse().getCharges()));
                 if (tax.getValue() > 0 || charges1.getForceShow() == 1) {
                     chargesList.add(tax);
                 }
