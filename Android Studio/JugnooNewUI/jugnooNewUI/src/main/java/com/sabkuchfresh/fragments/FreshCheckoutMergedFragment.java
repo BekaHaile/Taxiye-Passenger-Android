@@ -818,6 +818,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         } else {
             chargesList.add(new Tax(activity.getString(R.string.delivery_charges), deliveryCharges()));
         }
+        if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getTaxes() != null){
+            chargesList.addAll(activity.getUserCheckoutResponse().getTaxes());
+        }
 
         if (totalAmount() > 0 && jcUsed() > 0) {
             chargesList.add(new Tax(activity.getString(R.string.jugnoo_cash), jcUsed()));
@@ -1931,6 +1934,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             linearLayoutWalletContainer.addView(relativeLayoutIcici);
                             edtIciciVpa.removeTextChangedListener(selectIciciPaymentTextWatcher);
                             edtIciciVpa.setText(paymentModeConfigData.getUpiHandle());
+                            if(paymentModeConfigData.getUpiHandle()!=null && paymentModeConfigData.getUpiHandle().length()>0){
+                                edtIciciVpa.setSelection(paymentModeConfigData.getUpiHandle().length()-1);
+
+                            }
                             edtIciciVpa.addTextChangedListener(selectIciciPaymentTextWatcher);
                             jugnooVpaHandle =  paymentModeConfigData.getJugnooVpaHandle();
                             tvLabelIciciUpi.setText(activity.getString(R.string.label_below_icici_payment_edt, jugnooVpaHandle));
@@ -1983,6 +1990,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             relativeLayoutJugnooPay.setVisibility(View.GONE);
             rlOtherModesToPay.setVisibility(View.GONE);
             rlUPI.setVisibility(View.GONE);
+            relativeLayoutIcici.setVisibility(View.GONE);
         } else if (applicablePaymentMode == ApplicablePaymentMode.ONLINE.getOrdinal()) {
             relativeLayoutCash.setVisibility(View.GONE);
         }
@@ -2911,12 +2919,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 //        }
     }
 
+    private double getTotalTaxValue(){
+        if(activity.getUserCheckoutResponse() != null){
+            return activity.getUserCheckoutResponse().getTotalTaxValue();
+        } else {
+            return 0d;
+        }
+    }
+
 
     private double totalUndiscounted() {
         if (isMenusOpen()) {
-            return getSubTotalAmount(true) + totalTaxAmount;
+            return getSubTotalAmount(true) + totalTaxAmount + getTotalTaxValue();
         } else {
-            return getSubTotalAmount(true) + deliveryCharges();
+            return getSubTotalAmount(true) + deliveryCharges() + getTotalTaxValue();
         }
     }
 

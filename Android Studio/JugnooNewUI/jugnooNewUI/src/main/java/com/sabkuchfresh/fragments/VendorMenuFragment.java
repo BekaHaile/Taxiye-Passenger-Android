@@ -386,6 +386,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                         activity.updateCart = false;
                         activity.openCart();
                     }
+                    if(activity.menusSort == -1){
+                        activity.menusSort = 0;
+                    }
                     activity.getBus().post(new SortSelection(activity.menusSort));
 
                     if(activity.getMenuProductsResponse().getMenusPromotionInfo()!=null && activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText()!=null) {
