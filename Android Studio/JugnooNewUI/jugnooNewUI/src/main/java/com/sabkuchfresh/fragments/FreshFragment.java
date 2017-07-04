@@ -217,8 +217,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
 
 
-        activity.setSortingList(this);
-
         getAllProducts(true, activity.getSelectedLatLng());
 		activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
 

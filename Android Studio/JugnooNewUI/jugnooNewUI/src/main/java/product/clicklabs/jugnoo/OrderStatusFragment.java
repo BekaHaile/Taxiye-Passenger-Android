@@ -726,7 +726,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                     try {
                         if (Double.parseDouble(charges.getValue()) > 0) {
                             addFinalAmountView(llExtraCharges, charges.getText(), Double.parseDouble(charges.getValue()), false);
-                        } else if (charges.getForceShow() == 1) {
+                        }
+                        else if (Double.parseDouble(charges.getValue()) < 0) {
+                            addFinalAmountView(llExtraCharges, charges.getText(), Double.parseDouble(charges.getValue()), true, false, true, false);
+                        }
+                        else if (charges.getForceShow() == 1) {
                             addFinalAmountView(llExtraCharges, charges.getText(), Double.parseDouble(charges.getValue()), false, true, true, false);
                         }
                     } catch (Exception e) {

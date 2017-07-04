@@ -1,6 +1,7 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,14 +70,18 @@ public class CheckoutChargesAdapter extends BaseAdapter {
 			holder.tvName.setText(taxes.get(position).getKey());
 
 
-			holder.tvValue.setText(context.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(taxes.get(position).getValue())));
-
-			if ((taxes.get(position).getValue() <= 0)
+			if ((Utils.compareDouble(taxes.get(position).getValue(), 0) == 0)
 					&& (!holder.tvName.getText().toString().equalsIgnoreCase(context.getString(R.string.total).toUpperCase()))) {
 				holder.tvValue.setText(context.getString(R.string.free));
-				holder.tvValue.setTextColor(context.getResources().getColor(R.color.green));
-			} else {
-				holder.tvValue.setTextColor(context.getResources().getColor(R.color.text_color));
+				holder.tvValue.setTextColor(ContextCompat.getColor(context, R.color.green));
+			}
+			else if(taxes.get(position).getValue() < 0){
+				holder.tvValue.setText("- "+context.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(Math.abs(taxes.get(position).getValue()))));
+				holder.tvValue.setTextColor(ContextCompat.getColor(context, R.color.text_color));
+			}
+			else {
+				holder.tvValue.setText(context.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(taxes.get(position).getValue())));
+				holder.tvValue.setTextColor(ContextCompat.getColor(context, R.color.text_color));
 			}
 
 			holder.vSep.setVisibility((position) == getCount() - 1 ? View.GONE : View.VISIBLE);
