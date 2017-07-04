@@ -1,9 +1,11 @@
 package com.sabkuchfresh.pros.ui.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +75,8 @@ public class ProsOrderStatusFragment extends Fragment {
 	TextView tvPaidViaValue;
 	@Bind(R.id.bNeedHelp)
 	Button bNeedHelp;
+	@Bind(R.id.bCancelOrder)
+	Button bCancelOrder;
 	private Activity activity;
 
 	private int jobId;
@@ -126,7 +130,7 @@ public class ProsOrderStatusFragment extends Fragment {
 		ButterKnife.unbind(this);
 	}
 
-	@OnClick({R.id.bNeedHelp})
+	@OnClick({R.id.bNeedHelp, R.id.bCancelOrder})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.bNeedHelp:
@@ -142,6 +146,10 @@ public class ProsOrderStatusFragment extends Fragment {
 					homeUtil.openFuguOrSupport((FragmentActivity) activity, container,
 							jobId, supportCategory, date, ProductType.PROS.getOrdinal());
 				}
+				break;
+
+			case R.id.bCancelOrder:
+				cancelOrderApi(activity);
 				break;
 		}
 	}
@@ -160,9 +168,7 @@ public class ProsOrderStatusFragment extends Fragment {
 	public void getOrderData(final Activity activity) {
 		try {
 			if (getInstance().isOnline()) {
-
 				DialogPopup.showLoadingDialog(activity, "Loading...");
-
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_JOB_ID, String.valueOf(jobId));
@@ -273,9 +279,107 @@ public class ProsOrderStatusFragment extends Fragment {
 			}
 			date = datum.getJobPickupDatetime();
 			supportCategory = datum.getSupportCategory();
+			bCancelOrder.setVisibility(datum.getJobStatus() == ProsOrderStatus.UNASSIGNED.getOrdinal() ? View.VISIBLE : View.GONE);
 		}
 	}
 
 	private HomeUtil homeUtil = new HomeUtil();
 
+
+	public void cancelOrderApi(final Activity activity) {
+		try {
+			if (getInstance().isOnline()) {
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_JOB_ID, String.valueOf(jobId));
+				params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(ProductType.PROS.getOrdinal()));
+				params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+
+				Callback<ProsOrderStatusResponse> callback = new Callback<ProsOrderStatusResponse>() {
+					@Override
+					public void success(ProsOrderStatusResponse orderStatusResponse, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i("Server response cancelBooking", "response = " + responseStr);
+						try {
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, orderStatusResponse.getFlag(), orderStatusResponse.getError(), orderStatusResponse.getMessage())) {
+								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == orderStatusResponse.getFlag()) {
+									DialogPopup.alertPopupWithListener(activity, "", orderStatusResponse.getMessage(), new View.OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											Data.isOrderCancelled = true;
+
+											Intent intent = new Intent(Data.LOCAL_BROADCAST);
+											intent.putExtra("message", "Order cancelled, refresh inventory");
+											intent.putExtra("open_type", 10);
+											LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
+
+											activity.onBackPressed();
+										}
+									});
+								} else {
+									retryDialogCancelOrderApi(orderStatusResponse.getMessage(), DialogErrorType.SERVER_ERROR);
+								}
+							}
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							retryDialogCancelOrderApi("", DialogErrorType.SERVER_ERROR);
+						}
+						DialogPopup.dismissLoadingDialog();
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e("TAG", "cancelBooking error=" + error.toString());
+						DialogPopup.dismissLoadingDialog();
+						retryDialogCancelOrderApi("", DialogErrorType.CONNECTION_LOST);
+					}
+				};
+
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getProsApiService().cancelBooking(params, callback);
+			} else {
+				retryDialogCancelOrderApi("", DialogErrorType.NO_NET);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void retryDialogCancelOrderApi(String message, DialogErrorType dialogErrorType) {
+		if (TextUtils.isEmpty(message)) {
+			DialogPopup.dialogNoInternet(activity,
+					dialogErrorType,
+					new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+						@Override
+						public void positiveClick(View view) {
+							cancelOrderApi(activity);
+						}
+
+						@Override
+						public void neutralClick(View view) {
+
+						}
+
+						@Override
+						public void negativeClick(View view) {
+						}
+					});
+		} else {
+			DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+					activity.getString(R.string.retry), activity.getString(R.string.cancel),
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							cancelOrderApi(activity);
+						}
+					},
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							activity.onBackPressed();
+						}
+					}, false, false);
+		}
+	}
 }

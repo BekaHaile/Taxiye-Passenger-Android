@@ -260,20 +260,48 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/bNeedHelp"
-                android:layout_width="@dimen/dp_250"
-                android:layout_height="@dimen/dp_50"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/dp_14"
-                android:layout_marginTop="@dimen/dp_14"
-                android:background="@drawable/capsule_theme_login_selector"
-                android:text="@string/need_help"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_14"
-                app:font="@string/maven"
-                />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_14"
+                android:layout_marginRight="@dimen/dp_14"
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:splitMotionEvents="false"
+                android:visibility="visible"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/bNeedHelp"
+                    android:layout_width="0px"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_margin="@dimen/dp_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_theme"
+                    android:text="@string/need_help"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@string/maven"/>
+
+                <Button
+                    android:id="@+id/bCancelOrder"
+                    android:layout_width="0px"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_margin="@dimen/dp_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_white_grey_theme_border_selector"
+                    android:text="@string/cancel_order"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_theme_selector"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@string/maven"
+                    android:visibility="gone"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
 

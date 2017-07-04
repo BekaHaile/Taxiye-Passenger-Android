@@ -38,4 +38,9 @@ public interface ProsApi {
 	void orderHistory(@FieldMap Map<String, String> params,
 							 Callback<ProsOrderStatusResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/cancel_booking")
+	void cancelBooking(@FieldMap Map<String, String> params,
+					  Callback<ProsOrderStatusResponse> callback);
+
 }
