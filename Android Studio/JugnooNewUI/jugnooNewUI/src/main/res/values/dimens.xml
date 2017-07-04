@@ -878,5 +878,8 @@
     <dimen name="dp_56">
         56dp
     </dimen>
+    <dimen name="dp_160">
+        160dp
+    </dimen>
 
 </resources>

@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -257,7 +258,7 @@ public class ProsOrderStatusFragment extends Fragment {
 					tvAmountValue.setText(activity.getString(R.string.rupees_value_format, customField.getFleetData()));
 				}
 			}
-			tvServiceTime.setText(datum.getJobPickupDatetime().replace("\\", ""));
+			tvServiceTime.setText(DateOperations.convertDateTimeUSToInd(datum.getJobPickupDatetime().replace("\\", "")));
 			SearchResult searchResult = homeUtil.getNearBySavedAddress(activity,
 					new LatLng(datum.getJobLatitude(), datum.getJobLongitude()),
 					Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);

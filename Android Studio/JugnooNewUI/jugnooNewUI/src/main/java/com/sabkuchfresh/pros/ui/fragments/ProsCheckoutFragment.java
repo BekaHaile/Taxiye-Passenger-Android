@@ -1,16 +1,21 @@
 package com.sabkuchfresh.pros.ui.fragments;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +31,8 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.pros.models.CreateTaskData;
 import com.sabkuchfresh.pros.models.ProsProductData;
+import com.sabkuchfresh.pros.models.TimeDisplay;
+import com.sabkuchfresh.pros.ui.adapters.ProsTimeSelectorAdapter;
 import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.pros.utils.TimePickerFragment;
 import com.sabkuchfresh.utils.AppConstant;
@@ -36,6 +43,7 @@ import com.squareup.otto.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -193,7 +201,8 @@ public class ProsCheckoutFragment extends Fragment {
 					getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
 					openTimeDialogAfter = true;
 				} else {
-					getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
+//					getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
+					getTimeSelectorDialog().show();
 					openTimeDialogAfter = false;
 				}
 				break;
@@ -214,15 +223,17 @@ public class ProsCheckoutFragment extends Fragment {
 		@Override
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 			String date = year + "-" + (month + 1) + "-" + dayOfMonth;
-			if(DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime), DateOperations.getCurrentTime()) > 0) {
+			if(DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime),
+					DateOperations.addHoursToDateTime(DateOperations.getCurrentTime(), 1)) > 0) {
 				selectedDate = date;
 				tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
 				if(openTimeDialogAfter){
-					getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
+//					getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
+					getTimeSelectorDialog().show();
 				}
 				openTimeDialogAfter = false;
 			} else {
-				Utils.showToast(activity, activity.getString(R.string.please_select_date_from_today));
+				Utils.showToast(activity, activity.getString(R.string.please_select_appropriate_time));
 			}
 		}
 	};
@@ -238,16 +249,21 @@ public class ProsCheckoutFragment extends Fragment {
 	private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			String time = hourOfDay+":"+minute+":00";
-			if(DateOperations.getTimeDifference(getFormattedDateTime(selectedDate, time),
-					DateOperations.addHoursToDateTime(DateOperations.getCurrentTime(), 1)) > 0) {
-				selectedTime = time;
-				tvSelectTimeSlot.setText(DateOperations.convertDayTimeAPViaFormat(hourOfDay + ":" + minute + ":00"));
-			} else {
-				Utils.showToast(activity, activity.getString(R.string.please_select_time_after_one_hour_from_now));
-			}
+			setTimeToVars(hourOfDay+":"+minute+":00", hourOfDay+":"+minute+":00");
 		}
 	};
+
+	private boolean setTimeToVars(String time, String display){
+		if(DateOperations.getTimeDifference(getFormattedDateTime(selectedDate, time),
+				DateOperations.addHoursToDateTime(DateOperations.getCurrentTime(), 1)) > 0) {
+			selectedTime = time;
+			tvSelectTimeSlot.setText(display);
+			return true;
+		} else {
+			Utils.showToast(activity, activity.getString(R.string.please_select_appropriate_time));
+			return false;
+		}
+	}
 
 	public boolean addressSelectedNotValid(){
 		return TextUtils.isEmpty(activity.getSelectedAddressType());
@@ -412,5 +428,70 @@ public class ProsCheckoutFragment extends Fragment {
 					}
 				});
 	}
+
+
+	private Dialog timeSelectorDialog;
+
+	private Dialog getTimeSelectorDialog() {
+		if (timeSelectorDialog == null) {
+			timeSelectorDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			timeSelectorDialog.setContentView(R.layout.dialog_pros_time_selector);
+			timeSelectorDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			WindowManager.LayoutParams layoutParams = timeSelectorDialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			timeSelectorDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			timeSelectorDialog.setCancelable(true);
+			timeSelectorDialog.setCanceledOnTouchOutside(true);
+
+			RecyclerView rvTime = (RecyclerView) timeSelectorDialog.findViewById(R.id.rvTime);
+			rvTime.setLayoutManager(new LinearLayoutManager(activity));
+			rvTime.setItemAnimator(new DefaultItemAnimator());
+			ProsTimeSelectorAdapter prosTimeSelectorAdapter = new ProsTimeSelectorAdapter(getTimeDisplayArray(), rvTime,
+					new ProsTimeSelectorAdapter.Callback() {
+						@Override
+						public boolean onTimeDisplaySelected(TimeDisplay timeDisplay) {
+							if(setTimeToVars(timeDisplay.getValue(), timeDisplay.getDisplay())){
+								if(timeSelectorDialog != null) {
+									timeSelectorDialog.dismiss();
+								}
+								return true;
+							}
+							return false;
+						}
+					});
+			rvTime.setAdapter(prosTimeSelectorAdapter);
+
+			timeSelectorDialog.findViewById(R.id.rl).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(timeSelectorDialog != null) {
+						timeSelectorDialog.dismiss();
+					}
+				}
+			});
+
+			timeSelectorDialog.findViewById(R.id.llInner).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+				}
+			});
+
+
+		}
+		return timeSelectorDialog;
+	}
+
+	private ArrayList<TimeDisplay> getTimeDisplayArray() {
+		ArrayList<TimeDisplay> timeDisplays = new ArrayList<>();
+		for(int i=8; i<21; i++){
+			int j = i+1;
+			TimeDisplay timeDisplay = new TimeDisplay((i>12?(i-12):i)+" "+(i>11?"PM":"AM")
+					+" - "+(j>12?(j-12):j)+" "+(j>11?"PM":"AM"),
+					i+":00:00");
+			timeDisplays.add(timeDisplay);
+		}
+		return timeDisplays;
+	}
+
 
 }

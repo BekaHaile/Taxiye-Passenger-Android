@@ -1335,6 +1335,7 @@
     <string name="request_booking">Request Booking</string>
     <string name="service_name">Service Name</string>
     <string name="service_id_hash">Service ID: #</string>
+    <string name="service_id">Service ID:</string>
     <string name="date_and_time">Date &amp; Time</string>
     <string name="service_type_colon">Service Type:</string>
     <string name="service_time_colon">Service Time:</string>
@@ -1349,6 +1350,7 @@
     <string name="please_select_date_from_today">Please select date from today</string>
     <string name="please_select_time_after_one_hour_from_now">Please select time after one hour from now</string>
     <string name="upon_inspection">Upon Inspection</string>
+    <string name="please_select_appropriate_time">Please select an appropriate future time</string>
 
 
 </resources>

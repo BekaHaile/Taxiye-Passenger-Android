@@ -102,7 +102,8 @@ public class FreshOrderCompleteDialog {
 			textViewOrderDeliverySlot.setTypeface(Fonts.mavenRegular(activity));
 
 			if(appType == AppConstant.ApplicationType.PROS){
-				textViewOrderId.setText(activity.getResources().getString(R.string.service_id_hash));
+				textViewOrderId.setText(activity.getResources().getString(R.string.service_id));
+				textViewOrderId.append(" ");
 				final SpannableStringBuilder sb = new SpannableStringBuilder(orderId);
 				sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				textViewOrderId.append(sb);

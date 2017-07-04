@@ -583,4 +583,16 @@ public class DateOperations {
 		return tz.getOffset(now.getTime()) / 60000;
 	}
 
+	public static String convertDateTimeUSToInd(String dateTime) {
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+		try {
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return dateTime;
+		}
+	}
+
 }
