@@ -809,7 +809,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (isMenusOpen()) {
             totalTaxAmount = 0d;
             for (Charges charges1 : activity.getMenuProductsResponse().getCharges()) {
-                Tax tax = new Tax(charges1.getText(), getCalculatedCharges(subTotalAmount - getTotalPromoAmount(), charges1, activity.getMenuProductsResponse().getCharges()));
+                Tax tax = new Tax(charges1.getText(), getCalculatedCharges(charges1, activity.getMenuProductsResponse().getCharges()));
                 if (tax.getValue() > 0 || charges1.getForceShow() == 1) {
                     chargesList.add(tax);
                 }
@@ -3112,12 +3112,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         activity.performBackPressed(false);
     }
 
-    private Double getCalculatedCharges(double amount, Charges charges, List<Charges> chargesList) {
+    private Double getCalculatedCharges(Charges charges, List<Charges> chargesList) {
+        double amount = subTotalAmount - (charges.getSubtractDiscount() == 1 ? getTotalPromoAmount() : 0);
         double includedTaxValue = 0d;
         for (Integer pos : charges.getIncludedValues()) {
             try {
                 Charges chargesPos = chargesList.get(chargesList.indexOf(new Charges(pos)));
-                includedTaxValue = includedTaxValue + getCalculatedCharges(amount, chargesPos, chargesList);
+                includedTaxValue = includedTaxValue + getCalculatedCharges(chargesPos, chargesList);
             } catch (Exception e) {
             }
         }
