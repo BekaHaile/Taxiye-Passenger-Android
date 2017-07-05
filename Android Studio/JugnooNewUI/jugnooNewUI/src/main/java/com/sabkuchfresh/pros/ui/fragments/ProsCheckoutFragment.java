@@ -44,6 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -155,7 +156,7 @@ public class ProsCheckoutFragment extends Fragment {
 				String finalDateTime = getFormattedDateTime(selectedDate, selectedTime);
 				apiCreateTask(editTextDeliveryInstructions.getText().toString().trim(),
 						finalDateTime,
-						DateOperations.addHoursToDateTime(finalDateTime, 1),
+						DateOperations.addCalendarFieldValueToDateTime(finalDateTime, 1, Calendar.HOUR),
 						String.valueOf(-1*DateOperations.getTimezoneDiffWithUTC()));
 			}
 		});
@@ -174,7 +175,7 @@ public class ProsCheckoutFragment extends Fragment {
 	}
 
 	private String getFormattedDateTime(String selectedDate, String selectedTime){
-		return DateOperations.addHoursToDateTime(selectedDate+" "+selectedTime, 0);
+		return DateOperations.addCalendarFieldValueToDateTime(selectedDate+" "+selectedTime, 0, Calendar.HOUR);
 	}
 
 	@Override
@@ -224,7 +225,7 @@ public class ProsCheckoutFragment extends Fragment {
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 			String date = year + "-" + (month + 1) + "-" + dayOfMonth;
 			if(DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime),
-					DateOperations.addHoursToDateTime(DateOperations.getCurrentTime(), 1)) > 0) {
+					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.HOUR)) > 0) {
 				selectedDate = date;
 				tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
 				if(openTimeDialogAfter){
@@ -255,7 +256,7 @@ public class ProsCheckoutFragment extends Fragment {
 
 	private boolean setTimeToVars(String time, String display){
 		if(DateOperations.getTimeDifference(getFormattedDateTime(selectedDate, time),
-				DateOperations.addHoursToDateTime(DateOperations.getCurrentTime(), 1)) > 0) {
+				DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.HOUR)) > 0) {
 			selectedTime = time;
 			tvSelectTimeSlot.setText(display);
 			return true;

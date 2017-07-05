@@ -563,13 +563,13 @@ public class DateOperations {
 		}
 	}
 
-	public static String addHoursToDateTime(String dateTime, int numberOfHours){
+	public static String addCalendarFieldValueToDateTime(String dateTime, int addition, int calendarField){
 		try{
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date1 = format.parse(dateTime);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(date1);
-			calendar.add(Calendar.HOUR, numberOfHours);
+			calendar.add(calendarField, addition);
 			return format.format(calendar.getTime());
 		} catch (Exception e) {
 			e.printStackTrace();
