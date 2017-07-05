@@ -1707,7 +1707,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     }
                     textViewMinOrderSetVisibility(textViewMinOrderVis);
                     return 1;
-                } else if (getMealFragment() != null) {
+                } else if (getMealFragment() != null && getFeedbackFragment() == null) {
                     int textViewMinOrderVis;
                     if(getMealFragment().shouldShowStrip() && Data.getMealsData().getOfferStripMeals()!=null && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())){
                         textViewMinOrderVis = View.VISIBLE;
@@ -4509,6 +4509,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if (getFreshFragment().getSuperCategory() != null)
                 GAUtils.event(FRESH, getFreshFragment().getSuperCategory().getSuperCategoryName(), SORT_BUTTON + CLICKED);
         }
+    }
+
+    public ArrayList<SortResponseModel> getSlots(){
+        return slots;
     }
 
     public void llCheckoutBarSetVisibilityDirect(int visibility){
