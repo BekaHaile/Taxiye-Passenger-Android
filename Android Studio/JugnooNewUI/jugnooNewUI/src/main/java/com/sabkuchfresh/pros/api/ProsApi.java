@@ -7,6 +7,7 @@ import com.sabkuchfresh.pros.models.ProsProductData;
 
 import java.util.Map;
 
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -41,6 +42,6 @@ public interface ProsApi {
 	@FormUrlEncoded
 	@POST("/cancel_booking")
 	void cancelBooking(@FieldMap Map<String, String> params,
-					  Callback<ProsOrderStatusResponse> callback);
+					  Callback<SettleUserDebt> callback);
 
 }

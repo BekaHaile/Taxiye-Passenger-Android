@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.models.ProsOrderStatus;
 import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
@@ -37,6 +40,7 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -53,7 +57,7 @@ import static product.clicklabs.jugnoo.MyApplication.getInstance;
  * Created by shankar on 19/06/17.
  */
 
-public class ProsOrderStatusFragment extends Fragment {
+public class ProsOrderStatusFragment extends Fragment implements GAAction, GACategory{
 
 	@Bind(R.id.tvServiceType)
 	TextView tvServiceType;
@@ -149,7 +153,24 @@ public class ProsOrderStatusFragment extends Fragment {
 				break;
 
 			case R.id.bCancelOrder:
-				cancelOrderApi(activity);
+				DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want to cancel this booking?",
+						getResources().getString(R.string.ok),
+						getResources().getString(R.string.cancel),
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								cancelOrderApi(activity);
+								if (activity instanceof FreshActivity) {
+									GAUtils.event(((FreshActivity) activity).getGaCategory(), PROS+ORDER_STATUS, PROS+ORDER+CANCELLED);
+								}
+							}
+						}, new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+
+							}
+						}, false, false);
+
 				break;
 		}
 	}
@@ -296,12 +317,15 @@ public class ProsOrderStatusFragment extends Fragment {
 				params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(ProductType.PROS.getOrdinal()));
 				params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
-				Callback<ProsOrderStatusResponse> callback = new Callback<ProsOrderStatusResponse>() {
+				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
 					@Override
-					public void success(ProsOrderStatusResponse orderStatusResponse, Response response) {
+					public void success(SettleUserDebt orderStatusResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i("Server response cancelBooking", "response = " + responseStr);
 						try {
+							if(TextUtils.isEmpty(orderStatusResponse.getMessage())){
+								orderStatusResponse.setMessage(activity.getString(R.string.booking_cancelled_successfully));
+							}
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, orderStatusResponse.getFlag(), orderStatusResponse.getError(), orderStatusResponse.getMessage())) {
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == orderStatusResponse.getFlag()) {
 									DialogPopup.alertPopupWithListener(activity, "", orderStatusResponse.getMessage(), new View.OnClickListener() {

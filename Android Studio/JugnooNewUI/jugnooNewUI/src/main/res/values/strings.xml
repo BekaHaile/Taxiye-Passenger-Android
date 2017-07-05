@@ -1351,6 +1351,8 @@
     <string name="please_select_time_after_one_hour_from_now">Please select time after one hour from now</string>
     <string name="upon_inspection">Upon Inspection</string>
     <string name="please_select_appropriate_time">Please select an appropriate future date and time.</string>
+    <string name="booking_cancelled_successfully">Your booking is cancelled successfully.</string>
+    <string name="cancel_booking">Cancel Booking</string>
 
 
 </resources>

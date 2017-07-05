@@ -150,13 +150,18 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 				activity.setAddressTextToLocationPlaceHolder();
 				activity.fragmentUISetup(this);
 
-				if(activity.isProsTaskCreated()){
-					activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.PROS);
-					activity.setProsTaskCreated(false);
-				} else if(activity.isRefreshCart()){
-					activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.PROS);
-					activity.setRefreshCart(false);
-				}
+				activity.getHandler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						if(activity.isProsTaskCreated()){
+							activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.PROS);
+							activity.setProsTaskCreated(false);
+						} else if(activity.isRefreshCart()){
+							activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.PROS);
+							activity.setRefreshCart(false);
+						}
+					}
+				}, 200);
 			}
 
 			if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
