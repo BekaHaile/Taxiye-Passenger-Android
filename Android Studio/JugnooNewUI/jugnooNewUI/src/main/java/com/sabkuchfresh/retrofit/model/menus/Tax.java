@@ -20,6 +20,15 @@ public class Tax {
 	@SerializedName("value")
 	@Expose
 	private Double value;
+	@SerializedName("percent_value")
+	@Expose
+	private Double percentValue;
+	@SerializedName("is_percent")
+	@Expose
+	private int isPercent;
+	@SerializedName("subtract_discount")
+	@Expose
+	private int subtractDiscount;
 
 	public String getKey() {
 		return key;
@@ -37,4 +46,16 @@ public class Tax {
 		this.value = value;
 	}
 
+
+	public double getCalculatedValue(double subTotal, double discount) {
+		if (percentValue != null) {
+			if (isPercent == 1) {
+				return (subTotal - (subtractDiscount == 1 ? discount : 0)) * (percentValue-1);
+			} else {
+				return percentValue;
+			}
+		} else {
+			return value;
+		}
+	}
 }

@@ -819,7 +819,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             chargesList.add(new Tax(activity.getString(R.string.delivery_charges), deliveryCharges()));
         }
         if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getTaxes() != null){
-            chargesList.addAll(activity.getUserCheckoutResponse().getTaxes());
+            for(Tax tax : activity.getUserCheckoutResponse().getTaxes()){
+                Tax taxForDisplay = new Tax(tax.getKey(), tax.getCalculatedValue(subTotalAmount, getTotalPromoAmount()));
+                chargesList.add(taxForDisplay);
+            }
         }
 
         if (totalAmount() > 0 && jcUsed() > 0) {
@@ -2162,7 +2165,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private double getTotalPromoAmount() {
         if (activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getSubscription() != null) {
-            return promoAmount + activity.getUserCheckoutResponse().getSubscription().getDiscount(totalUndiscounted());
+            return promoAmount + activity.getUserCheckoutResponse().getSubscription().getDiscount(subTotalAmount);
         } else {
             return promoAmount;
         }
@@ -2921,7 +2924,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private double getTotalTaxValue(){
         if(activity.getUserCheckoutResponse() != null){
-            return activity.getUserCheckoutResponse().getTotalTaxValue();
+            return activity.getUserCheckoutResponse().getTotalTaxValue(subTotalAmount, getTotalPromoAmount());
         } else {
             return 0d;
         }
