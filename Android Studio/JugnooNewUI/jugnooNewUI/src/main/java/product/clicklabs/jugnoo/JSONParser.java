@@ -727,6 +727,7 @@ public class JSONParser implements Constants {
 
 
             if(Data.isFuguChatEnabled() && Data.getFuguUserData()!=null) {
+                Data.initializeFuguHandler((Activity) context);
                 FuguNotificationConfig.updateFcmRegistrationToken(MyApplication.getInstance().getDeviceToken());
                 FuguConfig.getInstance().registerIdentifiedUser((Activity) context, Data.getFuguUserData());
 
