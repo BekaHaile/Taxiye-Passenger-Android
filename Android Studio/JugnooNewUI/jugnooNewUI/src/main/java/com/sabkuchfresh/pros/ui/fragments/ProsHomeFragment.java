@@ -25,7 +25,10 @@ import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
 import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -246,8 +249,19 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 		stopOhSnap();
 		rvProsMain.smoothScrollToPosition(0);
-		categoriesAdapter.setList(prosCatalogueData.getData().get(prosCatalogueData.getData().size()-1),
-				(ArrayList<ProsCatalogueData.CurrentOrder>) prosCatalogueData.getCurrentOrders());
+
+		List<ProsCatalogueData.ProsCatalogueDatum> list = prosCatalogueData.getData().get(prosCatalogueData.getData().size()-1);
+		Collections.sort(list, new Comparator<ProsCatalogueData.ProsCatalogueDatum>() {
+			@Override
+			public int compare(ProsCatalogueData.ProsCatalogueDatum o1, ProsCatalogueData.ProsCatalogueDatum o2) {
+				if(o1.getPriority() != null && o2.getPriority() != null){
+					return o1.getPriority().compareTo(o2.getPriority());
+				}
+				return 0;
+			}
+		});
+
+		categoriesAdapter.setList(list, (ArrayList<ProsCatalogueData.CurrentOrder>) prosCatalogueData.getCurrentOrders());
 	}
 
 

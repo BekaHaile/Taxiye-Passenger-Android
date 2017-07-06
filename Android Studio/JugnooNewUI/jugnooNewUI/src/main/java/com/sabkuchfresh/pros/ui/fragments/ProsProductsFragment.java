@@ -19,7 +19,10 @@ import com.sabkuchfresh.pros.models.ProsCatalogueData;
 import com.sabkuchfresh.pros.models.ProsProductData;
 import com.sabkuchfresh.pros.ui.adapters.ProsProductsAdapter;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -130,7 +133,7 @@ public class ProsProductsFragment extends Fragment implements GAAction, GACatego
                         try {
                             if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
                                 if (productsResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    productsAdapter.setResults(productsResponse.getData());
+                                    setDataToList(productsResponse);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", productsResponse.getMessage());
                                 }
@@ -186,5 +189,19 @@ public class ProsProductsFragment extends Fragment implements GAAction, GACatego
                 });
     }
 
+    private void setDataToList(ProsProductData prosProductData){
+        List<ProsProductData.ProsProductDatum> list = prosProductData.getData();
+        Collections.sort(list, new Comparator<ProsProductData.ProsProductDatum>() {
+            @Override
+            public int compare(ProsProductData.ProsProductDatum o1, ProsProductData.ProsProductDatum o2) {
+                if(o1.getPriority() != null && o2.getPriority() != null){
+                    return o1.getPriority().compareTo(o2.getPriority());
+                }
+                return 0;
+            }
+        });
+
+        productsAdapter.setResults(list);
+    }
 
 }

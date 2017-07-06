@@ -91,7 +91,7 @@ public class ProsProductData{
 		private String layoutId;
 		@SerializedName("priority")
 		@Expose
-		private Object priority;
+		private Integer priority;
 		@SerializedName("creation_datetime")
 		@Expose
 		private String creationDatetime;
@@ -197,11 +197,11 @@ public class ProsProductData{
 			this.layoutId = layoutId;
 		}
 
-		public Object getPriority() {
+		public Integer getPriority() {
 			return priority;
 		}
 
-		public void setPriority(Object priority) {
+		public void setPriority(Integer priority) {
 			this.priority = priority;
 		}
 

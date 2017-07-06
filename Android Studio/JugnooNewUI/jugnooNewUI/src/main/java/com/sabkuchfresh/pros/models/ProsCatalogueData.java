@@ -102,7 +102,7 @@ public class ProsCatalogueData {
 		private String layoutId;
 		@SerializedName("priority")
 		@Expose
-		private Object priority;
+		private Integer priority;
 		@SerializedName("is_dummy")
 		@Expose
 		private int isDummy;
@@ -202,11 +202,11 @@ public class ProsCatalogueData {
 			this.layoutId = layoutId;
 		}
 
-		public Object getPriority() {
+		public Integer getPriority() {
 			return priority;
 		}
 
-		public void setPriority(Object priority) {
+		public void setPriority(Integer priority) {
 			this.priority = priority;
 		}
 
