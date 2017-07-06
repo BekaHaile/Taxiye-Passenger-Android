@@ -806,10 +806,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         chargesList.clear();
         chargesList.add(taxSubTotal);
 
+        if (getTotalPromoAmount() > 0) {
+            chargesList.add(new Tax(activity.getString(R.string.discount), getTotalPromoAmount()));
+        }
+
+        if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getTaxes() != null){
+            for(Tax tax : activity.getUserCheckoutResponse().getTaxes()){
+                Tax taxForDisplay = new Tax(tax.getKey(), tax.getCalculatedValue(subTotalAmount, getTotalPromoAmount()));
+                chargesList.add(taxForDisplay);
+            }
+        }
         if (isMenusOpen()) {
             totalTaxAmount = 0d;
             for (Charges charges1 : activity.getMenuProductsResponse().getCharges()) {
-                Tax tax = new Tax(charges1.getText(), getCalculatedCharges(subTotalAmount, charges1, activity.getMenuProductsResponse().getCharges()));
+                Tax tax = new Tax(charges1.getText(), getCalculatedCharges(charges1, activity.getMenuProductsResponse().getCharges()));
                 if (tax.getValue() > 0 || charges1.getForceShow() == 1) {
                     chargesList.add(tax);
                 }
@@ -818,17 +828,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         } else {
             chargesList.add(new Tax(activity.getString(R.string.delivery_charges), deliveryCharges()));
         }
-        if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getTaxes() != null){
-            chargesList.addAll(activity.getUserCheckoutResponse().getTaxes());
-        }
 
         if (totalAmount() > 0 && jcUsed() > 0) {
             chargesList.add(new Tax(activity.getString(R.string.jugnoo_cash), jcUsed()));
         }
 
-        if (getTotalPromoAmount() > 0) {
-            chargesList.add(new Tax(activity.getString(R.string.discount), getTotalPromoAmount()));
-        }
+
 
         if (isFreshOpen()) {
             double totalSavings = getTotalSavings();
@@ -2162,7 +2167,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private double getTotalPromoAmount() {
         if (activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getSubscription() != null) {
-            return promoAmount + activity.getUserCheckoutResponse().getSubscription().getDiscount(totalUndiscounted());
+            return promoAmount + activity.getUserCheckoutResponse().getSubscription().getDiscount(subTotalAmount);
         } else {
             return promoAmount;
         }
@@ -2921,7 +2926,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private double getTotalTaxValue(){
         if(activity.getUserCheckoutResponse() != null){
-            return activity.getUserCheckoutResponse().getTotalTaxValue();
+            return activity.getUserCheckoutResponse().getTotalTaxValue(subTotalAmount, getTotalPromoAmount());
         } else {
             return 0d;
         }
@@ -3112,12 +3117,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         activity.performBackPressed(false);
     }
 
-    private Double getCalculatedCharges(double amount, Charges charges, List<Charges> chargesList) {
+    private Double getCalculatedCharges(Charges charges, List<Charges> chargesList) {
+        double amount = subTotalAmount - (charges.getSubtractDiscount() == 1 ? getTotalPromoAmount() : 0);
         double includedTaxValue = 0d;
         for (Integer pos : charges.getIncludedValues()) {
             try {
                 Charges chargesPos = chargesList.get(chargesList.indexOf(new Charges(pos)));
-                includedTaxValue = includedTaxValue + getCalculatedCharges(amount, chargesPos, chargesList);
+                includedTaxValue = includedTaxValue + getCalculatedCharges(chargesPos, chargesList);
             } catch (Exception e) {
             }
         }

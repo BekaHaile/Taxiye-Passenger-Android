@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/menu_item_selector_color_F7">
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:layout_above="@+id/bPlaceOrder"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_7"
+        android:background="@drawable/shadow_down_new"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_7"
+        android:background="@drawable/shadow_up_new"
+        android:layout_above="@+id/bPlaceOrder"
+        />
+
+
+    <Button
+        android:id="@+id/bPlaceOrder"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@drawable/bg_theme_color_selector"
+        android:layout_alignParentBottom="true"
+        android:text="@string/place_bulk_order"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_15"
+        app:font="@string/maven"
+        />
+
+</RelativeLayout>

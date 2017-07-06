@@ -563,8 +563,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 @Override
                 public void onClick(View v) {
                     try {
-                        FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_BULK_MEALS());
-                        GAUtils.event(activity.getGaCategory(), HOME, BULK_ORDER);
+                        if(mealsBulkBanner.getOpenNextPage() == 1){
+                            activity.getTransactionUtils().openMealsBulkOrderFragment(activity, activity.getRelativeLayoutContainer(), mealsBulkBanner.getNextPageImage());
+                            GAUtils.event(activity.getGaCategory(), HOME, BULK_ORDER_NEXT_PAGE);
+                        } else {
+                            FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_BULK_MEALS());
+                            GAUtils.event(activity.getGaCategory(), HOME, BULK_ORDER);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Utils.showToast(activity, activity.getString(R.string.something_went_wrong));

@@ -870,7 +870,7 @@ public class Utils {
 		if(amount % 1 == 0)
 			finalVal = String.valueOf(amount.intValue());
 		else
-			finalVal = Utils.getDecimalFormat2Decimal().format(amount);
+			finalVal = Utils.getMoneyDecimalFormat().format(amount);
 
 		return finalVal;
 	}
