@@ -185,7 +185,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormatTZ(orderHistory.getJobTime())
                 +", "+orderHistory.getJobNameSplitted());
 
-                holder.textViewAmount.setText(R.string.cash);
+                holder.textViewAmount.setText("-");
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros_grey);
 
                 holder.relativeLayoutTo.setVisibility(View.GONE);

@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import product.clicklabs.jugnoo.R;
+
 public class ProsOrderStatusResponse {
 
 	@SerializedName("message")
@@ -191,6 +193,18 @@ public class ProsOrderStatusResponse {
 
 		public void setSupportCategory(int supportCategory) {
 			this.supportCategory = supportCategory;
+		}
+
+		public int getJobStatusColorRes() {
+			if(jobStatus == ProsOrderStatus.FAILED.getOrdinal()
+					|| jobStatus == ProsOrderStatus.DECLINE.getOrdinal()
+					|| jobStatus == ProsOrderStatus.CANCEL.getOrdinal()
+					|| jobStatus == ProsOrderStatus.DELETED.getOrdinal()
+					|| jobStatus == ProsOrderStatus.IGNORED.getOrdinal()){
+				return R.color.red_status;
+			} else {
+				return R.color.green_status;
+			}
 		}
 	}
 

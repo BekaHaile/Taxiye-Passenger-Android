@@ -89,6 +89,7 @@
                     android:text="Delivery Slot"
                     android:textColor="@color/text_color_dark"
                     android:textSize="@dimen/text_size_34"
+                    android:lineSpacingExtra="@dimen/dp_4"
                     />
 
                 <View

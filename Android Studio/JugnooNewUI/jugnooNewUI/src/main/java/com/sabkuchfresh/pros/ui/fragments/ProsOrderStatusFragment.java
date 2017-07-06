@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.models.ProsOrderStatus;
 import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
+import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
 
 import java.util.HashMap;
 
@@ -81,8 +83,10 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 	Button bNeedHelp;
 	@Bind(R.id.bCancelOrder)
 	Button bCancelOrder;
-	private Activity activity;
+	@Bind(R.id.tvOrderStatus)
+	TextView tvOrderStatus;
 
+	private Activity activity;
 	private int jobId;
 	private int supportCategory;
 	private String date;
@@ -178,11 +182,11 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 	private void setActivityUI(){
 		if(activity instanceof FreshActivity) {
 			((FreshActivity)activity).fragmentUISetup(this);
-			((FreshActivity)activity).getTopBar().title.setText(activity.getString(R.string.order_hash_format, String.valueOf(jobId)));
+			((FreshActivity)activity).getTopBar().title.setText(activity.getString(R.string.service_hash_format, String.valueOf(jobId)));
 		} else if (activity instanceof RideTransactionsActivity) {
-			((RideTransactionsActivity) activity).setTitle(activity.getString(R.string.order_hash_format, String.valueOf(jobId)));
+			((RideTransactionsActivity) activity).setTitle(activity.getString(R.string.service_hash_format, String.valueOf(jobId)));
 		} else if (activity instanceof SupportActivity) {
-			((SupportActivity) activity).setTitle(activity.getString(R.string.order_hash_format, String.valueOf(jobId)));
+			((SupportActivity) activity).setTitle(activity.getString(R.string.service_hash_format, String.valueOf(jobId)));
 		}
 	}
 
@@ -285,6 +289,9 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 					tvAmountValue.setText(activity.getString(R.string.rupees_value_format, customField.getFleetData()));
 				}
 			}
+			tvOrderStatus.setText(ProsSuperCategoriesAdapter.getProsOrderState(datum.getJobStatus()).second);
+			tvOrderStatus.setTextColor(ContextCompat.getColor(activity, datum.getJobStatusColorRes()));
+
 			tvServiceTime.setText(DateOperations.convertDateTimeUSToInd(datum.getJobPickupDatetime().replace("\\", "")));
 			SearchResult searchResult = homeUtil.getNearBySavedAddress(activity,
 					new LatLng(datum.getJobLatitude(), datum.getJobLongitude()),

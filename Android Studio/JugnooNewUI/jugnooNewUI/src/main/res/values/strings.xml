@@ -1335,6 +1335,8 @@
     <string name="please_select_appropriate_time">Please select an appropriate future date and time.</string>
     <string name="booking_cancelled_successfully">Your booking is cancelled successfully.</string>
     <string name="cancel_booking">Cancel Booking</string>
+    <string name="service_hash_format">Service #%s</string>
+    <string name="service_status_colon">Service Status:</string>
 
 
 </resources>

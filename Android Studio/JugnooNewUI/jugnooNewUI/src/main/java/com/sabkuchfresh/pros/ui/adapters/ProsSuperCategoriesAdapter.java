@@ -48,8 +48,8 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 		this.possibleStatus = new ArrayList<>();
 		this.possibleStatus.add("Booking Accepted");
 		this.possibleStatus.add("Pro Assigned");
-		this.possibleStatus.add("Job Started");
-		this.possibleStatus.add("Job Finished");
+		this.possibleStatus.add("Service Started");
+		this.possibleStatus.add("Service Finished");
 	}
 
 	public synchronized void setList(List<ProsCatalogueData.ProsCatalogueDatum> elements,
@@ -109,7 +109,7 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 					}
 				}
 				showPossibleStatus(possibleStatus, recentOrder.getJobStatus(), statusHolder);
-				statusHolder.tvServiceName.setText(recentOrder.getJobNameSplitted()+" (Order #"+recentOrder.getJobId()+")");
+				statusHolder.tvServiceName.setText(recentOrder.getJobNameSplitted()+" (Service #"+recentOrder.getJobId()+")");
 				statusHolder.tvServiceDateTime.setText(context.getString(R.string.service_date_colon_format,
 						DateOperations.convertDateViaFormatTZ(recentOrder.getJobPickupDatetime())));
 			} catch (Exception e) {
@@ -353,28 +353,29 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 		} else if(status == ProsOrderStatus.STARTED.getOrdinal()
 				|| status == ProsOrderStatus.ARRIVED.getOrdinal()){
 			status = 2;
-			statusName = "Job Started";
+			statusName = "Service Started";
 		} else if(status == ProsOrderStatus.ENDED.getOrdinal()){
 			status = 3;
-			statusName = "Job Finished";
+			statusName = "Service Finished";
 		}
 		else if(status == ProsOrderStatus.FAILED.getOrdinal()){
-			statusName = "Job Failed";
+			statusName = "Service Failed";
 		}
 		else if(status == ProsOrderStatus.DECLINE.getOrdinal()){
-			statusName = "Job Declined";
+			status = 0;
+			statusName = "Service Declined";
 		}
 		else if(status == ProsOrderStatus.CANCEL.getOrdinal()){
-			statusName = "Job Cancelled";
+			statusName = "Service Cancelled";
 		}
 		else if(status == ProsOrderStatus.DELETED.getOrdinal()){
-			statusName = "Job Deleted";
+			statusName = "Service Deleted";
 		}
 		else if(status == ProsOrderStatus.IGNORED.getOrdinal()){
-			statusName = "Job Ignored";
+			statusName = "Service Ignored";
 		}
 		else if(status == ProsOrderStatus.SEEN_BY_AGENT.getOrdinal()){
-			statusName = "Job seen by agent";
+			statusName = "Service seen by agent";
 		}
 		return new Pair<>(status, statusName);
 	}

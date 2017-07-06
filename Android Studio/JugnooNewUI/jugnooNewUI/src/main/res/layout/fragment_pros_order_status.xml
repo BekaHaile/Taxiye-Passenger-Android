@@ -33,6 +33,45 @@
                 <TextView
                     android:layout_width="@dimen/dp_110"
                     android:layout_height="wrap_content"
+                    android:text="@string/service_status_colon"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/sp_12"
+                    app:font="@string/maven_r"
+                    />
+
+                <TextView
+                    android:id="@+id/tvOrderStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@string/maven"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_20"
+                android:background="@color/stroke_light_grey_alpha"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="@dimen/dp_110"
+                    android:layout_height="wrap_content"
                     android:text="@string/service_type_colon"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light"
