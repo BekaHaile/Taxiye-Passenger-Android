@@ -101,7 +101,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 try {
                     int vehicleType = orderHistory.getVehicleType();
                     int rideType = orderHistory.getRideType();
-//                    holder.imageViewProductType.setImageResource(getVehicleTypeDrawable(vehicleType, rideType));
+                   holder.imageViewProductType.setImageResource(getVehicleTypeDrawable(vehicleType, rideType));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -326,24 +326,26 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     private int getVehicleTypeDrawable(int vehicleType, int rideType) {
         if (vehicleType == VehicleTypeValue.AUTOS.getOrdinal()) {
             if (rideType == RideTypeValue.POOL.getOrdinal()) {
-                return R.drawable.ic_history_pool;
+                return R.drawable.ic_pool_white;
             } else {
                 return R.drawable.ic_rides;
             }
         } else if (vehicleType == VehicleTypeValue.BIKES.getOrdinal()) {
             if (rideType == RideTypeValue.POOL.getOrdinal()) {
-                return R.drawable.ic_history_pool;
+                return R.drawable.ic_pool_white;
             } else {
-                return R.drawable.ic_history_bike;
+                return R.drawable.ic_bike_white;
             }
         } else if (vehicleType == VehicleTypeValue.TAXI.getOrdinal()) {
             if (rideType == RideTypeValue.POOL.getOrdinal()) {
-                return R.drawable.ic_history_carpool;
+                // TODO: 06/07/17 change icon
+//                return R.drawable.ic_history_carpool;
+                return R.drawable.ic_pool_white;
             } else {
-                return R.drawable.ic_history_car;
+                return R.drawable.ic_car_white;
             }
         } else if (vehicleType == VehicleTypeValue.HELICOPTER.getOrdinal()) {
-            return R.drawable.ic_helicopter_invoice;
+            return R.drawable.ic_copter_white;
         } else {
             return R.drawable.ic_rides;
         }
