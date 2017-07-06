@@ -19,6 +19,7 @@ import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
+import com.sabkuchfresh.fragments.MealsBulkOrderFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
@@ -412,6 +413,18 @@ public class TransactionUtils {
                     .add(relativeLayoutContainer.getId(), new FeedChangeCityFragment(),
                             FeedNotificationsFragment.class.getName())
                     .addToBackStack(FeedChangeCityFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openMealsBulkOrderFragment(FreshActivity activity, RelativeLayout relativeLayoutContainer, String url) {
+        if (!checkIfFragmentAdded(activity, MealsBulkOrderFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), MealsBulkOrderFragment.newInstance(url),
+                            MealsBulkOrderFragment.class.getName())
+                    .addToBackStack(MealsBulkOrderFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

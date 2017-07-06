@@ -262,11 +262,11 @@ public class UserCheckoutResponse{
 		this.taxes = taxes;
 	}
 
-	public double getTotalTaxValue(){
+	public double getTotalTaxValue(double subTotal, double discount){
 		double totalTax = 0;
 		if(taxes != null){
 			for(Tax tax : taxes){
-				totalTax = totalTax + tax.getValue();
+				totalTax = totalTax + tax.getCalculatedValue(subTotal, discount);
 			}
 		}
 		return totalTax;

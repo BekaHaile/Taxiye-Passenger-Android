@@ -35,6 +35,9 @@ public class Charges {
 	@SerializedName("default")
 	@Expose
 	private Double defaultValue;
+	@SerializedName("subtract_discount")
+	@Expose
+	private int subtractDiscount;
 
 	public Integer getId() {
 		return id;
@@ -112,6 +115,14 @@ public class Charges {
 		} else {
 			return false;
 		}
+	}
+
+	public int getSubtractDiscount() {
+		return subtractDiscount;
+	}
+
+	public void setSubtractDiscount(int subtractDiscount) {
+		this.subtractDiscount = subtractDiscount;
 	}
 
 	public enum ChargeType{

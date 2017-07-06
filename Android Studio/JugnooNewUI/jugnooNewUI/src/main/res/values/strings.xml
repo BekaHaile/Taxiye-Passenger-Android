@@ -1320,6 +1320,9 @@
     <string name="label_request_expires_in">Your request will expire in</string>
     <string name="hint_add_upi">Please add UPI Address</string>
     <string name="please_wait">Please Wait...</string>
+    <string name="discount_slabs">Discount Slabs</string>
+    <string name="place_bulk_order">Place a Bulk Order</string>
+    <string name="bulk_order">Bulk Order</string>
 
 
 </resources>

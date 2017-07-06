@@ -169,6 +169,10 @@ public class ProductsResponse {
 		private String imageUrl3X;
 		@SerializedName("meals_banner_enabled")
 		private int mealsBannerEnabled;
+		@SerializedName("open_next_page")
+		private int openNextPage;
+		@SerializedName("next_page_image_2x")
+		private String nextPageImage;
 
 		public String getImageUrl2X() {
 			return imageUrl2X;
@@ -180,6 +184,14 @@ public class ProductsResponse {
 
 		public int getMealsBannerEnabled() {
 			return mealsBannerEnabled;
+		}
+
+		public int getOpenNextPage() {
+			return openNextPage;
+		}
+
+		public String getNextPageImage() {
+			return nextPageImage;
 		}
 	}
 

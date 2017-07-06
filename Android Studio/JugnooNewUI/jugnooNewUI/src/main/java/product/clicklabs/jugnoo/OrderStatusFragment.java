@@ -721,6 +721,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
             llExtraCharges.removeAllViews();
             addFinalAmountView(llExtraCharges, activity.getString(R.string.sub_total), datum1.getSubTotal(), false, false, true, showAsterisk);
+
+            if ((datum1.getDiscount() != null) && (datum1.getDiscount() > 0)) {
+                addFinalAmountView(llExtraCharges, activity.getString(R.string.discount), datum1.getDiscount(), true);
+            }
+
             if (datum1.getCharges() != null) {
                 for (Charges charges : datum1.getCharges()) {
                     try {
@@ -736,9 +741,6 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                     } catch (Exception e) {
                     }
                 }
-            }
-            if ((datum1.getDiscount() != null) && (datum1.getDiscount() > 0)) {
-                addFinalAmountView(llExtraCharges, activity.getString(R.string.discount), datum1.getDiscount(), true);
             }
 
 
