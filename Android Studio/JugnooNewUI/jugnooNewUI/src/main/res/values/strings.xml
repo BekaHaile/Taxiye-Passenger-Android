@@ -42,7 +42,7 @@
     <string name="forgot_password"><u>Forgot Password?</u></string>
     <string name="sign_up">Sign Up</string>
     <string name="or">or</string>
-
+git
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="call_to_book">CALL TO BOOK</string>
     <string name="refresh">REFRESH</string>
@@ -732,8 +732,7 @@
     <string name="max_people">MAX PEOPLE:</string>
     <string name="fares_updated">Fares updated try again</string>
     <string name="mobikwik_wallet">MobiKwik Wallet</string>
-    >>>>>>>
-    feature_menus
+
     <string name="freecharge_wallet">FreeCharge Wallet</string>
     <string name="add_mobikwik_wallet">Add MobiKwik Wallet</string>
     <string name="add_freecharge_wallet">Add FreeCharge Wallet</string>
@@ -1340,5 +1339,8 @@
     <string name="to_be_confirmed">To be confirmed</string>
     <string name="label_confirm_service_address">Click and confirm service address!</string>
     <string name="type_service_address">Type Service Address</string>
+    <string name="order_status_colon">Order Status:</string>
+    <string name="order_id_colon">Order Id:</string>
+
 
 </resources>
