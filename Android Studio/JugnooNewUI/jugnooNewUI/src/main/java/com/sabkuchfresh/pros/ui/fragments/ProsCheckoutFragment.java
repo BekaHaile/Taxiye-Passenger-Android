@@ -237,7 +237,7 @@ public class ProsCheckoutFragment extends Fragment {
 					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.HOUR)) > 0
 					&&
 					DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime),
-					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.MONTH)) < 0) {
+					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 30, Calendar.DAY_OF_MONTH)) < 0) {
 				selectedDate = date;
 				tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
 				if(openTimeDialogAfter){

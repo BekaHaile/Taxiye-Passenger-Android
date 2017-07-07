@@ -197,7 +197,6 @@ public class ProsOrderStatusResponse {
 
 		public int getJobStatusColorRes() {
 			if(jobStatus == ProsOrderStatus.FAILED.getOrdinal()
-					|| jobStatus == ProsOrderStatus.DECLINE.getOrdinal()
 					|| jobStatus == ProsOrderStatus.CANCEL.getOrdinal()
 					|| jobStatus == ProsOrderStatus.DELETED.getOrdinal()
 					|| jobStatus == ProsOrderStatus.IGNORED.getOrdinal()){
