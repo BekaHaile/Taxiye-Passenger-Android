@@ -20,6 +20,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.utils.TextViewStrikeThrough;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -514,6 +515,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public TextView tvOrderId, tvOrderIdValue,tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
         public View lineStatus1, lineStatus2, lineStatus3;
+        public TextViewStrikeThrough textViewDiscountedPrice;
 
         public ViewTitleStatus(View itemView, Context context) {
             super(itemView);
@@ -535,6 +537,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             lineStatus1 = itemView.findViewById(R.id.lineStatus1);
             lineStatus2 = itemView.findViewById(R.id.lineStatus2);
             lineStatus3 = itemView.findViewById(R.id.lineStatus3);
+            textViewDiscountedPrice = (TextViewStrikeThrough) itemView.findViewById(R.id.text_price_striked);
         }
     }
 
