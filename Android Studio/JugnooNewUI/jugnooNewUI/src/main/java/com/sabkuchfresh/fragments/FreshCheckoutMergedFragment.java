@@ -3314,6 +3314,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     break;
                 case SUCCESSFUL:
                 case PROCESSED:
+                case COMPLETED:
                     isIciciPaymentRunnableInProgress = false;
                     activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
 

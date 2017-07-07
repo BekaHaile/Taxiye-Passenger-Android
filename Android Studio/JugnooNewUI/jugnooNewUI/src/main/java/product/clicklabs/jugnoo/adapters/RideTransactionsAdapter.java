@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
+import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
+import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -163,6 +165,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(orderHistory.getDiscountedAmount())));
 
 
+
+
                 if (orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_fresh);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_green);
@@ -181,7 +185,15 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_yellow);
                 }
                 holder.relativeLayoutTo.setVisibility(View.GONE);
-                holder.ivOrderStatusIcon.setVisibility(View.GONE);
+                IciciPaymentOrderStatus orderStatus = IciciPaymentRequestStatus.parseStatus(orderHistory.getProductType()==ProductType.MENUS.getOrdinal(),orderHistory.getOrderStatusInt());
+                if(orderStatus==IciciPaymentOrderStatus.CANCELLED||orderStatus==IciciPaymentOrderStatus.FAILURE){
+                    holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_order_history_cancelled);
+                } else if(orderStatus==IciciPaymentOrderStatus.COMPLETED){
+                    holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_tick_copy);
+                }else{
+                    holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_order_history_pending);
+
+                }
             }
             else if(orderHistory.getProductType() == ProductType.PROS.getOrdinal()){
                 holder.textViewStatus.setText(R.string.status_colon);
