@@ -175,6 +175,15 @@ public class ProsCheckoutFragment extends Fragment {
 	}
 
 	private String getFormattedDateTime(String selectedDate, String selectedTime){
+		if(TextUtils.isEmpty(selectedDate) || TextUtils.isEmpty(selectedTime)){
+			Calendar calendar = Calendar.getInstance();
+			if(TextUtils.isEmpty(selectedDate)){
+				selectedDate = calendar.get(Calendar.YEAR)+"-"+calendar.get(Calendar.MONTH)+"-"+calendar.get(Calendar.DAY_OF_MONTH);
+			}
+			if(TextUtils.isEmpty(selectedTime)){
+				selectedTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+":00";
+			}
+		}
 		return DateOperations.addCalendarFieldValueToDateTime(selectedDate+" "+selectedTime, 0, Calendar.HOUR);
 	}
 
@@ -225,7 +234,10 @@ public class ProsCheckoutFragment extends Fragment {
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 			String date = year + "-" + (month + 1) + "-" + dayOfMonth;
 			if(DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime),
-					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.HOUR)) > 0) {
+					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.HOUR)) > 0
+					&&
+					DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime),
+					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.MONTH)) < 0) {
 				selectedDate = date;
 				tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
 				if(openTimeDialogAfter){

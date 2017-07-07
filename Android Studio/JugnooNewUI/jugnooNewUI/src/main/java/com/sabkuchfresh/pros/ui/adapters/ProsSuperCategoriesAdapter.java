@@ -343,7 +343,8 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 
 	public static Pair<Integer, String> getProsOrderState(int status){
 		String statusName = "";
-		if(status == ProsOrderStatus.UNASSIGNED.getOrdinal()){
+		if(status == ProsOrderStatus.UNASSIGNED.getOrdinal()
+				|| status == ProsOrderStatus.DECLINE.getOrdinal()){
 			status = 0;
 			statusName = "Booking Accepted";
 		} else if(status == ProsOrderStatus.UPCOMING.getOrdinal()

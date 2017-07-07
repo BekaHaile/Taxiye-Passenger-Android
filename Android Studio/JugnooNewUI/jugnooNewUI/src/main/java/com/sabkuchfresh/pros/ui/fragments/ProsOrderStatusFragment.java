@@ -284,9 +284,12 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 				if(customField.getLabel().equalsIgnoreCase(Constants.KEY_PRODUCT_NAME)){
 					tvServiceType.setText(customField.getData());
 				} else if(customField.getLabel().equalsIgnoreCase(Constants.KEY_JOB_AMOUNT)
-						&& datum.getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()
-						&& !TextUtils.isEmpty(customField.getFleetData())){
-					tvAmountValue.setText(activity.getString(R.string.rupees_value_format, customField.getFleetData()));
+						&& datum.getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()){
+					if (!TextUtils.isEmpty(customField.getFleetData())) {
+						tvAmountValue.setText(activity.getString(R.string.rupees_value_format, customField.getFleetData()));
+					} else {
+						tvAmountValue.setText(R.string.to_be_confirmed);
+					}
 				}
 			}
 			tvOrderStatus.setText(ProsSuperCategoriesAdapter.getProsOrderState(datum.getJobStatus()).second);

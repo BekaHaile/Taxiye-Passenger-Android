@@ -165,6 +165,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             GAUtils.trackScreenView(((FreshActivity)activity).getGaCategory()+DELIVERY_ADDRESS);
             if(((FreshActivity)activity).getAppType() == AppConstant.ApplicationType.FEED){
                 editTextDeliveryAddress.setHint(R.string.type_address);
+            } else if(((FreshActivity)activity).getAppType() == AppConstant.ApplicationType.PROS){
+                editTextDeliveryAddress.setHint(R.string.type_service_address);
             } else {
                 editTextDeliveryAddress.setHint(R.string.type_delivery_address);
             }

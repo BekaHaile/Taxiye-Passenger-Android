@@ -1337,6 +1337,8 @@
     <string name="cancel_booking">Cancel Booking</string>
     <string name="service_hash_format">Service #%s</string>
     <string name="service_status_colon">Service Status:</string>
-
+    <string name="to_be_confirmed">To be confirmed</string>
+    <string name="label_confirm_service_address">Click and confirm service address!</string>
+    <string name="type_service_address">Type Service Address</string>
 
 </resources>
