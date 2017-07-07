@@ -177,11 +177,12 @@ public class ProsCheckoutFragment extends Fragment {
 	private String getFormattedDateTime(String selectedDate, String selectedTime){
 		if(TextUtils.isEmpty(selectedDate) || TextUtils.isEmpty(selectedTime)){
 			Calendar calendar = Calendar.getInstance();
+			if(TextUtils.isEmpty(selectedTime)){
+				calendar.add(Calendar.HOUR_OF_DAY, 2);
+				selectedTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+":00";
+			}
 			if(TextUtils.isEmpty(selectedDate)){
 				selectedDate = calendar.get(Calendar.YEAR)+"-"+calendar.get(Calendar.MONTH)+"-"+calendar.get(Calendar.DAY_OF_MONTH);
-			}
-			if(TextUtils.isEmpty(selectedTime)){
-				selectedTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+":00";
 			}
 		}
 		return DateOperations.addCalendarFieldValueToDateTime(selectedDate+" "+selectedTime, 0, Calendar.HOUR);
@@ -237,7 +238,7 @@ public class ProsCheckoutFragment extends Fragment {
 					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.HOUR)) > 0
 					&&
 					DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime),
-					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 30, Calendar.DAY_OF_MONTH)) < 0) {
+					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 30, Calendar.DAY_OF_YEAR)) < 0) {
 				selectedDate = date;
 				tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
 				if(openTimeDialogAfter){
