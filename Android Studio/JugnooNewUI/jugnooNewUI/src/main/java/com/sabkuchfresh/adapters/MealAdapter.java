@@ -3,6 +3,8 @@ package com.sabkuchfresh.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.DiscountInfo;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -24,6 +27,7 @@ import com.sabkuchfresh.utils.TextViewStrikeThrough;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -48,6 +52,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private ArrayList<String> possibleStatus;
     private int showBulkOrderOption;
     private ProductsResponse.MealsBulkBanner mealsBulkBanner;
+    private boolean isHandlerScheduled;
+    private DiscountInfo discountInfo;
+    private boolean showDiscountedPrices;
+
+
 
     private int listType = 0;
 
@@ -64,20 +73,25 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.possibleStatus = new ArrayList<>();
     }
 
-    public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback) {
+    public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback, DiscountInfo discountInfo) {
         this.activity = activity;
         this.subItems = subItems;
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
         this.callback = callback;
+        this.discountInfo = discountInfo;
+        scheduleHandlerForUpdatingDiscountTime(true);
+
     }
 
-    public void setList(ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, ProductsResponse.MealsBulkBanner mealsBulkBanner) {
+    public void setList(ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, ProductsResponse.MealsBulkBanner mealsBulkBanner, DiscountInfo discountInfo) {
         this.subItems = subItems;
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
         this.showBulkOrderOption = (mealsBulkBanner != null) ? mealsBulkBanner.getMealsBannerEnabled() : 0;
         this.mealsBulkBanner = mealsBulkBanner;
+        this.discountInfo = discountInfo;
+        scheduleHandlerForUpdatingDiscountTime(true);
         notifyDataSetChanged();
     }
 
@@ -178,8 +192,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 SubItem subItem = subItems.get(position);
 
                 mHolder.textViewTitle.setText(subItem.getSubItemName());
-                mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-                        Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getPrice())));
+
                 mHolder.textViewdetails.setText(subItem.getItemLargeDesc());
 //                mHolder.deliveryTime.setText(DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()) + "-"
 //                        + DateOperations.convertDayTimeAPViaFormat(subItem.getOrderEnd()));
@@ -334,6 +347,26 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             .error(R.drawable.ic_fresh_new_placeholder)
                             .into(mHolder.imageViewMmeals);
                 }
+
+
+                String discountOfferDisplay = getDiscountOfferDisplay();
+                if(discountInfo!=null  && showDiscountedPrices && discountOfferDisplay!=null){
+                    mHolder.tvDiscountedPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+                            Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getActualPrice())));
+                    mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+                            Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getPrice())));
+                    mHolder.tvDiscountedOffer.setText(discountOfferDisplay);
+                    mHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
+                    mHolder.tvDiscountedOffer.setVisibility(View.VISIBLE);
+                } else{
+                    if(subItem.getActualPrice()!=null) {
+                        subItem.setPrice(subItem.getActualPrice());
+                    }
+                    mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+                            Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getPrice())));
+                    mHolder.tvDiscountedPrice.setVisibility(View.GONE);
+                    mHolder.tvDiscountedOffer.setVisibility(View.GONE);
+                }
             } else if (holder instanceof ViewTitleHolder) {
                 ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
                 titleholder.relative.setVisibility(View.VISIBLE);
@@ -467,6 +500,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         private ImageView imageViewMmeals, foodType;
         private ImageView imageViewMinus, imageViewPlus, imageClosed;
         public TextView textViewTitle, textPrice, textViewdetails, deliveryTime, textViewQuantity, tvEarliestDelivery;
+        public TextViewStrikeThrough tvDiscountedPrice;
+        public TextView tvDiscountedOffer;
 
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
@@ -494,6 +529,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             textViewQuantity.setTypeface(Fonts.mavenRegular(context));
             tvEarliestDelivery = (TextView) itemView.findViewById(R.id.tvEarliestDelivery);
             tvEarliestDelivery.setTypeface(Fonts.mavenMedium(context));
+            tvDiscountedPrice = (TextViewStrikeThrough) itemView.findViewById(R.id.text_price_striked);
+            tvDiscountedOffer = (TextView) itemView.findViewById(R.id.tv_discounted_offer);
 
         }
     }
@@ -515,7 +552,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public TextView tvOrderId, tvOrderIdValue,tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
         public View lineStatus1, lineStatus2, lineStatus3;
-        public TextViewStrikeThrough textViewDiscountedPrice;
 
         public ViewTitleStatus(View itemView, Context context) {
             super(itemView);
@@ -537,7 +573,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             lineStatus1 = itemView.findViewById(R.id.lineStatus1);
             lineStatus2 = itemView.findViewById(R.id.lineStatus2);
             lineStatus3 = itemView.findViewById(R.id.lineStatus3);
-            textViewDiscountedPrice = (TextViewStrikeThrough) itemView.findViewById(R.id.text_price_striked);
         }
     }
 
@@ -580,5 +615,77 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
             });
         }
+
+
+    }
+
+    private Handler handler = new Handler();
+    private long currentTime;
+    private void scheduleHandlerForUpdatingDiscountTime(boolean firstTime){
+
+
+
+         showDiscountedPrices = discountInfo!= null && discountInfo.getIsActive() && discountInfo.getDiscountEndTime()!=null;
+        if(showDiscountedPrices){
+            if(firstTime){
+                Date currentDate = DateOperations.getDateFromString(discountInfo.getCurrentDate());
+                if(currentDate==null) {
+                    currentDate = new Date();
+                }
+                currentTime  = currentDate.getTime();
+            }else{
+                currentTime = currentTime +  60*1000;
+            }
+
+            Date endDate = DateOperations.getDateFromString(discountInfo.getDiscountEndTime());
+            showDiscountedPrices  = endDate!=null && currentTime < endDate.getTime();
+
+        }
+        handler.removeCallbacks(null);
+        if(showDiscountedPrices){
+            handler.postDelayed(updateDiscountedLabelRunnable,60 * 1000);
+        }
+
+
+
+    }
+
+    private Runnable updateDiscountedLabelRunnable = new Runnable() {
+        @Override
+        public void run() {
+            scheduleHandlerForUpdatingDiscountTime(false);
+            notifyDataSetChanged();
+
+        }
+    };
+
+    public void removeScheduledHandler(){
+        showDiscountedPrices =false;
+        isHandlerScheduled = false;
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    public String getDiscountOfferDisplay(){
+        if(discountInfo==null || discountInfo.getDiscountEndTime()==null){
+            return null;
+        }
+        Date endDate = DateOperations.getDateFromString(discountInfo.getDiscountEndTime());
+        if(endDate==null  || currentTime > endDate.getTime())
+            return null;
+
+        if(endDate.getTime()-currentTime>30*60*1000){
+            return "Discount valid till "+ DateOperations.getAmPmFromServerDateFormat(discountInfo.getDiscountEndTime());
+
+        }
+
+        SystemClock.currentThreadTimeMillis();
+
+        long TimeDiffSecs = (endDate.getTime()-currentTime)/1000;
+        int hours = (int) (TimeDiffSecs / 3600);
+        int min = (int) (TimeDiffSecs / 60 - hours * 60);
+        String suffix= min>1?" minutes":" minute";
+        return "Discount valid till "+ min + suffix;
+
+
     }
 }

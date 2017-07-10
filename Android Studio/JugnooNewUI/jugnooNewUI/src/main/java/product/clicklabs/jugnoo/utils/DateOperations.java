@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -16,6 +17,34 @@ import java.util.TimeZone;
  */
 @SuppressLint("SimpleDateFormat")
 public class DateOperations {
+
+	private static Calendar indianTimeCalendar = Calendar.getInstance();
+	private static final DateFormat FORMAT_UTC = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+	/*private static final DateFormat FORMAT_UTC_LOCAL = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+
+	static {
+		FORMAT_UTC_LOCAL.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+	}
+	public static Calendar getIndianTimeCalendar(){
+		indianTimeCalendar = Calendar.getInstance();
+		indianTimeCalendar.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+		indianTimeCalendar.setTimeInMillis(System.currentTimeMillis());
+		return indianTimeCalendar;
+
+	}*/
+
+
+
+	public static Date getDateFromString(String dfWithTimeZone)  {
+		try {
+			return FORMAT_UTC.parse(dfWithTimeZone);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
 
 	public DateOperations(){
 		
@@ -526,6 +555,21 @@ public class DateOperations {
 		}
 	}
 
+public static String getAmPmFromServerDateFormat(String dateTime) {
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("h:mm a");
+		try {
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return dateTime;
+		}
+	}
+
+
+
+
 	public static long getTimeDifferenceInHHmmss(String time1, String time2){
 		try {
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
@@ -611,5 +655,6 @@ public class DateOperations {
 			return dateTime;
 		}
 	}
+
 
 }
