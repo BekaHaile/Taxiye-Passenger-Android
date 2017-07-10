@@ -153,7 +153,7 @@ public class ProsCheckoutFragment extends Fragment {
 					Utils.showToast(activity, activity.getString(R.string.please_select_time));
 					return;
 				}
-				String finalDateTime = getFormattedDateTime(selectedDate, selectedTime);
+				String finalDateTime = getFormattedDateTime(selectedDate, selectedTime, true);
 				apiCreateTask(editTextDeliveryInstructions.getText().toString().trim(),
 						finalDateTime,
 						DateOperations.addCalendarFieldValueToDateTime(finalDateTime, 1, Calendar.HOUR),
@@ -174,11 +174,11 @@ public class ProsCheckoutFragment extends Fragment {
 		}
 	}
 
-	private String getFormattedDateTime(String selectedDate, String selectedTime){
+	private String getFormattedDateTime(String selectedDate, String selectedTime, boolean addHours){
 		if(TextUtils.isEmpty(selectedDate) || TextUtils.isEmpty(selectedTime)){
 			Calendar calendar = Calendar.getInstance();
 			if(TextUtils.isEmpty(selectedTime)){
-				calendar.add(Calendar.HOUR_OF_DAY, 2);
+				calendar.add(Calendar.HOUR_OF_DAY, addHours ? 2 : -1);
 				selectedTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+":00";
 			}
 			if(TextUtils.isEmpty(selectedDate)){
@@ -234,10 +234,10 @@ public class ProsCheckoutFragment extends Fragment {
 		@Override
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 			String date = year + "-" + (month + 1) + "-" + dayOfMonth;
-			if(DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime),
+			if(DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime, true),
 					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.HOUR)) > 0
 					&&
-					DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime),
+					DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime, false),
 					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 30, Calendar.DAY_OF_YEAR)) < 0) {
 				selectedDate = date;
 				tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
@@ -268,7 +268,7 @@ public class ProsCheckoutFragment extends Fragment {
 	};
 
 	private boolean setTimeToVars(String time, String display){
-		if(DateOperations.getTimeDifference(getFormattedDateTime(selectedDate, time),
+		if(DateOperations.getTimeDifference(getFormattedDateTime(selectedDate, time, true),
 				DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.HOUR)) > 0) {
 			selectedTime = time;
 			tvSelectTimeSlot.setText(display);
