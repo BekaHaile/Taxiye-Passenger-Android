@@ -18,7 +18,7 @@ public class DeliveryAddressView {
 	public LinearLayout llLocation;
 	public TextView tvDeliveryAddress, tvLocation;
 	public View shadowTop;
-	private TextView tvConfirmAddress;
+	public TextView tvConfirmAddress;
 	private View viewArrowConfirmAddress;
 
 	public DeliveryAddressView(Context context, View rootView){

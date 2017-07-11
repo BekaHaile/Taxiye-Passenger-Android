@@ -50,6 +50,8 @@ public enum AppLinkIndex {
 
 	OPEN_JEANIE(23), // open Jeanie
 
+	PROS_PAGE(24), // open Pros Screen
+
 	;
 
 	private int ordinal;

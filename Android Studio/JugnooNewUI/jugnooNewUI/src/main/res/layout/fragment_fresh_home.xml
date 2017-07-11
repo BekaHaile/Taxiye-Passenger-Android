@@ -1,90 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/llRoot"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+<LinearLayout android:id="@+id/llRoot"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
 
-    <include layout="@layout/layout_delivery_address_bar" />
+    <include layout="@layout/layout_delivery_address_bar"/>
 
-
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        >
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipeContainer"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvFreshSuper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_below="@+id/rlPager"
+                android:clipToPadding="false"
+                android:fadeScrollbars="true"
+                android:paddingBottom="@dimen/px_240"/>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/shadow_new_height"
+                android:layout_below="@+id/rlPager"
+                android:background="@drawable/shadow_down_new"/>
 
-                    <RelativeLayout
-                        android:id="@+id/rlPager"
-                        android:layout_width="match_parent"
-                        android:layout_height="220px"
-                        android:visibility="gone">
-
-                        <android.support.v4.view.ViewPager
-                            android:id="@+id/pager"
-                            android:layout_width="match_parent"
-                            android:layout_height="220px"/>
-
-                        <android.support.design.widget.TabLayout
-                            android:id="@+id/tabDots"
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
-                            android:layout_marginBottom="7dp"
-                            android:tag="@string/dont_touch_me"
-                            android:layout_alignParentBottom="true"
-                            app:paddingEnd="4dp"
-                            app:paddingStart="4dp"
-                            app:tabBackground="@drawable/tab_selector"
-                            app:tabGravity="center"
-                            app:tabIndicatorHeight="0dp"
-                            app:tabMaxWidth="10dp" />
-
-                    </RelativeLayout>
-
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rvFreshSuper"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_below="@+id/rlPager"
-                        android:fadeScrollbars="true"
-                        android:paddingBottom="@dimen/px_240"
-                        android:clipToPadding="false"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/shadow_new_height"
-                        android:background="@drawable/shadow_down_new"
-                        android:layout_below="@+id/rlPager"/>
-
-                    <include layout="@layout/layout_offering_not_available" />
-
-
-
-                </RelativeLayout>
-
-            </android.support.v4.widget.SwipeRefreshLayout>
-
+            <include layout="@layout/layout_offering_not_available"/>
 
 
         </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 </LinearLayout>

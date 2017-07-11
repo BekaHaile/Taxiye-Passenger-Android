@@ -258,7 +258,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
             public void onDismiss() {
                 //activity.orderComplete();
             }
-        }).show();
+        }).showNoDeliveryDialog();
 
     }
 

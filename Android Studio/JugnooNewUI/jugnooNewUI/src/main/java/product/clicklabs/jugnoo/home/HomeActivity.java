@@ -4046,6 +4046,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 dataFoundNull = true;
             } else if(clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.getFeedData() == null){
                 dataFoundNull = true;
+            } else if(clientId.equalsIgnoreCase(Config.getProsClientId()) && Data.getProsData() == null){
+                dataFoundNull = true;
             }
             if(dataFoundNull) {
                 activity.startActivity(new Intent(activity, SplashNewActivity.class));
@@ -4949,7 +4951,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) &&
                         (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
                         && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
-                        && (Data.userData.getFeedEnabled() == 0)) {
+                        && (Data.userData.getFeedEnabled() == 0)
+                        && Data.userData.getProsEnabled() == 0) {
                     //imageViewFabFake.setVisibility(View.GONE);
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 } else {

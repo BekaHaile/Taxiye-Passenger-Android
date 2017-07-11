@@ -91,6 +91,7 @@ public class Data {
     private static MenusData menusData;
     private static PayData payData;
     private static LoginResponse.Feed feedData;
+    private static LoginResponse.Pros prosData;
 
 
     public static final String DEVICE_TYPE = "0";
@@ -131,6 +132,7 @@ public class Data {
             freshData = null;
             mealsData = null;
             feedData = null;
+            prosData = null;
             DeliveryData = null;
 
             facebookUserData = null;
@@ -621,5 +623,12 @@ public class Data {
 
 	}
 
+    public static LoginResponse.Pros getProsData() {
+        return prosData;
+    }
+
+    public static void setProsData(LoginResponse.Pros prosData) {
+        Data.prosData = prosData;
+    }
 
 }

@@ -1756,8 +1756,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }).show(String.valueOf(placeOrderResponse.getOrderId()),
                     deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
-                    placeOrderResponse);
-            GAUtils.trackScreenView(productType + ORDER_PLACED);
+                    placeOrderResponse, type);
+            GAUtils.trackScreenView(productType+ORDER_PLACED);
         } else {
             dialogOrderComplete = new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
                 @Override
@@ -2971,12 +2971,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (type == AppConstant.ApplicationType.MEALS) {
             if (activity.getUserCheckoutResponse() != null
                     && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() != null
-                    && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() > 0) {
+                    /*&& activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() > 0*/){
                 deliveryCharges = activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges();
             } else if (activity.getUserCheckoutResponse() != null
                     && activity.getUserCheckoutResponse().getDeliveryInfo() != null
                     && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() != null
-                    && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() > 0) {
+                    /*&& activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() > 0*/){
                 deliveryCharges = activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges();
             } else {
                 deliveryCharges = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, getSubTotalAmount(false));

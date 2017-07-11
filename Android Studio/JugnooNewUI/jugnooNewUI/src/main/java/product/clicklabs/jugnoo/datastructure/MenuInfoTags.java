@@ -22,6 +22,7 @@ public enum MenuInfoTags {
     MENUS("menus"),
     PAY("pay"),
     FEED("feed"),
+    PROS("pros"),
     DELIVERY("delivery"),
     JUGNOO_STAR("jugnoo_star"),
     SIGNUP_TUTORIAL("signup_tutorial"),

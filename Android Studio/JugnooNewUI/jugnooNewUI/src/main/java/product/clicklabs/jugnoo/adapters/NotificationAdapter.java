@@ -299,6 +299,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFeedClientId(), new LatLng(Data.latitude, Data.longitude), true);
             }
+            else if(AppLinkIndex.PROS_PAGE.getOrdinal() == deepInt){
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getProsClientId(), new LatLng(Data.latitude, Data.longitude), true);
+            }
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch(Exception e){
             e.printStackTrace();

@@ -3,6 +3,7 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +112,7 @@ public class SuperCategoriesData {
 		this.subscriptionMessage = subscriptionMessage;
 	}
 
-	public class SuperCategory {
+	public class SuperCategory implements Serializable{
 
 		@SerializedName("super_category_id")
 		@Expose

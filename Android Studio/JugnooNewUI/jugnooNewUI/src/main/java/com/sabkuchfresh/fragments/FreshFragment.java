@@ -289,7 +289,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
             @Override
             public void onDismiss() {
             }
-        }).show();
+        }).showNoDeliveryDialog();
     }
 
 

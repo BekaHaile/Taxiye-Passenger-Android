@@ -164,7 +164,6 @@
     <string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
     <string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
     <string name="review_must_be_in">Review must be in 300 letters.</string>
-    <string name="includes_priority_tip">Includes Priority Tip | Offer will be applied at ride completion</string>
     <string name="order_expereince">How was your Experience?</string>
 
     <!-- Add Places -->
@@ -1132,8 +1131,6 @@
     <string name="thanks_for_your_valuable_feedback">Thanks for your valuable feedback</string>
     <string name="feedback_menu_what_amazing">What was amazing?</string>
     <string name="feedback_menu_what_wrong">Oh no,what went wrong?</string>
-    <string name="feed_is_empty">Feed is empty!</string>
-    <string name="be_first_one_to_add">BE THE FIRST ONE TO ADD...</string>
     <string name="be_first_one_to_add_a_post">BE THE FIRST ONE TO ADD A POST...</string>
     <string name="items_summary">Item(s) Summary</string>
     <string name="bill_summary">Bill Summary</string>
@@ -1285,7 +1282,6 @@
     <string name="label_confirm_delivery_address">Click and confirm delivery address!</string>
     <string name="veg_only">Veg Only</string>
     <string name="back_button">Back button</string>
-    <string name="online_payment">Online Payment</string>
     <string name="start_typing_a_cuisine">Start typing a cuisine…</string>
     <string name="minimum_order_amount">Minimum Order Amount</string>
     <string name="star_checkout_wallet_not_selected">Please select a wallet.</string>
@@ -1295,17 +1291,13 @@
     <string name="you_have_items_saved_in_cart">You have items saved in your cart</string>
     <string name="view">View</string>
     <string name="discard_all_items_in_cart">Discard all items in the cart?</string>
-    <string name="get_help">Get Help</string>
-    <string name="how_can_we_help">How can we help?</string>
     <string name="dig_in_enjoy_food">Dig in! Enjoy your food.</string>
     <string name="dig_in_enjoy_food_experience_feedback">We care about your experience. Once you are done eating, we’ll follow up for feedback</string>
-    <string name="menus_order_not_delivered_message">We apologise for the inconvenience. Our executive will get in touch with you soon.</string>
     <string name="report_issue">Report Issue</string>
     <string name="chat_with_us">Chat with us</string>
     <string name="call_restaurant">Call Restaurant</string>
     <string name="accepts_online_payment">Accepts Online Payment</string>
     <string name="reviews">Reviews</string>
-    <string name="no_issues_found">No issues found</string>
     <string name="order_is_late">Order is late</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="no_reviews_yet">No reviews yet!</string>
@@ -1320,9 +1312,33 @@
     <string name="label_request_expires_in">Your request will expire in</string>
     <string name="hint_add_upi">Please add UPI Address</string>
     <string name="please_wait">Please Wait...</string>
-    <string name="discount_slabs">Discount Slabs</string>
     <string name="place_bulk_order">Place a Bulk Order</string>
     <string name="bulk_order">Bulk Order</string>
-
+    <string name="pros">Pros</string>
+    <string name="your_service_request_confirm_message">Your service request will be\nconfirmed within the next 30 mins.</string>
+    <string name="service_address">Service Address</string>
+    <string name="select_date">Select Date</string>
+    <string name="request_booking">Request Booking</string>
+    <string name="service_name">Service Name</string>
+    <string name="service_id">Service ID:</string>
+    <string name="date_and_time">Date &amp; Time</string>
+    <string name="service_type_colon">Service Type:</string>
+    <string name="service_time_colon">Service Time:</string>
+    <string name="service_address_colon">Service Address:</string>
+    <string name="paid_via">Paid via</string>
+    <string name="view_details">View Details</string>
+    <string name="select_time">Select Time</string>
+    <string name="please_select_date">Please select date</string>
+    <string name="please_select_time">Please select time</string>
+    <string name="service_date_colon_format">Service Date: %s</string>
+    <string name="upon_inspection">Upon Inspection</string>
+    <string name="please_select_appropriate_time">Please select an appropriate future date and time.</string>
+    <string name="booking_cancelled_successfully">Your booking is cancelled successfully.</string>
+    <string name="cancel_booking">Cancel Booking</string>
+    <string name="service_hash_format">Service #%s</string>
+    <string name="service_status_colon">Service Status:</string>
+    <string name="to_be_confirmed">To be confirmed</string>
+    <string name="label_confirm_service_address">Click and confirm service address!</string>
+    <string name="type_service_address">Type Service Address</string>
 
 </resources>

@@ -221,6 +221,7 @@ public class JSONParser implements Constants {
         int menusEnabled = userData.optInt(KEY_MENUS_ENABLED, 0);
         int payEnabled = userData.optInt(KEY_PAY_ENABLED, 0);
         int feedEnabled = userData.optInt(KEY_FEED_ENABLED, 0);
+        int prosEnabled = userData.optInt(KEY_PROS_ENABLED, 0);
         String defaultClientId = userData.optString(KEY_DEFAULT_CLIENT_ID, Config.getAutosClientId());
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
@@ -244,7 +245,7 @@ public class JSONParser implements Constants {
                 cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
-                mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled, feedEnabled,
+                mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled, feedEnabled, prosEnabled,
                 inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
                 showOfferDialog, showTutorial, signupOnboarding);
@@ -664,6 +665,16 @@ public class JSONParser implements Constants {
         }
     }
 
+    public void parseProsData(Context context, JSONObject jProsData, LoginResponse.Pros prosData){
+        try{
+            if(prosData != null) {
+                Data.setProsData(prosData);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse,
                                             LoginVia loginVia, LatLng latLng) throws Exception {
@@ -679,6 +690,7 @@ public class JSONParser implements Constants {
         JSONObject jMenusObject = jObj.optJSONObject(KEY_MENUS);
         JSONObject jPayObject = jObj.optJSONObject(KEY_PAY);
         JSONObject jFeedObject = jObj.optJSONObject(KEY_FEED);
+        JSONObject jProsObject = jObj.optJSONObject(KEY_PROS);
 
         parseUserData(context, jUserDataObject, loginResponse.getUserData());
         parseAutoData(context, jAutosObject, loginResponse.getAutos());
@@ -689,6 +701,7 @@ public class JSONParser implements Constants {
         parsePayData(context, jPayObject, loginResponse.getPay());
         parseDeliveryData(loginResponse.getDelivery());
         parseFeedData(context, jFeedObject, loginResponse.getFeed());
+        parseProsData(context, jProsObject, loginResponse.getPros());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 

@@ -3,8 +3,10 @@
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="194px"
+    android:layout_height="@dimen/dp_97"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:tag="@string/dont_touch_me"
+    >
 
 </RelativeLayout>

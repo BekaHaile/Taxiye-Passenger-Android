@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -165,6 +167,27 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 } else if(orderHistory.getProductType() == ProductType.PAY.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_pay_grey);
                 }
+                holder.relativeLayoutTo.setVisibility(View.GONE);
+            }
+            else if(orderHistory.getProductType() == ProductType.PROS.getOrdinal()){
+                holder.textViewStatus.setText(R.string.status_colon);
+                holder.textViewStatusValue.setText(ProsSuperCategoriesAdapter.getProsOrderState(orderHistory.getJobStatus()).second);
+                try{
+                    holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
+                } catch (Exception e){
+                    holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, orderHistory.getJobStatusColorRes()));
+                }
+                holder.textViewId.setText(R.string.id_colon);
+                holder.textViewIdValue.setText(String.valueOf(orderHistory.getJobId()));
+                holder.textViewFrom.setText(R.string.address_colon);
+                holder.textViewFromValue.setText(orderHistory.getJobAddress());
+                holder.textViewDetails.setText(R.string.details_colon);
+                holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormatTZ(orderHistory.getJobTime())
+                +", "+orderHistory.getJobNameSplitted());
+
+                holder.textViewAmount.setText("-");
+                holder.imageViewProductType.setImageResource(R.drawable.ic_pros_grey);
+
                 holder.relativeLayoutTo.setVisibility(View.GONE);
             }
 

@@ -174,6 +174,20 @@ public class DateOperations {
 		}
 	}
 
+	public static String convertDateViaFormatTZ(String dateTime) {
+
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+		try {
+			dateTime = dateTime.replace("T", " ").split("\\.")[0];
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return convertDate(dateTime);
+		}
+	}
+
 	public static String convertDateViaFormatOnlyTime(String dateTime) {
 
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -535,6 +549,50 @@ public class DateOperations {
 		long hrSec = ((long)calendar.get(Calendar.HOUR_OF_DAY)) * 60l * 60l;
 		long minSec = ((long)calendar.get(Calendar.MINUTE)) * 60l;
 		return hrSec + minSec + ((long)calendar.get(Calendar.SECOND));
+	}
+
+	public static String getDateFormatted(String dateYYYYMMDD) {
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy");
+		try {
+			Date myDate = sdfFrom.parse(dateYYYYMMDD);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return dateYYYYMMDD;
+		}
+	}
+
+	public static String addCalendarFieldValueToDateTime(String dateTime, int addition, int calendarField){
+		try{
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date1 = format.parse(dateTime);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date1);
+			calendar.add(calendarField, addition);
+			return format.format(calendar.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dateTime;
+		}
+	}
+
+	public static int getTimezoneDiffWithUTC(){
+		TimeZone tz = TimeZone.getDefault();
+		Date now = new Date();
+		return tz.getOffset(now.getTime()) / 60000;
+	}
+
+	public static String convertDateTimeUSToInd(String dateTime) {
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+		try {
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return dateTime;
+		}
 	}
 
 }

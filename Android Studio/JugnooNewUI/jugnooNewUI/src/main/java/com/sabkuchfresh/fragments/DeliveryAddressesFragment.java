@@ -162,14 +162,20 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         if(activity instanceof FreshActivity) {
             ((FreshActivity)activity).fragmentUISetup(this);
             editTextDeliveryAddress = ((FreshActivity)activity).getTopBar().editTextDeliveryAddress;
+            tvDeliveryAddress = ((FreshActivity)activity).getTopBar().tvDeliveryAddress;
             GAUtils.trackScreenView(((FreshActivity)activity).getGaCategory()+DELIVERY_ADDRESS);
             if(((FreshActivity)activity).getAppType() == AppConstant.ApplicationType.FEED){
                 editTextDeliveryAddress.setHint(R.string.type_address);
+                tvDeliveryAddress.setHint(R.string.type_address);
+            } else if(((FreshActivity)activity).getAppType() == AppConstant.ApplicationType.PROS){
+                editTextDeliveryAddress.setHint(R.string.type_service_address);
+                tvDeliveryAddress.setHint(R.string.type_service_address);
             } else {
                 editTextDeliveryAddress.setHint(R.string.type_delivery_address);
+                tvDeliveryAddress.setHint(R.string.type_delivery_address);
             }
             progressWheelDeliveryAddressPin = ((FreshActivity)activity).getTopBar().progressWheelDeliveryAddressPin;
-            tvDeliveryAddress = ((FreshActivity)activity).getTopBar().tvDeliveryAddress;
+
         } else if(activity instanceof AddPlaceActivity){
             editTextDeliveryAddress = ((AddPlaceActivity)activity).getEditTextDeliveryAddress();
             progressWheelDeliveryAddressPin = ((AddPlaceActivity)activity).getProgressWheelDeliveryAddressPin();

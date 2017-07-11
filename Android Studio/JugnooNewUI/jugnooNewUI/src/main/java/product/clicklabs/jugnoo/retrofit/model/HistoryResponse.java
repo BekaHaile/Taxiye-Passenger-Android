@@ -2,10 +2,13 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.pros.models.ProsOrderStatus;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by gurmail on 19/08/16.
@@ -231,13 +234,33 @@ public class HistoryResponse {
         @SerializedName("order_adjustment")
         @Expose
         private double orderAdjustment;
-
-
-
         @SerializedName("live_tracking")
         @Expose
         private LiveTracking liveTracking;
 
+
+        // pros data
+        @SerializedName("job_id")
+        @Expose
+        private int jobId;
+        @SerializedName("job_time")
+        @Expose
+        private String jobTime;
+        @SerializedName("job_status")
+        @Expose
+        private int jobStatus;
+        @SerializedName("job_description")
+        @Expose
+        private String jobDescription;
+        @SerializedName("job_address")
+        @Expose
+        private String jobAddress;
+        @SerializedName("job_pickup_datetime")
+        @Expose
+        private String jobPickupDatetime;
+        @SerializedName("job_delivery_datetime")
+        @Expose
+        private String jobDeliveryDatetime;
 
 
 
@@ -838,6 +861,78 @@ public class HistoryResponse {
 
         public LiveTracking getLiveTracking() {
             return liveTracking;
+        }
+
+        public int getJobId() {
+            return jobId;
+        }
+
+        public void setJobId(int jobId) {
+            this.jobId = jobId;
+        }
+
+        public String getJobTime() {
+            return jobTime;
+        }
+
+        public void setJobTime(String jobTime) {
+            this.jobTime = jobTime;
+        }
+
+        public int getJobStatus() {
+            return jobStatus;
+        }
+
+        public int getJobStatusColorRes() {
+            if(jobStatus == ProsOrderStatus.FAILED.getOrdinal()
+                    || jobStatus == ProsOrderStatus.CANCEL.getOrdinal()
+                    || jobStatus == ProsOrderStatus.DELETED.getOrdinal()
+                    || jobStatus == ProsOrderStatus.IGNORED.getOrdinal()){
+                return R.color.red_status;
+            } else {
+                return R.color.green_status;
+            }
+        }
+
+        public void setJobStatus(int jobStatus) {
+            this.jobStatus = jobStatus;
+        }
+
+        public String getJobDescription() {
+            return jobDescription;
+        }
+
+        public String getJobNameSplitted() {
+            String[] arr = jobDescription.split("\\:\\ ");
+            return arr[0];
+        }
+
+        public void setJobDescription(String jobDescription) {
+            this.jobDescription = jobDescription;
+        }
+
+        public String getJobAddress() {
+            return jobAddress;
+        }
+
+        public void setJobAddress(String jobAddress) {
+            this.jobAddress = jobAddress;
+        }
+
+        public String getJobPickupDatetime() {
+            return jobPickupDatetime;
+        }
+
+        public void setJobPickupDatetime(String jobPickupDatetime) {
+            this.jobPickupDatetime = jobPickupDatetime;
+        }
+
+        public String getJobDeliveryDatetime() {
+            return jobDeliveryDatetime;
+        }
+
+        public void setJobDeliveryDatetime(String jobDeliveryDatetime) {
+            this.jobDeliveryDatetime = jobDeliveryDatetime;
         }
     }
 
