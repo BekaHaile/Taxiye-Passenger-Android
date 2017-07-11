@@ -277,7 +277,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private ImageView ivProfilePic;
     public int currentOffsetFeedHomeAppBar;
     public boolean filtersChanged = false;
-
+    private boolean showingEarlyBirdDiscount;
 
 
     public View getFeedHomeAddPostView() {
@@ -3854,6 +3854,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void performSuperBackPress() {
         super.onBackPressed();
+    }
+
+    public boolean isShowingEarlyBirdDiscount() {
+        return showingEarlyBirdDiscount;
+    }
+
+    public void setShowingEarlyBirdDiscount(boolean showingEarlyBirdDiscount) {
+        this.showingEarlyBirdDiscount = showingEarlyBirdDiscount;
     }
 
 

@@ -1431,6 +1431,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
                 if (type == AppConstant.ApplicationType.MEALS) {
+
+                    params.put("is_early_bird_discount",activity.isShowingEarlyBirdDiscount()?"1":"0");
                     params.put("store_id", "2");
                     params.put("group_id", "" + activity.getProductsResponse().getCategories().get(0).getSubItems().get(0).getGroupId());
                     chargeDetails.put(TYPE, "Meals");
@@ -1512,7 +1514,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             doSlideInitial = false;
                                         }
                                     }
-                                } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
+                                }
+                                else if(ApiResponseFlags.MEALS_PRICE_MISMATCH.getOrdinal() == flag){
+                                    if(freshCartItemsAdapter!=null){
+                                        freshCartItemsAdapter.resetPrices();
+                                    }
+                                    DialogPopup.alertPopup(activity, "", message);
+                                }else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
                                     final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
                                     final double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, 0);
                                     Log.e("USER_IN_DEBT message", "=" + message1);

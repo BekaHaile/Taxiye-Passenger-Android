@@ -52,7 +52,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private ArrayList<String> possibleStatus;
     private int showBulkOrderOption;
     private ProductsResponse.MealsBulkBanner mealsBulkBanner;
-    private boolean isHandlerScheduled;
     private DiscountInfo discountInfo;
     private boolean showDiscountedPrices;
 
@@ -646,7 +645,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             handler.postDelayed(updateDiscountedLabelRunnable,60 * 1000);
         }
 
-
+        activity.setShowingEarlyBirdDiscount(showDiscountedPrices);
 
     }
 
@@ -660,8 +659,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     };
 
     public void removeScheduledHandler(){
-        showDiscountedPrices =false;
-        isHandlerScheduled = false;
         handler.removeCallbacksAndMessages(null);
     }
 
