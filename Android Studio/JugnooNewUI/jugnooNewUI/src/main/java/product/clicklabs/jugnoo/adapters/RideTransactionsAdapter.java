@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
-import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
-import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -121,7 +118,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     }
                     holder.textViewDetailsValue.setText(orderHistory.getDate() + ", " + decimalFormat.format(orderHistory.getDistance()) + " km, " + decimalFormatNoDec.format(orderHistory.getRideTime()) + " min");
                     holder.relativeLayoutTo.setVisibility(View.VISIBLE);
-                    holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_tick_copy);
+//                    holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_tick_copy);
                 } else {
                     if (orderHistory.getAutosStatusText() == null) {
                         holder.textViewStatusValue.setText(R.string.ride_cancelled);
@@ -135,8 +132,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     }
                     holder.textViewDetailsValue.setText(orderHistory.getDate());
                     holder.relativeLayoutTo.setVisibility(View.GONE);
-                    holder.ivOrderStatusIcon.setVisibility(View.VISIBLE);
-                    holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_order_history_cancelled);
+//                    holder.ivOrderStatusIcon.setVisibility(View.VISIBLE);
+//                    holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_order_history_cancelled);
 
                 }
             } else if (orderHistory.getProductType() == ProductType.FRESH.getOrdinal()
@@ -185,7 +182,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_yellow);
                 }
                 holder.relativeLayoutTo.setVisibility(View.GONE);
-                IciciPaymentOrderStatus orderStatus = IciciPaymentRequestStatus.parseStatus(orderHistory.getProductType()==ProductType.MENUS.getOrdinal(),orderHistory.getOrderStatusInt());
+               /* IciciPaymentOrderStatus orderStatus = IciciPaymentRequestStatus.parseStatus(orderHistory.getProductType()==ProductType.MENUS.getOrdinal(),orderHistory.getOrderStatusInt());
                 if(orderStatus==IciciPaymentOrderStatus.CANCELLED||orderStatus==IciciPaymentOrderStatus.FAILURE){
                     holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_order_history_cancelled);
                 } else if(orderStatus==IciciPaymentOrderStatus.COMPLETED){
@@ -193,26 +190,35 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }else{
                     holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_order_history_pending);
 
-                }
+                }*/
             }
             else if(orderHistory.getProductType() == ProductType.PROS.getOrdinal()){
-                holder.textViewStatus.setText(R.string.status_colon);
+                holder.textViewStatus.setText(R.string.order_status_colon);
                 holder.textViewStatusValue.setText(ProsSuperCategoriesAdapter.getProsOrderState(orderHistory.getJobStatus()).second);
                 try{
                     holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
                 } catch (Exception e){
                     holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, orderHistory.getJobStatusColorRes()));
                 }
-                holder.textViewId.setText(R.string.id_colon);
+                holder.textViewId.setText(R.string.order_id_colon);
                 holder.textViewIdValue.setText(String.valueOf(orderHistory.getJobId()));
                 holder.textViewFrom.setText(R.string.address_colon);
                 holder.textViewFromValue.setText(orderHistory.getJobAddress());
                 holder.textViewDetails.setText(R.string.details_colon);
-                Pair<String, String> pair = orderHistory.getProductNameAndJobAmount();
+                android.util.Pair<String, String> pair = orderHistory.getProductNameAndJobAmount();
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormatTZ(orderHistory.getJobTime())
-                +", "+pair.first);
+                        +", "+pair.first);
                 holder.textViewAmount.setText(!TextUtils.isEmpty(pair.second)?pair.second:"-");
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros_grey);
+                holder.imageViewProductType.setImageResource(R.drawable.ic_pros);
+                holder.imageViewProductType.setBackgroundResource(R.drawable.circle_pink_pros_fab);
+/*
+                if(orderHistory.getJobStatus()==ProsOrderStatus.CANCEL.getOrdinal()||
+                    orderHistory.getJobStatus()==ProsOrderStatus.DECLINE.getOrdinal()||
+                    orderHistory.getJobStatus()==ProsOrderStatus.FAILED.getOrdinal()||
+                   orderHistory.getJobStatus()==ProsOrderStatus.DELETED.getOrdinal()||
+                   orderHistory.getJobStatus()==ProsOrderStatus.DELETED.getOrdinal())*/
+
 
                 holder.relativeLayoutTo.setVisibility(View.GONE);
             }

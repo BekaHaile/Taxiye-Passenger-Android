@@ -75,6 +75,7 @@
                             android:src="@drawable/ic_tick_copy"
                             android:layout_toRightOf="@id/textViewStatusValue"
                             android:layout_width="26px"
+                            android:visibility="gone"
                             android:layout_height="26px" />
                     </RelativeLayout>
 
