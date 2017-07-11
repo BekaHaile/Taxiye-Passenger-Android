@@ -595,4 +595,21 @@ public class DateOperations {
 		}
 	}
 
+	public static String getDaysAheadTime(String dateTime, int additionOfDays){
+		try{
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date1 = format.parse(dateTime);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date1);
+			calendar.add(Calendar.DAY_OF_MONTH, additionOfDays);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+
+			return format.format(calendar.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dateTime;
+		}
+	}
+
 }

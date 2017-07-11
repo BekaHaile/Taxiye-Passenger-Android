@@ -234,11 +234,7 @@ public class ProsCheckoutFragment extends Fragment {
 		@Override
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 			String date = year + "-" + (month + 1) + "-" + dayOfMonth;
-			if(DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime, true),
-					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.HOUR)) > 0
-					&&
-					DateOperations.getTimeDifference(getFormattedDateTime(date, selectedTime, false),
-					DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 30, Calendar.DAY_OF_YEAR)) < 0) {
+			if(validateDateTime(date, selectedTime)) {
 				selectedDate = date;
 				tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
 				if(openTimeDialogAfter){
@@ -268,8 +264,7 @@ public class ProsCheckoutFragment extends Fragment {
 	};
 
 	private boolean setTimeToVars(String time, String display){
-		if(DateOperations.getTimeDifference(getFormattedDateTime(selectedDate, time, true),
-				DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 1, Calendar.HOUR)) > 0) {
+		if(validateDateTime(selectedDate, time)) {
 			selectedTime = time;
 			tvSelectTimeSlot.setText(display);
 			return true;
@@ -507,5 +502,12 @@ public class ProsCheckoutFragment extends Fragment {
 		return timeDisplays;
 	}
 
+	private boolean validateDateTime(String date, String time){
+		String currentTimePlus24Hrs = DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 1);
+		return DateOperations.getTimeDifference(getFormattedDateTime(date, time, true), currentTimePlus24Hrs) > 0
+				&&
+				DateOperations.getTimeDifference(getFormattedDateTime(date, time, false),
+						DateOperations.addCalendarFieldValueToDateTime(currentTimePlus24Hrs, 31, Calendar.DAY_OF_MONTH)) < 0;
+	}
 
 }

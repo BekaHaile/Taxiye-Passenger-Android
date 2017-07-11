@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.fugu.FuguConfig;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -275,9 +276,18 @@ public class RideSummaryFragment extends Fragment implements Constants {
 				@Override
 				public void onClick(View v) {
 					if (activity instanceof RideTransactionsActivity) {
-						new TransactionUtils().openRideIssuesFragment(activity,
-								((RideTransactionsActivity) activity).getContainer(),
-								engagementId, -1, endRideData, items, 0, false, autosStatus, null, -1, -1, "");
+                        if (Data.isFuguChatEnabled()) {
+                            try {
+                                FuguConfig.getInstance().showConversations(activity);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
+                            }
+                        } else {
+                            new TransactionUtils().openRideIssuesFragment(activity,
+                                    ((RideTransactionsActivity) activity).getContainer(),
+                                    engagementId, -1, endRideData, items, 0, false, autosStatus, null, -1, -1, "");
+                        }
 					} else {
 						performBackPressed();
 					}
