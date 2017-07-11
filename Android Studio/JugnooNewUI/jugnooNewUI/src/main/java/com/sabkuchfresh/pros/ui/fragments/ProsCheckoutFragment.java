@@ -503,11 +503,11 @@ public class ProsCheckoutFragment extends Fragment {
 	}
 
 	private boolean validateDateTime(String date, String time){
-		String currentTimePlus24Hrs = DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), 24, Calendar.HOUR);
+		String currentTimePlus24Hrs = DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 1);
 		return DateOperations.getTimeDifference(getFormattedDateTime(date, time, true), currentTimePlus24Hrs) > 0
 				&&
 				DateOperations.getTimeDifference(getFormattedDateTime(date, time, false),
-						DateOperations.addCalendarFieldValueToDateTime(currentTimePlus24Hrs, 30, Calendar.DAY_OF_YEAR)) < 0;
+						DateOperations.addCalendarFieldValueToDateTime(currentTimePlus24Hrs, 31, Calendar.DAY_OF_MONTH)) < 0;
 	}
 
 }
