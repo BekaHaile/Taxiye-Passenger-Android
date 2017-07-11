@@ -355,8 +355,8 @@ public class ProsCheckoutFragment extends Fragment {
 				params.put(Constants.KEY_CUSTOMER_USERNAME, Data.userData.userName);
 				params.put(Constants.KEY_CUSTOMER_PHONE, Data.userData.phoneNo);
 				params.put(Constants.KEY_JOB_DESCRIPTION, prosProductDatum.getName()
-						+Constants.SPLITTER_PRODUCT_NAME_DESCRIPTION+
-						jobDescription);
+						+ (!TextUtils.isEmpty(jobDescription) ? (Constants.SPLITTER_PRODUCT_NAME_DESCRIPTION+
+						jobDescription):""));
 				params.put(Constants.KEY_JOB_PICKUP_DATETIME, jobPickupDateTime);
 				params.put(Constants.KEY_JOB_DELIVERY_DATETIME, jobDeliveryDateTime);
 				params.put(Constants.KEY_TIMEZONE, timeZoneDiff);

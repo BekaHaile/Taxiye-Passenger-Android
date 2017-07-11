@@ -903,7 +903,7 @@ public class HistoryResponse {
         }
 
         public String getJobNameSplitted() {
-            String[] arr = jobDescription.split("\\#\\#\\#\\#\\^\\^\\^\\^\\#\\#\\#\\#");
+            String[] arr = jobDescription.split("\\:\\ ");
             return arr[0];
         }
 
