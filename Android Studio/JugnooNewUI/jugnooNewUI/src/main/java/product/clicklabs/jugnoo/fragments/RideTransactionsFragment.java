@@ -229,6 +229,7 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_START_FROM, "" + (refresh ? 0 : rideInfosList.size()));
+				params.put(Constants.SHOW_CUSTOM_FIELDS, "1");
 
 				new HomeUtil().putDefaultParams(params);
 				RestClient.getApiService().getRecentRides(params, new Callback<HistoryResponse>() {

@@ -45,7 +45,7 @@ public abstract class PaySlider {
         llPayViewContainer.setVisibility(View.VISIBLE);
         rlSliderContainer.setVisibility(View.VISIBLE);
         tvSlide.setText("CONFIRM");
-        sliderText.setText("SWIPE RIGHT TO CONFIRM >>");
+        sliderText.setText("Swipe to confirm >>");
         setUpPayBar();
         paramsF = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
     }

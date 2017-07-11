@@ -750,4 +750,5 @@ public interface Constants {
     String KEY_JOB_ID = "job_id";
     String KEY_JOB_AMOUNT = "job_amount";
     String SPLITTER_PRODUCT_NAME_DESCRIPTION = ": ";
+    String SHOW_CUSTOM_FIELDS = "show_custom_fields";
 }
