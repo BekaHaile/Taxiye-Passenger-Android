@@ -67,6 +67,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
+import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
 import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
@@ -119,7 +120,6 @@ import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
-import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -1584,13 +1584,22 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
 							rating, "", "");
-                    Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
-                    intent.putExtra(INTENT_KEY_FROM_BAD, 1);
-                    intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
-                    intent.putExtra(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    GAUtils.event(RIDES, RIDE+FINISHED, THUMB_DOWN+CLICKED);
+                    if (Data.isFuguChatEnabled()) {
+                        try {
+                            FuguConfig.getInstance().showConversations(HomeActivity.this);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
+                        }
+                    } else {
+                        Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
+                        intent.putExtra(INTENT_KEY_FROM_BAD, 1);
+                        intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
+                        intent.putExtra(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        GAUtils.event(RIDES, RIDE + FINISHED, THUMB_DOWN + CLICKED);
+                    }
                     //imageViewThumbsUp.clearAnimation();
                     //imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
                     //textViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
