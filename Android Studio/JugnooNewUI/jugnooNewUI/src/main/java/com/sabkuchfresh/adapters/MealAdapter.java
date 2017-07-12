@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -623,26 +622,28 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private void scheduleHandlerForUpdatingDiscountTime(boolean firstTime){
 
 
+        showDiscountedPrices = discountInfo != null && discountInfo.getIsActive()
+                && discountInfo.getDiscountEndTime() != null && discountInfo.getCurrentDate() != null;
 
-         showDiscountedPrices = discountInfo!= null && discountInfo.getIsActive() && discountInfo.getDiscountEndTime()!=null;
-        if(showDiscountedPrices){
-            if(firstTime){
+        if (showDiscountedPrices) {
+            if (firstTime) {
                 Date currentDate = DateOperations.getDateFromString(discountInfo.getCurrentDate());
-                if(currentDate==null) {
-                    currentDate = new Date();
+                if (currentDate != null) {
+                    currentTime = currentDate.getTime();
+                } else {
+                    showDiscountedPrices = false;
                 }
-                currentTime  = currentDate.getTime();
-            }else{
-                currentTime += 60*1000;
+            } else {
+                currentTime += 60 * 1000;
             }
 
             Date endDate = DateOperations.getDateFromString(discountInfo.getDiscountEndTime());
-            showDiscountedPrices  = endDate!=null && currentTime < endDate.getTime();
+            showDiscountedPrices = endDate != null && currentTime < endDate.getTime();
 
         }
         handler.removeCallbacksAndMessages(null);
-        if(showDiscountedPrices){
-            handler.postDelayed(updateDiscountedLabelRunnable,60 * 1000);
+        if (showDiscountedPrices) {
+            handler.postDelayed(updateDiscountedLabelRunnable, 60 * 1000);
         }
 
         activity.setShowingEarlyBirdDiscount(showDiscountedPrices);
@@ -688,9 +689,18 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         int min = (int) (TimeDiffSecs / 60 - hours * 60);
         String suffix= min>1?" mins":" min";
         if(min!=0)
-           return "Discount valid till "+ min + suffix;
+           return "Discount valid for next "+ min + suffix;
         else
             return "Discount valid for less than 1 min";
 
+    }
+
+    public static boolean isDiscountValid(DiscountInfo discountInfo){
+        if(discountInfo!=null && discountInfo.getIsActive() && discountInfo.getDiscountEndTime()!=null && discountInfo.getCurrentDate()!=null){
+            Date endDate = DateOperations.getDateFromString(discountInfo.getDiscountEndTime());
+            Date currentDate = DateOperations.getDateFromString(discountInfo.getCurrentDate());
+            return endDate!=null && currentDate!=null && endDate.getTime()>currentDate.getTime();
+        }
+        return false;
     }
 }

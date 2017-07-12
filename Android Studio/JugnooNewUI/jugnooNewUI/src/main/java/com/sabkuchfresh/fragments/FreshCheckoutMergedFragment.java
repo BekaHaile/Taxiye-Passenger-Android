@@ -52,6 +52,7 @@ import com.sabkuchfresh.adapters.BecomeStarAdapter;
 import com.sabkuchfresh.adapters.CheckoutChargesAdapter;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
+import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -2342,6 +2343,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             }
                                             if (userCheckoutResponse.getCoupons() != null) {
                                                 Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
+
+                                            boolean isDiscountValidCheckout = MealAdapter.isDiscountValid(userCheckoutResponse.getDiscountInfo());
+                                            if(isDiscountValidCheckout!=activity.isShowingEarlyBirdDiscount()){
+                                                DialogPopup.alertPopup(activity,"", userCheckoutResponse.getDiscountSwitchMessage(isDiscountValidCheckout));
+                                                activity.setShowingEarlyBirdDiscount(isDiscountValidCheckout);
+
                                             }
                                         } else if (type == AppConstant.ApplicationType.GROCERY) {
                                             if (Data.getGroceryData().getPromoCoupons() == null) {
