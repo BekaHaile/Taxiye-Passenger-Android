@@ -2777,7 +2777,11 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         if(Data.autoData.getEndRideData().getIsPooled() == 1){
                             ivEndRideType.setImageResource(R.drawable.ic_history_pool);
                         } else{
-                            ivEndRideType.setImageResource(R.drawable.ic_auto_grey);
+                            try{
+                                ivEndRideType.setImageResource(Data.autoData.getAssignedDriverInfo().getVehicleIconSet().getIconInvoice());
+                            } catch (Exception e){
+                                ivEndRideType.setImageResource(R.drawable.ic_auto_grey);
+                            }
                         }
 
                         linearLayoutRideSummary.setLayoutTransition(null);
