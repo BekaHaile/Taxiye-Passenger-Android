@@ -25,7 +25,7 @@ public class DatePickerFragment extends DialogFragment
 		// Use the current date as the default date in the picker
 		final Calendar c = Calendar.getInstance();
 //		if(c.get(Calendar.HOUR_OF_DAY) > 20){
-			c.add(Calendar.DAY_OF_MONTH, 1);
+			c.add(Calendar.DAY_OF_MONTH, 2);
 //		}
 
 		int year = c.get(Calendar.YEAR);

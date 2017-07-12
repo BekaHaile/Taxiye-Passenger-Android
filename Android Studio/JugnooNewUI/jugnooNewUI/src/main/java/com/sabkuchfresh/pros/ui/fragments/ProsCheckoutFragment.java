@@ -503,7 +503,7 @@ public class ProsCheckoutFragment extends Fragment {
 	}
 
 	private boolean validateDateTime(String date, String time){
-		String currentTimePlus24Hrs = DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 1);
+		String currentTimePlus24Hrs = DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 2);
 		return DateOperations.getTimeDifference(getFormattedDateTime(date, time, true), currentTimePlus24Hrs) > 0
 				&&
 				DateOperations.getTimeDifference(getFormattedDateTime(date, time, false),
