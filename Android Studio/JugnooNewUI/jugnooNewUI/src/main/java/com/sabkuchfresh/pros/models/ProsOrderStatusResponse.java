@@ -1,10 +1,14 @@
 package com.sabkuchfresh.pros.models;
 
+import android.text.TextUtils;
+import android.util.Pair;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 
 public class ProsOrderStatusResponse {
@@ -204,6 +208,21 @@ public class ProsOrderStatusResponse {
 			} else {
 				return R.color.green_status;
 			}
+		}
+
+		public Pair<String, String> getProductNameAndJobAmount(){
+			String productName = "", jobAmount = "";
+			for(ProsOrderStatusResponse.CustomField customField : getFields().getCustomField()){
+				if(customField.getLabel().equalsIgnoreCase(Constants.KEY_PRODUCT_NAME)){
+					productName = customField.getData();
+				} else if(customField.getLabel().equalsIgnoreCase(Constants.KEY_JOB_AMOUNT)
+						&& getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()){
+					if (!TextUtils.isEmpty(customField.getFleetData())) {
+						jobAmount = customField.getFleetData();
+					}
+				}
+			}
+			return new Pair<>(productName, jobAmount);
 		}
 	}
 
