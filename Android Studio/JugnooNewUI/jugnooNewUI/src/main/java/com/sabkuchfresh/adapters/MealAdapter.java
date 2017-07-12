@@ -687,11 +687,14 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         long TimeDiffSecs = (endDate.getTime()-currentTime)/1000;
         int hours = (int) (TimeDiffSecs / 3600);
         int min = (int) (TimeDiffSecs / 60 - hours * 60);
+        int secs = (int) (TimeDiffSecs % 60);
         String suffix= min>1?" mins":" min";
-        if(min!=0)
+        if(min>1)
            return "Discount valid for next "+ min + suffix;
-        else
+        else if(secs>0)
             return "Discount valid for less than 1 min";
+        else
+            return null;
 
     }
 
