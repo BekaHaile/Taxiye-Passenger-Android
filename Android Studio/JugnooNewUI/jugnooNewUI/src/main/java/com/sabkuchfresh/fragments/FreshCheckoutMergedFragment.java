@@ -2353,6 +2353,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             if(isDiscountValidCheckout!=activity.isShowingEarlyBirdDiscount()){
                                                 DialogPopup.alertPopup(activity,"", userCheckoutResponse.getDiscountSwitchMessage(isDiscountValidCheckout));
                                                 activity.setShowingEarlyBirdDiscount(isDiscountValidCheckout);
+                                                activity.setRefreshCart(true);
 
                                             }
                                         } else if (type == AppConstant.ApplicationType.GROCERY) {
