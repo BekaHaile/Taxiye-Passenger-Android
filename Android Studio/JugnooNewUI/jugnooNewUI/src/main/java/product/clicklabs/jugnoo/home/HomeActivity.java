@@ -7598,11 +7598,20 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
                 @Override
                 public void onInAppCustomerSupportClick(View view) {
-                    Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
+                    if (Data.isFuguChatEnabled()) {
+                        try {
+                            FuguConfig.getInstance().showConversations(HomeActivity.this);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
+                        }
+                    } else {
+                        Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
 //                    intent.putExtra(INTENT_KEY_FROM_BAD, 1);
-                    intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    }
                     GAUtils.event(RIDES, GAAction.HELP+POPUP, IN_APP_SUPPORT+CLICKED);
                 }
 

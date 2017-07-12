@@ -46,10 +46,10 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 		this.callback = callback;
 		this.recyclerView = recyclerView;
 		this.possibleStatus = new ArrayList<>();
-		this.possibleStatus.add("Booking Accepted");
-		this.possibleStatus.add("Pro Assigned");
-		this.possibleStatus.add("Service Started");
-		this.possibleStatus.add("Service Finished");
+		this.possibleStatus.add("Booking\nAccepted");
+		this.possibleStatus.add("Pro\nAssigned");
+		this.possibleStatus.add("Service\nStarted");
+		this.possibleStatus.add("Service\nFinished");
 	}
 
 	public synchronized void setList(List<ProsCatalogueData.ProsCatalogueDatum> elements,
