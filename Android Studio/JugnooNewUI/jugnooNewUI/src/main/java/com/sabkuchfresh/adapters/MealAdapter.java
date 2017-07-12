@@ -78,7 +78,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.possibleStatus = possibleStatus;
         this.callback = callback;
         this.discountInfo = discountInfo;
-        scheduleHandlerForUpdatingDiscountTime(true);
+        scheduleHandlerForUpdatingDiscountTime(true, true);
 
     }
 
@@ -89,7 +89,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.showBulkOrderOption = (mealsBulkBanner != null) ? mealsBulkBanner.getMealsBannerEnabled() : 0;
         this.mealsBulkBanner = mealsBulkBanner;
         this.discountInfo = discountInfo;
-        scheduleHandlerForUpdatingDiscountTime(true);
+        scheduleHandlerForUpdatingDiscountTime(true, true);
         notifyDataSetChanged();
     }
 
@@ -619,12 +619,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     private Handler handler = new Handler();
     private long currentTime;
-    private void scheduleHandlerForUpdatingDiscountTime(boolean firstTime){
+    private void scheduleHandlerForUpdatingDiscountTime(boolean firstTime, boolean scheduleClearRunnableOnEndTime){
 
 
         showDiscountedPrices = discountInfo != null && discountInfo.getIsActive()
                 && discountInfo.getDiscountEndTime() != null && discountInfo.getCurrentDate() != null;
 
+        long scheduleRunnableTime = 60 * 1000;
         if (showDiscountedPrices) {
             if (firstTime) {
                 Date currentDate = DateOperations.getDateFromString(discountInfo.getCurrentDate());
@@ -633,6 +634,9 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else {
                     showDiscountedPrices = false;
                 }
+
+
+
             } else {
                 currentTime += 60 * 1000;
             }
@@ -640,10 +644,26 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             Date endDate = DateOperations.getDateFromString(discountInfo.getDiscountEndTime());
             showDiscountedPrices = endDate != null && currentTime < endDate.getTime();
 
+            if(showDiscountedPrices && firstTime && endDate!=null && scheduleClearRunnableOnEndTime){
+                stopTimerHandler.removeCallbacksAndMessages(null);
+                stopTimerHandler.postDelayed(stopTimerRunnable,endDate.getTime()-currentTime);
+            }
+            if(showDiscountedPrices && firstTime && endDate!=null){
+                long TimeDiffSecs = (endDate.getTime()-currentTime)/1000;
+                int secs = (int) (TimeDiffSecs % 60);
+                if(secs>0){
+                    scheduleRunnableTime = secs* 1000;
+                }
+            }
+
         }
+
+
         handler.removeCallbacksAndMessages(null);
         if (showDiscountedPrices) {
-            handler.postDelayed(updateDiscountedLabelRunnable, 60 * 1000);
+
+
+            handler.postDelayed(updateDiscountedLabelRunnable, scheduleRunnableTime);
         }
 
         activity.setShowingEarlyBirdDiscount(showDiscountedPrices);
@@ -653,7 +673,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private Runnable updateDiscountedLabelRunnable = new Runnable() {
         @Override
         public void run() {
-            scheduleHandlerForUpdatingDiscountTime(false);
+            scheduleHandlerForUpdatingDiscountTime(false, false);
             notifyDataSetChanged();
 
         }
@@ -661,7 +681,16 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     public void removeScheduledHandler(){
         handler.removeCallbacksAndMessages(null);
+        stopTimerHandler.removeCallbacksAndMessages(null);
     }
+    private Handler stopTimerHandler = new Handler();
+     private Runnable stopTimerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            scheduleHandlerForUpdatingDiscountTime(false, false);
+            notifyDataSetChanged();
+        }
+    };
 
     public String getDiscountOfferDisplay(){
         if(discountInfo==null){
@@ -688,13 +717,24 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         int hours = (int) (TimeDiffSecs / 3600);
         int min = (int) (TimeDiffSecs / 60 - hours * 60);
         int secs = (int) (TimeDiffSecs % 60);
-        String suffix= min>1?" mins":" min";
-        if(min>1)
+
+        if(min>1 || (min==1 && secs>0))
+        {
+            if(secs>0)
+                min+=1;
+            String suffix= min>1?" mins":" min";
+            return "Discount valid for next "+ min + suffix;
+        } else if(secs>0){
+            return "Discount valid for less than 1 min";
+        }
+        else
+            return null;
+   /*     if(min>1)
            return "Discount valid for next "+ min + suffix;
         else if(secs>0)
             return "Discount valid for less than 1 min";
         else
-            return null;
+            return null;*/
 
     }
 

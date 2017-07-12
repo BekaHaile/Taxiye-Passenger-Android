@@ -163,9 +163,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="19px"
+                        android:layout_gravity="right"
                         android:gravity="right"
                         android:visibility="visible"
-                        android:text="jsfldsjfdsjfljsdkfjsdklfjsdfksdf"
+                        android:text="jsf"
                         android:textColor="@color/text_color_light"
                         app:font="@string/maven_r"
                         />
