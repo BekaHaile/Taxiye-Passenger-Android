@@ -1,13 +1,18 @@
 package product.clicklabs.jugnoo.retrofit.model;
 
+import android.text.TextUtils;
+import android.util.Pair;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.pros.models.ProsOrderStatus;
+import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -261,6 +266,9 @@ public class HistoryResponse {
         @SerializedName("job_delivery_datetime")
         @Expose
         private String jobDeliveryDatetime;
+        @SerializedName("fields")
+        @Expose
+        private ProsOrderStatusResponse.Fields fields;
 
 
 
@@ -933,6 +941,29 @@ public class HistoryResponse {
 
         public void setJobDeliveryDatetime(String jobDeliveryDatetime) {
             this.jobDeliveryDatetime = jobDeliveryDatetime;
+        }
+
+        public Pair<String, String> getProductNameAndJobAmount(){
+            String productName = "", jobAmount = "";
+            for(ProsOrderStatusResponse.CustomField customField : getFields().getCustomField()){
+                if(customField.getLabel().equalsIgnoreCase(Constants.KEY_PRODUCT_NAME)){
+                    productName = customField.getData();
+                } else if(customField.getLabel().equalsIgnoreCase(Constants.KEY_JOB_AMOUNT)
+                        && getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()){
+                    if (!TextUtils.isEmpty(customField.getFleetData())) {
+                        jobAmount = customField.getFleetData();
+                    }
+                }
+            }
+            return new Pair<>(productName, jobAmount);
+        }
+
+        public ProsOrderStatusResponse.Fields getFields() {
+            return fields;
+        }
+
+        public void setFields(ProsOrderStatusResponse.Fields fields) {
+            this.fields = fields;
         }
     }
 

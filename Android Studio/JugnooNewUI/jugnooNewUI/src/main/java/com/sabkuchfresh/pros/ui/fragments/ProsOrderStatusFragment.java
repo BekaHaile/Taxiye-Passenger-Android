@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -280,17 +281,12 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 		tvAmountValue.setText(R.string.upon_inspection);
 		if(orderStatusResponse != null && orderStatusResponse.getData() != null && orderStatusResponse.getData().size() > 0){
 			ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
-			for(ProsOrderStatusResponse.CustomField customField : datum.getFields().getCustomField()){
-				if(customField.getLabel().equalsIgnoreCase(Constants.KEY_PRODUCT_NAME)){
-					tvServiceType.setText(customField.getData());
-				} else if(customField.getLabel().equalsIgnoreCase(Constants.KEY_JOB_AMOUNT)
-						&& datum.getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()){
-					if (!TextUtils.isEmpty(customField.getFleetData())) {
-						tvAmountValue.setText(activity.getString(R.string.rupees_value_format, customField.getFleetData()));
-					} else {
-						tvAmountValue.setText(R.string.to_be_confirmed);
-					}
-				}
+			Pair<String, String> pair = datum.getProductNameAndJobAmount();
+			tvServiceType.setText(pair.first);
+			if (!TextUtils.isEmpty(pair.second)) {
+				tvAmountValue.setText(activity.getString(R.string.rupees_value_format, pair.second));
+			} else {
+				tvAmountValue.setText(R.string.to_be_confirmed);
 			}
 			tvOrderStatus.setText(ProsSuperCategoriesAdapter.getProsOrderState(datum.getJobStatus()).second);
 			tvOrderStatus.setTextColor(ContextCompat.getColor(activity, datum.getJobStatusColorRes()));

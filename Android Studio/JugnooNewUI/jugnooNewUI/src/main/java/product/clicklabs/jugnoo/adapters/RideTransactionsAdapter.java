@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -182,10 +184,10 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewFrom.setText(R.string.address_colon);
                 holder.textViewFromValue.setText(orderHistory.getJobAddress());
                 holder.textViewDetails.setText(R.string.details_colon);
+                Pair<String, String> pair = orderHistory.getProductNameAndJobAmount();
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormatTZ(orderHistory.getJobTime())
-                +", "+orderHistory.getJobNameSplitted());
-
-                holder.textViewAmount.setText("-");
+                +", "+pair.first);
+                holder.textViewAmount.setText(!TextUtils.isEmpty(pair.second)?pair.second:"-");
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros_grey);
 
                 holder.relativeLayoutTo.setVisibility(View.GONE);
