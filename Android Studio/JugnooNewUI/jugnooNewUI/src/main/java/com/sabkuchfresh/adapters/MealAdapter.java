@@ -633,14 +633,14 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
                 currentTime  = currentDate.getTime();
             }else{
-                currentTime = currentTime +  60*1000;
+                currentTime += 60*1000;
             }
 
             Date endDate = DateOperations.getDateFromString(discountInfo.getDiscountEndTime());
             showDiscountedPrices  = endDate!=null && currentTime < endDate.getTime();
 
         }
-        handler.removeCallbacks(null);
+        handler.removeCallbacksAndMessages(null);
         if(showDiscountedPrices){
             handler.postDelayed(updateDiscountedLabelRunnable,60 * 1000);
         }
@@ -663,26 +663,34 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
     public String getDiscountOfferDisplay(){
-        if(discountInfo==null || discountInfo.getDiscountEndTime()==null){
+        if(discountInfo==null){
+            return null;
+        }
+        if(discountInfo.getTextToDisplay()!=null && discountInfo.getTextToDisplay().trim().length()>0){
+            return discountInfo.getTextToDisplay();
+        }
+
+        if(discountInfo.getDiscountEndTime()==null){
             return null;
         }
         Date endDate = DateOperations.getDateFromString(discountInfo.getDiscountEndTime());
         if(endDate==null  || currentTime > endDate.getTime())
             return null;
 
-        if(endDate.getTime()-currentTime>30*60*1000){
+        if(endDate.getTime()-currentTime>discountInfo.getThreshHoldTime()*60*1000){
             return "Discount valid till "+ DateOperations.getAmPmFromServerDateFormat(discountInfo.getDiscountEndTime());
 
         }
 
-        SystemClock.currentThreadTimeMillis();
 
         long TimeDiffSecs = (endDate.getTime()-currentTime)/1000;
         int hours = (int) (TimeDiffSecs / 3600);
         int min = (int) (TimeDiffSecs / 60 - hours * 60);
-        String suffix= min>1?" minutes":" minute";
-        return "Discount valid till "+ min + suffix;
-
+        String suffix= min>1?" mins":" min";
+        if(min!=0)
+           return "Discount valid till "+ min + suffix;
+        else
+            return "Discount valid for less than 1 min";
 
     }
 }

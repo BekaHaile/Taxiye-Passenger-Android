@@ -28,6 +28,8 @@ public  class DiscountInfo {
     @SerializedName("current_time_stamp")
     private String currentTimeStamp;
 
+    @SerializedName("threshold_time")
+    private Double threshHoldTime;
 
     public String getDiscountStartTime() {
         return discountStartTime;
@@ -51,5 +53,15 @@ public  class DiscountInfo {
 
     public String getCurrentDate() {
         return currentTimeStamp;
+    }
+
+    /**
+     *
+     * @return Time in mins to show counter
+     */
+    public Double getThreshHoldTime() {
+        if(threshHoldTime==null)
+            return  60.0;
+        return threshHoldTime;
     }
 }
