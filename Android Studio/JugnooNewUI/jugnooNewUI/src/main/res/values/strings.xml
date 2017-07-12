@@ -1341,6 +1341,7 @@
     <string name="type_service_address">Type Service Address</string>
     <string name="order_status_colon">Order Status:</string>
     <string name="order_id_colon">Order Id:</string>
+    <string name="visiting_charges_may_apply">*Service rate will be determined after inspection. Minimum  visiting charges may apply.</string>
 
 
 </resources>
