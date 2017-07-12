@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
+import com.sabkuchfresh.pros.ui.adapters.ProsCatalogueAdapter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -194,7 +194,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
             else if(orderHistory.getProductType() == ProductType.PROS.getOrdinal()){
                 holder.textViewStatus.setText(R.string.order_status_colon);
-                holder.textViewStatusValue.setText(ProsSuperCategoriesAdapter.getProsOrderState(orderHistory.getJobStatus()).second);
+                holder.textViewStatusValue.setText(ProsCatalogueAdapter.getProsOrderState(orderHistory.getJobStatus()).second);
                 try{
                     holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
                 } catch (Exception e){

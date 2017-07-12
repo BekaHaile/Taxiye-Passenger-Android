@@ -24,7 +24,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.models.ProsOrderStatus;
 import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
-import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
+import com.sabkuchfresh.pros.ui.adapters.ProsCatalogueAdapter;
 
 import java.util.HashMap;
 
@@ -288,7 +288,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 			} else {
 				tvAmountValue.setText(R.string.to_be_confirmed);
 			}
-			tvOrderStatus.setText(ProsSuperCategoriesAdapter.getProsOrderState(datum.getJobStatus()).second);
+			tvOrderStatus.setText(ProsCatalogueAdapter.getProsOrderState(datum.getJobStatus()).second);
 			tvOrderStatus.setTextColor(ContextCompat.getColor(activity, datum.getJobStatusColorRes()));
 
 			tvServiceTime.setText(DateOperations.convertDateTimeUSToInd(datum.getJobPickupDatetime().replace("\\", "")));

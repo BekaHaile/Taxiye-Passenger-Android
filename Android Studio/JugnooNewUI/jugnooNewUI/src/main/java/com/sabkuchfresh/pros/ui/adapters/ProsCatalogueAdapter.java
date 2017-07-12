@@ -30,7 +30,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
  * Created by shankar on 1/20/17.
  */
 
-public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
+public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
 	private Context context;
 	private List<ProsCatalogueData.ProsCatalogueDatum> prosCatalogueDatumList;
@@ -41,7 +41,7 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 	public static final int ORDER_ITEM = 2;
 	private RecyclerView recyclerView;
 
-	public ProsSuperCategoriesAdapter(Context context, Callback callback, RecyclerView recyclerView) {
+	public ProsCatalogueAdapter(Context context, Callback callback, RecyclerView recyclerView) {
 		this.context = context;
 		this.callback = callback;
 		this.recyclerView = recyclerView;
@@ -344,11 +344,11 @@ public class ProsSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVie
 	public static Pair<Integer, String> getProsOrderState(int status){
 		String statusName = "";
 		if(status == ProsOrderStatus.UNASSIGNED.getOrdinal()
-				|| status == ProsOrderStatus.DECLINE.getOrdinal()){
+				|| status == ProsOrderStatus.DECLINE.getOrdinal()
+				|| status == ProsOrderStatus.UPCOMING.getOrdinal()){
 			status = 0;
 			statusName = "Booking Accepted";
-		} else if(status == ProsOrderStatus.UPCOMING.getOrdinal()
-				|| status == ProsOrderStatus.ACCEPTED.getOrdinal()){
+		} else if(status == ProsOrderStatus.ACCEPTED.getOrdinal()){
 			status = 1;
 			statusName = "Pro Assigned";
 		} else if(status == ProsOrderStatus.STARTED.getOrdinal()
