@@ -571,6 +571,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							int campaignId = jObj.optInt(Constants.KEY_CAMPAIGN_ID, 0);
 							int postId = jObj.optInt(Constants.KEY_POST_ID, -1);
 							int postNotificationId = jObj.optInt(Constants.KEY_NOTIFICATION_ID, -1);
+							int jobId = jObj.optInt(Constants.KEY_JOB_ID, -1);
 
 							if(Data.activityResumed && deepindex == AppLinkIndex.FEED_PAGE.getOrdinal() && postId > 0){
 								return;
@@ -622,6 +623,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 								broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
 								broadcastIntent.putExtra(Constants.KEY_RESTAURANT_ID, restaurantId);
 								broadcastIntent.putExtra(Constants.KEY_FEEDBACK_ID, feedbackId);
+							}
+							else if (deepindex == AppLinkIndex.PROS_PAGE.getOrdinal() && jobId > 0){
+								broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
+								broadcastIntent.putExtra(Constants.KEY_JOB_ID, jobId);
 							}
 							else if("".equalsIgnoreCase(url)){
 								deepindex = showDialog == 1 ? -1 : deepindex;

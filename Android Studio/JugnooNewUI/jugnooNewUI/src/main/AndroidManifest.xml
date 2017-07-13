@@ -208,7 +208,7 @@
             android:name=".RideTransactionsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme" />
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".RideCancellationActivity"
             android:label="@string/app_name"
@@ -481,11 +481,11 @@
             android:name=".tutorials.NewUserFlow"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-        <!--<activity-->
-            <!--android:name="com.sabkuchfresh.home.TrackOrderActivity"-->
-            <!--android:label="@string/app_name"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@style/TransparentTheme"/>-->
+        <!-- <activity -->
+        <!-- android:name="com.sabkuchfresh.home.TrackOrderActivity" -->
+        <!-- android:label="@string/app_name" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:theme="@style/TransparentTheme"/> -->
         <activity
             android:name="com.picker.image.ui.PickerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -516,9 +516,8 @@
         <service
             android:name="com.sabkuchfresh.home.RazorpayCallbackService"
             android:enabled="true"/>
-
         <service
-            android:name="product.clicklabs.jugnoo.DeleteCacheIntentService"
+            android:name=".DeleteCacheIntentService"
             android:enabled="true"/>
 
     </application>

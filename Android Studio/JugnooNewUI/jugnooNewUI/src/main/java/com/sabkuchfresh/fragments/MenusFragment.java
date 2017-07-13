@@ -497,7 +497,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void onDismiss() {
                 //activity.orderComplete();
             }
-        }).show();
+        }).showNoDeliveryDialog();
 
     }
 

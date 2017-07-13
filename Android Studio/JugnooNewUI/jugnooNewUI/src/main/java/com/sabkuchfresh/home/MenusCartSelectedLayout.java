@@ -25,11 +25,12 @@ public class MenusCartSelectedLayout {
 		return rlMenusCartSelectedInner;
 	}
 
-	public MenusCartSelectedLayout(FreshActivity activity){
+	public MenusCartSelectedLayout(FreshActivity activity, View root){
 		this.activity = activity;
+		init(root);
 	}
 
-	public void init(View root){
+	private void init(View root){
 		rlMenusCartSelected = (RelativeLayout) root;
 		rlMenusCartSelected.setVisibility(View.GONE);
 		rlMenusCartSelectedInner = (RelativeLayout) root.findViewById(R.id.rlMenusCartSelectedInner);

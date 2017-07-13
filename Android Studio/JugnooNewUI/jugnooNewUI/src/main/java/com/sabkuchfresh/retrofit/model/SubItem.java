@@ -3,10 +3,12 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by shankar on 4/6/16.
  */
-public class SubItem {
+public class SubItem implements Serializable{
     @SerializedName("delivery_time_text")
     @Expose
     private String deliveryTimeText;
@@ -25,6 +27,10 @@ public class SubItem {
     @SerializedName("price")
     @Expose
     private Double price;
+
+    @SerializedName("actual_price")
+    @Expose
+    private Double actualPrice;
     @SerializedName("old_price")
     @Expose
     private String oldPrice;
@@ -85,6 +91,10 @@ public class SubItem {
     @SerializedName("earliest_delivery_message")
     @Expose
     private String earliestDeliveryMessage;
+
+
+
+
 
     /**
      *
@@ -523,5 +533,9 @@ public class SubItem {
 
     public void setEarliestDeliveryMessage(String earliestDeliveryMessage) {
         this.earliestDeliveryMessage = earliestDeliveryMessage;
+    }
+
+    public Double getActualPrice() {
+        return actualPrice;
     }
 }

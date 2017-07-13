@@ -74,7 +74,12 @@ public class UserCheckoutResponse{
 	@SerializedName("taxes")
 	@Expose
 	private List<Tax> taxes;
-
+	@SerializedName("discount_info")
+	private DiscountInfo discountInfo;
+	@SerializedName("text_early_bird_discount_enabled")
+	private String  mealsDiscountEnabled;
+	@SerializedName("text_early_bird_discount_disabled")
+	private String mealsDiscountDisabled;
 	/**
 	 *
 	 * @return
@@ -270,6 +275,14 @@ public class UserCheckoutResponse{
 			}
 		}
 		return totalTax;
+	}
+
+	public DiscountInfo getDiscountInfo() {
+		return discountInfo;
+	}
+
+	public String getDiscountSwitchMessage(boolean isDiscountEnabled) {
+		return isDiscountEnabled?mealsDiscountDisabled:mealsDiscountDisabled;
 	}
 
 	public class PaymentInfo{

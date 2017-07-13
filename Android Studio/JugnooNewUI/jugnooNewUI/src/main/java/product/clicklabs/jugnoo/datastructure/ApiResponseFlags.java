@@ -91,9 +91,7 @@ public enum ApiResponseFlags {
 
 	INVALID_DELIVERY_SLOT(604),
 	FRESH_NOT_AVAILABLE(606),
-
-
-	;
+	MEALS_PRICE_MISMATCH(787);
 
 	private int ordinal;
 

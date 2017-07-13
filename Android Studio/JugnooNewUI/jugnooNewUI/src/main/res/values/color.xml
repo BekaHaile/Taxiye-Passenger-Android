@@ -67,10 +67,10 @@
 
 
     <color name="yellow_jugnoo">#FAA31C</color>
-    <color name="yellow_jugnoo_alpha">#8CFAA31C</color>
 
 
     <color name="red_status">#F53C37</color>
+    <color name="green_status">#2EA058</color>
 
 
     <color name="red">#F23A30</color>
@@ -225,6 +225,8 @@
 
     <color name="grey_feed_fab">#7194d2</color>
     <color name="grey_feed_fab_pressed">#6187cb</color>
+    <color name="orange_pros_fab">#fa9b22</color>
+    <color name="orange_pros_fab_pressed">#ea8b12</color>
     <color name="blue_selection_color">#667194d2</color>
 
 
@@ -244,7 +246,6 @@
     <color name="feed_grey_border">#CCcdcdcd</color>
     <color name="feed_red">#d0021b</color>
     <color name="feed_comment_background">#fafafa</color>
-    <color name="geed_grey_text_secondary">#9c9cb5</color>
 
 
     <color name="feed_disabled_grey">#f7f7f7</color>

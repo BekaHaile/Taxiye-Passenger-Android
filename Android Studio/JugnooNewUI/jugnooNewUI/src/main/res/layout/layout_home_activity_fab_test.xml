@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/relativeLayoutFABTest"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/transparent"
-    android:splitMotionEvents="false"
-    android:visibility="visible">
+<RelativeLayout android:id="@+id/relativeLayoutFABTest"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:splitMotionEvents="false"
+                android:visibility="visible">
 
     <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu
         android:id="@+id/menu_labels_right_Test"
@@ -30,19 +30,34 @@
         fab:menu_shadowColor="@color/black_50">
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
+            android:id="@+id/fabProsTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_pros"
+            android:tag="DontTouchMe"
+            fab:fab_colorNormal="@color/orange_pros_fab"
+            fab:fab_colorPressed="@color/orange_pros_fab_pressed"
+            fab:fab_colorRipple="@color/orange_pros_fab_pressed"
+            fab:fab_label="@string/pros"
+            fab:fab_shadowColor="@color/black_50"
+            fab:fab_shadowXOffset="1dp"
+            fab:fab_shadowYOffset="2dp"
+            fab:fab_size="mini"/>
+
+        <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabFeedTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_ask"
-            fab:fab_size="mini"
-            fab:fab_shadowXOffset="1dp"
-            fab:fab_shadowYOffset="2dp"
-            fab:fab_shadowColor="@color/black_50"
+            android:tag="DontTouchMe"
             fab:fab_colorNormal="@color/grey_feed_fab"
             fab:fab_colorPressed="@color/grey_feed_fab_pressed"
             fab:fab_colorRipple="@color/grey_feed_fab_pressed"
-            android:tag="DontTouchMe"
-            fab:fab_label="AskLocal"/>
+            fab:fab_label="AskLocal"
+            fab:fab_shadowColor="@color/black_50"
+            fab:fab_shadowXOffset="1dp"
+            fab:fab_shadowYOffset="2dp"
+            fab:fab_size="mini"/>
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabPayTest"
@@ -57,7 +72,7 @@
             fab:fab_shadowColor="@color/black_50"
             fab:fab_shadowXOffset="1dp"
             fab:fab_shadowYOffset="2dp"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"/>
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabMenusTest"
@@ -72,7 +87,7 @@
             fab:fab_shadowColor="@color/black_50"
             fab:fab_shadowXOffset="1dp"
             fab:fab_shadowYOffset="2dp"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"/>
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabFreshTest"
@@ -87,7 +102,7 @@
             fab:fab_shadowColor="@color/black_50"
             fab:fab_shadowXOffset="1dp"
             fab:fab_shadowYOffset="2dp"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"/>
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabMealsTest"
@@ -102,7 +117,7 @@
             fab:fab_shadowColor="@color/black_50"
             fab:fab_shadowXOffset="1dp"
             fab:fab_shadowYOffset="2dp"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"/>
 
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
@@ -118,7 +133,7 @@
             fab:fab_shadowColor="@color/black_50"
             fab:fab_shadowXOffset="1dp"
             fab:fab_shadowYOffset="2dp"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"/>
 
 
     </product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu>
@@ -140,7 +155,7 @@
             android:layout_marginLeft="60px"
             android:background="@drawable/triangle_help_text"
             android:rotation="180"
-            android:tag="mwar" />
+            android:tag="mwar"/>
 
         <TextView
             android:id="@+id/tvGenieHelp"
@@ -151,7 +166,7 @@
             android:text="Explore more from Jugnoo"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_30"
-            app:font="maven" />
+            app:font="maven"/>
     </RelativeLayout>
 
     <ImageView
@@ -162,23 +177,23 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/px_40"
         android:src="@drawable/bg_jeanie_help"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 
     <TextView
         android:id="@+id/tvGenieExpandMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="40px"
         android:layout_marginRight="40px"
         android:layout_marginTop="100px"
+        android:gravity="center"
         android:text="What would you like to\ndo today?"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_50"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        app:font="maven"
         android:visibility="gone"
+        app:font="maven"
         />
 
 

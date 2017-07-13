@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/llRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_delivery_address_bar"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvProsMain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:fadeScrollbars="true"
+                android:paddingBottom="@dimen/dp_120"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_7"
+                android:background="@drawable/shadow_down_new"/>
+
+            <include layout="@layout/layout_offering_not_available"/>
+
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</LinearLayout>

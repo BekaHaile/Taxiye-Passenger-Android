@@ -28,6 +28,11 @@ import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
+import com.sabkuchfresh.pros.models.ProsCatalogueData;
+import com.sabkuchfresh.pros.models.ProsProductData;
+import com.sabkuchfresh.pros.ui.fragments.ProsCheckoutFragment;
+import com.sabkuchfresh.pros.ui.fragments.ProsOrderStatusFragment;
+import com.sabkuchfresh.pros.ui.fragments.ProsProductsFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -425,6 +430,42 @@ public class TransactionUtils {
                     .add(relativeLayoutContainer.getId(), MealsBulkOrderFragment.newInstance(url),
                             MealsBulkOrderFragment.class.getName())
                     .addToBackStack(MealsBulkOrderFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void addProsProductsFragment(FragmentActivity activity, View container, ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum) {
+        if (!checkIfFragmentAdded(activity, ProsProductsFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .add(container.getId(), ProsProductsFragment.newInstance(prosCatalogueDatum),
+                            ProsProductsFragment.class.getName())
+                    .addToBackStack(ProsProductsFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void addProsCheckoutFragment(FragmentActivity activity, View container, ProsProductData.ProsProductDatum prosProductDatum) {
+        if (!checkIfFragmentAdded(activity, ProsCheckoutFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .add(container.getId(), ProsCheckoutFragment.newInstance(prosProductDatum),
+                            ProsCheckoutFragment.class.getName())
+                    .addToBackStack(ProsCheckoutFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void addProsOrderStatusFragment(FragmentActivity activity, View container, int jobId) {
+        if (!checkIfFragmentAdded(activity, ProsOrderStatusFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .add(container.getId(), ProsOrderStatusFragment.newInstance(jobId),
+                            ProsOrderStatusFragment.class.getName())
+                    .addToBackStack(ProsOrderStatusFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

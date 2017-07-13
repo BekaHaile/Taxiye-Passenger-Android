@@ -134,6 +134,16 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 											-1, historyData.getOrderId(), null, null, 0, false, 0,
 											historyData, -1, -1, "");
 								}
+							} else if(historyData.getProductType() == ProductType.PROS.getOrdinal()){
+								View container = null;
+								if (activity instanceof RideTransactionsActivity) {
+									container = ((RideTransactionsActivity) activity).getContainer();
+								} else if(activity instanceof SupportActivity) {
+									container = ((SupportActivity) activity).getContainer();
+								}
+								if(container != null) {
+									new com.sabkuchfresh.home.TransactionUtils().addProsOrderStatusFragment(activity, container, historyData.getJobId());
+								}
 							}
 
 						} catch (Exception e) {
@@ -219,6 +229,7 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_START_FROM, "" + (refresh ? 0 : rideInfosList.size()));
+				params.put(Constants.SHOW_CUSTOM_FIELDS, "1");
 
 				new HomeUtil().putDefaultParams(params);
 				RestClient.getApiService().getRecentRides(params, new Callback<HistoryResponse>() {

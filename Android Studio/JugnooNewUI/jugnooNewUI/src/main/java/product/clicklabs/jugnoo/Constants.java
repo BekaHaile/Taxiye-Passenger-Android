@@ -438,6 +438,7 @@ public interface Constants {
     String KEY_MENUS = "menus";
     String KEY_PAY = "pay";
     String KEY_FEED = "feed";
+    String KEY_PROS = "pros";
 
     String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
     String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
@@ -458,6 +459,7 @@ public interface Constants {
     String KEY_MENUS_ENABLED = "menus_enabled";
     String KEY_PAY_ENABLED = "pay_enabled";
     String KEY_FEED_ENABLED = "feed_enabled";
+    String KEY_PROS_ENABLED = "pros_enabled";
     String KEY_DELIVERY_ENABLED = "delivery_enabled";
     String KEY_ORDER_HISTORY = "order_history";
     String INTENT_KEY_FROM_BAD = "FromBad";
@@ -723,4 +725,30 @@ public interface Constants {
     String KEY_VENDOR = "vendor";
 
     String SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK = "sp_restaurant_feedback_id_to_deep_link";
+    String KEY_SUB_ITEM = "sub_item";
+
+    String KEY_FORM_ID = "form_id";
+    String KEY_APP_ACCESS_TOKEN = "app_access_token";
+    String KEY_APP_DEVICE_TYPE = "app_device_type";
+    String KEY_CATALOGUE_DATUM = "catalogue_datum";
+    String KEY_PARENT_CATEGORY_ID = "parent_category_id";
+    String KEY_PRODUCT_DATUM = "product_datum";
+    String KEY_CUSTOMER_ADDRESS = "customer_address";
+    String KEY_CUSTOMER_EMAIL = "customer_email";
+    String KEY_CUSTOMER_USERNAME = "customer_username";
+    String KEY_CUSTOMER_PHONE = "customer_phone";
+    String KEY_JOB_DESCRIPTION = "job_description";
+    String KEY_JOB_PICKUP_DATETIME = "job_pickup_datetime";
+    String KEY_JOB_DELIVERY_DATETIME = "job_delivery_datetime";
+    String KEY_TIMEZONE = "timezone";
+    String KEY_CUSTOM_FIELD_TEMPLATE = "custom_field_template";
+    String KEY_META_DATA = "meta_data";
+    String KEY_LABEL = "label";
+    String KEY_JUGNOO_PROS = "jugnoo_pros";
+    String KEY_PRODUCT_ID = "product_id";
+    String KEY_PRODUCT_NAME = "product_name";
+    String KEY_JOB_ID = "job_id";
+    String KEY_JOB_AMOUNT = "job_amount";
+    String SPLITTER_PRODUCT_NAME_DESCRIPTION = ": ";
+    String SHOW_CUSTOM_FIELDS = "show_custom_fields";
 }

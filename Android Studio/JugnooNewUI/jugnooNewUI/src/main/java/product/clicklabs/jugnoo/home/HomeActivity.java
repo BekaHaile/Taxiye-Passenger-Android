@@ -67,6 +67,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
+import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
 import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
@@ -119,7 +120,6 @@ import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
-import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -1584,13 +1584,22 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
 							rating, "", "");
-                    Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
-                    intent.putExtra(INTENT_KEY_FROM_BAD, 1);
-                    intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
-                    intent.putExtra(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    GAUtils.event(RIDES, RIDE+FINISHED, THUMB_DOWN+CLICKED);
+                    if (Data.isFuguChatEnabled()) {
+                        try {
+                            FuguConfig.getInstance().showConversations(HomeActivity.this);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
+                        }
+                    } else {
+                        Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
+                        intent.putExtra(INTENT_KEY_FROM_BAD, 1);
+                        intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
+                        intent.putExtra(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        GAUtils.event(RIDES, RIDE + FINISHED, THUMB_DOWN + CLICKED);
+                    }
                     //imageViewThumbsUp.clearAnimation();
                     //imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
                     //textViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
@@ -2768,7 +2777,11 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         if(Data.autoData.getEndRideData().getIsPooled() == 1){
                             ivEndRideType.setImageResource(R.drawable.ic_history_pool);
                         } else{
-                            ivEndRideType.setImageResource(R.drawable.ic_auto_grey);
+                            try{
+                                ivEndRideType.setImageResource(Data.autoData.getAssignedDriverInfo().getVehicleIconSet().getIconInvoice());
+                            } catch (Exception e){
+                                ivEndRideType.setImageResource(R.drawable.ic_auto_grey);
+                            }
                         }
 
                         linearLayoutRideSummary.setLayoutTransition(null);
@@ -4046,6 +4059,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 dataFoundNull = true;
             } else if(clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.getFeedData() == null){
                 dataFoundNull = true;
+            } else if(clientId.equalsIgnoreCase(Config.getProsClientId()) && Data.getProsData() == null){
+                dataFoundNull = true;
             }
             if(dataFoundNull) {
                 activity.startActivity(new Intent(activity, SplashNewActivity.class));
@@ -4949,7 +4964,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) &&
                         (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
                         && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
-                        && (Data.userData.getFeedEnabled() == 0)) {
+                        && (Data.userData.getFeedEnabled() == 0)
+                        && Data.userData.getProsEnabled() == 0) {
                     //imageViewFabFake.setVisibility(View.GONE);
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 } else {
@@ -7582,11 +7598,20 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
                 @Override
                 public void onInAppCustomerSupportClick(View view) {
-                    Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
+                    if (Data.isFuguChatEnabled()) {
+                        try {
+                            FuguConfig.getInstance().showConversations(HomeActivity.this);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
+                        }
+                    } else {
+                        Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
 //                    intent.putExtra(INTENT_KEY_FROM_BAD, 1);
-                    intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    }
                     GAUtils.event(RIDES, GAAction.HELP+POPUP, IN_APP_SUPPORT+CLICKED);
                 }
 

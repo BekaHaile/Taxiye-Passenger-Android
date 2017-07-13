@@ -62,6 +62,16 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		this.subscription = subscription;
 		notifyDataSetChanged();
 	}
+	public  void resetPrices() {
+		if (subItems!=null && subItems.size()>0) {
+			for(SubItem item:subItems){
+                if(item.getActualPrice()!=null)
+                    item.setPrice(item.getActualPrice());
+
+            }
+			notifyDataSetChanged();
+		}
+	}
 
 	@Override
 	public int getCount() {

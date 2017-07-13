@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/llRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_110"
+    android:background="@color/rank_3"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dp_1"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/ivSuperCategoryImage"
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_fresh_new_placeholder"
+                />
+
+
+            <TextView
+                android:id="@+id/tvSuperCategoryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivSuperCategoryImage"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:padding="@dimen/dp_5"
+                android:text="Home services and Repairs"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_11"
+                app:font="@string/maven"
+                />
+
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/viewBG"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/bg_transparent_white_60_selector"/>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

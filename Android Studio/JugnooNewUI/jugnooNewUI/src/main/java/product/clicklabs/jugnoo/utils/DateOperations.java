@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -16,6 +17,34 @@ import java.util.TimeZone;
  */
 @SuppressLint("SimpleDateFormat")
 public class DateOperations {
+
+	private static Calendar indianTimeCalendar = Calendar.getInstance();
+	private static final DateFormat FORMAT_UTC = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+	/*private static final DateFormat FORMAT_UTC_LOCAL = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+
+	static {
+		FORMAT_UTC_LOCAL.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+	}
+	public static Calendar getIndianTimeCalendar(){
+		indianTimeCalendar = Calendar.getInstance();
+		indianTimeCalendar.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+		indianTimeCalendar.setTimeInMillis(System.currentTimeMillis());
+		return indianTimeCalendar;
+
+	}*/
+
+
+
+	public static Date getDateFromString(String dfWithTimeZone)  {
+		try {
+			return FORMAT_UTC.parse(dfWithTimeZone);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
 
 	public DateOperations(){
 		
@@ -166,6 +195,20 @@ public class DateOperations {
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
 		try {
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return convertDate(dateTime);
+		}
+	}
+
+	public static String convertDateViaFormatTZ(String dateTime) {
+
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+		try {
+			dateTime = dateTime.replace("T", " ").split("\\.")[0];
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
 		} catch (Exception e1) {
@@ -512,6 +555,21 @@ public class DateOperations {
 		}
 	}
 
+public static String getAmPmFromServerDateFormat(String dateTime) {
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("h:mm a");
+		try {
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return dateTime;
+		}
+	}
+
+
+
+
 	public static long getTimeDifferenceInHHmmss(String time1, String time2){
 		try {
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
@@ -536,5 +594,67 @@ public class DateOperations {
 		long minSec = ((long)calendar.get(Calendar.MINUTE)) * 60l;
 		return hrSec + minSec + ((long)calendar.get(Calendar.SECOND));
 	}
+
+	public static String getDateFormatted(String dateYYYYMMDD) {
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy");
+		try {
+			Date myDate = sdfFrom.parse(dateYYYYMMDD);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return dateYYYYMMDD;
+		}
+	}
+
+	public static String addCalendarFieldValueToDateTime(String dateTime, int addition, int calendarField){
+		try{
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date1 = format.parse(dateTime);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date1);
+			calendar.add(calendarField, addition);
+			return format.format(calendar.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dateTime;
+		}
+	}
+
+	public static int getTimezoneDiffWithUTC(){
+		TimeZone tz = TimeZone.getDefault();
+		Date now = new Date();
+		return tz.getOffset(now.getTime()) / 60000;
+	}
+
+	public static String convertDateTimeUSToInd(String dateTime) {
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+		try {
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return dateTime;
+		}
+	}
+
+	public static String getDaysAheadTime(String dateTime, int additionOfDays){
+		try{
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date1 = format.parse(dateTime);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date1);
+			calendar.add(Calendar.DAY_OF_MONTH, additionOfDays);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+
+			return format.format(calendar.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dateTime;
+		}
+	}
+
 
 }

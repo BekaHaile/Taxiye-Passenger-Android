@@ -26,6 +26,7 @@ import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.retrofit.model.DiscountInfo;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -127,7 +128,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
 
-        mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
+        mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this,null );
 
         recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
         recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
@@ -274,7 +275,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             public void onDismiss() {
                 //activity.orderComplete();
             }
-        }).show();
+        }).showNoDeliveryDialog();
 
     }
 
@@ -301,6 +302,9 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onDestroyView();
         if(activity.textViewMinOrder!=null) {
             activity.textViewMinOrder.setOnClickListener(null);
+        }
+        if(getMealAdapter()!=null){
+            getMealAdapter().removeScheduledHandler();
         }
     }
 
@@ -394,10 +398,10 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     if (activity.mealSort == -1) {
                                         slots.get(sortedBy).setCheck(true);
                                         activity.mealSort = sortedBy;
-                                        mealAdapter.setList(mealsData, recentOrder, status, mealsBulkBanner);
+                                        mealAdapter.setList(mealsData, recentOrder, status, mealsBulkBanner,productsResponse.getDiscountInfo() );
                                     } else {
                                         slots.get(activity.mealSort).setCheck(true);
-                                        onSortEvent(activity.mealSort);
+                                        onSortEvent(activity.mealSort,productsResponse.getDiscountInfo() );
                                     }
 
 
@@ -531,7 +535,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mealAdapter.notifyDataSetChanged();
     }
 
-    public void onSortEvent(int position) {
+    public void onSortEvent(int position, DiscountInfo discountInfo) {
         switch (position) {
             case 0:
                 Collections.sort(mealsData, new SubItemCompareAtoZ());
@@ -552,7 +556,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 Collections.sort(mealsData, new SubItemComparePriceHighToLow());
                 break;
         }
-        mealAdapter.setList(mealsData, recentOrder, status, mealsBulkBanner);
+        mealAdapter.setList(mealsData, recentOrder, status, mealsBulkBanner,discountInfo);
     }
 
     public MealAdapter getMealAdapter(){
