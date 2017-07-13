@@ -47,7 +47,6 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 	RelativeLayout rlPros;
 	public RelativeLayout rlFilter;
 	ImageView ivRidesRadio, ivMealsRadio, ivFreshRadio, ivMenusRadio, ivProsRadio, ivFilterApplied;
-	// TODO: 02/07/17 enable pros layout on pros launch
 
 	ArrayList<Integer> productTypedFiltered = new ArrayList<>();
 	boolean filtersChanged;
@@ -259,7 +258,7 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 					productType = ProductType.MENUS.getOrdinal();
 					break;
 				case R.id.rlPros:
-					// TODO: 02/07/17 hidden productType = ProductType.PROS.getOrdinal();
+					productType = ProductType.PROS.getOrdinal();
 					break;
 			}
 
@@ -278,7 +277,7 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 		ivMealsRadio.setImageResource(productTypedFiltered.contains(ProductType.MEALS.getOrdinal()) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 		ivFreshRadio.setImageResource(productTypedFiltered.contains(ProductType.FRESH.getOrdinal()) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 		ivMenusRadio.setImageResource(productTypedFiltered.contains(ProductType.MENUS.getOrdinal()) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
-		// TODO: 02/07/17 hidden ivProsRadio.setImageResource(productTypedFiltered.contains(ProductType.PROS.getOrdinal()) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
+		ivProsRadio.setImageResource(productTypedFiltered.contains(ProductType.PROS.getOrdinal()) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 		filtersChanged = true;
 		ivFilterApplied.setVisibility(productTypedFiltered.size() > 0 ? View.VISIBLE : View.GONE);
 	}
