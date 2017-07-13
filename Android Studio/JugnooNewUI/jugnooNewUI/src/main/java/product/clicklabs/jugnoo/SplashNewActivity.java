@@ -222,6 +222,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	private int nextPermissionsRequestCode = 4000;
 	private final Map<Integer, OnCompleteListener> permissionsListeners = new HashMap<>();
 	private FBAccountKit fbAccountKit;
+	private int loginChannel = 1;
+	private EditText editTextPhoneNumber;
 
 	@Override
 	protected void onStop() {
@@ -469,6 +471,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
 			adapter.setDropDownViewResource(R.layout.dropdown_textview);
 
+			editTextPhoneNumber = (EditText) findViewById(R.id.editTextPhoneNumber);
+
 			llContainer = (LinearLayout) findViewById(R.id.llContainer);
 			linearLayoutLogin = (RelativeLayout) findViewById(R.id.linearLayoutLogin);
 			editTextEmail = (AutoCompleteTextView) findViewById(R.id.editTextEmail);
@@ -698,14 +702,33 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			btnPhoneLogin.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
-					intent.putExtra("show_timer", 0);
-					intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
-					intent.putExtra("signup_by", signUpBy);
-					intent.putExtra("email", editTextEmail.getText().toString().trim());
-					intent.putExtra("otp_length", "4");
-					startActivity(intent);
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextPhoneNumber);
+					String phoneNumber = editTextPhoneNumber.getText().toString().trim();
+					if ("".equalsIgnoreCase(phoneNumber)) {
+						editTextPhoneNumber.requestFocus();
+						editTextPhoneNumber.setError(getResources().getString(R.string.nl_login_phone_empty_error));
+					} else{
+						boolean onlyDigits = Utils.checkIfOnlyDigits(phoneNumber);
+						if (onlyDigits) {
+							phoneNumber = Utils.retrievePhoneNumberTenChars(phoneNumber);
+							if (!Utils.validPhoneNumber(phoneNumber)) {
+								editTextPhoneNumber.requestFocus();
+								editTextPhoneNumber.setError(getResources().getString(R.string.invalid_phone_error));
+							} else {
+								phoneNumber = "+91" + phoneNumber;
+								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber);
+							}
+						}
+					}
+
+//					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
+//					intent.putExtra("show_timer", 0);
+//					intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
+//					intent.putExtra("signup_by", signUpBy);
+//					intent.putExtra("email", editTextEmail.getText().toString().trim());
+//					intent.putExtra("otp_length", "4");
+//					startActivity(intent);
+//					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
 			});
 
@@ -806,8 +829,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			rlMobileNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-//					fbAccountKit.startFbAccountKit(null);
-					changeUIState(State.SPLASH_LOGIN_PHONE_NO);
+					if(loginChannel == 1){
+						changeUIState(State.SPLASH_LOGIN_PHONE_NO);
+					} else {
+						fbAccountKit.startFbAccountKit(null);
+					}
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});
@@ -2251,6 +2277,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_unchecked);
 						}
 
+						//"login_channel": 0 //0-Default fbAccountKit, 1-Inhouse apis
+						loginChannel = jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 1);
+
 					}catch (Exception e){
 						e.printStackTrace();
 					}
@@ -2821,7 +2850,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									//intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
 									intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
 									intent.putExtra("signup_by", signUpBy);
-									intent.putExtra("email", editTextEmail.getText().toString().trim());
+									intent.putExtra("email", phoneNumber);
 									intent.putExtra("otp_length", jObj.optString("otp_length", String.valueOf(4)));
 									startActivity(intent);
 									finish();

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rlPhoneLogin"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:visibility="gone"
-    android:background="@color/white">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rlPhoneLogin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                android:background="@color/white">
 
     <ImageView
         android:layout_width="match_parent"
@@ -37,8 +38,8 @@
             android:src="@drawable/ic_phone"
             android:tag="mhar" />
 
-        <AutoCompleteTextView
-            android:id="@+id/editTextEmail"
+        <EditText
+            android:id="@+id/editTextPhoneNumber"
             android:layout_width="match_parent"
             android:layout_height="88px"
             android:layout_centerVertical="true"
@@ -58,7 +59,9 @@
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
             android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_size_34" />
+            android:textSize="@dimen/text_size_34"
+            app:font="@string/maven"
+            />
 
         <TextView
             android:id="@+id/textViewEmailRequired"
@@ -69,7 +72,8 @@
             android:layout_marginRight="30px"
             android:text="@string/nl_splash_required"
             android:textColor="@color/text_color_hint"
-            android:textSize="@dimen/text_size_22" />
+            android:textSize="@dimen/text_size_22"
+            app:font="@string/maven" />
 
 
 
@@ -92,7 +96,10 @@
         android:layout_marginTop="@dimen/px_50"
         android:layout_below="@+id/rlPhone"
         android:text="@string/continue_text"
+        android:textSize="@dimen/px_30"
         android:textColor="@color/white"
+        android:textAllCaps="true"
+        app:font="@string/maven"
         android:background="@drawable/capsule_theme_login_selector"/>
 
     <ImageView

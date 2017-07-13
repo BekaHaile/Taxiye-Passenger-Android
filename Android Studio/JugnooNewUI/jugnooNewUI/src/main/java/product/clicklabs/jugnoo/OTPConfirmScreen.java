@@ -109,19 +109,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	private ProgressDialog missedCallDialog;
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-//		FlurryAgent.init(this, Config.getFlurryKey());
-//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-//		FlurryAgent.onEndSession(this);
-	}
-
-	@Override
 	protected void onNewIntent(Intent intent) {
 		retrieveOTPFromSMS(intent);
 		super.onNewIntent(intent);
@@ -282,8 +269,8 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 			@Override
 			public void onClick(View v) {
-				//String otpCode = editTextOTP.getText().toString().trim();
-				String otpCode = txtPinEntry.getText().toString().trim();
+				String otpCode = editTextOTP.getText().toString().trim();
+//				String otpCode = txtPinEntry.getText().toString().trim();
 				if (otpCode.length() > 0) {
 					if(missedCallDialog != null) {
 						missedCallDialog.dismiss();
@@ -304,11 +291,11 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 						apiLoginUsingOtp(OTPConfirmScreen.this, otpCode, email);
 					}
 				} else {
-//					editTextOTP.requestFocus();
-//					editTextOTP.setError("OTP can't be empty");
+					editTextOTP.requestFocus();
+					editTextOTP.setError("OTP can't be empty");
 
-					txtPinEntry.requestFocus();
-					txtPinEntry.setError("OTP can't be empty");
+//					txtPinEntry.requestFocus();
+//					txtPinEntry.setError("OTP can't be empty");
 				}
 			}
 		});
