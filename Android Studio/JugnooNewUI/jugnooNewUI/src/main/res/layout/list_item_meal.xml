@@ -93,6 +93,36 @@
                     android:layout_marginLeft="22px"
                     android:layout_marginTop="22px"
                     android:tag="mwar" />
+
+                <RelativeLayout
+                    android:tag="@string/dont_touch_me"
+                    android:background="@drawable/bg_like_layout_meal_item"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                        <TextView
+                            app:font="maven"
+                            android:id="@+id/tv_like"
+                            android:drawableLeft="@drawable/ic_like_new"
+                            android:tag="@string/dont_touch_me"
+                            android:textColor="@color/text_color"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginTop="7dp"
+                            android:text="2 Likes"
+                            android:textSize="12sp"
+                            android:drawablePadding="3dp"
+                           android:gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+
+
+
+                </RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -244,6 +274,8 @@
                     android:layout_below="@+id/cart_layout" />
 
             </RelativeLayout>
+
+
 
             />
 
