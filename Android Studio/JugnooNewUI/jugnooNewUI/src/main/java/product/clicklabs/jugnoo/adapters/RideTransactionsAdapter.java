@@ -141,14 +141,14 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     || orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()
                     || orderHistory.getProductType() == ProductType.MENUS.getOrdinal()
                     || orderHistory.getProductType() == ProductType.PAY.getOrdinal()) {
-                holder.textViewStatus.setText(R.string.order_status_colon);
+                holder.textViewStatus.setText(R.string.status_colon);
                 holder.textViewStatusValue.setText(orderHistory.getOrderStatus());
                 try {
                     holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
                 } catch (Exception e) {
                     holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.text_color_blue));
                 }
-                holder.textViewId.setText(R.string.order_id_colon);
+                holder.textViewId.setText(R.string.id_colon);
                 holder.textViewIdValue.setText(String.valueOf(orderHistory.getOrderId()));
                 holder.textViewFrom.setText(R.string.address_colon);
                 holder.textViewFromValue.setText(orderHistory.getDeliveryAddress());
@@ -193,14 +193,14 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }*/
             }
             else if(orderHistory.getProductType() == ProductType.PROS.getOrdinal()){
-                holder.textViewStatus.setText(R.string.service_status_colon);
+                holder.textViewStatus.setText(R.string.status_colon);
                 holder.textViewStatusValue.setText(ProsCatalogueAdapter.getProsOrderState(orderHistory.getJobStatus()).second);
                 try{
                     holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
                 } catch (Exception e){
                     holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, orderHistory.getJobStatusColorRes()));
                 }
-                holder.textViewId.setText(R.string.service_id_colon);
+                holder.textViewId.setText(R.string.id_colon);
                 holder.textViewIdValue.setText(String.valueOf(orderHistory.getJobId()));
                 holder.textViewFrom.setText(R.string.address_colon);
                 holder.textViewFromValue.setText(orderHistory.getJobAddress());
