@@ -52,6 +52,7 @@ import com.sabkuchfresh.adapters.BecomeStarAdapter;
 import com.sabkuchfresh.adapters.CheckoutChargesAdapter;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
+import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -1431,6 +1432,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
                 if (type == AppConstant.ApplicationType.MEALS) {
+
+                    params.put("is_early_bird_discount",activity.isShowingEarlyBirdDiscount()?"1":"0");
                     params.put("store_id", "2");
                     params.put("group_id", "" + activity.getProductsResponse().getCategories().get(0).getSubItems().get(0).getGroupId());
                     chargeDetails.put(TYPE, "Meals");
@@ -1512,7 +1515,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             doSlideInitial = false;
                                         }
                                     }
-                                } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
+                                }
+                                else if(ApiResponseFlags.MEALS_PRICE_MISMATCH.getOrdinal() == flag){
+
+                                    DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            getCheckoutDataAPI(selectedSubscription);
+
+                                        }
+                                    });
+                                }else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
                                     final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
                                     final double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, 0);
                                     Log.e("USER_IN_DEBT message", "=" + message1);
@@ -2334,6 +2347,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             }
                                             if (userCheckoutResponse.getCoupons() != null) {
                                                 Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
+
+                                            boolean isDiscountValidCheckout = MealAdapter.isDiscountValid(userCheckoutResponse.getDiscountInfo());
+                                            if(isDiscountValidCheckout!=activity.isShowingEarlyBirdDiscount()){
+                                                DialogPopup.alertPopup(activity,"", userCheckoutResponse.getDiscountSwitchMessage(isDiscountValidCheckout));
+                                                activity.setShowingEarlyBirdDiscount(isDiscountValidCheckout);
+                                                activity.setRefreshCart(true);
+
                                             }
                                         } else if (type == AppConstant.ApplicationType.GROCERY) {
                                             if (Data.getGroceryData().getPromoCoupons() == null) {
@@ -3314,6 +3335,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     break;
                 case SUCCESSFUL:
                 case PROCESSED:
+                case COMPLETED:
                     isIciciPaymentRunnableInProgress = false;
                     activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
 

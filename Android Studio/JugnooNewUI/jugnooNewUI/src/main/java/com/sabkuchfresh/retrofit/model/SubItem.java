@@ -27,6 +27,10 @@ public class SubItem implements Serializable{
     @SerializedName("price")
     @Expose
     private Double price;
+
+    @SerializedName("actual_price")
+    @Expose
+    private Double actualPrice;
     @SerializedName("old_price")
     @Expose
     private String oldPrice;
@@ -87,6 +91,10 @@ public class SubItem implements Serializable{
     @SerializedName("earliest_delivery_message")
     @Expose
     private String earliestDeliveryMessage;
+
+
+
+
 
     /**
      *
@@ -525,5 +533,9 @@ public class SubItem implements Serializable{
 
     public void setEarliestDeliveryMessage(String earliestDeliveryMessage) {
         this.earliestDeliveryMessage = earliestDeliveryMessage;
+    }
+
+    public Double getActualPrice() {
+        return actualPrice;
     }
 }

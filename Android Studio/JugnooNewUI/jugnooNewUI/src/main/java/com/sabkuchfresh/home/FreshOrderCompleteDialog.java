@@ -76,7 +76,12 @@ public class FreshOrderCompleteDialog {
 
 
 			if(appType == AppConstant.ApplicationType.MEALS) {
-				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_meals));
+				if(placeOrderResponse == null || TextUtils.isEmpty(placeOrderResponse.getOrderPlacedMessage())) {
+					textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_meals));
+
+				} else {
+					textView.setText(Utils.trimHTML(Utils.fromHtml(placeOrderResponse.getOrderPlacedMessage())));
+				}
 			}
 			else if(appType == AppConstant.ApplicationType.GROCERY) {
 				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_grocery));

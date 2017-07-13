@@ -359,14 +359,15 @@
 
 
             <TextView
+                android:id="@+id/tvTerms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_14"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/dp_13"
-                android:text="*Visiting charges may apply"
+                android:text="@string/visiting_charges_may_apply"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/sp_13"
+                android:textSize="@dimen/sp_12"
                 app:font="@string/maven"
                 />
 

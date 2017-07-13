@@ -952,6 +952,10 @@ public class JSONParser implements Constants {
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no")));
+            int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
+            String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+            Data.autoData.getAssignedDriverInfo().setVehicleType(vehicleType);
+            Data.autoData.getAssignedDriverInfo().setVehicleIconSet(iconSet);
 
             try {
                 int rideEndGoodFeedbackViewType = jLastRideData.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, Data.autoData.getRideEndGoodFeedbackViewType());

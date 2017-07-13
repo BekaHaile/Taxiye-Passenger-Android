@@ -3,6 +3,7 @@ package com.sabkuchfresh.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,12 +18,15 @@ import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.DiscountInfo;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.utils.TextViewStrikeThrough;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -47,6 +51,10 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private ArrayList<String> possibleStatus;
     private int showBulkOrderOption;
     private ProductsResponse.MealsBulkBanner mealsBulkBanner;
+    private DiscountInfo discountInfo;
+    private boolean showDiscountedPrices;
+
+
 
     private int listType = 0;
 
@@ -63,20 +71,25 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.possibleStatus = new ArrayList<>();
     }
 
-    public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback) {
+    public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback, DiscountInfo discountInfo) {
         this.activity = activity;
         this.subItems = subItems;
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
         this.callback = callback;
+        this.discountInfo = discountInfo;
+        scheduleHandlerForUpdatingDiscountTime(true, true);
+
     }
 
-    public void setList(ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, ProductsResponse.MealsBulkBanner mealsBulkBanner) {
+    public void setList(ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, ProductsResponse.MealsBulkBanner mealsBulkBanner, DiscountInfo discountInfo) {
         this.subItems = subItems;
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
         this.showBulkOrderOption = (mealsBulkBanner != null) ? mealsBulkBanner.getMealsBannerEnabled() : 0;
         this.mealsBulkBanner = mealsBulkBanner;
+        this.discountInfo = discountInfo;
+        scheduleHandlerForUpdatingDiscountTime(true, true);
         notifyDataSetChanged();
     }
 
@@ -177,8 +190,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 SubItem subItem = subItems.get(position);
 
                 mHolder.textViewTitle.setText(subItem.getSubItemName());
-                mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-                        Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getPrice())));
+
                 mHolder.textViewdetails.setText(subItem.getItemLargeDesc());
 //                mHolder.deliveryTime.setText(DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()) + "-"
 //                        + DateOperations.convertDayTimeAPViaFormat(subItem.getOrderEnd()));
@@ -333,6 +345,26 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             .error(R.drawable.ic_fresh_new_placeholder)
                             .into(mHolder.imageViewMmeals);
                 }
+
+
+                String discountOfferDisplay = getDiscountOfferDisplay();
+                if(discountInfo!=null  && showDiscountedPrices && discountOfferDisplay!=null){
+                    mHolder.tvDiscountedPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+                            Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getActualPrice())));
+                    mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+                            Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getPrice())));
+                    mHolder.tvDiscountedOffer.setText(discountOfferDisplay);
+                    mHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
+                    mHolder.tvDiscountedOffer.setVisibility(View.VISIBLE);
+                } else{
+                    if(subItem.getActualPrice()!=null) {
+                        subItem.setPrice(subItem.getActualPrice());
+                    }
+                    mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+                            Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getPrice())));
+                    mHolder.tvDiscountedPrice.setVisibility(View.GONE);
+                    mHolder.tvDiscountedOffer.setVisibility(View.GONE);
+                }
             } else if (holder instanceof ViewTitleHolder) {
                 ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
                 titleholder.relative.setVisibility(View.VISIBLE);
@@ -466,6 +498,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         private ImageView imageViewMmeals, foodType;
         private ImageView imageViewMinus, imageViewPlus, imageClosed;
         public TextView textViewTitle, textPrice, textViewdetails, deliveryTime, textViewQuantity, tvEarliestDelivery;
+        public TextViewStrikeThrough tvDiscountedPrice;
+        public TextView tvDiscountedOffer;
 
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
@@ -493,6 +527,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             textViewQuantity.setTypeface(Fonts.mavenRegular(context));
             tvEarliestDelivery = (TextView) itemView.findViewById(R.id.tvEarliestDelivery);
             tvEarliestDelivery.setTypeface(Fonts.mavenMedium(context));
+            tvDiscountedPrice = (TextViewStrikeThrough) itemView.findViewById(R.id.text_price_striked);
+            tvDiscountedOffer = (TextView) itemView.findViewById(R.id.tv_discounted_offer);
 
         }
     }
@@ -577,5 +613,137 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
             });
         }
+
+
+    }
+
+    private Handler handler = new Handler();
+    private long currentTime;
+    private void scheduleHandlerForUpdatingDiscountTime(boolean firstTime, boolean scheduleClearRunnableOnEndTime){
+
+
+        showDiscountedPrices = discountInfo != null && discountInfo.getIsActive()
+                && discountInfo.getDiscountEndTime() != null && discountInfo.getCurrentDate() != null;
+
+        long scheduleRunnableTime = 60 * 1000;
+        if (showDiscountedPrices) {
+            if (firstTime) {
+                Date currentDate = DateOperations.getDateFromString(discountInfo.getCurrentDate());
+                if (currentDate != null) {
+                    currentTime = currentDate.getTime();
+                } else {
+                    showDiscountedPrices = false;
+                }
+
+
+
+            } else {
+                currentTime += 60 * 1000;
+            }
+
+            Date endDate = DateOperations.getDateFromString(discountInfo.getDiscountEndTime());
+            showDiscountedPrices = endDate != null && currentTime < endDate.getTime();
+
+            if(showDiscountedPrices && firstTime && endDate!=null && scheduleClearRunnableOnEndTime){
+                stopTimerHandler.removeCallbacksAndMessages(null);
+                stopTimerHandler.postDelayed(stopTimerRunnable,endDate.getTime()-currentTime);
+            }
+            if(showDiscountedPrices && firstTime && endDate!=null){
+                long TimeDiffSecs = (endDate.getTime()-currentTime)/1000;
+                int secs = (int) (TimeDiffSecs % 60);
+                if(secs>0){
+                    scheduleRunnableTime = secs* 1000;
+                }
+            }
+
+        }
+
+
+        handler.removeCallbacksAndMessages(null);
+        if (showDiscountedPrices) {
+
+
+            handler.postDelayed(updateDiscountedLabelRunnable, scheduleRunnableTime);
+        }
+
+        activity.setShowingEarlyBirdDiscount(showDiscountedPrices);
+
+    }
+
+    private Runnable updateDiscountedLabelRunnable = new Runnable() {
+        @Override
+        public void run() {
+            scheduleHandlerForUpdatingDiscountTime(false, false);
+            notifyDataSetChanged();
+
+        }
+    };
+
+    public void removeScheduledHandler(){
+        handler.removeCallbacksAndMessages(null);
+        stopTimerHandler.removeCallbacksAndMessages(null);
+    }
+    private Handler stopTimerHandler = new Handler();
+     private Runnable stopTimerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            scheduleHandlerForUpdatingDiscountTime(false, false);
+            notifyDataSetChanged();
+        }
+    };
+
+    public String getDiscountOfferDisplay(){
+        if(discountInfo==null){
+            return null;
+        }
+        if(discountInfo.getTextToDisplay()!=null && discountInfo.getTextToDisplay().trim().length()>0){
+            return discountInfo.getTextToDisplay();
+        }
+
+        if(discountInfo.getDiscountEndTime()==null){
+            return null;
+        }
+        Date endDate = DateOperations.getDateFromString(discountInfo.getDiscountEndTime());
+        if(endDate==null  || currentTime > endDate.getTime())
+            return null;
+
+        if(endDate.getTime()-currentTime>discountInfo.getThreshHoldTime()*60*1000){
+            return "Discount valid till "+ DateOperations.getAmPmFromServerDateFormat(discountInfo.getDiscountEndTime());
+
+        }
+
+
+        long TimeDiffSecs = (endDate.getTime()-currentTime)/1000;
+        int hours = (int) (TimeDiffSecs / 3600);
+        int min = (int) (TimeDiffSecs / 60 - hours * 60);
+        int secs = (int) (TimeDiffSecs % 60);
+
+        if(min>1 || (min==1 && secs>0))
+        {
+            if(secs>0)
+                min+=1;
+            String suffix= min>1?" mins":" min";
+            return "Discount valid for next "+ min + suffix;
+        } else if(secs>0){
+            return "Discount valid for less than 1 min";
+        }
+        else
+            return null;
+   /*     if(min>1)
+           return "Discount valid for next "+ min + suffix;
+        else if(secs>0)
+            return "Discount valid for less than 1 min";
+        else
+            return null;*/
+
+    }
+
+    public static boolean isDiscountValid(DiscountInfo discountInfo){
+        if(discountInfo!=null && discountInfo.getIsActive() && discountInfo.getDiscountEndTime()!=null && discountInfo.getCurrentDate()!=null){
+            Date endDate = DateOperations.getDateFromString(discountInfo.getDiscountEndTime());
+            Date currentDate = DateOperations.getDateFromString(discountInfo.getCurrentDate());
+            return endDate!=null && currentDate!=null && endDate.getTime()>currentDate.getTime();
+        }
+        return false;
     }
 }

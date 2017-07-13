@@ -212,13 +212,15 @@ public class ProsOrderStatusResponse {
 
 		public Pair<String, String> getProductNameAndJobAmount(){
 			String productName = "", jobAmount = "";
-			for(ProsOrderStatusResponse.CustomField customField : getFields().getCustomField()){
-				if(customField.getLabel().equalsIgnoreCase(Constants.KEY_PRODUCT_NAME)){
-					productName = customField.getData();
-				} else if(customField.getLabel().equalsIgnoreCase(Constants.KEY_JOB_AMOUNT)
-						&& getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()){
-					if (!TextUtils.isEmpty(customField.getFleetData())) {
-						jobAmount = customField.getFleetData();
+			if(getFields() != null) {
+				for (ProsOrderStatusResponse.CustomField customField : getFields().getCustomField()) {
+					if (customField.getLabel().equalsIgnoreCase(Constants.KEY_PRODUCT_NAME)) {
+						productName = customField.getData();
+					} else if (customField.getLabel().equalsIgnoreCase(Constants.KEY_JOB_AMOUNT)
+							&& getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()) {
+						if (!TextUtils.isEmpty(customField.getFleetData())) {
+							jobAmount = customField.getFleetData();
+						}
 					}
 				}
 			}

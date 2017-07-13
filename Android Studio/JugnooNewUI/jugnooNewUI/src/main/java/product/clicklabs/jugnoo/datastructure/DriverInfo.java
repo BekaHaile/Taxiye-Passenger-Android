@@ -168,8 +168,8 @@ public class DriverInfo {
 		return vehicleIconSet;
 	}
 
-	public void setVehicleIconSet(VehicleIconSet vehicleIconSet) {
-		this.vehicleIconSet = vehicleIconSet;
+	public void setVehicleIconSet(String iconSet) {
+		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
 	}
 
 	public ArrayList<Integer> getRegionIds() {

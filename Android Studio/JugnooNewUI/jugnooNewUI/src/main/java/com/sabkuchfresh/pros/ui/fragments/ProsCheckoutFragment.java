@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -106,6 +107,8 @@ public class ProsCheckoutFragment extends Fragment {
 	RelativeLayout linearLayoutRoot;
 	@Bind(R.id.tvProductName)
 	TextView tvProductName;
+	@Bind(R.id.tvTerms)
+	TextView tvTerms;
 	private FreshActivity activity;
 	private ProsProductData.ProsProductDatum prosProductDatum;
 	private Bus mBus;
@@ -162,6 +165,7 @@ public class ProsCheckoutFragment extends Fragment {
 		});
 
 		updateAddressView();
+		tvTerms.setTypeface(tvTerms.getTypeface(), Typeface.ITALIC);
 
 		return rootView;
 	}
@@ -503,7 +507,7 @@ public class ProsCheckoutFragment extends Fragment {
 	}
 
 	private boolean validateDateTime(String date, String time){
-		String currentTimePlus24Hrs = DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 1);
+		String currentTimePlus24Hrs = DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 2);
 		return DateOperations.getTimeDifference(getFormattedDateTime(date, time, true), currentTimePlus24Hrs) > 0
 				&&
 				DateOperations.getTimeDifference(getFormattedDateTime(date, time, false),

@@ -223,8 +223,8 @@
 
                     <ImageView
                         android:id="@+id/ivStar"
-                        android:layout_width="@dimen/px_45"
-                        android:layout_height="@dimen/px_45"
+                        android:layout_width="@dimen/px_75"
+                        android:layout_height="@dimen/px_75"
                         android:tag="mwar"
                         android:layout_centerVertical="true"
                         android:src="@drawable/star"/>

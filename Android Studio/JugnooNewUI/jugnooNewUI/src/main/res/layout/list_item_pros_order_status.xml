@@ -165,70 +165,71 @@
                     android:visibility="visible"/>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvStatus0"
-                android:layout_width="@dimen/dp_60"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/llOrderPath"
+                android:orientation="horizontal"
                 android:layout_below="@+id/llOrderPath"
-                android:layout_marginLeft="-3dp"
                 android:layout_marginTop="@dimen/dp_7"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="Statu0"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/sp_11"
-                android:visibility="visible"
-                app:font="@string/maven"
-                />
+                android:layout_marginLeft="@dimen/dp_7"
+                android:layout_marginRight="@dimen/dp_7"
 
-            <TextView
-                android:id="@+id/tvStatus1"
-                android:layout_width="@dimen/dp_60"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/llOrderPath"
-                android:layout_marginLeft="@dimen/dp_13"
-                android:layout_marginTop="@dimen/dp_7"
-                android:layout_toRightOf="@+id/tvStatus0"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="Status1"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/sp_11"
-                android:visibility="visible"
-                app:font="@string/maven"/>
+                >
 
-            <TextView
-                android:id="@+id/tvStatus2"
-                android:layout_width="@dimen/dp_60"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/llOrderPath"
-                android:layout_marginLeft="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_7"
-                android:layout_toRightOf="@+id/tvStatus1"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="Status2"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/sp_11"
-                android:visibility="visible"
-                app:font="@string/maven"/>
+                <TextView
+                    android:id="@+id/tvStatus0"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="Booking Accepted"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/sp_11"
+                    android:visibility="visible"
+                    app:font="@string/maven"
+                    />
 
-            <TextView
-                android:id="@+id/tvStatus3"
-                android:layout_width="@dimen/dp_60"
-                android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/llOrderPath"
-                android:layout_below="@+id/llOrderPath"
-                android:layout_marginRight="-5dp"
-                android:layout_marginTop="@dimen/dp_7"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="Status3"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/sp_11"
-                android:visibility="visible"
-                app:font="@string/maven"/>
+                <TextView
+                    android:id="@+id/tvStatus1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="Pro\nAssigned"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/sp_11"
+                    android:visibility="visible"
+                    app:font="@string/maven"/>
+
+                <TextView
+                    android:id="@+id/tvStatus2"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="Service Started"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/sp_11"
+                    android:visibility="visible"
+                    app:font="@string/maven"/>
+
+                <TextView
+                    android:id="@+id/tvStatus3"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="Service Finished"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/sp_11"
+                    android:visibility="visible"
+                    app:font="@string/maven"/>
+            </LinearLayout>
+
         </RelativeLayout>
 
 

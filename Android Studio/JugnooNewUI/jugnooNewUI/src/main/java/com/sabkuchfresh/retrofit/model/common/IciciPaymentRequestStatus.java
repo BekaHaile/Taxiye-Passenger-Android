@@ -56,6 +56,8 @@ public class IciciPaymentRequestStatus {
                 return IciciPaymentOrderStatus.CANCELLED;
             else if(status==1||status==0)
                 return IciciPaymentOrderStatus.SUCCESSFUL;
+            else if(status==2)
+                return IciciPaymentOrderStatus.COMPLETED;
             else
                 return IciciPaymentOrderStatus.PROCESSED;
 
@@ -66,6 +68,8 @@ public class IciciPaymentRequestStatus {
                 return IciciPaymentOrderStatus.CANCELLED;
             else if(status <0)
                 return IciciPaymentOrderStatus.FAILURE;
+            else if(status==2)
+                return IciciPaymentOrderStatus.COMPLETED;
             else if (status>=0)
                 return IciciPaymentOrderStatus.SUCCESSFUL;
             else

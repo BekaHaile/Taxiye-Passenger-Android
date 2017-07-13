@@ -46,6 +46,10 @@ public class ProductsResponse {
 	@Expose
 	private MealsBulkBanner mealsBulkBanner;
 
+	@SerializedName("discount_info")
+	@Expose
+	private DiscountInfo discountInfo;
+
 
 	/**
 	 *
@@ -160,6 +164,10 @@ public class ProductsResponse {
 
 	public MealsBulkBanner getMealsBulkBanner() {
 		return mealsBulkBanner;
+	}
+
+	public DiscountInfo getDiscountInfo() {
+		return discountInfo;
 	}
 
 	public class MealsBulkBanner {

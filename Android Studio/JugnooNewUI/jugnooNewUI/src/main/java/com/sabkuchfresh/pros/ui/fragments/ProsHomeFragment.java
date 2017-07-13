@@ -21,7 +21,7 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.models.ProsCatalogueData;
-import com.sabkuchfresh.pros.ui.adapters.ProsSuperCategoriesAdapter;
+import com.sabkuchfresh.pros.ui.adapters.ProsCatalogueAdapter;
 import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private RelativeLayout relativeLayoutNoMenus;
 	private FreshActivity activity;
 	private RecyclerView rvProsMain;
-	private ProsSuperCategoriesAdapter categoriesAdapter;
+	private ProsCatalogueAdapter categoriesAdapter;
 	private TextView textViewNothingFound;
 	private SwipeRefreshLayout swipeContainer;
 
@@ -91,9 +91,9 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 			@Override
 			public int getSpanSize(int position) {
 				switch (categoriesAdapter.getItemViewType(position)){
-					case ProsSuperCategoriesAdapter.ORDER_ITEM:
+					case ProsCatalogueAdapter.ORDER_ITEM:
 						return 3;
-					case ProsSuperCategoriesAdapter.MAIN_ITEM:
+					case ProsCatalogueAdapter.MAIN_ITEM:
 						return 1;
 					default:
 						return 1;
@@ -102,7 +102,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 		});
 
 		rvProsMain.setLayoutManager(gridLayoutManager);
-		categoriesAdapter = new ProsSuperCategoriesAdapter(activity, new ProsSuperCategoriesAdapter.Callback() {
+		categoriesAdapter = new ProsCatalogueAdapter(activity, new ProsCatalogueAdapter.Callback() {
 			@Override
 			public void onItemClick(ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum) {
 				if(prosCatalogueDatum.getIsEnabled() == 0){
