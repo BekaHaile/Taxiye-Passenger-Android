@@ -208,7 +208,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 android.util.Pair<String, String> pair = orderHistory.getProductNameAndJobAmount();
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormatTZ(orderHistory.getJobTime())
                         +", "+pair.first);
-                holder.textViewAmount.setText(!TextUtils.isEmpty(pair.second)?pair.second:"-");
+                holder.textViewAmount.setText(!TextUtils.isEmpty(pair.second)?activity.getString(R.string.rupees_value_format, pair.second):"-");
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros_grey);
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros);
                 holder.imageViewProductType.setBackgroundResource(R.drawable.circle_pink_pros_fab);
