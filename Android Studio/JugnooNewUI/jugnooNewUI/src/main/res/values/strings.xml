@@ -1344,5 +1344,8 @@
     <string name="visiting_charges_may_apply">*Service rate will be determined after inspection. Minimum  visiting charges may apply.</string>
     <string name="service_id_colon">Service ID:</string>
 
-
+    <plurals name="like_suffix">
+        <item quantity="one">%d Like</item>
+        <item quantity="other">%d Likes</item>
+    </plurals>
 </resources>

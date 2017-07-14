@@ -201,6 +201,21 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     mHolder.textViewdetails.setVisibility(View.GONE);
                 }*/
 
+                if(subItem.getLikeCount()>0){
+                   String noOfLikes =  activity.getResources().getQuantityString(R.plurals.like_suffix, subItem.getLikeCount(), subItem.getLikeCount());
+                    mHolder.tvLikeCount.setText(noOfLikes);
+                    mHolder.rlLikeLayout.setVisibility(View.VISIBLE);
+                    if(subItem.getIsLiked()){
+                        mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active_new,0,0,0);
+                    }else {
+                        mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_new,0,0,0);
+
+                    }
+                }else{
+                    mHolder.rlLikeLayout.setVisibility(View.GONE);
+                }
+
+
                 mHolder.linear.setTag(position);
                 mHolder.linear.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -499,7 +514,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         private ImageView imageViewMinus, imageViewPlus, imageClosed;
         public TextView textViewTitle, textPrice, textViewdetails, deliveryTime, textViewQuantity, tvEarliestDelivery;
         public TextViewStrikeThrough tvDiscountedPrice;
-        public TextView tvDiscountedOffer;
+        public TextView tvDiscountedOffer,tvLikeCount;
+        private RelativeLayout rlLikeLayout;
 
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
@@ -520,6 +536,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             textPrice = (TextView) itemView.findViewById(R.id.text_price);
             textPrice.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textViewdetails = (TextView) itemView.findViewById(R.id.textViewdetails);
+            tvLikeCount = (TextView) itemView.findViewById(R.id.tv_like_count);
             textViewdetails.setTypeface(Fonts.mavenMedium(context));
             deliveryTime = (TextView) itemView.findViewById(R.id.delivery_time);
             deliveryTime.setTypeface(Fonts.mavenMedium(context));
@@ -529,6 +546,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             tvEarliestDelivery.setTypeface(Fonts.mavenMedium(context));
             tvDiscountedPrice = (TextViewStrikeThrough) itemView.findViewById(R.id.text_price_striked);
             tvDiscountedOffer = (TextView) itemView.findViewById(R.id.tv_discounted_offer);
+            rlLikeLayout = (RelativeLayout) itemView.findViewById(R.id.rl_like_layout);
 
         }
     }

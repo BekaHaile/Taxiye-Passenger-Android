@@ -91,6 +91,13 @@ public class SubItem implements Serializable{
     @SerializedName("earliest_delivery_message")
     @Expose
     private String earliestDeliveryMessage;
+    @SerializedName("like_count")
+    @Expose
+    private int likeCount;
+    @SerializedName("is_liked")
+    @Expose
+    private int isLiked;
+
 
 
 
@@ -537,5 +544,13 @@ public class SubItem implements Serializable{
 
     public Double getActualPrice() {
         return actualPrice;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public boolean getIsLiked() {
+        return isLiked==1 ;
     }
 }
