@@ -581,8 +581,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			try {
 				if (getIntent().hasExtra(KEY_PREVIOUS_LOGIN_EMAIL)) {
 					String previousLoginPhone = getIntent().getStringExtra(KEY_PREVIOUS_LOGIN_EMAIL);
-					PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(previousLoginPhone), "IND");
-					fbAccountKit.startFbAccountKit(phoneNumber);
+					goToLoginUsingPhone(previousLoginPhone);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -830,11 +829,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			rlMobileNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(loginChannel == 1){
-						changeUIState(State.SPLASH_LOGIN_PHONE_NO);
-					} else {
-						fbAccountKit.startFbAccountKit(null);
-					}
+					goToLoginUsingPhone("");
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});
@@ -1672,6 +1667,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				imageViewBack.setVisibility(View.VISIBLE);
 				llContainer.setVisibility(View.VISIBLE);
 				rlPhoneLogin.setVisibility(View.VISIBLE);
+				editTextPhoneNumber.setText(phoneNoToFillInInHouseLogin);
 				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, duration);
 
 				break;
@@ -2738,8 +2734,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				String previousLoginEmail = getIntent().getStringExtra(KEY_PREVIOUS_LOGIN_EMAIL);
 				editTextEmail.setText(previousLoginEmail);
 				fromPreviousAccounts = true;
-				PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), "IND");
-				fbAccountKit.startFbAccountKit(phoneNumber);
+				goToLoginUsingPhone(phoneNo);
 			} else {
 				fromPreviousAccounts = false;
 			}
@@ -3243,7 +3238,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								facebookRegister = true;
 								//notRegisteredMsg = error;
 								fbVerifiedNumber = jObj.optString("fb_verified_number");
-								fbAccountKit.startFbAccountKit(null);
+								goToLoginUsingPhone("");
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
@@ -3260,8 +3255,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 								//sendToOtpScreen = true;
-								PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), "IND");
-								fbAccountKit.startFbAccountKit(phoneNumber);
+								goToLoginUsingPhone(phoneNo);
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
@@ -3359,7 +3353,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								String error = jObj.getString("error");
 								googleRegister = true;
 								//notRegisteredMsg = error;
-								fbAccountKit.startFbAccountKit(null);
+								goToLoginUsingPhone("");
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
 								String error = jObj.getString("error");
@@ -3379,8 +3373,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
 								//sendToOtpScreen = true;
 								googleRegister = true;
-								PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(SplashNewActivity.this.phoneNo), "IND");
-								fbAccountKit.startFbAccountKit(phoneNumber);
+								goToLoginUsingPhone(phoneNo);
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
@@ -4480,5 +4473,20 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			Data.loginLongitude = location.getLongitude();
 		}
 	};
+
+
+	String phoneNoToFillInInHouseLogin = "";
+	private void goToLoginUsingPhone(String previousLoginPhone){
+		if(loginChannel == 1){
+			phoneNoToFillInInHouseLogin = previousLoginPhone;
+			changeUIState(State.SPLASH_LOGIN_PHONE_NO);
+		} else {
+			PhoneNumber phoneNumber = null;
+			if(!TextUtils.isEmpty(previousLoginPhone)) {
+				phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(previousLoginPhone), "IND");
+			}
+			fbAccountKit.startFbAccountKit(phoneNumber);
+		}
+	}
 
 }
