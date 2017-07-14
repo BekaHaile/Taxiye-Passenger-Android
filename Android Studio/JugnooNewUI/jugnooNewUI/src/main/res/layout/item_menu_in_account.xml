@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:visibility="visible"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:tag="@string/dont_touch_me"
+    >
 
 
     <TextView
@@ -12,28 +14,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="40px"
-        android:layout_marginTop="25px"
-        android:layout_marginBottom="25px"
+        android:layout_marginLeft="@dimen/dp_17"
+        android:layout_marginTop="@dimen/dp_17"
+        android:layout_marginBottom="@dimen/dp_17"
         android:gravity="left"
         android:text="@string/jugnoo_star"
         android:layout_toLeftOf="@+id/textViewValue"
         android:layout_alignParentLeft="true"
         android:textColor="@color/text_color_light_selector"
-        android:textSize="30px" />
+        android:textSize="@dimen/sp_14" />
 
     <TextView
         android:id="@id/textViewValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="40px"
+        android:layout_marginRight="@dimen/dp_17"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/px_3"
+        android:layout_marginTop="@dimen/dp_2"
         android:gravity="right"
         android:text="@string/rupee_0"
         android:textColor="@color/theme_color"
-        android:textSize="30px"
+        android:textSize="@dimen/sp_14"
         android:visibility="visible" />
 
 
@@ -41,8 +43,8 @@
 
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_marginLeft="40px"
-        android:layout_marginRight="40px"
-        android:background="@color/stroke_color_light" />
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="@dimen/dp_12"
+        android:layout_marginRight="@dimen/dp_12"
+        android:background="@color/nl_white_dark" />
 </RelativeLayout>
