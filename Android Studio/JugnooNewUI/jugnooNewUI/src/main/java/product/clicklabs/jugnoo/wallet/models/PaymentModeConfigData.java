@@ -14,8 +14,10 @@ public class PaymentModeConfigData {
 	private int priority;
 	private String offerText, displayName, upiHandle;
 	private String jugnooVpaHandle;
+	private String upiCashbackValue;
 
-	public PaymentModeConfigData(String name, int enabled, String offerText, String displayName, String upiHandle,String jugnooVpaHanlde){
+	public PaymentModeConfigData(String name, int enabled, String offerText, String displayName, String upiHandle,
+								 String jugnooVpaHanlde, String upiCashbackValue){
 		this.name = name;
 		this.enabled = enabled;
 		this.offerText = offerText;
@@ -46,6 +48,7 @@ public class PaymentModeConfigData {
 			paymentOption = PaymentOption.ICICI_UPI.getOrdinal();
 		}
 		this.priority = 0;
+		this.upiCashbackValue = upiCashbackValue;
 	}
 
 	public String getName() {
@@ -110,5 +113,13 @@ public class PaymentModeConfigData {
 
 	public String getJugnooVpaHandle() {
 		return jugnooVpaHandle;
+	}
+
+	public String getUpiCashbackValue() {
+		return upiCashbackValue;
+	}
+
+	public void setUpiCashbackValue(String upiCashbackValue) {
+		this.upiCashbackValue = upiCashbackValue;
 	}
 }
