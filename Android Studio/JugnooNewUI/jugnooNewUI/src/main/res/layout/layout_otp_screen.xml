@@ -96,6 +96,13 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/llEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            ></LinearLayout>
+
         <EditText
             android:id="@+id/editTextOTP"
             android:layout_width="410px"
@@ -109,7 +116,7 @@
             android:paddingBottom="15px"
             android:paddingLeft="20px"
             android:paddingRight="20px"
-            android:visibility="visible"
+            android:visibility="gone"
             android:paddingTop="15px"
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
@@ -119,9 +126,10 @@
         <ImageView
             android:layout_width="410px"
             android:layout_height="2px"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_gravity="center_horizontal"
-            android:src="@color/stroke_light_grey" />
+            android:src="@color/stroke_light_grey"
+            />
 
         <LinearLayout
             android:id="@+id/llOTP"
@@ -217,8 +225,9 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/bFacebook"
                 android:text="@string/resend_otp"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_32"
+                android:textSize="@dimen/text_size_26"
                 app:font="maven" />
 
         </LinearLayout>
@@ -279,7 +288,9 @@
                 android:gravity="center"
                 android:text="@string/nl_otp_give_missed_call"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_30" />
+                android:textSize="@dimen/text_size_26"
+                android:textAllCaps="true"
+                />
         </LinearLayout>
 
         <!-- Password Login -->

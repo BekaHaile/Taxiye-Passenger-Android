@@ -222,8 +222,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	private int nextPermissionsRequestCode = 4000;
 	private final Map<Integer, OnCompleteListener> permissionsListeners = new HashMap<>();
 	private FBAccountKit fbAccountKit;
-	private int loginChannel = 1;
+	private int loginChannel = 0;
 	private EditText editTextPhoneNumber;
+	private TextView textViewPhoneNumberRequired;
 
 	@Override
 	protected void onStop() {
@@ -1311,6 +1312,26 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			}
 		}));
 		Prefs.with(this).save(Constants.KEY_ANIMATE_ASK_LOCAL_POST_TEXT,true);
+
+
+		textViewPhoneNumberRequired = (TextView) findViewById(R.id.textViewPhoneNumberRequired);
+		editTextPhoneNumber.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				textViewPhoneNumberRequired.setVisibility((s.length() == 0)?View.VISIBLE:View.GONE);
+			}
+		});
+
 	}
 
 	private void startFbAccountKit(PhoneNumber phoneNumber){
@@ -2278,7 +2299,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						}
 
 						//"login_channel": 0 //0-Default fbAccountKit, 1-Inhouse apis
-						loginChannel = jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 1);
+						loginChannel = jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0);
 
 					}catch (Exception e){
 						e.printStackTrace();

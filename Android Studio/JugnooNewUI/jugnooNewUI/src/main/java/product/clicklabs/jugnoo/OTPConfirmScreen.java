@@ -53,6 +53,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.widgets.PinEditTextLayout;
 import product.clicklabs.jugnoo.widgets.PinEntryEditText;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -108,6 +109,8 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	private PinEntryEditText txtPinEntry;
 	private ProgressDialog missedCallDialog;
 
+	private LinearLayout llEditText;
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		retrieveOTPFromSMS(intent);
@@ -155,6 +158,14 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+
+		llEditText = (LinearLayout) findViewById(R.id.llEditText);
+		PinEditTextLayout pinEditTextLayout = new PinEditTextLayout(llEditText, new PinEditTextLayout.Callback() {
+			@Override
+			public void onOTPComplete(String otp, EditText editText) {
+				verifyClick(otp, editText);
+			}
+		});
 
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenRegular(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
@@ -269,34 +280,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 			@Override
 			public void onClick(View v) {
-				String otpCode = editTextOTP.getText().toString().trim();
-//				String otpCode = txtPinEntry.getText().toString().trim();
-				if (otpCode.length() > 0) {
-					if(missedCallDialog != null) {
-						missedCallDialog.dismiss();
-					}
-					//rlProgress.setVisibility(View.GONE);
-					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
-						verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
-						/*if(userVerified == 1){
-							sendOTP(otpCode);
-						} else {
-							verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
-						}*/
-
-					} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
-						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode, linkedWallet);
-					} else {
-						//verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
-						apiLoginUsingOtp(OTPConfirmScreen.this, otpCode, email);
-					}
-				} else {
-					editTextOTP.requestFocus();
-					editTextOTP.setError("OTP can't be empty");
-
-//					txtPinEntry.requestFocus();
-//					txtPinEntry.setError("OTP can't be empty");
-				}
+				verifyClick(editTextOTP.getText().toString().trim(), editTextOTP);
 			}
 		});
 
@@ -2033,6 +2017,35 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				nextEt.requestFocus();
 			}*/
 			return false;
+		}
+	}
+
+	private void verifyClick(String otpCode, EditText editTextOTP){
+		if (otpCode.length() > 0) {
+			if(missedCallDialog != null) {
+				missedCallDialog.dismiss();
+			}
+			//rlProgress.setVisibility(View.GONE);
+			if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
+				verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
+						/*if(userVerified == 1){
+							sendOTP(otpCode);
+						} else {
+							verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
+						}*/
+
+			} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
+				verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode, linkedWallet);
+			} else {
+				//verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
+				apiLoginUsingOtp(OTPConfirmScreen.this, otpCode, email);
+			}
+		} else {
+			editTextOTP.requestFocus();
+			editTextOTP.setError("OTP can't be empty");
+
+//					txtPinEntry.requestFocus();
+//					txtPinEntry.setError("OTP can't be empty");
 		}
 	}
 

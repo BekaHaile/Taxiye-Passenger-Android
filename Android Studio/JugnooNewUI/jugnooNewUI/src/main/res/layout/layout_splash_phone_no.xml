@@ -44,7 +44,7 @@
             android:layout_height="88px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
-            android:layout_toLeftOf="@+id/textViewEmailRequired"
+            android:layout_toLeftOf="@+id/textViewPhoneNumberRequired"
             android:layout_toRightOf="@+id/imageViewEmail"
             android:background="#0000"
             android:completionThreshold="1"
@@ -64,7 +64,7 @@
             />
 
         <TextView
-            android:id="@+id/textViewEmailRequired"
+            android:id="@+id/textViewPhoneNumberRequired"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -73,7 +73,9 @@
             android:text="@string/nl_splash_required"
             android:textColor="@color/text_color_hint"
             android:textSize="@dimen/text_size_22"
-            app:font="@string/maven" />
+            app:font="@string/maven"
+            android:visibility="visible"
+            />
 
 
 
