@@ -27,6 +27,7 @@ import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.DiscountInfo;
+import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -60,6 +61,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -535,6 +537,44 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mealAdapter.notifyDataSetChanged();
     }
 
+    private boolean isLikeMealApiInProgress;
+    @Override
+    public boolean onLikeClicked(SubItem subItem) {
+        if(isLikeMealApiInProgress)
+            return false;
+
+        if(MyApplication.getInstance().isOnline()){
+            isLikeMealApiInProgress= true;
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            params.put(Constants.STORE_ID, "" + 2);
+            params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
+            params.put(Constants.INTERATED, "1");
+            params.put(Constants.IS_LIKED,subItem.getIsLiked()?"1":"0");
+            params.put(Constants.KEY_ITEM_ID,String.valueOf(subItem.getSubItemId()));
+
+            RestClient.getFreshApiService().markMealAsFavourite(params, new Callback<FreshSearchResponse>() {
+                @Override
+                public void success(FreshSearchResponse freshSearchResponse, Response response) {
+                    isLikeMealApiInProgress=false;
+
+
+
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    isLikeMealApiInProgress=false;
+
+                }
+            });
+
+        }else{
+            Utils.showToast(activity,"No Connection");
+        }
+        return true;
+    }
+
     public void onSortEvent(int position, DiscountInfo discountInfo) {
         switch (position) {
             case 0:
@@ -566,4 +606,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public boolean shouldShowStrip() {
         return getView()!=null && relativeLayoutNoMenus.getVisibility()!=View.VISIBLE;
     }
+
+
 }

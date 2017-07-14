@@ -186,8 +186,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
             } else if (holder instanceof ViewHolderSlot) {
                 position = position - recentOrders.size();
-                ViewHolderSlot mHolder = ((ViewHolderSlot) holder);
-                SubItem subItem = subItems.get(position);
+                final ViewHolderSlot mHolder = ((ViewHolderSlot) holder);
+                final SubItem subItem = subItems.get(position);
 
                 mHolder.textViewTitle.setText(subItem.getSubItemName());
 
@@ -211,9 +211,17 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_new,0,0,0);
 
                     }
-                }else{
-                    mHolder.rlLikeLayout.setVisibility(View.GONE);
                 }
+                mHolder.rlLikeLayout.setTag(position);
+                mHolder.rlLikeLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos  = (int) v.getTag();
+                        callback.onLikeClicked(subItems.get(pos));
+
+
+                    }
+                });
 
 
                 mHolder.linear.setTag(position);
@@ -603,6 +611,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         boolean checkForMinus(int position, SubItem subItem);
         void minusNotDone(int position, SubItem subItem);
 
+        boolean onLikeClicked(SubItem subItem);
     }
 
 

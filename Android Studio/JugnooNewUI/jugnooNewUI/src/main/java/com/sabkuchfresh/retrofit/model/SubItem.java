@@ -94,7 +94,7 @@ public class SubItem implements Serializable{
     @SerializedName("like_count")
     @Expose
     private int likeCount;
-    @SerializedName("is_liked")
+    @SerializedName("is_liked_by_user")
     @Expose
     private int isLiked;
 
