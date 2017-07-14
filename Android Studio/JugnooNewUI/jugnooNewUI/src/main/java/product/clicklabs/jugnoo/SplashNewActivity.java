@@ -2186,14 +2186,14 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	public void getAllowedAuthChannels(Activity activity){
 		if (MyApplication.getInstance().isOnline()) {
 
-			//DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, "Loading...");
 			HashMap<String, String> params = new HashMap<>();
 
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().getAllowedAuthChannels(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
-					//DialogPopup.dismissLoadingDialog();
+					DialogPopup.dismissLoadingDialog();
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 					Log.i(TAG, "Auth channel response = " + responseStr);
 					try {
@@ -2304,7 +2304,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 				@Override
 				public void failure(RetrofitError error) {
-					//DialogPopup.dismissLoadingDialog();
+					DialogPopup.dismissLoadingDialog();
 				}
 			});
 
