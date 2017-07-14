@@ -348,11 +348,11 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 				|| status == ProsOrderStatus.UPCOMING.getOrdinal()){
 			status = 0;
 			statusName = "Booking Accepted";
-		} else if(status == ProsOrderStatus.ACCEPTED.getOrdinal()){
+		} else if(status == ProsOrderStatus.ACCEPTED.getOrdinal()
+				|| status == ProsOrderStatus.STARTED.getOrdinal()){
 			status = 1;
 			statusName = "Pro Assigned";
-		} else if(status == ProsOrderStatus.STARTED.getOrdinal()
-				|| status == ProsOrderStatus.ARRIVED.getOrdinal()){
+		} else if(status == ProsOrderStatus.ARRIVED.getOrdinal()){
 			status = 2;
 			statusName = "Service Started";
 		} else if(status == ProsOrderStatus.ENDED.getOrdinal()){

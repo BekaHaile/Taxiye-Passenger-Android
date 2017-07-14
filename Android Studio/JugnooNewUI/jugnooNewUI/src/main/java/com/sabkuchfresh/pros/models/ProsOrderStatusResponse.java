@@ -211,7 +211,7 @@ public class ProsOrderStatusResponse {
 		}
 
 		public Pair<String, String> getProductNameAndJobAmount(){
-			String productName = "", jobAmount = "";
+			String productName = getJobNameSplitted(), jobAmount = "";
 			if(getFields() != null) {
 				for (ProsOrderStatusResponse.CustomField customField : getFields().getCustomField()) {
 					if (customField.getLabel().equalsIgnoreCase(Constants.KEY_PRODUCT_NAME)) {
@@ -226,6 +226,12 @@ public class ProsOrderStatusResponse {
 			}
 			return new Pair<>(productName, jobAmount);
 		}
+
+		public String getJobNameSplitted() {
+			String[] arr = jobDescription.split("\\:\\ ");
+			return arr[0];
+		}
+
 	}
 
 
