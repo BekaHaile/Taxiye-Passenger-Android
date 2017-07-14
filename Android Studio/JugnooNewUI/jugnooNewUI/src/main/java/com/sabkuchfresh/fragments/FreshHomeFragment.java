@@ -115,14 +115,20 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         superCategoriesAdapter = new FreshSuperCategoriesAdapter(activity, new FreshSuperCategoriesAdapter.Callback() {
             @Override
             public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
-                if(superCategory.getIsEnabled() == 0){
-                    Utils.showToast(activity, getString(R.string.coming_soon_to_your_city));
-                } else {
-                    activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
-                    activity.getFabViewTest().hideJeanieHelpInSession();
-                }
                 try {
-                    GAUtils.event(FRESH, HOME+SUPER+CATEGORY+CLICKED, superCategory.getSuperCategoryName());
+                    if(superCategory.getSuperCategoryId() != null) {
+						if (superCategory.getIsEnabled() == 0) {
+							Utils.showToast(activity, getString(R.string.coming_soon_to_your_city));
+						} else {
+							activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
+							activity.getFabViewTest().hideJeanieHelpInSession();
+						}
+						try {
+							GAUtils.event(FRESH, HOME + SUPER + CATEGORY + CLICKED, superCategory.getSuperCategoryName());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
