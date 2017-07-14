@@ -6,6 +6,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -86,7 +89,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 	LinearLayout relative;
 
-	private TextView textViewTitle, textViewSave, textViewPasswordSave;
+	private TextView textViewTitle, textViewPasswordSave;
 	ImageView imageViewBack;
     View viewTrackingLog;
 
@@ -97,7 +100,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     ImageView imageViewProfileImage;
 	EditText editTextUserName, editTextEmail, editTextPhone;
     LinearLayout linearLayoutPhone;
-    ImageView imageViewEditProfile, ivEditPhone;
+    ImageView imageViewEditProfile, ivEditPhone, imageViewEditProfileSave;
 
     RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact;
     TextView textViewEmergencyContact;
@@ -107,19 +110,20 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     ImageView imageViewChangePassword, imaveViewOldPasswordVisibility, imaveViewNewPasswordVisibility, imaveViewRetypePasswordVisibility;
 
     LinearLayout linearLayoutLogout, linearLayoutAbout;
+    ImageView ivLogout;
 
 	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie, imageViewPokemon, imageViewFAB, imageViewFABQuestion;
 	RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
     LinearLayout relativeLayoutPokemon, relativeLayoutFAB;
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
-    private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
+    private LinearLayout linearLayoutPasswordSave;
 
     RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer;
     NonScrollListView listViewSavedLocations;
     RelativeLayout relativeLayoutAddNewAddress;
     View viewStarIcon;
     SavedPlacesAdapter savedPlacesAdapter;
-    private RecyclerView recyclerViewMenuItems;
+    private RecyclerView rvMenuItems;
     private static final int FRAMEWORK_REQUEST_CODE = 1;
 
     private int nextPermissionsRequestCode = 4000;
@@ -128,6 +132,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private boolean setJeanieState;
     Bundle bundle = new Bundle();
     public static boolean updateMenuBar ;
+
+    private RelativeLayout rlMain;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,14 +142,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
-        recyclerViewMenuItems= (RecyclerView) findViewById(R.id.recycler_menu_nav_views);
+        rvMenuItems = (RecyclerView) findViewById(R.id.rvMenuItems);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
-        textViewSave = (TextView) findViewById(R.id.textViewSave); textViewSave.setTypeface(Fonts.mavenMedium(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         viewTrackingLog = findViewById(R.id.viewTrackingLog);
 //        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         textViewTitle.setText(R.string.title_my_profile);
         textViewTitle.setVisibility(View.VISIBLE);
+        rlMain = (RelativeLayout) findViewById(R.id.rlMain);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -155,8 +162,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPhone = (LinearLayout) findViewById(R.id.linearLayoutPhone);
         imageViewEditProfile = (ImageView) findViewById(R.id.imageViewEditProfile);
+        imageViewEditProfileSave = (ImageView) findViewById(R.id.imageViewEditProfileSave); imageViewEditProfileSave.setVisibility(View.GONE);
         ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.mavenMedium(this));
-        linearLayoutSave = (LinearLayout)findViewById(R.id.linearLayoutSave);
         textViewPasswordSave = (TextView) findViewById(R.id.textViewPasswordSave); textViewPasswordSave.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPasswordSave = (LinearLayout) findViewById(R.id.linearLayoutPasswordSave);
         ivEditPhone = (ImageView) findViewById(R.id.ivEditPhone);
@@ -311,6 +318,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 
         linearLayoutLogout = (LinearLayout) findViewById(R.id.linearLayoutLogout);
+        ivLogout = (ImageView) findViewById(R.id.ivLogout);
+        ivLogout.getDrawable().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#afafb7"), PorterDuff.Mode.SRC_IN));
         ((TextView)findViewById(R.id.textViewLogout)).setTypeface(Fonts.mavenMedium(this));
         linearLayoutAbout = (LinearLayout) findViewById(R.id.linearLayoutAbout);
         ((TextView)findViewById(R.id.textViewAbout)).setTypeface(Fonts.mavenMedium(this));
@@ -375,11 +384,11 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         imageViewEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                linearLayoutSave.performClick();
+                imageViewEditProfileSave.performClick();
             }
         });
 
-        linearLayoutSave.setOnClickListener(new View.OnClickListener() {
+        imageViewEditProfileSave.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -428,7 +437,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 //                        linearLayoutPhone.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         //buttonEditProfile.setText(getResources().getString(R.string.save_changes));
                         imageViewEditProfile.setVisibility(View.GONE);
-                        linearLayoutSave.setVisibility(View.VISIBLE);
+                        imageViewEditProfileSave.setVisibility(View.VISIBLE);
                         Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
                         GAUtils.event(SIDE_MENU, USER+PROFILE, GAAction.EDIT);
                     }
@@ -755,9 +764,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
 
             if(itemsToShowInAccountScreen.size()>0){
-                recyclerViewMenuItems.setNestedScrollingEnabled(false);
-                recyclerViewMenuItems.setLayoutManager(new LinearLayoutManager(this));
-                recyclerViewMenuItems.setAdapter(new AccountMenuItemsAdapter(itemsToShowInAccountScreen, recyclerViewMenuItems, new AccountMenuItemsAdapter.AccountMenuItemsCallback() {
+                rvMenuItems.setNestedScrollingEnabled(false);
+                rvMenuItems.setLayoutManager(new LinearLayoutManager(this));
+                rvMenuItems.setAdapter(new AccountMenuItemsAdapter(itemsToShowInAccountScreen, rvMenuItems, new AccountMenuItemsAdapter.AccountMenuItemsCallback() {
                     @Override
                     public void onMenuItemClick(MenuInfo menuInfo) {
                         if (!editTextUserName.isEnabled()) {
@@ -789,7 +798,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         }
                     }
                 },AccountActivity.this));
-                recyclerViewMenuItems.setVisibility(View.VISIBLE);
+                rvMenuItems.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -856,7 +865,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
             setUserData();
             imageViewEditProfile.setVisibility(View.VISIBLE);
-            linearLayoutSave.setVisibility(View.GONE);
+            imageViewEditProfileSave.setVisibility(View.GONE);
             editTextUserName.setError(null);
             editTextEmail.setError(null);
             editTextPhone.setError(null);
@@ -960,7 +969,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                 updateMenuBar=true;
-                                linearLayoutSave.setVisibility(View.GONE);
+                                imageViewEditProfileSave.setVisibility(View.GONE);
                                 imageViewEditProfile.setVisibility(View.VISIBLE);
                                 String message = jObj.getString("message");
                                 Data.userData.userName = updatedName;
@@ -1042,7 +1051,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     setUserData();
 
                                     imageViewEditProfile.setVisibility(View.VISIBLE);
-                                    linearLayoutSave.setVisibility(View.GONE);
+                                    imageViewEditProfileSave.setVisibility(View.GONE);
                                 }
                             }
                         } catch (Exception exception) {
@@ -1319,19 +1328,19 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
                 textViewTitle.setText(R.string.address_book);
                 imageViewEditProfile.setVisibility(View.GONE);
-                linearLayoutSave.setVisibility(View.GONE);
-                scrollView.setVisibility(View.GONE);
+                imageViewEditProfileSave.setVisibility(View.GONE);
+                rlMain.setVisibility(View.GONE);
             }
         } else{
             super.onBackPressed();
             textViewTitle.setText(R.string.title_my_profile);
-            scrollView.setVisibility(View.VISIBLE);
+            rlMain.setVisibility(View.VISIBLE);
             if (editTextUserName.isEnabled()) {
                 imageViewEditProfile.setVisibility(View.GONE);
-                linearLayoutSave.setVisibility(View.VISIBLE);
+                imageViewEditProfileSave.setVisibility(View.VISIBLE);
             } else {
                 imageViewEditProfile.setVisibility(View.VISIBLE);
-                linearLayoutSave.setVisibility(View.GONE);
+                imageViewEditProfileSave.setVisibility(View.GONE);
             }
         }
     }
@@ -1587,8 +1596,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     public final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
     private void updateMenuList(){
-        if(recyclerViewMenuItems != null && recyclerViewMenuItems.getAdapter() != null) {
-            recyclerViewMenuItems.getAdapter().notifyDataSetChanged();
+        if(rvMenuItems != null && rvMenuItems.getAdapter() != null) {
+            rvMenuItems.getAdapter().notifyDataSetChanged();
         }
     }
 }
