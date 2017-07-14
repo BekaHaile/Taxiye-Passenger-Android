@@ -876,7 +876,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 				new HomeUtil().putDefaultParams(params);
 
-				RestClient.getApiService().loginUsingOtp(params, new Callback<LoginResponse>() {
+				RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 						DialogPopup.dismissLoadingDialog();
