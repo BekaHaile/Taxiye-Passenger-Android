@@ -184,13 +184,6 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 	}
 
 
-    @Override
-	public void onDestroy() {
-		super.onDestroy();
-        ASSL.closeActivity(relativeLayoutRoot);
-		System.gc();
-	}
-
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
