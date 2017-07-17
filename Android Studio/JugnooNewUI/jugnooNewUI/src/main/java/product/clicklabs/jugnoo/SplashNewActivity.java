@@ -1660,6 +1660,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					animLeftToRight(rlPhoneLogin, rlLoginSignupNew, duration);
 				}
 				GAUtils.trackScreenView(SIGNUP_LOGIN);
+				getAllowedAuthChannels(SplashNewActivity.this);
 
 				break;
 
@@ -1667,7 +1668,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				imageViewBack.setVisibility(View.VISIBLE);
 				llContainer.setVisibility(View.VISIBLE);
 				rlPhoneLogin.setVisibility(View.VISIBLE);
-				editTextPhoneNumber.setText(phoneNoToFillInInHouseLogin);
+				editTextPhoneNumber.setText(Utils.retrievePhoneNumberTenChars(phoneNoToFillInInHouseLogin));
 				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, duration);
 
 				break;
@@ -1844,7 +1845,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				relativeLayoutSignup.setVisibility(View.VISIBLE);
 				relativeLayoutLS.setVisibility(View.GONE);
 				rlSplashLogo.setVisibility(View.GONE);
-				getAllowedAuthChannels(SplashNewActivity.this);
 				break;
 
 		}
@@ -2855,23 +2855,13 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-								DialogPopup.dismissLoadingDialog();
 								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									DialogPopup.showLoadingDialog(activity, "Loading...");
 									signUpBy = "email";
 									Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER, jObj.optString("knowlarity_missed_call_number", ""));
-									Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
-									intent.putExtra("show_timer", 1);
-									//intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
-									intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
-									intent.putExtra("signup_by", signUpBy);
-									intent.putExtra("email", phoneNumber);
-									intent.putExtra("otp_length", jObj.optString("otp_length", String.valueOf(4)));
-									startActivity(intent);
-									finish();
-									overridePendingTransition(R.anim.right_in, R.anim.right_out);
 									MyApplication.getInstance().getDatabase().insertEmail(phoneNumber);
+
+									otpScreenIntentAlongDataSet(1, LinkedWalletStatus.NO_WALLET.getOrdinal(), phoneNumber);
 								}
 								DialogPopup.showLoadingDialog(activity, "Loading...");
 							} else {
@@ -3233,21 +3223,16 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						int flag = jObj.getInt("flag");
 
 						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
-								String error = jObj.getString("error");
-								facebookRegister = true;
-								//notRegisteredMsg = error;
-								fbVerifiedNumber = jObj.optString("fb_verified_number");
-								goToLoginUsingPhone("");
-							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+							if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
-							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+							} else if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag
+									|| ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 								linkedWallet = jObj.optInt("reg_wallet_type");
-								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
-								accessToken = jObj.getString("access_token");
+								phoneNoOfUnverifiedAccount = jObj.optString("phone_no");
+								accessToken = jObj.optString("access_token");
 								SplashNewActivity.this.phoneNo = jObj.optString("phone_no", "");
-								SplashNewActivity.this.accessToken = jObj.getString("access_token");
+								SplashNewActivity.this.accessToken = jObj.optString("access_token");
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
@@ -3349,22 +3334,17 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						int flag = jObj.getInt("flag");
 
 						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-							if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
-								String error = jObj.getString("error");
-								googleRegister = true;
-								//notRegisteredMsg = error;
-								goToLoginUsingPhone("");
-							}
-							else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+							if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
 							}
-							else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+							else if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag
+									|| ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 								linkedWallet = jObj.optInt("reg_wallet_type");
 								phoneNoOfUnverifiedAccount = jObj.optString("phone_no", "");
-								accessToken = jObj.getString("access_token");
+								accessToken = jObj.optString("access_token");
 								SplashNewActivity.this.phoneNo = jObj.optString("phone_no", "");
-								SplashNewActivity.this.accessToken = jObj.getString("access_token");
+								SplashNewActivity.this.accessToken = jObj.optString("access_token");
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
@@ -3421,44 +3401,14 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	 * Send intent to otp screen by making required data objects
 	 * flag 0 for email, 1 for Facebook
 	 */
-	public void sendIntentToOtpScreen(int userVerified) {
+	public void sendIntentToOtpScreen() {
 		if (State.LOGIN == state) {
 			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "", otpErrorMsg, new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					DialogPopup.dismissAlertPopup();
-					OTPConfirmScreen.intentFromRegister = false;
-					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
-					if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
-						OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
-								Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
-								Data.facebookUserData.accessToken,
-								Data.facebookUserData.userEmail,
-								Data.facebookUserData.userName,
-								phoneNoOfUnverifiedAccount, "", "", accessToken);
-						signUpBy = "facebook";
-					} else if (RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
-						OTPConfirmScreen.googleRegisterData = new GoogleRegisterData(Data.googleSignInAccount.getId(),
-								Data.googleSignInAccount.getDisplayName(),
-								Data.googleSignInAccount.getEmail(),
-								"",
-								phoneNoOfUnverifiedAccount, "", "", accessToken);
-						signUpBy = "google";
-					} else {
-						OTPConfirmScreen.intentFromRegister = false;
-						OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfUnverifiedAccount, "", "", accessToken);
-						signUpBy = "email";
-					}
-
-					intent.putExtra("signup_by", signUpBy);
-					intent.putExtra("email", editTextEmail.getText().toString().trim());
-					intent.putExtra("password", editTextPassword.getText().toString().trim());
-					intent.putExtra("show_timer", 0);
-					intent.putExtra(LINKED_WALLET, linkedWallet);
-					startActivity(intent);
-					finish();
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					otpScreenIntentAlongDataSet(0, linkedWallet, emailId);
 				}
 			});
 		} else if (State.SIGNUP == state) {
@@ -3471,11 +3421,45 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			intent.putExtra("signup_by", signUpBy);
 			intent.putExtra("email", editTextSEmail.getText().toString().trim());
 			intent.putExtra("password", editTextSPassword.getText().toString().trim());
-			intent.putExtra(USER_VERIFIED, userVerified);
 			startActivity(intent);
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
+	}
+
+
+	private void otpScreenIntentAlongDataSet(int showTimer, int linkedWallet, String phone){
+		OTPConfirmScreen.intentFromRegister = false;
+		Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
+		if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
+			OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
+					Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
+					Data.facebookUserData.accessToken,
+					Data.facebookUserData.userEmail,
+					Data.facebookUserData.userName,
+					phone, "", "", accessToken);
+			signUpBy = "facebook";
+		} else if (RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
+			OTPConfirmScreen.googleRegisterData = new GoogleRegisterData(Data.googleSignInAccount.getId(),
+					Data.googleSignInAccount.getDisplayName(),
+					Data.googleSignInAccount.getEmail(),
+					"",
+					phone, "", "", accessToken);
+			signUpBy = "google";
+		} else {
+			OTPConfirmScreen.intentFromRegister = false;
+			OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phone, "", "", accessToken);
+			signUpBy = "email";
+		}
+
+		intent.putExtra("signup_by", signUpBy);
+		intent.putExtra("email", phone);
+		intent.putExtra("show_timer", showTimer);
+		intent.putExtra(LINKED_WALLET, linkedWallet);
+		intent.putExtra("otp_length", String.valueOf(4));
+		startActivity(intent);
+		finish();
+		overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 
 

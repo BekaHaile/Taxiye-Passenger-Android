@@ -516,11 +516,13 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			else{
 				if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
 					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
+					tvOtpPhoneNumber.setText(facebookRegisterData.phoneNo);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "" + SplashNewActivity.RegisterationType.FACEBOOK);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(facebookRegisterData, FacebookRegisterData.class));
 				}
 				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 					textViewOtpNumber.setText(googleRegisterData.phoneNo);
+					tvOtpPhoneNumber.setText(googleRegisterData.phoneNo);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+SplashNewActivity.RegisterationType.GOOGLE);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(googleRegisterData, GoogleRegisterData.class));
 				}
@@ -1138,7 +1140,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
                 params.put("user_fb_id", facebookRegisterData.fbId);
                 params.put("user_fb_name", facebookRegisterData.fbName);
-                params.put("fb_access_token", facebookRegisterData.accessToken);
+                params.put("fb_access_token", facebookRegisterData.fbAccessToken);
                 params.put("fb_mail", facebookRegisterData.fbUserEmail);
                 params.put("username", facebookRegisterData.fbUserName);
 
@@ -2048,6 +2050,8 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 //					txtPinEntry.setError("OTP can't be empty");
 		}
 	}
+
+
 
 }
 
