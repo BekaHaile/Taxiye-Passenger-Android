@@ -2845,6 +2845,15 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								emailNeedRegister = phoneNumber;
 								emailRegister = true;
 								notRegisteredMsg = error;
+							} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+								SplashNewActivity.this.name = name;
+								SplashNewActivity.this.emailId = emailId;
+								SplashNewActivity.this.phoneNo = phoneNo;
+								SplashNewActivity.this.password = password;
+								SplashNewActivity.this.referralCode = referralCode;
+								SplashNewActivity.this.accessToken = "";
+								Data.kitPhoneNumber = jObj.optString("kit_phone_no");
+								SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNo, password, referralCode, accessToken);
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
@@ -2988,7 +2997,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								SplashNewActivity.this.referralCode = referralCode;
 								SplashNewActivity.this.accessToken = "";
 								Data.kitPhoneNumber = jObj.optString("kit_phone_no");
-								parseDataSendToMultipleAccountsScreen(activity, jObj);
+								parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNo, password, referralCode, accessToken);
 							}else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 								enteredEmail = jObj.getString("user_email");
 								linkedWallet = jObj.optInt("reg_wallet_type");
@@ -3419,7 +3428,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			});
 		} else if (State.SIGNUP == state) {
 			OTPConfirmScreen.intentFromRegister = true;
-			generateOTPRegisterData();
+			generateOTPRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
 			Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 			intent.putExtra("show_timer", 1);
 			intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
@@ -3803,7 +3812,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                     SplashNewActivity.this.password = password;
                                     SplashNewActivity.this.referralCode = referralCode;
                                     SplashNewActivity.this.accessToken = "";
-                                    parseDataSendToMultipleAccountsScreen(activity, jObj);
+                                    parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNo, password, referralCode, accessToken);
                                 } else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
                                     SplashNewActivity.this.name = name;
@@ -3920,7 +3929,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                     SplashNewActivity.this.password = password;
                                     SplashNewActivity.this.referralCode = referralCode;
                                     SplashNewActivity.this.accessToken = "";
-                                    parseDataSendToMultipleAccountsScreen(activity, jObj);
+                                    parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNo, password, referralCode, accessToken);
                                 } else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
@@ -4030,7 +4039,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                     SplashNewActivity.this.password = password;
                                     SplashNewActivity.this.referralCode = referralCode;
                                     SplashNewActivity.this.accessToken = "";
-                                    parseDataSendToMultipleAccountsScreen(activity, jObj);
+                                    parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNo, password, referralCode, accessToken);
                                 } else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
@@ -4078,7 +4087,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		Prefs.with(this).save(SP_WALLET_AT_SIGNUP, String.valueOf(linkedWallet));
     }
 
-    private void generateOTPRegisterData() {
+    public static void generateOTPRegisterData(String name, String emailId, String phoneNo, String password,
+											   String referralCode, String accessToken) {
         if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
             OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
                     Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
@@ -4099,17 +4109,18 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
     }
 
 
-    public void parseDataSendToMultipleAccountsScreen(Activity activity, JSONObject jObj) {
-        generateOTPRegisterData();
+    public static void parseDataSendToMultipleAccountsScreen(Activity activity, JSONObject jObj, String name, String emailId,
+															 String phoneNo, String password, String referralCode, String accessToken) {
+        generateOTPRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
         SplashNewActivity.multipleCaseJSON = jObj;
         if (Data.previousAccountInfoList == null) {
             Data.previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
         }
         Data.previousAccountInfoList.clear();
         Data.previousAccountInfoList.addAll(JSONParser.parsePreviousAccounts(jObj));
-        startActivity(new Intent(activity, MultipleAccountsActivity.class));
-        ActivityCompat.finishAffinity(this);
-        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        activity.startActivity(new Intent(activity, MultipleAccountsActivity.class));
+        ActivityCompat.finishAffinity(activity);
+        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
     private View.OnClickListener onClickListenerAlreadyRegistered = new View.OnClickListener() {

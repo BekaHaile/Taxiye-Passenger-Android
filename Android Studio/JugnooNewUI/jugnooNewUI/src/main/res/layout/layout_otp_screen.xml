@@ -7,6 +7,7 @@
     android:background="@color/white">
 
     <ImageView
+        android:id="@+id/ivTopBanner"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:src="@drawable/bg_top_2"
@@ -68,7 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="9788"
+                        android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_42"
                         app:font="@string/maven"
@@ -250,16 +251,15 @@
 
             <Button
                 android:id="@+id/buttonOtpViaCall"
-                style="@style/ButtonThemeAlternate"
                 android:layout_width="460px"
                 android:layout_height="@dimen/px_94"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="25px"
-                android:background="@drawable/capsule_login_button_selector"
+                android:background="@drawable/capsule_theme_login_selector"
                 android:text="@string/receive_otp_via_call"
-                android:textColor="@color/text_color_light_selector"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size_28"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
         </LinearLayout>
 
@@ -331,9 +331,14 @@
 
 
     <ImageView
+        android:id="@+id/ivBottomBanner"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:layout_alignParentBottom="true"
         android:src="@drawable/splash_bottom_building_bg2"
-        android:tag="mwar" />
+        android:tag="mwar"
+
+        />
+
+    <!--new JSONObject("{\"flag\":143,\"message\":\"We already have an active request for changing to this contact number. Please wait for an hour before requesting again.\"}")-->
 </RelativeLayout>

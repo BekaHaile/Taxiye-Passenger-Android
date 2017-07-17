@@ -418,8 +418,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         } else if (Data.userData.userName.equals(nameChanged)
                                 && Data.userData.userEmail.equalsIgnoreCase(emailChanged)
                                 && Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged)) {
-                            editTextUserName.requestFocus();
-                            editTextUserName.setError(getResources().getString(R.string.nothing_changed));
+                            Utils.showToast(AccountActivity.this, getString(R.string.nothing_changed));
                         } else {
                             updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), emailChanged, "+91" + phoneNoChanged,
                                     !Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged));
@@ -746,7 +745,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         });
 
 
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         GAUtils.trackScreenView(PROFILE_SCREEN);
 
         setMenuItemsAdapter();

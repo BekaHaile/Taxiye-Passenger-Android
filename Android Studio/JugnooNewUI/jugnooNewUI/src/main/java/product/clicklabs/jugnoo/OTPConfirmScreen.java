@@ -846,7 +846,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		}
 	}
 
-	private void apiLoginUsingOtp(final Activity activity, String otp, String phoneNumber){
+	private void apiLoginUsingOtp(final Activity activity, String otp, final String phoneNumber){
 			if(MyApplication.getInstance().isOnline()){
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 
@@ -900,6 +900,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+									Data.kitPhoneNumber = jObj.optString("kit_phone_no");
+									SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj,
+											emailRegisterData.name, emailRegisterData.emailId,
+											phoneNumber, emailRegisterData.password,
+											emailRegisterData.referralCode, emailRegisterData.accessToken);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
@@ -1180,6 +1186,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+									Data.kitPhoneNumber = jObj.optString("kit_phone_no");
+									SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj,
+											facebookRegisterData.fbName, facebookRegisterData.fbUserEmail,
+											facebookRegisterData.phoneNo, facebookRegisterData.password,
+											facebookRegisterData.referralCode, facebookRegisterData.accessToken);
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
@@ -1280,6 +1292,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+									Data.kitPhoneNumber = jObj.optString("kit_phone_no");
+									SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj,
+											googleRegisterData.name, googleRegisterData.email,
+											googleRegisterData.phoneNo, googleRegisterData.password,
+											googleRegisterData.referralCode, googleRegisterData.accessToken);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
