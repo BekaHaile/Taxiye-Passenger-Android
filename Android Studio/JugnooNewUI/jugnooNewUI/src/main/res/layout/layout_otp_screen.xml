@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <ImageView
+        android:id="@+id/ivTopBanner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:src="@drawable/bg_top_2"
+        android:tag="mwar" />
 
     <LinearLayout
         android:id="@+id/linearLayoutMain"
@@ -34,7 +40,7 @@
                 <ImageView
                     android:id="@+id/imageViewWalletIcon"
                     style="@style/payment_option_icon_big_dimen"
-                    android:layout_marginTop="30px"
+                    android:layout_marginTop="0px"
                     android:src="@drawable/ic_paytm_big"
                     android:visibility="gone" />
 
@@ -42,7 +48,7 @@
                     android:id="@+id/otpHelpText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30px"
+                    android:layout_marginTop="0px"
                     android:text="@string/enter_otp_recieved_on"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_32" />
@@ -65,7 +71,9 @@
                         android:gravity="center"
                         android:text=""
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_32" />
+                        android:textSize="@dimen/text_size_42"
+                        app:font="@string/maven"
+                        />
 
                     <ImageView
                         android:id="@+id/imageViewSep"
@@ -89,12 +97,19 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/llEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            ></LinearLayout>
+
         <EditText
             android:id="@+id/editTextOTP"
             android:layout_width="410px"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="70px"
+            android:layout_marginTop="0px"
             android:background="#0000"
             android:gravity="center"
             android:hint="@string/nl_otp_enter_otp"
@@ -114,7 +129,8 @@
             android:layout_height="2px"
             android:visibility="gone"
             android:layout_gravity="center_horizontal"
-            android:src="@color/stroke_light_grey" />
+            android:src="@color/stroke_light_grey"
+            />
 
         <LinearLayout
             android:id="@+id/llOTP"
@@ -131,7 +147,8 @@
         <RelativeLayout
             android:layout_width="411px"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone">
 
             <include layout="@layout/layout_otp_edittext" />
 
@@ -154,13 +171,14 @@
             android:layout_width="410px"
             android:layout_height="2px"
             android:layout_gravity="center_horizontal"
-            android:src="@color/stroke_light_grey" />
+            android:src="@color/stroke_light_grey"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/px_50"
+            android:layout_marginTop="@dimen/px_40"
             android:text="@string/did_not_receive_otp"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_34"
@@ -180,23 +198,23 @@
 
         <LinearLayout
             android:id="@+id/rlResendOTP"
-            android:layout_width="460px"
-            android:layout_height="@dimen/splash_button_height"
+            android:layout_width="500px"
+            android:layout_height="104px"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/px_30"
-            android:background="@drawable/capsule_login_button_selector"
+            android:background="@drawable/capsule_theme_login_selector"
             android:gravity="center">
 
             <ImageView
                 android:id="@+id/ivResend"
-                android:layout_width="@dimen/px_34"
-                android:layout_height="@dimen/px_38"
+                android:layout_width="@dimen/px_36"
+                android:layout_height="@dimen/px_36"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/px_20"
                 android:clickable="false"
                 android:duplicateParentState="true"
-                android:src="@drawable/ic_resend"
+                android:src="@drawable/ic_repeat_white"
                 android:textColor="@drawable/text_color_white_alpha_selector"
                 android:textSize="@dimen/text_size_34" />
 
@@ -208,8 +226,9 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/bFacebook"
                 android:text="@string/resend_otp"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_26"
                 app:font="maven" />
 
         </LinearLayout>
@@ -232,27 +251,26 @@
 
             <Button
                 android:id="@+id/buttonOtpViaCall"
-                style="@style/ButtonThemeAlternate"
                 android:layout_width="460px"
                 android:layout_height="@dimen/px_94"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="25px"
-                android:background="@drawable/capsule_login_button_selector"
+                android:background="@drawable/capsule_theme_login_selector"
                 android:text="@string/receive_otp_via_call"
-                android:textColor="@color/text_color_light_selector"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size_28"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
         </LinearLayout>
 
         <!-- Missed call Button -->
         <LinearLayout
             android:id="@+id/linearLayoutGiveAMissedCall"
-            android:layout_width="460px"
-            android:layout_height="@dimen/px_94"
+            android:layout_width="500px"
+            android:layout_height="104px"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="25px"
-            android:background="@drawable/capsule_login_button_selector"
+            android:background="@drawable/capsule_theme_login_selector"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -260,7 +278,7 @@
                 android:layout_width="37px"
                 android:layout_height="34px"
                 android:layout_marginRight="16px"
-                android:src="@drawable/ic_otp_missed_call"
+                android:src="@drawable/ic_misscall"
                 android:tag="mwar" />
 
             <TextView
@@ -269,8 +287,10 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/nl_otp_give_missed_call"
-                android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_30" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_26"
+                android:textAllCaps="true"
+                />
         </LinearLayout>
 
         <!-- Password Login -->
@@ -282,6 +302,7 @@
             android:layout_marginTop="25px"
             android:background="@drawable/capsule_login_button_selector"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <ImageView
@@ -310,15 +331,14 @@
 
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/px_160"
-        android:src="@drawable/bg_top_2"
-        android:tag="mwar" />
-
-    <ImageView
+        android:id="@+id/ivBottomBanner"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:layout_alignParentBottom="true"
         android:src="@drawable/splash_bottom_building_bg2"
-        android:tag="mwar" />
+        android:tag="mwar"
+
+        />
+
+    <!--new JSONObject("{\"flag\":143,\"message\":\"We already have an active request for changing to this contact number. Please wait for an hour before requesting again.\"}")-->
 </RelativeLayout>

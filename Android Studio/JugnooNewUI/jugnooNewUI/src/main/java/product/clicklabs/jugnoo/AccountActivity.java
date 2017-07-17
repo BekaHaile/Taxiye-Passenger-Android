@@ -146,7 +146,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         viewTrackingLog = findViewById(R.id.viewTrackingLog);
-//        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         textViewTitle.setText(R.string.title_my_profile);
         textViewTitle.setVisibility(View.VISIBLE);
         rlMain = (RelativeLayout) findViewById(R.id.rlMain);
@@ -208,7 +207,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         }
 
 
-        //textViewPokemon, imageViewPokemon
         relativeLayoutPokemon = (LinearLayout) findViewById(R.id.relativeLayoutPokemon);
         textViewPokemon = (TextView)findViewById(R.id.textViewPokemon); textViewPokemon.setTypeface(Fonts.mavenMedium(this));
         imageViewPokemon = (ImageView)findViewById(R.id.imageViewPokemon);
@@ -335,6 +333,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
         });
 
+        ivEditPhone.setVisibility(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1 ? View.GONE : View.VISIBLE);
         ivEditPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -419,8 +418,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         } else if (Data.userData.userName.equals(nameChanged)
                                 && Data.userData.userEmail.equalsIgnoreCase(emailChanged)
                                 && Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged)) {
-                            editTextUserName.requestFocus();
-                            editTextUserName.setError(getResources().getString(R.string.nothing_changed));
+                            Utils.showToast(AccountActivity.this, getString(R.string.nothing_changed));
                         } else {
                             updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), emailChanged, "+91" + phoneNoChanged,
                                     !Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged));
@@ -432,9 +430,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         editTextUserName.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextEmail.setEnabled(true);
                         editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
-                        //editTextPhone.setEnabled(true);
-                        editTextPhone.setEnabled(false);
-//                        linearLayoutPhone.setBackgroundResource(R.drawable.bg_white_orange_bb);
+                        editTextPhone.setEnabled(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1);
+                        if(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1) {
+                            linearLayoutPhone.setBackgroundResource(R.drawable.bg_white_orange_bb);
+                        }
                         //buttonEditProfile.setText(getResources().getString(R.string.save_changes));
                         imageViewEditProfile.setVisibility(View.GONE);
                         imageViewEditProfileSave.setVisibility(View.VISIBLE);
@@ -746,7 +745,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         });
 
 
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         GAUtils.trackScreenView(PROFILE_SCREEN);
 
         setMenuItemsAdapter();
@@ -1209,7 +1208,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         }
     }
 
-    // Call Back method  to get the Message form other Activity
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1472,7 +1470,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(final DialogInterface dialog, final int which) {
-                            // ignore and clean up the listener
                             permissionsListeners.remove(requestCode);
                         }
                     })

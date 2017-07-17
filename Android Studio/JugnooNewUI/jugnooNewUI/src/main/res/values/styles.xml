@@ -820,5 +820,20 @@
         name="AppThemePay.PopupOverlay"
         parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="pin_edittext_style">
+        <item name="android:gravity">center</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:minEms">2</item>
+        <item name="android:inputType">number</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:padding">@dimen/dp_10</item>
+        <item name="android:layout_margin">@dimen/dp_4</item>
+        <item name="android:background">@drawable/bg_transparent_grey_alpha_bottom</item>
+    </style>
+
 
 </resources>

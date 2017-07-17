@@ -66,7 +66,7 @@ public interface ApiService {
 
 
     @FormUrlEncoded
-    @POST("/v3/customer/verify_otp")
+    @POST("/v4/customer/verify_otp")
     void verifyOtp(@FieldMap Map<String, String> params,
                         Callback<LoginResponse> callback);
 
@@ -76,7 +76,7 @@ public interface ApiService {
                    Callback<LoginResponse> callback);
 
     @FormUrlEncoded
-    @POST("/v3/customer/generate_login_otp")
+    @POST("/v4/customer/generate_login_otp")
     void generateLoginOtp(@FieldMap Map<String, String> params,
                    Callback<LoginResponse> callback);
 

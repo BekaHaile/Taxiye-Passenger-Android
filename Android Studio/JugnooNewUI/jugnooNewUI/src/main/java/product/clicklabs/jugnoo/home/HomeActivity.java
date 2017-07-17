@@ -1030,11 +1030,15 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         relativeLayoutOfferConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() <= 0){
-                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
+                try {
+                    if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() <= 0){
+						slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
+					}
+                    slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
+							Data.userData.getCoupons(ProductType.AUTO));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
-                        Data.userData.getCoupons(ProductType.AUTO));
             }
         });
 
@@ -1155,22 +1159,26 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         relativeLayoutInitialSearchBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
-                int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
-                if(index == 1 && Data.autoData.getDropLatLng() == null) {
-                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
-                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
-                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-                        textViewDestSearch.setText(getResources().getString(R.string.destination_required));
-                    } else {
-                        textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
-                    }
-                    textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
-                }else{
-                    placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
-                    setServiceAvailablityUI("");
-                    passengerScreenMode = PassengerScreenMode.P_SEARCH;
-                    switchPassengerScreen(passengerScreenMode);
+                try {
+                    ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
+                    int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
+                    if(index == 1 && Data.autoData.getDropLatLng() == null) {
+						translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
+						translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
+						if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+							textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+						} else {
+							textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+						}
+						textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+					}else{
+						placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
+						setServiceAvailablityUI("");
+						passengerScreenMode = PassengerScreenMode.P_SEARCH;
+						switchPassengerScreen(passengerScreenMode);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -1179,16 +1187,20 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         relativeLayoutDestSearchBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
-                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-                if(index == 1 && Data.autoData.getDropLatLng() == null) {
-                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
-                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
-                }else{
-                    placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
-                    setServiceAvailablityUI("");
-                    passengerScreenMode = PassengerScreenMode.P_SEARCH;
-                    switchPassengerScreen(passengerScreenMode);
+                try {
+                    ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+                    int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+                    if(index == 1 && Data.autoData.getDropLatLng() == null) {
+						translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+						translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
+					}else{
+						placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
+						setServiceAvailablityUI("");
+						passengerScreenMode = PassengerScreenMode.P_SEARCH;
+						switchPassengerScreen(passengerScreenMode);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -1196,24 +1208,28 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         imageViewDropCross.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Data.autoData.setDropLatLng(null);
-                Data.autoData.setDropAddress("");
-				Data.autoData.setDropAddressId(0);
-                dropLocationSet = false;
-                dropLocationSearched = false;
-                if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-                    textViewDestSearch.setText(R.string.destination_required);
-                } else {
-                    textViewDestSearch.setText(R.string.enter_destination);
-                }
-                imageViewDropCross.setVisibility(View.GONE);
-                ((ViewGroup) relativeLayoutInitialSearchBar.getParent()).bringChildToFront(relativeLayoutInitialSearchBar);
-                translateViewBottomTop(relativeLayoutDestSearchBar, false);
-                translateViewTopBottom(relativeLayoutInitialSearchBar, true);
-                Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
+                try {
+                    Data.autoData.setDropLatLng(null);
+                    Data.autoData.setDropAddress("");
+                    Data.autoData.setDropAddressId(0);
+                    dropLocationSet = false;
+                    dropLocationSearched = false;
+                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+						textViewDestSearch.setText(R.string.destination_required);
+					} else {
+						textViewDestSearch.setText(R.string.enter_destination);
+					}
+                    imageViewDropCross.setVisibility(View.GONE);
+                    ((ViewGroup) relativeLayoutInitialSearchBar.getParent()).bringChildToFront(relativeLayoutInitialSearchBar);
+                    translateViewBottomTop(relativeLayoutDestSearchBar, false);
+                    translateViewTopBottom(relativeLayoutInitialSearchBar, true);
+                    Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
                 /*if(dropInitialMarker != null) {
                     dropInitialMarker.remove();
                 }*/
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -1239,9 +1255,13 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         relativeLayoutLocationError.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                locationGotNow();
-                setServiceAvailablityUI(Data.autoData.getFarAwayCity());
-                callMapTouchedRefreshDrivers();
+                try {
+                    locationGotNow();
+                    setServiceAvailablityUI(Data.autoData.getFarAwayCity());
+                    callMapTouchedRefreshDrivers();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -1270,15 +1290,19 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         initialCancelRideBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-                    if (checkForGPSAccuracyTimer != null) {
-                        if (checkForGPSAccuracyTimer.isRunning) {
-                            checkForGPSAccuracyTimer.stopTimer();
-                            customerUIBackToInitialAfterCancel();
-                        }
-                    }
-                } else {
-                    cancelCustomerRequestAsync(HomeActivity.this);
+                try {
+                    if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
+						if (checkForGPSAccuracyTimer != null) {
+							if (checkForGPSAccuracyTimer.isRunning) {
+								checkForGPSAccuracyTimer.stopTimer();
+								customerUIBackToInitialAfterCancel();
+							}
+						}
+					} else {
+						cancelCustomerRequestAsync(HomeActivity.this);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -1304,9 +1328,13 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             @Override
             public void onClick(View v) {
 
-                Data.deepLinkIndex = Data.autoData.getRideStartInviteTextDeepIndexV2();
-                deepLinkAction.openDeepLink(menuBar);
-                GAUtils.event(RIDES, RIDE+IN_PROGRESS, Constants.REFERRAL+CLICKED);
+                try {
+                    Data.deepLinkIndex = Data.autoData.getRideStartInviteTextDeepIndexV2();
+                    deepLinkAction.openDeepLink(menuBar);
+                    GAUtils.event(RIDES, RIDE+IN_PROGRESS, Constants.REFERRAL+CLICKED);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -1438,17 +1466,21 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         ratingBarRSFeedback.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if (Data.autoData.getFeedbackReasons().size() > 0) {
-                    if (rating > 0 && rating <= 3) {
-                        textViewRSWhatImprove.setVisibility(View.VISIBLE);
-                        gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
+                try {
+                    if (Data.autoData.getFeedbackReasons().size() > 0) {
+						if (rating > 0 && rating <= 3) {
+							textViewRSWhatImprove.setVisibility(View.VISIBLE);
+							gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
 
-                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-                        layoutParams.height = (int) (ASSL.Yscale() * 150);
-                        editTextRSFeedback.setLayoutParams(layoutParams);
-                    } else {
-                        setZeroRatingView();
-                    }
+							LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+							layoutParams.height = (int) (ASSL.Yscale() * 150);
+							editTextRSFeedback.setLayoutParams(layoutParams);
+						} else {
+							setZeroRatingView();
+						}
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -1520,18 +1552,26 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         buttonRSSkipFeedback.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                skipFeedbackForCustomerAsync(HomeActivity.this, Data.autoData.getcEngagementId());
-                flurryEventGAForTransaction();
+                try {
+                    skipFeedbackForCustomerAsync(HomeActivity.this, Data.autoData.getcEngagementId());
+                    flurryEventGAForTransaction();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         linearLayoutRSViewInvoice.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Data.autoData.getEndRideData() != null) {
-                    linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.INVOICE);
-                    Bundle bundle = new Bundle();
-                    GAUtils.event(RIDES, FEEDBACK, VIEW_INVOICE+CLICKED);
+                try {
+                    if(Data.autoData.getEndRideData() != null) {
+						linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.INVOICE);
+						Bundle bundle = new Bundle();
+						GAUtils.event(RIDES, FEEDBACK, VIEW_INVOICE+CLICKED);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -1714,9 +1754,13 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             }
         }, 500);
 
-        if(Data.getFuguChatBundle()!=null) {
-            fuguNotificationConfig.handleFuguPushNotification(HomeActivity.this, Data.getFuguChatBundle());
-            Data.setFuguChatBundle(null);
+        try {
+            if(Data.getFuguChatBundle()!=null) {
+				fuguNotificationConfig.handleFuguPushNotification(HomeActivity.this, Data.getFuguChatBundle());
+				Data.setFuguChatBundle(null);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
