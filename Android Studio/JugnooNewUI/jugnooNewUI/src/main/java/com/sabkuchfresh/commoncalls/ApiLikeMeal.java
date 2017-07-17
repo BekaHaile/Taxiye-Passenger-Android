@@ -68,7 +68,7 @@ public class ApiLikeMeal {
                             String message = feedbackResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(), feedbackResponse.getError(), feedbackResponse.getMessage())) {
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                    if(!TextUtils.isEmpty(feedbackResponse.getToastMessage()))
+                                    if(feedbackResponse.getShowToastMessage())
                                         Utils.showToast(activity,feedbackResponse.getToastMessage());
                                     likeMealCallback.onSuccess(isLikeAPI, position, subItem);
                                 } else {
