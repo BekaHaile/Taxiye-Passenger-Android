@@ -540,14 +540,13 @@ public class Data {
 
     }
 
-
-    public static void initializeFuguHandler(Activity context) {
+    public static void initializeFuguHandler(Activity context, CaptureUserData userData) {
 
 
         if (Config.getConfigMode() == ConfigMode.LIVE) {
-            FuguConfig.init(context.getString(R.string.fugu_key), context, "live");
+            FuguConfig.init(context.getString(R.string.fugu_key), context, "live", userData);
         } else {
-            FuguConfig.init(context.getString(R.string.fugu_key), context, "test");
+            FuguConfig.init(context.getString(R.string.fugu_key_test), context, "test", userData);
         }
 
         FuguConfig.getInstance().configActionBar("#ffffff", "#595968", R.drawable.ic_back_selector);
@@ -555,7 +554,6 @@ public class Data {
 
 
     }
-
     public static void setFuguUserData(CaptureUserData userData) {
         fuguUserData = userData;
     }
@@ -589,17 +587,16 @@ public class Data {
     }
 
     public static long CHANNEL_ID_FUGU_ISSUE_ORDER(){
-        return Config.getConfigMode()==ConfigMode.LIVE?56:56;
+        return Config.getConfigMode()==ConfigMode.LIVE?56:435;
     }
 
     public static long CHANNEL_ID_FUGU_BULK_MEALS(){
-        return Config.getConfigMode()==ConfigMode.LIVE?556:556;
+        return Config.getConfigMode()==ConfigMode.LIVE?556:599;
     }
 
     public static long CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE(){
-        return Config.getConfigMode()==ConfigMode.LIVE?57:57;
+        return Config.getConfigMode()==ConfigMode.LIVE?57:610;
     }
-
 
 	public static void saveCurrentIciciUpiTransaction(PlaceOrderResponse placeOrderResponse, int applicationType){
 

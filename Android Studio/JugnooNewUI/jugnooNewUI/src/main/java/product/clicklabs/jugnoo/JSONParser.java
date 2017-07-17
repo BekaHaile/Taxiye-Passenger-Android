@@ -737,14 +737,11 @@ public class JSONParser implements Constants {
                    Data.setIsFuguChatEnabled(true);
                }
             }
-
-
             if(Data.isFuguChatEnabled() && Data.getFuguUserData()!=null) {
-                Data.initializeFuguHandler((Activity) context);
                 FuguNotificationConfig.updateFcmRegistrationToken(MyApplication.getInstance().getDeviceToken());
-                FuguConfig.getInstance().registerIdentifiedUser((Activity) context, Data.getFuguUserData());
-
+                Data.initializeFuguHandler((Activity) context, Data.getFuguUserData());
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
