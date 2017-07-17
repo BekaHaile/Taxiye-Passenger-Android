@@ -205,7 +205,7 @@
                         android:layout_marginTop="@dimen/dp_13"
                         android:layout_toRightOf="@+id/ivFreshRadio"
                         android:gravity="center_vertical"
-                        android:text="@string/fresh"
+                        android:text="@string/fatafat"
                         android:textColor="@color/text_color_selector"
                         android:textSize="@dimen/sp_14"
                         android:visibility="visible"
