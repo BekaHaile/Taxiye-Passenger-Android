@@ -1239,7 +1239,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 				params.put("user_google_id", googleRegisterData.id);
 				params.put("email", googleRegisterData.email);
-				params.put("google_access_token", googleRegisterData.accessToken);
+				params.put("google_access_token", googleRegisterData.googleAccessToken);
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
 				params.put("device_name", MyApplication.getInstance().deviceName());

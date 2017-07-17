@@ -222,7 +222,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	private int nextPermissionsRequestCode = 4000;
 	private final Map<Integer, OnCompleteListener> permissionsListeners = new HashMap<>();
 	private FBAccountKit fbAccountKit;
-	private int loginChannel = 0;
 	private EditText editTextPhoneNumber;
 	private TextView textViewPhoneNumberRequired;
 
@@ -1554,6 +1553,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		rlLoginSignupNew.setVisibility(View.GONE);
 		llSignupOnboarding.setVisibility(View.GONE);
 		rlPhoneLogin.setVisibility(View.GONE);
+
+		getAllowedAuthChannels(SplashNewActivity.this);
+
 		int duration = 500;
 		switch (state) {
 			case SPLASH_INIT:
@@ -1660,7 +1662,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					animLeftToRight(rlPhoneLogin, rlLoginSignupNew, duration);
 				}
 				GAUtils.trackScreenView(SIGNUP_LOGIN);
-				getAllowedAuthChannels(SplashNewActivity.this);
 
 				break;
 
@@ -2183,9 +2184,13 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		}
 	}
 
+
+	private boolean allowedAuthChannelsHitOnce = false;
 	public void getAllowedAuthChannels(Activity activity){
 		if (MyApplication.getInstance().isOnline()) {
-
+			if(allowedAuthChannelsHitOnce){
+				return;
+			}
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			HashMap<String, String> params = new HashMap<>();
 
@@ -2295,11 +2300,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						}
 
 						//"login_channel": 0 //0-Default fbAccountKit, 1-Inhouse apis
-						loginChannel = jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0);
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
 
 					}catch (Exception e){
 						e.printStackTrace();
 					}
+					allowedAuthChannelsHitOnce = true;
 				}
 
 				@Override
@@ -3444,7 +3450,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					Data.googleSignInAccount.getDisplayName(),
 					Data.googleSignInAccount.getEmail(),
 					"",
-					phone, "", "", accessToken);
+					phone, "", "", accessToken, Data.googleSignInAccount.getIdToken());
 			signUpBy = "google";
 		} else {
 			OTPConfirmScreen.intentFromRegister = false;
@@ -4085,7 +4091,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                     Data.googleSignInAccount.getDisplayName(),
                     Data.googleSignInAccount.getEmail(),
                     "",
-                    phoneNo, password, referralCode, accessToken);
+                    phoneNo, password, referralCode, accessToken, Data.googleSignInAccount.getIdToken());
         } else {
             OTPConfirmScreen.intentFromRegister = true;
             OTPConfirmScreen.emailRegisterData = new EmailRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
@@ -4461,7 +4467,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 	String phoneNoToFillInInHouseLogin = "";
 	private void goToLoginUsingPhone(String previousLoginPhone){
-		if(loginChannel == 1){
+		if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1){
 			phoneNoToFillInInHouseLogin = previousLoginPhone;
 			changeUIState(State.SPLASH_LOGIN_PHONE_NO);
 		} else {

@@ -1314,7 +1314,7 @@
     <string name="place_bulk_order">Place a Bulk Order</string>
     <string name="bulk_order">Bulk Order</string>
     <string name="pros">Pros</string>
-    <string name="your_service_request_confirm_message">Your service request will be\nconfirmed in a while</string>
+    <string name="your_service_request_confirm_message">Your service request will be\nconfirmed in a while.</string>
     <string name="service_address">Service Address</string>
     <string name="select_date">Select Date</string>
     <string name="request_booking">Request Booking</string>

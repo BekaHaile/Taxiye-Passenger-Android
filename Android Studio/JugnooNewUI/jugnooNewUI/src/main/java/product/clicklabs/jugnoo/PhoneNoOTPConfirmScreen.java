@@ -363,50 +363,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			
 			Log.i("params", ">" + params);
 		
-//			AsyncHttpClient client = Data.getClient();
-//			client.post(Config.getServerUrl() + "/verify_my_contact_number", params,
-//					new CustomAsyncHttpResponseHandler() {
-//					private JSONObject jObj;
-//
-//						@Override
-//						public void onFailure(Throwable arg3) {
-//							Log.e("request fail", arg3.toString());
-//							DialogPopup.dismissLoadingDialog();
-//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-//						}
-//
-//						@Override
-//						public void onSuccess(String response) {
-//							Log.i("Server response", "response = " + response);
-//							try {
-//								jObj = new JSONObject(response);
-//								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-//									int flag = jObj.getInt("flag");
-//									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-//										String error = jObj.getString("error");
-//										DialogPopup.dialogBanner(activity, error);
-//									}
-//									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-//										String message = jObj.getString("message");
-//										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-//											@Override
-//											public void onClick(View v) {
-//												performBackPressed();
-//											}
-//										});
-//									}
-//									else{
-//										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-//									}
-//								}
-//							}  catch (Exception exception) {
-//								exception.printStackTrace();
-//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-//							}
-//							DialogPopup.dismissLoadingDialog();
-//						}
-//					});
-
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().verifyMyContactNumber(params, new Callback<SettleUserDebt>() {
 				@Override
@@ -473,46 +429,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			params.put("phone_no", phoneNo);
 			Log.i("params", ">"+params);
 		
-//			AsyncHttpClient client = Data.getClient();
-//			client.post(Config.getServerUrl() + "/send_new_number_otp_via_call", params,
-//					new CustomAsyncHttpResponseHandler() {
-//					private JSONObject jObj;
-//
-//						@Override
-//						public void onFailure(Throwable arg3) {
-//							Log.e("request fail", arg3.toString());
-//							DialogPopup.dismissLoadingDialog();
-//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-//						}
-//
-//						@Override
-//						public void onSuccess(String response) {
-//							Log.i("Server response", "response = " + response);
-//							try {
-//								jObj = new JSONObject(response);
-//								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-//									int flag = jObj.getInt("flag");
-//									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-//										String error = jObj.getString("error");
-//										DialogPopup.dialogBanner(activity, error);
-//									}
-//									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-//										String message = jObj.getString("message");
-//										DialogPopup.dialogBanner(activity, message);
-//									}
-//									else{
-//										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-//									}
-//								}
-//							}  catch (Exception exception) {
-//								exception.printStackTrace();
-//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-//							}
-//							DialogPopup.dismissLoadingDialog();
-//						}
-//					});
-
-
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().sendNewNumberOtpViaCall(params, new Callback<SettleUserDebt>() {
 				@Override
