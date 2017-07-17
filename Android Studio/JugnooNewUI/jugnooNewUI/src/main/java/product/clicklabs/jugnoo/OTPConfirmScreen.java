@@ -110,6 +110,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	private ProgressDialog missedCallDialog;
 
 	private LinearLayout llEditText;
+	private PinEditTextLayout pinEditTextLayout;
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -160,7 +161,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 		llEditText = (LinearLayout) findViewById(R.id.llEditText);
-		PinEditTextLayout pinEditTextLayout = new PinEditTextLayout(llEditText, new PinEditTextLayout.Callback() {
+		pinEditTextLayout = new PinEditTextLayout(llEditText, new PinEditTextLayout.Callback() {
 			@Override
 			public void onOTPComplete(String otp, EditText editText) {
 				verifyClick(otp, editText);
@@ -263,7 +264,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			public void afterTextChanged(Editable s) {
 				if(s.length() == 4){
 					buttonVerify.performClick();
-					rlOTPTimer.setVisibility(View.GONE);
+					setRlOTPTimerVisibility(View.GONE);
 				}
 			}
 		});
@@ -338,7 +339,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 				if(s.length() == 4){
 					buttonVerify.performClick();
-					rlOTPTimer.setVisibility(View.GONE);
+					setRlOTPTimerVisibility(View.GONE);
 				}
 			}
 		});
@@ -591,7 +592,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		rlOTPTimer.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				rlOTPTimer.setVisibility(View.GONE);
+				setRlOTPTimerVisibility(View.GONE);
 			}
 		});
 
@@ -622,7 +623,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		try{
 			long timerDuration = 10000;
 			if(getIntent().getIntExtra("show_timer", 0) == 1){
-				rlOTPTimer.setVisibility(View.VISIBLE);
+				setRlOTPTimerVisibility(View.VISIBLE);
 				linearLayoutOtherOptions.setVisibility(View.GONE);
 				CustomCountDownTimer customCountDownTimer = new CustomCountDownTimer(timerDuration, 5);
 				customCountDownTimer.start();
@@ -631,7 +632,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				throw new Exception();
 			}
 		} catch(Exception e){
-			rlOTPTimer.setVisibility(View.GONE);
+			setRlOTPTimerVisibility(View.GONE);
 			linearLayoutOtherOptions.setVisibility(View.VISIBLE);
 		}
 	}
@@ -674,7 +675,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 		@Override
 		public void onFinish() {
-			rlOTPTimer.setVisibility(View.GONE);
+			setRlOTPTimerVisibility(View.GONE);
 			linearLayoutOtherOptions.setVisibility(View.VISIBLE);
 		}
 	}
@@ -1149,6 +1150,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
                 params.put("fb_access_token", facebookRegisterData.fbAccessToken);
                 params.put("fb_mail", facebookRegisterData.fbUserEmail);
                 params.put("username", facebookRegisterData.fbUserName);
+				params.put("phone_no", "+91"+Utils.retrievePhoneNumberTenChars(facebookRegisterData.phoneNo));
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
                 params.put("device_name", MyApplication.getInstance().deviceName());
@@ -1158,13 +1160,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
                 params.put("latitude", "" + Data.loginLatitude);
                 params.put("longitude", "" + Data.loginLongitude);
                 params.put("client_id", Config.getAutosClientId());
-                params.put("otp", otp);
+                params.put("login_otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
-				}
-				else{
+				} else{
 					params.put("device_rooted", "0");
 				}
 
@@ -1252,6 +1253,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				params.put("user_google_id", googleRegisterData.id);
 				params.put("email", googleRegisterData.email);
 				params.put("google_access_token", googleRegisterData.googleAccessToken);
+				params.put("phone_no", "+91"+Utils.retrievePhoneNumberTenChars(googleRegisterData.phoneNo));
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
 				params.put("device_name", MyApplication.getInstance().deviceName());
@@ -1261,7 +1263,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				params.put("latitude", "" + Data.loginLatitude);
 				params.put("longitude", "" + Data.loginLongitude);
 				params.put("client_id", Config.getAutosClientId());
-				params.put("otp", otp);
+				params.put("login_otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 				if(Utils.isDeviceRooted()){
@@ -2066,6 +2068,15 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 //					txtPinEntry.requestFocus();
 //					txtPinEntry.setError("OTP can't be empty");
+		}
+	}
+
+	private void setRlOTPTimerVisibility(int visibility){
+		if(visibility == View.GONE){
+			pinEditTextLayout.tapOnEditText();
+			rlOTPTimer.setVisibility(View.GONE);
+		} else {
+			rlOTPTimer.setVisibility(View.VISIBLE);
 		}
 	}
 

@@ -30,6 +30,7 @@ public class PinEditTextLayout implements View.OnFocusChangeListener, View.OnKey
 	private EditText mPinForthDigitEditText;
 //	private EditText mPinFifthDigitEditText;
 	private EditText mPinHiddenEditText;
+	private LinearLayout pinLayout;
 
 	private ViewGroup rootView;
 	private Context context;
@@ -78,6 +79,18 @@ public class PinEditTextLayout implements View.OnFocusChangeListener, View.OnKey
 		mPinForthDigitEditText = (EditText) rootView.findViewById(R.id.pin_forth_edittext);
 //		mPinFifthDigitEditText = (EditText) rootView.findViewById(R.id.pin_fifth_edittext);
 		mPinHiddenEditText = (EditText) rootView.findViewById(R.id.pin_hidden_edittext);
+		pinLayout = (LinearLayout) rootView.findViewById(R.id.pin_layout);
+		pinLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setFocus(mPinHiddenEditText);
+				showSoftKeyboard(mPinHiddenEditText);
+			}
+		});
+	}
+
+	public void tapOnEditText(){
+		pinLayout.performClick();
 	}
 
 	@Override

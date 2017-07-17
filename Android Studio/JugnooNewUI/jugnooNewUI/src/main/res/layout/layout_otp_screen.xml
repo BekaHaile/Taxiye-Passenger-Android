@@ -251,14 +251,15 @@
 
             <Button
                 android:id="@+id/buttonOtpViaCall"
-                android:layout_width="460px"
-                android:layout_height="@dimen/px_94"
+                android:layout_width="500px"
+                android:layout_height="104px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="25px"
                 android:background="@drawable/capsule_theme_login_selector"
                 android:text="@string/receive_otp_via_call"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_28"
+                android:textSize="@dimen/text_size_26"
+                android:textAllCaps="true"
                 android:visibility="visible" />
 
         </LinearLayout>
