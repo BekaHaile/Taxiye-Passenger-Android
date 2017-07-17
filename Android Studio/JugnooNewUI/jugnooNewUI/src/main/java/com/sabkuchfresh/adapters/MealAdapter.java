@@ -17,11 +17,14 @@ import android.widget.TextView;
 import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
+import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DiscountInfo;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.utils.TextViewStrikeThrough;
 import com.squareup.picasso.Picasso;
 
@@ -216,8 +219,14 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 mHolder.rlLikeLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         int pos  = (int) v.getTag();
-                        callback.onLikeClicked(subItems.get(pos));
+                        SubItem subItem1  = subItems.get(pos);
+                        if(!subItem1.isLikeAPIInProgress()){
+                            subItem1.setLikeAPIInProgress(true);
+                            callback.onLikeClicked(subItem1,pos);
+                        }
+
 
 
                     }
@@ -508,6 +517,31 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         return (((recentOrdersSize + subItemsSize) > 0) ? (recentOrdersSize + subItemsSize + 1) : 0) + showBulkOrderOption;
     }
 
+    public void notifyOnLike(int position, boolean isLiked) {
+        try {
+            if (subItems != null && position < subItems.size()) {
+                SubItem subItem = (SubItem) subItems.get(position);
+                if (subItem.isLikeAPIInProgress()) {
+                    subItem.setLikeAPIInProgress(false);
+                    if (isLiked) {
+                        /*FeedHomeAdapter.ViewHolderReviewImage viewHolderReviewImage = ((FeedHomeAdapter.ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position));
+                        if(viewHolderReviewImage!=null) {
+                            LikeButton likeButton = viewHolderReviewImage.likeButtonAnimate;
+                            likeButton.onClick(likeButton);
+                        }*/
+                        subItem.setLikeCount(subItem.getLikeCount() + 1);
+                    } else if (subItem.getLikeCount() > 0)
+                        subItem.setLikeCount(subItem.getLikeCount() - 1);
+
+                    subItem.setIsLiked(isLiked);
+                    notifyItemChanged(position);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 //    @Override
 //    public int getItemCount() {
 //        return subItems == null ? 0 : subItems.size();
@@ -611,7 +645,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         boolean checkForMinus(int position, SubItem subItem);
         void minusNotDone(int position, SubItem subItem);
 
-        boolean onLikeClicked(SubItem subItem);
+        boolean onLikeClicked(SubItem subItem, int pos);
     }
 
 

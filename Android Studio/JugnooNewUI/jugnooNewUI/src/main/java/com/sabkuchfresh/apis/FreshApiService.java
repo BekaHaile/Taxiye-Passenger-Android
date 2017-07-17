@@ -101,6 +101,6 @@ public interface FreshApiService {
 	@FormUrlEncoded
 	@POST("/update_like_count")
 	void markMealAsFavourite(@FieldMap Map<String, String> params,
-					   Callback<FreshSearchResponse> callback);
+					   Callback<SettleUserDebt> callback);
 
 }

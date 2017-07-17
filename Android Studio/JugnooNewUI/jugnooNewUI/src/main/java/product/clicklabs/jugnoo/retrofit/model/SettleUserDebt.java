@@ -18,6 +18,13 @@ public class SettleUserDebt {
 	@Expose
 	private String error;
 
+	@SerializedName("toast_message")
+	@Expose String toastMessage;
+
+	public String getToastMessage() {
+		return toastMessage;
+	}
+
 	public Integer getFlag() {
 		return flag;
 	}

@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
+import com.sabkuchfresh.commoncalls.ApiLikeMeal;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -134,8 +136,9 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
         recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
+//        recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
         recyclerViewCategoryItems.setHasFixedSize(false);
+        ((SimpleItemAnimator) recyclerViewCategoryItems.getItemAnimator()).setSupportsChangeAnimations(false);
 
         noMealsView = (ImageView) rootView.findViewById(R.id.noMealsView);
         noMealsView.setVisibility(View.GONE);
@@ -537,41 +540,33 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mealAdapter.notifyDataSetChanged();
     }
 
-    private boolean isLikeMealApiInProgress;
+    private ApiLikeMeal apiLikeMeal;
     @Override
-    public boolean onLikeClicked(SubItem subItem) {
-        if(isLikeMealApiInProgress)
-            return false;
+    public boolean onLikeClicked(SubItem subItem, int position) {
+        if (!mSwipeRefreshLayout.isRefreshing()) {
 
-        if(MyApplication.getInstance().isOnline()){
-            isLikeMealApiInProgress= true;
-            HashMap<String, String> params = new HashMap<>();
-            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-            params.put(Constants.STORE_ID, "" + 2);
-            params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
-            params.put(Constants.INTERATED, "1");
-            params.put(Constants.IS_LIKED,subItem.getIsLiked()?"1":"0");
-            params.put(Constants.KEY_ITEM_ID,String.valueOf(subItem.getSubItemId()));
+            if (apiLikeMeal == null)
+                apiLikeMeal = new ApiLikeMeal(new ApiLikeMeal.LikeMealCallback() {
+                    @Override
+                    public void onSuccess(boolean isLiked, int position, SubItem subItem) {
+                        if (getView() != null && mealAdapter != null) {
 
-            RestClient.getFreshApiService().markMealAsFavourite(params, new Callback<FreshSearchResponse>() {
-                @Override
-                public void success(FreshSearchResponse freshSearchResponse, Response response) {
-                    isLikeMealApiInProgress=false;
+                            mealAdapter.notifyOnLike(position, isLiked);
+                        }
+                    }
 
-
-
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    isLikeMealApiInProgress=false;
-
-                }
-            });
-
-        }else{
-            Utils.showToast(activity,"No Connection");
+                    @Override
+                    public void onFailure(boolean isLiked, int posInOriginalList, SubItem subItem) {
+                        if (subItem != null) {
+                            subItem.setLikeAPIInProgress(false);
+                        }
+                    }
+                });
+            apiLikeMeal.likeFeed( getActivity(), !subItem.getIsLiked(), position, subItem);
+//            GAUtils.event(FEED, HOME, LIKE + CLICKED);
         }
+
+
         return true;
     }
 
