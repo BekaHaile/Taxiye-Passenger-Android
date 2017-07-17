@@ -134,6 +134,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     public static boolean updateMenuBar ;
 
     private RelativeLayout rlMain;
+    private TextView tvAbout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -273,6 +274,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
       //  ((TextView)findViewById(R.id.tvJugnooStar)).setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
+        tvAbout = (TextView) findViewById(R.id.tvAbout);
 
 
         imageViewPokemon.setOnClickListener(new View.OnClickListener() {
@@ -344,7 +346,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
         });
 
-        linearLayoutAbout.setOnClickListener(new View.OnClickListener() {
+        tvAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!editTextUserName.isEnabled()) {
