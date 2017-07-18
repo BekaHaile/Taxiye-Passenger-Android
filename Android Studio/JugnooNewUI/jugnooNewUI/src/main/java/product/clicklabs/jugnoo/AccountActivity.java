@@ -911,7 +911,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
 
             scrollView.scrollTo(0, 0);
-            textViewTitle.setText(R.string.title_my_profile);
+            textViewTitle.setText(getAddressBookFragment() == null ? R.string.title_my_profile : R.string.address_book);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1327,23 +1327,21 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 transaction.commitAllowingStateLoss();
 
                 textViewTitle.setText(R.string.address_book);
-                imageViewEditProfile.setVisibility(View.GONE);
-                imageViewEditProfileSave.setVisibility(View.GONE);
                 rlMain.setVisibility(View.GONE);
+                tvAbout.setVisibility(View.GONE);
             }
         } else{
             super.onBackPressed();
             textViewTitle.setText(R.string.title_my_profile);
             rlMain.setVisibility(View.VISIBLE);
-            if (editTextUserName.isEnabled()) {
-                imageViewEditProfile.setVisibility(View.GONE);
-                imageViewEditProfileSave.setVisibility(View.VISIBLE);
-            } else {
-                imageViewEditProfile.setVisibility(View.VISIBLE);
-                imageViewEditProfileSave.setVisibility(View.GONE);
-            }
+            tvAbout.setVisibility(View.VISIBLE);
         }
     }
+
+    public AddressBookFragment getAddressBookFragment(){
+        return (AddressBookFragment) getSupportFragmentManager().findFragmentByTag(AddressBookFragment.class.getName());
+    }
+
 
     public TextView getTextViewTitle(){
         return textViewTitle;
