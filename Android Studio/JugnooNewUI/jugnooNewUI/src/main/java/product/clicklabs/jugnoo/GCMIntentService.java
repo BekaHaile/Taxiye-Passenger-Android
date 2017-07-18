@@ -145,6 +145,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 											 int orderId, int productType, int campaignId, int postId, int postNotificationId) {
 
         try {
+			if(TextUtils.isEmpty(message)){
+				return;
+			}
+
             long when = System.currentTimeMillis();
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -549,7 +553,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 						notificationManager(this, title, logMessage, playSound);
 
-					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag) {
+					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag
+							|| PushFlags.PROS_STATUS_SILENT.getOrdinal() == flag) {
 						if (jObj.has("client_id")) {
 							String clientId = jObj.getString("client_id");
 							if (AccessTokenGenerator.MEALS_CLIENT_ID.equalsIgnoreCase(clientId)) {
@@ -596,18 +601,19 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							}
 
 
-							// if picture is not empty first fetch picture via Picasso loading and then
-							// display bitmap along push else display push directly
-							if(!"".equalsIgnoreCase(picture)){
-								deepindex = jObj.optInt(KEY_DEEPINDEX, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
-								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush,
-										tabIndex, flag, campaignId, postId, postNotificationId);
-							}
-							else{
-								deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
-								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
-										null, url, playSound, showDialog, showPush, tabIndex, flag,
-										0, ProductType.AUTO.getOrdinal(), campaignId, postId, postNotificationId);
+							if(PushFlags.PROS_STATUS_SILENT.getOrdinal() != flag) {
+								// if picture is not empty first fetch picture via Picasso loading and then
+								// display bitmap along push else display push directly
+								if (!"".equalsIgnoreCase(picture)) {
+									deepindex = jObj.optInt(KEY_DEEPINDEX, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
+									bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush,
+											tabIndex, flag, campaignId, postId, postNotificationId);
+								} else {
+									deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
+									notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
+											null, url, playSound, showDialog, showPush, tabIndex, flag,
+											0, ProductType.AUTO.getOrdinal(), campaignId, postId, postNotificationId);
+								}
 							}
 
 

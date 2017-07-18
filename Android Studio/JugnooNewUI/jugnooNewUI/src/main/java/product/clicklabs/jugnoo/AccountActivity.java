@@ -6,9 +6,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -319,7 +316,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         linearLayoutLogout = (LinearLayout) findViewById(R.id.linearLayoutLogout);
         ivLogout = (ImageView) findViewById(R.id.ivLogout);
-        ivLogout.getDrawable().setColorFilter(new PorterDuffColorFilter(Color.parseColor("#afafb7"), PorterDuff.Mode.SRC_IN));
         ((TextView)findViewById(R.id.textViewLogout)).setTypeface(Fonts.mavenMedium(this));
         linearLayoutAbout = (LinearLayout) findViewById(R.id.linearLayoutAbout);
         ((TextView)findViewById(R.id.textViewAbout)).setTypeface(Fonts.mavenMedium(this));

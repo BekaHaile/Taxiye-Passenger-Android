@@ -36,6 +36,7 @@ public enum PushFlags {
 	REFRESH_PAY_DATA(90),
 	UPLOAD_CONTACTS_ERROR(103),
 	DRIVER_ETA(104),
+	PROS_STATUS_SILENT(56)
 	;
 
 	private int ordinal;

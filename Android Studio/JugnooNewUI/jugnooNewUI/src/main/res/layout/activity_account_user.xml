@@ -162,17 +162,19 @@
                         android:orientation="vertical"
                         >
 
+                        <!--android:digits="@string/digits_characters_numbers"-->
                         <EditText
                             android:id="@+id/editTextUserName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_white_orange_bb"
-                            android:digits="@string/digits_characters_numbers"
                             android:gravity="center_vertical"
                             android:hint="@string/enter_your_name"
-                            android:inputType="textCapWords"
                             android:maxLength="60"
+                            android:inputType="text"
                             android:maxLines="1"
+                            android:lines="1"
+                            android:scrollHorizontally="true"
                             android:ellipsize="end"
                             android:paddingBottom="@dimen/dp_6"
                             android:paddingTop="@dimen/dp_6"
@@ -900,8 +902,8 @@
 
                 <ImageView
                     android:id="@+id/ivLogout"
-                    android:layout_width="@dimen/dp_14"
-                    android:layout_height="@dimen/dp_12"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
                     android:src="@drawable/ic_logout"/>
 
                 <TextView
