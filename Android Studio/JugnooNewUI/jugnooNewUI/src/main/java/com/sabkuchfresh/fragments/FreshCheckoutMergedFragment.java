@@ -1518,14 +1518,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                     }
                                 }
                                 else if(ApiResponseFlags.MEALS_PRICE_MISMATCH.getOrdinal() == flag){
-
+                                    getCheckoutDataAPI(selectedSubscription, true);
+/*
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            getCheckoutDataAPI(selectedSubscription, true);
 
                                         }
-                                    });
+                                    });*/
                                 }else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
                                     final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
                                     final double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, 0);
@@ -3530,7 +3530,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
             @Override
             public void onSubmitClick() {
-                placeOrderApi();
+                placeOrder();
 
             }
         },freshCartItemsAdapter,chargesAdapter,noOfItemsInCart).showDialog();
