@@ -2350,7 +2350,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                 Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
                                             }
 
-                                            boolean isDiscountValidCheckout = MealAdapter.isDiscountValid(userCheckoutResponse.getDiscountInfo());
+                                            boolean isDiscountValidCheckout =  userCheckoutResponse.getDiscountInfo()!=null && userCheckoutResponse.getDiscountInfo().getIsActive();
                                             if(isDiscountValidCheckout!=activity.isShowingEarlyBirdDiscount()){
                                                 if(!showMealsMismatchPopup)
                                                    DialogPopup.alertPopup(activity,"", userCheckoutResponse.getDiscountSwitchMessage(isDiscountValidCheckout));
