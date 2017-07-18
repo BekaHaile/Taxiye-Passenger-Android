@@ -174,7 +174,7 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
                     public void removeCoupon() {
 
                     }
-                });
+                },this);
         listViewCart.setAdapter(freshCartItemsAdapter);
 
         linearLayoutCartExpansion.setVisibility(View.GONE);

@@ -204,34 +204,40 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     mHolder.textViewdetails.setVisibility(View.GONE);
                 }*/
 
-                if(subItem.getLikeCount()>0){
-                   String noOfLikes =  activity.getResources().getQuantityString(R.plurals.like_suffix, subItem.getLikeCount(), subItem.getLikeCount());
-                    mHolder.tvLikeCount.setText(noOfLikes);
+                if(Data.getMealsData().isMealsFavEnabled()){
                     mHolder.rlLikeLayout.setVisibility(View.VISIBLE);
-                    if(subItem.getIsLiked()){
-                        mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active_new,0,0,0);
-                    }else {
-                        mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_new,0,0,0);
+                    if(subItem.getLikeCount()>0){
+                        String noOfLikes =  activity.getResources().getQuantityString(R.plurals.like_suffix, subItem.getLikeCount(), subItem.getLikeCount());
+                        mHolder.tvLikeCount.setText(noOfLikes);
+                        mHolder.rlLikeLayout.setVisibility(View.VISIBLE);
+                        if(subItem.getIsLiked()){
+                            mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active_new,0,0,0);
+                        }else {
+                            mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_new,0,0,0);
 
-                    }
-                }
-                mHolder.rlLikeLayout.setTag(position);
-                mHolder.rlLikeLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        int pos  = (int) v.getTag();
-                        SubItem subItem1  = subItems.get(pos);
-                        if(!subItem1.isLikeAPIInProgress()){
-                            subItem1.setLikeAPIInProgress(true);
-                            callback.onLikeClicked(subItem1,pos);
                         }
-
-
-
                     }
-                });
+                    mHolder.rlLikeLayout.setTag(position);
+                    mHolder.rlLikeLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
+                            int pos  = (int) v.getTag();
+                            SubItem subItem1  = subItems.get(pos);
+                            if(!subItem1.isLikeAPIInProgress()){
+                                subItem1.setLikeAPIInProgress(true);
+                                callback.onLikeClicked(subItem1,pos);
+                            }
+
+
+
+                        }
+                    });
+
+
+                }else{
+                    mHolder.rlLikeLayout.setVisibility(View.GONE);
+                }
 
                 mHolder.linear.setTag(position);
                 mHolder.linear.setOnClickListener(new View.OnClickListener() {

@@ -2,6 +2,7 @@ package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.dialogs.CheckoutPriceMismatchDialog;
+import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.utils.AppConstant;
@@ -45,9 +48,10 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 	private boolean checkForCouponApplied;
 	private int appType;
 	private UserCheckoutResponse.SubscriptionInfo subscription;
+	private FreshCheckoutMergedFragment freshCheckoutMergedFragment;
 
 	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, String categoryName, boolean checkForCouponApplied,
-								 Callback callback) {
+								 Callback callback, Fragment fragment) {
 		this.context = context;
 		this.subItems = subItems;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -55,6 +59,9 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		this.categoryName = categoryName;
 		this.checkForCouponApplied = checkForCouponApplied;
 		appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
+		if(fragment instanceof FreshCheckoutMergedFragment)
+			freshCheckoutMergedFragment = (FreshCheckoutMergedFragment) fragment;
+
 	}
 
 	public synchronized void setResults(ArrayList<SubItem> subItems, UserCheckoutResponse.SubscriptionInfo subscription) {
@@ -193,7 +200,12 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+
 					try {
+
+						if(freshCheckoutMergedFragment!=null &&freshCheckoutMergedFragment.isPriceMisMatchDialogShowing())
+							return;
+
 						final int pos = (int) v.getTag();
 //						if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
 //							DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
@@ -226,6 +238,9 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View v) {
 					try {
+						if(freshCheckoutMergedFragment!=null &&freshCheckoutMergedFragment.isPriceMisMatchDialogShowing())
+							return;
+
 						final int pos = (int) v.getTag();
 //						if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
 //							DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
