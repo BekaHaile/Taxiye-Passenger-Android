@@ -9,7 +9,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.CheckoutChargesAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
@@ -34,7 +36,12 @@ public class CheckoutPriceMismatchDialog extends Dialog {
     LinearLayout rootLayout;
     @Bind(R.id.listViewCharges)
     NonScrollListView listViewCharges;
+    @Bind(R.id.btn_cancel)
+    Button btnCancel;
+    @Bind(R.id.textViewCartItems)
+    TextView textViewCartItems;
     private Activity activity;
+    private FreshCartItemsAdapter freshCartItemsAdapter;
 
     public CheckoutPriceMismatchDialogListener getCheckoutPriceMismatchDialogListener() {
         return checkoutPriceMismatchDialogListener;
@@ -50,7 +57,7 @@ public class CheckoutPriceMismatchDialog extends Dialog {
                 checkoutPriceMismatchDialogListener.onCancelClick();
                 break;
             case R.id.btn_confirm:
-
+                dismiss();
                 checkoutPriceMismatchDialogListener.onSubmitClick();
                 break;
         }
@@ -70,7 +77,10 @@ public class CheckoutPriceMismatchDialog extends Dialog {
 
     }
 
-    public CheckoutPriceMismatchDialog setData(CheckoutPriceMismatchDialogListener checkoutRequestPaymentListener, FreshCartItemsAdapter freshCartItemsAdapter, CheckoutChargesAdapter checkoutChargesAdapter) {
+    public CheckoutPriceMismatchDialog setData(CheckoutPriceMismatchDialogListener checkoutRequestPaymentListener, FreshCartItemsAdapter freshCartItemsAdapter, CheckoutChargesAdapter checkoutChargesAdapter, int noOfItems) {
+        textViewCartItems.setAllCaps(false);
+        textViewCartItems.setText(activity.getString(R.string.cart_items_popup_format, String.valueOf(noOfItems)));
+        this.freshCartItemsAdapter = freshCartItemsAdapter;
         this.checkoutPriceMismatchDialogListener = checkoutRequestPaymentListener;
         listViewCharges.setAdapter(checkoutChargesAdapter);
         listViewCart.setAdapter(freshCartItemsAdapter);
@@ -84,10 +94,17 @@ public class CheckoutPriceMismatchDialog extends Dialog {
     }
 
     public void showDialog() {
-
+        if (freshCartItemsAdapter != null)
+            freshCartItemsAdapter.notifyDataSetChanged();
         super.show();
     }
 
+    @Override
+    public void dismiss() {
+        if (freshCartItemsAdapter != null)
+            freshCartItemsAdapter.notifyDataSetChanged();
+        super.dismiss();
+    }
 
     private CheckoutPriceMismatchDialog(@StyleRes int themeResId, Activity context) {
         super(context, themeResId);
@@ -95,9 +112,9 @@ public class CheckoutPriceMismatchDialog extends Dialog {
         setContentView(R.layout.dialog_checkout_price_mismatch);
         ButterKnife.bind(this, getWindow().getDecorView());
         ASSL.DoMagic(rootLayout);
+        btnCancel.setSelected(true);
         Window window = getWindow();
         WindowManager.LayoutParams wlp = getWindow().getAttributes();
-        setCancelable(false);
         wlp.gravity = Gravity.LEFT | Gravity.CENTER;
         wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;

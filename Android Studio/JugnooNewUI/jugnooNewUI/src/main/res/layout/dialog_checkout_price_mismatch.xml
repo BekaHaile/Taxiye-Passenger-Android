@@ -22,8 +22,8 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textSize="35px"
-        android:layout_marginBottom="12px"
-        android:text="Price update: Discount slot expired"
+        android:layout_marginBottom="20px"
+        android:text="Price update: \n Discount slot expired"
         android:textColor="@color/text_color"
         app:font="maven" />
 
@@ -33,6 +33,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textSize="26px"
+        android:layout_marginBottom="20px"
         android:text="Kindly review your cart"
         android:textColor="@color/text_color"
         app:font="maven" />
@@ -52,8 +53,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="25px"
-        android:layout_marginTop="20px"
+        android:layout_marginTop="@dimen/px_15"
+        android:layout_marginBottom="30px"
         android:textSize="26px"
         android:textColor="@color/text_color"
         android:text="Click on cancel to edit order"
@@ -71,9 +72,9 @@
             android:layout_marginLeft="40px"
             android:layout_marginRight="10px"
             android:layout_weight="1"
-            android:background="@drawable/capsule_theme_color_selector"
+            android:textColor="@color/text_selector_back_icici"
+            android:background="@drawable/selector_back_icici"
             android:text="Cancel"
-            android:textColor="@color/white"
             android:textSize="28px"
             app:font="maven" />
 

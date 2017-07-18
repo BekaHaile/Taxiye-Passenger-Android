@@ -148,6 +148,8 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 
 			mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
 			mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
+			mHolder.imageViewPlus.setEnabled(!(freshCheckoutMergedFragment!=null && freshCheckoutMergedFragment.isPriceMisMatchDialogShowing()));
+			mHolder.imageViewMinus.setEnabled(!(freshCheckoutMergedFragment!=null && freshCheckoutMergedFragment.isPriceMisMatchDialogShowing()));
 			if(position == getCount()-1){
 				mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.transparent));
 			} else {

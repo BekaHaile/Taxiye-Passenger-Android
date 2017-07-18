@@ -2352,7 +2352,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                                             boolean isDiscountValidCheckout = MealAdapter.isDiscountValid(userCheckoutResponse.getDiscountInfo());
                                             if(isDiscountValidCheckout!=activity.isShowingEarlyBirdDiscount()){
-                                                DialogPopup.alertPopup(activity,"", userCheckoutResponse.getDiscountSwitchMessage(isDiscountValidCheckout));
+                                                if(!showMealsMismatchPopup)
+                                                   DialogPopup.alertPopup(activity,"", userCheckoutResponse.getDiscountSwitchMessage(isDiscountValidCheckout));
                                                 activity.setShowingEarlyBirdDiscount(isDiscountValidCheckout);
                                                 activity.setRefreshCart(true);
 
@@ -2903,8 +2904,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
+
+    private int noOfItemsInCart;
     private void updateCartTopBarView(Pair<Double, Integer> pair) {
         taxSubTotal.setValue(getSubTotalAmount(true));
+        noOfItemsInCart =pair.second;
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
         taxTotal.setValue(pair.first);
         chargesAdapter.notifyDataSetChanged();
@@ -3529,7 +3533,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 placeOrderApi();
 
             }
-        },freshCartItemsAdapter,chargesAdapter).showDialog();
+        },freshCartItemsAdapter,chargesAdapter,noOfItemsInCart).showDialog();
 
     }
 

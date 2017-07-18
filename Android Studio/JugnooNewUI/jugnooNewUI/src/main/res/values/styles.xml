@@ -688,7 +688,7 @@
     <style name="Checkout_Price_Mismatch_Theme" parent="Feed_Popup_Theme">
 
         <item name="android:backgroundDimAmount">0.7</item>
-        <!--<item name="android:windowCloseOnTouchOutside">false</item>-->
+        <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
 
