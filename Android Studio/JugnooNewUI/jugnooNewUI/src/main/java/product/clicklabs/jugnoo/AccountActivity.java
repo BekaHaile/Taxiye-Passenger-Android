@@ -331,7 +331,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
         });
 
-        ivEditPhone.setVisibility(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1 ? View.GONE : View.VISIBLE);
+        setEditPhoneUI();
         ivEditPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -748,6 +748,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         setMenuItemsAdapter();
 
+        getAllowedAuthChannels();
 	}
 
     private void setMenuItemsAdapter() {
@@ -1592,5 +1593,42 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         if(rvMenuItems != null && rvMenuItems.getAdapter() != null) {
             rvMenuItems.getAdapter().notifyDataSetChanged();
         }
+    }
+
+
+    public void getAllowedAuthChannels(){
+        if (MyApplication.getInstance().isOnline()) {
+            if(SplashNewActivity.allowedAuthChannelsHitOnce){
+                return;
+            }
+            HashMap<String, String> params = new HashMap<>();
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().getAllowedAuthChannels(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    DialogPopup.dismissLoadingDialog();
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i(TAG, "Auth channel response = " + responseStr);
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        Prefs.with(AccountActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
+                        setEditPhoneUI();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    SplashNewActivity.allowedAuthChannelsHitOnce = true;
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    DialogPopup.dismissLoadingDialog();
+                }
+            });
+
+        }
+    }
+
+    private void setEditPhoneUI(){
+        ivEditPhone.setVisibility(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1 ? View.GONE : View.VISIBLE);
     }
 }

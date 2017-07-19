@@ -1554,8 +1554,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		llSignupOnboarding.setVisibility(View.GONE);
 		rlPhoneLogin.setVisibility(View.GONE);
 
-		getAllowedAuthChannels(SplashNewActivity.this);
-
 		int duration = 500;
 		switch (state) {
 			case SPLASH_INIT:
@@ -2185,13 +2183,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	}
 
 
-	private boolean allowedAuthChannelsHitOnce = false;
+	public static boolean allowedAuthChannelsHitOnce = false;
 	public void getAllowedAuthChannels(Activity activity){
 		if (MyApplication.getInstance().isOnline()) {
 			if(allowedAuthChannelsHitOnce){
 				return;
 			}
-			DialogPopup.showLoadingDialog(activity, "Loading...");
 			HashMap<String, String> params = new HashMap<>();
 
 			new HomeUtil().putDefaultParams(params);
