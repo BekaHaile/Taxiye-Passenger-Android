@@ -70,6 +70,7 @@ public class ApiLikeMeal {
                                 if (feedbackResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                     if(feedbackResponse.getShowToastMessage())
                                         Utils.showToast(activity,feedbackResponse.getToastMessage());
+
                                     likeMealCallback.onSuccess(isLikeAPI, position, subItem);
                                 } else {
                                     Utils.showToast(activity, message);

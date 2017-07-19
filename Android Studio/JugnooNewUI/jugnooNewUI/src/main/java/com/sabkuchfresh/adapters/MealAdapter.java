@@ -540,6 +540,9 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         subItem.setLikeCount(subItem.getLikeCount() - 1);
 
                     subItem.setIsLiked(isLiked);
+
+                    if(recentOrders!=null)
+                        position +=recentOrders.size();
                     notifyItemChanged(position);
                 }
             }
