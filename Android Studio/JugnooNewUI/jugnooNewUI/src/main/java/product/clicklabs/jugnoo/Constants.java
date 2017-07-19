@@ -469,6 +469,7 @@ public interface Constants {
     String KEY_FEEDBACK_DATE = "feedback_delivery_date";
     String KEY_FEEDBACK_VIEW_TYPE = "feedback_view_type";
     String KEY_PRODUCT_TYPE = "product_type";
+    String KEY_OFFERING_ARRAY = "offering_array";
     String KEY_ORDER_ID = "order_id";
     String KEY_ORDER_DATE = "order_date";
     String KEY_FATAFAT_ENABLED = "fatafat_enabled";
@@ -751,4 +752,6 @@ public interface Constants {
     String KEY_JOB_AMOUNT = "job_amount";
     String SPLITTER_PRODUCT_NAME_DESCRIPTION = ": ";
     String SHOW_CUSTOM_FIELDS = "show_custom_fields";
+    String KEY_UPI_CASHBACK_VALUE = "upi_cashback_value";
+    String KEY_LOGIN_CHANNEL = "login_channel";
 }

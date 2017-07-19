@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -727,6 +728,8 @@ public class JSONParser implements Constants {
 
         resetUseCouponSP(context);
         resetIsVegToggle(context);
+
+        Paper.book().delete(PaperDBKeys.HISTORY_PRODUCT_TYPES);
 
         try {
 

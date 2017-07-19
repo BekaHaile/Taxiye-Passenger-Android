@@ -59,7 +59,7 @@
                     android:id="@+id/textViewThanks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/thanks_for_riding_with_jugnoo"
+                    android:text="@string/thanks_for_riding_with_us"
                     android:textSize="@dimen/text_size_36"
                     android:layout_marginLeft="15px"
                     android:textColor="@color/text_color"/>

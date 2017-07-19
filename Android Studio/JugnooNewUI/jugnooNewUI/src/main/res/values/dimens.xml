@@ -845,5 +845,14 @@
     <dimen name="dp_63">
         63dp
     </dimen>
+    <dimen name="dp_26">
+        26dp
+    </dimen>
+    <dimen name="sp_30">
+        30sp
+    </dimen>
+    <dimen name="text_size_45">
+        45px
+    </dimen>
 
 </resources>

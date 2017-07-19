@@ -41,7 +41,7 @@ public class FreshOrderCompleteDialog {
 	}
 
 	public Dialog show(String orderId, String deliverySlot, String deliveryDay, boolean showDeliverySlot,
-					   String restaurantName, PlaceOrderResponse placeOrderResponse, int appType) {
+					   String restaurantName, PlaceOrderResponse placeOrderResponse, int appType, String prosTaskCreatedMessage) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -94,10 +94,10 @@ public class FreshOrderCompleteDialog {
 				}
 			}
 			else if(appType == AppConstant.ApplicationType.PROS) {
-				if(placeOrderResponse == null || TextUtils.isEmpty(placeOrderResponse.getOrderPlacedMessage())) {
+				if(TextUtils.isEmpty(prosTaskCreatedMessage)) {
 					textView.setText(activity.getResources().getString(R.string.your_service_request_confirm_message));
 				} else {
-					textView.setText(Utils.trimHTML(Utils.fromHtml(placeOrderResponse.getOrderPlacedMessage())));
+					textView.setText(Utils.trimHTML(Utils.fromHtml(prosTaskCreatedMessage)));
 				}
 			}
 

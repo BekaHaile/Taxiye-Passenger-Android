@@ -498,7 +498,8 @@ public class WalletCore {
 				JSONObject ji = jsonArray.getJSONObject(i);
 				PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
 						ji.getInt(Constants.KEY_ENABLED), ji.optString(KEY_OFFER_TEXT, null), ji.optString(KEY_DISPLAY_NAME, null),
-						ji.optString(KEY_UPI_HANDLE, null),ji.optString(KEY_JUGNOO_VPA_HANDLE,null));
+						ji.optString(KEY_UPI_HANDLE, null),ji.optString(KEY_JUGNOO_VPA_HANDLE,null),
+						ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""));
 				paymentModeConfigDatas.add(paymentModeConfigData);
 			}
 		} catch (Exception e){

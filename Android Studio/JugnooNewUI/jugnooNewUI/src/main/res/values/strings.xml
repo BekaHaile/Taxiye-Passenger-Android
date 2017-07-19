@@ -1314,7 +1314,7 @@
     <string name="place_bulk_order">Place a Bulk Order</string>
     <string name="bulk_order">Bulk Order</string>
     <string name="pros">Pros</string>
-    <string name="your_service_request_confirm_message">Your service request will be\nconfirmed within the next 30 mins.</string>
+    <string name="your_service_request_confirm_message">Your service request will be\nconfirmed in a while.</string>
     <string name="service_address">Service Address</string>
     <string name="select_date">Select Date</string>
     <string name="request_booking">Request Booking</string>
@@ -1343,6 +1343,8 @@
     <string name="order_id_colon">Order Id:</string>
     <string name="visiting_charges_may_apply">*Service rate will be determined after inspection. Minimum  visiting charges may apply.</string>
     <string name="service_id_colon">Service ID:</string>
+    <string name="select_offerings">Select Offerings</string>
+    <string name="thanks_for_riding_with_us">Thanks for riding with us</string>
 
 
 </resources>

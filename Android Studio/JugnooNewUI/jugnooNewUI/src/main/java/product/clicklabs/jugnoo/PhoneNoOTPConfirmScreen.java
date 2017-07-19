@@ -19,7 +19,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -36,6 +35,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.widgets.PinEditTextLayout;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -51,13 +51,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
-	LinearLayout linearLayoutWaiting;
-	TextView textViewCounter;
-	ImageView imageViewYellowLoadingBar;
-
 	Button buttonVerify, buttonOtpViaCall;
 	LinearLayout linearLayoutGiveAMissedCall;
-	TextView textViewOr;
 
 
 	RelativeLayout relative;
@@ -65,6 +60,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	ScrollView scrollView;
 	LinearLayout linearLayoutMain;
 	TextView textViewScroll;
+
+	LinearLayout llEditText;
 
 	
 	String phoneNoToVerify = "";
@@ -127,23 +124,28 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		imageViewSep = (ImageView) findViewById(R.id.imageViewSep); imageViewSep.setVisibility(View.GONE);
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber); imageViewChangePhoneNumber.setVisibility(View.GONE);
 
-		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
-		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenLight(this));
-		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.mavenLight(this));
-		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
-
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.mavenMedium(this));
 
 		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
 		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
-		textViewOr = (TextView) findViewById(R.id.textViewOr); textViewOr.setTypeface(Fonts.mavenLight(this));
 		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
 		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenLight(this));
 
+		findViewById(R.id.ivTopBanner).setVisibility(View.GONE);
+		findViewById(R.id.ivBottomBanner).setVisibility(View.GONE);
+		findViewById(R.id.rlResendOTP).setVisibility(View.GONE);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
+		llEditText = (LinearLayout) findViewById(R.id.llEditText);
+		PinEditTextLayout pinEditTextLayout = new PinEditTextLayout(llEditText, new PinEditTextLayout.Callback() {
+			@Override
+			public void onOTPComplete(String otp, EditText editText) {
+				verifyClick(otp, editText);
+			}
+		});
 
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
@@ -164,13 +166,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 			@Override
 			public void onClick(View v) {
-				String otpCode = editTextOTP.getText().toString().trim();
-				if (otpCode.length() > 0) {
-					verifyOtpPhoneNoChange(PhoneNoOTPConfirmScreen.this, phoneNoToVerify, otpCode);
-				} else {
-					editTextOTP.requestFocus();
-					editTextOTP.setError("OTP can't be empty");
-				}
+				verifyClick(editTextOTP.getText().toString().trim(), editTextOTP);
 			}
 		});
 
@@ -254,7 +250,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			performBackPressed();
 		}
 
-		linearLayoutWaiting.setVisibility(View.GONE);
 
 		try{
 			if(!"".equalsIgnoreCase(Prefs.with(PhoneNoOTPConfirmScreen.this).getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
@@ -270,21 +265,23 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			else{
 				buttonOtpViaCall.setVisibility(View.GONE);
 			}
-			if(linearLayoutGiveAMissedCall.getVisibility() == View.VISIBLE
-					&& buttonOtpViaCall.getVisibility() == View.VISIBLE){
-				textViewOr.setVisibility(View.VISIBLE);
-			} else{
-				textViewOr.setVisibility(View.GONE);
-			}
 		} catch(Exception e){
 			e.printStackTrace();
 			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			buttonOtpViaCall.setVisibility(View.GONE);
-			textViewOr.setVisibility(View.GONE);
 		}
 
 
 
+	}
+
+	private void verifyClick(String otp, EditText editText){
+		if (otp.length() > 0) {
+			verifyOtpPhoneNoChange(PhoneNoOTPConfirmScreen.this, phoneNoToVerify, otp);
+		} else {
+			editText.requestFocus();
+			editText.setError("OTP can't be empty");
+		}
 	}
 
 
@@ -363,50 +360,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			
 			Log.i("params", ">" + params);
 		
-//			AsyncHttpClient client = Data.getClient();
-//			client.post(Config.getServerUrl() + "/verify_my_contact_number", params,
-//					new CustomAsyncHttpResponseHandler() {
-//					private JSONObject jObj;
-//
-//						@Override
-//						public void onFailure(Throwable arg3) {
-//							Log.e("request fail", arg3.toString());
-//							DialogPopup.dismissLoadingDialog();
-//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-//						}
-//
-//						@Override
-//						public void onSuccess(String response) {
-//							Log.i("Server response", "response = " + response);
-//							try {
-//								jObj = new JSONObject(response);
-//								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-//									int flag = jObj.getInt("flag");
-//									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-//										String error = jObj.getString("error");
-//										DialogPopup.dialogBanner(activity, error);
-//									}
-//									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-//										String message = jObj.getString("message");
-//										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-//											@Override
-//											public void onClick(View v) {
-//												performBackPressed();
-//											}
-//										});
-//									}
-//									else{
-//										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-//									}
-//								}
-//							}  catch (Exception exception) {
-//								exception.printStackTrace();
-//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-//							}
-//							DialogPopup.dismissLoadingDialog();
-//						}
-//					});
-
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().verifyMyContactNumber(params, new Callback<SettleUserDebt>() {
 				@Override
@@ -473,46 +426,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			params.put("phone_no", phoneNo);
 			Log.i("params", ">"+params);
 		
-//			AsyncHttpClient client = Data.getClient();
-//			client.post(Config.getServerUrl() + "/send_new_number_otp_via_call", params,
-//					new CustomAsyncHttpResponseHandler() {
-//					private JSONObject jObj;
-//
-//						@Override
-//						public void onFailure(Throwable arg3) {
-//							Log.e("request fail", arg3.toString());
-//							DialogPopup.dismissLoadingDialog();
-//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-//						}
-//
-//						@Override
-//						public void onSuccess(String response) {
-//							Log.i("Server response", "response = " + response);
-//							try {
-//								jObj = new JSONObject(response);
-//								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-//									int flag = jObj.getInt("flag");
-//									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-//										String error = jObj.getString("error");
-//										DialogPopup.dialogBanner(activity, error);
-//									}
-//									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-//										String message = jObj.getString("message");
-//										DialogPopup.dialogBanner(activity, message);
-//									}
-//									else{
-//										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-//									}
-//								}
-//							}  catch (Exception exception) {
-//								exception.printStackTrace();
-//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-//							}
-//							DialogPopup.dismissLoadingDialog();
-//						}
-//					});
-
-
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().sendNewNumberOtpViaCall(params, new Callback<SettleUserDebt>() {
 				@Override

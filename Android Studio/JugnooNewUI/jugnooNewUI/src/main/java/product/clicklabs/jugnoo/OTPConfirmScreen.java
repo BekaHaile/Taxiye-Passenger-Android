@@ -53,6 +53,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.widgets.PinEditTextLayout;
 import product.clicklabs.jugnoo.widgets.PinEntryEditText;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -108,18 +109,8 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	private PinEntryEditText txtPinEntry;
 	private ProgressDialog missedCallDialog;
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-//		FlurryAgent.init(this, Config.getFlurryKey());
-//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-//		FlurryAgent.onEndSession(this);
-	}
+	private LinearLayout llEditText;
+	private PinEditTextLayout pinEditTextLayout;
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -168,6 +159,14 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+
+		llEditText = (LinearLayout) findViewById(R.id.llEditText);
+		pinEditTextLayout = new PinEditTextLayout(llEditText, new PinEditTextLayout.Callback() {
+			@Override
+			public void onOTPComplete(String otp, EditText editText) {
+				verifyClick(otp, editText);
+			}
+		});
 
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenRegular(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
@@ -265,7 +264,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			public void afterTextChanged(Editable s) {
 				if(s.length() == 4){
 					buttonVerify.performClick();
-					rlOTPTimer.setVisibility(View.GONE);
+					setRlOTPTimerVisibility(View.GONE);
 				}
 			}
 		});
@@ -282,34 +281,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 			@Override
 			public void onClick(View v) {
-				//String otpCode = editTextOTP.getText().toString().trim();
-				String otpCode = txtPinEntry.getText().toString().trim();
-				if (otpCode.length() > 0) {
-					if(missedCallDialog != null) {
-						missedCallDialog.dismiss();
-					}
-					//rlProgress.setVisibility(View.GONE);
-					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
-						verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
-						/*if(userVerified == 1){
-							sendOTP(otpCode);
-						} else {
-							verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
-						}*/
-
-					} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
-						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode, linkedWallet);
-					} else {
-						//verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
-						apiLoginUsingOtp(OTPConfirmScreen.this, otpCode, email);
-					}
-				} else {
-//					editTextOTP.requestFocus();
-//					editTextOTP.setError("OTP can't be empty");
-
-					txtPinEntry.requestFocus();
-					txtPinEntry.setError("OTP can't be empty");
-				}
+				verifyClick(editTextOTP.getText().toString().trim(), editTextOTP);
 			}
 		});
 
@@ -367,7 +339,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 				if(s.length() == 4){
 					buttonVerify.performClick();
-					rlOTPTimer.setVisibility(View.GONE);
+					setRlOTPTimerVisibility(View.GONE);
 				}
 			}
 		});
@@ -545,11 +517,13 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			else{
 				if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
 					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
+					tvOtpPhoneNumber.setText(facebookRegisterData.phoneNo);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "" + SplashNewActivity.RegisterationType.FACEBOOK);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(facebookRegisterData, FacebookRegisterData.class));
 				}
 				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 					textViewOtpNumber.setText(googleRegisterData.phoneNo);
+					tvOtpPhoneNumber.setText(googleRegisterData.phoneNo);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+SplashNewActivity.RegisterationType.GOOGLE);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(googleRegisterData, GoogleRegisterData.class));
 				}
@@ -618,7 +592,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		rlOTPTimer.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				rlOTPTimer.setVisibility(View.GONE);
+				setRlOTPTimerVisibility(View.GONE);
 			}
 		});
 
@@ -649,7 +623,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		try{
 			long timerDuration = 10000;
 			if(getIntent().getIntExtra("show_timer", 0) == 1){
-				rlOTPTimer.setVisibility(View.VISIBLE);
+				setRlOTPTimerVisibility(View.VISIBLE);
 				linearLayoutOtherOptions.setVisibility(View.GONE);
 				CustomCountDownTimer customCountDownTimer = new CustomCountDownTimer(timerDuration, 5);
 				customCountDownTimer.start();
@@ -658,7 +632,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				throw new Exception();
 			}
 		} catch(Exception e){
-			rlOTPTimer.setVisibility(View.GONE);
+			setRlOTPTimerVisibility(View.GONE);
 			linearLayoutOtherOptions.setVisibility(View.VISIBLE);
 		}
 	}
@@ -701,7 +675,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 		@Override
 		public void onFinish() {
-			rlOTPTimer.setVisibility(View.GONE);
+			setRlOTPTimerVisibility(View.GONE);
 			linearLayoutOtherOptions.setVisibility(View.VISIBLE);
 		}
 	}
@@ -873,7 +847,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		}
 	}
 
-	private void apiLoginUsingOtp(final Activity activity, String otp, String phoneNumber){
+	private void apiLoginUsingOtp(final Activity activity, String otp, final String phoneNumber){
 			if(MyApplication.getInstance().isOnline()){
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 
@@ -905,7 +879,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 				new HomeUtil().putDefaultParams(params);
 
-				RestClient.getApiService().loginUsingOtp(params, new Callback<LoginResponse>() {
+				RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 						DialogPopup.dismissLoadingDialog();
@@ -927,6 +901,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+									Data.kitPhoneNumber = jObj.optString("kit_phone_no");
+									SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj,
+											emailRegisterData.name, emailRegisterData.emailId,
+											phoneNumber, emailRegisterData.password,
+											emailRegisterData.referralCode, emailRegisterData.accessToken);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
@@ -1167,9 +1147,10 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
                 params.put("user_fb_id", facebookRegisterData.fbId);
                 params.put("user_fb_name", facebookRegisterData.fbName);
-                params.put("fb_access_token", facebookRegisterData.accessToken);
+                params.put("fb_access_token", facebookRegisterData.fbAccessToken);
                 params.put("fb_mail", facebookRegisterData.fbUserEmail);
                 params.put("username", facebookRegisterData.fbUserName);
+				params.put("phone_no", "+91"+Utils.retrievePhoneNumberTenChars(facebookRegisterData.phoneNo));
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
                 params.put("device_name", MyApplication.getInstance().deviceName());
@@ -1179,13 +1160,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
                 params.put("latitude", "" + Data.loginLatitude);
                 params.put("longitude", "" + Data.loginLongitude);
                 params.put("client_id", Config.getAutosClientId());
-                params.put("otp", otp);
+                params.put("login_otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
-				}
-				else{
+				} else{
 					params.put("device_rooted", "0");
 				}
 
@@ -1207,6 +1187,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+									Data.kitPhoneNumber = jObj.optString("kit_phone_no");
+									SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj,
+											facebookRegisterData.fbName, facebookRegisterData.fbUserEmail,
+											facebookRegisterData.phoneNo, facebookRegisterData.password,
+											facebookRegisterData.referralCode, facebookRegisterData.accessToken);
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
@@ -1266,7 +1252,8 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 				params.put("user_google_id", googleRegisterData.id);
 				params.put("email", googleRegisterData.email);
-				params.put("google_access_token", googleRegisterData.accessToken);
+				params.put("google_access_token", googleRegisterData.googleAccessToken);
+				params.put("phone_no", "+91"+Utils.retrievePhoneNumberTenChars(googleRegisterData.phoneNo));
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
 				params.put("device_name", MyApplication.getInstance().deviceName());
@@ -1276,7 +1263,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				params.put("latitude", "" + Data.loginLatitude);
 				params.put("longitude", "" + Data.loginLongitude);
 				params.put("client_id", Config.getAutosClientId());
-				params.put("otp", otp);
+				params.put("login_otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 				if(Utils.isDeviceRooted()){
@@ -1307,6 +1294,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+									Data.kitPhoneNumber = jObj.optString("kit_phone_no");
+									SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj,
+											googleRegisterData.name, googleRegisterData.email,
+											googleRegisterData.phoneNo, googleRegisterData.password,
+											googleRegisterData.referralCode, googleRegisterData.accessToken);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
@@ -2048,6 +2041,46 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			return false;
 		}
 	}
+
+	private void verifyClick(String otpCode, EditText editTextOTP){
+		if (otpCode.length() > 0) {
+			if(missedCallDialog != null) {
+				missedCallDialog.dismiss();
+			}
+			//rlProgress.setVisibility(View.GONE);
+			if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
+				verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
+						/*if(userVerified == 1){
+							sendOTP(otpCode);
+						} else {
+							verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
+						}*/
+
+			} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
+				verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode, linkedWallet);
+			} else {
+				//verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
+				apiLoginUsingOtp(OTPConfirmScreen.this, otpCode, email);
+			}
+		} else {
+			editTextOTP.requestFocus();
+			editTextOTP.setError("OTP can't be empty");
+
+//					txtPinEntry.requestFocus();
+//					txtPinEntry.setError("OTP can't be empty");
+		}
+	}
+
+	private void setRlOTPTimerVisibility(int visibility){
+		if(visibility == View.GONE){
+			pinEditTextLayout.tapOnEditText();
+			rlOTPTimer.setVisibility(View.GONE);
+		} else {
+			rlOTPTimer.setVisibility(View.VISIBLE);
+		}
+	}
+
+
 
 }
 

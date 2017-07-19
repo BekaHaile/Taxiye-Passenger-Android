@@ -46,7 +46,7 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 		this.callback = callback;
 		this.recyclerView = recyclerView;
 		this.possibleStatus = new ArrayList<>();
-		this.possibleStatus.add("Booking\nAccepted");
+		this.possibleStatus.add("Booking\nReceived");
 		this.possibleStatus.add("Pro\nAssigned");
 		this.possibleStatus.add("Service\nStarted");
 		this.possibleStatus.add("Service\nFinished");
@@ -347,7 +347,7 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 				|| status == ProsOrderStatus.DECLINE.getOrdinal()
 				|| status == ProsOrderStatus.UPCOMING.getOrdinal()){
 			status = 0;
-			statusName = "Booking Accepted";
+			statusName = "Booking Received";
 		} else if(status == ProsOrderStatus.ACCEPTED.getOrdinal()
 				|| status == ProsOrderStatus.STARTED.getOrdinal()){
 			status = 1;

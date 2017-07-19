@@ -761,7 +761,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         setRefreshCart(true);
                                     }
                                 } else {
-                                    if (flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()) {
+                                    if (flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()
+                                            || flag == PushFlags.PROS_STATUS_SILENT.getOrdinal()) {
                                         // for refreshing generate feed api on feed like comment related pushes
                                         if(intent.getIntExtra(Constants.KEY_DEEPINDEX, -1) == AppLinkIndex.FEED_PAGE.getOrdinal()
                                                 && intent.getIntExtra(Constants.KEY_POST_ID, -1) != -1) {

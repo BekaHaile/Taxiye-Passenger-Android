@@ -7,18 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,8 +31,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
-import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
-import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -643,13 +637,25 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	@Override
 	public void onStart() {
 		super.onStart();
-		mGoogleApiClient.connect();
+		try {
+			if(mGoogleApiClient != null) {
+				mGoogleApiClient.connect();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		mGoogleApiClient.disconnect();
+		try {
+			if(mGoogleApiClient != null) {
+				mGoogleApiClient.disconnect();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	private Double lastLatFetched ;
 	private Double lastLngFetched ;
@@ -729,13 +735,19 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 	}
 	public void openSetLocationOnMapMode(){
-		bNext.setVisibility(View.VISIBLE);
-		if(bottomSheetBehaviour!=null && bottomSheetBehaviour.getState()!=BottomSheetBehavior.STATE_COLLAPSED){
-			bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+		try {
+			bNext.setVisibility(View.VISIBLE);
+			if(bottomSheetBehaviour!=null && bottomSheetBehaviour.getState()!=BottomSheetBehavior.STATE_COLLAPSED){
+				bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+			}
+			rlMarkerPin.setVisibility(View.VISIBLE);
+			if(googleMap != null) {
+				fillAddressDetails(googleMap.getCameraPosition().target);
+			}
+			Utils.hideSoftKeyboard(activity,editTextSearch);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		rlMarkerPin.setVisibility(View.VISIBLE);
-		fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target);
-		Utils.hideSoftKeyboard(activity,editTextSearch);
 	}
 
 }

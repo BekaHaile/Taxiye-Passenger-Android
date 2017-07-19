@@ -395,7 +395,7 @@ public class ProsCheckoutFragment extends Fragment {
 									}).show(String.valueOf(productsResponse.getData().getJobId()),
 											tvSelectTimeSlot.getText().toString(),
 											tvSelectDate.getText().toString(), true, "",
-											null, AppConstant.ApplicationType.PROS);
+											null, AppConstant.ApplicationType.PROS, productsResponse.getMessage());
 								} else {
 									DialogPopup.alertPopup(activity, "", productsResponse.getMessage());
 								}

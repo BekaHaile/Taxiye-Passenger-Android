@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -244,6 +245,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private boolean isRazorUPI;
     private EditText edtIciciVpa;
     private String jugnooVpaHandle;
+    private TextView tvUPICashback;
 
     @Override
     public void onStart() {
@@ -530,6 +532,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         paramsF = (RelativeLayout.LayoutParams) activity.tvSlide.getLayoutParams();
+
+        tvUPICashback = (TextView) rootView.findViewById(R.id.tvUPICashback);
+        tvUPICashback.setTypeface(tvUPICashback.getTypeface(), Typeface.ITALIC);
 
 
         btnAddStar.setOnClickListener(new View.OnClickListener() {
@@ -1769,7 +1774,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }).show(String.valueOf(placeOrderResponse.getOrderId()),
                     deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
-                    placeOrderResponse, type);
+                    placeOrderResponse, type, "");
             GAUtils.trackScreenView(productType+ORDER_PLACED);
         } else {
             dialogOrderComplete = new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
@@ -1959,7 +1964,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             edtIciciVpa.addTextChangedListener(selectIciciPaymentTextWatcher);
                             jugnooVpaHandle =  paymentModeConfigData.getJugnooVpaHandle();
                             tvLabelIciciUpi.setText(activity.getString(R.string.label_below_icici_payment_edt, jugnooVpaHandle));
-
+                            tvUPICashback.setText(!TextUtils.isEmpty(paymentModeConfigData.getUpiCashbackValue())?paymentModeConfigData.getUpiCashbackValue():"");
 
 
                         }

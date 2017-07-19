@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="visible">
+    android:visibility="gone">
 
 
     <ImageView

@@ -283,6 +283,8 @@
     <color name="bg_address_confirm">#ffe6b3</color>
     <color name="text_address_confirm">#8b572a</color>
     <color name="grey_light_choose_destination">#d0d0d0</color>
+    <color name="logout_text_color">#adadb5</color>
+    <color name="logout_text_color_alpha">#99adadb5</color>
 
 
 </resources>
