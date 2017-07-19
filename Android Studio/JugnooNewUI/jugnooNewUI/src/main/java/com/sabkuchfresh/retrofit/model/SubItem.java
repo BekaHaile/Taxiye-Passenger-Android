@@ -93,7 +93,7 @@ public class SubItem implements Serializable{
     private String earliestDeliveryMessage;
     @SerializedName("like_count")
     @Expose
-    private int likeCount;
+    private double likeCount;
     @SerializedName("is_liked_by_user")
     @Expose
     private int isLiked;
@@ -558,7 +558,7 @@ public class SubItem implements Serializable{
     }
 
     public int getLikeCount() {
-        return likeCount;
+        return (int) likeCount;
     }
 
     public void setLikeCount(int likeCount) {
