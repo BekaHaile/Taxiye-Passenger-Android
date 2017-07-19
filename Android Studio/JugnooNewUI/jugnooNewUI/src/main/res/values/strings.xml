@@ -1347,6 +1347,7 @@
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>
+        <item quantity="zero">Like</item>
         <item quantity="other">%d Likes</item>
     </plurals>
 </resources>

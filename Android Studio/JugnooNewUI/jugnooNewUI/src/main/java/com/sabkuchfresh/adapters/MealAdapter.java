@@ -206,9 +206,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
                 if(Data.getMealsData().isMealsFavEnabled()){
                     mHolder.rlLikeLayout.setVisibility(View.VISIBLE);
-                    if(subItem.getLikeCount()>0){
-                        String noOfLikes =  activity.getResources().getQuantityString(R.plurals.like_suffix, subItem.getLikeCount(), subItem.getLikeCount());
-                        mHolder.tvLikeCount.setText(noOfLikes);
+                    String noOfLikesLabel;
+                    if(subItem.getLikeCount()>0)
+                         noOfLikesLabel =  activity.getResources().getQuantityString(R.plurals.like_suffix, subItem.getLikeCount(), subItem.getLikeCount());
+                    else
+                        noOfLikesLabel = " Like";
+
+                        mHolder.tvLikeCount.setText(noOfLikesLabel);
                         mHolder.rlLikeLayout.setVisibility(View.VISIBLE);
                         if(subItem.getIsLiked()){
                             mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active_new,0,0,0);
@@ -216,7 +220,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_new,0,0,0);
 
                         }
-                    }
+
                     mHolder.rlLikeLayout.setTag(position);
                     mHolder.rlLikeLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
