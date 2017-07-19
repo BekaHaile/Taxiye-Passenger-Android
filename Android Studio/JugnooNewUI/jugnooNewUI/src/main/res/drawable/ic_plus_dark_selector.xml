@@ -4,6 +4,8 @@
 
     <item android:drawable="@drawable/ic_plus_theme"
           android:state_pressed="true"/>
+    <item android:drawable="@drawable/ic_plus_disable"
+          android:state_enabled="false"/>
     <item android:drawable="@drawable/ic_plus_dark"/>
 
 </selector>

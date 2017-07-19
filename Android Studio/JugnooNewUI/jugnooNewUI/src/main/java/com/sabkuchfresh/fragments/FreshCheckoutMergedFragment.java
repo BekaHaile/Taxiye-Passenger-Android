@@ -62,6 +62,7 @@ import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.commoncalls.ApiCancelOrder;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
+import com.sabkuchfresh.dialogs.CheckoutPriceMismatchDialog;
 import com.sabkuchfresh.dialogs.CheckoutRequestPaymentDialog;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
@@ -410,7 +411,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             menusCartItemsAdapter = new MenusCartItemsAdapter(activity, itemsInCart, true, this);
             listViewCart.setAdapter(menusCartItemsAdapter);
         } else {
-            freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, "Review Cart", true, this);
+            freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, "Review Cart", true, this,this);
             listViewCart.setAdapter(freshCartItemsAdapter);
         }
 
@@ -541,7 +542,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             @Override
             public void onClick(View v) {
                 selectedSubscription = new Gson().fromJson(selectedSubId, SubscriptionData.Subscription.class);
-                getCheckoutDataAPI(selectedSubscription);
+                getCheckoutDataAPI(selectedSubscription, false);
                 GAUtils.event(activity.getGaCategory(), CHECKOUT + SUBSCRIPTION + ADDED, selectedSubscription.getPlanString());
             }
         });
@@ -590,7 +591,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getVendorOpened().getMinimumOrderAmount())));
                     setSlideInitial();
                 } else if (activity.buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
-                    getCheckoutDataAPI(selectedSubscription);
+                    getCheckoutDataAPI(selectedSubscription, false);
                 } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
                     setSlideInitial();
@@ -1522,14 +1523,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                     }
                                 }
                                 else if(ApiResponseFlags.MEALS_PRICE_MISMATCH.getOrdinal() == flag){
-
+                                    getCheckoutDataAPI(selectedSubscription, true);
+/*
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            getCheckoutDataAPI(selectedSubscription);
 
                                         }
-                                    });
+                                    });*/
                                 }else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
                                     final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
                                     final double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, 0);
@@ -1555,7 +1556,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            getCheckoutDataAPI(selectedSubscription);
+                                            getCheckoutDataAPI(selectedSubscription, false);
                                         }
                                     });
                                 } else {
@@ -2197,7 +2198,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (type == AppConstant.ApplicationType.MEALS
                 && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1) {
             selectedSlot = slot.getDeliverySlotId();
-            getCheckoutDataAPI(selectedSubscription);
+            getCheckoutDataAPI(selectedSubscription, false);
         } else {
             activity.setSlotSelected(slot);
             recyclerViewDeliverySlots.scrollToPosition(position);
@@ -2206,7 +2207,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
-    public void getCheckoutDataAPI(SubscriptionData.Subscription subscription) {
+    public void getCheckoutDataAPI(SubscriptionData.Subscription subscription, final boolean showMealsMismatchPopup) {
         try {
             if (MyApplication.getInstance().isOnline()) {
 
@@ -2300,7 +2301,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                                                 @Override
                                                 public void onNoClick() {
-                                                    getCheckoutDataAPI(selectedSubscription);
+                                                    getCheckoutDataAPI(selectedSubscription, false);
                                                 }
                                             })) {
 
@@ -2354,12 +2355,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                 Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
                                             }
 
-                                            boolean isDiscountValidCheckout = MealAdapter.isDiscountValid(userCheckoutResponse.getDiscountInfo());
+                                            boolean isDiscountValidCheckout =  userCheckoutResponse.getDiscountInfo()!=null && userCheckoutResponse.getDiscountInfo().getIsActive();
                                             if(isDiscountValidCheckout!=activity.isShowingEarlyBirdDiscount()){
-                                                DialogPopup.alertPopup(activity,"", userCheckoutResponse.getDiscountSwitchMessage(isDiscountValidCheckout));
+                                                if(!showMealsMismatchPopup)
+                                                   DialogPopup.alertPopup(activity,"", userCheckoutResponse.getDiscountSwitchMessage(isDiscountValidCheckout));
                                                 activity.setShowingEarlyBirdDiscount(isDiscountValidCheckout);
                                                 activity.setRefreshCart(true);
 
+                                            }
+                                            if(showMealsMismatchPopup){
+                                                showMealsPriceMismatchDialog();
                                             }
                                         } else if (type == AppConstant.ApplicationType.GROCERY) {
                                             if (Data.getGroceryData().getPromoCoupons() == null) {
@@ -2418,6 +2423,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
                                     }
+
                                 } else {
                                     setSlideInitial();
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
@@ -2506,7 +2512,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        getCheckoutDataAPI(selectedSubscription);
+                        getCheckoutDataAPI(selectedSubscription, false);
                     }
 
                     @Override
@@ -2717,7 +2723,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         updateCartDataView();
         if (type == AppConstant.ApplicationType.MEALS
                 && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1) {
-            getCheckoutDataAPI(selectedSubscription);
+            getCheckoutDataAPI(selectedSubscription, false);
         } else {
             if (!rehitCheckoutApi()) {
                 removeCouponWithCheck();
@@ -2744,7 +2750,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (subItemsInCart.size() > 0
                 && type == AppConstant.ApplicationType.MEALS
                 && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1) {
-            getCheckoutDataAPI(selectedSubscription);
+            getCheckoutDataAPI(selectedSubscription, false);
         } else if (subItemsInCart.size() > 0) {
             if (!rehitCheckoutApi()) {
                 removeCouponWithCheck();
@@ -2756,7 +2762,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     @Override
     public void deleteStarSubscription() {
         selectedSubscription = null;
-        getCheckoutDataAPI(selectedSubscription);
+        getCheckoutDataAPI(selectedSubscription, false);
     }
 
 
@@ -2806,7 +2812,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private boolean rehitCheckoutApi() {
         if (activity.getUserCheckoutResponse() != null
                 && activity.getUserCheckoutResponse().getRefreshOnCartChange() == 1) {
-            getCheckoutDataAPI(selectedSubscription);
+            getCheckoutDataAPI(selectedSubscription, false);
             return true;
         }
         return false;
@@ -2854,7 +2860,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     @Override
     public void onCouponSelected() {
         if (cartChangedRefreshCheckout) {
-            getCheckoutDataAPI(selectedSubscription);
+            getCheckoutDataAPI(selectedSubscription, false);
         }
         couponManuallySelected = true;
     }
@@ -2903,8 +2909,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
+
+    private int noOfItemsInCart;
     private void updateCartTopBarView(Pair<Double, Integer> pair) {
         taxSubTotal.setValue(getSubTotalAmount(true));
+        noOfItemsInCart =pair.second;
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
         taxTotal.setValue(pair.first);
         chargesAdapter.notifyDataSetChanged();
@@ -3246,7 +3255,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     public void onClick(View v) {
                         activity.setDeliveryAddressModelToSelectedAddress(true);
 						deliveryAddressUpdated = true;
-                        getCheckoutDataAPI(selectedSubscription);
+                        getCheckoutDataAPI(selectedSubscription, false);
                     }
                 }, false, false);
     }
@@ -3468,7 +3477,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                     if (dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
                         if(checkoutRequestPaymentDialog==null||!checkoutRequestPaymentDialog.isShowing())
-                             getCheckoutDataAPI(selectedSubscription);
+                             getCheckoutDataAPI(selectedSubscription, false);
                     }
                 }
             }, 150);
@@ -3508,6 +3517,31 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         }
     };
+
+    public boolean isPriceMisMatchDialogShowing() {
+        return checkoutPriceMismatchDialog!=null && checkoutPriceMismatchDialog.isShowing();
+    }
+
+    private CheckoutPriceMismatchDialog checkoutPriceMismatchDialog;
+    public void showMealsPriceMismatchDialog(){
+        if(checkoutPriceMismatchDialog==null){
+            checkoutPriceMismatchDialog = CheckoutPriceMismatchDialog.init(activity);
+        }
+        checkoutPriceMismatchDialog.setData(new CheckoutPriceMismatchDialog.CheckoutPriceMismatchDialogListener() {
+            @Override
+            public void onCancelClick() {
+
+            }
+
+            @Override
+            public void onSubmitClick() {
+                placeOrder();
+
+            }
+        },freshCartItemsAdapter,chargesAdapter,noOfItemsInCart).showDialog();
+
+    }
+
 
 
 }

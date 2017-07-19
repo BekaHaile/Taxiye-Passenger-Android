@@ -387,8 +387,9 @@ public class JSONParser implements Constants {
             String feedbackOrderItems = jMealsData.optString("feedback_order_items", "");
 
 
+
             Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText, negativeFeedbackReasons
-            , feedbackOrderItems,mealsData.getOfferStripMeals()));
+            , feedbackOrderItems,mealsData.getOfferStripMeals(),mealsData.getMealsFavouriteFeature()));
         } catch (Exception e) {
             e.printStackTrace();
         }

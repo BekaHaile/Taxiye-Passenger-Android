@@ -754,4 +754,5 @@ public interface Constants {
     String SHOW_CUSTOM_FIELDS = "show_custom_fields";
     String KEY_UPI_CASHBACK_VALUE = "upi_cashback_value";
     String KEY_LOGIN_CHANNEL = "login_channel";
+    String IS_LIKED = "is_liked";
 }

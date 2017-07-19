@@ -174,7 +174,7 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
                     public void removeCoupon() {
 
                     }
-                });
+                },this);
         listViewCart.setAdapter(freshCartItemsAdapter);
 
         linearLayoutCartExpansion.setVisibility(View.GONE);
@@ -293,6 +293,11 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
     @Override
     public void minusNotDone(int position, SubItem subItem) {
 
+    }
+
+    @Override
+    public boolean onLikeClicked(SubItem subItem, int pos) {
+        return false;
     }
 
     private void updateCartTopBarView(Pair<Double, Integer> pair){

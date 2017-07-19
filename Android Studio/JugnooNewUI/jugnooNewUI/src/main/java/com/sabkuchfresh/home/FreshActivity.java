@@ -300,13 +300,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
             callbackManager = CallbackManager.Factory.create();
 
-
             Data.currentActivity = FreshActivity.class.getName();
             drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
             new ASSL(this, drawerLayout, 1134, 720, false);
             scale = getResources().getDisplayMetrics().density;
 
             relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
+
+            if(savedInstanceState!=null && savedInstanceState.containsKey("showingEarlyBirdDiscount")){
+                showingEarlyBirdDiscount = savedInstanceState.getBoolean("showingEarlyBirdDiscount");
+            }
 
             try {
                 mBus = ((MyApplication) getApplication()).getBus();
@@ -4868,4 +4871,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setProsTaskCreated(boolean prosTaskCreated) {
         this.prosTaskCreated = prosTaskCreated;
     }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("showingEarlyBirdDiscount",showingEarlyBirdDiscount);
+    }
+
 }

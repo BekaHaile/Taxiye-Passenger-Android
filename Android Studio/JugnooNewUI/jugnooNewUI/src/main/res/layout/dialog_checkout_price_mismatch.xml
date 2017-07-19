@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/rootLayout"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:layout_gravity="center"
+    android:maxHeight="400dp"
+    android:layout_marginLeft="40px"
+    android:layout_marginRight="40px"
+    android:layout_marginTop="40px"
+    android:layout_marginBottom="40px"
+    android:orientation="vertical"
+    android:paddingBottom="20px"
+    android:paddingTop="20px">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="35px"
+        android:layout_marginBottom="20px"
+        android:text="Price update: \n Discount slot expired"
+        android:textColor="@color/text_color"
+        app:font="maven" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="26px"
+        android:layout_marginBottom="20px"
+        android:text="Kindly review your cart"
+        android:textColor="@color/text_color"
+        app:font="maven" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <include
+            layout="@layout/layout_fresh_cart" />
+
+    </ScrollView>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/px_15"
+        android:layout_marginBottom="30px"
+        android:textSize="26px"
+        android:textColor="@color/text_color"
+        android:text="Click on cancel to edit order"
+        app:font="maven" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="10px"
+            android:layout_weight="1"
+            android:textColor="@color/text_selector_back_icici"
+            android:background="@drawable/selector_back_icici"
+            android:text="Cancel"
+            android:textSize="28px"
+            app:font="maven" />
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
+            android:layout_marginRight="40px"
+            android:layout_weight="1"
+            android:background="@drawable/capsule_theme_color_selector"
+            android:text="Confirm"
+            android:textColor="@color/white"
+            android:textSize="28px"
+            app:font="maven" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -20,10 +20,11 @@ public class MealsData {
 	private JSONArray negativeFeedbackReasons;
 	private String feedbackOrderItems;
 	private OfferStripMeals offerStripMeals;
+	private MealsFavouriteFeature mealsFavouriteFeature;
 
 	public MealsData(String orderId, int pendingFeedback, double amount, String feedbackDeliveryDate, int feedbackViewType,
 					 String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons, String feedbackOrderItems,
-			OfferStripMeals offerStripMeals) {
+			OfferStripMeals offerStripMeals,MealsFavouriteFeature mealsFavouriteFeature) {
 		this.orderId = orderId;
 		this.pendingFeedback = pendingFeedback;
 		this.amount = amount;
@@ -33,6 +34,7 @@ public class MealsData {
 		this.negativeFeedbackReasons = negativeFeedbackReasons;
 		this.feedbackOrderItems = feedbackOrderItems;
 		this.offerStripMeals = offerStripMeals;
+		this.mealsFavouriteFeature = mealsFavouriteFeature;
 	}
 
 	public ArrayList<PromoCoupon> getPromoCoupons() {
@@ -127,5 +129,18 @@ public class MealsData {
 		public String getDeepIndex() {
 			return deepIndex;
 		}
+	}
+
+	public class MealsFavouriteFeature {
+		@SerializedName("is_enabled")
+		private int isEnabled;
+
+		public boolean getIsEnabled() {
+			return isEnabled>0;
+		}
+	}
+
+	public boolean isMealsFavEnabled(){
+		return  mealsFavouriteFeature!=null && mealsFavouriteFeature.getIsEnabled();
 	}
 }

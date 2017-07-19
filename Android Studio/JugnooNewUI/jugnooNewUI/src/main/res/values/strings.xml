@@ -853,6 +853,7 @@
     <string name="add_special_notes_for_menus">Allergic to something? Want your food less spicy? Mention it here..</string>
     <string name="cart_items">Cart Items</string>
     <string name="cart_items_format">Cart Items(%s)</string>
+    <string name="cart_items_popup_format">Items (%s)</string>
     <string name="order_status_txt">Order Status:</string>
     <string name="order_time">Order Time:</string>
     <string name="delivery_time">Delivery Time:</string>
@@ -1346,5 +1347,8 @@
     <string name="select_offerings">Select Offerings</string>
     <string name="thanks_for_riding_with_us">Thanks for riding with us</string>
 
-
+    <plurals name="like_suffix">
+        <item quantity="one">%d Like</item>
+        <item quantity="other">%d Likes</item>
+    </plurals>
 </resources>
