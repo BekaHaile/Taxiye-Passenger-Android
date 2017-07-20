@@ -98,4 +98,9 @@ public interface FreshApiService {
 	@POST("/razorpay_place_order_callback")
 	Response razorpayPlaceOrderCallback(@FieldMap Map<String, String> params);
 
+	@FormUrlEncoded
+	@POST("/update_like_count")
+	void markMealAsFavourite(@FieldMap Map<String, String> params,
+					   Callback<SettleUserDebt> callback);
+
 }

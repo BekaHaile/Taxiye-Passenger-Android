@@ -217,10 +217,8 @@ public class ProsOrderStatusResponse {
 					if (customField.getLabel().equalsIgnoreCase(Constants.KEY_PRODUCT_NAME)) {
 						productName = customField.getData();
 					} else if (customField.getLabel().equalsIgnoreCase(Constants.KEY_JOB_AMOUNT)
-							&& getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()) {
-						if (!TextUtils.isEmpty(customField.getFleetData())) {
-							jobAmount = customField.getFleetData();
-						}
+							&& !TextUtils.isEmpty(customField.getFleetData())) {
+						jobAmount = customField.getFleetData();
 					}
 				}
 			}

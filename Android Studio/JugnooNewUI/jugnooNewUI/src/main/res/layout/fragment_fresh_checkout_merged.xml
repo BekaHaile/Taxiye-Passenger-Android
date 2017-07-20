@@ -427,7 +427,7 @@
 
                             <LinearLayout
                                 android:id="@+id/layout_select_upi"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
@@ -444,6 +444,19 @@
                                     android:src="@drawable/upi_logo"
                                     android:tag="mwar" />
 
+
+                                <TextView
+                                    android:id="@+id/tvUPICashback"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/sp_15"
+                                    android:paddingRight="@dimen/dp_2"
+                                    android:textColor="@color/theme_color"
+                                    android:gravity="right"
+                                    android:text=""
+                                    app:font="@string/maven"
+                                    android:tag="@string/dont_touch_me"
+                                    />
 
                             </LinearLayout>
 

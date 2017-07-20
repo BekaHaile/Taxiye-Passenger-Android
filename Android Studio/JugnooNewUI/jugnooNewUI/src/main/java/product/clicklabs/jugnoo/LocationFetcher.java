@@ -65,7 +65,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	public double getSavedLatFromSP(){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		String latitude = preferences.getString(LOCATION_LAT, "" + 0);
-		Log.d("saved last lat", "==" + latitude);
+//		Log.d("saved last lat", "==" + latitude);
 		return Double.parseDouble(latitude);
 	}
 
@@ -131,7 +131,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			else{
 				if(googleApiClient != null && googleApiClient.isConnected()){
 					locationUnchecked = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-					Log.i(TAG, "getLocation = "+locationUnchecked);
+//					Log.i(TAG, "getLocation = "+locationUnchecked);
 					if(!Utils.mockLocationEnabled(locationUnchecked)) {
 						location = locationUnchecked;
 						return location;
@@ -149,7 +149,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	public synchronized void destroy(){
 		try{
 			this.location = null;
-			Log.e("location", "destroy");
+//			Log.e("location", "destroy");
 			if(googleApiClient!=null){
 				if(googleApiClient.isConnected()){
                     LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
@@ -175,7 +175,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		Log.e(TAG, "onConnected");
+//		Log.e(TAG, "onConnected");
 		// sending one cached location at connection establishment
 		Location loc = getLocation();
 		if(loc != null){
@@ -197,7 +197,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
-		Log.e(TAG, "onConnectionFailed");
+//		Log.e(TAG, "onConnectionFailed");
 		this.location = null;
 	}
 
@@ -212,7 +212,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	@Override
 	public void onLocationChanged(Location location) {
 		try{
-			Log.i(TAG, "onLocationChanged>"+location);
+//			Log.i(TAG, "onLocationChanged>"+location);
 			locationUnchecked = location;
 			if(location != null && !Utils.mockLocationEnabled(location)) {
 				this.location = location;

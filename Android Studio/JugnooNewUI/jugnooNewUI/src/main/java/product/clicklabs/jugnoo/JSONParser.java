@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -386,8 +387,9 @@ public class JSONParser implements Constants {
             String feedbackOrderItems = jMealsData.optString("feedback_order_items", "");
 
 
+
             Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText, negativeFeedbackReasons
-            , feedbackOrderItems,mealsData.getOfferStripMeals()));
+            , feedbackOrderItems,mealsData.getOfferStripMeals(),mealsData.getMealsFavouriteFeature()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -728,6 +730,8 @@ public class JSONParser implements Constants {
         resetUseCouponSP(context);
         resetIsVegToggle(context);
 
+        Paper.book().delete(PaperDBKeys.HISTORY_PRODUCT_TYPES);
+
         try {
 
             Data.setIsFuguChatEnabled(false);
@@ -737,14 +741,11 @@ public class JSONParser implements Constants {
                    Data.setIsFuguChatEnabled(true);
                }
             }
-
-
             if(Data.isFuguChatEnabled() && Data.getFuguUserData()!=null) {
-                Data.initializeFuguHandler((Activity) context);
                 FuguNotificationConfig.updateFcmRegistrationToken(MyApplication.getInstance().getDeviceToken());
-                FuguConfig.getInstance().registerIdentifiedUser((Activity) context, Data.getFuguUserData());
-
+                Data.initializeFuguHandler((Activity) context, Data.getFuguUserData());
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

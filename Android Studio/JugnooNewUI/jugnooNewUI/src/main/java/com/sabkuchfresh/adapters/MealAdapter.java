@@ -17,11 +17,14 @@ import android.widget.TextView;
 import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
+import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DiscountInfo;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.utils.TextViewStrikeThrough;
 import com.squareup.picasso.Picasso;
 
@@ -186,8 +189,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
             } else if (holder instanceof ViewHolderSlot) {
                 position = position - recentOrders.size();
-                ViewHolderSlot mHolder = ((ViewHolderSlot) holder);
-                SubItem subItem = subItems.get(position);
+                final ViewHolderSlot mHolder = ((ViewHolderSlot) holder);
+                final SubItem subItem = subItems.get(position);
 
                 mHolder.textViewTitle.setText(subItem.getSubItemName());
 
@@ -200,6 +203,45 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else {
                     mHolder.textViewdetails.setVisibility(View.GONE);
                 }*/
+
+                if(Data.getMealsData().isMealsFavEnabled()){
+                    mHolder.rlLikeLayout.setVisibility(View.VISIBLE);
+                    String noOfLikesLabel;
+                    if(subItem.getLikeCount()>0)
+                         noOfLikesLabel =  activity.getResources().getQuantityString(R.plurals.like_suffix, subItem.getLikeCount(), subItem.getLikeCount());
+                    else
+                        noOfLikesLabel = " Like";
+
+                        mHolder.tvLikeCount.setText(noOfLikesLabel);
+                        mHolder.rlLikeLayout.setVisibility(View.VISIBLE);
+                        if(subItem.getIsLiked()){
+                            mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active_new,0,0,0);
+                        }else {
+                            mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_new,0,0,0);
+
+                        }
+
+                    mHolder.rlLikeLayout.setTag(position);
+                    mHolder.rlLikeLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            int pos  = (int) v.getTag();
+                            SubItem subItem1  = subItems.get(pos);
+                            if(!subItem1.isLikeAPIInProgress()){
+                                subItem1.setLikeAPIInProgress(true);
+                                callback.onLikeClicked(subItem1,pos);
+                            }
+
+
+
+                        }
+                    });
+
+
+                }else{
+                    mHolder.rlLikeLayout.setVisibility(View.GONE);
+                }
 
                 mHolder.linear.setTag(position);
                 mHolder.linear.setOnClickListener(new View.OnClickListener() {
@@ -485,6 +527,34 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         return (((recentOrdersSize + subItemsSize) > 0) ? (recentOrdersSize + subItemsSize + 1) : 0) + showBulkOrderOption;
     }
 
+    public void notifyOnLike(int position, boolean isLiked) {
+        try {
+            if (subItems != null && position < subItems.size()) {
+                SubItem subItem = (SubItem) subItems.get(position);
+                if (subItem.isLikeAPIInProgress()) {
+                    subItem.setLikeAPIInProgress(false);
+                    if (isLiked) {
+                        /*FeedHomeAdapter.ViewHolderReviewImage viewHolderReviewImage = ((FeedHomeAdapter.ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position));
+                        if(viewHolderReviewImage!=null) {
+                            LikeButton likeButton = viewHolderReviewImage.likeButtonAnimate;
+                            likeButton.onClick(likeButton);
+                        }*/
+                        subItem.setLikeCount(subItem.getLikeCount() + 1);
+                    } else if (subItem.getLikeCount() > 0)
+                        subItem.setLikeCount(subItem.getLikeCount() - 1);
+
+                    subItem.setIsLiked(isLiked);
+
+                    if(recentOrders!=null)
+                        position +=recentOrders.size();
+                    notifyItemChanged(position);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 //    @Override
 //    public int getItemCount() {
 //        return subItems == null ? 0 : subItems.size();
@@ -499,7 +569,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         private ImageView imageViewMinus, imageViewPlus, imageClosed;
         public TextView textViewTitle, textPrice, textViewdetails, deliveryTime, textViewQuantity, tvEarliestDelivery;
         public TextViewStrikeThrough tvDiscountedPrice;
-        public TextView tvDiscountedOffer;
+        public TextView tvDiscountedOffer,tvLikeCount;
+        private RelativeLayout rlLikeLayout;
 
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
@@ -520,6 +591,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             textPrice = (TextView) itemView.findViewById(R.id.text_price);
             textPrice.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textViewdetails = (TextView) itemView.findViewById(R.id.textViewdetails);
+            tvLikeCount = (TextView) itemView.findViewById(R.id.tv_like_count);
             textViewdetails.setTypeface(Fonts.mavenMedium(context));
             deliveryTime = (TextView) itemView.findViewById(R.id.delivery_time);
             deliveryTime.setTypeface(Fonts.mavenMedium(context));
@@ -529,6 +601,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             tvEarliestDelivery.setTypeface(Fonts.mavenMedium(context));
             tvDiscountedPrice = (TextViewStrikeThrough) itemView.findViewById(R.id.text_price_striked);
             tvDiscountedOffer = (TextView) itemView.findViewById(R.id.tv_discounted_offer);
+            rlLikeLayout = (RelativeLayout) itemView.findViewById(R.id.rl_like_layout);
 
         }
     }
@@ -585,6 +658,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         boolean checkForMinus(int position, SubItem subItem);
         void minusNotDone(int position, SubItem subItem);
 
+        boolean onLikeClicked(SubItem subItem, int pos);
     }
 
 

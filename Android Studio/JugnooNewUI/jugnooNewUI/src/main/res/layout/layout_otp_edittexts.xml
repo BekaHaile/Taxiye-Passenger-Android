@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/pin_content_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:id="@+id/pin_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/pin_first_edittext"
+            style="@style/pin_edittext_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:font="@string/maven"
+            android:background="@drawable/bg_transparent_grey_bottom"
+            />
+
+        <EditText
+            android:id="@+id/pin_second_edittext"
+            style="@style/pin_edittext_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:font="@string/maven"
+            />
+
+        <EditText
+            android:id="@+id/pin_third_edittext"
+            style="@style/pin_edittext_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:font="@string/maven"
+            />
+
+        <EditText
+            android:id="@+id/pin_forth_edittext"
+            style="@style/pin_edittext_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:font="@string/maven"
+            />
+
+        <!--<EditText-->
+            <!--android:id="@+id/pin_fifth_edittext"-->
+            <!--style="@style/pin_edittext_style"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:font="@string/maven"-->
+            <!--/>-->
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/pin_hidden_edittext"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@null"
+        android:cursorVisible="false"
+        android:gravity="center_horizontal"
+        android:maxLength="4"
+        android:inputType="number"
+        android:textColor="#00000000"/>
+</LinearLayout>

@@ -108,6 +108,7 @@ public class FABViewTest implements GACategory, GAAction {
             tvGenieHelp = (TextView) view.findViewById(R.id.tvGenieHelp);
             ivJeanieHelp = (ImageView) view.findViewById(R.id.ivJeanieHelp);
             tvGenieExpandMessage = (TextView) view.findViewById(R.id.tvGenieExpandMessage);
+            tvGenieExpandMessage.setVisibility(View.GONE);
 
             fabFeedTest.setLabelText(Data.getFeedName(activity), 14);
 

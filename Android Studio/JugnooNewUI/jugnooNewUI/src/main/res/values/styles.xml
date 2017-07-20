@@ -685,6 +685,11 @@
         <item name="android:backgroundDimAmount">0.0</item>
         <item name="android:windowCloseOnTouchOutside">false</item>
     </style>
+    <style name="Checkout_Price_Mismatch_Theme" parent="Feed_Popup_Theme">
+
+        <item name="android:backgroundDimAmount">0.7</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
 
 
     <style name="dialog_anim_from_bottom">
@@ -819,6 +824,21 @@
     <style
         name="AppThemePay.PopupOverlay"
         parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="pin_edittext_style">
+        <item name="android:gravity">center</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:minEms">2</item>
+        <item name="android:inputType">number</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:padding">@dimen/dp_10</item>
+        <item name="android:layout_margin">@dimen/dp_4</item>
+        <item name="android:background">@drawable/bg_transparent_grey_alpha_bottom</item>
+    </style>
 
 
 </resources>

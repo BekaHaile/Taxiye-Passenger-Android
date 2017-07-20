@@ -91,10 +91,28 @@ public class SubItem implements Serializable{
     @SerializedName("earliest_delivery_message")
     @Expose
     private String earliestDeliveryMessage;
+    @SerializedName("like_count")
+    @Expose
+    private double likeCount;
+    @SerializedName("is_liked_by_user")
+    @Expose
+    private int isLiked;
+
+    private boolean isLikeAPIInProgress;
+
+    public void setLikeAPIInProgress(boolean likeAPIInProgress) {
+        isLikeAPIInProgress = likeAPIInProgress;
+    }
+
+    public boolean isLikeAPIInProgress() {
+        return isLikeAPIInProgress;
+    }
 
 
+    public void setIsLiked(boolean isLiked) {
 
-
+        this.isLiked = isLiked?1:0;
+    }
 
     /**
      *
@@ -537,5 +555,17 @@ public class SubItem implements Serializable{
 
     public Double getActualPrice() {
         return actualPrice;
+    }
+
+    public int getLikeCount() {
+        return (int) likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public boolean getIsLiked() {
+        return isLiked>0 ;
     }
 }

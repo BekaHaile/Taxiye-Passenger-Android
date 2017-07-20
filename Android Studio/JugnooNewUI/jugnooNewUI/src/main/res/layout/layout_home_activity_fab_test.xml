@@ -182,16 +182,16 @@
 
     <TextView
         android:id="@+id/tvGenieExpandMessage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="40px"
-        android:layout_marginRight="40px"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="140px"
+        android:layout_marginRight="60px"
         android:layout_marginTop="100px"
-        android:gravity="center"
+        android:gravity="right"
         android:text="What would you like to\ndo today?"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_50"
+        android:textSize="@dimen/text_size_45"
         android:visibility="gone"
         app:font="maven"
         />

@@ -2,8 +2,6 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +20,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -50,9 +47,6 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
     @Override
     public MenuItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View convertView =  layoutInflater.inflate(R.layout.item_menu_in_account,parent,false);
-
-        ASSL.DoMagic(convertView);
-
         return new MenuItemViewHolder(convertView,this,activity);
     }
 

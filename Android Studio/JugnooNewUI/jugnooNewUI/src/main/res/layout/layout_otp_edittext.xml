@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/px_100"
+    android:layout_height="@dimen/dp_50"
     android:background="@color/white"
     android:gravity="center_horizontal"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:visibility="gone"
+    android:tag="@string/dont_touch_me"
+    >
 
     <EditText
         android:id="@+id/etOtp1"
-        android:layout_width="@dimen/px_100"
+        android:layout_width="@dimen/dp_50"
         android:layout_height="match_parent"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/px_60"
-        android:gravity="center"
+        android:textSize="@dimen/sp_30"
         android:enabled="false"
         android:inputType="number"
-        android:background="@color/transparent"/>
+        android:background="@color/transparent"
+        style="@style/pin_edittext_style"/>
 
     <View
         android:id="@+id/view1"
@@ -23,7 +26,7 @@
         android:layout_height="match_parent"
         android:background="@color/stroke_light_grey"
         android:layout_marginTop="@dimen/px_20"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_marginBottom="@dimen/px_20"/>
 
     <EditText

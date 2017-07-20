@@ -283,7 +283,8 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 			ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
 			Pair<String, String> pair = datum.getProductNameAndJobAmount();
 			tvServiceType.setText(pair.first);
-			if(datum.getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()) {
+			if(datum.getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()
+					|| datum.getJobStatus() == ProsOrderStatus.FAILED.getOrdinal()) {
 				if (!TextUtils.isEmpty(pair.second)) {
 					tvAmountValue.setText(activity.getString(R.string.rupees_value_format, pair.second));
 				} else {

@@ -11,6 +11,7 @@ public class Typewriter extends android.support.v7.widget.AppCompatTextView {
     private int mIndex;
     private long mDelay =75; //Default 500ms delay
     private AudioManager am ;
+    private boolean playSound;
 
     public Typewriter(Context context) {
         super(context);
@@ -37,10 +38,14 @@ public class Typewriter extends android.support.v7.widget.AppCompatTextView {
 
     public void animateText(CharSequence text) {
         mText = text;
-        mIndex = 0;
-        setText("");
-        mHandler.removeCallbacks(characterAdder);
-        mHandler.postDelayed(characterAdder, mDelay);
+        if (playSound) {
+            mIndex = 0;
+            setText("");
+            mHandler.removeCallbacks(characterAdder);
+            mHandler.postDelayed(characterAdder, mDelay);
+        }else{
+            setText(text);
+        }
     }
 
     public void setCharacterDelay(long millis) {
@@ -48,8 +53,12 @@ public class Typewriter extends android.support.v7.widget.AppCompatTextView {
     }
 
     public void clearAnimAndSetText(){
-        if(mText!=null) {
-            mHandler.removeCallbacksAndMessages(null);
+        if (playSound) {
+            if(mText!=null) {
+                mHandler.removeCallbacksAndMessages(null);
+                setText(mText);
+            }
+        }else{
             setText(mText);
         }
     }

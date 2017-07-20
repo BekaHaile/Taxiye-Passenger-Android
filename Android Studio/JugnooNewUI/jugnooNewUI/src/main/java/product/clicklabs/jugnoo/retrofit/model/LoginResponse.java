@@ -256,6 +256,8 @@ public class LoginResponse {
 
 		@SerializedName("offers_strip_meals")
 		private MealsData.OfferStripMeals offerStripMeals;
+		@SerializedName("meals_favorite_feature")
+		private MealsData.MealsFavouriteFeature mealsFavouriteFeature;
 
 		public List<PromotionInfo> getPromotions() {
 			return promotions;
@@ -276,6 +278,15 @@ public class LoginResponse {
 		public MealsData.OfferStripMeals getOfferStripMeals() {
 			return offerStripMeals;
 		}
+
+		public MealsData.MealsFavouriteFeature getMealsFavouriteFeature() {
+			return mealsFavouriteFeature;
+		}
+
+		/*public boolean isMealsFavEnabled(){
+			return mealsFavouriteFeature!=null && mealsFavouriteFeature.getIsEnabled();
+		}*/
+
 	}
 
 	public class Fresh{

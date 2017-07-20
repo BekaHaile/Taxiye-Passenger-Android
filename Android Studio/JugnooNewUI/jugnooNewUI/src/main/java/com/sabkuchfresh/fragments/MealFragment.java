@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +24,12 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
+import com.sabkuchfresh.commoncalls.ApiLikeMeal;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.DiscountInfo;
+import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -60,6 +63,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -132,8 +136,9 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
         recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
+//        recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
         recyclerViewCategoryItems.setHasFixedSize(false);
+        ((SimpleItemAnimator) recyclerViewCategoryItems.getItemAnimator()).setSupportsChangeAnimations(false);
 
         noMealsView = (ImageView) rootView.findViewById(R.id.noMealsView);
         noMealsView.setVisibility(View.GONE);
@@ -535,6 +540,36 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mealAdapter.notifyDataSetChanged();
     }
 
+    private ApiLikeMeal apiLikeMeal;
+    @Override
+    public boolean onLikeClicked(SubItem subItem, int position) {
+        if (!mSwipeRefreshLayout.isRefreshing()) {
+
+            if (apiLikeMeal == null)
+                apiLikeMeal = new ApiLikeMeal(new ApiLikeMeal.LikeMealCallback() {
+                    @Override
+                    public void onSuccess(boolean isLiked, int position, SubItem subItem) {
+                        if (getView() != null && mealAdapter != null) {
+
+                            mealAdapter.notifyOnLike(position, isLiked);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(boolean isLiked, int posInOriginalList, SubItem subItem) {
+                        if (subItem != null) {
+                            subItem.setLikeAPIInProgress(false);
+                        }
+                    }
+                });
+            apiLikeMeal.likeFeed( getActivity(), !subItem.getIsLiked(), position, subItem);
+//            GAUtils.event(FEED, HOME, LIKE + CLICKED);
+        }
+
+
+        return true;
+    }
+
     public void onSortEvent(int position, DiscountInfo discountInfo) {
         switch (position) {
             case 0:
@@ -566,4 +601,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public boolean shouldShowStrip() {
         return getView()!=null && relativeLayoutNoMenus.getVisibility()!=View.VISIBLE;
     }
+
+
 }

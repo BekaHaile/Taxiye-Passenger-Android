@@ -4,6 +4,8 @@
 
     <item android:drawable="@drawable/ic_minus_dark_active"
           android:state_pressed="true"/>
+    <item android:drawable="@drawable/ic_minus_disable"
+          android:state_enabled="false"/>
     <item android:drawable="@drawable/ic_minus_dark"/>
 
 </selector>
