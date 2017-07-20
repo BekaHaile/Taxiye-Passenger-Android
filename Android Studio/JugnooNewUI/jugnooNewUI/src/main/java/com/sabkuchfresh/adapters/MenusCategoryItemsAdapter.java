@@ -58,12 +58,15 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int SUB_CATEGORY_ITEM = 2;
     private static final int SEARCHED_CATEGORY_ITEM = 3;
 
+    private boolean isVendorMenuFragment;
     public MenusCategoryItemsAdapter(Context context, int categoryPos, Category category, Callback callback) {
         this.context = context;
         this.callback = callback;
         this.categoryPos = categoryPos;
         this.category = category;
+        isVendorMenuFragment = true;
         setSubItems(false);
+
     }
 
     public void setSubItems(boolean notify){
@@ -246,7 +249,10 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             }
             mHolder.textViewAboutItemDescription.setVisibility(visibilityDesc);
             mHolder.saperatorImage.setLayoutParams(paramsSep);
+            if(!isVendorMenuFragment){
+                mHolder.saperatorImage.setVisibility(position==subItems.size()-1?View.INVISIBLE:View.VISIBLE);
 
+            }
             mHolder.textViewAboutItemDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -414,7 +420,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemCount() {
-        return subItems == null ? 0 : subItems.size() + categoriesCount() + 1;
+        return subItems == null ? 0 : subItems.size() + categoriesCount() + (isVendorMenuFragment ?1:0);
     }
 
 

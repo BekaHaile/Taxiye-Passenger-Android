@@ -21,10 +21,10 @@
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
         app:font="@string/maven"
-        android:drawableRight="@drawable/ic_arrow_grey_svg"
         />
 
     <View
+        android:id="@+id/border_bottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_1"
         android:background="@color/stroke_light_grey_alpha"

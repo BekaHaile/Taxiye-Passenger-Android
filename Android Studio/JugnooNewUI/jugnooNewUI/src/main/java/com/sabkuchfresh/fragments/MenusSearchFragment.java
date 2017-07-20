@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.MenusCategoryCategoriesAdapter;
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -45,10 +47,12 @@ import product.clicklabs.jugnoo.utils.Prefs;
 @SuppressLint("ValidFragment")
 public class MenusSearchFragment extends Fragment implements GACategory, GAAction {
 
-	private RelativeLayout rlRoot;
+	private NestedScrollView rlRoot;
 
 	private RecyclerView recyclerViewCategoryItems;
+	private RecyclerView recyclerViewCategories;
 	private MenusCategoryItemsAdapter menusCategoryItemsAdapter;
+	private MenusCategoryCategoriesAdapter menusCategoryCategoriesAdapter;
 	private TextView textViewPlaceholder;
 
 	private View rootView;
@@ -56,6 +60,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 	private ArrayList<Item> itemsInSearch;
 	private ArrayList<Category> categoriesSearched;
 	private int isVegToggle;
+	private TextView labelItems,labelCategories;
 
 
 	@Override
@@ -71,14 +76,14 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_fresh_search, container, false);
+        rootView = inflater.inflate(R.layout.fragment_menus_search, container, false);
 
         activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
 
 		GAUtils.trackScreenView(activity.getGaCategory()+HOME+SEARCH);
 
-		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
+		rlRoot = (NestedScrollView) rootView.findViewById(R.id.rlRoot);
 		try {
 			if(rlRoot != null) {
 				new ASSL(activity, rlRoot, 1134, 720, false);
@@ -87,12 +92,17 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 			e.printStackTrace();
 		}
         Utils.setupUI(rlRoot, activity);
-
+		labelItems = (TextView) rootView.findViewById(R.id.label_items);
+		labelCategories = (TextView) rootView.findViewById(R.id.label_categories);
 		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
+		recyclerViewCategories = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategories);
 		recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewCategoryItems.setHasFixedSize(false);
-		
+		recyclerViewCategories.setLayoutManager(new LinearLayoutManager(activity));
+		recyclerViewCategories.setItemAnimator(new DefaultItemAnimator());
+		recyclerViewCategoryItems.setNestedScrollingEnabled(false);
+		recyclerViewCategories.setNestedScrollingEnabled(false);
 		textViewPlaceholder = (TextView) rootView.findViewById(R.id.textViewPlaceholder); textViewPlaceholder.setTypeface(Fonts.mavenRegular(activity));
 		textViewPlaceholder.setVisibility(View.GONE);
 
@@ -167,6 +177,17 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 						}
 					}
 				});
+		menusCategoryCategoriesAdapter = new MenusCategoryCategoriesAdapter(activity, categoriesSearched, new MenusCategoryCategoriesAdapter.Callback() {
+			@Override
+			public void onCategoryClick(Category category) {
+				if(category != null){
+					activity.setScrollToCategoryId(category.getCategoryId());
+					activity.onBackPressed();
+				}
+			}
+		});
+		menusCategoryCategoriesAdapter.setList(null);
+		recyclerViewCategories.setAdapter(menusCategoryCategoriesAdapter);
 		recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
 
 
@@ -272,20 +293,24 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 			return "";
 		}
 
+
 		@Override
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 			try {
-				menusCategoryItemsAdapter.setList(itemsInSearch, true, categoriesSearched);
-				if(menusCategoryItemsAdapter.getItemCount() > 1){
+				menusCategoryItemsAdapter.setList(itemsInSearch, true, null);
+				menusCategoryCategoriesAdapter.setList(categoriesSearched);
+				if(menusCategoryItemsAdapter.getItemCount() > 0 || menusCategoryCategoriesAdapter.getItemCount()>0){
 					textViewPlaceholder.setVisibility(View.GONE);
 				} else{
 					textViewPlaceholder.setVisibility(View.VISIBLE);
 				}
 
-				if(menusCategoryItemsAdapter.getItemCount() == 1) {
+				if(menusCategoryItemsAdapter.getItemCount() == 0) {
 					GAUtils.event(GACategory.MENUS, SEARCH + NOT_FOUND, token);
 				}
+				labelItems.setVisibility(menusCategoryItemsAdapter.getItemCount()>0?View.VISIBLE:View.GONE);
+				labelCategories.setVisibility(menusCategoryCategoriesAdapter.getItemCount()>0?View.VISIBLE:View.GONE);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -363,6 +388,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 		super.onHiddenChanged(hidden);
 		try {
 			menusCategoryItemsAdapter.notifyDataSetChanged();
+			menusCategoryCategoriesAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
