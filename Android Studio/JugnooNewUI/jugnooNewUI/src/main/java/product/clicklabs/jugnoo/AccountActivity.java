@@ -830,10 +830,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
             if(!Data.userData.userName.equalsIgnoreCase("User")) {
                 editTextUserName.setText(Data.userData.userName);
+            } else {
+                editTextUserName.setText("");
             }
             if(!Data.userData.userEmail.contains("@facebook.com")
                     && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
                 editTextEmail.setText(Data.userData.userEmail);
+            } else {
+                editTextEmail.setText("");
             }
 			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
 
@@ -965,8 +969,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                             if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
                                 String error = jObj.getString("error");
                                 DialogPopup.alertPopup(activity, "", error);
+                                updateMenuBar = true;
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                updateMenuBar=true;
+                                updateMenuBar = true;
                                 imageViewEditProfileSave.setVisibility(View.GONE);
                                 imageViewEditProfile.setVisibility(View.VISIBLE);
                                 String message = jObj.getString("message");
