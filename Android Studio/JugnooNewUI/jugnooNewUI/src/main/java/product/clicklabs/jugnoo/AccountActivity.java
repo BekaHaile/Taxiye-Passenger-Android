@@ -986,7 +986,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                 } else{
                                     Utils.showToast(AccountActivity.this, message);
-                                    reloadProfileAPI(activity);
+                                    performBackPressed();
+//                                    reloadProfileAPI(activity);
                                 }
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
