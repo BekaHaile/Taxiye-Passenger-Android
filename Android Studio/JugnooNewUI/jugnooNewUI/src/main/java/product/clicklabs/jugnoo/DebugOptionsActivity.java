@@ -236,6 +236,7 @@ public class DebugOptionsActivity extends BaseActivity {
                 }
 
                 if(!stop){
+                    SplashNewActivity.allowedAuthChannelsHitOnce = true;
                     performBackPressed();
                 }
             }

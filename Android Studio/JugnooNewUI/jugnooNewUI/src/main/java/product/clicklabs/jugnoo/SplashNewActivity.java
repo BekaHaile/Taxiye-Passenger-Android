@@ -193,9 +193,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	private ImageView ivUser;
 	private TextView tvGiftFrom, tvGiftDetail, tvReferralTitle, tvSkip;
 	private Button btnClaimGift, bPromoSubmit, btnPhoneLogin;
-	private String refreeUserId = "", loginResponseStr;
+	private String refreeUserId = "";
+	public static String loginResponseStr;
 	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle, rlPhoneLogin;
-	private LoginResponse loginResponseData;
+	public static LoginResponse loginResponseData;
 
 
 	public void resetFlags() {
@@ -682,14 +683,20 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							String name = etOnboardingName.getText().toString().trim();
 							String email = etOnboardingEmail.getText().toString().trim();
 							String referralCode = etReferralCode.getText().toString().trim();
-							if (!TextUtils.isEmpty(referralCode)) {
-								if(!TextUtils.isEmpty(email) && !Utils.isEmailValid(email)){
-									Utils.showToast(SplashNewActivity.this, getResources().getString(R.string.email_was_incorrect));
-								}
-								apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
-							} else{
-								tvSkip.performClick();
+							if(TextUtils.isEmpty(name)){
+								Utils.showToast(SplashNewActivity.this, "Please fill your name");
+								return;
 							}
+							if(TextUtils.isEmpty(email)){
+								Utils.showToast(SplashNewActivity.this, "Please fill your email");
+								return;
+							}
+							if(!TextUtils.isEmpty(email) && !Utils.isEmailValid(email)){
+								Utils.showToast(SplashNewActivity.this, getResources().getString(R.string.email_was_incorrect));
+								return;
+							}
+							apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
+							Utils.hideSoftKeyboard(SplashNewActivity.this, etOnboardingName);
 							GAUtils.event(JUGNOO, REFERRAL_CODE_SCREEN, SUBMIT+CLICKED);
 						}
 					} catch (Exception e) {
@@ -1240,6 +1247,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						state = State.SPLASH_LS_NEW;
 					} else if (State.SPLASH_LS.getOrdinal() == stateInt) {
 						state = State.SPLASH_LS_NEW;
+					} else if(stateInt == State.SPLASH_ONBOARDING.getOrdinal()){
+						state = State.SPLASH_ONBOARDING;
+						accessToken = getIntent().getStringExtra(KEY_ACCESS_TOKEN);
 					} else {
 						state = State.SPLASH_INIT;
 					}
@@ -1553,6 +1563,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		rlLoginSignupNew.setVisibility(View.GONE);
 		llSignupOnboarding.setVisibility(View.GONE);
 		rlPhoneLogin.setVisibility(View.GONE);
+		svSignupOnboarding.setVisibility(View.GONE);
 
 		int duration = 500;
 		switch (state) {
@@ -1674,6 +1685,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 			case SPLASH_ONBOARDING:
 				llContainer.setVisibility(View.VISIBLE);
+				rlPhoneLogin.clearAnimation();
+				svSignupOnboarding.setVisibility(View.VISIBLE);
 				llSignupOnboarding.setVisibility(View.VISIBLE);
 
 				Animation anim1 = AnimationUtils.loadAnimation(this, R.anim.right_in);
@@ -2037,6 +2050,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		userVerfied = 0;
 		AppEventsLogger.activateApp(this);
 
+		if(OTPConfirmScreen.backToSplashOboarding){
+			OTPConfirmScreen.backToSplashOboarding = false;
+			accessToken = OTPConfirmScreen.accessTokenOnBoarding;
+			changeUIState(State.SPLASH_ONBOARDING);
+		}
 
 	}
 
@@ -2542,7 +2560,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			performSignupBackPressed();
 		} else if (State.SPLASH_LOGIN_PHONE_NO == state){
 			changeUIState(State.SPLASH_LS_NEW);
-		} else{
+		} else if(State.SPLASH_ONBOARDING == state){
+			changeUIState(State.SPLASH_LS_NEW);
+			AccessTokenGenerator.saveLogoutToken(this);
+		}
+		else{
 			super.onBackPressed();
 		}
 	}
@@ -2862,12 +2884,16 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
+										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								loginDataFetched = true;
+								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
+										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									signUpBy = "email";
 									Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER, jObj.optString("knowlarity_missed_call_number", ""));
@@ -3003,7 +3029,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
+										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								sendToOtpScreen = true;
@@ -3055,127 +3081,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	}
 
 
-	/**
-	 * ASync for login from server
-	 */
-	public void sendLoginValues(final Activity activity, final String emailId, String password, final boolean isPhoneNumber) {
-		if (MyApplication.getInstance().isOnline()) {
-			resetFlags();
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-
-			HashMap<String, String> params = new HashMap<>();
-
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
-
-			if (isPhoneNumber) {
-				params.put("phone_no", emailId);
-			} else {
-				params.put("email", emailId);
-			}
-			params.put("password", password);
-			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("os_version", MyApplication.getInstance().osVersion());
-			params.put("country", MyApplication.getInstance().country());
-			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("latitude", "" + Data.loginLatitude);
-			params.put("longitude", "" + Data.loginLongitude);
-			params.put("client_id", Config.getAutosClientId());
-
-			if (Utils.isDeviceRooted()) {
-				params.put("device_rooted", "1");
-			} else {
-				params.put("device_rooted", "0");
-			}
-			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
-			if(links != null){
-				if(!"[]".equalsIgnoreCase(links)) {
-					params.put(KEY_BRANCH_REFERRING_LINKS, links);
-				}
-			}
-			params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
-
-			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
-
-			Log.i("params", "=" + params);
-
-			new HomeUtil().putDefaultParams(params);
-			RestClient.getApiService().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
-				@Override
-				public void success(LoginResponse loginResponse, Response response) {
-					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-					Log.i(TAG, "loginUsingEmailOrPhoneNo response = " + responseStr);
-					try {
-						JSONObject jObj = new JSONObject(responseStr);
-
-						int flag = jObj.getInt("flag");
-
-						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
-								String error = jObj.getString("error");
-								emailNeedRegister = emailId;
-								emailRegister = true;
-								notRegisteredMsg = error;
-							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
-								String error = jObj.getString("error");
-								DialogPopup.alertPopup(activity, "", error);
-							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
-								if (isPhoneNumber) {
-									enteredEmail = jObj.getString("user_email");
-								} else {
-									enteredEmail = emailId;
-								}
-								linkedWallet = jObj.optInt("reg_wallet_type");
-								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
-								accessToken = jObj.getString("access_token");
-								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
-										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
-								otpErrorMsg = jObj.getString("error");
-								SplashNewActivity.registerationType = RegisterationType.EMAIL;
-								sendToOtpScreen = true;
-							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-								loginDataFetched = true;
-								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									DialogPopup.showLoadingDialog(activity, "Loading...");
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
-									MyApplication.getInstance().getDatabase().insertEmail(emailId);
-									DialogPopup.dismissLoadingDialog();
-								}
-								DialogPopup.showLoadingDialog(activity, "Loading...");
-							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-							DialogPopup.dismissLoadingDialog();
-						} else {
-							DialogPopup.dismissLoadingDialog();
-						}
-
-					} catch (Exception exception) {
-						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-						DialogPopup.dismissLoadingDialog();
-					}
-				}
-
-				@Override
-				public void failure(RetrofitError error) {
-					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
-					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-				}
-			});
-
-		}
-		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-
-	}
 
 	public void sendFacebookLoginValues(final Activity activity) {
 		if (MyApplication.getInstance().isOnline()) {
@@ -3248,7 +3153,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
+										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 								//sendToOtpScreen = true;
@@ -3360,7 +3265,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
+										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
 								//sendToOtpScreen = true;
@@ -3434,7 +3339,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			intent.putExtra("email", editTextSEmail.getText().toString().trim());
 			intent.putExtra("password", editTextSPassword.getText().toString().trim());
 			startActivity(intent);
-			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 	}
@@ -3470,7 +3374,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		intent.putExtra(LINKED_WALLET, linkedWallet);
 		intent.putExtra("otp_length", String.valueOf(4));
 		startActivity(intent);
-		finish();
 		overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 
@@ -4078,7 +3981,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
         Prefs.with(this).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
                 jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
         Prefs.with(this).save(SP_OTP_VIA_CALL_ENABLED,
-                jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
+                jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
         sendToOtpScreen = true;
         linkedWalletErrorMsg = jObj.optString(KEY_MESSAGE, "");
 		Prefs.with(this).save(SP_WALLET_AT_SIGNUP, String.valueOf(linkedWallet));

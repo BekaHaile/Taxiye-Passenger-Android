@@ -8,7 +8,6 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
-import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -129,7 +128,7 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
                 userData.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
         Prefs.with(context).save(SP_OTP_VIA_CALL_ENABLED,
-                userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
+                userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 		int promoSuccess = userData.optInt(KEY_PROMO_SUCCESS, 1);
         String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
                 context.getResources().getString(R.string.promocode_invalid_message_on_signup));
