@@ -975,6 +975,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 imageViewEditProfileSave.setVisibility(View.GONE);
                                 imageViewEditProfile.setVisibility(View.VISIBLE);
                                 String message = jObj.getString("message");
+                                updateSubscriptionMessage(updatedName);
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
                                 if(!Data.userData.userName.equalsIgnoreCase("User")) {
@@ -1047,6 +1048,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     String phoneNo = jObj.getString("phone_no");
                                     int emailVerificationStatus = jObj.getInt("email_verification_status");
 
+                                    updateSubscriptionMessage(userName);
                                     Data.userData.userName = userName;
                                     Data.userData.phoneNo = phoneNo;
                                     Data.userData.userEmail = email;
@@ -1636,5 +1638,15 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     private void setEditPhoneUI(){
         ivEditPhone.setVisibility(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1 ? View.GONE : View.VISIBLE);
+    }
+
+    private void updateSubscriptionMessage(String updatedName){
+        try {
+            Data.userData.getSubscriptionData().setSubscriptionTitleNew(Data.userData.
+                    getSubscriptionData().getSubscriptionTitleNew()
+                    .replace(Data.userData.userName, updatedName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

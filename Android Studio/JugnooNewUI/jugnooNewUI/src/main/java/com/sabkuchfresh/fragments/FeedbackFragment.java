@@ -34,14 +34,11 @@ import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -56,7 +53,7 @@ import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -405,7 +402,11 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 }
 
                 // api call
-                if (productType != ProductType.MENUS) {
+                if(productType == ProductType.PROS){
+                    apiProsFeedback((int) ratingBarMenuFeedback.getScore(),
+                            comments+(TextUtils.isEmpty(comments)?"":", ")+reviewDescription);
+                }
+                else if (productType != ProductType.MENUS) {
                     sendQuery(0, comments);
                 } else {
                     sumbitMenuFeedback(reviewDescription, comments, (int) ratingBarMenuFeedback.getScore());
@@ -667,84 +668,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
     }
 
-    /**
-     * Method used to get order information
-     */
-    private void getOrderData() {
-        try {
-            if (MyApplication.getInstance().isOnline()) {
-
-                DialogPopup.showLoadingDialog(activity, "Loading...");
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put("access_token", Data.userData.accessToken);
-                params.put("order_id", "" + orderId);
-                params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-                params.put(Constants.INTERATED, "1");
-                Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
-                    @Override
-                    public void success(HistoryResponse historyResponse, Response response) {
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i("Server response", "response = " + responseStr);
-                        try {
-
-                            JSONObject jObj = new JSONObject(responseStr);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt("flag");
-                                String message = JSONParser.getServerMessage(jObj);
-                                if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
-                                    new TransactionUtils().openOrderStatusFragment(activity,
-                                            activity.getRelativeLayoutContainer(), historyResponse.getData().get(0).getOrderId(),
-                                            historyResponse.getData().get(0).getProductType(), 0);
-                                } else {
-                                    updateListData(message);
-                                }
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            updateListData(Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        updateListData(Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-                };
-
-                new HomeUtil().putDefaultParams(params);
-                if (productType == ProductType.MENUS) {
-                    RestClient.getMenusApiService().orderHistory(params, callback);
-                } else {
-                    RestClient.getFreshApiService().orderHistory(params, callback);
-                }
-            } else {
-                updateListData(Data.CHECK_INTERNET_MSG);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateListData(String message) {
-        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
-                activity.getString(R.string.retry), activity.getString(R.string.cancel),
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getOrderData();
-                    }
-                }, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                }, false, false);
-    }
-
 
     private void backPressed(boolean goodRating) {
         this.goodRating = goodRating;
@@ -793,6 +716,12 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                     activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
                 } else {
                     activity.getTopBar().title.setText(activity.getString(R.string.menus));
+                }
+            } else if (productType == ProductType.PROS){
+                if(orderStatusResponse != null && orderStatusResponse.getData() != null && orderStatusResponse.getData().size() > 0) {
+                    ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
+                    Pair<String, String> pair = datum.getProductNameAndJobAmount();
+                    activity.getTopBar().title.setText(pair.first);
                 }
             }
         }
@@ -884,7 +813,9 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         return apiProsOrderStatus;
     }
 
+    private ProsOrderStatusResponse orderStatusResponse;
     private void setProsDataToUI(ProsOrderStatusResponse orderStatusResponse){
+        this.orderStatusResponse = orderStatusResponse;
         if(orderStatusResponse != null && orderStatusResponse.getData() != null && orderStatusResponse.getData().size() > 0) {
             ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
             Pair<String, String> pair = datum.getProductNameAndJobAmount();
@@ -899,6 +830,108 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             }
             textViewRSTotalFare.setText(TextUtils.isEmpty(datum.getFleetName()) ? activity.getString(R.string.service_date) : datum.getFleetName());
             textViewRSData.setText(DateOperations.convertDateTimeUSToInd(datum.getJobPickupDatetime().replace("\\", "")));
+        }
+    }
+
+
+    public void apiProsFeedback(final int rating, final String comments) {
+        try {
+            if (MyApplication.getInstance().isOnline()) {
+                DialogPopup.showLoadingDialog(activity, "Loading...");
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_JOB_ID, String.valueOf(jobId));
+                params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(ProductType.PROS.getOrdinal()));
+                params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                params.put(Constants.RATING, String.valueOf(rating));
+                params.put(Constants.COMMENTS, comments);
+
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getProsApiService().taskRating(params, new Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i("Server response", "response = " + responseStr);
+                        try {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, orderStatusResponse.getFlag(), orderStatusResponse.getError(), orderStatusResponse.getMessage())) {
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == orderStatusResponse.getFlag()) {
+                                    if (rating > 2) {
+                                        // for Good rating
+                                        afterGoodRating();
+                                        if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
+                                            activity.getHandler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    backPressed(true);
+                                                }
+                                            }, 3000);
+                                        } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()) {
+                                            backPressed(true);
+                                        }
+                                    } else {
+                                        // for bad rating
+                                        backPressed(true);
+                                    }
+                                } else {
+                                    retryDialogOrderData(rating, comments, orderStatusResponse.getMessage(), DialogErrorType.SERVER_ERROR);
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            retryDialogOrderData(rating, comments, "", DialogErrorType.SERVER_ERROR);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        retryDialogOrderData(rating, comments, "", DialogErrorType.CONNECTION_LOST);
+                    }
+                });
+            } else {
+                retryDialogOrderData(rating, comments, "", DialogErrorType.NO_NET);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retryDialogOrderData(final int rating, final String comments, String message, DialogErrorType dialogErrorType) {
+        if (TextUtils.isEmpty(message)) {
+            DialogPopup.dialogNoInternet(activity,
+                    dialogErrorType,
+                    new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View view) {
+                            apiProsFeedback(rating, comments);
+                        }
+
+                        @Override
+                        public void neutralClick(View view) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View view) {
+                        }
+                    });
+        } else {
+            DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+                    activity.getString(R.string.retry), activity.getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            apiProsFeedback(rating, comments);
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.finish();
+                        }
+                    }, false, false);
         }
     }
 }
