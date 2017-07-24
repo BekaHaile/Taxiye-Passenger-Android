@@ -43,6 +43,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -315,5 +316,19 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.PROS);
 		}
 		resumed = true;
+		try {
+			// TODO: 24/07/17 remove this
+//			Prefs.with(activity).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 189421);
+			if (Prefs.with(activity).getInt(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0) > 0) {
+				activity.getHandler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						activity.openFeedback();
+					}
+				}, 300);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

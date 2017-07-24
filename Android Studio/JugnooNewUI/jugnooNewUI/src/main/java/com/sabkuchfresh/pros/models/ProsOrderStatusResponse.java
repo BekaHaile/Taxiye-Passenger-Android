@@ -109,6 +109,9 @@ public class ProsOrderStatusResponse {
 		@SerializedName("support_category")
 		@Expose
 		private int supportCategory;
+		@SerializedName("fleet_name")
+		@Expose
+		private String fleetName;
 
 
 		public String getJobAddress() {
@@ -230,6 +233,13 @@ public class ProsOrderStatusResponse {
 			return arr[0];
 		}
 
+		public String getFleetName() {
+			return fleetName;
+		}
+
+		public void setFleetName(String fleetName) {
+			this.fleetName = fleetName;
+		}
 	}
 
 

@@ -1348,6 +1348,7 @@
     <string name="thanks_for_riding_with_us">Thanks for riding with us</string>
     <string name="label_searched_items">SEARCHED ITEMS</string>
     <string name="label_relevant_categories">RELEVANT CATEGORIES</string>
+    <string name="service_date">Service Date</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

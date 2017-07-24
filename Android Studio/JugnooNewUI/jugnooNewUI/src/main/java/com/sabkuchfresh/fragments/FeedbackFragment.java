@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,9 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.pros.api.ApiProsOrderStatus;
+import com.sabkuchfresh.pros.models.ProsOrderStatus;
+import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
@@ -55,6 +59,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -104,12 +109,21 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     private TextView textViewRSWhatImprove;
     private ArrayList<FeedbackReason> positiveReasons;
 
+    private int jobId = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        rootView = inflater.inflate(R.layout.layout_feedback, container, false);
 
         activity = (FreshActivity) getActivity();
+
+        mainLayout = (RelativeLayout) rootView.findViewById(R.id.mainLayout);
+        new ASSL(activity, mainLayout, 1134, 720, false);
+
+
+
+
         try {
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
@@ -178,6 +192,13 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                     }
                 }
 
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getProsClientId())){
+                jobId = Prefs.with(activity).getInt(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
+                productType = ProductType.PROS;
+                getApiProsOrderStatus().getOrderData(activity, jobId);
+
+                Prefs.with(activity).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
             } else {
                 activity.finish();
             }
@@ -186,20 +207,20 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         }
 
 
-        if (TextUtils.isEmpty(orderId))
+        if (TextUtils.isEmpty(orderId) && jobId <= 0)
             activity.finish();
-        rootView = inflater.inflate(R.layout.layout_feedback, container, false);
+
 
         GAUtils.trackScreenView(activity.getGaCategory()+FEEDBACK);
 
         setUp();
 
+
+
         return rootView;
     }
 
     private void setUp() {
-        mainLayout = (RelativeLayout) rootView.findViewById(R.id.mainLayout);
-        new ASSL(activity, mainLayout, 1134, 720, false);
 
         scrollViewRideSummary = (ScrollView) rootView.findViewById(R.id.scrollViewRideSummary);
         linearLayoutRideSummary = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideSummary);
@@ -234,7 +255,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 + "" + Utils.getMoneyDecimalFormat().format(orderAmount));
         textViewRSData.setText("" + dateValue);
 
-        if (feedbackOrderItems != null && !feedbackOrderItems.equalsIgnoreCase("")) {
+        if (!TextUtils.isEmpty(feedbackOrderItems)) {
             textViewRSTotalFare.setVisibility(View.GONE);
             tvItems.setVisibility(View.VISIBLE);
             tvItems.setText(feedbackOrderItems);
@@ -270,14 +291,17 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         if (Config.getFreshClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.ic_fresh_grey);
             ivOffering.setImageResource(R.drawable.ic_fresh_grey);
-        } else if (Config.getGroceryClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
-            imageviewType.setImageResource(R.drawable.ic_fresh_grey);
-            ivOffering.setImageResource(R.drawable.ic_fresh_grey);
-        } else if (Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+        } else if (Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))
+                || Config.getProsClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
 
 
-            imageviewType.setImageResource(R.drawable.ic_menus_grey);
-            ivOffering.setImageResource(R.drawable.ic_menus_grey);
+            if(Config.getProsClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))){
+                imageviewType.setImageResource(R.drawable.ic_pros_grey);
+                ivOffering.setImageResource(R.drawable.ic_pros_grey);
+            } else {
+                imageviewType.setImageResource(R.drawable.ic_menus_grey);
+                ivOffering.setImageResource(R.drawable.ic_menus_grey);
+            }
 
             /**
              Edited by Parminder Singh on 2/10/17 at 12:46 PM
@@ -334,7 +358,8 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             });
 
 
-        } else {
+        }
+        else {
             imageviewType.setImageResource(R.drawable.ic_meals_grey);
             ivOffering.setImageResource(R.drawable.ic_meals_grey);
 
@@ -414,8 +439,12 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             @Override
             public void onClick(View v) {
 //                getOrderData();
-                new TransactionUtils().openOrderStatusFragment(activity,
-                        activity.getRelativeLayoutContainer(), Integer.parseInt(orderId), productType.getOrdinal(), 0);
+                if(productType == ProductType.PROS){
+                    activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), jobId);
+                } else {
+                    new TransactionUtils().openOrderStatusFragment(activity,
+                            activity.getRelativeLayoutContainer(), Integer.parseInt(orderId), productType.getOrdinal(), 0);
+                }
             }
         });
 
@@ -520,32 +549,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
     @Override
     public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.buttonSubmit:
-//                if (ratingType == 0)
-//                    FlurryEventLogger.event(PAYMENT_SCREEN, "Dislike", SUBMIT_FEEDBACK);
-//                else
-//                    FlurryEventLogger.event(PAYMENT_SCREEN, "Like", SUBMIT_FEEDBACK);
-//
-//                if (ratingType == -1) {
-//                    Toast.makeText(activity, "Please rate us", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    sendQuery(commentBox.getText().toString().trim(), ratingType);
-//                }
-//                break;
-//            case R.id.textView_skip:
-//                FlurryEventLogger.event(PAYMENT_SCREEN, SKIP_FEEDBACK, SKIP_FEEDBACK);
-//                skipValue = "1";
-//                sendQuery("", ratingType);
-//                activity.onBackPressed();
-//                //activity.finish();
-//                break;
-//            default:
-//
-//                break;
-//
-//
-//        }
 
     }
 
@@ -860,5 +863,42 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     public void onPause() {
         super.onPause();
         fragResumed = false;
+    }
+
+    private ApiProsOrderStatus apiProsOrderStatus;
+    private ApiProsOrderStatus getApiProsOrderStatus(){
+        if(apiProsOrderStatus == null){
+            apiProsOrderStatus = new ApiProsOrderStatus(new ApiProsOrderStatus.Callback() {
+                @Override
+                public void onNoRetry() {
+                    activity.onBackPressed();
+                }
+
+                @Override
+                public void onSuccess(ProsOrderStatusResponse orderStatusResponse) {
+                    setProsDataToUI(orderStatusResponse);
+
+                }
+            });
+        }
+        return apiProsOrderStatus;
+    }
+
+    private void setProsDataToUI(ProsOrderStatusResponse orderStatusResponse){
+        if(orderStatusResponse != null && orderStatusResponse.getData() != null && orderStatusResponse.getData().size() > 0) {
+            ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
+            Pair<String, String> pair = datum.getProductNameAndJobAmount();
+            activity.getTopBar().title.setText(pair.first);
+            if(datum.getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()
+                    || datum.getJobStatus() == ProsOrderStatus.FAILED.getOrdinal()) {
+                if (!TextUtils.isEmpty(pair.second)) {
+                    textViewRSCashPaidValue.setText(activity.getString(R.string.rupees_value_format, pair.second));
+                } else {
+                    textViewRSCashPaidValue.setText(R.string.to_be_confirmed);
+                }
+            }
+            textViewRSTotalFare.setText(TextUtils.isEmpty(datum.getFleetName()) ? activity.getString(R.string.service_date) : datum.getFleetName());
+            textViewRSData.setText(DateOperations.convertDateTimeUSToInd(datum.getJobPickupDatetime().replace("\\", "")));
+        }
     }
 }
