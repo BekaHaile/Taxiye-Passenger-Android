@@ -80,7 +80,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     private FreshActivity activity;
     private LinearLayout linearLayoutRideSummary, linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer, llBadReason;
     private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
-    private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue, tvItems,
+    private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaid, textViewRSCashPaidValue, tvItems,
             textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp, textViewRideEndWithImage;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;
     private ScrollView scrollViewRideSummary;
@@ -193,6 +193,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                     .equals(Config.getProsClientId())){
                 jobId = Prefs.with(activity).getInt(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
                 productType = ProductType.PROS;
+                textViewRSTotalFare.setText("");
                 getApiProsOrderStatus().getOrderData(activity, jobId);
 
                 Prefs.with(activity).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
@@ -233,6 +234,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         textViewRSData = (TextView) rootView.findViewById(R.id.textViewRSData);
         tvItems = (TextView) rootView.findViewById(R.id.tvItems);
         tvItems.setTypeface(Fonts.avenirNext(activity));
+        textViewRSCashPaid = (TextView) rootView.findViewById(R.id.textViewRSCashPaid);
         textViewRSCashPaidValue = (TextView) rootView.findViewById(R.id.textViewRSCashPaidValue);
         textViewRSInvoice = (TextView) rootView.findViewById(R.id.textViewRSInvoice);
         textViewRSRateYourRide = (TextView) rootView.findViewById(R.id.textViewRSRateYourRide);
@@ -242,6 +244,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         textViewThanks.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewRSTotalFare.setTypeface(Fonts.avenirNext(activity));
         textViewRSData.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        textViewRSCashPaid.setTypeface(Fonts.mavenMedium(activity)); textViewRSCashPaid.setVisibility(View.GONE);
         textViewRSCashPaidValue.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewRSInvoice.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewRSRateYourRide.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
@@ -814,6 +817,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
     private ProsOrderStatusResponse orderStatusResponse;
     private void setProsDataToUI(ProsOrderStatusResponse orderStatusResponse){
+        textViewRSCashPaid.setVisibility(View.VISIBLE);
         this.orderStatusResponse = orderStatusResponse;
         if(orderStatusResponse != null && orderStatusResponse.getData() != null && orderStatusResponse.getData().size() > 0) {
             ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
@@ -824,7 +828,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 if (!TextUtils.isEmpty(pair.second)) {
                     textViewRSCashPaidValue.setText(activity.getString(R.string.rupees_value_format, pair.second));
                 } else {
-                    textViewRSCashPaidValue.setText(R.string.to_be_confirmed);
+                    textViewRSCashPaidValue.setText(activity.getString(R.string.rupees_value_format, "-"));
                 }
             }
             textViewRSTotalFare.setText(TextUtils.isEmpty(datum.getFleetName()) ? activity.getString(R.string.service_date) : datum.getFleetName());
