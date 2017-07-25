@@ -425,10 +425,10 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 			HashMap<String, String> params = new HashMap<>();
 
-			params.put("client_id", Config.getAutosClientId());
-			params.put("access_token", Data.userData.accessToken);
-			params.put("is_access_token_new", "1");
-			params.put("phone_no", phoneNo);
+			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+			params.put(Constants.KEY_PHONE_NO, phoneNo);
 			Log.i("params", ">"+params);
 
 			new HomeUtil().putDefaultParams(params);

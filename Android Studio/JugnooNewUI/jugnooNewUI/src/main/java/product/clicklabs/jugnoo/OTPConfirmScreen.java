@@ -562,6 +562,13 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			}
 		});
 
+		buttonOtpViaCall.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				initiateOTPCallAsync(OTPConfirmScreen.this, textViewOtpNumber.getText().toString());
+			}
+		});
+
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -1205,7 +1212,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 			HashMap<String, String> params = new HashMap<>();
 
-			params.put("phone_no", phoneNo);
+			params.put(KEY_PHONE_NO, phoneNo);
 			Log.i("phone_no", ">" + phoneNo);
 
 			new HomeUtil().putDefaultParams(params);
