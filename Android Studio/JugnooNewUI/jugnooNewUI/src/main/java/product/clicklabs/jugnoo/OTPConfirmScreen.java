@@ -76,7 +76,8 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	TextView textViewCounter, tvOtpViaCall;
 	ImageView imageViewYellowLoadingBar, imageViewWalletIcon, ivResend;
 
-	Button buttonVerify, buttonOtpViaCall;
+	Button buttonVerify;
+	LinearLayout buttonOtpViaCall;
 	LinearLayout linearLayoutGiveAMissedCall, llPasswordLogin, llOTP;
 	private Animation tweenAnimation;
 
@@ -185,7 +186,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
 
-		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
+		buttonOtpViaCall = (LinearLayout) findViewById(R.id.buttonOtpViaCall);
 		rlResendOTP = (LinearLayout) findViewById(R.id.rlResendOTP);
 		ivResend = (ImageView) findViewById(R.id.ivResend);
 		tvOtpViaCall = (TextView) findViewById(R.id.tvOtpViaCall); tvOtpViaCall.setTypeface(Fonts.mavenRegular(this));

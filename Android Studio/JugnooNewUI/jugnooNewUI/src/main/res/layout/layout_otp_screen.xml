@@ -206,7 +206,7 @@
 
             <ImageView
                 android:id="@+id/ivResend"
-                android:layout_width="@dimen/px_32"
+                android:layout_width="@dimen/px_33"
                 android:layout_height="@dimen/px_38"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
@@ -240,18 +240,34 @@
             android:text="@string/nl_otp_verify"
             android:visibility="gone" />
 
-        <Button
+        <LinearLayout
             android:id="@+id/buttonOtpViaCall"
             android:layout_width="500px"
             android:layout_height="104px"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="25px"
             android:background="@drawable/capsule_theme_login_selector"
-            android:text="@string/receive_otp_via_call"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_26"
-            android:textAllCaps="true"
-            android:visibility="visible" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="28px"
+                android:layout_height="30px"
+                android:layout_marginRight="16px"
+                android:src="@drawable/ic_call_otp"
+                android:tag="mwar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/receive_otp_via_call"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_26"
+                android:textAllCaps="true"
+                app:font="@string/maven"
+                />
+        </LinearLayout>
 
         <!-- Missed call Button -->
         <LinearLayout

@@ -529,7 +529,7 @@
 
     <string name="give_missed_call_dialog_text">No OTP? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
     <string name="call_us">Call Us</string>
-    <string name="receive_otp_via_call">Receive the OTP via call</string>
+    <string name="receive_otp_via_call">Get OTP Via Call</string>
     <string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
     <string name="couldnt_find_drivers_nearby">Cannot find drivers nearby</string>
 

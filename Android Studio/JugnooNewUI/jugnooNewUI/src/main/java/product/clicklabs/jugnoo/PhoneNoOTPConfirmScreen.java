@@ -52,7 +52,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
-	Button buttonVerify, buttonOtpViaCall;
+	Button buttonVerify;
+	LinearLayout buttonOtpViaCall;
 	LinearLayout linearLayoutGiveAMissedCall;
 
 
@@ -118,7 +119,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.mavenMedium(this));
 
 		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
-		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
+		buttonOtpViaCall = (LinearLayout) findViewById(R.id.buttonOtpViaCall);
 		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
 		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenLight(this));
 
