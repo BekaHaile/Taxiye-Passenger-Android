@@ -206,16 +206,15 @@
 
             <ImageView
                 android:id="@+id/ivResend"
-                android:layout_width="@dimen/px_36"
-                android:layout_height="@dimen/px_36"
+                android:layout_width="@dimen/px_32"
+                android:layout_height="@dimen/px_38"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/px_20"
                 android:clickable="false"
                 android:duplicateParentState="true"
-                android:src="@drawable/ic_repeat_white"
-                android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/text_size_34" />
+                android:src="@drawable/ic_resend_otp"
+                />
 
             <TextView
                 android:id="@+id/tvOtpViaCall"

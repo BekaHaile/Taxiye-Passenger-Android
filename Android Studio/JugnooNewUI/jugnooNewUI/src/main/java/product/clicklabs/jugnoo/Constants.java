@@ -758,5 +758,6 @@ public interface Constants {
 
     String SP_PROS_LAST_COMPLETE_JOB_ID = "sp_pros_last_complete_job_id";
     String KEY_IS_FEEDBACK_PENDING = "is_feedback_pending";
-    String COMMENTS = "comments";
+    String KEY_CUSTOMER_COMMENT = "customer_comment";
+    String KEY_JOB_ID_2 = "job_id_2";
 }

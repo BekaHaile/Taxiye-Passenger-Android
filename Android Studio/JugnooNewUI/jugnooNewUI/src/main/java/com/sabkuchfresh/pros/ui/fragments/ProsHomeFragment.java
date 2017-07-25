@@ -317,8 +317,6 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 		}
 		resumed = true;
 		try {
-			// TODO: 24/07/17 remove this
-			Prefs.with(activity).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 189421);
 			if (Prefs.with(activity).getInt(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0) > 0) {
 				activity.getHandler().postDelayed(new Runnable() {
 					@Override

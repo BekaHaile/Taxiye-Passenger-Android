@@ -112,6 +112,9 @@ public class ProsOrderStatusResponse {
 		@SerializedName("fleet_name")
 		@Expose
 		private String fleetName;
+		@SerializedName("job_hash")
+		@Expose
+		private String jobHash;
 
 
 		public String getJobAddress() {
@@ -239,6 +242,14 @@ public class ProsOrderStatusResponse {
 
 		public void setFleetName(String fleetName) {
 			this.fleetName = fleetName;
+		}
+
+		public String getJobHash() {
+			return jobHash;
+		}
+
+		public void setJobHash(String jobHash) {
+			this.jobHash = jobHash;
 		}
 	}
 

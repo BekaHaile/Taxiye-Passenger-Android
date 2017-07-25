@@ -86,7 +86,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     private ScrollView scrollViewRideSummary;
     private TextView textViewRSScroll;
 
-    private int viewType = -1;
+    private int viewType = RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal();
     private String dateValue = "", endRideGoodFeedbackText;
     private double orderAmount = 0;
     private String orderId = "", feedbackOrderItems = "";
@@ -394,19 +394,18 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                         editTextRSFeedback.setError(getString(R.string.review_must_be_in));
                         return;
                     } else {
-                        if (productType != ProductType.MENUS) {
-                            comments = comments + ", " + reviewDescription;
-                        }
                         GAUtils.event(activity.getGaCategory(), FEEDBACK, COMMENT+ADDED);
                     }
                 }
 
+                if (productType != ProductType.MENUS) {
+                    comments = comments+((TextUtils.isEmpty(comments) || TextUtils.isEmpty(reviewDescription))?"":", ")+reviewDescription;
+                }
+
                 // api call
                 if(productType == ProductType.PROS){
-                    apiProsFeedback((int) ratingBarMenuFeedback.getScore(),
-                            comments+(TextUtils.isEmpty(comments)?"":", ")+reviewDescription);
-                }
-                else if (productType != ProductType.MENUS) {
+                    apiProsFeedback((int) ratingBarMenuFeedback.getScore(), comments);
+                } else if (productType != ProductType.MENUS) {
                     sendQuery(0, comments);
                 } else {
                     sumbitMenuFeedback(reviewDescription, comments, (int) ratingBarMenuFeedback.getScore());
@@ -840,11 +839,12 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 DialogPopup.showLoadingDialog(activity, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_JOB_ID, String.valueOf(jobId));
+                params.put(Constants.KEY_JOB_ID, String.valueOf(orderStatusResponse.getData().get(0).getJobHash()));
+                params.put(Constants.KEY_JOB_ID_2, String.valueOf(orderStatusResponse.getData().get(0).getJobId()));
                 params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(ProductType.PROS.getOrdinal()));
                 params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.RATING, String.valueOf(rating));
-                params.put(Constants.COMMENTS, comments);
+                params.put(Constants.KEY_CUSTOMER_COMMENT, comments);
 
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getProsApiService().taskRating(params, new Callback<SettleUserDebt>() {
@@ -873,12 +873,12 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                                         backPressed(true);
                                     }
                                 } else {
-                                    retryDialogOrderData(rating, comments, orderStatusResponse.getMessage(), DialogErrorType.SERVER_ERROR);
+                                    retryDialogProsFeedback(rating, comments, orderStatusResponse.getMessage(), DialogErrorType.SERVER_ERROR);
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            retryDialogOrderData(rating, comments, "", DialogErrorType.SERVER_ERROR);
+                            retryDialogProsFeedback(rating, comments, "", DialogErrorType.SERVER_ERROR);
                         }
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -887,18 +887,18 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                     public void failure(RetrofitError error) {
                         Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
                         DialogPopup.dismissLoadingDialog();
-                        retryDialogOrderData(rating, comments, "", DialogErrorType.CONNECTION_LOST);
+                        retryDialogProsFeedback(rating, comments, "", DialogErrorType.CONNECTION_LOST);
                     }
                 });
             } else {
-                retryDialogOrderData(rating, comments, "", DialogErrorType.NO_NET);
+                retryDialogProsFeedback(rating, comments, "", DialogErrorType.NO_NET);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void retryDialogOrderData(final int rating, final String comments, String message, DialogErrorType dialogErrorType) {
+    private void retryDialogProsFeedback(final int rating, final String comments, String message, DialogErrorType dialogErrorType) {
         if (TextUtils.isEmpty(message)) {
             DialogPopup.dialogNoInternet(activity,
                     dialogErrorType,
