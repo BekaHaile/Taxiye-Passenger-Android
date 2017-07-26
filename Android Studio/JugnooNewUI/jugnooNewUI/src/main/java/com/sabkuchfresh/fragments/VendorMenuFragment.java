@@ -293,6 +293,13 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                         }
                     }
                 }, 200);
+                if(activity.getScrollToCategoryId() != -1){
+                    int positionInPager = menusCategoryFragmentsAdapter.getCategoryPosition(activity.getScrollToCategoryId());
+                    if(positionInPager > -1) {
+                        viewPager.setCurrentItem(positionInPager);
+                    }
+                    activity.setScrollToCategoryId(-1);
+                }
 			} else {
 				if(recyclerViewOffers!=null && recyclerViewOffers.getVisibility()==View.VISIBLE) {
 					ibArrow.performClick();

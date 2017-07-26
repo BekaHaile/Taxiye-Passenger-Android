@@ -31,6 +31,20 @@ public class Category {
 	private List<Item> items = null;
 	@SerializedName("categoryPos")
 	private int categoryPos;
+	@SerializedName("vegItemsCount")
+	private int vegItemsCount;
+
+	/**
+	 * constructor for category search
+	 * @param categoryId
+	 * @param categoryName
+	 * @param categoryPos
+	 */
+	public Category(Integer categoryId, String categoryName, int categoryPos){
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
+		this.categoryPos = categoryPos;
+	}
 
 
 	public Integer getCategoryId() {
@@ -96,5 +110,13 @@ public class Category {
 
 	public void setCategoryPos(int categoryPos) {
 		this.categoryPos = categoryPos;
+	}
+
+	public int getVegItemsCount() {
+		return vegItemsCount;
+	}
+
+	public void setVegItemsCount(int vegItemsCount) {
+		this.vegItemsCount = vegItemsCount;
 	}
 }

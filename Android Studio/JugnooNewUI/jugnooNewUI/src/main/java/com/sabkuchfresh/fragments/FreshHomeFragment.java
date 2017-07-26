@@ -116,18 +116,26 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onItemClick(int pos, SuperCategoriesData.SuperCategory superCategory) {
                 try {
-                    if(superCategory.getSuperCategoryId() != null) {
-						if (superCategory.getIsEnabled() == 0) {
-							Utils.showToast(activity, getString(R.string.coming_soon_to_your_city));
-						} else {
-							activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
-							activity.getFabViewTest().hideJeanieHelpInSession();
-						}
-						try {
-							GAUtils.event(FRESH, HOME + SUPER + CATEGORY + CLICKED, superCategory.getSuperCategoryName());
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+                    if(superCategory.getIsBulkOrder()){
+                        Utils.openCallIntent(activity,superCategory.getBulkOrderCellNumber());
+                    }else if(superCategory.getSuperCategoryId() != null) {
+
+
+
+                            if (superCategory.getIsEnabled() == 0) {
+                                Utils.showToast(activity, getString(R.string.coming_soon_to_your_city));
+                            } else {
+                                activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer(), superCategory);
+                                activity.getFabViewTest().hideJeanieHelpInSession();
+                            }
+                            try {
+                                GAUtils.event(FRESH, HOME + SUPER + CATEGORY + CLICKED, superCategory.getSuperCategoryName());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+
 					}
                 } catch (Exception e) {
                     e.printStackTrace();
