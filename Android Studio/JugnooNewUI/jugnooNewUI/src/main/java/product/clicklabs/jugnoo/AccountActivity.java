@@ -972,6 +972,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 updateMenuBar = true;
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                 updateMenuBar = true;
+                                Prefs.with(activity).save(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER,
+                                        jObj.optString(Constants.KEY_KNOWLARITY_MISSED_CALL_NUMBER,
+                                                Prefs.with(activity).getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, "")));
+                                Prefs.with(activity).save(Constants.SP_OTP_VIA_CALL_ENABLED,
+                                        jObj.optInt(Constants.KEY_OTP_VIA_CALL_ENABLED,
+                                                Prefs.with(activity).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 0)));
                                 imageViewEditProfileSave.setVisibility(View.GONE);
                                 imageViewEditProfile.setVisibility(View.VISIBLE);
                                 String message = jObj.getString("message");

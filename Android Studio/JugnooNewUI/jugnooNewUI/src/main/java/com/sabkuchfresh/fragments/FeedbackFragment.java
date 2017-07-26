@@ -193,7 +193,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                     .equals(Config.getProsClientId())){
                 jobId = Prefs.with(activity).getInt(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
                 productType = ProductType.PROS;
-                textViewRSTotalFare.setText("");
                 getApiProsOrderStatus().getOrderData(activity, jobId);
 
                 Prefs.with(activity).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
@@ -261,6 +260,9 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             tvItems.setText(feedbackOrderItems);
         }
 
+        if(productType == ProductType.PROS){
+            textViewRSTotalFare.setText("");
+        }
 
         linearLayoutRideSummaryContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideSummaryContainer);
         linearLayoutRSViewInvoice = (LinearLayout) rootView.findViewById(R.id.linearLayoutRSViewInvoice);

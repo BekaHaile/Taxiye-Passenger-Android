@@ -258,14 +258,14 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 
 		try{
-			if(!"".equalsIgnoreCase(Prefs.with(PhoneNoOTPConfirmScreen.this).getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
+			if(!"".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
 				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
 			}
 			else{
 				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
-			if(1 == Prefs.with(PhoneNoOTPConfirmScreen.this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
+			if(1 == Prefs.with(this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
 				buttonOtpViaCall.setVisibility(View.VISIBLE);
 			}
 			else{
