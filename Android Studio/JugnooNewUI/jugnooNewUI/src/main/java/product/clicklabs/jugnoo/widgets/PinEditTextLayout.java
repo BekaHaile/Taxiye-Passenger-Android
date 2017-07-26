@@ -342,4 +342,11 @@ public class PinEditTextLayout implements View.OnFocusChangeListener, View.OnKey
 	public interface Callback{
 		void onOTPComplete(String otp, EditText editText);
 	}
+
+	public void setOTPDirectly(String otp){
+		mPinHiddenEditText.setText(String.valueOf(otp.charAt(0)));
+		mPinHiddenEditText.append(String.valueOf(otp.charAt(1)));
+		mPinHiddenEditText.append(String.valueOf(otp.charAt(2)));
+		mPinHiddenEditText.append(String.valueOf(otp.charAt(3)));
+	}
 }

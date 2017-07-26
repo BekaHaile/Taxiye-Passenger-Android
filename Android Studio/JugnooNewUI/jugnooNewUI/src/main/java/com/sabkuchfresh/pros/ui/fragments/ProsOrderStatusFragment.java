@@ -22,6 +22,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.pros.api.ApiProsOrderStatus;
 import com.sabkuchfresh.pros.models.ProsOrderStatus;
 import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
 import com.sabkuchfresh.pros.ui.adapters.ProsCatalogueAdapter;
@@ -120,7 +121,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 			bNeedHelp.setVisibility(View.GONE);
 		}
 
-		getOrderData(activity);
+		getApiProsOrderStatus().getOrderData(activity, jobId);
 
 		return rootView;
 	}
@@ -191,91 +192,23 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 		}
 	}
 
-	public void getOrderData(final Activity activity) {
-		try {
-			if (getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(activity, "Loading...");
-				HashMap<String, String> params = new HashMap<>();
-				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_JOB_ID, String.valueOf(jobId));
-				params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(ProductType.PROS.getOrdinal()));
-				params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+	private ApiProsOrderStatus apiProsOrderStatus;
+	private ApiProsOrderStatus getApiProsOrderStatus(){
+		if(apiProsOrderStatus == null){
+			apiProsOrderStatus = new ApiProsOrderStatus(new ApiProsOrderStatus.Callback() {
+				@Override
+				public void onNoRetry() {
+					activity.onBackPressed();
+				}
 
-				Callback<ProsOrderStatusResponse> callback = new Callback<ProsOrderStatusResponse>() {
-					@Override
-					public void success(ProsOrderStatusResponse orderStatusResponse, Response response) {
-						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i("Server response", "response = " + responseStr);
-						try {
-							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, orderStatusResponse.getFlag(), orderStatusResponse.getError(), orderStatusResponse.getMessage())) {
-								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == orderStatusResponse.getFlag()) {
-									setDataToUI(orderStatusResponse);
-								} else {
-									retryDialogOrderData(orderStatusResponse.getMessage(), DialogErrorType.SERVER_ERROR);
-								}
-							}
-						} catch (Exception exception) {
-							exception.printStackTrace();
-							retryDialogOrderData("", DialogErrorType.SERVER_ERROR);
-						}
-						DialogPopup.dismissLoadingDialog();
-					}
-
-					@Override
-					public void failure(RetrofitError error) {
-						Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
-						DialogPopup.dismissLoadingDialog();
-						retryDialogOrderData("", DialogErrorType.CONNECTION_LOST);
-					}
-				};
-
-				new HomeUtil().putDefaultParams(params);
-				RestClient.getProsApiService().orderHistory(params, callback);
-			} else {
-				retryDialogOrderData("", DialogErrorType.NO_NET);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+				@Override
+				public void onSuccess(ProsOrderStatusResponse orderStatusResponse) {
+					setDataToUI(orderStatusResponse);
+				}
+			});
 		}
+		return apiProsOrderStatus;
 	}
-
-	private void retryDialogOrderData(String message, DialogErrorType dialogErrorType) {
-		if (TextUtils.isEmpty(message)) {
-			DialogPopup.dialogNoInternet(activity,
-					dialogErrorType,
-					new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
-						@Override
-						public void positiveClick(View view) {
-							getOrderData(activity);
-						}
-
-						@Override
-						public void neutralClick(View view) {
-
-						}
-
-						@Override
-						public void negativeClick(View view) {
-						}
-					});
-		} else {
-			DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
-					activity.getString(R.string.retry), activity.getString(R.string.cancel),
-					new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							getOrderData(activity);
-						}
-					},
-					new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							activity.onBackPressed();
-						}
-					}, false, false);
-		}
-	}
-
 
 	private void setDataToUI(ProsOrderStatusResponse orderStatusResponse){
 		tvAmountValue.setText(R.string.upon_inspection);

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,18 +27,18 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.pros.api.ApiProsOrderStatus;
+import com.sabkuchfresh.pros.models.ProsOrderStatus;
+import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -52,9 +53,10 @@ import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -78,13 +80,13 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     private FreshActivity activity;
     private LinearLayout linearLayoutRideSummary, linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer, llBadReason;
     private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
-    private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue, tvItems,
+    private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaid, textViewRSCashPaidValue, tvItems,
             textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp, textViewRideEndWithImage;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;
     private ScrollView scrollViewRideSummary;
     private TextView textViewRSScroll;
 
-    private int viewType = -1;
+    private int viewType = RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal();
     private String dateValue = "", endRideGoodFeedbackText;
     private double orderAmount = 0;
     private String orderId = "", feedbackOrderItems = "";
@@ -104,12 +106,21 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     private TextView textViewRSWhatImprove;
     private ArrayList<FeedbackReason> positiveReasons;
 
+    private int jobId = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        rootView = inflater.inflate(R.layout.layout_feedback, container, false);
 
         activity = (FreshActivity) getActivity();
+
+        mainLayout = (RelativeLayout) rootView.findViewById(R.id.mainLayout);
+        new ASSL(activity, mainLayout, 1134, 720, false);
+
+
+
+
         try {
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
@@ -178,6 +189,11 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                     }
                 }
 
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getProsClientId())){
+                jobId = Prefs.with(activity).getInt(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
+                productType = ProductType.PROS;
+                getApiProsOrderStatus().getOrderData(activity, jobId);
             } else {
                 activity.finish();
             }
@@ -186,20 +202,20 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         }
 
 
-        if (TextUtils.isEmpty(orderId))
+        if (TextUtils.isEmpty(orderId) && jobId <= 0)
             activity.finish();
-        rootView = inflater.inflate(R.layout.layout_feedback, container, false);
+
 
         GAUtils.trackScreenView(activity.getGaCategory()+FEEDBACK);
 
         setUp();
 
+
+
         return rootView;
     }
 
     private void setUp() {
-        mainLayout = (RelativeLayout) rootView.findViewById(R.id.mainLayout);
-        new ASSL(activity, mainLayout, 1134, 720, false);
 
         scrollViewRideSummary = (ScrollView) rootView.findViewById(R.id.scrollViewRideSummary);
         linearLayoutRideSummary = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideSummary);
@@ -215,6 +231,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         textViewRSData = (TextView) rootView.findViewById(R.id.textViewRSData);
         tvItems = (TextView) rootView.findViewById(R.id.tvItems);
         tvItems.setTypeface(Fonts.avenirNext(activity));
+        textViewRSCashPaid = (TextView) rootView.findViewById(R.id.textViewRSCashPaid);
         textViewRSCashPaidValue = (TextView) rootView.findViewById(R.id.textViewRSCashPaidValue);
         textViewRSInvoice = (TextView) rootView.findViewById(R.id.textViewRSInvoice);
         textViewRSRateYourRide = (TextView) rootView.findViewById(R.id.textViewRSRateYourRide);
@@ -224,6 +241,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         textViewThanks.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewRSTotalFare.setTypeface(Fonts.avenirNext(activity));
         textViewRSData.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        textViewRSCashPaid.setTypeface(Fonts.mavenMedium(activity)); textViewRSCashPaid.setVisibility(View.GONE);
         textViewRSCashPaidValue.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewRSInvoice.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewRSRateYourRide.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
@@ -234,12 +252,15 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 + "" + Utils.getMoneyDecimalFormat().format(orderAmount));
         textViewRSData.setText("" + dateValue);
 
-        if (feedbackOrderItems != null && !feedbackOrderItems.equalsIgnoreCase("")) {
+        if (!TextUtils.isEmpty(feedbackOrderItems)) {
             textViewRSTotalFare.setVisibility(View.GONE);
             tvItems.setVisibility(View.VISIBLE);
             tvItems.setText(feedbackOrderItems);
         }
 
+        if(productType == ProductType.PROS){
+            textViewRSTotalFare.setText("");
+        }
 
         linearLayoutRideSummaryContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideSummaryContainer);
         linearLayoutRSViewInvoice = (LinearLayout) rootView.findViewById(R.id.linearLayoutRSViewInvoice);
@@ -270,14 +291,17 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         if (Config.getFreshClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.ic_fresh_grey);
             ivOffering.setImageResource(R.drawable.ic_fresh_grey);
-        } else if (Config.getGroceryClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
-            imageviewType.setImageResource(R.drawable.ic_fresh_grey);
-            ivOffering.setImageResource(R.drawable.ic_fresh_grey);
-        } else if (Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+        } else if (Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))
+                || Config.getProsClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
 
 
-            imageviewType.setImageResource(R.drawable.ic_menus_grey);
-            ivOffering.setImageResource(R.drawable.ic_menus_grey);
+            if(Config.getProsClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))){
+                imageviewType.setImageResource(R.drawable.ic_pros_grey);
+                ivOffering.setImageResource(R.drawable.ic_pros_grey);
+            } else {
+                imageviewType.setImageResource(R.drawable.ic_menus_grey);
+                ivOffering.setImageResource(R.drawable.ic_menus_grey);
+            }
 
             /**
              Edited by Parminder Singh on 2/10/17 at 12:46 PM
@@ -334,7 +358,8 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             });
 
 
-        } else {
+        }
+        else {
             imageviewType.setImageResource(R.drawable.ic_meals_grey);
             ivOffering.setImageResource(R.drawable.ic_meals_grey);
 
@@ -372,15 +397,18 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                         editTextRSFeedback.setError(getString(R.string.review_must_be_in));
                         return;
                     } else {
-                        if (productType != ProductType.MENUS) {
-                            comments = comments + ", " + reviewDescription;
-                        }
                         GAUtils.event(activity.getGaCategory(), FEEDBACK, COMMENT+ADDED);
                     }
                 }
 
-                // api call
                 if (productType != ProductType.MENUS) {
+                    comments = comments+((TextUtils.isEmpty(comments) || TextUtils.isEmpty(reviewDescription))?"":", ")+reviewDescription;
+                }
+
+                // api call
+                if(productType == ProductType.PROS){
+                    apiProsFeedback((int) ratingBarMenuFeedback.getScore(), comments);
+                } else if (productType != ProductType.MENUS) {
                     sendQuery(0, comments);
                 } else {
                     sumbitMenuFeedback(reviewDescription, comments, (int) ratingBarMenuFeedback.getScore());
@@ -414,8 +442,12 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             @Override
             public void onClick(View v) {
 //                getOrderData();
-                new TransactionUtils().openOrderStatusFragment(activity,
-                        activity.getRelativeLayoutContainer(), Integer.parseInt(orderId), productType.getOrdinal(), 0);
+                if(productType == ProductType.PROS){
+                    activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), jobId);
+                } else {
+                    new TransactionUtils().openOrderStatusFragment(activity,
+                            activity.getRelativeLayoutContainer(), Integer.parseInt(orderId), productType.getOrdinal(), 0);
+                }
             }
         });
 
@@ -520,32 +552,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
     @Override
     public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.buttonSubmit:
-//                if (ratingType == 0)
-//                    FlurryEventLogger.event(PAYMENT_SCREEN, "Dislike", SUBMIT_FEEDBACK);
-//                else
-//                    FlurryEventLogger.event(PAYMENT_SCREEN, "Like", SUBMIT_FEEDBACK);
-//
-//                if (ratingType == -1) {
-//                    Toast.makeText(activity, "Please rate us", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    sendQuery(commentBox.getText().toString().trim(), ratingType);
-//                }
-//                break;
-//            case R.id.textView_skip:
-//                FlurryEventLogger.event(PAYMENT_SCREEN, SKIP_FEEDBACK, SKIP_FEEDBACK);
-//                skipValue = "1";
-//                sendQuery("", ratingType);
-//                activity.onBackPressed();
-//                //activity.finish();
-//                break;
-//            default:
-//
-//                break;
-//
-//
-//        }
 
     }
 
@@ -664,84 +670,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
     }
 
-    /**
-     * Method used to get order information
-     */
-    private void getOrderData() {
-        try {
-            if (MyApplication.getInstance().isOnline()) {
-
-                DialogPopup.showLoadingDialog(activity, "Loading...");
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put("access_token", Data.userData.accessToken);
-                params.put("order_id", "" + orderId);
-                params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-                params.put(Constants.INTERATED, "1");
-                Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
-                    @Override
-                    public void success(HistoryResponse historyResponse, Response response) {
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i("Server response", "response = " + responseStr);
-                        try {
-
-                            JSONObject jObj = new JSONObject(responseStr);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt("flag");
-                                String message = JSONParser.getServerMessage(jObj);
-                                if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
-                                    new TransactionUtils().openOrderStatusFragment(activity,
-                                            activity.getRelativeLayoutContainer(), historyResponse.getData().get(0).getOrderId(),
-                                            historyResponse.getData().get(0).getProductType(), 0);
-                                } else {
-                                    updateListData(message);
-                                }
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            updateListData(Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        updateListData(Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-                };
-
-                new HomeUtil().putDefaultParams(params);
-                if (productType == ProductType.MENUS) {
-                    RestClient.getMenusApiService().orderHistory(params, callback);
-                } else {
-                    RestClient.getFreshApiService().orderHistory(params, callback);
-                }
-            } else {
-                updateListData(Data.CHECK_INTERNET_MSG);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateListData(String message) {
-        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
-                activity.getString(R.string.retry), activity.getString(R.string.cancel),
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getOrderData();
-                    }
-                }, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                }, false, false);
-    }
-
 
     private void backPressed(boolean goodRating) {
         this.goodRating = goodRating;
@@ -790,6 +718,12 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                     activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
                 } else {
                     activity.getTopBar().title.setText(activity.getString(R.string.menus));
+                }
+            } else if (productType == ProductType.PROS){
+                if(orderStatusResponse != null && orderStatusResponse.getData() != null && orderStatusResponse.getData().size() > 0) {
+                    ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
+                    Pair<String, String> pair = datum.getProductNameAndJobAmount();
+                    activity.getTopBar().title.setText(pair.first);
                 }
             }
         }
@@ -860,5 +794,150 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     public void onPause() {
         super.onPause();
         fragResumed = false;
+    }
+
+    private ApiProsOrderStatus apiProsOrderStatus;
+    private ApiProsOrderStatus getApiProsOrderStatus(){
+        if(apiProsOrderStatus == null){
+            apiProsOrderStatus = new ApiProsOrderStatus(new ApiProsOrderStatus.Callback() {
+                @Override
+                public void onNoRetry() {
+                    activity.onBackPressed();
+                }
+
+                @Override
+                public void onSuccess(ProsOrderStatusResponse orderStatusResponse) {
+                    setProsDataToUI(orderStatusResponse);
+
+                }
+            });
+        }
+        return apiProsOrderStatus;
+    }
+
+    private ProsOrderStatusResponse orderStatusResponse;
+    private void setProsDataToUI(ProsOrderStatusResponse orderStatusResponse){
+        textViewRSCashPaid.setVisibility(View.VISIBLE);
+        this.orderStatusResponse = orderStatusResponse;
+        if(orderStatusResponse != null && orderStatusResponse.getData() != null && orderStatusResponse.getData().size() > 0) {
+            ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
+            Pair<String, String> pair = datum.getProductNameAndJobAmount();
+            activity.getTopBar().title.setText(pair.first);
+            if(datum.getJobStatus() == ProsOrderStatus.ENDED.getOrdinal()
+                    || datum.getJobStatus() == ProsOrderStatus.FAILED.getOrdinal()) {
+                if (!TextUtils.isEmpty(pair.second)) {
+                    textViewRSCashPaidValue.setText(activity.getString(R.string.rupees_value_format, pair.second));
+                } else {
+                    textViewRSCashPaidValue.setText(activity.getString(R.string.rupees_value_format, "-"));
+                }
+            }
+            textViewRSTotalFare.setText(TextUtils.isEmpty(datum.getFleetName()) ? activity.getString(R.string.service_date) : datum.getFleetName());
+            textViewRSData.setText(DateOperations.convertDateTimeUSToInd(datum.getJobPickupDatetime().replace("\\", "")));
+        }
+    }
+
+
+    public void apiProsFeedback(final int rating, final String comments) {
+        try {
+            if (MyApplication.getInstance().isOnline()) {
+                DialogPopup.showLoadingDialog(activity, "Loading...");
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_JOB_ID, String.valueOf(orderStatusResponse.getData().get(0).getJobHash()));
+                params.put(Constants.KEY_JOB_ID_2, String.valueOf(orderStatusResponse.getData().get(0).getJobId()));
+                params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(ProductType.PROS.getOrdinal()));
+                params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                params.put(Constants.RATING, String.valueOf(rating));
+                params.put(Constants.KEY_CUSTOMER_COMMENT, comments);
+
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getProsApiService().taskRating(params, new Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i("Server response", "response = " + responseStr);
+                        try {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, settleUserDebt.getFlag(), settleUserDebt.getError(), settleUserDebt.getMessage())) {
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == settleUserDebt.getFlag()) {
+                                    Prefs.with(activity).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
+                                    Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
+                                    if (rating > 2) {
+                                        // for Good rating
+                                        afterGoodRating();
+                                        if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
+                                            activity.getHandler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    backPressed(true);
+                                                }
+                                            }, 3000);
+                                        } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()) {
+                                            backPressed(true);
+                                        }
+                                    } else {
+                                        // for bad rating
+                                        backPressed(true);
+                                    }
+                                } else {
+                                    retryDialogProsFeedback(rating, comments, settleUserDebt.getMessage(), DialogErrorType.SERVER_ERROR);
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            retryDialogProsFeedback(rating, comments, "", DialogErrorType.SERVER_ERROR);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        retryDialogProsFeedback(rating, comments, "", DialogErrorType.CONNECTION_LOST);
+                    }
+                });
+            } else {
+                retryDialogProsFeedback(rating, comments, "", DialogErrorType.NO_NET);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retryDialogProsFeedback(final int rating, final String comments, String message, DialogErrorType dialogErrorType) {
+        if (TextUtils.isEmpty(message)) {
+            DialogPopup.dialogNoInternet(activity,
+                    dialogErrorType,
+                    new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View view) {
+                            apiProsFeedback(rating, comments);
+                        }
+
+                        @Override
+                        public void neutralClick(View view) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View view) {
+                        }
+                    });
+        } else {
+            DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+                    activity.getString(R.string.retry), activity.getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            apiProsFeedback(rating, comments);
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.finish();
+                        }
+                    }, false, false);
+        }
     }
 }

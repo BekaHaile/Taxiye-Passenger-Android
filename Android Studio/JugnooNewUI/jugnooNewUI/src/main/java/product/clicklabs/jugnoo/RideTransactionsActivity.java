@@ -91,17 +91,6 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 		});
 
 
-		if(getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0) != 0){
-			new TransactionUtils().openOrderStatusFragment(this, relativeLayoutContainer, getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0),
-					getIntent().getIntExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal()),
-					getIntent().getIntExtra(Constants.KEY_OPEN_LIVE_TRACKING, 0));
-		} else {
-			getSupportFragmentManager().beginTransaction()
-					.add(relativeLayoutContainer.getId(), new RideTransactionsFragment(), RideTransactionsFragment.class.getName())
-					.addToBackStack(RideTransactionsFragment.class.getName())
-					.commitAllowingStateLoss();
-		}
-
 		ivBack = (ImageView) findViewById(R.id.ivBack);
 		tvReset = (TextView) findViewById(R.id.tvReset);
 		rlRides = (RelativeLayout) findViewById(R.id.rlRides);
@@ -175,6 +164,20 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 		setSelectedFilters();
 		filtersChanged = false;
 
+		getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+		rlFilter.setVisibility(View.GONE);
+
+
+		if(getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0) != 0){
+			new TransactionUtils().openOrderStatusFragment(this, relativeLayoutContainer, getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0),
+					getIntent().getIntExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal()),
+					getIntent().getIntExtra(Constants.KEY_OPEN_LIVE_TRACKING, 0));
+		} else {
+			getSupportFragmentManager().beginTransaction()
+					.add(relativeLayoutContainer.getId(), new RideTransactionsFragment(), RideTransactionsFragment.class.getName())
+					.addToBackStack(RideTransactionsFragment.class.getName())
+					.commitAllowingStateLoss();
+		}
 	}
 
 	public void setTitle(String title){

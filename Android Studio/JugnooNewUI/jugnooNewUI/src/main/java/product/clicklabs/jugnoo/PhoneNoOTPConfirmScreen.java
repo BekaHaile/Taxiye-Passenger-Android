@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -43,7 +44,7 @@ import retrofit.mime.TypedByteArray;
 
 
 public class PhoneNoOTPConfirmScreen extends BaseActivity{
-	
+
 	ImageView imageViewBack;
 	TextView textViewTitle;
 
@@ -51,7 +52,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
-	Button buttonVerify, buttonOtpViaCall;
+	Button buttonVerify;
+	LinearLayout buttonOtpViaCall;
 	LinearLayout linearLayoutGiveAMissedCall;
 
 
@@ -63,21 +65,10 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 	LinearLayout llEditText;
 
-	
+
 	String phoneNoToVerify = "";
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-//		FlurryAgent.init(this, Config.getFlurryKey());
-//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-//		FlurryAgent.onEndSession(this);
-	}
+	private PinEditTextLayout pinEditTextLayout;
+	LinearLayout rlResendOTP;
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -93,9 +84,10 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 			if(Utils.checkIfOnlyDigits(otp)){
 				if(!"".equalsIgnoreCase(otp)) {
-					editTextOTP.setText(otp);
-					editTextOTP.setSelection(editTextOTP.getText().length());
-					buttonVerify.performClick();
+//					editTextOTP.setText(otp);
+//					editTextOTP.setSelection(editTextOTP.getText().length());
+//					buttonVerify.performClick();
+					pinEditTextLayout.setOTPDirectly(otp);
 				}
 			}
 
@@ -106,15 +98,15 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		super.onNewIntent(intent);
 	}
 
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_phone_no_otp);
-		
+
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(PhoneNoOTPConfirmScreen.this, relative, 1134, 720, false);
-		
+
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 
@@ -127,20 +119,21 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.mavenMedium(this));
 
 		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
-		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
+		buttonOtpViaCall = (LinearLayout) findViewById(R.id.buttonOtpViaCall);
 		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
 		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenLight(this));
 
 		findViewById(R.id.ivTopBanner).setVisibility(View.GONE);
 		findViewById(R.id.ivBottomBanner).setVisibility(View.GONE);
-		findViewById(R.id.rlResendOTP).setVisibility(View.GONE);
+
+		rlResendOTP = (LinearLayout) findViewById(R.id.rlResendOTP);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
 		llEditText = (LinearLayout) findViewById(R.id.llEditText);
-		PinEditTextLayout pinEditTextLayout = new PinEditTextLayout(llEditText, new PinEditTextLayout.Callback() {
+		pinEditTextLayout = new PinEditTextLayout(llEditText, new PinEditTextLayout.Callback() {
 			@Override
 			public void onOTPComplete(String otp, EditText editText) {
 				verifyClick(otp, editText);
@@ -161,7 +154,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 		editTextOTP.setOnFocusChangeListener(onFocusChangeListener);
 		editTextOTP.setOnClickListener(onClickListener);
-		
+
 		buttonVerify.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -234,9 +227,22 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				}
 			}
 		});
-		
+
+		rlResendOTP.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try{
+					Utils.disableSMSReceiver(PhoneNoOTPConfirmScreen.this);
+					editTextOTP.setError(null);
+					apiGenerateLoginOtp(PhoneNoOTPConfirmScreen.this, Utils.retrievePhoneNumberTenChars(phoneNoToVerify));
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
+
 		try {
 			if(getIntent().hasExtra("phone_no_verify")){
 				phoneNoToVerify = getIntent().getStringExtra("phone_no_verify");
@@ -252,14 +258,14 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 
 		try{
-			if(!"".equalsIgnoreCase(Prefs.with(PhoneNoOTPConfirmScreen.this).getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
+			if(!"".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
 				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
 			}
 			else{
 				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
-			if(1 == Prefs.with(PhoneNoOTPConfirmScreen.this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
+			if(1 == Prefs.with(this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
 				buttonOtpViaCall.setVisibility(View.VISIBLE);
 			}
 			else{
@@ -326,7 +332,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		}
 	};
 
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -336,30 +342,30 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 		HomeActivity.checkForAccessTokenChange(this);
 	}
-	
+
 	@Override
 	protected void onPause() {
 		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, "");
 		Utils.disableSMSReceiver(this);
 		super.onPause();
 	}
-	
+
 
 	public void verifyOtpPhoneNoChange(final Activity activity, String phoneNo, String otp) {
 		if (MyApplication.getInstance().isOnline()) {
-			
+
 			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
+
 			HashMap<String, String> params = new HashMap<>();
-		
+
 			params.put("client_id", Config.getAutosClientId());
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
 			params.put("phone_no", phoneNo);
 			params.put("verification_token", otp);
-			
+
 			Log.i("params", ">" + params);
-		
+
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().verifyMyContactNumber(params, new Callback<SettleUserDebt>() {
 				@Override
@@ -408,24 +414,24 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		}
 
 	}
-	
-	
+
+
 	/**
 	 * ASync for initiating OTP Call from server
 	 */
 	public void initiateOTPCallAsync(final Activity activity, String phoneNo) {
 		if (MyApplication.getInstance().isOnline()) {
-			
+
 			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
+
 			HashMap<String, String> params = new HashMap<>();
-		
-			params.put("client_id", Config.getAutosClientId());
-			params.put("access_token", Data.userData.accessToken);
-			params.put("is_access_token_new", "1");
-			params.put("phone_no", phoneNo);
+
+			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+			params.put(Constants.KEY_PHONE_NO, phoneNo);
 			Log.i("params", ">"+params);
-		
+
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().sendNewNumberOtpViaCall(params, new Callback<SettleUserDebt>() {
 				@Override
@@ -469,26 +475,90 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		}
 
 	}
-	
-	
+
+
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
 		super.onBackPressed();
 	}
-	
-	
+
+
 	public void performBackPressed(){
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
-	
-	
+
+
 	@Override
 	protected void onDestroy() {
 		ASSL.closeActivity(relative);
         System.gc();
 		super.onDestroy();
 	}
-	
+
+
+	private void apiGenerateLoginOtp(final Activity activity, final String phoneNumber){
+		if(MyApplication.getInstance().isOnline()){
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			HashMap<String, String> params = new HashMap<>();
+
+			params.put("phone_no", "+91"+phoneNumber);
+			params.put("device_token", MyApplication.getInstance().getDeviceToken());
+			params.put("device_name", MyApplication.getInstance().deviceName());
+			params.put("os_version", MyApplication.getInstance().osVersion());
+			params.put("country", MyApplication.getInstance().country());
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
+			params.put("client_id", Config.getAutosClientId());
+			params.put("login_type", "0");
+
+			if (Utils.isDeviceRooted()) {
+				params.put("device_rooted", "1");
+			} else {
+				params.put("device_rooted", "0");
+			}
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().generateLoginOtp(params, new Callback<LoginResponse>() {
+				@Override
+				public void success(LoginResponse loginResponse, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i("TAG", "generateLoginOtp response = " + responseStr);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						int flag = jObj.getInt("flag");
+
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								DialogPopup.dismissLoadingDialog();
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									Utils.enableSMSReceiver(PhoneNoOTPConfirmScreen.this);
+									DialogPopup.alertPopup(activity, "", JSONParser.getServerMessage(jObj));
+								}
+							} else {
+								DialogPopup.alertPopup(activity, "", jObj.optString("error"));
+							}
+							DialogPopup.dismissLoadingDialog();
+						}
+
+
+					} catch (Exception e){
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e("TAG", "loginUsingEmailOrPhoneNo error=" + error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+		} else{
+			DialogPopup.alertPopup(this, "", Data.CHECK_INTERNET_MSG);
+		}
+	}
+
 }

@@ -854,5 +854,8 @@
     <dimen name="text_size_45">
         45px
     </dimen>
+    <dimen name="px_33">
+        33px
+    </dimen>
 
 </resources>

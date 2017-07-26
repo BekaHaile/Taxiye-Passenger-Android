@@ -1098,7 +1098,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                             datum1.getOrderId(), datum1.getLiveTracking().getDeliveryId(),
                             datum1.getLiveTracking().getPickupLatitude(), datum1.getLiveTracking().getPickupLongitude(),
                             datum1.getLiveTracking().getDeliveryLatitude(), datum1.getLiveTracking().getDeliveryLongitude(),
-                            datum1.getLiveTracking().getShowDeliveryRoute(), datum1.getLiveTracking().getDriverPhoneNo(), llShadowPeekHeight),
+                            datum1.getLiveTracking().getShowDeliveryRoute(), datum1.getLiveTracking().getDriverPhoneNo(), llShadowPeekHeight,
+                            openLiveTracking != 1),
                             TrackOrderFragment.class.getName())
                     .commit();
 

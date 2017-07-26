@@ -52,6 +52,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.PinEditTextLayout;
 import product.clicklabs.jugnoo.widgets.PinEntryEditText;
@@ -75,8 +76,9 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	TextView textViewCounter, tvOtpViaCall;
 	ImageView imageViewYellowLoadingBar, imageViewWalletIcon, ivResend;
 
-	Button buttonVerify, buttonOtpViaCall;
-	LinearLayout linearLayoutOtherOptions, linearLayoutGiveAMissedCall, llPasswordLogin, llOTP;
+	Button buttonVerify;
+	LinearLayout buttonOtpViaCall;
+	LinearLayout linearLayoutGiveAMissedCall, llPasswordLogin, llOTP;
 	private Animation tweenAnimation;
 
 	RelativeLayout relative, rlOTPTimer;
@@ -184,8 +186,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
 
-		linearLayoutOtherOptions = (LinearLayout) findViewById(R.id.linearLayoutOtherOptions);
-		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
+		buttonOtpViaCall = (LinearLayout) findViewById(R.id.buttonOtpViaCall);
 		rlResendOTP = (LinearLayout) findViewById(R.id.rlResendOTP);
 		ivResend = (ImageView) findViewById(R.id.ivResend);
 		tvOtpViaCall = (TextView) findViewById(R.id.tvOtpViaCall); tvOtpViaCall.setTypeface(Fonts.mavenRegular(this));
@@ -239,7 +240,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 		tweenAnimation = AnimationUtils.loadAnimation(OTPConfirmScreen.this, R.anim.tween);
 
-		//createEditTextOtp();
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -311,7 +311,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 					if(missedCallDialog != null) {
 						missedCallDialog.dismiss();
 					}
-//					rlProgress.setVisibility(View.GONE);
 					apiGenerateLoginOtp(OTPConfirmScreen.this, email);
 
 				} catch(Exception e){
@@ -361,7 +360,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 					if(missedCallDialog != null) {
 						missedCallDialog.dismiss();
 					}
-//					rlProgress.setVisibility(View.GONE);
 					linearLayoutGiveAMissedCall.clearAnimation();
 					if(!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
 						DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
@@ -505,10 +503,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 					textViewOtpNumber.setText(emailRegisterData.phoneNo);
 				}
 				if(otp != null && !"".equalsIgnoreCase(otp)){
-//					editTextOTP.setText(otp);
-//					editTextOTP.setSelection(editTextOTP.getText().length());
-//					buttonVerify.performClick();
-
 					txtPinEntry.setText(otp);
 					txtPinEntry.setSelection(txtPinEntry.getText().length());
 					buttonVerify.performClick();
@@ -540,30 +534,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 		textViewCounter.setText("0:10");
 
-		/*if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
-			imageViewWalletIcon.setVisibility(View.VISIBLE);
-			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
-			ivResend.setVisibility(View.VISIBLE);
-			tvOtpViaCall.setText(getResources().getString(R.string.resend_otp));
-		}
-		else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-			imageViewWalletIcon.setVisibility(View.VISIBLE);
-			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
-			ivResend.setVisibility(View.VISIBLE);
-			tvOtpViaCall.setText(getResources().getString(R.string.resend_otp));
-		}
-		else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
-			imageViewWalletIcon.setVisibility(View.VISIBLE);
-			imageViewWalletIcon.setImageResource(R.drawable.ic_freecharge_big);
-			ivResend.setVisibility(View.VISIBLE);
-			tvOtpViaCall.setText(getResources().getString(R.string.resend_otp));
-		}
-		else{
-			imageViewWalletIcon.setVisibility(View.GONE);
-			ivResend.setVisibility(View.GONE);
-			tvOtpViaCall.setText(getResources().getString(R.string.receive_otp_via_call));
-		}*/
-
 		startOTPTimer();
 
 		try{
@@ -574,25 +544,29 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
-			/*if(1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)
-					|| linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
-					|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()
-					|| linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()) {
-				rlResendOTP.setVisibility(View.VISIBLE);
+			if(Prefs.with(this).getInt(SP_OTP_VIA_CALL_ENABLED, 0) == 1){
+				buttonOtpViaCall.setVisibility(View.VISIBLE);
+			} else {
+				buttonOtpViaCall.setVisibility(View.GONE);
 			}
-			else{
-				rlResendOTP.setVisibility(View.GONE);
-			}*/
+
 		} catch(Exception e){
 			e.printStackTrace();
 			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
-			//rlResendOTP.setVisibility(View.GONE);
+			buttonOtpViaCall.setVisibility(View.GONE);
 		}
 
 		rlOTPTimer.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setRlOTPTimerVisibility(View.GONE);
+			}
+		});
+
+		buttonOtpViaCall.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				initiateOTPCallAsync(OTPConfirmScreen.this, textViewOtpNumber.getText().toString());
 			}
 		});
 
@@ -624,7 +598,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			long timerDuration = 10000;
 			if(getIntent().getIntExtra("show_timer", 0) == 1){
 				setRlOTPTimerVisibility(View.VISIBLE);
-				linearLayoutOtherOptions.setVisibility(View.GONE);
 				CustomCountDownTimer customCountDownTimer = new CustomCountDownTimer(timerDuration, 5);
 				customCountDownTimer.start();
 			}
@@ -633,7 +606,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			}
 		} catch(Exception e){
 			setRlOTPTimerVisibility(View.GONE);
-			linearLayoutOtherOptions.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -676,7 +648,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		@Override
 		public void onFinish() {
 			setRlOTPTimerVisibility(View.GONE);
-			linearLayoutOtherOptions.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -807,7 +778,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
     public static boolean checkIfRegisterDataNull(Activity activity){
         try {
             if(emailRegisterData == null && facebookRegisterData == null && googleRegisterData == null){
-                activity.startActivity(new Intent(activity, SplashNewActivity.class));
                 activity.finish();
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 return true;
@@ -909,13 +879,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 											emailRegisterData.referralCode, emailRegisterData.accessToken);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-												loginResponse, LoginVia.EMAIL_OTP,
-												new LatLng(Data.loginLatitude, Data.loginLongitude));
-										//MyApplication.getInstance().getDatabase().insertEmail(emailRegisterData.emailId);
-										//MyApplication.getInstance().getDatabase().close();
-										loginDataFetched = true;
-										firebaseEventWalletAtSignup();
+										goToLoginOrOnboarding(jObj, responseStr, loginResponse, LoginVia.EMAIL);
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
@@ -1031,107 +995,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		}
 	}
 
-	/**
-	 * ASync for confirming otp from server
-	 */
-	public void verifyOtpViaEmail(final Activity activity, String otp, final int linkedWallet) {
-        if(!checkIfRegisterDataNull(activity)) {
-            if (MyApplication.getInstance().isOnline()) {
-
-                DialogPopup.showLoadingDialog(activity, "Loading...");
-
-                HashMap<String, String> params = new HashMap<>();
-
-				Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-				Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
-
-                params.put("email", emailRegisterData.emailId);
-                params.put("password", emailRegisterData.password);
-				params.put("device_token", MyApplication.getInstance().getDeviceToken());
-                params.put("device_name", MyApplication.getInstance().deviceName());
-                params.put("os_version", MyApplication.getInstance().osVersion());
-                params.put("country", MyApplication.getInstance().country());
-                params.put("unique_device_id", Data.uniqueDeviceId);
-                params.put("latitude", "" + Data.loginLatitude);
-                params.put("longitude", "" + Data.loginLongitude);
-                params.put("client_id", Config.getAutosClientId());
-                params.put("otp", otp);
-				params.put("reg_wallet_type", String.valueOf(linkedWallet));
-
-				if(Utils.isDeviceRooted()){
-					params.put("device_rooted", "1");
-				}
-				else{
-					params.put("device_rooted", "0");
-				}
-
-                Log.i("params", "" + params.toString());
-
-				new HomeUtil().putDefaultParams(params);
-				RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
-					@Override
-					public void success(LoginResponse loginResponse, Response response) {
-						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "verifyOtp response = " + responseStr);
-
-						try {
-							JSONObject jObj = new JSONObject(responseStr);
-
-							int flag = jObj.getInt("flag");
-
-							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-								if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
-									String error = jObj.getString("error");
-									DialogPopup.alertPopup(activity, "", error);
-								} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
-									String error = jObj.getString("error");
-									DialogPopup.alertPopup(activity, "", error);
-								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-												loginResponse, LoginVia.EMAIL_OTP,
-												new LatLng(Data.loginLatitude, Data.loginLongitude));
-										MyApplication.getInstance().getDatabase().insertEmail(emailRegisterData.emailId);
-										MyApplication.getInstance().getDatabase().close();
-										loginDataFetched = true;
-										firebaseEventWalletAtSignup();
-									}
-								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
-									String error = jObj.getString("error");
-									DialogPopup.alertPopup(activity, "", error);
-								} else if (ApiResponseFlags.AUTH_ALREADY_VERIFIED.getOrdinal() == flag) {
-									String error = jObj.getString("error");
-									DialogPopup.alertPopup(activity, "", error);
-								}else {
-									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								}
-								DialogPopup.dismissLoadingDialog();
-							} else {
-								DialogPopup.dismissLoadingDialog();
-							}
-
-						} catch (Exception exception) {
-							exception.printStackTrace();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							DialogPopup.dismissLoadingDialog();
-						}
-					}
-
-					@Override
-					public void failure(RetrofitError error) {
-						Log.e(TAG, "verifyOtp error="+error.toString());
-						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-					}
-				});
-
-            } else {
-                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-            }
-        }
-
-	}
-
 
 	public void verifyOtpViaFB(final Activity activity, String otp, final int linkedWallet) {
         if(!checkIfRegisterDataNull(activity)) {
@@ -1204,7 +1067,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 										loginDataFetched = true;
 										MyApplication.getInstance().getDatabase().insertEmail(facebookRegisterData.fbUserEmail);
 										MyApplication.getInstance().getDatabase().close();
-										firebaseEventWalletAtSignup();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
@@ -1308,7 +1170,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 										loginDataFetched = true;
 										MyApplication.getInstance().getDatabase().insertEmail(googleRegisterData.email);
 										MyApplication.getInstance().getDatabase().close();
-										firebaseEventWalletAtSignup();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
@@ -1352,7 +1213,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 			HashMap<String, String> params = new HashMap<>();
 
-			params.put("phone_no", phoneNo);
+			params.put(KEY_PHONE_NO, phoneNo);
 			Log.i("phone_no", ">" + phoneNo);
 
 			new HomeUtil().putDefaultParams(params);
@@ -1420,6 +1281,9 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 //			startActivity(intent);
 //			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 //			ActivityCompat.finishAffinity(this);
+		} else if(hasFocus && backToSplashOboarding){
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			finish();
 		}
 	}
 
@@ -1444,17 +1308,17 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			rlOTPContainer.setVisibility(View.VISIBLE);
 			llLoginNew.setVisibility(View.GONE);
 		} else {
-			if (intentFromRegister) {
-				Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
-				intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());
-				intent.putExtra(KEY_BACK_FROM_OTP, true);
-				startActivity(intent);
-			} else {
-				Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
-				intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.LOGIN.getOrdinal());
-				intent.putExtra(KEY_BACK_FROM_OTP, true);
-				startActivity(intent);
-			}
+//			if (intentFromRegister) {
+//				Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
+//				intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());
+//				intent.putExtra(KEY_BACK_FROM_OTP, true);
+//				startActivity(intent);
+//			} else {
+//				Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
+//				intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.LOGIN.getOrdinal());
+//				intent.putExtra(KEY_BACK_FROM_OTP, true);
+//				startActivity(intent);
+//			}
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
@@ -1490,9 +1354,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				if(!"".equalsIgnoreCase(otp)) {
 					//editTextOTP.setText(otp);
 					//editTextOTP.setSelection(editTextOTP.getText().length());
-					txtPinEntry.setText(otp);
-					txtPinEntry.setSelection(txtPinEntry.getText().length());
+//					txtPinEntry.setText(otp);
+//					txtPinEntry.setSelection(txtPinEntry.getText().length());
+
 					//buttonVerify.performClick();
+
+					pinEditTextLayout.setOTPDirectly(otp);
 				}
 			}
 		} catch(Exception e){
@@ -1632,9 +1499,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		}
 	}
 
-	private void firebaseEventWalletAtSignup(){
-	}
-
 	/**
 	 * ASync for login from server
 	 */
@@ -1713,11 +1577,8 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								}*/
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.EMAIL,
-											new LatLng(Data.loginLatitude, Data.loginLongitude));
+									goToLoginOrOnboarding(jObj, responseStr, loginResponse, LoginVia.EMAIL);
 									MyApplication.getInstance().getDatabase().insertEmail(emailId);
-									loginDataFetched = true;
 									DialogPopup.showLoadingDialog(activity, "Loading...");
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -1820,10 +1681,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								showErrorOnMissedCallBack();
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.FACEBOOK,
-											new LatLng(Data.loginLatitude, Data.loginLongitude));
-									loginDataFetched = true;
+									goToLoginOrOnboarding(jObj, responseStr, loginResponse, LoginVia.FACEBOOK);
 
 									MyApplication.getInstance().getDatabase().insertEmail(Data.facebookUserData.userEmail);
 									DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -1927,10 +1785,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.GOOGLE,
-											new LatLng(Data.loginLatitude, Data.loginLongitude));
-									loginDataFetched = true;
+									goToLoginOrOnboarding(jObj, responseStr, loginResponse, LoginVia.GOOGLE);
 
 									MyApplication.getInstance().getDatabase().insertEmail(Data.googleSignInAccount.getEmail());
 									DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -2047,27 +1902,16 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			if(missedCallDialog != null) {
 				missedCallDialog.dismiss();
 			}
-			//rlProgress.setVisibility(View.GONE);
 			if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 				verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
-						/*if(userVerified == 1){
-							sendOTP(otpCode);
-						} else {
-							verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
-						}*/
-
 			} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 				verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode, linkedWallet);
 			} else {
-				//verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
 				apiLoginUsingOtp(OTPConfirmScreen.this, otpCode, email);
 			}
 		} else {
 			editTextOTP.requestFocus();
 			editTextOTP.setError("OTP can't be empty");
-
-//					txtPinEntry.requestFocus();
-//					txtPinEntry.setError("OTP can't be empty");
 		}
 	}
 
@@ -2080,6 +1924,26 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		}
 	}
 
+
+	public static boolean backToSplashOboarding = false;
+	public static String accessTokenOnBoarding = "";
+	private void goToLoginOrOnboarding(JSONObject jObj, String responseStr, LoginResponse loginResponse,
+										LoginVia loginVia) throws Exception {
+		if(jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 1){
+			String authKey = jObj.optJSONObject("user_data").optString("auth_key", "");
+			AccessTokenGenerator.saveAuthKey(this, authKey);
+			String authSecret = authKey + Config.getClientSharedSecret();
+			accessTokenOnBoarding = SHA256Convertor.getSHA256String(authSecret);
+			backToSplashOboarding = true;
+			SplashNewActivity.loginResponseStr = responseStr;
+			SplashNewActivity.loginResponseData = loginResponse;
+		} else{
+			new JSONParser().parseAccessTokenLoginData(this, responseStr,
+					loginResponse, loginVia,
+					new LatLng(Data.loginLatitude, Data.loginLongitude));
+			loginDataFetched = true;
+		}
+	}
 
 
 }

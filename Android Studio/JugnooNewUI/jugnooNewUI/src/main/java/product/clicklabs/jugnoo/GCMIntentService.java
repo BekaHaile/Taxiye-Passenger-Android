@@ -577,6 +577,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							int postId = jObj.optInt(Constants.KEY_POST_ID, -1);
 							int postNotificationId = jObj.optInt(Constants.KEY_NOTIFICATION_ID, -1);
 							int jobId = jObj.optInt(Constants.KEY_JOB_ID, -1);
+							int isFeedbackPending = jObj.optInt(Constants.KEY_IS_FEEDBACK_PENDING, 0);
 
 							if(Data.activityResumed && deepindex == AppLinkIndex.FEED_PAGE.getOrdinal() && postId > 0){
 								return;
@@ -631,8 +632,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 								broadcastIntent.putExtra(Constants.KEY_FEEDBACK_ID, feedbackId);
 							}
 							else if (deepindex == AppLinkIndex.PROS_PAGE.getOrdinal() && jobId > 0){
+								if(isFeedbackPending == 1) {
+									Prefs.with(this).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, jobId);
+								}
+
 								broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
 								broadcastIntent.putExtra(Constants.KEY_JOB_ID, jobId);
+								broadcastIntent.putExtra(Constants.KEY_IS_FEEDBACK_PENDING, isFeedbackPending);
 							}
 							else if("".equalsIgnoreCase(url)){
 								deepindex = showDialog == 1 ? -1 : deepindex;

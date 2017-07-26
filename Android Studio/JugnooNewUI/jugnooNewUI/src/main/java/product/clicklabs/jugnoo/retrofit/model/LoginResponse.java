@@ -1194,6 +1194,17 @@ public class LoginResponse {
 
 	public class Pros{
 
+		@SerializedName("job_id")
+		@Expose
+		private int jobId;
+
+		public int getJobId() {
+			return jobId;
+		}
+
+		public void setJobId(int jobId) {
+			this.jobId = jobId;
+		}
 	}
 
 }

@@ -44,4 +44,9 @@ public interface ProsApi {
 	void cancelBooking(@FieldMap Map<String, String> params,
 					  Callback<SettleUserDebt> callback);
 
+	@FormUrlEncoded
+	@POST("/task_rating")
+	void taskRating(@FieldMap Map<String, String> params,
+					   Callback<SettleUserDebt> callback);
+
 }
