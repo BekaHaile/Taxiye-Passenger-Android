@@ -859,8 +859,8 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i("Server response", "response = " + responseStr);
                         try {
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, orderStatusResponse.getFlag(), orderStatusResponse.getError(), orderStatusResponse.getMessage())) {
-                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == orderStatusResponse.getFlag()) {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, settleUserDebt.getFlag(), settleUserDebt.getError(), settleUserDebt.getMessage())) {
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == settleUserDebt.getFlag()) {
                                     if (rating > 2) {
                                         // for Good rating
                                         afterGoodRating();
@@ -879,7 +879,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                                         backPressed(true);
                                     }
                                 } else {
-                                    retryDialogProsFeedback(rating, comments, orderStatusResponse.getMessage(), DialogErrorType.SERVER_ERROR);
+                                    retryDialogProsFeedback(rating, comments, settleUserDebt.getMessage(), DialogErrorType.SERVER_ERROR);
                                 }
                             }
                         } catch (Exception exception) {

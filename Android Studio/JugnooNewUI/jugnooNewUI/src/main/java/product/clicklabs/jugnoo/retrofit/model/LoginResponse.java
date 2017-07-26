@@ -1194,6 +1194,28 @@ public class LoginResponse {
 
 	public class Pros{
 
+		@SerializedName("data")
+		@Expose
+		private List<Datum> data;
+
+		public class Datum {
+			@SerializedName("job_id")
+			@Expose
+			private int jobId;
+
+			public int getJobId() {
+				return jobId;
+			}
+		}
+
+		public int getFeedbackPendingJobId(){
+			if(data != null && data.size() > 0){
+				int jobId = data.get(0).getJobId();
+				data = null;
+				return jobId;
+			}
+			return 0;
+		}
 	}
 
 }

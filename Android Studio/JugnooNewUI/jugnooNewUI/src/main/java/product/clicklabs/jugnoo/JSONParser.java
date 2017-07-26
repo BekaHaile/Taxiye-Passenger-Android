@@ -666,10 +666,11 @@ public class JSONParser implements Constants {
         }
     }
 
-    public void parseProsData(Context context, JSONObject jProsData, LoginResponse.Pros prosData){
+    public void parseProsData(Context context, LoginResponse.Pros prosData){
         try{
             if(prosData != null) {
                 Data.setProsData(prosData);
+                Prefs.with(context).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, prosData.getFeedbackPendingJobId());
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -702,7 +703,7 @@ public class JSONParser implements Constants {
         parsePayData(context, jPayObject, loginResponse.getPay());
         parseDeliveryData(loginResponse.getDelivery());
         parseFeedData(context, jFeedObject, loginResponse.getFeed());
-        parseProsData(context, jProsObject, loginResponse.getPros());
+        parseProsData(context, loginResponse.getPros());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 
