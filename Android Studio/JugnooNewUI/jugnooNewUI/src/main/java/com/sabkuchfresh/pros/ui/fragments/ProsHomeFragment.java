@@ -179,14 +179,16 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 	}
 
 
+	ProgressDialog finalProgressDialog;
 	public void getSuperCategoriesAPI(boolean showDialog) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
 				ProgressDialog progressDialog = null;
+				finalProgressDialog = null;
 				if(showDialog) {
 					progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
 				}
-				final ProgressDialog finalProgressDialog = progressDialog;
+				finalProgressDialog = progressDialog;
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -324,6 +326,9 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 						activity.openFeedback();
 					}
 				}, 300);
+				if(finalProgressDialog != null){
+					finalProgressDialog.dismiss();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

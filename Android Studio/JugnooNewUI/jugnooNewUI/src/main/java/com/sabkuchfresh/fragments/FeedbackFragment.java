@@ -194,8 +194,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 jobId = Prefs.with(activity).getInt(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
                 productType = ProductType.PROS;
                 getApiProsOrderStatus().getOrderData(activity, jobId);
-
-                Prefs.with(activity).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
             } else {
                 activity.finish();
             }
@@ -861,6 +859,8 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                         try {
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, settleUserDebt.getFlag(), settleUserDebt.getError(), settleUserDebt.getMessage())) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == settleUserDebt.getFlag()) {
+                                    Prefs.with(activity).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
+                                    Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
                                     if (rating > 2) {
                                         // for Good rating
                                         afterGoodRating();

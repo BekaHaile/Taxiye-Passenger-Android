@@ -669,8 +669,9 @@ public class JSONParser implements Constants {
     public void parseProsData(Context context, LoginResponse.Pros prosData){
         try{
             if(prosData != null) {
+                Prefs.with(context).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, prosData.getJobId());
+                prosData.setJobId(0);
                 Data.setProsData(prosData);
-                Prefs.with(context).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, prosData.getFeedbackPendingJobId());
             }
         } catch (Exception e){
             e.printStackTrace();
