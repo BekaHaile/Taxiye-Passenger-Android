@@ -27,7 +27,7 @@ public class MapLatLngBoundsCreator {
      * Create a new LatLng which lies toNorth meters north and toEast meters
      * east of startLL
      */
-    private static LatLng move(LatLng startLL, double toNorth, double toEast) {
+    public static LatLng move(LatLng startLL, double toNorth, double toEast) {
         double lonDiff = meterToLongitude(toEast, startLL.latitude);
         double latDiff = meterToLatitude(toNorth);
         return new LatLng(startLL.latitude + latDiff, startLL.longitude

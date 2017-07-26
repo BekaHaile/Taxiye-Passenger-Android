@@ -79,11 +79,23 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 					}
 				}
 			}
+			category.setVegItemsCount(vegItemsCount);
 			if(isVegToggle == 0 || vegItemsCount > 0){
 				this.categories.add(category);
 			}
 		}
 		notifyDataSetChanged();
+	}
+
+	public int getCategoryPosition(int categoryId){
+		if(categories != null){
+			for(int i=0; i<categories.size(); i++){
+				if(categories.get(i).getCategoryId().equals(categoryId)){
+					return i;
+				}
+			}
+		}
+		return -1;
 	}
 
 	@Override

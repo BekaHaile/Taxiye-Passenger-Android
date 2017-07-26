@@ -783,7 +783,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         else if(intent.getIntExtra(Constants.KEY_DEEPINDEX, -1) == AppLinkIndex.PROS_PAGE.getOrdinal()
                                                 && intent.getIntExtra(Constants.KEY_JOB_ID, -1) > 0){
                                             if(getProsHomeFragment() != null){
-                                                getProsHomeFragment().getSuperCategoriesAPI(true);
+                                                if(intent.getIntExtra(Constants.KEY_IS_FEEDBACK_PENDING, 0) == 1){
+                                                    if(!(getTopFragment() instanceof ProsHomeFragment)){
+                                                        getSupportFragmentManager().popBackStack(ProsProductsFragment.class.getName(),
+                                                                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                                    }
+                                                    getProsHomeFragment().onResume();
+                                                } else {
+                                                    getProsHomeFragment().getSuperCategoriesAPI(true);
+                                                }
                                             }
                                         }
                                         else {
@@ -1606,6 +1614,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     || fragment instanceof FeedbackFragment){
                 topBar.title.setGravity(Gravity.CENTER);
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
+                topBar.title.setPadding((int) (ASSL.Xscale() * 20f), 0, 0, 0);
             }
 
 
@@ -4879,4 +4888,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         outState.putBoolean("showingEarlyBirdDiscount",showingEarlyBirdDiscount);
     }
 
+    private int scrollToCategoryId = -1;
+
+    public int getScrollToCategoryId() {
+        return scrollToCategoryId;
+    }
+
+    public void setScrollToCategoryId(int scrollToCategoryId) {
+        this.scrollToCategoryId = scrollToCategoryId;
+    }
 }

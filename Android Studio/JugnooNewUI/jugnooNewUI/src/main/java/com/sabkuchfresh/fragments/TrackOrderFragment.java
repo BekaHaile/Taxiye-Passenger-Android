@@ -93,7 +93,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 	private Marker markerDriver;
 	private Polyline polylinePath1, polylinePath2;
-	private final int MAP_ANIMATE_DURATION = 300;
+	private final int MAP_ANIMATE_DURATION = 1000;
 	private boolean mapTouchedOnce, zoomSetManually;
 	private float zoomInitial;
 	private int initialHeight, rootHeight;
@@ -103,12 +103,14 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	private boolean expanded;
 	private long lastEta;
 	private float padding = 140f;
+	private boolean tiltState = false;
 
 
 	public static TrackOrderFragment newInstance(String accessToken, int orderId, int deliveryId,
 												 double pickupLatitude, double pickupLongitude,
 												 double deliveryLatitude, double deliveryLongitude,
-												 int showDeliveryRoute, String driverPhoneNo, int initialHeight){
+												 int showDeliveryRoute, String driverPhoneNo, int initialHeight,
+												 boolean tiltState){
 		TrackOrderFragment fragment = new TrackOrderFragment();
 		Bundle bundle = new Bundle();
 		bundle.putString(Constants.KEY_ACCESS_TOKEN, accessToken);
@@ -121,6 +123,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		bundle.putInt(Constants.KEY_SHOW_DELIVERY_ROUTE, showDeliveryRoute);
 		bundle.putString(Constants.KEY_DRIVER_PHONE_NO, driverPhoneNo);
 		bundle.putInt("initialHeight", initialHeight);
+		bundle.putBoolean("tiltState", tiltState);
 		fragment.setArguments(bundle);
 		return fragment;
 	}
@@ -152,6 +155,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		showDeliveryRoute = getArguments().getInt(Constants.KEY_SHOW_DELIVERY_ROUTE, 0);
 		driverPhoneNo = getArguments().getString(Constants.KEY_DRIVER_PHONE_NO, "");
 		initialHeight = getArguments().getInt("initialHeight", ViewGroup.LayoutParams.MATCH_PARENT);
+		tiltState = getArguments().getBoolean("tiltState", false);
 
 		rlMapContainer = (RelativeLayout) rootView.findViewById(R.id.rlMapContainer);
 		rlMapContainer.post(new Runnable() {
@@ -177,6 +181,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 				if (googleMap != null) {
 					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 					googleMap.setMyLocationEnabled(false);
+					googleMap.getUiSettings().setCompassEnabled(false);
 
 					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 40f, 40f, 0.5f, 0.5f, 0));
 					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 71f, 83f, 0.15f, 1.0f, 0));
@@ -268,6 +273,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 				e.printStackTrace();
 				googleMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLatLng));
 			}
+			zoomToDriverAndDrop();
 		}
 	}
 
@@ -275,6 +281,17 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		try {
 			if (googleMap != null) {
 				LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
+				if (!zoomedFirstTime) {
+					llbBuilder.include(pickupLatLng);
+					handler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							if (googleMap != null) {
+								zoomInitial = googleMap.getCameraPosition().zoom;
+							}
+						}
+					}, MAP_ANIMATE_DURATION + 50);
+				}
 				llbBuilder.include(deliveryLatLng);
 				int points = 0;
 				if(markerDriver != null) {
@@ -295,7 +312,17 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 				}
 
 				if(points > 0) {
-					googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+					if(tiltState) {
+						LatLngBounds latLngBounds = getMapLatLngBounds(llbBuilder);
+						CameraPosition cameraPosition = new CameraPosition.Builder()
+								.target(MapLatLngBoundsCreator.move(latLngBounds.getCenter(), -1500, 0))
+								.zoom(12)
+								.tilt(40)
+								.build();
+						googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), MAP_ANIMATE_DURATION, null);
+					} else {
+						googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+					}
 				} else {
 					googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator
 							.createBoundsWithMinDiagonal(llbBuilder, 140), (int) (padding * ASSL.minRatio())),
@@ -426,17 +453,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 														callbackAnim);
 											}
 											if (!zoomedFirstTime) {
-												LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
-												llbBuilder.include(pickupLatLng).include(deliveryLatLng).include(latLngDriver);
-												googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
-												handler.postDelayed(new Runnable() {
-													@Override
-													public void run() {
-														if (googleMap != null) {
-															zoomInitial = googleMap.getCameraPosition().zoom;
-														}
-													}
-												}, MAP_ANIMATE_DURATION + 50);
+												zoomToDriverAndDrop();
 											}
 
 											if (!TextUtils.isEmpty(trackingInfo)) {
@@ -526,7 +543,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 											polylinePath2 = googleMap.addPolyline(polylineOptions2);
 										}
 										if (zoomedFirstTime && !zoomSetManually) {
-											googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(builder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+											zoomToDriverAndDrop();
 										}
 									} catch (Exception e) {
 										e.printStackTrace();
@@ -649,7 +666,8 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		if(googleMap != null) {
 			expanded = true;
 			googleMap.setPadding(0, 0, 0, 0);
-			bMyLocation.performClick();
+			tiltState = false;
+			zoomToDriverAndDrop();
 			setEtaText(lastEta);
 		}
 	}
@@ -658,7 +676,8 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		if(googleMap != null) {
 			expanded = false;
 			googleMap.setPadding(0, 0, 0, rootHeight - initialHeight);
-			bMyLocation.performClick();
+			tiltState = true;
+			zoomToDriverAndDrop();
 			tvETA.setVisibility(View.GONE);
 		}
 	}

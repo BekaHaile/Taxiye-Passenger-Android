@@ -830,10 +830,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
             if(!Data.userData.userName.equalsIgnoreCase("User")) {
                 editTextUserName.setText(Data.userData.userName);
+            } else {
+                editTextUserName.setText("");
             }
             if(!Data.userData.userEmail.contains("@facebook.com")
                     && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
                 editTextEmail.setText(Data.userData.userEmail);
+            } else {
+                editTextEmail.setText("");
             }
 			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
 
@@ -965,11 +969,19 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                             if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
                                 String error = jObj.getString("error");
                                 DialogPopup.alertPopup(activity, "", error);
+                                updateMenuBar = true;
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                updateMenuBar=true;
+                                updateMenuBar = true;
+                                Prefs.with(activity).save(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER,
+                                        jObj.optString(Constants.KEY_KNOWLARITY_MISSED_CALL_NUMBER,
+                                                Prefs.with(activity).getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, "")));
+                                Prefs.with(activity).save(Constants.SP_OTP_VIA_CALL_ENABLED,
+                                        jObj.optInt(Constants.KEY_OTP_VIA_CALL_ENABLED,
+                                                Prefs.with(activity).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 0)));
                                 imageViewEditProfileSave.setVisibility(View.GONE);
                                 imageViewEditProfile.setVisibility(View.VISIBLE);
                                 String message = jObj.getString("message");
+                                updateSubscriptionMessage(updatedName);
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
                                 if(!Data.userData.userName.equalsIgnoreCase("User")) {
@@ -986,7 +998,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                 } else{
                                     Utils.showToast(AccountActivity.this, message);
-                                    reloadProfileAPI(activity);
+                                    performBackPressed();
+//                                    reloadProfileAPI(activity);
                                 }
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -1041,6 +1054,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     String phoneNo = jObj.getString("phone_no");
                                     int emailVerificationStatus = jObj.getInt("email_verification_status");
 
+                                    updateSubscriptionMessage(userName);
                                     Data.userData.userName = userName;
                                     Data.userData.phoneNo = phoneNo;
                                     Data.userData.userEmail = email;
@@ -1630,5 +1644,15 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     private void setEditPhoneUI(){
         ivEditPhone.setVisibility(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1 ? View.GONE : View.VISIBLE);
+    }
+
+    private void updateSubscriptionMessage(String updatedName){
+        try {
+            Data.userData.getSubscriptionData().setSubscriptionTitleNew(Data.userData.
+                    getSubscriptionData().getSubscriptionTitleNew()
+                    .replace(Data.userData.userName, updatedName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -8,7 +8,6 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
-import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -129,7 +128,7 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
                 userData.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
         Prefs.with(context).save(SP_OTP_VIA_CALL_ENABLED,
-                userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
+                userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 		int promoSuccess = userData.optInt(KEY_PROMO_SUCCESS, 1);
         String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
                 context.getResources().getString(R.string.promocode_invalid_message_on_signup));
@@ -667,9 +666,11 @@ public class JSONParser implements Constants {
         }
     }
 
-    public void parseProsData(Context context, JSONObject jProsData, LoginResponse.Pros prosData){
+    public void parseProsData(Context context, LoginResponse.Pros prosData){
         try{
             if(prosData != null) {
+                Prefs.with(context).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, prosData.getJobId());
+                prosData.setJobId(0);
                 Data.setProsData(prosData);
             }
         } catch (Exception e){
@@ -703,7 +704,7 @@ public class JSONParser implements Constants {
         parsePayData(context, jPayObject, loginResponse.getPay());
         parseDeliveryData(loginResponse.getDelivery());
         parseFeedData(context, jFeedObject, loginResponse.getFeed());
-        parseProsData(context, jProsObject, loginResponse.getPros());
+        parseProsData(context, loginResponse.getPros());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 

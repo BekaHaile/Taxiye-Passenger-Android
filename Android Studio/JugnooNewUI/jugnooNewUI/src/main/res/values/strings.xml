@@ -214,7 +214,7 @@
     <string name="paytm_wallet">Paytm Wallet</string>
     <string name="nl_add_paytm_wallet">Add Paytm Wallet</string>
     <string name="nl_splash_required">Required</string>
-    <string name="nl_splash_optional">Optional</string>
+    <string name="nl_splash_optional">optional</string>
 
 
     <!-- NL Login-->
@@ -529,7 +529,7 @@
 
     <string name="give_missed_call_dialog_text">No OTP? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
     <string name="call_us">Call Us</string>
-    <string name="receive_otp_via_call">Receive the OTP via call</string>
+    <string name="receive_otp_via_call">Get OTP Via Call</string>
     <string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
     <string name="couldnt_find_drivers_nearby">Cannot find drivers nearby</string>
 
@@ -1248,11 +1248,11 @@
     <string name="enter_location">Enter location</string>
     <string name="checkout_bracket_item"><b>CHECKOUT</b> (%s ITEM)</string>
     <string name="checkout_bracket_items"><b>CHECKOUT</b> (%s ITEMS)</string>
-    <string name="do_you_have_a_referral_code">Do you have a <b>promocode</b>?</string>
+    <string name="do_you_have_a_referral_code">Do you have a Promocode?</string>
     <string name="please_enter_your_personal_info">Please enter your personal information</string>
     <string name="skip_this_step"><u>Skip this step</u></string>
-    <string name="your_full_name">Your full name</string>
-    <string name="email_address">E-mail address</string>
+    <string name="your_full_name">Your Full Name</string>
+    <string name="email_address">E-mail Address</string>
     <string name="enter_promocode_optional">Enter promocode (optional)</string>
     <string name="label_anonymous">anonymous</string>
 
@@ -1346,6 +1346,10 @@
     <string name="service_id_colon">Service ID:</string>
     <string name="select_offerings">Select Offerings</string>
     <string name="thanks_for_riding_with_us">Thanks for riding with us</string>
+    <string name="label_searched_items">SEARCHED ITEMS</string>
+    <string name="label_relevant_categories">RELEVANT CATEGORIES</string>
+    <string name="service_date">Service Date</string>
+    <string name="service_charges">Service Charges</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

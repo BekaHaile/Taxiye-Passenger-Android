@@ -154,6 +154,21 @@ public class SuperCategoriesData {
 		@Expose
 		private Integer isAd;
 
+		@SerializedName("is_bulk_order")
+		private int isBulkOrder;
+
+		@SerializedName("bulk_order_cell_number")
+		private String bulkOrderCellNumber;
+
+
+		public boolean getIsBulkOrder() {
+			return isBulkOrder>0;
+		}
+
+		public String getBulkOrderCellNumber() {
+			return bulkOrderCellNumber;
+		}
+
 		public Integer getSuperCategoryId() {
 			return superCategoryId;
 		}

@@ -4443,8 +4443,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             }
 
             if(AccountActivity.updateMenuBar){
-                menuBar.setProfileData();;
-                AccountActivity.updateMenuBar=false;
+                menuBar.setProfileData();
+                AccountActivity.updateMenuBar = false;
             }
         } catch (Exception e) {
             e.printStackTrace();

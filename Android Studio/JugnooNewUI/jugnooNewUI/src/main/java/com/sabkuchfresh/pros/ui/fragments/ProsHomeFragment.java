@@ -43,6 +43,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -178,14 +179,16 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 	}
 
 
+	ProgressDialog finalProgressDialog;
 	public void getSuperCategoriesAPI(boolean showDialog) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
 				ProgressDialog progressDialog = null;
+				finalProgressDialog = null;
 				if(showDialog) {
 					progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
 				}
-				final ProgressDialog finalProgressDialog = progressDialog;
+				finalProgressDialog = progressDialog;
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -315,5 +318,20 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.PROS);
 		}
 		resumed = true;
+		try {
+			if (Prefs.with(activity).getInt(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0) > 0) {
+				activity.getHandler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						activity.openFeedback();
+					}
+				}, 300);
+				if(finalProgressDialog != null){
+					finalProgressDialog.dismiss();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
