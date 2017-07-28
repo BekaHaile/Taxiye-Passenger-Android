@@ -345,19 +345,15 @@ public class MapUtils {
 
 
 
-	public static void rotateMarker(final Marker marker, final float bearing) {
-		//final LatLng latLng,
+
+
+	public static void rotateMarker(final Marker marker, float bearing) {
 		if (marker != null) {
-//			final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.LinearFixed();
 			ValueAnimator valueAnimator = new ValueAnimator();
-//			final LatLng startPosition = marker.getPosition();
-			float markerRotation = marker.getRotation();
-			if(markerRotation > 360){
-				markerRotation = markerRotation - ((int)(markerRotation / 360)) * 360;
-			}
-			final float startRotation = markerRotation;
-			final float angle = 180 - Math.abs(Math.abs(startRotation - bearing) - 180);
-			final float right = WhichWayToTurn(startRotation, bearing);
+			final float start = getPositiveRotation(marker.getRotation());
+			final float end = getPositiveRotation(bearing);
+			final float rotationAngle = getRotationAngle(start, end);
+
 			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(ValueAnimator animation) {
@@ -366,61 +362,52 @@ public class MapUtils {
 							return;
 						}
 						float v = animation.getAnimatedFraction();
-//						LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, latLng);
-						float rotation = startRotation + right * v * angle;
-						marker.setRotation((float) rotation);
-//						marker.setPosition(newPosition);
-					} catch (Exception ex) {
-						// I don't care atm..
+						float rotation = start + v * rotationAngle;
+						marker.setRotation(getRotationUnder360(rotation));
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 			});
+
 			valueAnimator.setFloatValues(0, 1);
 			valueAnimator.setDuration(300);
 			valueAnimator.start();
-		}
-	}
-
-	private static float WhichWayToTurn(float currentDirection, float targetDirection) {
-		float diff = targetDirection - currentDirection;
-		if (Math.abs(diff) == 0) {
-			return 0;
-		}
-		if (diff > 180) {
-			return -1;
-		} else {
-			return 1;
-		}
-	}
-
-	public interface LatLngInterpolator {
-		public LatLng interpolate(float fraction, LatLng a, LatLng b);
-
-		public class Linear implements LatLngInterpolator {
-			@Override
-			public LatLng interpolate(float fraction, LatLng a, LatLng b) {
-				double lat = (b.latitude - a.latitude) * fraction + a.latitude;
-				double lng = (b.longitude - a.longitude) * fraction + a.longitude;
-				return new LatLng(lat, lng);
-			}
-		}
-
-		public class LinearFixed implements LatLngInterpolator {
-			@Override
-			public LatLng interpolate(float fraction, LatLng a, LatLng b) {
-				double lat = (b.latitude - a.latitude) * fraction + a.latitude;
-				double lngDelta = b.longitude - a.longitude;
-				// Take the shortest path across the 180th meridian.
-				if (Math.abs(lngDelta) > 180) {
-					lngDelta -= Math.signum(lngDelta) * 360;
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					Log.e("marker.getRotation()", ">" + marker.getRotation());
 				}
-				double lng = lngDelta * fraction + a.longitude;
-				return new LatLng(lat, lng);
-			}
+			}, 3005);
 		}
 	}
 
-	public static LatLng toLatLng(final Location location) {
-		return new LatLng(location.getLatitude(), location.getLongitude());
+
+	private static float getPositiveRotation(float rotation){
+		if(rotation < 0){
+			rotation = -(-180 - (rotation + 180));
+		}
+		return rotation;
+	}
+
+	private static float getRotationUnder360(float rotation){
+		if(rotation > 360){
+			rotation = rotation - ((int)(rotation/360))*360;
+		}
+		return rotation;
+	}
+
+	private static float getRotationAngle(float start, float end){
+		float rotationTo = 0;
+		if(start <= end){
+			rotationTo = end - start;
+		} else {
+			rotationTo = 360+end - start;
+		}
+
+		if(rotationTo > 180){
+			rotationTo = -(180 - (rotationTo - 180));
+		}
+		return rotationTo;
 	}
 }
