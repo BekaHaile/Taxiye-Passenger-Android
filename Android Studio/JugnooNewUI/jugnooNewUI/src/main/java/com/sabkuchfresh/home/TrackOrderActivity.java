@@ -344,6 +344,16 @@ public class TrackOrderActivity extends AppCompatActivity implements GACategory,
 			latLngsDriverAnim.clear();
 			latLngsDriverAnim.addAll(latLngs);
 		}
+
+		@Override
+		public void onAnimComplete() {
+
+		}
+
+		@Override
+		public void onAnimNotDone() {
+
+		}
 	};
 
 	TimerTask timerTask;

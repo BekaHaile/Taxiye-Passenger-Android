@@ -91,7 +91,7 @@ public class MarkerAnimation {
             if(MapUtils.distance(marker.getPosition(), finalPosition) < 80
 					|| MapUtils.distance(marker.getPosition(), finalPosition) > 2000){
                 //marker.setPosition(finalPosition);
-                animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator);
+                animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim);
 			}
 			else{
                 getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim));
@@ -106,11 +106,15 @@ public class MarkerAnimation {
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
+            if(callbackAnim != null){
+                callbackAnim.onAnimNotDone();
+            }
         }
 
     }
 
     private static void checkAndExecute(){
+        getDirectionsAsyncs.remove(0);
         if(getDirectionsAsyncs.size() > 0){
             getDirectionsAsyncs.get(0).execute();
         }
@@ -167,16 +171,23 @@ public class MarkerAnimation {
                     }
                     if(list.size() > 0) {
                         list.remove(0);
+                    } else {
+                        throw new Exception();
                     }
                     if(callbackAnim != null) {
 						callbackAnim.onPathFound(list);
 					}
-                    animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, true);
+                    animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, true, callbackAnim);
+                } else {
+                    throw new Exception();
                 }
-                getDirectionsAsyncs.remove(0);
-                checkAndExecute();
+
             } catch (Exception e) {
                 e.printStackTrace();
+                checkAndExecute();
+                if(callbackAnim != null){
+                    callbackAnim.onAnimNotDone();
+                }
             }
 
         }
@@ -185,7 +196,7 @@ public class MarkerAnimation {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static void animateMarkerToICSRecursive(final String engagementId, final Marker marker, final List<LatLng> list,
                                                    final LatLngInterpolator latLngInterpolator,
-                                                   final List<Double> duration, final boolean rotation) {
+                                                   final List<Double> duration, final boolean rotation, final CallbackAnim callbackAnim) {
         if(list.size() > 0) {
             final LatLng finalPosition = list.remove(0);
             final double finalDuration = duration.remove(0);
@@ -210,7 +221,12 @@ public class MarkerAnimation {
                 public void onAnimationEnd(Animator animator) {
 //                    marker.setPosition(finalPosition);
                     if (list.size() > 0) {
-                        animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, rotation);
+                        animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, rotation, callbackAnim);
+                    } else {
+                        checkAndExecute();
+                        if(callbackAnim != null){
+                            callbackAnim.onAnimComplete();
+                        }
                     }
                 }
 
@@ -227,7 +243,7 @@ public class MarkerAnimation {
 
             float bearing  = (float) MapUtils.getBearing(marker.getPosition(), finalPosition);
             if (rotation) {
-                MapUtils.rotateMarker(marker, (float) MapUtils.getBearing(marker.getPosition(), finalPosition));
+                MapUtils.rotateMarker(marker, bearing);
             }
             if(Integer.parseInt(engagementId) > 0) {
                 MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(engagementId),
@@ -241,7 +257,7 @@ public class MarkerAnimation {
     }
 
     public static void animationForShortDistance(String engagementId, final Marker marker, LatLng latLng,
-                                                 final LatLngInterpolator latLngInterpolator){
+                                                 final LatLngInterpolator latLngInterpolator, final CallbackAnim callbackAnim){
         if(MapUtils.distance(marker.getPosition(), latLng) >= 20) {
             TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {
                 @Override
@@ -260,7 +276,9 @@ public class MarkerAnimation {
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-
+                    if(callbackAnim != null){
+                        callbackAnim.onAnimComplete();
+                    }
                 }
 
                 @Override
@@ -282,12 +300,26 @@ public class MarkerAnimation {
                         TrackingLogModeValue.MOVE.getOrdinal(),
                         marker.getPosition(), (long) ANIMATION_TIME);
             }
+
+
+            if(callbackAnim != null) {
+                List<LatLng> latLngs = new ArrayList<>();
+                latLngs.add(marker.getPosition());
+                latLngs.add(latLng);
+                callbackAnim.onPathFound(latLngs);
+            }
+        } else {
+            if(callbackAnim != null){
+                callbackAnim.onAnimNotDone();
+            }
         }
     }
 
 
     public interface CallbackAnim {
 		void onPathFound(List<LatLng> latLngs);
+        void onAnimComplete();
+        void onAnimNotDone();
 	}
 
 

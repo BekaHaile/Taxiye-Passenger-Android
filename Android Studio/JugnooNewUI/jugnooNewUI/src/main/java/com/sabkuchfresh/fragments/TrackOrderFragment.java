@@ -410,6 +410,16 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			latLngsDriverAnim.clear();
 			latLngsDriverAnim.addAll(latLngs);
 		}
+
+		@Override
+		public void onAnimComplete() {
+
+		}
+
+		@Override
+		public void onAnimNotDone() {
+
+		}
 	};
 
 	TimerTask timerTask;

@@ -351,7 +351,11 @@ public class MapUtils {
 //			final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.LinearFixed();
 			ValueAnimator valueAnimator = new ValueAnimator();
 //			final LatLng startPosition = marker.getPosition();
-			final float startRotation = marker.getRotation();
+			float markerRotation = marker.getRotation();
+			if(markerRotation > 360){
+				markerRotation = markerRotation - ((int)(markerRotation / 360)) * 360;
+			}
+			final float startRotation = markerRotation;
 			final float angle = 180 - Math.abs(Math.abs(startRotation - bearing) - 180);
 			final float right = WhichWayToTurn(startRotation, bearing);
 			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
