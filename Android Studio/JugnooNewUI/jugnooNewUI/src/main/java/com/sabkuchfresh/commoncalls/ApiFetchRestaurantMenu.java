@@ -2,16 +2,29 @@ package com.sabkuchfresh.commoncalls;
 
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.Category;
+import com.sabkuchfresh.retrofit.model.menus.CustomiseOptionsId;
+import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
+import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
+import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -45,7 +58,7 @@ public class ApiFetchRestaurantMenu {
 		this.callback = callback;
 	}
 
-	public void hit(final int restaurantId, final double latitude, final double longitude, final boolean directCheckout) {
+	public void hit(final int restaurantId, final double latitude, final double longitude, final boolean directCheckout, final JSONArray cartItemToSet) {
 		try {
 			if (MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
@@ -77,15 +90,31 @@ public class ApiFetchRestaurantMenu {
 										Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
 									}
 									activity.setMenuProductsResponse(productsResponse);
+									if(cartItemToSet!=null){
+										for(Category category : activity.getMenuProductsResponse().getCategories()){
+											if (category.getSubcategories() != null) {
+												for (Subcategory subcategory : category.getSubcategories()) {
+													setIterateItems(subcategory.getItems(),cartItemToSet);
+												}
+											} else if (category.getItems() != null) {
+												setIterateItems(category.getItems(),cartItemToSet);
+											}
+										}
+
+									}else{
+										activity.updateItemListFromSPDB();
+										if (activity.getVendorOpened().getIsClosed() == 1) {
+											activity.clearMenusCart();
+										}
+									}
+
 									if (activity.menusSort == -1) {
 										activity.menusSort = jObj.optInt(Constants.SORTED_BY, 0);
 									}
-									if (activity.getVendorOpened().getIsClosed() == 1) {
-										activity.clearMenusCart();
-									}
+
 									GAUtils.event(GACategory.MENUS, GAAction.HOME + GAAction.RESTAURANT_CLICKED, activity.getVendorOpened().getName());
 
-									activity.updateItemListFromSPDB();
+
 									activity.updateCartValuesGetTotalPrice();
 									if(directCheckout){
 										activity.openCart(AppConstant.ApplicationType.MENUS);
@@ -149,4 +178,67 @@ public class ApiFetchRestaurantMenu {
 		void onNoRetry(View view);
 	}
 
+	Gson gson = new Gson();  JsonParser parser = new JsonParser();
+
+	/**
+	 *
+	 * @param jsonArray Json array of orderd_items as in order history api
+	 * @return Hashmap consisting  of ItemSelected corresponding to its itemId;
+	 */
+	private ArrayList<ItemSelected> prepareMenuItemsArray(JSONArray jsonArray){
+
+		ArrayList<ItemSelected> mapItems = new ArrayList<>();
+		for(int i =0;i<jsonArray.length();i++){
+			try {
+				if(jsonArray.getJSONObject(i)!=null){
+					JsonElement mJson =  parser.parse(jsonArray.getJSONObject(i).toString());
+					ItemSelected itemSelected = gson.fromJson(mJson,ItemSelected.class);
+
+
+					if(itemSelected!=null){
+						//To Assign Value to arrayList<Integer> from ArrayList<CustomiseOptionsId>
+						for(CustomizeItemSelected customizeItemSelected:itemSelected.getCustomizeItemSelectedList()){
+							ArrayList<Integer> customisedOptionsIdList = new ArrayList<>();
+							for(CustomiseOptionsId customiseOptionsId:customizeItemSelected.getOptions()){
+								customisedOptionsIdList.add(customiseOptionsId.getId());
+							}
+							customizeItemSelected.setCustomizeOptions(customisedOptionsIdList);
+						}
+					}
+
+					mapItems.add(itemSelected);
+
+
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+
+		}
+		return mapItems;
+
+
+	}
+	private void setIterateItems(List<Item> items, JSONArray jCart) {
+		ArrayList<ItemSelected> itemSelected = prepareMenuItemsArray(jCart);
+		for (Item item : items) {
+
+
+
+			for(ItemSelected itemSelected1:itemSelected){
+				if(item.getRestaurantItemId().equals(itemSelected1.getRestaurantItemId())){
+
+					item.getItemSelectedList().add(itemSelected1);
+
+
+
+				}
+			}
+
+
+
+
+		}
+	}
 }

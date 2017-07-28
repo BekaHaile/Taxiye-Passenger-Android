@@ -144,6 +144,7 @@ import com.squareup.picasso.Picasso;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -596,7 +597,24 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             fuguNotificationConfig.handleFuguPushNotification(FreshActivity.this, Data.getFuguChatBundle());
             Data.setFuguChatBundle(null);
         }
+        checkForReorderMenus();
 
+    }
+
+    private void checkForReorderMenus() {
+
+
+        try {
+            Integer restaurantId = Prefs.with(this).getInt(Constants.ORDER_STATUS_PENDING_ID,-1);
+            String jsonArray = Prefs.with(this).getString(Constants.ORDER_STATUS_JSON_ARRAY,null);
+            if(restaurantId!=-1 && jsonArray!=null){
+                fetchRestaurantMenuAPI(restaurantId,true,new JSONArray(jsonArray));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Prefs.with(this).remove(Constants.ORDER_STATUS_PENDING_ID);
+        Prefs.with(this).remove(Constants.ORDER_STATUS_JSON_ARRAY);
     }
 
     private void setUpAddPostForFeedFragment() {
@@ -4366,7 +4384,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     private ApiFetchRestaurantMenu apiFetchRestaurantMenu;
-    public void fetchRestaurantMenuAPI(int restaurantId, boolean directCheckout){
+    public void fetchRestaurantMenuAPI(int restaurantId, boolean directCheckout, JSONArray jsonArray){
         if(apiFetchRestaurantMenu == null){
             apiFetchRestaurantMenu = new ApiFetchRestaurantMenu(this, new ApiFetchRestaurantMenu.Callback() {
                 @Override
@@ -4381,7 +4399,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void onRetry(View view, int restaurantId, boolean directCheckout) {
-                    fetchRestaurantMenuAPI(restaurantId, directCheckout);
+                    fetchRestaurantMenuAPI(restaurantId, directCheckout, null);
                 }
 
                 @Override
@@ -4391,7 +4409,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             });
         }
         apiFetchRestaurantMenu.hit(restaurantId, getSelectedLatLng().latitude,
-                getSelectedLatLng().longitude, directCheckout);
+                getSelectedLatLng().longitude, directCheckout, jsonArray);
     }
 
 

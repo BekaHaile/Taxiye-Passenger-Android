@@ -46,6 +46,8 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.jugnoo.pay.activities.MainActivity;
 import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
@@ -80,6 +82,7 @@ import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
+import com.sabkuchfresh.retrofit.model.menus.CustomiseOptionsId;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
@@ -92,6 +95,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
@@ -1357,6 +1361,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
         return jCart.toString();
     }
+
+
+
 
 
     HashMap<String, Object> chargeDetails = new HashMap<String, Object>();

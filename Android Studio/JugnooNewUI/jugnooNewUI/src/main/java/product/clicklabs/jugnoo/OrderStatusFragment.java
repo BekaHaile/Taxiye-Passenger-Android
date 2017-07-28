@@ -33,11 +33,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fugu.FuguConfig;
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCancelOrder;
+import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.fragments.OrderCancelReasonsFragment;
 import com.sabkuchfresh.fragments.TrackOrderFragment;
 import com.sabkuchfresh.home.FreshActivity;
@@ -46,6 +48,7 @@ import com.sabkuchfresh.retrofit.model.menus.Charges;
 import com.sabkuchfresh.utils.TextViewStrikeThrough;
 import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -427,6 +430,17 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                 } else {
                                     retryDialogOrderData(message, DialogErrorType.SERVER_ERROR);
                                 }
+
+                                JSONArray jsonArray = jObj.getJSONArray("data");
+                                if(jsonArray!=null && jsonArray.length()>0){
+                                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+                                    Integer restaurantId = jsonObject.getInt(Constants.KEY_RESTAURANT_ID);
+                                    JSONArray cartItems = jsonObject.getJSONArray("order_items");
+                                    reorder(cartItems,restaurantId);
+
+                                }
+                            }else{
+
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -1136,6 +1150,24 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         return null;
     }
 
-    private Handler handler = new Handler();
+
+
+    public void reorder(JSONArray jsonArray,int restaurantId){
+
+
+        if(activity instanceof FreshActivity && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getMenusClientId())){
+
+            ((FreshActivity)activity).onBackPressed();
+
+            ((FreshActivity)activity).fetchRestaurantMenuAPI(restaurantId,true,jsonArray);
+        }else {
+            Prefs.with(activity).save(Constants.ORDER_STATUS_PENDING_ID,restaurantId);
+            Prefs.with(activity).save(Constants.ORDER_STATUS_JSON_ARRAY,jsonArray.toString());
+            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), new LatLng(Data.latitude,Data.longitude), false);
+
+
+        }
+    }
+
 
 }
