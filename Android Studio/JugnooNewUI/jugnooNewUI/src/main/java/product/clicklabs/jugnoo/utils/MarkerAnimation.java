@@ -117,6 +117,7 @@ public class MarkerAnimation {
 
     public static void animateMarkerOnList(Marker marker, List<LatLng> list, final LatLngInterpolator latLngInterpolator){
         getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, null, list));
+        Log.e("getDirectionsAsyncs.size", "="+getDirectionsAsyncs.size());
         if(getDirectionsAsyncs.size() == 1){
             getDirectionsAsyncs.get(0).execute();
         }
@@ -203,7 +204,7 @@ public class MarkerAnimation {
                             duration.add(animDuration);
                         }
                     }
-                    if (list.size() > 0) {
+                    if (list.size() > 1) {
                         list.remove(0);
                     } else {
                         throw new Exception();
@@ -357,5 +358,8 @@ public class MarkerAnimation {
         void onAnimNotDone();
 	}
 
+	public static void clearAsyncList(){
+        getDirectionsAsyncs.clear();
+    }
 
 }

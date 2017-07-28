@@ -6011,6 +6011,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                             JSONArray jsonArray = jObj.getJSONArray("locations");
                                             LatLng lastLatLng = null;
                                             List<LatLng> latLngsList = new ArrayList<LatLng>();
+                                            latLngsList.add(Data.autoData.getAssignedDriverInfo().latLng);
                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                                 RidePath currentRidePath = new RidePath(
@@ -6034,10 +6035,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                 latLngsList.add(end);
                                             }
                                             plotPolylineInRideDriverPath();
+
+                                            Log.e("latLngsList.size", "="+latLngsList.size());
                                             if(driverMarkerInRide == null){
                                                 driverMarkerInRide = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
                                             }
-                                            if(latLngsList.size() > 0) {
+                                            if(driverMarkerInRide != null && latLngsList.size() > 1) {
                                                 MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsList, new LatLngInterpolator.Spherical());
                                             }
 
@@ -6069,6 +6072,10 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
             getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), false);
             displayOldPath();
+            if(driverMarkerInRide == null){
+                driverMarkerInRide = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
+            }
+            MarkerAnimation.clearAsyncList();
 
             timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 15000);
             Log.i("timerMapAnimateAndUpdateRideData", "started");
@@ -9371,6 +9378,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
             homeUtil.displaySavedAddressesAsFlags(this, assl, map, true);
             homeUtil.displayPointOfInterestMarkers(this, assl, map);
+            if(driverMarkerInRide != null){driverMarkerInRide.remove();}
+            driverMarkerInRide = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
