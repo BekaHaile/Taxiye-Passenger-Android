@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.util.Property;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -113,6 +114,15 @@ public class MarkerAnimation {
 
     }
 
+
+    public static void animateMarkerOnList(Marker marker, List<LatLng> list, final LatLngInterpolator latLngInterpolator){
+        getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, null, list));
+        if(getDirectionsAsyncs.size() == 1){
+            getDirectionsAsyncs.get(0).execute();
+        }
+    }
+
+
     private static void checkAndExecute(){
         getDirectionsAsyncs.remove(0);
         if(getDirectionsAsyncs.size() > 0){
@@ -126,6 +136,8 @@ public class MarkerAnimation {
         Marker marker;
         LatLngInterpolator latLngInterpolator;
 		CallbackAnim callbackAnim;
+        List<LatLng> list;
+        double totalDistance;
 
         public GetDirectionsAsync(String engagementId, Marker marker, LatLng destination, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim){
             this.engagementId = engagementId;
@@ -136,6 +148,15 @@ public class MarkerAnimation {
 			this.callbackAnim = callbackAnim;
         }
 
+        public GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, List<LatLng> list){
+            this.engagementId = engagementId;
+            this.source = marker.getPosition();
+            this.marker = marker;
+            this.latLngInterpolator = latLngInterpolator;
+            this.callbackAnim = callbackAnim;
+            this.list = list;
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -144,10 +165,20 @@ public class MarkerAnimation {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
-                        destination.latitude + "," + destination.longitude, false, "driving", false);
-                String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                return responseStr;
+                if(list == null || list.size() == 0) {
+                    Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
+                            destination.latitude + "," + destination.longitude, false, "driving", false);
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    return responseStr;
+                } else {
+                    LatLng first = list.get(0);
+                    totalDistance = 0;
+                    for(LatLng latLng : list){
+                        totalDistance = totalDistance + MapUtils.distance(first, latLng);
+                        first = latLng;
+                    }
+                    return "";
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -159,24 +190,28 @@ public class MarkerAnimation {
             super.onPostExecute(result);
             try {
                 if (result != null) {
-                    JSONObject jObj = new JSONObject(result);
-                    double totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
-                    final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
-                    final ArrayList<Double> duration = new ArrayList<>();
-                    for(int i=0; i<list.size(); i++){
-                        if(i+1 < list.size()) {
-                            double animDuration = (MapUtils.distance(list.get(i), list.get(i + 1))/totalDistance) * ANIMATION_TIME;
+                    if(list==null && !TextUtils.isEmpty(result)) {
+                        JSONObject jObj = new JSONObject(result);
+                        totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
+                        list = MapUtils.getLatLngListFromPath(result);
+                    }
+
+                    ArrayList<Double> duration = new ArrayList<>();
+                    for (int i = 0; i < list.size(); i++) {
+                        if (i + 1 < list.size()) {
+                            double animDuration = (MapUtils.distance(list.get(i), list.get(i + 1)) / totalDistance) * ANIMATION_TIME;
                             duration.add(animDuration);
                         }
                     }
-                    if(list.size() > 0) {
+                    if (list.size() > 0) {
                         list.remove(0);
                     } else {
                         throw new Exception();
                     }
-                    if(callbackAnim != null) {
-						callbackAnim.onPathFound(list);
-					}
+                    if (callbackAnim != null) {
+                        callbackAnim.onPathFound(list);
+                    }
+
                     animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, true, callbackAnim);
                 } else {
                     throw new Exception();

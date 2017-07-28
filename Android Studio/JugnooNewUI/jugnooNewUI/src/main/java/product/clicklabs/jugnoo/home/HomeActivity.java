@@ -376,7 +376,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     public static PassengerScreenMode passengerScreenMode;
 
 
-    Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker, dropInitialMarker;
+    Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker, dropInitialMarker,
+            driverMarkerInRide;
     Polyline pathToDropLocationPolyline;
     PolylineOptions pathToDropLocationPolylineOptions;
     ArrayList<Polyline> polylinesInRideDriverPath = new ArrayList<>();
@@ -2813,6 +2814,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 if(mode != PassengerScreenMode.P_DRIVER_ARRIVED) {
                     try {pickupLocationMarker.remove();} catch (Exception e) {}
                     try {driverLocationMarker.remove(); driverLocationMarker = null;} catch (Exception e) {}
+                }
+                if(mode != PassengerScreenMode.P_IN_RIDE){
+                    try{driverMarkerInRide.remove(); driverMarkerInRide = null;}catch (Exception e){}
                 }
 
                 if (mode == PassengerScreenMode.P_RIDE_END) {
@@ -6006,6 +6010,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
                                             JSONArray jsonArray = jObj.getJSONArray("locations");
                                             LatLng lastLatLng = null;
+                                            List<LatLng> latLngsList = new ArrayList<LatLng>();
                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                                 RidePath currentRidePath = new RidePath(
@@ -6026,8 +6031,16 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                 polylineOptions.add(start, end);
                                                 getPolylineOptionsInRideDriverPath().add(polylineOptions);
                                                 lastLatLng = end;
+                                                latLngsList.add(end);
                                             }
                                             plotPolylineInRideDriverPath();
+                                            if(driverMarkerInRide == null){
+                                                driverMarkerInRide = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
+                                            }
+                                            if(latLngsList.size() > 0) {
+                                                MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsList, new LatLngInterpolator.Spherical());
+                                            }
+
 
                                             try { MyApplication.getInstance().getDatabase2().createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
 
