@@ -2810,8 +2810,10 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     currentLocationMarker.remove();
                 }
 
-                try {pickupLocationMarker.remove();} catch (Exception e) {}
-                try {driverLocationMarker.remove();} catch (Exception e) {}
+                if(mode != PassengerScreenMode.P_DRIVER_ARRIVED) {
+                    try {pickupLocationMarker.remove();} catch (Exception e) {}
+                    try {driverLocationMarker.remove(); driverLocationMarker = null;} catch (Exception e) {}
+                }
 
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.autoData.getEndRideData() != null) {
@@ -3232,24 +3234,25 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         if (map != null) {
 
                             Log.e("Data.autoData.getAssignedDriverInfo().latLng", "=" + Data.autoData.getAssignedDriverInfo().latLng);
+                            if(driverLocationMarker == null) {
+                                clearMap();
 
-                            clearMap();
+                                pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
 
-                            pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
+                                driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
+                                if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
+                                    driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
+                                }
+                                MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
+                                        Data.autoData.getAssignedDriverInfo().latLng,
+                                        driverLocationMarker.getRotation(),
+                                        TrackingLogModeValue.RESET.getOrdinal(),
+                                        Data.autoData.getAssignedDriverInfo().latLng, 0);
+                                Log.i("marker added", "REQUEST_FINAL");
 
-                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
-                            if(Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0){
-                                driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
-                            }
-                            MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
-                                    Data.autoData.getAssignedDriverInfo().latLng,
-                                    driverLocationMarker.getRotation(),
-                                    TrackingLogModeValue.RESET.getOrdinal(),
-                                    Data.autoData.getAssignedDriverInfo().latLng, 0);
-                            Log.i("marker added", "REQUEST_FINAL");
-
-                            if(Data.autoData.getDropLatLng() != null) {
-                                setDropLocationMarker();
+                                if (Data.autoData.getDropLatLng() != null) {
+                                    setDropLocationMarker();
+                                }
                             }
                         }
 
@@ -5859,7 +5862,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                         try {
                                                             if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
                                                                 if (map != null) {
-                                                                    if (HomeActivity.this.hasWindowFocus()) {
+                                                                    if (HomeActivity.this.hasWindowFocus() && driverLocationMarker != null) {
                                                                         MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
                                                                                 driverCurrentLatLng, new LatLngInterpolator.Spherical(), null);
                                                                         updateDriverETAText(passengerScreenMode);
