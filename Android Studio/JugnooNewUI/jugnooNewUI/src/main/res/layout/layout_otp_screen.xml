@@ -13,6 +13,16 @@
         android:src="@drawable/bg_top_2"
         android:tag="mwar" />
 
+    <ImageView
+        android:id="@+id/ivBottomBanner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/splash_bottom_building_bg2"
+        android:tag="mwar"
+
+        />
+
     <LinearLayout
         android:id="@+id/linearLayoutMain"
         android:layout_width="match_parent"
@@ -335,16 +345,4 @@
 
     </LinearLayout>
 
-
-    <ImageView
-        android:id="@+id/ivBottomBanner"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/px_160"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/splash_bottom_building_bg2"
-        android:tag="mwar"
-
-        />
-
-    <!--new JSONObject("{\"flag\":143,\"message\":\"We already have an active request for changing to this contact number. Please wait for an hour before requesting again.\"}")-->
 </RelativeLayout>

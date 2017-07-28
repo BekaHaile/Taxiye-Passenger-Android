@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.utils;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Color;
 import android.location.Location;
@@ -67,7 +68,7 @@ public class MapUtils {
 		return 0;
 	}
 
-	public static void rotateMarker(final Marker marker, final float toRotation) {
+	public static void rotateMarker1(final Marker marker, final float toRotation) {
 		final Handler handler = new Handler();
 		final long start = SystemClock.uptimeMillis();
 		final float startRotation = marker.getRotation();
@@ -341,5 +342,81 @@ public class MapUtils {
 			}
 		}
 	}
-	
+
+
+
+	public static void rotateMarker(final Marker marker, final float bearing) {
+		//final LatLng latLng,
+		if (marker != null) {
+//			final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.LinearFixed();
+			ValueAnimator valueAnimator = new ValueAnimator();
+//			final LatLng startPosition = marker.getPosition();
+			final float startRotation = marker.getRotation();
+			final float angle = 180 - Math.abs(Math.abs(startRotation - bearing) - 180);
+			final float right = WhichWayToTurn(startRotation, bearing);
+			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				@Override
+				public void onAnimationUpdate(ValueAnimator animation) {
+					try {
+						if (marker == null) {
+							return;
+						}
+						float v = animation.getAnimatedFraction();
+//						LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, latLng);
+						float rotation = startRotation + right * v * angle;
+						marker.setRotation((float) rotation);
+//						marker.setPosition(newPosition);
+					} catch (Exception ex) {
+						// I don't care atm..
+					}
+				}
+			});
+			valueAnimator.setFloatValues(0, 1);
+			valueAnimator.setDuration(300);
+			valueAnimator.start();
+		}
+	}
+
+	private static float WhichWayToTurn(float currentDirection, float targetDirection) {
+		float diff = targetDirection - currentDirection;
+		if (Math.abs(diff) == 0) {
+			return 0;
+		}
+		if (diff > 180) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
+
+	public interface LatLngInterpolator {
+		public LatLng interpolate(float fraction, LatLng a, LatLng b);
+
+		public class Linear implements LatLngInterpolator {
+			@Override
+			public LatLng interpolate(float fraction, LatLng a, LatLng b) {
+				double lat = (b.latitude - a.latitude) * fraction + a.latitude;
+				double lng = (b.longitude - a.longitude) * fraction + a.longitude;
+				return new LatLng(lat, lng);
+			}
+		}
+
+		public class LinearFixed implements LatLngInterpolator {
+			@Override
+			public LatLng interpolate(float fraction, LatLng a, LatLng b) {
+				double lat = (b.latitude - a.latitude) * fraction + a.latitude;
+				double lngDelta = b.longitude - a.longitude;
+				// Take the shortest path across the 180th meridian.
+				if (Math.abs(lngDelta) > 180) {
+					lngDelta -= Math.signum(lngDelta) * 360;
+				}
+				double lng = lngDelta * fraction + a.longitude;
+				return new LatLng(lat, lng);
+			}
+		}
+	}
+
+	public static LatLng toLatLng(final Location location) {
+		return new LatLng(location.getLatitude(), location.getLongitude());
+	}
 }

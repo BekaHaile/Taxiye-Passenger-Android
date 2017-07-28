@@ -663,12 +663,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 						if(missedCallDialog != null) {
 							missedCallDialog.dismiss();
 						}
-//						rlProgress.setVisibility(View.GONE);
-						/*if(rlOTPTimer.getVisibility() == View.VISIBLE){
-							scrollView.smoothScrollTo(0, editTextOTP.getBottom());
-						} else {
-							scrollView.smoothScrollTo(0, buttonVerify.getTop());
-						}*/
 					}
 				}, 200);
 			} else {
@@ -691,12 +685,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 					if(missedCallDialog != null) {
 						missedCallDialog.dismiss();
 					}
-//					rlProgress.setVisibility(View.GONE);
-					/*if(rlOTPTimer.getVisibility() == View.VISIBLE){
-						scrollView.smoothScrollTo(0, editTextOTP.getBottom());
-					} else {
-						scrollView.smoothScrollTo(0, buttonVerify.getTop());
-					}*/
 				}
 			}, 200);
 			try {
