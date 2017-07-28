@@ -371,7 +371,7 @@ public class MapUtils {
 			});
 
 			valueAnimator.setFloatValues(0, 1);
-			valueAnimator.setDuration(300);
+			valueAnimator.setDuration(220);
 			valueAnimator.start();
 			new Handler().postDelayed(new Runnable() {
 				@Override
