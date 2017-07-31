@@ -1350,6 +1350,7 @@
     <string name="label_relevant_categories">RELEVANT CATEGORIES</string>
     <string name="service_date">Service Date</string>
     <string name="service_charges">Service Charges</string>
+    <string name="action_repeat_order">Repeat Order</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

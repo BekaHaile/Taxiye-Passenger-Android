@@ -82,9 +82,11 @@ public class ApiFetchRestaurantMenu {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = productsResponse.getMessage();
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								boolean goToCheckout = directCheckout;
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
 
 									if(cartItemToSet!=null){
+										//Delete old cart
 										activity.clearMenusCart();
 									}
 									activity.setVendorOpened(productsResponse.getVendor());
@@ -94,15 +96,21 @@ public class ApiFetchRestaurantMenu {
 										Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
 									}
 									activity.setMenuProductsResponse(productsResponse);
+									int count=0;
 									if(cartItemToSet!=null){
+										//Re order Case
 										for(Category category : activity.getMenuProductsResponse().getCategories()){
 											if (category.getSubcategories() != null) {
 												for (Subcategory subcategory : category.getSubcategories()) {
-													setIterateItems(subcategory.getItems(),cartItemToSet);
+													count+=setIterateItems(subcategory.getItems(),cartItemToSet);
 												}
 											} else if (category.getItems() != null) {
-												setIterateItems(category.getItems(),cartItemToSet);
+												count+=setIterateItems(category.getItems(),cartItemToSet);
 											}
+										}
+										if(count==0){
+											//All items in re-oder case have been disabled so do not go to checkout
+											goToCheckout=false;
 										}
 
 									}else{
@@ -112,6 +120,8 @@ public class ApiFetchRestaurantMenu {
 										}
 									}
 
+
+
 									if (activity.menusSort == -1) {
 										activity.menusSort = jObj.optInt(Constants.SORTED_BY, 0);
 									}
@@ -120,7 +130,7 @@ public class ApiFetchRestaurantMenu {
 
 
 									activity.updateCartValuesGetTotalPrice();
-									if(directCheckout){
+									if(goToCheckout){
 										activity.openCart(AppConstant.ApplicationType.MENUS);
 									} else {
 										activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
@@ -224,7 +234,8 @@ public class ApiFetchRestaurantMenu {
 
 
 	}
-	private void setIterateItems(List<Item> items, JSONArray jCart) {
+	private int setIterateItems(List<Item> items, JSONArray jCart) {
+		int count=0;
 		ArrayList<ItemSelected> itemSelected = prepareMenuItemsArray(jCart);
 		for (Item item : items) {
 
@@ -234,7 +245,7 @@ public class ApiFetchRestaurantMenu {
 				if(item.getRestaurantItemId().equals(itemSelected1.getRestaurantItemId())){
 
 					item.getItemSelectedList().add(itemSelected1);
-
+					count++;
 
 
 				}
@@ -244,5 +255,6 @@ public class ApiFetchRestaurantMenu {
 
 
 		}
+		return count;
 	}
 }

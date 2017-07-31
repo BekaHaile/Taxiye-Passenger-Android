@@ -3927,12 +3927,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             } catch (Exception e) {
             }
         }
-        if (deliveryAddressModel != null) {
-            setSelectedAddress(deliveryAddressModel.getAddress());
-            setSelectedLatLng(deliveryAddressModel.getLatLng());
-            setSelectedAddressId(deliveryAddressModel.getId());
-            setSelectedAddressType(deliveryAddressModel.getType());
-            onAddressUpdated(new AddressAdded(true, dontRefresh));
+        try {
+            if (deliveryAddressModel != null) {
+                setSelectedAddress(deliveryAddressModel.getAddress());
+                setSelectedLatLng(deliveryAddressModel.getLatLng());
+                setSelectedAddressId(deliveryAddressModel.getId());
+                setSelectedAddressType(deliveryAddressModel.getType());
+                onAddressUpdated(new AddressAdded(true, dontRefresh));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
