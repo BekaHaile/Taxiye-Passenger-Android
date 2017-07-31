@@ -123,9 +123,10 @@ public class MarkerAnimation {
     }
 
 
-    public static void animateMarkerOnList(Marker marker, List<LatLng> list, final LatLngInterpolator latLngInterpolator){
-        getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, null, list));
+    public static void animateMarkerOnList(Marker marker, List<LatLng> list, final LatLngInterpolator latLngInterpolator, GoogleMap googleMap, int pathResolvedColor){
+        getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, null, list, true, googleMap, pathResolvedColor));
         Log.e("getDirectionsAsyncs.size", "="+getDirectionsAsyncs.size());
+        //true, googleMap,ContextCompat.getColor(TrackOrderActivity.this,R.color.theme_color)
         if(getDirectionsAsyncs.size() == 1){
             getDirectionsAsyncs.get(0).execute();
         }
@@ -163,13 +164,16 @@ public class MarkerAnimation {
             this.pathResolvedColor = pathResolvedColor;
         }
 
-        public GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, List<LatLng> list){
+        public GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, List<LatLng> list, boolean animateRoute, GoogleMap googleMap, int pathResolvedColor){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.marker = marker;
             this.latLngInterpolator = latLngInterpolator;
             this.callbackAnim = callbackAnim;
             this.list = list;
+            this.animateRoute = animateRoute;
+            this.googleMap = googleMap;
+            this.pathResolvedColor = pathResolvedColor;
         }
 
         @Override
@@ -219,20 +223,20 @@ public class MarkerAnimation {
                         }
                     }
                     if (list.size() > 1) {
+                        if(animateRoute && googleMap != null){
+                            List<LatLng> latLngList = new ArrayList<>();
+                            latLngList.addAll(list);
+                            if(latLngList.size() > 1) {
+                                MapRouteAnimator.getInstance().animateRoute(googleMap, latLngList, (long) ANIMATION_TIME, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
+                            }
+                        }
                         list.remove(0);
+                        if (callbackAnim != null) {
+                            callbackAnim.onPathFound(list);
+                        }
+                        animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, true, callbackAnim);
                     } else {
                         throw new Exception();
-                    }
-                    if (callbackAnim != null) {
-                        callbackAnim.onPathFound(list);
-                    }
-
-                    animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, true, callbackAnim);
-                    if(animateRoute && googleMap != null){
-                        List<LatLng> latLngList = new ArrayList<>();
-                        latLngList.add(source);
-                        latLngList.addAll(list);
-                        MapRouteAnimator.getInstance().animateRoute(googleMap, latLngList, (long) ANIMATION_TIME, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
                     }
                 } else {
                     throw new Exception();

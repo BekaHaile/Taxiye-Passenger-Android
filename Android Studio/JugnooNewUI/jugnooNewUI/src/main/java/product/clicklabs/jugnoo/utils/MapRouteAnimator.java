@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ public class MapRouteAnimator {
     private Polyline foregroundPolyline;
 
     private AnimatorSet firstRunAnimSet;
+    private List<LatLng> latLngList;
 
     private MapRouteAnimator(){
     }
@@ -48,11 +50,14 @@ public class MapRouteAnimator {
         //Reset the polylines
         if (foregroundPolyline != null) foregroundPolyline.remove();
 
-        PolylineOptions optionsForeground = new PolylineOptions().add(latLngList.get(0)).color(pathResolvedColor).width(pathWidth).geodesic(true);
+        this.latLngList = new ArrayList<>();
+        this.latLngList.addAll(latLngList);
+
+        PolylineOptions optionsForeground = new PolylineOptions().add(this.latLngList.get(0)).color(pathResolvedColor).width(pathWidth).geodesic(true);
         foregroundPolyline = googleMap.addPolyline(optionsForeground);
 
 
-        ObjectAnimator foregroundRouteAnimator = ObjectAnimator.ofObject(this, "routeIncreaseForward", new RouteEvaluator(latLngInterpolator), latLngList.toArray());
+        ObjectAnimator foregroundRouteAnimator = ObjectAnimator.ofObject(this, "routeIncreaseForward", new RouteEvaluator(latLngInterpolator), this.latLngList.toArray());
         foregroundRouteAnimator.setInterpolator(new LinearInterpolator());
         foregroundRouteAnimator.setDuration(duration);
         foregroundRouteAnimator.addListener(new Animator.AnimatorListener() {
