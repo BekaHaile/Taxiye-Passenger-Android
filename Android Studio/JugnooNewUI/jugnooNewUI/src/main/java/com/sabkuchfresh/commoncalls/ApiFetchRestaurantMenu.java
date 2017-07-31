@@ -83,6 +83,10 @@ public class ApiFetchRestaurantMenu {
 							String message = productsResponse.getMessage();
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
+
+									if(cartItemToSet!=null){
+										activity.clearMenusCart();
+									}
 									activity.setVendorOpened(productsResponse.getVendor());
 									if(activity.getAppType() == AppConstant.ApplicationType.FEED) {
 										Data.AppType = AppConstant.ApplicationType.MENUS;
