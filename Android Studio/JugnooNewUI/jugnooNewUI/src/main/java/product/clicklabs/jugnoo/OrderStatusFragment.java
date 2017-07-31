@@ -39,7 +39,6 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCancelOrder;
-import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.fragments.OrderCancelReasonsFragment;
 import com.sabkuchfresh.fragments.TrackOrderFragment;
 import com.sabkuchfresh.home.FreshActivity;
@@ -119,6 +118,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private RelativeLayout rlOrderStatusMapPeek;
     private LinearLayout llShadowPeek;
     private int llShadowPeekHeight, openLiveTracking;
+    private JSONObject responseOrderDataApi;
 
 
     @Nullable
@@ -414,10 +414,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i("Server response", "response = " + responseStr);
                         try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt("flag");
-                                String message = JSONParser.getServerMessage(jObj);
+                            responseOrderDataApi = new JSONObject(responseStr);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, responseOrderDataApi)) {
+                                int flag = responseOrderDataApi.getInt("flag");
+                                String message = JSONParser.getServerMessage(responseOrderDataApi);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
                                     llMain.setVisibility(View.VISIBLE);
                                     datum1 = historyResponse.getData().get(0);
@@ -431,14 +431,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                     retryDialogOrderData(message, DialogErrorType.SERVER_ERROR);
                                 }
 
-                                JSONArray jsonArray = jObj.getJSONArray("data");
-                                if(jsonArray!=null && jsonArray.length()>0){
-                                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-                                    Integer restaurantId = jsonObject.getInt(Constants.KEY_RESTAURANT_ID);
-                                    JSONArray cartItems = jsonObject.getJSONArray("order_items");
-                                    reorder(cartItems,restaurantId);
 
-                                }
                             }else{
 
                             }
@@ -939,7 +932,28 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 needHelpClick();
                 break;
             case R.id.reorderBtn:
-                saveHistoryCardToSP(datum1);
+                try {
+                    if(productType==ProductType.MENUS.getOrdinal()){
+                        if(responseOrderDataApi!=null){
+                            JSONArray jsonArray = responseOrderDataApi.getJSONArray("data");
+                            if(jsonArray!=null && jsonArray.length()>0){
+                                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                                Integer restaurantId = jsonObject.getInt(Constants.KEY_RESTAURANT_ID);
+                                JSONArray cartItems = jsonObject.getJSONArray("order_items");
+                                reorderMenus(cartItems,restaurantId);
+
+                            }
+                        }
+
+                    }else{
+                        saveHistoryCardToSP(datum1);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
                 break;
             case R.id.cancelfeedbackBtn:
                 needHelpClick();
@@ -974,7 +988,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     public void saveHistoryCardToSP(HistoryResponse.Datum orderHistory) {
         try {
-            // TODO: 19/03/17 check for reorder cart fill
+            // TODO: 19/03/17 check for reorderMenus cart fill
 //            JSONObject jCart = new JSONObject();
 //            if (orderHistory.getOrderItems() != null) {
 //                Gson gson = new Gson();
@@ -1152,7 +1166,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
 
 
-    public void reorder(JSONArray jsonArray,int restaurantId){
+    public void reorderMenus(JSONArray jsonArray, int restaurantId){
 
 
         if(activity instanceof FreshActivity && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getMenusClientId())){

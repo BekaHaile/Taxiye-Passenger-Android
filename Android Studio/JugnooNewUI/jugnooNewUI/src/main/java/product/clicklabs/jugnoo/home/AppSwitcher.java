@@ -60,7 +60,7 @@ public class AppSwitcher {
 
 
 	/**
-	 * For reorder offering opening
+	 * For reorderMenus offering opening
 	 * @param activity
 	 * @param clientId
 	 * @param data
