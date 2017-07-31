@@ -1350,6 +1350,10 @@
     <string name="label_relevant_categories">RELEVANT CATEGORIES</string>
     <string name="service_date">Service Date</string>
     <string name="service_charges">Service Charges</string>
+    <string name="resend_code_in">Resend Code in %s</string>
+    <string name="call_me_in">Call Me in %s</string>
+    <string name="resend_code">Resend Code</string>
+    <string name="call_me">Call Me</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

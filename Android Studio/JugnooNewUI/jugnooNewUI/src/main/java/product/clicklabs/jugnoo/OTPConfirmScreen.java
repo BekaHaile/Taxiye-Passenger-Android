@@ -9,21 +9,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -51,11 +44,9 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.PinEditTextLayout;
-import product.clicklabs.jugnoo.widgets.PinEntryEditText;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -68,51 +59,38 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 	ImageView imageViewBack;
 
-	TextView textViewOtpNumber, tvOtpPhoneNumber, textViewForgotPassword;
-	ImageView imageViewChangePhoneNumber;
-	EditText editTextOTP, etPhoneNew, etPasswordNew;
+	TextView textViewOtpNumber, tvOtpPhoneNumber;
 
 	LinearLayout linearLayoutWaiting;
-	TextView textViewCounter, tvOtpViaCall;
-	ImageView imageViewYellowLoadingBar, imageViewWalletIcon, ivResend;
-
-	Button buttonVerify;
-	LinearLayout buttonOtpViaCall;
-	LinearLayout linearLayoutGiveAMissedCall, llPasswordLogin, llOTP;
-	private Animation tweenAnimation;
-
+	TextView textViewCounter;
+	ImageView imageViewYellowLoadingBar;
 	RelativeLayout relative, rlOTPTimer;
 
-	LinearLayout rlResendOTP;
 	TextView textViewScroll;
 	
 	boolean loginDataFetched = false;
 	private int linkedWallet = 0;
 	//private int userVerified = 0;
 	private String linkedWalletErrorMsg = "";
-	private Button bEmailLoginNew;
-	
+
 	public static boolean intentFromRegister = true, backFromMissedCall;
 	public static EmailRegisterData emailRegisterData;
 	public static FacebookRegisterData facebookRegisterData;
 	public static GoogleRegisterData googleRegisterData;
 	private boolean giveAMissedCall;
-	private Handler handler = new Handler();
 	private String signupBy = "", email = "", password = "";
-	private RelativeLayout rlProgress, llLoginNew, rlOTPContainer;
-	private ProgressWheel progressBar;
+
+	private RelativeLayout rlOTPContainer;
 	private boolean runAfterDelay;
-	private TextView tvProgress;
 	private boolean onlyDigits, openHomeSwitcher = false;
 	public static boolean phoneNoLogin = false;
 	int duration = 500, otpLength = 4;
-	private EditText etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6;
-	private View view1, view2, view3, view4, view5;
-	private PinEntryEditText txtPinEntry;
 	private ProgressDialog missedCallDialog;
 
 	private LinearLayout llEditText;
 	private PinEditTextLayout pinEditTextLayout;
+	private TextView tvResendCode, tvCallMe;
+	private Handler handler = new Handler();
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -152,9 +130,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			e.printStackTrace();
 		}
 
-		/*if(getIntent().hasExtra(USER_VERIFIED)){
-			userVerified = getIntent().getIntExtra(USER_VERIFIED, 0);
-		}*/
 
 
 		relative = (RelativeLayout) findViewById(R.id.relative);
@@ -172,73 +147,19 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenRegular(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+		tvOtpPhoneNumber = (TextView) findViewById(R.id.tvOtpPhoneNumber); tvOtpPhoneNumber.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 
 		rlOTPContainer = (RelativeLayout) findViewById(R.id.rlOTPContainer);
-		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber);
-		imageViewWalletIcon = (ImageView) findViewById(R.id.imageViewWalletIcon);
 
 		rlOTPTimer = (RelativeLayout) findViewById(R.id.rlOTPTimer);
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
 		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.mavenRegular(this));
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
 
-		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.mavenMedium(this));
-
-		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
-
-		buttonOtpViaCall = (LinearLayout) findViewById(R.id.buttonOtpViaCall);
-		rlResendOTP = (LinearLayout) findViewById(R.id.rlResendOTP);
-		ivResend = (ImageView) findViewById(R.id.ivResend);
-		tvOtpViaCall = (TextView) findViewById(R.id.tvOtpViaCall); tvOtpViaCall.setTypeface(Fonts.mavenRegular(this));
-		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
-		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenRegular(this));
-		rlProgress = (RelativeLayout) findViewById(R.id.rlProgress);
-		tvProgress = (TextView) findViewById(R.id.tvProgress); tvProgress.setTypeface(Fonts.mavenRegular(this));
-		progressBar = (ProgressWheel) findViewById(R.id.progressBar);
-
-		llLoginNew = (RelativeLayout) findViewById(R.id.llLoginNew); llLoginNew.setVisibility(View.GONE);
-		txtPinEntry = (PinEntryEditText) findViewById(R.id.txt_pin_entry);
-
-		llPasswordLogin = (LinearLayout) findViewById(R.id.llPasswordLogin);
-
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
-		tvOtpPhoneNumber = (TextView) findViewById(R.id.tvOtpPhoneNumber); tvOtpPhoneNumber.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
-		textViewForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword);
-		etPhoneNew = (EditText) findViewById(R.id.etPhoneNew); etPhoneNew.setText(email);
-		etPasswordNew = (EditText) findViewById(R.id.etPasswordNew);
-		bEmailLoginNew = (Button) findViewById(R.id.bEmailLoginNew);
 
-		etOtp1 = (EditText) findViewById(R.id.etOtp1);
-		etOtp2 = (EditText) findViewById(R.id.etOtp2);
-		etOtp3 = (EditText) findViewById(R.id.etOtp3);
-		etOtp4 = (EditText) findViewById(R.id.etOtp4);
-		etOtp5 = (EditText) findViewById(R.id.etOtp5);
-		etOtp6 = (EditText) findViewById(R.id.etOtp6);
-
-		view1 = (View) findViewById(R.id.view1);
-		view2 = (View) findViewById(R.id.view2);
-		view3 = (View) findViewById(R.id.view3);
-		view4 = (View) findViewById(R.id.view4);
-		view5 = (View) findViewById(R.id.view5);
-
-		etOtp1.addTextChangedListener(new CustomTextWatcher(null, etOtp1, etOtp2));
-		etOtp2.addTextChangedListener(new CustomTextWatcher(etOtp1, etOtp2, etOtp3));
-		etOtp3.addTextChangedListener(new CustomTextWatcher(etOtp2, etOtp3, etOtp4));
-		etOtp4.addTextChangedListener(new CustomTextWatcher(etOtp3, etOtp4, etOtp5));
-		etOtp5.addTextChangedListener(new CustomTextWatcher(etOtp4, etOtp5, etOtp6));
-		etOtp6.addTextChangedListener(new CustomTextWatcher(etOtp5, etOtp6, null));
-
-		etOtp1.setOnKeyListener(new CustomBackKeyListener(null, etOtp2));
-		etOtp2.setOnKeyListener(new CustomBackKeyListener(etOtp1, etOtp3));
-		etOtp3.setOnKeyListener(new CustomBackKeyListener(etOtp2, etOtp4));
-		etOtp4.setOnKeyListener(new CustomBackKeyListener(etOtp3, etOtp5));
-		etOtp5.setOnKeyListener(new CustomBackKeyListener(etOtp4, etOtp6));
-		etOtp6.setOnKeyListener(new CustomBackKeyListener(etOtp5, null));
-
-
-		llOTP = (LinearLayout) findViewById(R.id.llOTP);
-
-		tweenAnimation = AnimationUtils.loadAnimation(OTPConfirmScreen.this, R.anim.tween);
+		tvResendCode = (TextView) findViewById(R.id.tvResendCode);
+		tvCallMe = (TextView) findViewById(R.id.tvCallMe);
 
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -249,230 +170,31 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			}
 		});
 
-		txtPinEntry.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				if(s.length() == 4){
-					buttonVerify.performClick();
-					setRlOTPTimerVisibility(View.GONE);
-				}
-			}
-		});
-
-
-		relative.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				editTextOTP.setError(null);
-			}
-		});
-
-		buttonVerify.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				verifyClick(editTextOTP.getText().toString().trim(), editTextOTP);
-			}
-		});
-
-
-		editTextOTP.setOnEditorActionListener(new OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				buttonVerify.performClick();
-				return true;
-			}
-		});
-
-		txtPinEntry.setOnEditorActionListener(new OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				buttonVerify.performClick();
-				return true;
-			}
-		});
-
-		rlResendOTP.setOnClickListener(new View.OnClickListener() {
+		tvResendCode.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try{
 					Utils.disableSMSReceiver(OTPConfirmScreen.this);
-					editTextOTP.setError(null);
 					if(missedCallDialog != null) {
 						missedCallDialog.dismiss();
 					}
 					apiGenerateLoginOtp(OTPConfirmScreen.this, email);
-
+					startTimerForRetry();
 				} catch(Exception e){
 					e.printStackTrace();
 				}
 			}
 		});
 
-		editTextOTP.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				if (s.length() > 0) {
-					editTextOTP.setTextSize(20);
-				} else {
-					editTextOTP.setTextSize(15);
-				}
-
-				if(s.length() == 4){
-					buttonVerify.performClick();
-					setRlOTPTimerVisibility(View.GONE);
-				}
-			}
-		});
-
-
-		editTextOTP.setOnFocusChangeListener(onFocusChangeListener);
-		editTextOTP.setOnClickListener(onClickListener);
-
-
-		linearLayoutGiveAMissedCall.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				try {
-					Utils.disableSMSReceiver(OTPConfirmScreen.this);
-					editTextOTP.setError(null);
-					txtPinEntry.setError(null);
-					tweenAnimation.cancel();
-					if(missedCallDialog != null) {
-						missedCallDialog.dismiss();
-					}
-					linearLayoutGiveAMissedCall.clearAnimation();
-					if(!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
-						DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
-								getResources().getString(R.string.give_missed_call_dialog_text),
-								getResources().getString(R.string.call_us),
-								getResources().getString(R.string.cancel),
-								new View.OnClickListener() {
-									@Override
-									public void onClick(View v) {
-										giveAMissedCall = true;
-										Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
-												.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-										backFromMissedCall = true;
-									}
-								},
-								new View.OnClickListener() {
-									@Override
-									public void onClick(View v) {
-
-									}
-								}, false, false
-						);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-		llPasswordLogin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.disableSMSReceiver(OTPConfirmScreen.this);
-				llLoginNew.setVisibility(View.VISIBLE);
-				Animation animation8 = AnimationUtils.loadAnimation(OTPConfirmScreen.this, R.anim.right_in);
-				animation8.setFillAfter(true);
-				animation8.setDuration(duration);
-				llLoginNew.startAnimation(animation8);
-
-				Animation animation9 = AnimationUtils.loadAnimation(OTPConfirmScreen.this, R.anim.right_out);
-				animation9.setFillAfter(false);
-				animation9.setDuration(duration);
-				rlOTPContainer.startAnimation(animation9);
-				rlOTPContainer.setVisibility(View.GONE);
-			}
-		});
-
-
-		imageViewChangePhoneNumber.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-				editTextOTP.setError(null);
-				Intent intent = new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class);
-				intent.putExtra(LINKED_WALLET, linkedWallet);
-				startActivity(intent);
-                finish();
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            }
-        });
-
-		textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.hideSoftKeyboard(OTPConfirmScreen.this, editTextOTP);
-				ForgotPasswordScreen.emailAlready = etPhoneNew.getText().toString();
-				startActivity(new Intent(OTPConfirmScreen.this, ForgotPasswordScreen.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				finish();
-			}
-		});
-
-		bEmailLoginNew.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.hideSoftKeyboard(OTPConfirmScreen.this, etPhoneNew);
-					String email = etPhoneNew.getText().toString().trim();
-					String password = etPasswordNew.getText().toString().trim();
-					if ("".equalsIgnoreCase(email)) {
-						etPhoneNew.requestFocus();
-						etPhoneNew.setError(getResources().getString(R.string.nl_login_phone_empty_error));
-					} else {
-						if ("".equalsIgnoreCase(password)) {
-							etPasswordNew.requestFocus();
-							etPasswordNew.setError(getResources().getString(R.string.nl_login_empty_password_error));
-						} else {
-							boolean onlyDigits = Utils.checkIfOnlyDigits(email);
-							if (onlyDigits) {
-								email = Utils.retrievePhoneNumberTenChars(email);
-								if (!Utils.validPhoneNumber(email)) {
-									etPhoneNew.requestFocus();
-									etPhoneNew.setError(getResources().getString(R.string.invalid_phone_error));
-								} else {
-									email = "+91" + email;
-									sendLoginValues(OTPConfirmScreen.this, email, password, true, true);
-									phoneNoLogin = true;
-								}
-							} else {
-								if (Utils.isEmailValid(email)) {
-									sendLoginValues(OTPConfirmScreen.this, email, password, false, true);
-									phoneNoLogin = false;
-								} else {
-									etPhoneNew.requestFocus();
-									etPhoneNew.setError("Please enter valid email");
-								}
-							}
-						}
-					}
-			}
-		});
-
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+			}
+		}, 500);
 
 		try {
 			//jungooautos-verify://app?otp=1234
@@ -491,21 +213,22 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 						&& !"".equalsIgnoreCase(registerData)){
 					facebookRegisterData = gson.fromJson(registerData, FacebookRegisterData.class);
 					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
+					tvOtpPhoneNumber.setText(facebookRegisterData.phoneNo);
 				}
 				else if((""+SplashNewActivity.RegisterationType.GOOGLE).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					googleRegisterData = gson.fromJson(registerData, GoogleRegisterData.class);
 					textViewOtpNumber.setText(googleRegisterData.phoneNo);
+					tvOtpPhoneNumber.setText(googleRegisterData.phoneNo);
 				}
 				else if((""+SplashNewActivity.RegisterationType.EMAIL).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					emailRegisterData = gson.fromJson(registerData, EmailRegisterData.class);
 					textViewOtpNumber.setText(emailRegisterData.phoneNo);
+					tvOtpPhoneNumber.setText(emailRegisterData.phoneNo);
 				}
 				if(otp != null && !"".equalsIgnoreCase(otp)){
-					txtPinEntry.setText(otp);
-					txtPinEntry.setSelection(txtPinEntry.getText().length());
-					buttonVerify.performClick();
+					pinEditTextLayout.setOTPDirectly(otp);
 				}
 			}
 			else{
@@ -538,22 +261,19 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 		try{
 			if(!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
-				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
 			}
 			else{
-				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
 			if(Prefs.with(this).getInt(SP_OTP_VIA_CALL_ENABLED, 0) == 1){
-				buttonOtpViaCall.setVisibility(View.VISIBLE);
+				tvCallMe.setVisibility(View.VISIBLE);
 			} else {
-				buttonOtpViaCall.setVisibility(View.GONE);
+				tvCallMe.setVisibility(View.GONE);
 			}
 
 		} catch(Exception e){
 			e.printStackTrace();
-			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
-			buttonOtpViaCall.setVisibility(View.GONE);
+			tvCallMe.setVisibility(View.GONE);
 		}
 
 		rlOTPTimer.setOnClickListener(new View.OnClickListener() {
@@ -563,12 +283,14 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			}
 		});
 
-		buttonOtpViaCall.setOnClickListener(new View.OnClickListener() {
+		tvCallMe.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				initiateOTPCallAsync(OTPConfirmScreen.this, textViewOtpNumber.getText().toString());
+				startTimerForRetry();
 			}
 		});
+		startTimerForRetry();
 
 		new Handler().postDelayed(new Runnable() {
 			@Override
@@ -579,20 +301,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 	}
 
-	private void createEditTextOtp(){
-		if(otpLength == 4){
-			view4.setVisibility(View.GONE);
-			etOtp5.setVisibility(View.GONE);
-			view5.setVisibility(View.GONE);
-			etOtp6.setVisibility(View.GONE);
-			etOtp4.addTextChangedListener(new CustomTextWatcher(etOtp3, etOtp4, null));
-		} else if(otpLength == 5){
-			view5.setVisibility(View.GONE);
-			etOtp6.setVisibility(View.GONE);
-			etOtp5.addTextChangedListener(new CustomTextWatcher(etOtp4, etOtp5, null));
-		}
-	}
-
 	private void startOTPTimer(){
 		try{
 			long timerDuration = 10000;
@@ -600,24 +308,13 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				setRlOTPTimerVisibility(View.VISIBLE);
 				CustomCountDownTimer customCountDownTimer = new CustomCountDownTimer(timerDuration, 5);
 				customCountDownTimer.start();
+				Utils.hideKeyboard(this);
 			}
 			else{
 				throw new Exception();
 			}
 		} catch(Exception e){
 			setRlOTPTimerVisibility(View.GONE);
-		}
-	}
-
-	private String getLoggedInAccesToken(){
-		if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
-			return facebookRegisterData.accessToken;
-		}
-		else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
-			return googleRegisterData.accessToken;
-		}
-		else{
-			return emailRegisterData.accessToken;
 		}
 	}
 
@@ -714,9 +411,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				//buttonVerify.performClick();
 				missedCallDialog = DialogPopup.showLoadingDialogNewInstance(OTPConfirmScreen.this, "Loading...");
 				//rlProgress.setVisibility(View.VISIBLE);
-				progressBar.setVisibility(View.VISIBLE);
-				tvProgress.setText(getResources().getString(R.string.trying_to_verify));
-				progressBar.spin();
 				if (signupBy.equalsIgnoreCase("email")) {
 					if (onlyDigits) {
 						email = "+91" + email;
@@ -1282,20 +976,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 
 	public void performBackPressed(){
-		if(llLoginNew.getVisibility() == View.VISIBLE){
-			Animation animation4 = AnimationUtils.loadAnimation(this, R.anim.left_out);
-			animation4.setFillAfter(false);
-			animation4.setDuration(duration);
-			llLoginNew.startAnimation(animation4);
-
-			Animation animation5 = AnimationUtils.loadAnimation(this, R.anim.left_in);
-			animation5.setFillAfter(true);
-			animation5.setDuration(duration);
-			rlOTPContainer.startAnimation(animation5);
-
-			rlOTPContainer.setVisibility(View.VISIBLE);
-			llLoginNew.setVisibility(View.GONE);
-		} else {
 //			if (intentFromRegister) {
 //				Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
 //				intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());
@@ -1309,7 +989,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 //			}
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
-		}
 	}
 
 	@Override
@@ -1820,70 +1499,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		}
 	};
 
-	private class CustomTextWatcher implements TextWatcher{
-
-		EditText previousEt, currentEt, nextEt;
-
-		public CustomTextWatcher(EditText previousET, EditText currentEt, EditText nextEt) {
-			this.previousEt = previousET;
-			this.currentEt = currentEt;
-			this.nextEt = nextEt;
-		}
-
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			Log.v("customTextWatcher before", "---> "+s.length());
-		}
-
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			Log.v("customTextWatcher onText", "---> "+s.length());
-		}
-
-		@Override
-		public void afterTextChanged(Editable s) {
-			Log.v("customTextWatcher afterText", "---> "+s.length());
-			Log.v("currentEt length afterText", "---> "+currentEt.getText().length());
-			Log.v("s length afterText", "---> "+s.length());
-			if(s.length() == 2 && nextEt != null){
-				currentEt.setText(s.subSequence(0, s.length()-1));
-				nextEt.setText(s.subSequence(s.length()-1, s.length()));
-			}
-			if(s.length() > 0 && nextEt != null) {
-				nextEt.requestFocus();
-				nextEt.setSelection(nextEt.getText().length());
-				nextEt.setEnabled(true);
-			}
-		}
-	}
-
-	private class CustomBackKeyListener implements View.OnKeyListener{
-
-		EditText previousEt, nextEt;
-
-		public CustomBackKeyListener(EditText previousEt, EditText nextEt) {
-			this.previousEt = previousEt;
-			this.nextEt = nextEt;
-		}
-
-		@Override
-		public boolean onKey(View v, int keyCode, KeyEvent event) {
-			if(keyCode == KeyEvent.KEYCODE_DEL){
-				if(((EditText)v).getText().length() == 0 && previousEt != null) {
-					previousEt.setEnabled(true);
-					previousEt.requestFocus();
-					previousEt.setSelection(previousEt.getText().length());
-				}
-			} /*else if(((EditText)v).getText().length() == 1 && nextEt != null){
-				nextEt.requestFocus();
-			} else if(((EditText)v).getText().length() == 2 && nextEt != null){
-				nextEt.setText(((EditText)v).getText().subSequence(((EditText)v).getText().length()-1, ((EditText)v).getText().length()));
-				((EditText)v).setText(((EditText)v).getText().subSequence(0, ((EditText)v).getText().length()-1));
-				nextEt.requestFocus();
-			}*/
-			return false;
-		}
-	}
 
 	private void verifyClick(String otpCode, EditText editTextOTP){
 		if (otpCode.length() > 0) {
@@ -1933,6 +1548,67 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		}
 	}
 
+
+	private void giveAMissCall(){
+		try {
+			Utils.disableSMSReceiver(OTPConfirmScreen.this);
+			if(missedCallDialog != null) {
+				missedCallDialog.dismiss();
+			}
+			if(!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
+				DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
+						getResources().getString(R.string.give_missed_call_dialog_text),
+						getResources().getString(R.string.call_us),
+						getResources().getString(R.string.cancel),
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								giveAMissedCall = true;
+								Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
+										.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+								backFromMissedCall = true;
+							}
+						},
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+
+							}
+						}, false, false
+				);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private Runnable runnableRetryBlock;
+	private int secondsLeftForRetry = 15;
+	private void startTimerForRetry(){
+		if(runnableRetryBlock == null) {
+			runnableRetryBlock = new Runnable() {
+				@Override
+				public void run() {
+					if(secondsLeftForRetry > 0){
+						tvResendCode.setText(getString(R.string.resend_code_in, (secondsLeftForRetry > 9?"0:":"0:0")+secondsLeftForRetry));
+						tvCallMe.setText(getString(R.string.call_me_in, (secondsLeftForRetry > 9?"0:":"0:0")+secondsLeftForRetry));
+						tvResendCode.setEnabled(false);
+						tvCallMe.setEnabled(false);
+						secondsLeftForRetry--;
+						handler.postDelayed(runnableRetryBlock, 1000);
+					} else {
+						tvResendCode.setText(R.string.resend_code);
+						tvCallMe.setText(R.string.call_me);
+						tvResendCode.setEnabled(true);
+						tvCallMe.setEnabled(true);
+						handler.removeCallbacks(runnableRetryBlock);
+					}
+				}
+			};
+		}
+		secondsLeftForRetry = 15;
+		handler.post(runnableRetryBlock);
+	}
 
 }
 
