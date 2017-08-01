@@ -47,9 +47,7 @@ public class VendorMenuResponse {
     @Expose
     private int restuarantOutOfRadius;
 
-    @SerializedName("next_slot_time")
-    @Expose
-    private int next_slot_time;
+
 
     public boolean getRestuarantOutOfRadius() {
         return restuarantOutOfRadius == 1;

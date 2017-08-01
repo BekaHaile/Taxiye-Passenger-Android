@@ -304,6 +304,13 @@ public class MenusResponse implements Serializable {
 		@SerializedName("offer_text")
 		private String offerText;
 
+		@SerializedName("next_slot_time")
+		@Expose
+		private String next_slot_time;
+
+		public String  getNext_slot_time() {
+			return next_slot_time;
+		}
 
 		public String getOfferText() {
 			return offerText;
