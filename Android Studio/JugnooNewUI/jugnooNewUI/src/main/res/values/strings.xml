@@ -1351,6 +1351,11 @@
     <string name="service_date">Service Date</string>
     <string name="service_charges">Service Charges</string>
     <string name="action_repeat_order">Repeat Order</string>
+    <string name="reorder_rest_unavailable">Oops! This restaurant is not accepting any orders now. Kindly order from some other restaurant.</string>
+    <string name="reorder_items_missing">Sorry, some of the items in your cart aren\'t available at the restaurant. Please review your cart for details.</string>
+    <string name="reorder_no_items_available">Sorry, none of the items in your cart are available at the restaurant. To order from the same restaurant, Press \'Edit Order\'. If you\'d like to order from another restaurant, Press \'Change\'.</string>
+    <string name="edit_order">Edit Order</string>
+    <string name="change_order">Change Order</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>
