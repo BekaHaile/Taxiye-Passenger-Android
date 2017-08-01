@@ -89,7 +89,9 @@ public class ApiFetchRestaurantMenu {
 
                                         //Restaurant is not available
                                         if(productsResponse.getVendor()!=null && productsResponse.getVendor().getIsAvailable()!=1){
+                                            DialogPopup.dismissLoadingDialog();
                                             DialogPopup.alertPopup(activity, "", activity.getString(R.string.reorder_rest_unavailable));
+
                                             return;
                                         }
 
