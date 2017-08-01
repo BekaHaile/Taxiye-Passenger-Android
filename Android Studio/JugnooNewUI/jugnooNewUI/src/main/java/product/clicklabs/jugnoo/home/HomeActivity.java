@@ -5874,7 +5874,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                                 if (map != null) {
                                                                     if (HomeActivity.this.hasWindowFocus() && driverLocationMarker != null) {
                                                                         MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-																				driverCurrentLatLng, new LatLngInterpolator.Spherical(), null, false, null, 0);
+																				driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0);
                                                                         updateDriverETAText(passengerScreenMode);
                                                                     }
                                                                 }

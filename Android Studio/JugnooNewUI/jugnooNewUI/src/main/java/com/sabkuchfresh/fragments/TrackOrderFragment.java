@@ -423,6 +423,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	};
 
 	TimerTask timerTask;
+	LatLng latLngCurr;
 	private TimerTask getTimerTask() {
 		timerTask = new TimerTask() {
 			@Override
@@ -453,13 +454,14 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 									try {
 										if(status == EngagementStatus.STARTED.getOrdinal()) {
 											latLngsDriverAnim.clear();
+											latLngCurr = markerDriver != null ? markerDriver.getPosition() : latLngDriver;
 											if (markerDriver == null) {
 												markerDriver = googleMap.addMarker(getMarkerOptionsForResource(latLngDriver,
 														R.drawable.ic_bike_track_order_marker, 38f, 94f, 0.5f, 0.5f, 2));
 												markerDriver.setRotation((float) bearing);
 											} else {
 												MarkerAnimation.animateMarkerToICS("-1", markerDriver,
-														latLngDriver, new LatLngInterpolator.Spherical(),
+														latLngDriver, new LatLngInterpolator.LinearFixed(),
 														callbackAnim, true, googleMap, ContextCompat.getColor(activity, R.color.theme_color));
 											}
 											if (!zoomedFirstTime) {
@@ -528,22 +530,27 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 										builder.include(deliveryLatLng).include(latLngDriver);
 										for(LatLng latLng : latLngsDriverAnim){builder.include(latLng);}
 
-										int positionCentre = 0;
-										double distance = Double.MAX_VALUE;
+										int positionNearPrev = 0, positionNearCurr = 0;
+										double distanceNearPrev = Double.MAX_VALUE, distanceNearCurr = Double.MAX_VALUE;
 										for(int i=0; i<list.size(); i++){
 											double distI = MapUtils.distance(latLngDriver, list.get(i));
-											if(distI < distance){
-												distance = distI;
-												positionCentre = i;
+											if(distI < distanceNearPrev){
+												distanceNearPrev = distI;
+												positionNearPrev = i;
+											}
+											double distC = MapUtils.distance(latLngCurr, list.get(i));
+											if(distC < distanceNearCurr){
+												distanceNearCurr = distC;
+												positionNearCurr = i;
 											}
 										}
 										polylineOptions1.add(pickupLatLng);
-										for(int j=0; j<positionCentre; j++){
+										for(int j=0; j<positionNearCurr; j++){
 											polylineOptions1.add(list.get(j));
 										}
-										polylineOptions1.add(latLngDriver);
+										polylineOptions1.add(latLngCurr);
 										polylineOptions2.add(latLngDriver);
-										for (int k = positionCentre+1; k < list.size(); k++) {
+										for (int k = positionNearPrev+1; k < list.size(); k++) {
 											polylineOptions2.add(list.get(k));
 											builder.include(list.get(k));
 										}
