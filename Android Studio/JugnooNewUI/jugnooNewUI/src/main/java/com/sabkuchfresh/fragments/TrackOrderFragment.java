@@ -68,6 +68,7 @@ import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.MarkerAnimation;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
@@ -339,6 +340,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		Prefs.with(activity).save(Constants.SP_TRACKING_LAST_BEARING, markerDriver != null ? markerDriver.getRotation() : 0f);
 		LocalBroadcastManager.getInstance(activity).unregisterReceiver(orderUpdateBroadcast);
 	}
 
@@ -441,7 +443,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 							final double latitude = jObj.optDouble(Constants.KEY_LATITUDE, 0d);
 							final double longitude = jObj.optDouble(Constants.KEY_LONGITUDE, 0d);
-							final double bearing = jObj.optDouble(Constants.KEY_BEARING, 0d);
+							final double bearing = jObj.optDouble(Constants.KEY_BEARING, 0);
 							final String eta = jObj.optString(Constants.KEY_ETA, "");
 							final String trackingInfo = jObj.optString(Constants.KEY_TRACKING_INFO, "");
 							final int status = jObj.optInt(Constants.KEY_STATUS, EngagementStatus.STARTED.getOrdinal());
@@ -458,7 +460,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 											if (markerDriver == null) {
 												markerDriver = googleMap.addMarker(getMarkerOptionsForResource(latLngDriver,
 														R.drawable.ic_bike_track_order_marker, 38f, 94f, 0.5f, 0.5f, 2));
-												markerDriver.setRotation((float) bearing);
+												markerDriver.setRotation(Prefs.with(activity).getFloat(Constants.SP_TRACKING_LAST_BEARING, (float)bearing));
 											} else {
 												MarkerAnimation.animateMarkerToICS("-1", markerDriver,
 														latLngDriver, new LatLngInterpolator.LinearFixed(),

@@ -760,4 +760,5 @@ public interface Constants {
     String KEY_IS_FEEDBACK_PENDING = "is_feedback_pending";
     String KEY_CUSTOMER_COMMENT = "customer_comment";
     String KEY_JOB_ID_2 = "job_id_2";
+    String SP_TRACKING_LAST_BEARING = "sp_tracking_last_bearing";
 }
