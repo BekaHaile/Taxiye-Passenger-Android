@@ -633,6 +633,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 setSelectedLatLng(searchResult.getLatLng());
                 setSelectedAddressId(searchResult.getId());
                 setSelectedAddressType(searchResult.getName());
+                saveDeliveryAddressModel();
+
             }else{
                 setSelectedAddress(reoderAddress);
                 setSelectedLatLng(reorderLatLng);
