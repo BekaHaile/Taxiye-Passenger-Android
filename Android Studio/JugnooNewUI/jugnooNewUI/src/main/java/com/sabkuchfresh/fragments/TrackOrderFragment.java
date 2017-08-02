@@ -325,9 +325,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 						googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 					}
 				} else {
-					googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator
-							.createBoundsWithMinDiagonal(llbBuilder, 140), (int) (padding * ASSL.minRatio())),
-							MAP_ANIMATE_DURATION, null);
+					googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 				}
 			} else {
 				Utils.showToast(activity, getString(R.string.waiting_for_location));
@@ -528,9 +526,6 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 												.color(ContextCompat.getColor(activity,
 														R.color.text_color_30alpha)).geodesic(true);
 
-										LatLngBounds.Builder builder = new LatLngBounds.Builder();
-										builder.include(deliveryLatLng).include(latLngDriver);
-										for(LatLng latLng : latLngsDriverAnim){builder.include(latLng);}
 
 										int positionNearPrev = 0, positionNearCurr = 0;
 										double distanceNearPrev = Double.MAX_VALUE, distanceNearCurr = Double.MAX_VALUE;
@@ -554,7 +549,6 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 										polylineOptions2.add(latLngDriver);
 										for (int k = positionNearPrev+1; k < list.size(); k++) {
 											polylineOptions2.add(list.get(k));
-											builder.include(list.get(k));
 										}
 										polylineOptions2.add(deliveryLatLng);
 										if(showDeliveryRoute == 1 && list.size() > 0) {

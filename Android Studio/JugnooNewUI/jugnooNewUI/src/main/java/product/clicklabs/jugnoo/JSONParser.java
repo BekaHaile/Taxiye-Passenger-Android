@@ -1436,8 +1436,9 @@ public class JSONParser implements Constants {
                     String carNumber = "";
                     double bearing = driver.getBearing() == null ? 0 : driver.getBearing();
                     int vehicleType = driver.getVehicleType() == null ? VEHICLE_AUTO : driver.getVehicleType();
+                    String brandingStatus = driver.getBrandingStatus();
                     Data.autoData.getDriverInfos().add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage,
-                            phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds()));
+                            phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(), brandingStatus));
                 }
             }
         } catch (Exception e) {

@@ -151,8 +151,9 @@ public class ApiFindADriver {
 						bearing = driver.getBearing();
 					}
 					int vehicleType = driver.getVehicleType() == null ? Constants.VEHICLE_AUTO : driver.getVehicleType();
+					String brandingStatus = driver.getBrandingStatus();
 					Data.autoData.getDriverInfos().add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
-							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds()));
+							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(), brandingStatus));
 				}
 			}
 

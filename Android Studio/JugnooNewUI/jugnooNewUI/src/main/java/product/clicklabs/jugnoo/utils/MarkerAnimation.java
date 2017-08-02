@@ -38,6 +38,7 @@ public class MarkerAnimation {
     private static final String TAG = MarkerAnimation.class.getSimpleName();
     private static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
     private static final double ANIMATION_TIME = 14000;
+    private static final double MAX_DISTANCE = 14000;
 
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         final LatLng startPosition = marker.getPosition();
