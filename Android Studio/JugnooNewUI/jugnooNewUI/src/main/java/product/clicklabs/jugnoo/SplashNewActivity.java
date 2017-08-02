@@ -366,6 +366,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 			MyApplication.getInstance().initializeServerURL(this);
 
+			Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
+			//clear Menu Reorder Prefs
+			Prefs.with(this).remove(Constants.ORDER_STATUS_PENDING_ID);
+			Prefs.with(this).remove(Constants.ORDER_STATUS_JSON_ARRAY);
 
 			try {
 				Data.TRANSFER_FROM_JEANIE = 0;
@@ -382,7 +386,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 
 
-			Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
+
+
 			Utils.disableSMSReceiver(this);
 
 			Data.locationSettingsNoPressed = false;

@@ -11,16 +11,16 @@ import java.util.List;
  */
 
 public class ItemSelected {
-	@SerializedName("restaurant_item_id")
+	@SerializedName(value = "restaurant_item_id",alternate = {"item_id"})
 	@Expose
 	private Integer restaurantItemId;
-	@SerializedName("customize_items")
+	@SerializedName(value = "customize_items",alternate = {"customisations_json"})
 	@Expose
 	private List<CustomizeItemSelected> customizeItemSelectedList;
-	@SerializedName("quantity")
+	@SerializedName(value = "quantity",alternate = {"item_quantity"})
 	@Expose
 	private Integer quantity;
-	@SerializedName("totalPrice")
+	@SerializedName(value = "totalPrice",alternate = {"item_amount"})
 	@Expose
 	private Double totalPrice;
 	@SerializedName("customizeText")

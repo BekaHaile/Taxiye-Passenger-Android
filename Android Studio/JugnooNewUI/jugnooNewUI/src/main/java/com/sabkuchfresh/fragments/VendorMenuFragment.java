@@ -286,9 +286,14 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                             if (activity.isRefreshCart()) {
 							}
                             activity.setRefreshCart(false);
-                            if(!activity.isOrderJustCompleted()) {
-								activity.setMinOrderAmountText(VendorMenuFragment.this);
-							}
+                            if(activity.getVendorOpened()!=null && !TextUtils.isEmpty(activity.getVendorOpened().getNext_slot_time())){
+                                activity.textViewMinOrder.setText(activity.getVendorOpened().getNext_slot_time());
+                                activity.textViewMinOrder.setVisibility(View.VISIBLE);
+                            }else if(!activity.isOrderJustCompleted()){
+                                activity.setMinOrderAmountText(VendorMenuFragment.this);
+                            }
+
+
                         } catch (Exception e) {
                         }
                     }
@@ -455,6 +460,11 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 viewPromoTitle.setVisibility(View.GONE);
                 rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.GONE);
             }
+            if(!TextUtils.isEmpty(activity.getVendorOpened().getNext_slot_time())){
+                activity.textViewMinOrder.setText(activity.getVendorOpened().getNext_slot_time());
+                activity.textViewMinOrder.setVisibility(View.VISIBLE);
+            }
+
         }
     }
 

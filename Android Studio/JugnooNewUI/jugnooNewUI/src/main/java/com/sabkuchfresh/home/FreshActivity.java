@@ -144,6 +144,7 @@ import com.squareup.picasso.Picasso;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -596,7 +597,49 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             fuguNotificationConfig.handleFuguPushNotification(FreshActivity.this, Data.getFuguChatBundle());
             Data.setFuguChatBundle(null);
         }
+        checkForReorderMenus();
 
+    }
+
+    private void checkForReorderMenus() {
+
+
+        try {
+            Integer restaurantId = Prefs.with(this).getInt(Constants.ORDER_STATUS_PENDING_ID,-1);
+            Integer orderId = Prefs.with(this).getInt(Constants.ORDER_STATUS_ORDER_ID,-1);
+            String jsonArray = Prefs.with(this).getString(Constants.ORDER_STATUS_JSON_ARRAY,null);
+            LatLng reorderLatLng = Prefs.with(this).getObject(Constants.ORDER_STATUS_LAT_LNG,LatLng.class);
+            String reoderAddress = Prefs.with(this).getString(Constants.ORDER_STATUS_ADDRESS,null);
+            if(restaurantId!=-1 && jsonArray!=null){
+
+
+                fetchRestaurantMenuAPI(restaurantId,true,new JSONArray(jsonArray), reorderLatLng, orderId, reoderAddress);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Prefs.with(this).remove(Constants.ORDER_STATUS_PENDING_ID);
+        Prefs.with(this).remove(Constants.ORDER_STATUS_JSON_ARRAY);
+        Prefs.with(this).remove(Constants.ORDER_STATUS_ORDER_ID);
+        Prefs.with(this).remove(Constants.ORDER_STATUS_LAT_LNG);
+    }
+
+    public void setReorderLatlngToAdrress(LatLng reorderLatLng,String  reoderAddress) {
+        if(reorderLatLng!=null){
+            SearchResult searchResult = homeUtil.getNearBySavedAddress(this, reorderLatLng,
+                    Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
+            if (searchResult!=null) {
+                setSelectedAddress(searchResult.getAddress());
+                setSelectedLatLng(searchResult.getLatLng());
+                setSelectedAddressId(searchResult.getId());
+                setSelectedAddressType(searchResult.getName());
+            }else{
+                setSelectedAddress(reoderAddress);
+                setSelectedLatLng(reorderLatLng);
+                setSelectedAddressId(0);
+                setSelectedAddressType("");
+            }
+        }
     }
 
     private void setUpAddPostForFeedFragment() {
@@ -956,6 +999,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedAddressType("");
 
                     Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
+                    saveDeliveryAddressModel();
                 }
                 // else if selected address is updated by user, updating address related local variables
                 // from SP search result
@@ -963,6 +1007,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedLatLng(searchResultLastFMM.getLatLng());
                     setSelectedAddress(searchResultLastFMM.getAddress());
                     setSelectedAddressType(searchResultLastFMM.getName());
+                    saveDeliveryAddressModel();
                 }
                 // else find any tagged address near current set location, if that is not tagged
                 else if(getSelectedAddressId() == 0){
@@ -1755,7 +1800,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
      * @param fragment fragment to call this
      * @return returns 1 if visibility changed by this function else 0
      */
-    public int setMinOrderAmountText(Fragment fragment) {
+    public int  setMinOrderAmountText(Fragment fragment) {
         try {
             if (getFreshCheckoutMergedFragment() == null) {
                 if (getFreshFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
@@ -2705,7 +2750,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     public void clearMenusCart() {
-//        Prefs.with(this).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
+       Prefs.with(this).remove(Constants.CART_STATUS_REORDER_ID);
         Paper.book().delete(DB_MENUS_CART);
         createAppCart(Config.getMenusClientId());
     }
@@ -3504,7 +3549,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 			}
             setLocationAddress(address);
             if(deliveryAddressView != null) {
-                deliveryAddressView.showConfirmAddressBar(TextUtils.isEmpty(getSelectedAddressType()) && !TextUtils.isEmpty(address));
+                deliveryAddressView.showConfirmAddressBar(TextUtils.isEmpty(getSelectedAddressType()) || TextUtils.isEmpty(address));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -3909,12 +3954,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             } catch (Exception e) {
             }
         }
-        if (deliveryAddressModel != null) {
-            setSelectedAddress(deliveryAddressModel.getAddress());
-            setSelectedLatLng(deliveryAddressModel.getLatLng());
-            setSelectedAddressId(deliveryAddressModel.getId());
-            setSelectedAddressType(deliveryAddressModel.getType());
-            onAddressUpdated(new AddressAdded(true, dontRefresh));
+        try {
+            if (deliveryAddressModel != null) {
+                setSelectedAddress(deliveryAddressModel.getAddress());
+                setSelectedLatLng(deliveryAddressModel.getLatLng());
+                setSelectedAddressId(deliveryAddressModel.getId());
+                setSelectedAddressType(deliveryAddressModel.getType());
+                onAddressUpdated(new AddressAdded(true, dontRefresh));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -4366,7 +4415,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     private ApiFetchRestaurantMenu apiFetchRestaurantMenu;
-    public void fetchRestaurantMenuAPI(int restaurantId, boolean directCheckout){
+    public void fetchRestaurantMenuAPI(int restaurantId, boolean directCheckout, final JSONArray jsonArray, final LatLng latLng, final int reorderStatusId, final String reoderDelAddress){
+
+
         if(apiFetchRestaurantMenu == null){
             apiFetchRestaurantMenu = new ApiFetchRestaurantMenu(this, new ApiFetchRestaurantMenu.Callback() {
                 @Override
@@ -4381,7 +4432,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void onRetry(View view, int restaurantId, boolean directCheckout) {
-                    fetchRestaurantMenuAPI(restaurantId, directCheckout);
+                    fetchRestaurantMenuAPI(restaurantId, directCheckout, jsonArray, latLng, reorderStatusId, reoderDelAddress);
                 }
 
                 @Override
@@ -4391,7 +4442,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             });
         }
         apiFetchRestaurantMenu.hit(restaurantId, getSelectedLatLng().latitude,
-                getSelectedLatLng().longitude, directCheckout);
+                getSelectedLatLng().longitude, directCheckout, jsonArray, latLng, reorderStatusId, reoderDelAddress);
     }
 
 

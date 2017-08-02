@@ -43,8 +43,15 @@ public class VendorMenuResponse {
     @SerializedName("restaurant_info")
     @Expose
     private MenusResponse.Vendor vendor;
+    @SerializedName("out_of_radius")
+    @Expose
+    private int restuarantOutOfRadius;
 
 
+
+    public boolean getRestuarantOutOfRadius() {
+        return restuarantOutOfRadius == 1;
+    }
 
     public MenusPromotionInfo getMenusPromotionInfo() {
         return menusPromotionInfo;
