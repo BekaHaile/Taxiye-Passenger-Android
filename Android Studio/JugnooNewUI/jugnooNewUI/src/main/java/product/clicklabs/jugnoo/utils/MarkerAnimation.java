@@ -22,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONObject;
 
@@ -420,7 +421,13 @@ public class MarkerAnimation {
                                 polylines.add(foregroundPolyline);
                                 animatePath(currLatLng, googleMap, latLngList, durationList, pathResolvedColor, pathWidth, latLngInterpolator);
                             } else {
-
+                                polylines.add(foregroundPolyline);
+                                PolylineOptions polylineOptions = new PolylineOptions().color(pathResolvedColor).width(pathWidth).geodesic(true);
+                                for(Polyline polyline : polylines){
+                                    polylineOptions.addAll(polyline.getPoints());
+                                }
+                                clearPolylines();
+                                polylines.add(googleMap.addPolyline(polylineOptions));
                             }
                         }
                     });
