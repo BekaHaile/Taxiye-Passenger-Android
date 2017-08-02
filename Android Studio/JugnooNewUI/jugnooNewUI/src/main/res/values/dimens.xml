@@ -857,5 +857,8 @@
     <dimen name="px_33">
         33px
     </dimen>
+    <dimen name="dp_182">
+        182dp
+    </dimen>
 
 </resources>

@@ -1,350 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rlOTPContainer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
-
-    <ImageView
-        android:id="@+id/ivTopBanner"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/px_160"
-        android:src="@drawable/bg_top_2"
-        android:tag="mwar" />
-
-    <LinearLayout
-        android:id="@+id/linearLayoutMain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:splitMotionEvents="false">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/px_150"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <LinearLayout
+<RelativeLayout android:id="@+id/rlOTPContainer"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
-                <ImageView
-                    android:id="@+id/imageViewWalletIcon"
-                    style="@style/payment_option_icon_big_dimen"
-                    android:layout_marginTop="0px"
-                    android:src="@drawable/ic_paytm_big"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/otpHelpText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0px"
-                    android:text="@string/enter_otp_recieved_on"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_32" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="20px"
-                    android:layout_marginTop="20px"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-
-                    <TextView
-                        android:id="@+id/textViewOtpNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text=""
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_42"
-                        app:font="@string/maven"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewSep"
-                        android:layout_width="2px"
-                        android:layout_height="35px"
-                        android:layout_marginLeft="10px"
-                        android:background="@color/stroke_color_light"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:id="@+id/imageViewChangePhoneNumber"
-                        android:layout_width="58px"
-                        android:layout_height="58px"
-                        android:padding="15px"
-                        android:src="@drawable/ic_otp_edit_number_selector"
-                        android:tag="mwar"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </LinearLayout>
-
-        </LinearLayout>
-
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/llEditText"
+            android:id="@+id/linearLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            ></LinearLayout>
+            android:splitMotionEvents="false">
 
-        <EditText
-            android:id="@+id/editTextOTP"
-            android:layout_width="410px"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="0px"
-            android:background="#0000"
-            android:gravity="center"
-            android:hint="@string/nl_otp_enter_otp"
-            android:inputType="number"
-            android:paddingBottom="15px"
-            android:paddingLeft="20px"
-            android:paddingRight="20px"
-            android:visibility="gone"
-            android:paddingTop="15px"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color_hint"
-            android:textCursorDrawable="@drawable/cursor_black"
-            android:textSize="@dimen/text_size_32" />
 
-        <ImageView
-            android:layout_width="410px"
-            android:layout_height="2px"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal"
-            android:src="@color/stroke_light_grey"
-            />
+            <ImageView
+                android:id="@+id/ivTopBanner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px_160"
+                android:scaleX="-1"
+                android:src="@drawable/bg_top_2"
+                android:tag="mwar"/>
 
-        <LinearLayout
-            android:id="@+id/llOTP"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px_100"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            <ImageView
+                android:id="@+id/ivGraphic"
+                android:layout_width="@dimen/dp_182"
+                android:layout_height="@dimen/dp_80"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_otp_graphic"
+                android:tag="@string/dont_touch_me"
+                />
 
-            <include layout="@layout/layout_otp_edittext" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="411px"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone">
-
-            <include layout="@layout/layout_otp_edittext" />
-
-            <product.clicklabs.jugnoo.widgets.PinEntryEditText
-                android:id="@+id/txt_pin_entry"
-                android:layout_width="410px"
+            <TextView
+                android:id="@+id/otpHelpText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/cursor_black"
-                android:digits="1234567890"
-                android:inputType="number"
-                android:maxLength="4"
-                android:textIsSelectable="false"
-                android:textSize="@dimen/text_size_44" />
-
-        </RelativeLayout>
-
-        <ImageView
-            android:layout_width="410px"
-            android:layout_height="2px"
-            android:layout_gravity="center_horizontal"
-            android:src="@color/stroke_light_grey"
-            android:visibility="gone"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/px_40"
-            android:text="@string/did_not_receive_otp"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
-            android:textStyle="bold"
-            app:font="maven" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/px_10"
-            android:text="@string/try_one_of_the_following"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
-            app:font="@string/maven_r" />
-
-        <LinearLayout
-            android:id="@+id/rlResendOTP"
-            android:layout_width="500px"
-            android:layout_height="104px"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/px_30"
-            android:background="@drawable/capsule_theme_login_selector"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/ivResend"
-                android:layout_width="@dimen/px_33"
-                android:layout_height="@dimen/px_38"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/px_20"
-                android:clickable="false"
-                android:duplicateParentState="true"
-                android:src="@drawable/ic_resend_otp"
+                android:layout_marginTop="@dimen/px_25"
+                android:text="@string/enter_otp_recieved_on"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32"
                 />
 
             <TextView
-                android:id="@+id/tvOtpViaCall"
+                android:id="@+id/textViewOtpNumber"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/bFacebook"
-                android:text="@string/resend_otp"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_26"
-                app:font="maven" />
-
-        </LinearLayout>
-
-
-        <Button
-            android:id="@+id/buttonVerify"
-            style="@style/ButtonTheme"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="100px"
-            android:text="@string/nl_otp_verify"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/buttonOtpViaCall"
-            android:layout_width="500px"
-            android:layout_height="104px"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="25px"
-            android:background="@drawable/capsule_theme_login_selector"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="28px"
-                android:layout_height="30px"
-                android:layout_marginRight="16px"
-                android:src="@drawable/ic_call_otp"
-                android:tag="mwar" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:text="@string/receive_otp_via_call"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_26"
-                android:textAllCaps="true"
+                android:text=""
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_42"
                 app:font="@string/maven"
+                android:layout_marginTop="@dimen/px_10"
                 />
-        </LinearLayout>
 
-        <!-- Missed call Button -->
-        <LinearLayout
-            android:id="@+id/linearLayoutGiveAMissedCall"
-            android:layout_width="500px"
-            android:layout_height="104px"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="25px"
-            android:background="@drawable/capsule_theme_login_selector"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="37px"
-                android:layout_height="34px"
-                android:layout_marginRight="16px"
-                android:src="@drawable/ic_misscall"
-                android:tag="mwar" />
+            <LinearLayout
+                android:id="@+id/llEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/px_20"
+                />
 
             <TextView
-                android:id="@+id/textViewGiveAMissedCall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/nl_otp_give_missed_call"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_26"
-                android:textAllCaps="true"
-                />
+                android:id="@+id/textViewScroll"
+                android:layout_width="10px"
+                android:layout_height="10px"/>
+
         </LinearLayout>
 
-        <!-- Password Login -->
-        <LinearLayout
-            android:id="@+id/llPasswordLogin"
-            android:layout_width="460px"
-            android:layout_height="@dimen/px_96"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="25px"
-            android:background="@drawable/capsule_login_button_selector"
-            android:gravity="center"
-            android:visibility="gone"
-            android:orientation="horizontal">
+    </ScrollView>
 
-            <ImageView
-                android:layout_width="37px"
-                android:layout_height="34px"
-                android:layout_marginRight="@dimen/px_20"
-                android:src="@drawable/ic_lock"
-                android:tag="mwar" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/use_password_to_login"
-                android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_30"
-                app:font="@string/maven_r" />
-        </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/rlRetryOptions"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_58"
+        android:tag="@string/dont_touch_me"
+        android:layout_alignParentBottom="true"
+        >
+
 
         <TextView
-            android:id="@+id/textViewScroll"
-            android:layout_width="10px"
-            android:layout_height="10px" />
+            android:id="@+id/tvResendCode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawablePadding="@dimen/dp_6"
+            android:drawableLeft="@drawable/ic_otp_retry"
+            android:padding="@dimen/dp_15"
+            android:textSize="@dimen/sp_15"
+            android:textColor="@color/text_color_selector"
+            android:text="Resend Code in 0:15"
+            android:gravity="center_vertical"
+            app:font="@string/maven"
+            />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tvCallMe"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawablePadding="@dimen/dp_6"
+            android:layout_alignParentRight="true"
+            android:drawableLeft="@drawable/ic_otp_call"
+            android:padding="@dimen/dp_15"
+            android:textSize="@dimen/sp_15"
+            android:textColor="@color/text_color_selector"
+            android:text="Call Me in 0:15"
+            android:gravity="center_vertical"
+            app:font="@string/maven"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/stroke_light_grey_alpha"
+            />
+
+    </RelativeLayout>
 
 
-    <ImageView
-        android:id="@+id/ivBottomBanner"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/px_160"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/splash_bottom_building_bg2"
-        android:tag="mwar"
 
-        />
 
-    <!--new JSONObject("{\"flag\":143,\"message\":\"We already have an active request for changing to this contact number. Please wait for an hour before requesting again.\"}")-->
 </RelativeLayout>

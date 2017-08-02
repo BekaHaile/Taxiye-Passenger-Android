@@ -68,6 +68,7 @@ import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.MarkerAnimation;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
@@ -313,20 +314,24 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 				if(points > 0) {
 					if(tiltState) {
-						LatLngBounds latLngBounds = getMapLatLngBounds(llbBuilder);
-						CameraPosition cameraPosition = new CameraPosition.Builder()
-								.target(MapLatLngBoundsCreator.move(latLngBounds.getCenter(), -1500, 0))
-								.zoom(12)
-								.tilt(40)
-								.build();
-						googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), MAP_ANIMATE_DURATION, null);
+						googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+//						handler.postDelayed(new Runnable() {
+//							@Override
+//							public void run() {
+//								CameraPosition cameraPosition = new CameraPosition.Builder()
+//										.target(MapLatLngBoundsCreator.move(googleMap.getCameraPosition().target, zoomedFirstTime?0:-1500, 0))
+//										.zoom(googleMap.getCameraPosition().zoom)
+//										.tilt(40)
+//										.build();
+//
+//								googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), MAP_ANIMATE_DURATION, null);
+//							}
+//						}, MAP_ANIMATE_DURATION);
 					} else {
 						googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 					}
 				} else {
-					googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator
-							.createBoundsWithMinDiagonal(llbBuilder, 140), (int) (padding * ASSL.minRatio())),
-							MAP_ANIMATE_DURATION, null);
+					googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 				}
 			} else {
 				Utils.showToast(activity, getString(R.string.waiting_for_location));
@@ -339,6 +344,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		Prefs.with(activity).save(Constants.SP_TRACKING_LAST_BEARING, markerDriver != null ? markerDriver.getRotation() : 0f);
 		LocalBroadcastManager.getInstance(activity).unregisterReceiver(orderUpdateBroadcast);
 	}
 
@@ -410,9 +416,20 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			latLngsDriverAnim.clear();
 			latLngsDriverAnim.addAll(latLngs);
 		}
+
+		@Override
+		public void onAnimComplete() {
+
+		}
+
+		@Override
+		public void onAnimNotDone() {
+
+		}
 	};
 
 	TimerTask timerTask;
+	LatLng latLngCurr;
 	private TimerTask getTimerTask() {
 		timerTask = new TimerTask() {
 			@Override
@@ -430,7 +447,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 							final double latitude = jObj.optDouble(Constants.KEY_LATITUDE, 0d);
 							final double longitude = jObj.optDouble(Constants.KEY_LONGITUDE, 0d);
-							final double bearing = jObj.optDouble(Constants.KEY_BEARING, 0d);
+							final double bearing = jObj.optDouble(Constants.KEY_BEARING, 0);
 							final String eta = jObj.optString(Constants.KEY_ETA, "");
 							final String trackingInfo = jObj.optString(Constants.KEY_TRACKING_INFO, "");
 							final int status = jObj.optInt(Constants.KEY_STATUS, EngagementStatus.STARTED.getOrdinal());
@@ -443,14 +460,15 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 									try {
 										if(status == EngagementStatus.STARTED.getOrdinal()) {
 											latLngsDriverAnim.clear();
+											latLngCurr = markerDriver != null ? markerDriver.getPosition() : latLngDriver;
 											if (markerDriver == null) {
 												markerDriver = googleMap.addMarker(getMarkerOptionsForResource(latLngDriver,
 														R.drawable.ic_bike_track_order_marker, 38f, 94f, 0.5f, 0.5f, 2));
-												markerDriver.setRotation((float) bearing);
+												markerDriver.setRotation(Prefs.with(activity).getFloat(Constants.SP_TRACKING_LAST_BEARING, (float)bearing));
 											} else {
 												MarkerAnimation.animateMarkerToICS("-1", markerDriver,
-														latLngDriver, new LatLngInterpolator.Spherical(),
-														callbackAnim);
+														latLngDriver, new LatLngInterpolator.LinearFixed(),
+														callbackAnim, true, googleMap, ContextCompat.getColor(activity, R.color.theme_color));
 											}
 											if (!zoomedFirstTime) {
 												zoomToDriverAndDrop();
@@ -514,28 +532,29 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 												.color(ContextCompat.getColor(activity,
 														R.color.text_color_30alpha)).geodesic(true);
 
-										LatLngBounds.Builder builder = new LatLngBounds.Builder();
-										builder.include(deliveryLatLng).include(latLngDriver);
-										for(LatLng latLng : latLngsDriverAnim){builder.include(latLng);}
 
-										int positionCentre = 0;
-										double distance = Double.MAX_VALUE;
+										int positionNearPrev = 0, positionNearCurr = 0;
+										double distanceNearPrev = Double.MAX_VALUE, distanceNearCurr = Double.MAX_VALUE;
 										for(int i=0; i<list.size(); i++){
 											double distI = MapUtils.distance(latLngDriver, list.get(i));
-											if(distI < distance){
-												distance = distI;
-												positionCentre = i;
+											if(distI < distanceNearPrev){
+												distanceNearPrev = distI;
+												positionNearPrev = i;
+											}
+											double distC = MapUtils.distance(latLngCurr, list.get(i));
+											if(distC < distanceNearCurr){
+												distanceNearCurr = distC;
+												positionNearCurr = i;
 											}
 										}
 										polylineOptions1.add(pickupLatLng);
-										for(int j=0; j<positionCentre; j++){
+										for(int j=0; j<positionNearCurr; j++){
 											polylineOptions1.add(list.get(j));
 										}
-										polylineOptions1.add(latLngDriver);
+										polylineOptions1.add(latLngCurr);
 										polylineOptions2.add(latLngDriver);
-										for (int k = positionCentre+1; k < list.size(); k++) {
+										for (int k = positionNearPrev+1; k < list.size(); k++) {
 											polylineOptions2.add(list.get(k));
-											builder.include(list.get(k));
 										}
 										polylineOptions2.add(deliveryLatLng);
 										if(showDeliveryRoute == 1 && list.size() > 0) {

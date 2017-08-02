@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.utils;
 /**
  * Created by socomo on 10/23/15.
  */
+
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
@@ -12,12 +13,16 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.util.Property;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONObject;
 
@@ -33,8 +38,9 @@ import retrofit.mime.TypedByteArray;
 public class MarkerAnimation {
 
     private static final String TAG = MarkerAnimation.class.getSimpleName();
-    public static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
+    private static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
     private static final double ANIMATION_TIME = 14000;
+    private static final double MAX_DISTANCE = 14000;
 
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         final LatLng startPosition = marker.getPosition();
@@ -85,16 +91,24 @@ public class MarkerAnimation {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim) {
+    public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, boolean animateRoute, GoogleMap googleMap, int pathResolvedColor) {
 
         try {
             if(MapUtils.distance(marker.getPosition(), finalPosition) < 80
 					|| MapUtils.distance(marker.getPosition(), finalPosition) > 2000){
                 //marker.setPosition(finalPosition);
-                animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator);
+                animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim);
+                if(animateRoute && googleMap != null){
+                    List<LatLng> list = new ArrayList<>();
+                    list.add(finalPosition);
+                    List<Double> durationList = new ArrayList<>();
+                    durationList.add(ANIMATION_TIME);
+                    clearPolylines();
+                    animatePath(marker.getPosition(), googleMap, list, durationList, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
+                }
 			}
 			else{
-                getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim));
+                getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim, animateRoute, googleMap, pathResolvedColor));
                 if(getDirectionsAsyncs.size() == 1){
                     getDirectionsAsyncs.get(0).execute();
                 }
@@ -106,30 +120,65 @@ public class MarkerAnimation {
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
+            if(callbackAnim != null){
+                callbackAnim.onAnimNotDone();
+            }
         }
 
     }
 
+
+    public static void animateMarkerOnList(Marker marker, List<LatLng> list, final LatLngInterpolator latLngInterpolator, GoogleMap googleMap, int pathResolvedColor){
+        getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, null, list, true, googleMap, pathResolvedColor));
+        Log.e("getDirectionsAsyncs.size", "="+getDirectionsAsyncs.size());
+        //true, googleMap,ContextCompat.getColor(TrackOrderActivity.this,R.color.theme_color)
+        if(getDirectionsAsyncs.size() == 1){
+            getDirectionsAsyncs.get(0).execute();
+        }
+    }
+
+
     private static void checkAndExecute(){
+        getDirectionsAsyncs.remove(0);
         if(getDirectionsAsyncs.size() > 0){
             getDirectionsAsyncs.get(0).execute();
         }
     }
 
-    static class GetDirectionsAsync extends AsyncTask<String, String, String>{
+    private static class GetDirectionsAsync extends AsyncTask<String, String, String>{
         String engagementId;
         LatLng source, destination;
         Marker marker;
         LatLngInterpolator latLngInterpolator;
 		CallbackAnim callbackAnim;
+        List<LatLng> list;
+        double totalDistance;
+        boolean animateRoute;
+        GoogleMap googleMap;
+        int pathResolvedColor;
 
-        public GetDirectionsAsync(String engagementId, Marker marker, LatLng destination, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim){
+        GetDirectionsAsync(String engagementId, Marker marker, LatLng destination, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, boolean animateRoute, GoogleMap googleMap, int pathResolvedColor){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.destination = destination;
             this.marker = marker;
             this.latLngInterpolator = latLngInterpolator;
 			this.callbackAnim = callbackAnim;
+            this.animateRoute = animateRoute;
+            this.googleMap = googleMap;
+            this.pathResolvedColor = pathResolvedColor;
+        }
+
+        public GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, List<LatLng> list, boolean animateRoute, GoogleMap googleMap, int pathResolvedColor){
+            this.engagementId = engagementId;
+            this.source = marker.getPosition();
+            this.marker = marker;
+            this.latLngInterpolator = latLngInterpolator;
+            this.callbackAnim = callbackAnim;
+            this.list = list;
+            this.animateRoute = animateRoute;
+            this.googleMap = googleMap;
+            this.pathResolvedColor = pathResolvedColor;
         }
 
         @Override
@@ -140,10 +189,20 @@ public class MarkerAnimation {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
-                        destination.latitude + "," + destination.longitude, false, "driving", false);
-                String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                return responseStr;
+                if(list == null || list.size() == 0) {
+                    Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
+                            destination.latitude + "," + destination.longitude, false, "driving", false);
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    return responseStr;
+                } else {
+                    LatLng first = list.get(0);
+                    totalDistance = 0;
+                    for(LatLng latLng : list){
+                        totalDistance = totalDistance + MapUtils.distance(first, latLng);
+                        first = latLng;
+                    }
+                    return "";
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -155,28 +214,49 @@ public class MarkerAnimation {
             super.onPostExecute(result);
             try {
                 if (result != null) {
-                    JSONObject jObj = new JSONObject(result);
-                    double totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
-                    final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
-                    final ArrayList<Double> duration = new ArrayList<>();
-                    for(int i=0; i<list.size(); i++){
-                        if(i+1 < list.size()) {
-                            double animDuration = (MapUtils.distance(list.get(i), list.get(i + 1))/totalDistance) * ANIMATION_TIME;
+                    if(list==null && !TextUtils.isEmpty(result)) {
+                        JSONObject jObj = new JSONObject(result);
+                        totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
+                        list = MapUtils.getLatLngListFromPath(result);
+                    }
+
+                    ArrayList<Double> duration = new ArrayList<>();
+                    for (int i = 0; i < list.size(); i++) {
+                        if (i + 1 < list.size()) {
+                            double animDuration = (MapUtils.distance(list.get(i), list.get(i + 1)) / totalDistance) * ANIMATION_TIME;
                             duration.add(animDuration);
                         }
                     }
-                    if(list.size() > 0) {
-                        list.remove(0);
+                    if (list.size() > 1) {
+                        LatLng lastLatLng = list.remove(0);
+                        if(animateRoute && googleMap != null){
+                            List<LatLng> latLngList = new ArrayList<>();
+                            latLngList.addAll(list);
+                            List<Double> durationList = new ArrayList<>();
+                            durationList.addAll(duration);
+                            clearPolylines();
+                            if(latLngList.size() > 0) {
+                                animatePath(lastLatLng, googleMap, latLngList, durationList, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
+                            }
+                        }
+
+                        if (callbackAnim != null) {
+                            callbackAnim.onPathFound(list);
+                        }
+                        animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, true, callbackAnim);
+                    } else {
+                        throw new Exception();
                     }
-                    if(callbackAnim != null) {
-						callbackAnim.onPathFound(list);
-					}
-                    animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, true);
+                } else {
+                    throw new Exception();
                 }
-                getDirectionsAsyncs.remove(0);
-                checkAndExecute();
+
             } catch (Exception e) {
                 e.printStackTrace();
+                checkAndExecute();
+                if(callbackAnim != null){
+                    callbackAnim.onAnimNotDone();
+                }
             }
 
         }
@@ -185,7 +265,7 @@ public class MarkerAnimation {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static void animateMarkerToICSRecursive(final String engagementId, final Marker marker, final List<LatLng> list,
                                                    final LatLngInterpolator latLngInterpolator,
-                                                   final List<Double> duration, final boolean rotation) {
+                                                   final List<Double> duration, final boolean rotation, final CallbackAnim callbackAnim) {
         if(list.size() > 0) {
             final LatLng finalPosition = list.remove(0);
             final double finalDuration = duration.remove(0);
@@ -210,7 +290,12 @@ public class MarkerAnimation {
                 public void onAnimationEnd(Animator animator) {
 //                    marker.setPosition(finalPosition);
                     if (list.size() > 0) {
-                        animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, rotation);
+                        animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, rotation, callbackAnim);
+                    } else {
+                        checkAndExecute();
+                        if(callbackAnim != null){
+                            callbackAnim.onAnimComplete();
+                        }
                     }
                 }
 
@@ -227,7 +312,7 @@ public class MarkerAnimation {
 
             float bearing  = (float) MapUtils.getBearing(marker.getPosition(), finalPosition);
             if (rotation) {
-                MapUtils.rotateMarker(marker, (float) MapUtils.getBearing(marker.getPosition(), finalPosition));
+                MapUtils.rotateMarker(marker, bearing);
             }
             if(Integer.parseInt(engagementId) > 0) {
                 MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(engagementId),
@@ -241,7 +326,7 @@ public class MarkerAnimation {
     }
 
     public static void animationForShortDistance(String engagementId, final Marker marker, LatLng latLng,
-                                                 final LatLngInterpolator latLngInterpolator){
+                                                 final LatLngInterpolator latLngInterpolator, final CallbackAnim callbackAnim){
         if(MapUtils.distance(marker.getPosition(), latLng) >= 20) {
             TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {
                 @Override
@@ -260,7 +345,9 @@ public class MarkerAnimation {
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-
+                    if(callbackAnim != null){
+                        callbackAnim.onAnimComplete();
+                    }
                 }
 
                 @Override
@@ -282,13 +369,70 @@ public class MarkerAnimation {
                         TrackingLogModeValue.MOVE.getOrdinal(),
                         marker.getPosition(), (long) ANIMATION_TIME);
             }
+
+
+            if(callbackAnim != null) {
+                List<LatLng> latLngs = new ArrayList<>();
+                latLngs.add(marker.getPosition());
+                latLngs.add(latLng);
+                callbackAnim.onPathFound(latLngs);
+            }
+        } else {
+            if(callbackAnim != null){
+                callbackAnim.onAnimNotDone();
+            }
         }
     }
 
 
     public interface CallbackAnim {
 		void onPathFound(List<LatLng> latLngs);
+        void onAnimComplete();
+        void onAnimNotDone();
 	}
 
+	public static void clearAsyncList(){
+        getDirectionsAsyncs.clear();
+    }
+
+    private static ArrayList<Polyline> polylines = new ArrayList<>();
+    private static void clearPolylines(){
+        if(polylines != null){
+            for(Polyline polyline : polylines){
+                polyline.remove();
+            }
+            polylines.clear();
+        }
+    }
+
+    private static void animatePath(final LatLng lastLatLng, final GoogleMap googleMap, final List<LatLng> latLngList, final List<Double> durationList,
+                                    final int pathResolvedColor, final float pathWidth, final LatLngInterpolator latLngInterpolator){
+        if(latLngList.size() > 0 && durationList.size() > 0){
+            final LatLng currLatLng = latLngList.remove(0);
+            List<LatLng> latLngs = new ArrayList<>();
+            latLngs.add(lastLatLng);
+            latLngs.add(currLatLng);
+            double duration = durationList.remove(0);
+            new MapRouteAnimator().animateRoute(googleMap, latLngs, (long) duration, pathResolvedColor, pathWidth, latLngInterpolator,
+                    new MapRouteAnimator.Callback() {
+                        @Override
+                        public void onAnimationEnd(Polyline foregroundPolyline) {
+                            if(latLngList.size() > 0){
+                                polylines.add(foregroundPolyline);
+                                animatePath(currLatLng, googleMap, latLngList, durationList, pathResolvedColor, pathWidth, latLngInterpolator);
+                            } else {
+                                polylines.add(foregroundPolyline);
+                                PolylineOptions polylineOptions = new PolylineOptions().color(pathResolvedColor).width(pathWidth).geodesic(true);
+                                for(Polyline polyline : polylines){
+                                    polylineOptions.addAll(polyline.getPoints());
+                                }
+                                clearPolylines();
+                                polylines.add(googleMap.addPolyline(polylineOptions));
+                            }
+                        }
+                    });
+        }
+
+    }
 
 }

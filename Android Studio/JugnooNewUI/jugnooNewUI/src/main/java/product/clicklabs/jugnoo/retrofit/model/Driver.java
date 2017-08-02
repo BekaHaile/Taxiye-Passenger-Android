@@ -43,7 +43,9 @@ public class Driver {
 	@SerializedName("bearing")
 	@Expose
 	private Double bearing;
-
+	@SerializedName("branding_status")
+	@Expose
+	private String brandingStatus;
 	/**
 	 * @return The userId
 	 */
@@ -174,5 +176,13 @@ public class Driver {
 
 	public void setRegionIds(List<Integer> regionIds) {
 		this.regionIds = regionIds;
+	}
+
+	public String getBrandingStatus() {
+		return brandingStatus;
+	}
+
+	public void setBrandingStatus(String brandingStatus) {
+		this.brandingStatus = brandingStatus;
 	}
 }

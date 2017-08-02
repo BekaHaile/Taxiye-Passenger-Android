@@ -5,19 +5,14 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import org.json.JSONObject;
 
@@ -49,12 +44,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	TextView textViewTitle;
 
 	TextView textViewOtpNumber;
-	ImageView imageViewSep, imageViewChangePhoneNumber;
-	EditText editTextOTP;
-
-	Button buttonVerify;
-	LinearLayout buttonOtpViaCall;
-	LinearLayout linearLayoutGiveAMissedCall;
 
 
 	RelativeLayout relative;
@@ -64,11 +53,11 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	TextView textViewScroll;
 
 	LinearLayout llEditText;
+	private TextView tvResendCode, tvCallMe;
 
 
 	String phoneNoToVerify = "";
 	private PinEditTextLayout pinEditTextLayout;
-	LinearLayout rlResendOTP;
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -113,20 +102,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
-		imageViewSep = (ImageView) findViewById(R.id.imageViewSep); imageViewSep.setVisibility(View.GONE);
-		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber); imageViewChangePhoneNumber.setVisibility(View.GONE);
-
-		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.mavenMedium(this));
-
-		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
-		buttonOtpViaCall = (LinearLayout) findViewById(R.id.buttonOtpViaCall);
-		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
-		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenLight(this));
-
-		findViewById(R.id.ivTopBanner).setVisibility(View.GONE);
-		findViewById(R.id.ivBottomBanner).setVisibility(View.GONE);
-
-		rlResendOTP = (LinearLayout) findViewById(R.id.rlResendOTP);
+		findViewById(R.id.ivTopBanner).setVisibility(View.INVISIBLE);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -139,6 +115,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				verifyClick(otp, editText);
 			}
 		});
+		tvResendCode = (TextView) findViewById(R.id.tvResendCode);
+		tvCallMe = (TextView) findViewById(R.id.tvCallMe);
 
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
@@ -152,43 +130,13 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		});
 
 
-		editTextOTP.setOnFocusChangeListener(onFocusChangeListener);
-		editTextOTP.setOnClickListener(onClickListener);
-
-		buttonVerify.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				verifyClick(editTextOTP.getText().toString().trim(), editTextOTP);
-			}
-		});
-
-
-		editTextOTP.setOnEditorActionListener(new OnEditorActionListener() {
-
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						buttonVerify.performClick();
-						break;
-
-					case EditorInfo.IME_ACTION_NEXT:
-						break;
-
-					default:
-				}
-				return true;
-			}
-		});
-
-		buttonOtpViaCall.setOnClickListener(new View.OnClickListener() {
+		tvCallMe.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
 					if (1 == Prefs.with(PhoneNoOTPConfirmScreen.this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
 						initiateOTPCallAsync(PhoneNoOTPConfirmScreen.this, phoneNoToVerify);
+						startTimerForRetry();
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -197,44 +145,14 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		});
 
 
-		linearLayoutGiveAMissedCall.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				try {
-					if (!"".equalsIgnoreCase(Prefs.with(PhoneNoOTPConfirmScreen.this)
-							.getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
-						DialogPopup.alertPopupTwoButtonsWithListeners(PhoneNoOTPConfirmScreen.this, "",
-								getResources().getString(R.string.give_missed_call_dialog_text),
-								getResources().getString(R.string.call_us),
-								getResources().getString(R.string.cancel),
-								new View.OnClickListener() {
-									@Override
-									public void onClick(View v) {
-										Utils.openCallIntent(PhoneNoOTPConfirmScreen.this, Prefs.with(PhoneNoOTPConfirmScreen.this)
-												.getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-									}
-								},
-								new View.OnClickListener() {
-									@Override
-									public void onClick(View v) {
-
-									}
-								}, false, false);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-		rlResendOTP.setOnClickListener(new View.OnClickListener() {
+		tvResendCode.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try{
 					Utils.disableSMSReceiver(PhoneNoOTPConfirmScreen.this);
-					editTextOTP.setError(null);
 					apiGenerateLoginOtp(PhoneNoOTPConfirmScreen.this, Utils.retrievePhoneNumberTenChars(phoneNoToVerify));
+					startTimerForRetry();
 				} catch(Exception e){
 					e.printStackTrace();
 				}
@@ -259,25 +177,22 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 		try{
 			if(!"".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
-				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
 			}
 			else{
-				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
 			if(1 == Prefs.with(this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
-				buttonOtpViaCall.setVisibility(View.VISIBLE);
+				tvCallMe.setVisibility(View.VISIBLE);
 			}
 			else{
-				buttonOtpViaCall.setVisibility(View.GONE);
+				tvCallMe.setVisibility(View.GONE);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
-			buttonOtpViaCall.setVisibility(View.GONE);
+			tvCallMe.setVisibility(View.GONE);
 		}
 
-
+		startTimerForRetry();
 
 	}
 
@@ -289,48 +204,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			editText.setError("OTP can't be empty");
 		}
 	}
-
-
-	private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
-
-		@Override
-		public void onFocusChange(final View v, boolean hasFocus) {
-			if (hasFocus) {
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						scrollView.smoothScrollTo(0, buttonVerify.getTop());
-					}
-				}, 200);
-			} else {
-				try {
-					((EditText)v).setError(null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				((EditText)v).setError(null);
-			}
-		}
-	};
-
-	private View.OnClickListener onClickListener = new View.OnClickListener() {
-		@Override
-		public void onClick(final View v) {
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					scrollView.smoothScrollTo(0, buttonVerify.getTop());
-				}
-			}, 200);
-			try {
-				if(v.getId() == R.id.editTextEmail) {
-					((AutoCompleteTextView) v).showDropDown();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	};
 
 
 	@Override
@@ -561,4 +434,60 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		}
 	}
 
+
+	private void giveAMissCall(){
+		try {
+			if (!"".equalsIgnoreCase(Prefs.with(PhoneNoOTPConfirmScreen.this)
+					.getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
+				DialogPopup.alertPopupTwoButtonsWithListeners(PhoneNoOTPConfirmScreen.this, "",
+						getResources().getString(R.string.give_missed_call_dialog_text),
+						getResources().getString(R.string.call_us),
+						getResources().getString(R.string.cancel),
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								Utils.openCallIntent(PhoneNoOTPConfirmScreen.this, Prefs.with(PhoneNoOTPConfirmScreen.this)
+										.getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+							}
+						},
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+
+							}
+						}, false, false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private Handler handler = new Handler();
+	private Runnable runnableRetryBlock;
+	private int secondsLeftForRetry = 15;
+	private void startTimerForRetry(){
+		if(runnableRetryBlock == null) {
+			runnableRetryBlock = new Runnable() {
+				@Override
+				public void run() {
+					if(secondsLeftForRetry > 0){
+						tvResendCode.setText(getString(R.string.resend_code_in, (secondsLeftForRetry > 9?"0:":"0:0")+secondsLeftForRetry));
+						tvCallMe.setText(getString(R.string.call_me_in, (secondsLeftForRetry > 9?"0:":"0:0")+secondsLeftForRetry));
+						tvResendCode.setEnabled(false);
+						tvCallMe.setEnabled(false);
+						secondsLeftForRetry--;
+						handler.postDelayed(runnableRetryBlock, 1000);
+					} else {
+						tvResendCode.setText(R.string.resend_code);
+						tvCallMe.setText(R.string.call_me);
+						tvResendCode.setEnabled(true);
+						tvCallMe.setEnabled(true);
+						handler.removeCallbacks(runnableRetryBlock);
+					}
+				}
+			};
+		}
+		secondsLeftForRetry = 15;
+		handler.post(runnableRetryBlock);
+	}
 }
