@@ -173,7 +173,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
             @Override
             public void onRestaurantClick(int restaurantId) {
                 if (restaurantId > 0) {
-                    activity.fetchRestaurantMenuAPI(restaurantId, false, null);
+                    activity.fetchRestaurantMenuAPI(restaurantId, false, null, null, -1, null);
                 }
 
             }

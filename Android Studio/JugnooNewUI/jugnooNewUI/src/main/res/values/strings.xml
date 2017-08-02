@@ -896,7 +896,7 @@
     <string name="popularity">Popularity</string>
     <string name="price">Price</string>
     <string name="cuisines">Cuisines</string>
-    <string name="minimum_order">Minimum order</string>
+    <string name="minimum_order">Minimum order Amount</string>
     <string name="less_than_150"><![CDATA[<Rs. 150]]></string>
     <string name="less_than_250"><![CDATA[<Rs. 250]]></string>
     <string name="less_than_500"><![CDATA[<Rs. 500]]></string>
@@ -1067,7 +1067,7 @@
     <string name="free_delivery">Free Delivery</string>
 
     <string name="delivers_in">Delivers in</string>
-    <string name="minimum_order_rupee_format">Minimum Order \u20B9%s</string>
+    <string name="minimum_order_rupee_format">Minimum Order Amount \u20B9%s</string>
     <string name="jugnoo_star">Jugnoo star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>
     <string name="no">No</string>
@@ -1094,7 +1094,7 @@
     <string name="more">More</string>
     <string name="less">Less</string>
     <string name="view_cart">View Cart</string>
-    <string name="no_minimum_order">No minimum order</string>
+    <string name="no_minimum_order">No minimum order Amount</string>
     <string name="produce">Produce</string>
     <string name="coming_soon_to_your_city">Coming soon to your city...</string>
     <string name="delivery_address_changed_alert">Delivery address change!\nItems in cart will be deleted. Proceed?</string>
@@ -1355,7 +1355,7 @@
     <string name="reorder_items_missing">Sorry, some of the items in your cart aren\'t available at the restaurant. Please review your cart for details.</string>
     <string name="reorder_no_items_available">Sorry, none of the items in your cart are available at the restaurant. To order from the same restaurant, Press \'Edit Order\'. If you\'d like to order from another restaurant, Press \'Change\'.</string>
     <string name="edit_order">Edit Order</string>
-    <string name="change_order">Change Order</string>
+    <string name="change_order">Change</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

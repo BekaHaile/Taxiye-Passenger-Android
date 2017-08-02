@@ -762,4 +762,9 @@ public interface Constants {
     String KEY_JOB_ID_2 = "job_id_2";
     String ORDER_STATUS_PENDING_ID = "order_status_pending_id";
     String ORDER_STATUS_JSON_ARRAY = "order_status_json_array";
+    String ORDER_STATUS_LAT_LNG = "order_status_lat_lng";
+    String ORDER_STATUS_ORDER_ID = "order_status_id";
+    String CART_STATUS_REORDER_ID = "cart_status_reorder_id";
+    String KEY_REODER_ID = "prev_order_id";
+    String ORDER_STATUS_ADDRESS = "order_status_address";
 }

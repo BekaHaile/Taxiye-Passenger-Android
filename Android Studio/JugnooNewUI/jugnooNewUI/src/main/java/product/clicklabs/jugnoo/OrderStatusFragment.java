@@ -940,7 +940,22 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                                 Integer restaurantId = jsonObject.getInt(Constants.KEY_RESTAURANT_ID);
                                 JSONArray cartItems = jsonObject.getJSONArray("order_items");
-                                reorderMenus(cartItems,restaurantId);
+                                LatLng delLatlng =null;
+                                String delAddress  = null;
+                                try {
+                                    if(jsonObject.has("delivery_latitude") && jsonObject.has("delivery_longitude")){
+                                        Double delivery_latitude = jsonObject.getDouble("delivery_latitude");
+                                        Double delivery_longitude = jsonObject.getDouble("delivery_longitude");
+                                        delLatlng = new LatLng(delivery_latitude,delivery_longitude);
+                                    }
+                                    if(jsonObject.has("delivery_address")){
+                                        delAddress  = jsonObject.getString("delivery_address");
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                reorderMenus(cartItems,restaurantId,delLatlng,delAddress);
 
                             }
                         }
@@ -1166,17 +1181,20 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
 
 
-    public void reorderMenus(JSONArray jsonArray, int restaurantId){
+    public void reorderMenus(JSONArray jsonArray, int restaurantId, LatLng latLng, String delAddress){
 
 
         if(activity instanceof FreshActivity && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getMenusClientId())){
 
             ((FreshActivity)activity).onBackPressed();
 
-            ((FreshActivity)activity).fetchRestaurantMenuAPI(restaurantId,true,jsonArray);
+            ((FreshActivity)activity).fetchRestaurantMenuAPI(restaurantId,true,jsonArray, latLng, orderId, delAddress);
         }else {
             Prefs.with(activity).save(Constants.ORDER_STATUS_PENDING_ID,restaurantId);
             Prefs.with(activity).save(Constants.ORDER_STATUS_JSON_ARRAY,jsonArray.toString());
+            Prefs.with(activity).save(Constants.ORDER_STATUS_LAT_LNG,latLng);
+            Prefs.with(activity).save(Constants.ORDER_STATUS_ORDER_ID,orderId);
+            Prefs.with(activity).save(Constants.ORDER_STATUS_ADDRESS,delAddress);
             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), new LatLng(Data.latitude,Data.longitude), false);
 
 

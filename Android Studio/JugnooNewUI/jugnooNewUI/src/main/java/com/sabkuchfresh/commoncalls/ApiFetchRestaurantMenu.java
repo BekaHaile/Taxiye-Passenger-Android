@@ -2,6 +2,7 @@ package com.sabkuchfresh.commoncalls;
 
 import android.view.View;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -17,7 +18,6 @@ import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,7 +59,7 @@ public class ApiFetchRestaurantMenu {
         this.callback = callback;
     }
 
-    public void hit(final int restaurantId, final double latitude, final double longitude, final boolean directCheckout, final JSONArray cartItemToSet) {
+    public void hit(final int restaurantId, final double latitude, final double longitude, final boolean directCheckout, final JSONArray cartItemToSet, final LatLng reOrderLatlng, final int reorderId, final String reorderAddress) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
@@ -119,18 +119,19 @@ public class ApiFetchRestaurantMenu {
                                         if (count == 0) {
                                             //All items in re-oder case have been disabled so do not go to checkout ask user to go to home or VendorMenuFragment
                                             DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",  activity.getString(R.string.reorder_no_items_available),
-                                                    activity.getString(R.string.edit_order),
-                                                    activity.getString(R.string.change_order),
+                                                    activity.getString(R.string.change_order) ,activity.getString(R.string.edit_order)
+                                                   ,
                                                     new View.OnClickListener() {
                                                         @Override
                                                         public void onClick(View v) {
-                                                            openNextFragment(false);
-                                                            updateCartAndSetJeanie(jObj);
+                                                            //stay on menu home fragment
+
                                                         }
                                                     }, new View.OnClickListener() {
                                                         @Override
                                                         public void onClick(View v) {
-                                                            //stay on menu home fragment
+                                                            openNextFragment(false);
+                                                            updateCartAndSetJeanie(jObj);
 
                                                         }
                                                     }, false, false);
@@ -138,15 +139,20 @@ public class ApiFetchRestaurantMenu {
                                         }else if( quantityReorderItems!=count){
                                             //Give user a confirmation popup before going to next checkout fragment because some items are missing
                                             DialogPopup.alertPopupWithListener(activity, "", activity.getString(R.string.reorder_items_missing), new View.OnClickListener() {
+
                                                 @Override
                                                 public void onClick(View v) {
-                                                    openNextFragment(false);
+                                                    activity.setReorderLatlngToAdrress(reOrderLatlng,reorderAddress);
+                                                    Prefs.with(activity).save(Constants.CART_STATUS_REORDER_ID,reorderId);//save reoderId in cart to send in checkout
+                                                    openNextFragment(true);
                                                     updateCartAndSetJeanie(jObj);
                                                 }
                                             });
 
                                         }else{
                                             //Everything is okay go to checkout
+                                            Prefs.with(activity).save(Constants.CART_STATUS_REORDER_ID,reorderId);//save reoderId in cart to send in checkout
+                                            activity.setReorderLatlngToAdrress(reOrderLatlng,reorderAddress);
                                             openNextFragment(true);
                                             updateCartAndSetJeanie(jObj);
                                         }
