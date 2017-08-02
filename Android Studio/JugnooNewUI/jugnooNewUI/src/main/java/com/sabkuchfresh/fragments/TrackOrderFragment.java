@@ -314,13 +314,19 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 				if(points > 0) {
 					if(tiltState) {
-						LatLngBounds latLngBounds = getMapLatLngBounds(llbBuilder);
-						CameraPosition cameraPosition = new CameraPosition.Builder()
-								.target(MapLatLngBoundsCreator.move(latLngBounds.getCenter(), -1500, 0))
-								.zoom(12)
-								.tilt(40)
-								.build();
-						googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), MAP_ANIMATE_DURATION, null);
+						googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
+//						handler.postDelayed(new Runnable() {
+//							@Override
+//							public void run() {
+//								CameraPosition cameraPosition = new CameraPosition.Builder()
+//										.target(MapLatLngBoundsCreator.move(googleMap.getCameraPosition().target, zoomedFirstTime?0:-1500, 0))
+//										.zoom(googleMap.getCameraPosition().zoom)
+//										.tilt(40)
+//										.build();
+//
+//								googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), MAP_ANIMATE_DURATION, null);
+//							}
+//						}, MAP_ANIMATE_DURATION);
 					} else {
 						googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
 					}
