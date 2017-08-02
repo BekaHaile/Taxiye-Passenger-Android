@@ -43,7 +43,7 @@ public class Driver {
 	@SerializedName("bearing")
 	@Expose
 	private Double bearing;
-	@SerializedName("branding_status")
+	@SerializedName("audit_status")
 	@Expose
 	private String brandingStatus;
 	/**
@@ -179,6 +179,9 @@ public class Driver {
 	}
 
 	public String getBrandingStatus() {
+		if(brandingStatus == null){
+			brandingStatus = "";
+		}
 		return brandingStatus;
 	}
 
