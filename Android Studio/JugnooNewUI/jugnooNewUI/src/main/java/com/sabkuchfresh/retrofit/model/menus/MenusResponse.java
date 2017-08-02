@@ -304,7 +304,7 @@ public class MenusResponse implements Serializable {
 		@SerializedName("offer_text")
 		private String offerText;
 
-		@SerializedName("next_slot_time")
+		@SerializedName("next_slot")
 		@Expose
 		private String next_slot_time;
 
