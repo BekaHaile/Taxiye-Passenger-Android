@@ -896,7 +896,7 @@
     <string name="popularity">Popularity</string>
     <string name="price">Price</string>
     <string name="cuisines">Cuisines</string>
-    <string name="minimum_order">Minimum order Amount</string>
+    <string name="minimum_order">Minimum order amount</string>
     <string name="less_than_150"><![CDATA[<Rs. 150]]></string>
     <string name="less_than_250"><![CDATA[<Rs. 250]]></string>
     <string name="less_than_500"><![CDATA[<Rs. 500]]></string>
@@ -1067,7 +1067,7 @@
     <string name="free_delivery">Free Delivery</string>
 
     <string name="delivers_in">Delivers in</string>
-    <string name="minimum_order_rupee_format">Minimum Order Amount \u20B9%s</string>
+    <string name="minimum_order_rupee_format">Minimum Order amount \u20B9%s</string>
     <string name="jugnoo_star">Jugnoo star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>
     <string name="no">No</string>
@@ -1094,7 +1094,7 @@
     <string name="more">More</string>
     <string name="less">Less</string>
     <string name="view_cart">View Cart</string>
-    <string name="no_minimum_order">No minimum order Amount</string>
+    <string name="no_minimum_order">No minimum order amount</string>
     <string name="produce">Produce</string>
     <string name="coming_soon_to_your_city">Coming soon to your city...</string>
     <string name="delivery_address_changed_alert">Delivery address change!\nItems in cart will be deleted. Proceed?</string>
@@ -1283,7 +1283,7 @@
     <string name="veg_only">Veg Only</string>
     <string name="back_button">Back button</string>
     <string name="start_typing_a_cuisine">Start typing a cuisine…</string>
-    <string name="minimum_order_amount">Minimum Order Amount</string>
+    <string name="minimum_order_amount">Minimum order amount</string>
     <string name="star_checkout_wallet_not_selected">Please select a wallet.</string>
     <string name="back">Back</string>
     <string name="change">Change</string>

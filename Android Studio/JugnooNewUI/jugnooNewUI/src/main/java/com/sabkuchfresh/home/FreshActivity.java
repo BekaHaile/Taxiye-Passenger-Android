@@ -999,6 +999,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedAddressType("");
 
                     Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
+                    saveDeliveryAddressModel();
                 }
                 // else if selected address is updated by user, updating address related local variables
                 // from SP search result
@@ -1006,6 +1007,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedLatLng(searchResultLastFMM.getLatLng());
                     setSelectedAddress(searchResultLastFMM.getAddress());
                     setSelectedAddressType(searchResultLastFMM.getName());
+                    saveDeliveryAddressModel();
                 }
                 // else find any tagged address near current set location, if that is not tagged
                 else if(getSelectedAddressId() == 0){
