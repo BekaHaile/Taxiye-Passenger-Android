@@ -11,7 +11,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,23 +20,11 @@ import java.util.List;
 
 public class MapRouteAnimator {
 
-    private static MapRouteAnimator mapRouteAnimator;
-
     private Polyline foregroundPolyline;
 
     private AnimatorSet firstRunAnimSet;
-    private List<LatLng> latLngList;
 
-    private MapRouteAnimator(){
-    }
-
-    public static MapRouteAnimator getInstance(){
-        if(mapRouteAnimator == null) mapRouteAnimator = new MapRouteAnimator();
-        return mapRouteAnimator;
-    }
-
-
-    public void animateRoute(GoogleMap googleMap, List<LatLng> latLngList, long duration, int pathResolvedColor, float pathWidth, LatLngInterpolator latLngInterpolator) {
+    public void animateRoute(GoogleMap googleMap, List<LatLng> latLngList, long duration, int pathResolvedColor, float pathWidth, LatLngInterpolator latLngInterpolator, final Callback callback) {
         if (firstRunAnimSet == null){
             firstRunAnimSet = new AnimatorSet();
         } else {
@@ -50,14 +37,11 @@ public class MapRouteAnimator {
         //Reset the polylines
         if (foregroundPolyline != null) foregroundPolyline.remove();
 
-        this.latLngList = new ArrayList<>();
-        this.latLngList.addAll(latLngList);
-
-        PolylineOptions optionsForeground = new PolylineOptions().add(this.latLngList.get(0)).color(pathResolvedColor).width(pathWidth).geodesic(true);
+        PolylineOptions optionsForeground = new PolylineOptions().add(latLngList.get(0)).color(pathResolvedColor).width(pathWidth).geodesic(true);
         foregroundPolyline = googleMap.addPolyline(optionsForeground);
 
 
-        ObjectAnimator foregroundRouteAnimator = ObjectAnimator.ofObject(this, "routeIncreaseForward", new RouteEvaluator(latLngInterpolator), this.latLngList.toArray());
+        ObjectAnimator foregroundRouteAnimator = ObjectAnimator.ofObject(this, "routeIncreaseForward", new RouteEvaluator(latLngInterpolator), latLngList.toArray());
         foregroundRouteAnimator.setInterpolator(new LinearInterpolator());
         foregroundRouteAnimator.setDuration(duration);
         foregroundRouteAnimator.addListener(new Animator.AnimatorListener() {
@@ -67,6 +51,9 @@ public class MapRouteAnimator {
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                if(callback != null) {
+                    callback.onAnimationEnd(foregroundPolyline);
+                }
             }
 
             @Override
@@ -99,11 +86,12 @@ public class MapRouteAnimator {
 
         @Override
         public LatLng evaluate(float t, LatLng startPoint, LatLng endPoint) {
-//            double lat = startPoint.latitude + t * (endPoint.latitude - startPoint.latitude);
-//            double lng = startPoint.longitude + t * (endPoint.longitude - startPoint.longitude);
-//            return new LatLng(lat,lng);
             return latLngInterpolator.interpolate(t, startPoint, endPoint);
         }
+    }
+
+    public interface Callback{
+        void onAnimationEnd(Polyline foregroundPolyline);
     }
 
 }

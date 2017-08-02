@@ -21,6 +21,7 @@ import android.view.animation.Interpolator;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polyline;
 
 import org.json.JSONObject;
 
@@ -98,9 +99,11 @@ public class MarkerAnimation {
                 animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim);
                 if(animateRoute && googleMap != null){
                     List<LatLng> list = new ArrayList<>();
-                    list.add(marker.getPosition());
                     list.add(finalPosition);
-                    MapRouteAnimator.getInstance().animateRoute(googleMap, list, (long) ANIMATION_TIME, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
+                    List<Double> durationList = new ArrayList<>();
+                    durationList.add(ANIMATION_TIME);
+                    clearPolylines();
+                    animatePath(marker.getPosition(), googleMap, list, durationList, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
                 }
 			}
 			else{
@@ -224,14 +227,18 @@ public class MarkerAnimation {
                         }
                     }
                     if (list.size() > 1) {
+                        LatLng lastLatLng = list.remove(0);
                         if(animateRoute && googleMap != null){
                             List<LatLng> latLngList = new ArrayList<>();
                             latLngList.addAll(list);
-                            if(latLngList.size() > 1) {
-                                MapRouteAnimator.getInstance().animateRoute(googleMap, latLngList, (long) ANIMATION_TIME, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
+                            List<Double> durationList = new ArrayList<>();
+                            durationList.addAll(duration);
+                            clearPolylines();
+                            if(latLngList.size() > 0) {
+                                animatePath(lastLatLng, googleMap, latLngList, durationList, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
                             }
                         }
-                        list.remove(0);
+
                         if (callbackAnim != null) {
                             callbackAnim.onPathFound(list);
                         }
@@ -385,6 +392,40 @@ public class MarkerAnimation {
 
 	public static void clearAsyncList(){
         getDirectionsAsyncs.clear();
+    }
+
+    private static ArrayList<Polyline> polylines = new ArrayList<>();
+    private static void clearPolylines(){
+        if(polylines != null){
+            for(Polyline polyline : polylines){
+                polyline.remove();
+            }
+            polylines.clear();
+        }
+    }
+
+    private static void animatePath(final LatLng lastLatLng, final GoogleMap googleMap, final List<LatLng> latLngList, final List<Double> durationList,
+                                    final int pathResolvedColor, final float pathWidth, final LatLngInterpolator latLngInterpolator){
+        if(latLngList.size() > 0 && durationList.size() > 0){
+            final LatLng currLatLng = latLngList.remove(0);
+            List<LatLng> latLngs = new ArrayList<>();
+            latLngs.add(lastLatLng);
+            latLngs.add(currLatLng);
+            double duration = durationList.remove(0);
+            new MapRouteAnimator().animateRoute(googleMap, latLngs, (long) duration, pathResolvedColor, pathWidth, latLngInterpolator,
+                    new MapRouteAnimator.Callback() {
+                        @Override
+                        public void onAnimationEnd(Polyline foregroundPolyline) {
+                            if(latLngList.size() > 0){
+                                polylines.add(foregroundPolyline);
+                                animatePath(currLatLng, googleMap, latLngList, durationList, pathResolvedColor, pathWidth, latLngInterpolator);
+                            } else {
+
+                            }
+                        }
+                    });
+        }
+
     }
 
 }
