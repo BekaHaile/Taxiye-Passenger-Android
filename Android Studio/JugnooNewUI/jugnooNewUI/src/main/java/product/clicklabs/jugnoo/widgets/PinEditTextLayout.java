@@ -228,7 +228,7 @@ public class PinEditTextLayout implements View.OnFocusChangeListener, View.OnKey
 	 * @param editText edit text to change
 	 */
 	private void setDefaultPinBackground(EditText editText) {
-		setViewBackground(editText, ContextCompat.getDrawable(context, R.drawable.bg_transparent_grey_alpha_bottom));
+		setViewBackground(editText, ContextCompat.getDrawable(context, R.drawable.bg_white_layer_shadow));
 	}
 
 	/**
@@ -252,7 +252,7 @@ public class PinEditTextLayout implements View.OnFocusChangeListener, View.OnKey
 	 * @param editText edit text to change
 	 */
 	private void setFocusedPinBackground(EditText editText) {
-		setViewBackground(editText, ContextCompat.getDrawable(context, R.drawable.bg_transparent_grey_bottom));
+		setViewBackground(editText, ContextCompat.getDrawable(context, R.drawable.bg_white_layer_shadow_mid_cursor));
 	}
 
 	/**

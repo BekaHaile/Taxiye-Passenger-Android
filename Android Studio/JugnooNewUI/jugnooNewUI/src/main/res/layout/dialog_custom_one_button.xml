@@ -58,7 +58,10 @@
                 android:paddingRight="40px"
                 android:text="Message"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"/>
+                android:textSize="@dimen/text_size_32"
+                android:autoLink="web"
+                android:textIsSelectable="true"
+                />
 
 
             <ImageView

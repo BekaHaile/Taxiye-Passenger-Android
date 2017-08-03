@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.utils;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Color;
 import android.location.Location;
@@ -67,7 +68,7 @@ public class MapUtils {
 		return 0;
 	}
 
-	public static void rotateMarker(final Marker marker, final float toRotation) {
+	public static void rotateMarker1(final Marker marker, final float toRotation) {
 		final Handler handler = new Handler();
 		final long start = SystemClock.uptimeMillis();
 		final float startRotation = marker.getRotation();
@@ -341,5 +342,72 @@ public class MapUtils {
 			}
 		}
 	}
-	
+
+
+
+
+
+	public static void rotateMarker(final Marker marker, float bearing) {
+		if (marker != null) {
+			ValueAnimator valueAnimator = new ValueAnimator();
+			final float start = getPositiveRotation(marker.getRotation());
+			final float end = getPositiveRotation(bearing);
+			final float rotationAngle = getRotationAngle(start, end);
+
+			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				@Override
+				public void onAnimationUpdate(ValueAnimator animation) {
+					try {
+						if (marker == null) {
+							return;
+						}
+						float v = animation.getAnimatedFraction();
+						float rotation = start + v * rotationAngle;
+						marker.setRotation(getRotationUnder360(rotation));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
+			valueAnimator.setFloatValues(0, 1);
+			valueAnimator.setDuration(220);
+			valueAnimator.start();
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					Log.e("marker.getRotation()", ">" + marker.getRotation());
+				}
+			}, 3005);
+		}
+	}
+
+
+	private static float getPositiveRotation(float rotation){
+		if(rotation < 0){
+			rotation = -(-180 - (rotation + 180));
+		}
+		return rotation;
+	}
+
+	private static float getRotationUnder360(float rotation){
+		if(rotation > 360){
+			rotation = rotation - ((int)(rotation/360))*360;
+		}
+		return rotation;
+	}
+
+	private static float getRotationAngle(float start, float end){
+		float rotationTo = 0;
+		if(start <= end){
+			rotationTo = end - start;
+		} else {
+			rotationTo = 360+end - start;
+		}
+
+		if(rotationTo > 180){
+			rotationTo = -(180 - (rotationTo - 180));
+		}
+		return rotationTo;
+	}
 }

@@ -13,7 +13,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class DriverInfo {
 	
-	public String userId, name, image, carImage, phoneNumber, rating, carNumber;
+	public String userId, name, image, carImage, phoneNumber, rating, carNumber, brandingStatus;
 	public LatLng latLng;
 	public int freeRide;
 	
@@ -37,7 +37,7 @@ public class DriverInfo {
 	//for drivers to show in free state
 	public DriverInfo(String userId, double latitude, double longitude, 
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
-			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds){
+			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds, String brandingStatus){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -50,6 +50,7 @@ public class DriverInfo {
 		this.bearing = bearing;
 		this.vehicleType = vehicleType;
 		this.regionIds = regionIds;
+		this.brandingStatus = brandingStatus;
 	}
 
 	//for engagement
@@ -112,8 +113,8 @@ public class DriverInfo {
 
 	@Override
 	public String toString() {
-		return  "Name: " + name + "\n" +
-				"Phone Number: "+ phoneNumber;
+		return  "Id: " + userId + "\n" +
+				"Branding Status: "+ brandingStatus;
 	}
 	
 	@Override

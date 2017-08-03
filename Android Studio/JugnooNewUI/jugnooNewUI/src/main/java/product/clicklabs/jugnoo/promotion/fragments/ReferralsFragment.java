@@ -176,8 +176,9 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 				@Override
 				public void onClick(View textView) {
 					try {
+						boolean html = Utils.DetectHtml.isHtml(Data.userData.getReferralMessages().referralMoreInfoMessage);
 						DialogPopup.alertPopupLeftOriented(activity, "",
-								Data.userData.getReferralMessages().referralMoreInfoMessage, true, true, true);
+								Data.userData.getReferralMessages().referralMoreInfoMessage, true, true, html);
 						GAUtils.event(SIDE_MENU, FREE_GIFT, GAAction.DETAILS+CLICKED);
 					} catch (Exception e) {
 						e.printStackTrace();

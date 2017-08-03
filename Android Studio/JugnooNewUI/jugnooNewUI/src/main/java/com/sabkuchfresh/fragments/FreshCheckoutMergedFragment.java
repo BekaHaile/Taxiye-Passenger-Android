@@ -46,6 +46,8 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.jugnoo.pay.activities.MainActivity;
 import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
@@ -80,6 +82,7 @@ import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
+import com.sabkuchfresh.retrofit.model.menus.CustomiseOptionsId;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
@@ -92,6 +95,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
@@ -1359,6 +1363,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
+
+
+
     HashMap<String, Object> chargeDetails = new HashMap<String, Object>();
     ArrayList<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
 
@@ -1473,6 +1480,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
                 if (type == AppConstant.ApplicationType.FRESH) {
                     params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedVendorId()));
+                }
+
+                //for menus reorder case
+
+                if (type == AppConstant.ApplicationType.MENUS ) {
+                    //send order ID of old order if order has been reorder,this value is saved when cart is made from reoder and cleared everytime the cart is cleared
+                    int cartReorderId = Prefs.with(activity).getInt(Constants.CART_STATUS_REORDER_ID,-1);
+                    if(cartReorderId!=-1){
+                        params.put(Constants.KEY_REODER_ID, String.valueOf(cartReorderId));
+
+                    }
                 }
 
                 Callback<PlaceOrderResponse> callback = new Callback<PlaceOrderResponse>() {

@@ -13,42 +13,6 @@
         android:layout_height="match_parent"/>
 
     <RelativeLayout
-        android:id="@+id/rlProgress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50px"
-        android:visibility="gone">
-
-        <product.clicklabs.jugnoo.utils.ProgressWheel
-            xmlns:wheel="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/progressBar"
-            android:layout_width="100px"
-            android:layout_height="100px"
-            android:layout_centerHorizontal="true"
-            android:layout_marginRight="5px"
-            android:tag="mwar"
-            android:visibility="visible"
-            wheel:matProg_barColor="@color/theme_color"
-            wheel:matProg_barWidth="3dp"
-            wheel:matProg_fillRadius="true"
-            wheel:matProg_progressIndeterminate="true" />
-
-        <TextView
-            android:id="@+id/tvProgress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/progressBar"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:padding="20px"
-            android:text="@string/trying_to_verify"
-            android:textSize="@dimen/text_size_30"
-            android:visibility="visible" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/rlOTPTimer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -77,48 +41,23 @@
                     android:textSize="@dimen/text_size_32"
                     app:font="@string/maven_r"/>
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvOtpPhoneNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="20px"
-                    android:layout_marginTop="20px"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-
-                    <TextView
-                        android:id="@+id/tvOtpPhoneNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text=""
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_32" />
-
-
-                    <ImageView
-                        android:id="@+id/imageViewChangePhoneNumber"
-                        android:layout_width="58px"
-                        android:layout_height="58px"
-                        android:padding="15px"
-                        android:src="@drawable/ic_otp_edit_number_selector"
-                        android:tag="mwar"
-                        android:visibility="gone" />
-                </LinearLayout>
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_32" />
 
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="600px"
+                    android:layout_height="12px"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="30px">
-
-                    <ImageView
-                        android:layout_width="600px"
-                        android:layout_height="12px"
-                        android:src="@drawable/grey_loading_bar"
-                        android:tag="mwar" />
+                    android:layout_marginTop="30px"
+                    android:background="@drawable/grey_loading_bar"
+                    android:tag="mwar"
+                    >
 
                     <ImageView
                         android:id="@+id/imageViewYellowLoadingBar"
@@ -145,7 +84,6 @@
 
     </RelativeLayout>
 
-    <include layout="@layout/layout_splash_login_after_otp"/>
 
     <RelativeLayout
         android:id="@+id/topRl"

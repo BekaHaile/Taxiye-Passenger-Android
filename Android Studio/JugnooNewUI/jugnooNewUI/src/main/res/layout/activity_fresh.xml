@@ -80,8 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:orientation="vertical"
-            android:tag="@string/dont_touch_me"
-            >
+            android:tag="@string/dont_touch_me">
 
             <View
                 android:id="@+id/vCheckoutShadow"

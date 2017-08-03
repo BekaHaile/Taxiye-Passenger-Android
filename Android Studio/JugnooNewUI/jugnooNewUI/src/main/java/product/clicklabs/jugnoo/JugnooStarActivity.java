@@ -21,7 +21,6 @@ import product.clicklabs.jugnoo.adapters.StarMembershipAdapter;
 import product.clicklabs.jugnoo.datastructure.StarPurchaseType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
-import product.clicklabs.jugnoo.fragments.ViewJugnooStarBenefitsFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -145,15 +144,19 @@ public class JugnooStarActivity extends StarBaseActivity implements View.OnClick
     }
 
     private void selectedPlan(RelativeLayout rlPlan, ImageView ivRadio, int subId){
-        //rlPlan1.setBackgroundResource(R.drawable.capsule_white_stroke);
-        //rlPlan2.setBackgroundResource(R.drawable.capsule_white_stroke);
-        ivRadio1.setImageResource(R.drawable.ic_radio_button_normal);
-        ivRadio2.setImageResource(R.drawable.ic_radio_button_normal);
+        try {
+            //rlPlan1.setBackgroundResource(R.drawable.capsule_white_stroke);
+            //rlPlan2.setBackgroundResource(R.drawable.capsule_white_stroke);
+            ivRadio1.setImageResource(R.drawable.ic_radio_button_normal);
+            ivRadio2.setImageResource(R.drawable.ic_radio_button_normal);
 
-        //rlPlan.setBackgroundResource(R.drawable.capsule_white_theme_stroke);
-        ivRadio.setImageResource(R.drawable.ic_order_status_green);
-        subscription = Data.userData.getSubscriptionData().getSubscriptions().get(subId);
-        selectedSubId = new Gson().toJson(subscription);
+            //rlPlan.setBackgroundResource(R.drawable.capsule_white_theme_stroke);
+            ivRadio.setImageResource(R.drawable.ic_order_status_green);
+            subscription = Data.userData.getSubscriptionData().getSubscriptions().get(subId);
+            selectedSubId = new Gson().toJson(subscription);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void performBackPressed() {

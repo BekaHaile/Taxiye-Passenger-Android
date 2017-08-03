@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fugu.FuguConfig;
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -46,6 +47,7 @@ import com.sabkuchfresh.retrofit.model.menus.Charges;
 import com.sabkuchfresh.utils.TextViewStrikeThrough;
 import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -116,6 +118,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private RelativeLayout rlOrderStatusMapPeek;
     private LinearLayout llShadowPeek;
     private int llShadowPeekHeight, openLiveTracking;
+    private JSONObject responseOrderDataApi;
 
 
     @Nullable
@@ -411,10 +414,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i("Server response", "response = " + responseStr);
                         try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt("flag");
-                                String message = JSONParser.getServerMessage(jObj);
+                            responseOrderDataApi = new JSONObject(responseStr);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, responseOrderDataApi)) {
+                                int flag = responseOrderDataApi.getInt("flag");
+                                String message = JSONParser.getServerMessage(responseOrderDataApi);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
                                     llMain.setVisibility(View.VISIBLE);
                                     datum1 = historyResponse.getData().get(0);
@@ -427,6 +430,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                 } else {
                                     retryDialogOrderData(message, DialogErrorType.SERVER_ERROR);
                                 }
+
+
+                            }else{
+
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -925,7 +932,43 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 needHelpClick();
                 break;
             case R.id.reorderBtn:
-                saveHistoryCardToSP(datum1);
+                try {
+                    if(productType==ProductType.MENUS.getOrdinal()){
+                        if(responseOrderDataApi!=null){
+                            JSONArray jsonArray = responseOrderDataApi.getJSONArray("data");
+                            if(jsonArray!=null && jsonArray.length()>0){
+                                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                                Integer restaurantId = jsonObject.getInt(Constants.KEY_RESTAURANT_ID);
+                                JSONArray cartItems = jsonObject.getJSONArray("order_items");
+                                LatLng delLatlng =null;
+                                String delAddress  = null;
+                                try {
+                                    if(jsonObject.has("delivery_latitude") && jsonObject.has("delivery_longitude")){
+                                        Double delivery_latitude = jsonObject.getDouble("delivery_latitude");
+                                        Double delivery_longitude = jsonObject.getDouble("delivery_longitude");
+                                        delLatlng = new LatLng(delivery_latitude,delivery_longitude);
+                                    }
+                                    if(jsonObject.has("delivery_address")){
+                                        delAddress  = jsonObject.getString("delivery_address");
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                reorderMenus(cartItems,restaurantId,delLatlng,delAddress);
+
+                            }
+                        }
+
+                    }else{
+                        saveHistoryCardToSP(datum1);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
                 break;
             case R.id.cancelfeedbackBtn:
                 needHelpClick();
@@ -960,7 +1003,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     public void saveHistoryCardToSP(HistoryResponse.Datum orderHistory) {
         try {
-            // TODO: 19/03/17 check for reorder cart fill
+            // TODO: 19/03/17 check for reorderMenus cart fill
 //            JSONObject jCart = new JSONObject();
 //            if (orderHistory.getOrderItems() != null) {
 //                Gson gson = new Gson();
@@ -1136,6 +1179,27 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         return null;
     }
 
-    private Handler handler = new Handler();
+
+
+    public void reorderMenus(JSONArray jsonArray, int restaurantId, LatLng latLng, String delAddress){
+
+
+        if(activity instanceof FreshActivity && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getMenusClientId())){
+
+            ((FreshActivity)activity).onBackPressed();
+
+            ((FreshActivity)activity).fetchRestaurantMenuAPI(restaurantId,true,jsonArray, latLng, orderId, delAddress);
+        }else {
+            Prefs.with(activity).save(Constants.ORDER_STATUS_PENDING_ID,restaurantId);
+            Prefs.with(activity).save(Constants.ORDER_STATUS_JSON_ARRAY,jsonArray.toString());
+            Prefs.with(activity).save(Constants.ORDER_STATUS_LAT_LNG,latLng);
+            Prefs.with(activity).save(Constants.ORDER_STATUS_ORDER_ID,orderId);
+            Prefs.with(activity).save(Constants.ORDER_STATUS_ADDRESS,delAddress);
+            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), new LatLng(Data.latitude,Data.longitude), false);
+
+
+        }
+    }
+
 
 }
