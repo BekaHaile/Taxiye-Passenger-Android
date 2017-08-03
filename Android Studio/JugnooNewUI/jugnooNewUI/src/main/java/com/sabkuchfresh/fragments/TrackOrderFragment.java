@@ -468,7 +468,8 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 											} else {
 												MarkerAnimation.animateMarkerToICS("-1", markerDriver,
 														latLngDriver, new LatLngInterpolator.LinearFixed(),
-														callbackAnim, true, googleMap, ContextCompat.getColor(activity, R.color.theme_color));
+														callbackAnim, true, googleMap, ContextCompat.getColor(activity, R.color.theme_color),
+														ContextCompat.getColor(activity, R.color.text_color_30alpha), ASSL.Xscale() * 7f);
 											}
 											if (!zoomedFirstTime) {
 												zoomToDriverAndDrop();

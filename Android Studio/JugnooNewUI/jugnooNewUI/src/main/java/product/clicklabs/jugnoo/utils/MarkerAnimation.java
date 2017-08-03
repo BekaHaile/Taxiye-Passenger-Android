@@ -91,7 +91,10 @@ public class MarkerAnimation {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, boolean animateRoute, GoogleMap googleMap, int pathResolvedColor) {
+    public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition,
+                                          final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim,
+                                          boolean animateRoute, GoogleMap googleMap, int pathResolvedColor,
+                                          int untrackedPathColor, float pathWidth) {
 
         try {
             if(MapUtils.distance(marker.getPosition(), finalPosition) < 80
@@ -104,11 +107,16 @@ public class MarkerAnimation {
                     List<Double> durationList = new ArrayList<>();
                     durationList.add(ANIMATION_TIME);
                     clearPolylines();
+
+                    PolylineOptions polylineOptions = new PolylineOptions().color(untrackedPathColor).width(pathWidth)
+                            .geodesic(true).add(marker.getPosition()).addAll(list);
+                    polylines.add(googleMap.addPolyline(polylineOptions));
                     animatePath(marker.getPosition(), googleMap, list, durationList, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
                 }
 			}
 			else{
-                getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim, animateRoute, googleMap, pathResolvedColor));
+                getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator,
+                        callbackAnim, animateRoute, googleMap, pathResolvedColor, untrackedPathColor, pathWidth));
                 if(getDirectionsAsyncs.size() == 1){
                     getDirectionsAsyncs.get(0).execute();
                 }
@@ -128,8 +136,10 @@ public class MarkerAnimation {
     }
 
 
-    public static void animateMarkerOnList(Marker marker, List<LatLng> list, final LatLngInterpolator latLngInterpolator, GoogleMap googleMap, int pathResolvedColor){
-        getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, null, list, true, googleMap, pathResolvedColor));
+    public static void animateMarkerOnList(Marker marker, List<LatLng> list, final LatLngInterpolator latLngInterpolator,
+                                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth){
+        getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, null, list, true,
+                googleMap, pathResolvedColor, untrackedPathColor, pathWidth));
         Log.e("getDirectionsAsyncs.size", "="+getDirectionsAsyncs.size());
         //true, googleMap,ContextCompat.getColor(TrackOrderActivity.this,R.color.theme_color)
         if(getDirectionsAsyncs.size() == 1){
@@ -155,9 +165,13 @@ public class MarkerAnimation {
         double totalDistance;
         boolean animateRoute;
         GoogleMap googleMap;
-        int pathResolvedColor;
+        int pathResolvedColor, untrackedPathColor;
+        float pathWidth;
 
-        GetDirectionsAsync(String engagementId, Marker marker, LatLng destination, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, boolean animateRoute, GoogleMap googleMap, int pathResolvedColor){
+        public GetDirectionsAsync(String engagementId, Marker marker, LatLng destination,
+                                  LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim,
+                                  boolean animateRoute, GoogleMap googleMap, int pathResolvedColor,
+                                  int untrackedPathColor, float pathWidth){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.destination = destination;
@@ -167,9 +181,13 @@ public class MarkerAnimation {
             this.animateRoute = animateRoute;
             this.googleMap = googleMap;
             this.pathResolvedColor = pathResolvedColor;
+            this.untrackedPathColor = untrackedPathColor;
+            this.pathWidth = pathWidth;
         }
 
-        public GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, List<LatLng> list, boolean animateRoute, GoogleMap googleMap, int pathResolvedColor){
+        public GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator,
+                                  CallbackAnim callbackAnim, List<LatLng> list, boolean animateRoute,
+                                  GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.marker = marker;
@@ -179,6 +197,8 @@ public class MarkerAnimation {
             this.animateRoute = animateRoute;
             this.googleMap = googleMap;
             this.pathResolvedColor = pathResolvedColor;
+            this.untrackedPathColor = untrackedPathColor;
+            this.pathWidth = pathWidth;
         }
 
         @Override
@@ -236,7 +256,9 @@ public class MarkerAnimation {
                             durationList.addAll(duration);
                             clearPolylines();
                             if(latLngList.size() > 0) {
-                                animatePath(lastLatLng, googleMap, latLngList, durationList, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
+                                PolylineOptions polylineOptions = new PolylineOptions().color(untrackedPathColor).width(pathWidth).geodesic(true).add(lastLatLng).addAll(latLngList);
+                                polylines.add(googleMap.addPolyline(polylineOptions));
+                                animatePath(lastLatLng, googleMap, latLngList, durationList, pathResolvedColor, pathWidth, latLngInterpolator);
                             }
                         }
 
@@ -420,14 +442,6 @@ public class MarkerAnimation {
                             if(latLngList.size() > 0){
                                 polylines.add(foregroundPolyline);
                                 animatePath(currLatLng, googleMap, latLngList, durationList, pathResolvedColor, pathWidth, latLngInterpolator);
-                            } else {
-                                polylines.add(foregroundPolyline);
-                                PolylineOptions polylineOptions = new PolylineOptions().color(pathResolvedColor).width(pathWidth).geodesic(true);
-                                for(Polyline polyline : polylines){
-                                    polylineOptions.addAll(polyline.getPoints());
-                                }
-                                clearPolylines();
-                                polylines.add(googleMap.addPolyline(polylineOptions));
                             }
                         }
                     });
