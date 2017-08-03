@@ -218,6 +218,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private ImageView imageViewIcici;
     private final static IntentFilter ICICI_STATUS_BROADCAST_FILTER = new IntentFilter(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE);
     private TextView tvLabelIciciUpi;
+    private TextView tvMinOrderLabelDisplay;
 
 
     public FreshCheckoutMergedFragment() {
@@ -273,6 +274,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_checkout_merged, container, false);
+        rootView = inflater.inflate(R.layout.fragment_fresh_checkout_merged, container, false);
 
         cartChangedRefreshCheckout = false;
         activity = (FreshActivity) getActivity();
@@ -283,6 +285,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         GAUtils.trackScreenView(activity.getGaCategory() + CHECKOUT);
 
         linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+        tvMinOrderLabelDisplay=(TextView)rootView.findViewById(R.id.tv_min_order_label);
+
         try {
             if (linearLayoutRoot != null) {
                 new ASSL(activity, linearLayoutRoot, 1134, 720, false);
@@ -394,7 +398,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         ((TextView) rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView) rootView.findViewById(R.id.textViewPaymentVia)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView) rootView.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
-
 
         relativeLayoutCartTop = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCartTop);
         textViewCartItems = (TextView) rootView.findViewById(R.id.textViewCartItems);
@@ -2948,6 +2951,25 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             subTotalAmount = pair.first;
             updateCartTopBarView(pair);
             updateCartUI();
+
+            if(activity.getAppType()== AppConstant.ApplicationType.MENUS && activity.getVendorOpened()!=null){
+
+                double diffDouble = activity.getVendorOpened().getMinimumOrderAmount()-subTotalAmount;
+                if(diffDouble>0){
+                    String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
+                    tvMinOrderLabelDisplay.setText(textToSet);
+                    tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
+
+
+                }else{
+                    tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                }
+
+            }else{
+                tvMinOrderLabelDisplay.setVisibility(View.GONE);
+
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
