@@ -29,7 +29,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
+import android.text.method.LinkMovementMethod;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
@@ -2402,7 +2402,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			textMessage.setTypeface(Fonts.mavenLight(activity));
 			textHead.setVisibility(View.VISIBLE);
 
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMovementMethod(LinkMovementMethod.getInstance());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
 			textHead.setText(title);

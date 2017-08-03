@@ -7,7 +7,7 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.WindowManager;
@@ -108,7 +108,7 @@ public class PriorityTipDialog {
 
             textViewTipValue.setText(String.valueOf(fareFactor) + "X");
 
-            textMessage.setMovementMethod(new ScrollingMovementMethod());
+            textMessage.setMovementMethod(LinkMovementMethod.getInstance());
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
             final Button btnOk = (Button) dialog.findViewById(R.id.btnOk);

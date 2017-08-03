@@ -35,7 +35,8 @@
             android:textColorLink="@color/theme_color"
             android:text="@string/free_ride_desc"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34" />
+            android:textSize="@dimen/text_size_34"
+            />
 
     </LinearLayout>
 

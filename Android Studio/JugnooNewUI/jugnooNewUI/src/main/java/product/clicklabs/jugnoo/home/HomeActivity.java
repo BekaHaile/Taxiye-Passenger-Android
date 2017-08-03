@@ -38,7 +38,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
+import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.view.Gravity;
@@ -5597,7 +5597,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
             textMessage.setTypeface(Fonts.mavenMedium(activity));
 
-            textMessage.setMovementMethod(new ScrollingMovementMethod());
+            textMessage.setMovementMethod(LinkMovementMethod.getInstance());
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
             if (zeroDriversNearby) {
