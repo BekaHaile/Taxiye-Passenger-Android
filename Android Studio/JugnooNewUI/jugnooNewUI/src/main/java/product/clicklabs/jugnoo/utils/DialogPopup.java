@@ -298,7 +298,7 @@ public class DialogPopup {
 			}
 			
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFadeNew;
 			dialog.setContentView(R.layout.dialog_custom_one_button);
 
 			RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);

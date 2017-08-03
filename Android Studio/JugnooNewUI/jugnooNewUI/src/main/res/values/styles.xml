@@ -841,5 +841,8 @@
         <item name="android:background">@drawable/bg_white_layer_shadow</item>
     </style>
 
+    <style name="Animations.LoadingDialogFadeNew" parent="Animations.LoadingDialogFade">
+        <item name="windowActionModeOverlay">true</item>
+    </style>
 
 </resources>

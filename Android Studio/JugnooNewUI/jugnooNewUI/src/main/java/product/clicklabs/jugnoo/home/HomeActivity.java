@@ -6223,7 +6223,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                                 getResources().getColor(R.color.google_path_polyline_color), ASSL.Xscale() * 7f);
                                                     }
 
-													if(zoomAfterDropSet) {
+													if(!zoomAfterDropSet) {
 														zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
 													}
                                                 }
