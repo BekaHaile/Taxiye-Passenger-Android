@@ -922,11 +922,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return mBus;
     }
 
+    private boolean isLocationChangeCheckedAfterResume;
     @Override
     protected void onResume() {
         super.onResume();
         try {
-
+            isLocationChangeCheckedAfterResume = false;
             isTimeAutomatic();
 
             if (Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getAutosClientId())) {
@@ -2976,6 +2977,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         try {
                             if (getFreshCheckoutMergedFragment() != null) {
                                 getFreshCheckoutMergedFragment().updateAddressView();
+                                setRefreshCart(true);
                                 GAUtils.event(getGaCategory(), CHECKOUT, DELIVERY_ADDRESS+MODIFIED);
                             } else if (getProsCheckoutFragment() != null) {
                                 getProsCheckoutFragment().updateAddressView();
@@ -4239,6 +4241,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         public void onLocationChanged(Location location) {
             Data.latitude = location.getLatitude();
             Data.longitude = location.getLongitude();
+
+            if (!isLocationChangeCheckedAfterResume) {
+                LatLng currentLatlng = new LatLng(Data.latitude,Data.longitude);
+                if(MapUtils.distance(currentLatlng,getSelectedLatLng())>2000) {
+                    setSelectedLatLng(currentLatlng);
+                    setSelectedAddress("");
+                    setSelectedAddressType("");
+                    setSelectedAddressId(0);
+                    saveOfferingLastAddress(getAppType());
+                    setLocalityAddressFirstTime(getAppType());
+                }
+            }
+            isLocationChangeCheckedAfterResume=true;
         }
     };
 
