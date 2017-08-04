@@ -70,6 +70,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -370,6 +371,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			//clear Menu Reorder Prefs
 			Prefs.with(this).remove(Constants.ORDER_STATUS_PENDING_ID);
 			Prefs.with(this).remove(Constants.ORDER_STATUS_JSON_ARRAY);
+			Prefs.with(this).remove(Constants.ORDER_STATUS_ORDER_ID);
+			Prefs.with(this).remove(Constants.ORDER_STATUS_LAT_LNG);
+			FreshActivity.saveAddressRefreshBoolean(this,true);
+
 
 			try {
 				Data.TRANSFER_FROM_JEANIE = 0;

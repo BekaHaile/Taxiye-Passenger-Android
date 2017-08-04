@@ -2977,7 +2977,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         try {
                             if (getFreshCheckoutMergedFragment() != null) {
                                 getFreshCheckoutMergedFragment().updateAddressView();
-                                setRefreshCart(true);
                                 GAUtils.event(getGaCategory(), CHECKOUT, DELIVERY_ADDRESS+MODIFIED);
                             } else if (getProsCheckoutFragment() != null) {
                                 getProsCheckoutFragment().updateAddressView();
@@ -3660,6 +3659,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             }
+            if(event.hasUserChangedAddress){
+                FreshActivity.saveAddressRefreshBoolean(this,false);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3927,6 +3929,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
+
+
     public interface CityChangeCallback {
         void onYesClick();
 
@@ -3937,6 +3941,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private Gson gson = new Gson();
     public Gson getGson(){
         return gson;
+    }
+
+    public static void saveAddressRefreshBoolean(Activity activity,boolean isEnable){
+        Prefs.with(activity).save(Constants.SHOULD_REFRESH_ADDRESS,isEnable);
+    }
+    public static boolean shouldRefreshAddress(Activity activity){
+        return Prefs.with(activity).getBoolean(Constants.SHOULD_REFRESH_ADDRESS,false);
     }
 
     public void saveDeliveryAddressModel() {
@@ -4242,7 +4253,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             Data.latitude = location.getLatitude();
             Data.longitude = location.getLongitude();
 
-            if (!isLocationChangeCheckedAfterResume) {
+            if (!isLocationChangeCheckedAfterResume && shouldRefreshAddress(FreshActivity.this)) {
                 LatLng currentLatlng = new LatLng(Data.latitude,Data.longitude);
                 if(MapUtils.distance(currentLatlng,getSelectedLatLng())>2000) {
                     setSelectedLatLng(currentLatlng);
