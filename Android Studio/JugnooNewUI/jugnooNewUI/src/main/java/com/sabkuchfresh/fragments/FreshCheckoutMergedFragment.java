@@ -274,7 +274,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_checkout_merged, container, false);
-        rootView = inflater.inflate(R.layout.fragment_fresh_checkout_merged, container, false);
 
         cartChangedRefreshCheckout = false;
         activity = (FreshActivity) getActivity();
@@ -663,7 +662,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         imageViewDeleteCart.setVisibility(View.GONE);
 
         checkoutApiDoneOnce = false;
-
+        showPaySliderEnabled(true);
         activity.tvSlide.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -762,7 +761,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         activity.rlSliderContainer.setBackgroundResource(R.drawable.bg_rectangle_gradient_normal);
         activity.relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
         activity.sliderText.setVisibility(View.VISIBLE);
-        activity.viewAlpha.setAlpha(0.0f);
+
+        activity.viewAlpha.setAlpha(activity.viewAlpha.getTag()!=null && activity.viewAlpha.getTag().equals("Disabled")?1.0f:0.0f);
     }
 
     private float getRelativeSliderLeftMargin() {
@@ -771,6 +771,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private long animDuration = 150;
+
 
     private void animateSliderButton(final int currMargin, final float newMargin) {
         float diff = newMargin - (float) currMargin;
@@ -2959,13 +2960,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
                     tvMinOrderLabelDisplay.setText(textToSet);
                     tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
-
+                    showPaySliderEnabled(false);
 
                 }else{
+
+                    showPaySliderEnabled(true);
                     tvMinOrderLabelDisplay.setVisibility(View.GONE);
                 }
 
             }else{
+                showPaySliderEnabled(true);
                 tvMinOrderLabelDisplay.setVisibility(View.GONE);
 
             }
@@ -3583,5 +3587,23 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
+    public void showPaySliderEnabled(boolean isEnable){
 
+
+            if(isEnable){
+                if(activity.viewAlpha.getTag()!=null && activity.viewAlpha.getTag().equals("Disabled")){
+                    activity.viewAlpha.setTag("Enabled");
+                    activity.viewAlpha.setBackgroundColor(ContextCompat.getColor(activity,R.color.slider_green));
+                    activity.viewAlpha.setAlpha(0);
+
+                }
+            }else{
+                activity.viewAlpha.setTag("Disabled");
+                activity.viewAlpha.setBackgroundColor(ContextCompat.getColor(activity,R.color.grey_969696));
+                activity.viewAlpha.setAlpha(1);
+            }
+
+
+
+    }
 }

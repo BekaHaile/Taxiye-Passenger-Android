@@ -326,8 +326,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
 
                     statusHolder.tvViewOrder.setTag(position);
+                    statusHolder.container.setTag(position);
                     statusHolder.tvTrackOrder.setTag(position);
                     statusHolder.tvViewOrder.setOnClickListener(viewOrderOnClickListener);
+                    statusHolder.container.setOnClickListener(viewOrderOnClickListener);
                     statusHolder.tvTrackOrder.setOnClickListener(trackOrderOnClickListener);
                     statusHolder.tvDeliveryTime.setOnClickListener(null);
                     statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
