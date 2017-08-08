@@ -366,7 +366,8 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 								|| PushFlags.MENUS_STATUS.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag)) {
 							if(activity instanceof RideTransactionsActivity) {
-								((RideTransactionsActivity) activity).performBackPressed();
+								activity.finish();
+								activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 								new Handler().postDelayed(new Runnable() {
 									@Override
 									public void run() {
