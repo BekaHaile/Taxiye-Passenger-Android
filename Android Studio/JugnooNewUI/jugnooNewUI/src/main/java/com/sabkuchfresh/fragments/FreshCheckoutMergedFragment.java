@@ -194,6 +194,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private CardView cvStarSavings, cvBecomeStar;
     private TextView tvStarSavingsValue;
+    private View shadowMinOrder;
 
 
     private ArrayList<Slot> slots = new ArrayList<>();
@@ -473,7 +474,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rlDeliveryFrom = (RelativeLayout) rootView.findViewById(R.id.rlDeliveryFrom);
         tvRestName = (TextView) rootView.findViewById(R.id.tvRestName);
         tvRestAddress = (TextView) rootView.findViewById(R.id.tvRestAddress);
-
+        shadowMinOrder = (View)rootView.findViewById(R.id.shadow_top_min_order);
 
         linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
@@ -2960,17 +2961,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
                     tvMinOrderLabelDisplay.setText(textToSet);
                     tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
+                    shadowMinOrder.setVisibility(View.VISIBLE);
                     showPaySliderEnabled(false);
 
                 }else{
 
                     showPaySliderEnabled(true);
                     tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                    shadowMinOrder.setVisibility(View.GONE);
                 }
 
             }else{
                 showPaySliderEnabled(true);
                 tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                shadowMinOrder.setVisibility(View.GONE);
 
             }
 

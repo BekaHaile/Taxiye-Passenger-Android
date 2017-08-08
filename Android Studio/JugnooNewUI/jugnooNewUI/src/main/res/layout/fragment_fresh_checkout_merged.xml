@@ -22,6 +22,13 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <ImageView
+        android:id="@+id/shadow_top_min_order"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_7"
+        android:tag="@string/dont_touch_me"
+        android:layout_below="@id/tv_min_order_label"
+        android:src="@drawable/shadow_down_new"/>
 
     <ScrollView
         android:id="@+id/scrollView"

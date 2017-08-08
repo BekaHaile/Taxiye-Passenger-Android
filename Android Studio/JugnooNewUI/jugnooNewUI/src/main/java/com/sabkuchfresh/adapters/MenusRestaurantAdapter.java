@@ -2,8 +2,11 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -449,8 +452,16 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             (int)(ASSL.Yscale() * 26f));
                     paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.textViewRestaurantCloseTime.getId());
                     mHolder.imageViewRestaurantImage.setColorFilter(BW_FILTER);
+                    mHolder.tvOffer.getBackground().setColorFilter(BW_FILTER);
+                    mHolder.viewOffer.getBackground().setColorFilter(BW_FILTER);
+                    mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
+
                 } else {
                     mHolder.imageViewRestaurantImage.setColorFilter(null);
+                    mHolder.tvOffer.getBackground().setColorFilter(null);
+                    mHolder.viewOffer.getBackground().setColorFilter(null);
+                    mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.order_history_status_color));
+
                     // restaurant about to close
                     if (minutes <= vendor.getBufferTime() && minutes > 0) {
                         mHolder.textViewRestaurantCloseTime.setText("Closing in " + minutes + (minutes>1?" mins":" min"));
@@ -537,6 +548,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 if (vendor.getRating() != null && vendor.getRating() >= 1d) {
                     visibilityRating = View.VISIBLE;
                     activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(), vendor.getColorCode(), true);
+                    if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
+                        if(mHolder.tvRating.getBackground()!=null){
+                            mHolder.tvRating.getBackground().setColorFilter(BW_FILTER);
+
+
+                        }
+                    }
                 }
                 mHolder.tvRating.setVisibility(visibilityRating);
 

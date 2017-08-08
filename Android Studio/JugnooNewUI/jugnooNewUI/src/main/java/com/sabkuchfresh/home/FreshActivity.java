@@ -2489,7 +2489,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     @Override
     protected void onPause() {
         super.onPause();
-
+        isLocationChangeCheckedAfterResume = false;
         try {
             Utils.hideKeyboard(this);
         } catch (Exception e) {
