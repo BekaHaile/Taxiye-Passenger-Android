@@ -2,6 +2,8 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -89,6 +91,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final int NO_VENDORS_ITEM = 4;
     private static final int OFFERS_PAGER_ITEM = 5;
     private static final int OFFER_STRIP_ITEM = 6;
+   private final static ColorMatrix BW_MATRIX = new ColorMatrix();
+   private final static  ColorMatrixColorFilter BW_FILTER;
+    static {
+        BW_MATRIX.setSaturation(0);
+        BW_FILTER = new ColorMatrixColorFilter(BW_MATRIX);
+
+    }
 
 
 
@@ -439,7 +448,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 23f), paramsDelivery.rightMargin,
                             (int)(ASSL.Yscale() * 26f));
                     paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.textViewRestaurantCloseTime.getId());
+                    mHolder.imageViewRestaurantImage.setColorFilter(BW_FILTER);
                 } else {
+                    mHolder.imageViewRestaurantImage.setColorFilter(null);
                     // restaurant about to close
                     if (minutes <= vendor.getBufferTime() && minutes > 0) {
                         mHolder.textViewRestaurantCloseTime.setText("Closing in " + minutes + (minutes>1?" mins":" min"));
@@ -539,6 +550,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 				mHolder.tvOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.GONE:View.VISIBLE);
 				mHolder.viewOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.GONE:View.VISIBLE);
 				mHolder.tvOffer.setText(vendor.getOfferText());
+
 
             } else if (holder instanceof ViewHolderRestaurantForm) {
                 ViewHolderRestaurantForm titleHolder = ((ViewHolderRestaurantForm) holder);
