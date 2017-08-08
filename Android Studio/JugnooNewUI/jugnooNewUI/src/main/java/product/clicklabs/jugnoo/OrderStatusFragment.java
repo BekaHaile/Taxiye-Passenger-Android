@@ -1133,26 +1133,28 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private void openTrackOrderFragment(){
         if(datum1.getLiveTracking() != null
                 && datum1.getLiveTracking().getShowLiveTracking() == 1 && datum1.getLiveTracking().getDeliveryId() > 0) {
-            rlOrderStatusMapPeek.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
-            llShadowPeek.setVisibility(View.VISIBLE);
-            rlContainer.setVisibility(View.VISIBLE);
-            getChildFragmentManager().beginTransaction()
-                    .replace(rlContainer.getId(), TrackOrderFragment.newInstance(Data.userData.accessToken,
-                            datum1.getOrderId(), datum1.getLiveTracking().getDeliveryId(),
-                            datum1.getLiveTracking().getPickupLatitude(), datum1.getLiveTracking().getPickupLongitude(),
-                            datum1.getLiveTracking().getDeliveryLatitude(), datum1.getLiveTracking().getDeliveryLongitude(),
-                            datum1.getLiveTracking().getShowDeliveryRoute(), datum1.getLiveTracking().getDriverPhoneNo(), llShadowPeekHeight,
-                            openLiveTracking != 1),
-                            TrackOrderFragment.class.getName())
-                    .commit();
+            if(getChildFragmentManager().findFragmentByTag(TrackOrderFragment.class.getName()) == null) {
+                rlOrderStatusMapPeek.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+                llShadowPeek.setVisibility(View.VISIBLE);
+                rlContainer.setVisibility(View.VISIBLE);
+                getChildFragmentManager().beginTransaction()
+                        .replace(rlContainer.getId(), TrackOrderFragment.newInstance(Data.userData.accessToken,
+                                datum1.getOrderId(), datum1.getLiveTracking().getDeliveryId(),
+                                datum1.getLiveTracking().getPickupLatitude(), datum1.getLiveTracking().getPickupLongitude(),
+                                datum1.getLiveTracking().getDeliveryLatitude(), datum1.getLiveTracking().getDeliveryLongitude(),
+                                datum1.getLiveTracking().getShowDeliveryRoute(), datum1.getLiveTracking().getDriverPhoneNo(), llShadowPeekHeight,
+                                openLiveTracking != 1),
+                                TrackOrderFragment.class.getName())
+                        .commit();
 
-            if(openLiveTracking == 1){
-                scrollView.setVisibility(View.GONE);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                bottomSheetBehavior.setLocked(true);
-            } else {
-                scrollView.setVisibility(View.VISIBLE);
-                bottomSheetBehavior.setLocked(false);
+                if (openLiveTracking == 1) {
+                    scrollView.setVisibility(View.GONE);
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    bottomSheetBehavior.setLocked(true);
+                } else {
+                    scrollView.setVisibility(View.VISIBLE);
+                    bottomSheetBehavior.setLocked(false);
+                }
             }
         } else {
             bottomSheetBehavior.setLocked(true);

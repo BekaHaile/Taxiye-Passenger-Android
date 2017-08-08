@@ -148,9 +148,13 @@ public class MarkerAnimation {
 
 
     private static void checkAndExecute(){
-        getDirectionsAsyncs.remove(0);
-        if(getDirectionsAsyncs.size() > 0){
-            getDirectionsAsyncs.get(0).execute();
+        try {
+            getDirectionsAsyncs.remove(0);
+            if(getDirectionsAsyncs.size() > 0){
+				getDirectionsAsyncs.get(0).execute();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -4369,8 +4369,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                 && !isNormalRideWithDropAtConfirmation()
                                 && !isSpecialPickupScreenOpened()) {
                             callAndHandleStateRestoreAPI(false);
+                        } else {
+                            initiateTimersForStates(passengerScreenMode);
                         }
-                        initiateTimersForStates(passengerScreenMode);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
