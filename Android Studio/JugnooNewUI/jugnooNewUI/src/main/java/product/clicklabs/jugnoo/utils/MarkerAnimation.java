@@ -40,6 +40,8 @@ public class MarkerAnimation {
     private static final String TAG = MarkerAnimation.class.getSimpleName();
     private static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
     private static final double ANIMATION_TIME = 14000;
+    private static final double MIN_DISTANCE = 80;
+    private static final double MAX_DISTANCE = 4000;
 
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         final LatLng startPosition = marker.getPosition();
@@ -96,16 +98,16 @@ public class MarkerAnimation {
                                           int untrackedPathColor, float pathWidth) {
 
         try {
-            if(MapUtils.distance(marker.getPosition(), finalPosition) < 80
-					|| MapUtils.distance(marker.getPosition(), finalPosition) > 2000){
+            if(MapUtils.distance(marker.getPosition(), finalPosition) < MIN_DISTANCE
+					|| MapUtils.distance(marker.getPosition(), finalPosition) > MAX_DISTANCE){
                 //marker.setPosition(finalPosition);
                 animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim);
+                clearPolylines();
                 if(animateRoute && googleMap != null){
                     List<LatLng> list = new ArrayList<>();
                     list.add(finalPosition);
                     List<Double> durationList = new ArrayList<>();
                     durationList.add(ANIMATION_TIME);
-                    clearPolylines();
 
                     PolylineOptions polylineOptions = new PolylineOptions().color(untrackedPathColor).width(pathWidth)
                             .geodesic(true).add(marker.getPosition()).addAll(list);
@@ -237,6 +239,7 @@ public class MarkerAnimation {
             super.onPostExecute(result);
             try {
                 if (result != null) {
+                    clearPolylines();
                     if(list==null && !TextUtils.isEmpty(result)) {
                         JSONObject jObj = new JSONObject(result);
                         totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
@@ -257,7 +260,7 @@ public class MarkerAnimation {
                             latLngList.addAll(list);
                             List<Double> durationList = new ArrayList<>();
                             durationList.addAll(duration);
-                            clearPolylines();
+
                             if(latLngList.size() > 0) {
                                 PolylineOptions polylineOptions = new PolylineOptions().color(untrackedPathColor).width(pathWidth).geodesic(true).add(lastLatLng).addAll(latLngList);
                                 polylines.add(googleMap.addPolyline(polylineOptions));
@@ -421,7 +424,7 @@ public class MarkerAnimation {
     }
 
     private static ArrayList<Polyline> polylines = new ArrayList<>();
-    private static void clearPolylines(){
+    public static void clearPolylines(){
         if(polylines != null){
             for(Polyline polyline : polylines){
                 polyline.remove();

@@ -530,9 +530,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 										for(int j=0; j<=positionNearCurr; j++){
 											polylineOptions1.add(list.get(j));
 										}
-										polylineOptions1.add(latLngCurr);
 
-										polylineOptions2.add(latLngDriver);
 										for (int k = positionNearNew; k < list.size(); k++) {
 											polylineOptions2.add(list.get(k));
 										}
@@ -541,11 +539,9 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 										//to animate driver between curr and new points
 										if(positionNearNew > positionNearCurr+1) {
 											List<LatLng> latLngsAnimateDriver = new ArrayList<LatLng>();
-											latLngsAnimateDriver.add(latLngCurr);
-											for(int l=positionNearCurr+1; l<positionNearNew; l++){
+											for(int l=positionNearCurr; l<=positionNearNew; l++){
 												latLngsAnimateDriver.add(list.get(l));
 											}
-											latLngsAnimateDriver.add(latLngDriver);
 
 											int pathColor = ContextCompat.getColor(activity, R.color.theme_color);
 											int untrackedPathColor = ContextCompat.getColor(activity, R.color.text_color_30alpha);
@@ -561,6 +557,8 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 													ASSL.Xscale() * 7f);
 											latLngsDriverAnim.clear();
 											latLngsDriverAnim.addAll(latLngsAnimateDriver);
+										} else {
+											MarkerAnimation.clearPolylines();
 										}
 
 

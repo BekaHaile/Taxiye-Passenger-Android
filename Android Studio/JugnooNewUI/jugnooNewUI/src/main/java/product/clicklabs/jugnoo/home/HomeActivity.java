@@ -6263,7 +6263,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 												new LatLngInterpolator.LinearFixed(), map,
 												RIDE_ELAPSED_PATH_COLOR,
 												untrackedPathColor, ASSL.Xscale() * 7f);
-									}
+									} else {
+                                        MarkerAnimation.clearPolylines();
+                                    }
 
                                     if(zoom) {
 										zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsListForDriverAnimation);
