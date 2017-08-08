@@ -547,13 +547,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 int visibilityRating = View.GONE;
                 if (vendor.getRating() != null && vendor.getRating() >= 1d) {
                     visibilityRating = View.VISIBLE;
-                    activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(), vendor.getColorCode(), true);
                     if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
-                        if(mHolder.tvRating.getBackground()!=null){
-                            mHolder.tvRating.getBackground().setColorFilter(BW_FILTER);
-
-
-                        }
+                        activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(),"#9d9d9d", true);
+                    }
+                    else{
+                        activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(), vendor.getColorCode(), true);
                     }
                 }
                 mHolder.tvRating.setVisibility(visibilityRating);
