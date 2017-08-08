@@ -3312,15 +3312,17 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
-                            clearMap();
+                            if(driverMarkerInRide == null) {
+                                clearMap();
 
-                            if (Data.autoData.getPickupLatLng() != null) {
-                                pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
-                            }
+                                if (Data.autoData.getPickupLatLng() != null) {
+                                    pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
+                                }
 
-                            if(Data.autoData.getDropLatLng() != null) {
-                                setDropLocationMarker();
-                                setPickupToDropPath();
+                                if (Data.autoData.getDropLatLng() != null) {
+                                    setDropLocationMarker();
+                                    setPickupToDropPath();
+                                }
                             }
                         }
 
@@ -6021,7 +6023,10 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                             JSONArray jsonArray = jObj.getJSONArray("locations");
                                             LatLng lastLatLng = null;
                                             List<LatLng> latLngsList = new ArrayList<LatLng>();
-                                            latLngsList.add(Data.autoData.getAssignedDriverInfo().latLng);
+                                            LatLng driverLatLng = driverMarkerInRide != null ? driverMarkerInRide.getPosition() : Data.autoData.getAssignedDriverInfo().latLng;
+                                            latLngsList.add(driverLatLng);
+                                            double distFromDriverLl = Double.MAX_VALUE;
+                                            int firstPos = -1;
                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                                 RidePath currentRidePath = new RidePath(
@@ -6033,17 +6038,49 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
                                                 ridePathsList.add(currentRidePath);
 
-                                                LatLng start = new LatLng(currentRidePath.sourceLatitude, currentRidePath.sourceLongitude);
-                                                LatLng end = new LatLng(currentRidePath.destinationLatitude, currentRidePath.destinationLongitude);
-//                                                PolylineOptions polylineOptions = new PolylineOptions();
-//                                                polylineOptions.width(ASSL.Xscale() * 7);
-//                                                polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
-//                                                polylineOptions.geodesic(false);
-//                                                polylineOptions.add(start, end);
-//                                                getPolylineOptionsInRideDriverPath().add(polylineOptions);
-                                                lastLatLng = end;
-                                                latLngsList.add(end);
+                                                double dist = MapUtils.distance(driverLatLng, currentRidePath.getSourceLatLng());
+                                                if(dist < distFromDriverLl){
+                                                    distFromDriverLl = dist;
+                                                    firstPos = i;
+                                                }
                                             }
+                                            // sorting logic
+                                            if(firstPos > -1) {
+                                                List<RidePath> ridePathsSorted = new ArrayList<RidePath>();
+                                                ridePathsList.add(0, ridePathsList.remove(firstPos));
+
+												ridePathsSorted.add(ridePathsList.get(0));
+
+												while(ridePathsSorted.size() < ridePathsList.size()){
+													RidePath ridePath = ridePathsSorted.get(ridePathsSorted.size()-1);
+													RidePath ridePathNearest = null;
+													double distFromCurr = Double.MAX_VALUE;
+													for (RidePath ridePathI : ridePathsList) {
+														if(ridePath.ridePathId != ridePathI.ridePathId && !ridePathsSorted.contains(ridePathI)){
+															double dist = MapUtils.distance(ridePath.getDestinationLatLng(), ridePathI.getSourceLatLng());
+															if(dist < distFromCurr){
+																distFromCurr = dist;
+																ridePathNearest = ridePathI;
+															}
+														}
+													}
+													if(ridePathNearest != null){
+														ridePathsSorted.add(ridePathNearest);
+													}
+												}
+
+												if(ridePathsList.size() == ridePathsSorted.size()){
+													ridePathsList.clear();
+													ridePathsList.addAll(ridePathsSorted);
+
+													for (RidePath ridePathI : ridePathsList) {
+														lastLatLng = ridePathI.getDestinationLatLng();
+														latLngsList.add(lastLatLng);
+													}
+												}
+                                            }
+
+
                                             if(lastLatLng != null) {
                                                 Data.autoData.getAssignedDriverInfo().latLng = lastLatLng;
                                                 getDropLocationPathAndDisplay(lastLatLng, true, latLngsList);
@@ -6084,7 +6121,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             }
             MarkerAnimation.clearAsyncList();
 
-            timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 15000);
+            timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 18000);
             Log.i("timerMapAnimateAndUpdateRideData", "started");
         } catch (Exception e) {
             e.printStackTrace();

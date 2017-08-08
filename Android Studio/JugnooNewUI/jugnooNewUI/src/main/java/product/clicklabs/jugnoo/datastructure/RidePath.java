@@ -1,5 +1,9 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import product.clicklabs.jugnoo.utils.MapUtils;
+
 /**
  * Created by clicklabs on 6/13/15.
  */
@@ -19,4 +23,16 @@ public class RidePath {
         this.destinationLongitude = destinationLongitude;
     }
 
+    public LatLng getSourceLatLng(){
+        return new LatLng(sourceLatitude, sourceLongitude);
+    }
+
+    public LatLng getDestinationLatLng(){
+        return new LatLng(destinationLatitude, destinationLongitude);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof RidePath && ridePathId == ((RidePath) obj).ridePathId && MapUtils.distance(getSourceLatLng(), ((RidePath) obj).getSourceLatLng()) <= 10 && MapUtils.distance(getDestinationLatLng(), ((RidePath) obj).getDestinationLatLng()) <= 10;
+    }
 }
