@@ -4707,8 +4707,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             vCheckoutShadow.clearAnimation();
             getHandler().removeCallbacks(runnableLlCheckoutBarGone);
             if (visibility == View.VISIBLE && totalPrice > 0 && totalQuantity > 0) {
-                llCheckoutBar.setVisibility(View.VISIBLE);
-                vCheckoutShadow.setVisibility(View.VISIBLE);
+                if(getFeedbackFragment()!=null){
+                    llCheckoutBar.setVisibility(View.GONE);
+                    vCheckoutShadow.setVisibility(View.GONE);
+
+                }else{
+                    llCheckoutBar.setVisibility(View.VISIBLE);
+                    vCheckoutShadow.setVisibility(View.VISIBLE);
+                }
             } else {
                 llCheckoutBar.setVisibility(View.GONE);
                 if(textViewMinOrder.getVisibility() != View.VISIBLE) {
