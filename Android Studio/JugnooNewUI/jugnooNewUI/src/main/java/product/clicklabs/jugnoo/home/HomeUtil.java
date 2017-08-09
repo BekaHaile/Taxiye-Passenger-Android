@@ -91,6 +91,9 @@ public class HomeUtil {
 		else if(VehicleIconSet.HELICOPTER.getName().equalsIgnoreCase(name)){
 			return VehicleIconSet.HELICOPTER;
 		}
+		else if(VehicleIconSet.ERICKSHAW.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.ERICKSHAW;
+		}
 		else{
 			return VehicleIconSet.ORANGE_AUTO;
 		}
