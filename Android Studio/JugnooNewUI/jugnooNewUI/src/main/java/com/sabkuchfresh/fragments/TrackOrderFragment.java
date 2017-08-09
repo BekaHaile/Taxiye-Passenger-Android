@@ -345,6 +345,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		cancelTimer();
 		Prefs.with(activity).save(Constants.SP_TRACKING_LAST_BEARING, markerDriver != null ? markerDriver.getRotation() : 0f);
 		LocalBroadcastManager.getInstance(activity).unregisterReceiver(orderUpdateBroadcast);
 	}
@@ -365,20 +366,16 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 								&& (PushFlags.STATUS_CHANGED.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag)) {
-							if(activity instanceof RideTransactionsActivity) {
-								activity.finish();
-								activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-								new Handler().postDelayed(new Runnable() {
-									@Override
-									public void run() {
-										Intent intent1 = new Intent(Data.LOCAL_BROADCAST);
-										intent1.putExtra(Constants.KEY_FLAG, flag);
-										LocalBroadcastManager.getInstance(activity).sendBroadcast(intent1);
-									}
-								}, 200);
-							} else {
-								activity.onBackPressed();
-							}
+							activity.finish();
+							activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+							new Handler().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									Intent intent1 = new Intent(Data.LOCAL_BROADCAST);
+									intent1.putExtra(Constants.KEY_FLAG, flag);
+									LocalBroadcastManager.getInstance(activity).sendBroadcast(intent1);
+								}
+							}, 200);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();

@@ -1162,6 +1162,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             llShadowPeek.setVisibility(View.GONE);
             rlContainer.setVisibility(View.GONE);
             scrollView.setVisibility(View.VISIBLE);
+            if(!performBack()){
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
         }
     }
 
