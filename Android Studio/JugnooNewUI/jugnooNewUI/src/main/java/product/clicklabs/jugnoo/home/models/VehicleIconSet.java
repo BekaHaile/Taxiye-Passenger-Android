@@ -78,7 +78,7 @@ public enum VehicleIconSet {
 			R.drawable.ic_helicopter_invoice),
 
 
-	ERICKSHAW("ERICKSHAW", R.drawable.ic_erickshaw_tab_normal, R.drawable.ic_erickshaw_tab_selected,
+	ERICKSHAW("E-RICK", R.drawable.ic_erickshaw_tab_normal, R.drawable.ic_erickshaw_tab_selected,
 			R.drawable.ic_auto_marker,
 			R.drawable.ic_erickshaw_request_normal,
 			R.drawable.ic_erickshaw_request_pressed,
