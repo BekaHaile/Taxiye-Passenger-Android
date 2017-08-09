@@ -1,5 +1,8 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -9,6 +12,8 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.t20.models.Schedule;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.Utils;
 
 public class DriverInfo {
@@ -228,5 +233,15 @@ public class DriverInfo {
 
 	public void setChatEnabled(int chatEnabled) {
 		this.chatEnabled = chatEnabled;
+	}
+
+	public Bitmap getMarkerBitmap(Activity activity, ASSL assl){
+		if(vehicleIconSet == VehicleIconSet.ERICKSHAW){
+			return CustomMapMarkerCreator.createMarkerBitmapForResource(activity, assl,
+					vehicleIconSet.getIconMarker(), 34f, 52f);
+		} else {
+			return CustomMapMarkerCreator
+					.createMarkerBitmapForResource(activity, assl, vehicleIconSet.getIconMarker());
+		}
 	}
 }

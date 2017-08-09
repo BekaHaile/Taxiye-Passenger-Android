@@ -5144,8 +5144,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         markerOptions1.position(driverInfo.latLng);
         markerOptions1.anchor(0.5f, 0.5f);
         markerOptions1.zIndex(HOME_MARKER_ZINDEX);
-        markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                .createMarkerBitmapForResource(HomeActivity.this, assl, driverInfo.getVehicleIconSet().getIconMarker())));
+        markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(driverInfo.getMarkerBitmap(HomeActivity.this, assl)));
         return markerOptions1;
     }
 
@@ -5158,8 +5157,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.zIndex(HOME_MARKER_ZINDEX);
         markerOptions.rotation((float) driverInfo.getBearing());
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                .createMarkerBitmapForResource(HomeActivity.this, assl, resourceId)));
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(driverInfo.getMarkerBitmap(HomeActivity.this, assl)));
         return map.addMarker(markerOptions);
     }
 
@@ -5202,6 +5200,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
                             if(region.getVehicleType().equals(Data.autoData.getDriverInfos().get(i).getVehicleType())
                                     && Data.autoData.getDriverInfos().get(i).getRegionIds().contains(region.getRegionId())) {
+                                Data.autoData.getDriverInfos().get(i).setVehicleIconSet(region.getVehicleIconSet().getName());
                                 markersDriversFindADriver.add(addDriverMarkerForCustomer(Data.autoData.getDriverInfos().get(i),
                                         region.getVehicleIconSet().getIconMarker()));
                             }
@@ -6114,7 +6113,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 if(lastSavedLatLng != null){
                     Data.autoData.getAssignedDriverInfo().latLng = lastSavedLatLng;
                 }
-                driverMarkerInRide = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
+                MarkerOptions markerOptions = getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo());
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createMarkerBitmapForResource(this, assl, R.drawable.ic_marker_transparent)));
+                driverMarkerInRide = map.addMarker(markerOptions);
                 getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, true, null);
                 if(driverMarkerInRide.getRotation() == 0f) {
                     if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
