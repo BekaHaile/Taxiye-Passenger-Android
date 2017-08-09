@@ -18,8 +18,7 @@
         android:paddingBottom="22px"
         android:textSize="25px"
         app:font="maven"
-        android:text="dsad"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
@@ -834,6 +833,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_7"
         android:tag="@string/dont_touch_me"
+        android:visibility="gone"
         android:layout_below="@id/tv_min_order_label"
         android:src="@drawable/shadow_down_new"/>
     <View
