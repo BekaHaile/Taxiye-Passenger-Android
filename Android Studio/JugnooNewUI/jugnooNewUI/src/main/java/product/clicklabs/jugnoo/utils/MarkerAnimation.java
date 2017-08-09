@@ -1,6 +1,6 @@
 package product.clicklabs.jugnoo.utils;
 
-/**
+/*
  * Created by socomo on 10/23/15.
  */
 
@@ -37,12 +37,12 @@ import retrofit.mime.TypedByteArray;
 
 public class MarkerAnimation {
 
-    private static final String TAG = MarkerAnimation.class.getSimpleName();
     private static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
     private static final double ANIMATION_TIME = 14000;
     private static final double MIN_DISTANCE = 80;
     private static final double MAX_DISTANCE = 4000;
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         final LatLng startPosition = marker.getPosition();
         final Handler handler = new Handler();
@@ -110,8 +110,9 @@ public class MarkerAnimation {
                     durationList.add(ANIMATION_TIME);
 
                     PolylineOptions polylineOptions = new PolylineOptions().color(untrackedPathColor).width(pathWidth)
-                            .geodesic(true).add(marker.getPosition()).addAll(list);
-                    polylines.add(googleMap.addPolyline(polylineOptions));
+                            .geodesic(true).add(marker.getPosition()).add(finalPosition);
+                    polylineOptions.zIndex(0);
+                    polylinesUnTracked.add(googleMap.addPolyline(polylineOptions));
                     animatePath(marker.getPosition(), googleMap, list, durationList, pathResolvedColor, ASSL.Xscale() * 7f, latLngInterpolator);
                 }
 			}
@@ -173,10 +174,10 @@ public class MarkerAnimation {
         int pathResolvedColor, untrackedPathColor;
         float pathWidth;
 
-        public GetDirectionsAsync(String engagementId, Marker marker, LatLng destination,
-                                  LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim,
-                                  boolean animateRoute, GoogleMap googleMap, int pathResolvedColor,
-                                  int untrackedPathColor, float pathWidth){
+        GetDirectionsAsync(String engagementId, Marker marker, LatLng destination,
+                           LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim,
+                           boolean animateRoute, GoogleMap googleMap, int pathResolvedColor,
+                           int untrackedPathColor, float pathWidth){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.destination = destination;
@@ -190,9 +191,9 @@ public class MarkerAnimation {
             this.pathWidth = pathWidth;
         }
 
-        public GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator,
-                                  CallbackAnim callbackAnim, List<LatLng> list, boolean animateRoute,
-                                  GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth){
+        GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator,
+                           CallbackAnim callbackAnim, List<LatLng> list, boolean animateRoute,
+                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.marker = marker;
@@ -217,8 +218,7 @@ public class MarkerAnimation {
                 if(list == null || list.size() == 0) {
                     Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
                             destination.latitude + "," + destination.longitude, false, "driving", false);
-                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    return responseStr;
+                    return new String(((TypedByteArray) response.getBody()).getBytes());
                 } else {
                     LatLng first = list.get(0);
                     totalDistance = 0;
@@ -262,8 +262,7 @@ public class MarkerAnimation {
                             durationList.addAll(duration);
 
                             if(latLngList.size() > 0) {
-                                PolylineOptions polylineOptions = new PolylineOptions().color(untrackedPathColor).width(pathWidth).geodesic(true).add(lastLatLng).addAll(latLngList);
-                                polylines.add(googleMap.addPolyline(polylineOptions));
+                                plotPolylinesUntracked(lastLatLng, latLngList, untrackedPathColor, pathWidth, googleMap);
                                 animatePath(lastLatLng, googleMap, latLngList, durationList, pathResolvedColor, pathWidth, latLngInterpolator);
                             }
                         }
@@ -291,9 +290,9 @@ public class MarkerAnimation {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static void animateMarkerToICSRecursive(final String engagementId, final Marker marker, final List<LatLng> list,
-                                                   final LatLngInterpolator latLngInterpolator,
-                                                   final List<Double> duration, final boolean rotation, final CallbackAnim callbackAnim) {
+    private static void animateMarkerToICSRecursive(final String engagementId, final Marker marker, final List<LatLng> list,
+                                                    final LatLngInterpolator latLngInterpolator,
+                                                    final List<Double> duration, final boolean rotation, final CallbackAnim callbackAnim) {
         if(list.size() > 0) {
             final LatLng finalPosition = list.remove(0);
             final double finalDuration = duration.remove(0);
@@ -353,8 +352,8 @@ public class MarkerAnimation {
         }
     }
 
-    public static void animationForShortDistance(String engagementId, final Marker marker, LatLng latLng,
-                                                 final LatLngInterpolator latLngInterpolator, final CallbackAnim callbackAnim){
+    private static void animationForShortDistance(String engagementId, final Marker marker, LatLng latLng,
+                                                  final LatLngInterpolator latLngInterpolator, final CallbackAnim callbackAnim){
         if(MapUtils.distance(marker.getPosition(), latLng) >= 20) {
             TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {
                 @Override
@@ -413,7 +412,7 @@ public class MarkerAnimation {
     }
 
 
-    public interface CallbackAnim {
+    interface CallbackAnim {
 		void onPathFound(List<LatLng> latLngs);
         void onAnimComplete();
         void onAnimNotDone();
@@ -424,12 +423,23 @@ public class MarkerAnimation {
     }
 
     private static ArrayList<Polyline> polylines = new ArrayList<>();
+    private static ArrayList<Polyline> polylinesUnTracked = new ArrayList<>();
     public static void clearPolylines(){
         if(polylines != null){
             for(Polyline polyline : polylines){
                 polyline.remove();
             }
             polylines.clear();
+        }
+        clearPolylinesUnTracked();
+    }
+
+    private static void clearPolylinesUnTracked(){
+        if(polylinesUnTracked != null){
+            for(Polyline polyline : polylinesUnTracked){
+                polyline.remove();
+            }
+            polylinesUnTracked.clear();
         }
     }
 
@@ -448,11 +458,23 @@ public class MarkerAnimation {
                             polylines.add(foregroundPolyline);
                             if(latLngList.size() > 0){
                                 animatePath(currLatLng, googleMap, latLngList, durationList, pathResolvedColor, pathWidth, latLngInterpolator);
+                            } else {
+                                clearPolylinesUnTracked();
                             }
                         }
                     });
         }
 
+    }
+
+    private static void plotPolylinesUntracked(LatLng lastLatLng, List<LatLng> latLngList, int untrackedPathColor, float pathWidth, GoogleMap googleMap){
+        LatLng pointer = lastLatLng;
+        for(LatLng currLatLng : latLngList){
+            PolylineOptions polylineOptions = new PolylineOptions().color(untrackedPathColor).width(pathWidth).geodesic(true).add(pointer).add(currLatLng);
+            polylineOptions.zIndex(0);
+            polylinesUnTracked.add(googleMap.addPolyline(polylineOptions));
+            pointer = currLatLng;
+        }
     }
 
 }

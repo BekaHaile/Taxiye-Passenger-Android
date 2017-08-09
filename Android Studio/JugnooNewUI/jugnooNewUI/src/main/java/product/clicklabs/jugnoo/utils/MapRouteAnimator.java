@@ -38,6 +38,7 @@ public class MapRouteAnimator {
         if (foregroundPolyline != null) foregroundPolyline.remove();
 
         PolylineOptions optionsForeground = new PolylineOptions().add(latLngList.get(0)).color(pathResolvedColor).width(pathWidth).geodesic(true);
+        optionsForeground.zIndex(2);
         foregroundPolyline = googleMap.addPolyline(optionsForeground);
 
 

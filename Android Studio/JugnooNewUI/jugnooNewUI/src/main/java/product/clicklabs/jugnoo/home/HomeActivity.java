@@ -6235,7 +6235,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                             try {
                                                 if (toShowPathToDrop()) {
                                                     pathToDropLocationPolylineOptions = new PolylineOptions();
-                                                    pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 7f).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
+                                                    pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 7f).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true).zIndex(0);
                                                     for (int z = 0; z < list.size(); z++) {
                                                         pathToDropLocationPolylineOptions.add(list.get(z));
                                                     }
