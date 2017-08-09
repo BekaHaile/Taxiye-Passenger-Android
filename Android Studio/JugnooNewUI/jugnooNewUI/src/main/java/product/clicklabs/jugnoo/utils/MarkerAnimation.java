@@ -445,8 +445,8 @@ public class MarkerAnimation {
                     new MapRouteAnimator.Callback() {
                         @Override
                         public void onAnimationEnd(Polyline foregroundPolyline) {
+                            polylines.add(foregroundPolyline);
                             if(latLngList.size() > 0){
-                                polylines.add(foregroundPolyline);
                                 animatePath(currLatLng, googleMap, latLngList, durationList, pathResolvedColor, pathWidth, latLngInterpolator);
                             }
                         }

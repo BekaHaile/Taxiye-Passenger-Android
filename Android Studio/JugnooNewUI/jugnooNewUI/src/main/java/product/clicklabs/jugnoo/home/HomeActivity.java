@@ -6936,12 +6936,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     destroyHighSpeedAccuracyFusedLocationFetcher();
                 } else {
                     initialMyLocationBtn.setVisibility(View.GONE);
-                    customerInRideMyLocationBtn.setVisibility(View.GONE);
+                    customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                     initializeHighSpeedAccuracyFusedLocationFetcher();
                 }
             } else{
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
-                customerInRideMyLocationBtn.setVisibility(View.GONE);
+                customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                 destroyHighSpeedAccuracyFusedLocationFetcher();
             }
         } catch(Exception e){
