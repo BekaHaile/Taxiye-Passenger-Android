@@ -75,7 +75,7 @@ public class TransactionUtils {
     }
 
     public void openCheckoutMergedFragment(FragmentActivity activity, View container) {
-        if (!checkIfFragmentAdded(activity, FreshCheckoutMergedFragment.class.getName())) {
+        if (!activity.isFinishing() && !checkIfFragmentAdded(activity, FreshCheckoutMergedFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
                     .add(container.getId(), new FreshCheckoutMergedFragment(),

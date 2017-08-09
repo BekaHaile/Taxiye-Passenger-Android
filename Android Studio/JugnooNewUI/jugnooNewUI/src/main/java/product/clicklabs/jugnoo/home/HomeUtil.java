@@ -385,7 +385,7 @@ public class HomeUtil {
 				if(productType == ProductType.MENUS.getOrdinal()){
 					FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
 				} else {
-					FuguConfig.getInstance().showConversations(activity);
+					FuguConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

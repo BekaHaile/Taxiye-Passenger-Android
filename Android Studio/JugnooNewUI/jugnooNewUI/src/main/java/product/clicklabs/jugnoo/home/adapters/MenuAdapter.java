@@ -630,7 +630,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             }
 
             else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(tag)){
-                FuguConfig.getInstance().showConversations(activity);
+                FuguConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
 
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){

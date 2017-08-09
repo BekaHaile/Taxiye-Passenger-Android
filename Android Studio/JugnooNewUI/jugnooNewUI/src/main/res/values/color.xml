@@ -267,6 +267,7 @@
     <color name="text_color_30alpha">#4E595968</color>
 
     <color name="grey_969696">#969696</color>
+    <color name="grey_pay_disabled">#c5c5c5</color>
 
     <color name="yellow_promo_count">#fffab0</color>
     <color name="orange_promo_count_stroke">#f6a623</color>

@@ -127,10 +127,12 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(llMain, null, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                sv.fullScroll(View.FOCUS_DOWN);
+                if (getView()!=null) {
+                    sv.fullScroll(View.FOCUS_DOWN);
+
+                }
                 activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
                 activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
             }
 
             @Override

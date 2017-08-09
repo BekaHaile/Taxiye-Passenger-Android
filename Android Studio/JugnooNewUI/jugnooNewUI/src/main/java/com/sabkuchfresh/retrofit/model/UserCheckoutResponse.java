@@ -282,7 +282,7 @@ public class UserCheckoutResponse{
 	}
 
 	public String getDiscountSwitchMessage(boolean isDiscountEnabled) {
-		return isDiscountEnabled?mealsDiscountDisabled:mealsDiscountDisabled;
+		return isDiscountEnabled?mealsDiscountEnabled:mealsDiscountDisabled;
 	}
 
 	public class PaymentInfo{

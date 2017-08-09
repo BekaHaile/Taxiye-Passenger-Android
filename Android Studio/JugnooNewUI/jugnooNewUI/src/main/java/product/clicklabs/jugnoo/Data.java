@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.fugu.CaptureUserData;
+import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
@@ -35,6 +36,7 @@ import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
+import product.clicklabs.jugnoo.utils.FuguColorConfigStrings;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -549,11 +551,37 @@ public class Data {
             FuguConfig.init(context.getString(R.string.fugu_key_test), context, "test", userData);
         }
 
-        FuguConfig.getInstance().configActionBar("#ffffff", "#595968", R.drawable.ic_back_selector);
-        FuguConfig.getInstance().configThemeColor("#ff7d49");
+        FuguConfig.getInstance().setHomeUpIndicatorDrawableId(R.drawable.ic_back_selector);
+
+        FuguColorConfig fuguColorConfig = new FuguColorConfig.Builder()
+                .fuguActionBarBg(FuguColorConfigStrings.FUGU_ACTION_BAR_BG)
+                .fuguActionBarText(FuguColorConfigStrings.FUGU_ACTION_BAR_TEXT)
+                .fuguBgMessageYou(FuguColorConfigStrings.FUGU_BG_MESSAGE_YOU)
+                .fuguBgMessageFrom(FuguColorConfigStrings.FUGU_BG_MESSAGE_FROM)
+                .fuguPrimaryTextMsgYou(FuguColorConfigStrings.FUGU_PRIMARY_TEXT_MSG_YOU)
+                .fuguMessageRead(FuguColorConfigStrings.FUGU_MESSAG_EREAD)
+                .fuguPrimaryTextMsgFrom(FuguColorConfigStrings.FUGU_PRIMARY_TEXT_MSG_FROM)
+                .fuguSecondaryTextMsgYou(FuguColorConfigStrings.FUGU_SECONDARY_TEXT_MSG_YOU)
+                .fuguSecondaryTextMsgFrom(FuguColorConfigStrings.FUGU_SECONDARY_TEXT_MSG_FROM)
+                .fuguTextColorPrimary(FuguColorConfigStrings.FUGU_TEXT_COLOR_PRIMARY)
+                .fuguChannelDateText(FuguColorConfigStrings.FUGU_CHANNEL_DATE_TEXT)
+                .fuguChatBg(FuguColorConfigStrings.FUGU_CHAT_BG)
+                .fuguBorderColor(FuguColorConfigStrings.FUGU_BORDER_COLOR)
+                .fuguChatDateText(FuguColorConfigStrings.FUGU_CHAT_DATE_TEXT)
+                .fuguThemeColorPrimary(FuguColorConfigStrings.FUGU_THEME_COLOR_PRIMARY)
+                .fuguThemeColorSecondary(FuguColorConfigStrings.FUGU_THEME_COLOR_SECONDARY)
+                .fuguTypeMessageBg(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_BG)
+                .fuguTypeMessageHint(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_HINT)
+                .fuguTypeMessageText(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_TEXT)
+                .fuguChannelBg(FuguColorConfigStrings.FUGU_CHANNEL_BG)
+                .build();
+
+        FuguConfig.getInstance().setColorConfig(fuguColorConfig);
 
 
     }
+
+
     public static void setFuguUserData(CaptureUserData userData) {
         fuguUserData = userData;
     }

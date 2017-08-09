@@ -165,7 +165,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				editTextSearch.setText("");
+				try {
+					editTextSearch.setText("");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 
