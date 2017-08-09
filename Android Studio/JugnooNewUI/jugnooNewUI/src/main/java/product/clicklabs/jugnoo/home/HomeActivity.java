@@ -2817,6 +2817,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 }
                 if(mode != PassengerScreenMode.P_IN_RIDE){
                     try{driverMarkerInRide.remove(); driverMarkerInRide = null;}catch (Exception e){}
+                    lastSavedLatLng = null;
                 }
 
                 if (mode == PassengerScreenMode.P_RIDE_END) {
@@ -6110,6 +6111,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
             displayOldPath();
             if(driverMarkerInRide == null){
+                if(lastSavedLatLng != null){
+                    Data.autoData.getAssignedDriverInfo().latLng = lastSavedLatLng;
+                }
                 driverMarkerInRide = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
                 getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, true, null);
                 if(driverMarkerInRide.getRotation() == 0f) {
@@ -6130,6 +6134,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
     }
 
+    private LatLng lastSavedLatLng;
     private ArrayList<PolylineOptions> getPolylineOptionsInRideDriverPath(){
         if(polylineOptionsInRideDriverPath == null){
             polylineOptionsInRideDriverPath = new ArrayList<>();
@@ -6145,6 +6150,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
                             new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
                     polylineOptionsInRideDriverPath.add(polylineOptions);
+                    lastSavedLatLng = ridePath.getDestinationLatLng();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -6196,17 +6202,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     }
 
     public void displayOldPath() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    polylineOptionsInRideDriverPath = null;
-                    plotPolylineInRideDriverPath();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        try {
+            polylineOptionsInRideDriverPath = null;
+            plotPolylineInRideDriverPath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean toShowPathToDrop(){

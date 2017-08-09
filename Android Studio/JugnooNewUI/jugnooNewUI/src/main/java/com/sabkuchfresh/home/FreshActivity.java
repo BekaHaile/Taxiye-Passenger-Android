@@ -2738,12 +2738,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         Paper.book().delete(DB_FRESH_CART);
         Paper.book().delete(DB_PREVIOUS_VENDOR);
         createAppCart(Config.getFreshClientId());
+        updateItemListFromSPDB();
     }
 
     private void clearMealCart() {
         Paper.book().delete(DB_MEALS_CART);
         Paper.book().delete(DB_PREVIOUS_VENDOR);
         createAppCart(Config.getMealsClientId());
+        updateItemListFromSPDB();
     }
 
     private void clearGroceryCart() {
@@ -2755,6 +2757,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
        Prefs.with(this).remove(Constants.CART_STATUS_REORDER_ID);
         Paper.book().delete(DB_MENUS_CART);
         createAppCart(Config.getMenusClientId());
+        updateItemListFromSPDB();
     }
 
     @Subscribe
