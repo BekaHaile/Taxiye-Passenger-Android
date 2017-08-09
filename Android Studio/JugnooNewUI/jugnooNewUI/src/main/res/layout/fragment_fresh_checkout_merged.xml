@@ -14,21 +14,15 @@
         android:textColor="#c77327"
         android:paddingLeft="60px"
         android:paddingRight="60px"
-        android:paddingTop="14px"
-        android:paddingBottom="14px"
+        android:paddingTop="22px"
+        android:paddingBottom="22px"
         android:textSize="25px"
         app:font="maven"
         android:text="dsad"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <ImageView
-        android:id="@+id/shadow_top_min_order"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_7"
-        android:tag="@string/dont_touch_me"
-        android:layout_below="@id/tv_min_order_label"
-        android:src="@drawable/shadow_down_new"/>
+
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -835,6 +829,13 @@
 
     </ScrollView>
 
+    <ImageView
+        android:id="@+id/shadow_top_min_order"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_7"
+        android:tag="@string/dont_touch_me"
+        android:layout_below="@id/tv_min_order_label"
+        android:src="@drawable/shadow_down_new"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_new_height"

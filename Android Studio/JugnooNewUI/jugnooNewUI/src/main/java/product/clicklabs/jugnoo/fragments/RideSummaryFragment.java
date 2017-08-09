@@ -278,7 +278,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
 					if (activity instanceof RideTransactionsActivity) {
                         if (Data.isFuguChatEnabled()) {
                             try {
-                                FuguConfig.getInstance().showConversations(activity);
+                                FuguConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
