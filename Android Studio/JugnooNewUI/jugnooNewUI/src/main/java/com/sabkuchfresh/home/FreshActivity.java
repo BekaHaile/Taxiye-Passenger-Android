@@ -4258,7 +4258,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             if (!isLocationChangeCheckedAfterResume && shouldRefreshAddress(FreshActivity.this)) {
                 LatLng currentLatlng = new LatLng(Data.latitude,Data.longitude);
-                if(MapUtils.distance(currentLatlng,getSelectedLatLng())>2000) {
+                if(MapUtils.distance(currentLatlng,getSelectedLatLng())>500) {
                     setSelectedLatLng(currentLatlng);
                     setSelectedAddress("");
                     setSelectedAddressType("");
