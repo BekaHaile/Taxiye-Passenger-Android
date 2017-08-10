@@ -455,7 +455,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 								@Override
 								public void run() {
-									if(list.size() > 0) {
+									if(list != null && list.size() > 0) {
 										try {
 											try {
 												if (status == EngagementStatus.STARTED.getOrdinal()) {
