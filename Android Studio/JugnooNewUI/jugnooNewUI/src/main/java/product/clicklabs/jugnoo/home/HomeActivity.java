@@ -3242,8 +3242,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                             if(driverLocationMarker == null) {
                                 clearMap();
 
-                                pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
-
                                 driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
                                 if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
                                     driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
@@ -3259,6 +3257,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                     setDropLocationMarker();
                                 }
                             }
+                            pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
                         }
 
 
@@ -3316,14 +3315,13 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                             if(driverMarkerInRide == null) {
                                 clearMap();
 
-                                if (Data.autoData.getPickupLatLng() != null) {
-                                    pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
-                                }
-
                                 if (Data.autoData.getDropLatLng() != null) {
                                     setDropLocationMarker();
                                     setPickupToDropPath();
                                 }
+                            }
+                            if (Data.autoData.getPickupLatLng() != null) {
+                                pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
                             }
                         }
 
