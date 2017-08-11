@@ -482,6 +482,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.GROCERY);
                     lastClientId = Config.getGroceryClientId();
                 } else if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                    getTopBar().etSearch.setText(getString(R.string.search_items_menus));
                     fetchFiltersFromSP();
                     openCart();
                     addMenusFragment();

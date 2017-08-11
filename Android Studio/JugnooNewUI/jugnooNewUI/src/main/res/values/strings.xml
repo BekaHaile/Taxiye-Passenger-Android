@@ -670,6 +670,7 @@
     <string name="will_be_delivered_between">will be delivered between</string>
     <string name="your_cart_is_empty">Your cart is empty</string>
     <string name="search_items">Search Items</string>
+    <string name="search_items_menus">Search</string>
     <string name="item_cancelled">Cancelled</string>
 
 
@@ -1109,7 +1110,7 @@
     <string name="your_order_will_be_delivered_between">Your order will be delivered between</string>
     <string name="could_not_find_favorite_restaurant">Couldn’t find your favourite restaurant yet?</string>
     <string name="why_not_recommend_it">Why not recommend it!</string>
-    <string name="restaurant_name_star">Restaurant name*</string>
+    <string name="restaurant_name_star">Restaurant Name*</string>
     <string name="locality_optional">Locality (optional)</string>
     <string name="telephone_number_optional">Telephone Number (optional)</string>
     <string name="restaurant_name_is_neccessary">Restaurant name is neccessary</string>
