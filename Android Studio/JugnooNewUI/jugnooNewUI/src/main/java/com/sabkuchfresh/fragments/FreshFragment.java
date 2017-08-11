@@ -576,7 +576,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
     @Override
     public void onTabClicked(int position) {
-        Log.d(TAG, "onTabClicked = "+activity.getProductsResponse().getCategories().get(position).getCategoryName());
         tabClickFlag = true;
     }
 

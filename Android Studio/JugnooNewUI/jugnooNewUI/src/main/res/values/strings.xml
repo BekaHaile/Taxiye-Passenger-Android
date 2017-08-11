@@ -1360,6 +1360,9 @@
     <string name="reorder_no_items_available">Sorry, none of the items in your cart are available at the restaurant. To order from the same restaurant, Press \'Edit Order\'. If you\'d like to order from another restaurant, Press \'Change\'.</string>
     <string name="edit_order">Edit Order</string>
     <string name="change_order">Change</string>
+    <string name="min_order_checkout">You still have \u20B9%s to go to reach the minimum order amount.</string>
+    <string name="label_cancel_edit_order">Click on cancel to edit your order</string>
+    <string name="fugu_support_title">Support</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

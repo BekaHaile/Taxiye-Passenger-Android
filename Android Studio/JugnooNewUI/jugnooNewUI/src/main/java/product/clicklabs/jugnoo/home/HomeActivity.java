@@ -38,7 +38,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
+import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.view.Gravity;
@@ -1627,7 +1627,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 							rating, "", "");
                     if (Data.isFuguChatEnabled()) {
                         try {
-                            FuguConfig.getInstance().showConversations(HomeActivity.this);
+                            FuguConfig.getInstance().showConversations(HomeActivity.this,((HomeActivity)HomeActivity.this).getString(R.string.fugu_support_title));
                         } catch (Exception e) {
                             e.printStackTrace();
                             Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
@@ -2725,7 +2725,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 && Data.autoData != null
                 && Data.autoData.getAssignedDriverInfo() != null
                 && Data.autoData.getAssignedDriverInfo().latLng != null){
-            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
+            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
         }else {
             myLocationButtonClicked = true;
             if(fromButton) {
@@ -2817,6 +2817,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 }
                 if(mode != PassengerScreenMode.P_IN_RIDE){
                     try{driverMarkerInRide.remove(); driverMarkerInRide = null;}catch (Exception e){}
+                    lastSavedLatLng = null;
                 }
 
                 if (mode == PassengerScreenMode.P_RIDE_END) {
@@ -3201,7 +3202,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                             stopDropLocationSearchUI(true);
                         }
                         setDropLocationEngagedUI();
-                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
+                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
@@ -3241,8 +3242,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                             if(driverLocationMarker == null) {
                                 clearMap();
 
-                                pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
-
                                 driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
                                 if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
                                     driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
@@ -3258,6 +3257,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                     setDropLocationMarker();
                                 }
                             }
+                            pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
                         }
 
 
@@ -3276,7 +3276,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         setDropLocationEngagedUI();
 
                         setAssignedDriverData(mode);
-                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
+                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
 
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
@@ -3312,15 +3312,16 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
-                            clearMap();
+                            if(driverMarkerInRide == null) {
+                                clearMap();
 
+                                if (Data.autoData.getDropLatLng() != null) {
+                                    setDropLocationMarker();
+                                    setPickupToDropPath();
+                                }
+                            }
                             if (Data.autoData.getPickupLatLng() != null) {
                                 pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
-                            }
-
-                            if(Data.autoData.getDropLatLng() != null) {
-                                setDropLocationMarker();
-                                setPickupToDropPath();
                             }
                         }
 
@@ -3342,7 +3343,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         setDropLocationEngagedUI();
 
                         setAssignedDriverData(mode);
-                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
+                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
 
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
@@ -4367,8 +4368,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                 && !isNormalRideWithDropAtConfirmation()
                                 && !isSpecialPickupScreenOpened()) {
                             callAndHandleStateRestoreAPI(false);
+                        } else {
+                            initiateTimersForStates(passengerScreenMode);
                         }
-                        initiateTimersForStates(passengerScreenMode);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -5140,8 +5142,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         markerOptions1.position(driverInfo.latLng);
         markerOptions1.anchor(0.5f, 0.5f);
         markerOptions1.zIndex(HOME_MARKER_ZINDEX);
-        markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                .createMarkerBitmapForResource(HomeActivity.this, assl, driverInfo.getVehicleIconSet().getIconMarker())));
+        markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(driverInfo.getMarkerBitmap(HomeActivity.this, assl)));
         return markerOptions1;
     }
 
@@ -5154,8 +5155,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.zIndex(HOME_MARKER_ZINDEX);
         markerOptions.rotation((float) driverInfo.getBearing());
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                .createMarkerBitmapForResource(HomeActivity.this, assl, resourceId)));
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(driverInfo.getMarkerBitmap(HomeActivity.this, assl)));
         return map.addMarker(markerOptions);
     }
 
@@ -5198,6 +5198,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
                             if(region.getVehicleType().equals(Data.autoData.getDriverInfos().get(i).getVehicleType())
                                     && Data.autoData.getDriverInfos().get(i).getRegionIds().contains(region.getRegionId())) {
+                                Data.autoData.getDriverInfos().get(i).setVehicleIconSet(region.getVehicleIconSet().getName());
                                 markersDriversFindADriver.add(addDriverMarkerForCustomer(Data.autoData.getDriverInfos().get(i),
                                         region.getVehicleIconSet().getIconMarker()));
                             }
@@ -5232,7 +5233,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         }
     }
 
-    private void zoomtoPickupAndDriverLatLngBounds(final LatLng driverLatLng){
+    private void zoomtoPickupAndDriverLatLngBounds(final LatLng driverLatLng, List<LatLng> latLngsToInclude){
         try{
             if((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
@@ -5247,6 +5248,11 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                             .include(driverLatLng);
                     if(Data.autoData.getDropLatLng() != null && PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
                         boundsBuilder.include(Data.autoData.getDropLatLng());
+                    }
+                    if(latLngsToInclude != null){
+                        for(LatLng latLng : latLngsToInclude) {
+                            boundsBuilder.include(latLng);
+                        }
                     }
                     if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                             || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
@@ -5597,7 +5603,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
             textMessage.setTypeface(Fonts.mavenMedium(activity));
 
-            textMessage.setMovementMethod(new ScrollingMovementMethod());
+            textMessage.setMovementMethod(LinkMovementMethod.getInstance());
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
             if (zeroDriversNearby) {
@@ -5776,7 +5782,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                     if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
                                         pickupLatLng = Data.autoData.getAssignedDriverInfo().latLng;
                                     }
-                                    getDropLocationPathAndDisplay(pickupLatLng, zoomAfterDropSet);
+                                    getDropLocationPathAndDisplay(pickupLatLng, zoomAfterDropSet, null);
                                 }
 
                             } else {
@@ -5874,7 +5880,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                                 if (map != null) {
                                                                     if (HomeActivity.this.hasWindowFocus() && driverLocationMarker != null) {
                                                                         MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-																				driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0);
+																				driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0);
                                                                         updateDriverETAText(passengerScreenMode);
                                                                     }
                                                                 }
@@ -5900,7 +5906,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 }
             };
 
-            getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), false);
+            getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), true, null);
 
             timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 10, 15000);
             Log.i("timerDriverLocationUpdater", "started");
@@ -6016,7 +6022,10 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                             JSONArray jsonArray = jObj.getJSONArray("locations");
                                             LatLng lastLatLng = null;
                                             List<LatLng> latLngsList = new ArrayList<LatLng>();
-                                            latLngsList.add(Data.autoData.getAssignedDriverInfo().latLng);
+                                            LatLng driverLatLng = driverMarkerInRide != null ? driverMarkerInRide.getPosition() : Data.autoData.getAssignedDriverInfo().latLng;
+                                            latLngsList.add(driverLatLng);
+                                            double distFromDriverLl = Double.MAX_VALUE;
+                                            int firstPos = -1;
                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                                 RidePath currentRidePath = new RidePath(
@@ -6028,35 +6037,52 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
                                                 ridePathsList.add(currentRidePath);
 
-                                                LatLng start = new LatLng(currentRidePath.sourceLatitude, currentRidePath.sourceLongitude);
-                                                LatLng end = new LatLng(currentRidePath.destinationLatitude, currentRidePath.destinationLongitude);
-//                                                PolylineOptions polylineOptions = new PolylineOptions();
-//                                                polylineOptions.width(ASSL.Xscale() * 7);
-//                                                polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
-//                                                polylineOptions.geodesic(false);
-//                                                polylineOptions.add(start, end);
-//                                                getPolylineOptionsInRideDriverPath().add(polylineOptions);
-                                                lastLatLng = end;
-                                                latLngsList.add(end);
-                                            }
-                                            if(lastLatLng != null) {
-                                                Data.autoData.getAssignedDriverInfo().latLng = lastLatLng;
-                                                getDropLocationPathAndDisplay(lastLatLng, false);
-                                            }
-
-                                            Log.e("latLngsList.size", "="+latLngsList.size());
-                                            if(driverMarkerInRide == null){
-                                                driverMarkerInRide = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
-                                                if(driverMarkerInRide.getRotation() == 0f) {
-                                                    if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
-                                                        driverMarkerInRide.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
-                                                    } else {
-                                                        driverMarkerInRide.setRotation((float) Data.autoData.getAssignedDriverInfo().getBearing());
-                                                    }
+                                                double dist = MapUtils.distance(driverLatLng, currentRidePath.getSourceLatLng());
+                                                if(dist < distFromDriverLl){
+                                                    distFromDriverLl = dist;
+                                                    firstPos = i;
                                                 }
                                             }
-                                            if(driverMarkerInRide != null && latLngsList.size() > 1) {
-                                                MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsList, new LatLngInterpolator.Spherical(), map, RIDE_ELAPSED_PATH_COLOR);
+                                            // sorting logic
+                                            if(firstPos > -1) {
+                                                List<RidePath> ridePathsSorted = new ArrayList<RidePath>();
+                                                ridePathsList.add(0, ridePathsList.remove(firstPos));
+
+												ridePathsSorted.add(ridePathsList.get(0));
+
+												while(ridePathsSorted.size() < ridePathsList.size()){
+													RidePath ridePath = ridePathsSorted.get(ridePathsSorted.size()-1);
+													RidePath ridePathNearest = null;
+													double distFromCurr = Double.MAX_VALUE;
+													for (RidePath ridePathI : ridePathsList) {
+														if(ridePath.ridePathId != ridePathI.ridePathId && !ridePathsSorted.contains(ridePathI)){
+															double dist = MapUtils.distance(ridePath.getDestinationLatLng(), ridePathI.getSourceLatLng());
+															if(dist < distFromCurr){
+																distFromCurr = dist;
+																ridePathNearest = ridePathI;
+															}
+														}
+													}
+													if(ridePathNearest != null){
+														ridePathsSorted.add(ridePathNearest);
+													}
+												}
+
+												if(ridePathsList.size() == ridePathsSorted.size()){
+													ridePathsList.clear();
+													ridePathsList.addAll(ridePathsSorted);
+
+													for (RidePath ridePathI : ridePathsList) {
+														lastLatLng = ridePathI.getDestinationLatLng();
+														latLngsList.add(lastLatLng);
+													}
+												}
+                                            }
+
+
+                                            if(lastLatLng != null) {
+                                                Data.autoData.getAssignedDriverInfo().latLng = lastLatLng;
+                                                getDropLocationPathAndDisplay(lastLatLng, true, latLngsList);
                                             }
                                             polylineOptionsInRideDriverPath = null;
                                             plotPolylineInRideDriverPath();
@@ -6082,8 +6108,13 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
             displayOldPath();
             if(driverMarkerInRide == null){
-                driverMarkerInRide = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
-                getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, false);
+                if(lastSavedLatLng != null){
+                    Data.autoData.getAssignedDriverInfo().latLng = lastSavedLatLng;
+                }
+                MarkerOptions markerOptions = getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo());
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createMarkerBitmapForResource(this, assl, R.drawable.ic_marker_transparent)));
+                driverMarkerInRide = map.addMarker(markerOptions);
+                getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, true, null);
                 if(driverMarkerInRide.getRotation() == 0f) {
                     if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
                         driverMarkerInRide.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
@@ -6094,7 +6125,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             }
             MarkerAnimation.clearAsyncList();
 
-            timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 15000);
+            timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 18000);
             Log.i("timerMapAnimateAndUpdateRideData", "started");
         } catch (Exception e) {
             e.printStackTrace();
@@ -6102,6 +6133,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
     }
 
+    private LatLng lastSavedLatLng;
     private ArrayList<PolylineOptions> getPolylineOptionsInRideDriverPath(){
         if(polylineOptionsInRideDriverPath == null){
             polylineOptionsInRideDriverPath = new ArrayList<>();
@@ -6117,6 +6149,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
                             new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
                     polylineOptionsInRideDriverPath.add(polylineOptions);
+                    lastSavedLatLng = ridePath.getDestinationLatLng();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -6168,45 +6201,23 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     }
 
     public void displayOldPath() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    polylineOptionsInRideDriverPath = null;
-                    plotPolylineInRideDriverPath();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        try {
+            polylineOptionsInRideDriverPath = null;
+            plotPolylineInRideDriverPath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean toShowPathToDrop(){
         return (PassengerScreenMode.P_IN_RIDE == passengerScreenMode);
     }
 
-    public void getDropLocationPathAndDisplay(final LatLng pickupLatLng, final boolean zoomAfterDropSet) {
+    public void getDropLocationPathAndDisplay(final LatLng pickupLatLng, final boolean zoom, final List<LatLng> latLngsListForDriverAnimation) {
         try {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        if(zoomAfterDropSet) {
-                                            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, 500);
-                        }
-                    });
                     try {
                         if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
                             Response response = RestClient.getGoogleApiService().getDirections(pickupLatLng.latitude + "," + pickupLatLng.longitude,
@@ -6222,7 +6233,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                             try {
                                                 if (toShowPathToDrop()) {
                                                     pathToDropLocationPolylineOptions = new PolylineOptions();
-                                                    pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
+                                                    pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 7f).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true).zIndex(0);
                                                     for (int z = 0; z < list.size(); z++) {
                                                         pathToDropLocationPolylineOptions.add(list.get(z));
                                                     }
@@ -6231,24 +6242,39 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                         pathToDropLocationPolyline.remove();
                                                     }
                                                     pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
-
-													if(zoomAfterDropSet) {
-														zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
-													}
                                                 }
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
                                         }
                                     });
-                                } else{
-                                    try {
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
                                 }
                             }
                         }
+
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    if(driverMarkerInRide != null && latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1) {
+										int untrackedPathColor = Data.autoData.getDropLatLng() != null ? getResources().getColor(R.color.google_path_polyline_color) : Color.TRANSPARENT;
+										MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsListForDriverAnimation,
+												new LatLngInterpolator.LinearFixed(), map,
+												RIDE_ELAPSED_PATH_COLOR,
+												untrackedPathColor, ASSL.Xscale() * 7f);
+									} else {
+                                        MarkerAnimation.clearPolylines();
+                                    }
+
+                                    if(zoom) {
+										zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsListForDriverAnimation);
+									}
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -6909,12 +6935,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     destroyHighSpeedAccuracyFusedLocationFetcher();
                 } else {
                     initialMyLocationBtn.setVisibility(View.GONE);
-                    customerInRideMyLocationBtn.setVisibility(View.GONE);
+                    customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                     initializeHighSpeedAccuracyFusedLocationFetcher();
                 }
             } else{
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
-                customerInRideMyLocationBtn.setVisibility(View.GONE);
+                customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                 destroyHighSpeedAccuracyFusedLocationFetcher();
             }
         } catch(Exception e){
@@ -7678,7 +7704,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 public void onInAppCustomerSupportClick(View view) {
                     if (Data.isFuguChatEnabled()) {
                         try {
-                            FuguConfig.getInstance().showConversations(HomeActivity.this);
+                            FuguConfig.getInstance().showConversations(HomeActivity.this,((Activity)HomeActivity.this).getString(R.string.fugu_support_title));
                         } catch (Exception e) {
                             e.printStackTrace();
                             Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
@@ -8617,7 +8643,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 					|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
 					|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
 				saveLastDestinations(searchResult);
-				zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng());
+				zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null);
 
 				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
 						getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());

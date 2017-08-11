@@ -24,7 +24,7 @@ public class MapRouteAnimator {
 
     private AnimatorSet firstRunAnimSet;
 
-    public void animateRoute(GoogleMap googleMap, List<LatLng> latLngList, long duration, int pathResolvedColor, float pathWidth, LatLngInterpolator latLngInterpolator, final Callback callback) {
+    public AnimatorSet animateRoute(GoogleMap googleMap, List<LatLng> latLngList, long duration, int pathResolvedColor, float pathWidth, LatLngInterpolator latLngInterpolator, final Callback callback) {
         if (firstRunAnimSet == null){
             firstRunAnimSet = new AnimatorSet();
         } else {
@@ -38,6 +38,7 @@ public class MapRouteAnimator {
         if (foregroundPolyline != null) foregroundPolyline.remove();
 
         PolylineOptions optionsForeground = new PolylineOptions().add(latLngList.get(0)).color(pathResolvedColor).width(pathWidth).geodesic(true);
+        optionsForeground.zIndex(2);
         foregroundPolyline = googleMap.addPolyline(optionsForeground);
 
 
@@ -67,6 +68,7 @@ public class MapRouteAnimator {
 
         firstRunAnimSet.play(foregroundRouteAnimator);
         firstRunAnimSet.start();
+        return firstRunAnimSet;
     }
 
     /**

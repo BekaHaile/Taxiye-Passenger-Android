@@ -613,6 +613,7 @@ public class AddToAddressBookFragment extends Fragment {
                 }
 
                 mBus.post(new AddressAdded(true));
+
             }
 
             SearchResult searchResult = new SearchResult(label, localAddress, placeId, current_latitude, current_longitude);

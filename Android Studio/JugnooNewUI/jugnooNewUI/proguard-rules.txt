@@ -41,6 +41,9 @@
 -dontoptimize
 -dontpreverify
 
+-keep public class product.clicklabs.jugnoo.utils.MapRouteAnimator{
+    public protected *;
+}
 
 -keepattributes *Annotation*
 -keep public class * extends android.app.Activity

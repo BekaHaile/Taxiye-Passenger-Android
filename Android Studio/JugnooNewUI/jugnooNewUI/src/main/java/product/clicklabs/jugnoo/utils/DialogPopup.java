@@ -15,7 +15,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -138,7 +138,7 @@ public class DialogPopup {
 				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
 				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
 
-				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMovementMethod(LinkMovementMethod.getInstance());
 				textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 
 				textMessage.setText(message);
@@ -197,7 +197,7 @@ public class DialogPopup {
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
 
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMovementMethod(LinkMovementMethod.getInstance());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
 			textHead.setText(title);
@@ -315,7 +315,7 @@ public class DialogPopup {
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
 
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMovementMethod(LinkMovementMethod.getInstance());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
 
@@ -458,7 +458,7 @@ public class DialogPopup {
 				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
 				textMessage.setTypeface(Fonts.mavenLight(activity));
 
-				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMovementMethod(LinkMovementMethod.getInstance());
 				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
 				textHead.setText(title);
@@ -548,7 +548,7 @@ public class DialogPopup {
 						.findViewById(R.id.textMessage);
 				textMessage.setTypeface(Fonts.mavenLight(activity));
 
-				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMovementMethod(LinkMovementMethod.getInstance());
 				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
 				textHead.setText(title);
@@ -644,7 +644,7 @@ public class DialogPopup {
 					.findViewById(R.id.textMessage);
 			textMessage.setTypeface(Fonts.mavenLight(activity));
 
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMovementMethod(LinkMovementMethod.getInstance());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
 			textHead.setText(title);

@@ -410,4 +410,13 @@ public class MapUtils {
 		}
 		return rotationTo;
 	}
+
+
+	private static void resolvePoint(List<LatLng> latLngList, LatLng point){
+		LatLng resolvedPoint = null;
+		double pDistance = Double.MAX_VALUE;
+		for(int i=0; i<latLngList.size()-1; i++){
+
+		}
+	}
 }

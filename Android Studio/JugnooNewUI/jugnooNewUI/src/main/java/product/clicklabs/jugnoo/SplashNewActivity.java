@@ -29,7 +29,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
+import android.text.method.LinkMovementMethod;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
@@ -70,6 +70,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -370,6 +371,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			//clear Menu Reorder Prefs
 			Prefs.with(this).remove(Constants.ORDER_STATUS_PENDING_ID);
 			Prefs.with(this).remove(Constants.ORDER_STATUS_JSON_ARRAY);
+			Prefs.with(this).remove(Constants.ORDER_STATUS_ORDER_ID);
+			Prefs.with(this).remove(Constants.ORDER_STATUS_LAT_LNG);
+			FreshActivity.saveAddressRefreshBoolean(this,true);
+
 
 			try {
 				Data.TRANSFER_FROM_JEANIE = 0;
@@ -2402,7 +2407,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			textMessage.setTypeface(Fonts.mavenLight(activity));
 			textHead.setVisibility(View.VISIBLE);
 
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMovementMethod(LinkMovementMethod.getInstance());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
 			textHead.setText(title);

@@ -7,7 +7,8 @@ public enum VehicleTypeValue {
     AUTOS(1),
     BIKES(2),
     TAXI(3),
-    HELICOPTER(4)
+    HELICOPTER(4),
+    ERICKSHAW(5)
 
     ;
 

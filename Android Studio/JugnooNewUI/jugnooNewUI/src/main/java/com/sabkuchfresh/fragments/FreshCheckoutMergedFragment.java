@@ -194,6 +194,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private CardView cvStarSavings, cvBecomeStar;
     private TextView tvStarSavingsValue;
+    private View shadowMinOrder;
 
 
     private ArrayList<Slot> slots = new ArrayList<>();
@@ -218,6 +219,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private ImageView imageViewIcici;
     private final static IntentFilter ICICI_STATUS_BROADCAST_FILTER = new IntentFilter(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE);
     private TextView tvLabelIciciUpi;
+    private TextView tvMinOrderLabelDisplay;
 
 
     public FreshCheckoutMergedFragment() {
@@ -283,6 +285,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         GAUtils.trackScreenView(activity.getGaCategory() + CHECKOUT);
 
         linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+        tvMinOrderLabelDisplay=(TextView)rootView.findViewById(R.id.tv_min_order_label);
+
         try {
             if (linearLayoutRoot != null) {
                 new ASSL(activity, linearLayoutRoot, 1134, 720, false);
@@ -395,7 +399,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         ((TextView) rootView.findViewById(R.id.textViewPaymentVia)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView) rootView.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
 
-
         relativeLayoutCartTop = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCartTop);
         textViewCartItems = (TextView) rootView.findViewById(R.id.textViewCartItems);
         textViewCartItems.setTypeface(Fonts.mavenMedium(activity));
@@ -471,7 +474,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rlDeliveryFrom = (RelativeLayout) rootView.findViewById(R.id.rlDeliveryFrom);
         tvRestName = (TextView) rootView.findViewById(R.id.tvRestName);
         tvRestAddress = (TextView) rootView.findViewById(R.id.tvRestAddress);
-
+        shadowMinOrder = (View)rootView.findViewById(R.id.shadow_top_min_order);
 
         linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
@@ -660,7 +663,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         imageViewDeleteCart.setVisibility(View.GONE);
 
         checkoutApiDoneOnce = false;
-
+        showPaySliderEnabled(true);
         activity.tvSlide.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -759,7 +762,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         activity.rlSliderContainer.setBackgroundResource(R.drawable.bg_rectangle_gradient_normal);
         activity.relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
         activity.sliderText.setVisibility(View.VISIBLE);
-        activity.viewAlpha.setAlpha(0.0f);
+
+        activity.viewAlpha.setAlpha(activity.viewAlpha.getTag()!=null && activity.viewAlpha.getTag().equals("Disabled")?1.0f:0.0f);
     }
 
     private float getRelativeSliderLeftMargin() {
@@ -768,6 +772,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private long animDuration = 150;
+
 
     private void animateSliderButton(final int currMargin, final float newMargin) {
         float diff = newMargin - (float) currMargin;
@@ -2948,6 +2953,31 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             subTotalAmount = pair.first;
             updateCartTopBarView(pair);
             updateCartUI();
+
+            if(activity.getAppType()== AppConstant.ApplicationType.MENUS && activity.getVendorOpened()!=null){
+
+                double diffDouble = activity.getVendorOpened().getMinimumOrderAmount()-subTotalAmount;
+                if(diffDouble>0){
+                    String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
+                    tvMinOrderLabelDisplay.setText(textToSet);
+                    tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
+                    shadowMinOrder.setVisibility(View.VISIBLE);
+                    showPaySliderEnabled(false);
+
+                }else{
+
+                    showPaySliderEnabled(true);
+                    tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                    shadowMinOrder.setVisibility(View.GONE);
+                }
+
+            }else{
+                showPaySliderEnabled(true);
+                tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                shadowMinOrder.setVisibility(View.GONE);
+
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3561,5 +3591,23 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
+    public void showPaySliderEnabled(boolean isEnable){
 
+
+            if(isEnable){
+                if(activity.viewAlpha.getTag()!=null && activity.viewAlpha.getTag().equals("Disabled")){
+                    activity.viewAlpha.setTag("Enabled");
+                    activity.viewAlpha.setBackgroundColor(ContextCompat.getColor(activity,R.color.slider_green));
+                    activity.viewAlpha.setAlpha(0);
+
+                }
+            }else{
+                activity.viewAlpha.setTag("Disabled");
+                activity.viewAlpha.setBackgroundColor(ContextCompat.getColor(activity,R.color.grey_969696));
+                activity.viewAlpha.setAlpha(1);
+            }
+
+
+
+    }
 }

@@ -36,23 +36,21 @@ public class MenusCart {
 
 	public void updateItemForRestaurant(MenusResponse.Vendor vendor, Item item){
 		if(vendor != null) {
+			List<ItemSelected> itemSelecteds = new ArrayList<>();
 			if (getRestaurantCart(vendor).getItemHashMap().containsKey(item.getRestaurantItemId())) {
 				Item itemSaved = getRestaurantCart(vendor).getItemHashMap().get(item.getRestaurantItemId());
 				if(itemSaved.getItemSelectedList().size() > 0){
-					List<ItemSelected> itemSelecteds = new ArrayList<>();
 					for(ItemSelected itemSelected : itemSaved.getItemSelectedList()){
 						if (itemSelected.getQuantity() > 0) {
 							itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
 							itemSelecteds.add(itemSelected);
 						}
 					}
-					if(itemSelecteds.size() > 0){
-						item.getItemSelectedList().clear();
-						item.getItemSelectedList().addAll(itemSelecteds);
-						getRestaurantCart(vendor).getItemHashMap().put(item.getRestaurantItemId(), item);
-					}
 				}
 			}
+			item.getItemSelectedList().clear();
+			item.getItemSelectedList().addAll(itemSelecteds);
+			getRestaurantCart(vendor).getItemHashMap().put(item.getRestaurantItemId(), item);
 		}
 	}
 

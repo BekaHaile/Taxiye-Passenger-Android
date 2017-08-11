@@ -97,7 +97,7 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 	}
 
 	public Pair<List<LatLng>, String> syncHit(){
-		List<LatLng> list = null;
+		List<LatLng> list = new ArrayList<>();
 		String s = null;
 		try {
 			Response response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination, strWaypoints);

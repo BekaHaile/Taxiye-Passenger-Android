@@ -270,10 +270,9 @@ public class Database2 {                                                        
     }
 
     public int getLastRowIdInRideInfo() {
-        String[] columns = new String[]{POSITION_ID};
-        Cursor cursor = database.query(TABLE_RIDE_INFO, columns, null, null, null, null, null);
+        Cursor cursor = database.rawQuery("SELECT "+POSITION_ID+" FROM "+TABLE_RIDE_INFO+" ORDER BY "+POSITION_ID+" DESC LIMIT 1", null);
         if (cursor.getCount() > 0) {
-            cursor.moveToLast();
+            cursor.moveToFirst();
             Log.d("ride_path_db_current_size", String.valueOf(cursor.getCount()));
             return cursor.getInt(cursor.getColumnIndex(POSITION_ID));
         } else {

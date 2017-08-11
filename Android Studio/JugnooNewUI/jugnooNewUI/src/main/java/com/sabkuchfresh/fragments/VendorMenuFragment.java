@@ -260,14 +260,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (!isHidden()) {
-            activity.setRefreshCart(false);
 
-        }
-    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -283,9 +276,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     @Override
                     public void run() {
                         try {
-                            if (activity.isRefreshCart()) {
-							}
-                            activity.setRefreshCart(false);
+
                             if(activity.getVendorOpened()!=null && !TextUtils.isEmpty(activity.getVendorOpened().getNext_slot_time())){
                                 activity.textViewMinOrder.setText(activity.getVendorOpened().getNext_slot_time());
                                 activity.textViewMinOrder.setVisibility(View.VISIBLE);
