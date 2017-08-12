@@ -703,6 +703,9 @@
     <dimen name="dp_176">
         176dp
     </dimen>
+    <dimen name="dp_186">
+        186dp
+    </dimen>
     <dimen name="dp_32">
         32dp
     </dimen>
@@ -794,6 +797,7 @@
     <dimen name="dp_290">
         290dp
     </dimen>
+
     <dimen name="dp_72">
         72dp
     </dimen>

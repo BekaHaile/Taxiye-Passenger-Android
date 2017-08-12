@@ -51,7 +51,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="100px"
                 android:layout_marginRight="32px"
-                android:background="@drawable/bg_menu_item_color_f7_r"
+                android:background="@drawable/bg_delivery_address_topbar"
                 android:hint="@string/type_delivery_address"
                 android:textColor="@color/text_color"
                 android:textCursorDrawable="@drawable/cursor_black"
@@ -71,7 +71,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="100px"
                 android:layout_marginRight="32px"
-                android:background="@drawable/bg_menu_item_color_f7_r"
+                android:background="@drawable/bg_delivery_address_topbar"
                 android:hint="@string/type_delivery_address"
                 android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color_hint"
@@ -215,12 +215,13 @@
                         android:id="@+id/ivSearchCross"
                         android:layout_width="45px"
                         android:layout_height="45px"
-                        android:padding="15px"
+                        android:padding="12px"
+                        android:layout_marginTop="5px"
+                        android:layout_marginBottom="5px"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="@dimen/px_10"
+                        android:layout_marginRight="@dimen/px_15"
                         android:src="@drawable/ic_cross_grey_selector"
                         android:visibility="visible" />
-
                 </LinearLayout>
 
                 <LinearLayout
