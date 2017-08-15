@@ -96,45 +96,108 @@ public class TxnDetails {
     private String refurl;
     private String payerAccntNo;
 
-    public String getPayeeAccntNo() { return payeeAccntNo; }
+    public String getPayeeAccntNo() {
+        if(payeeAccntNo == null){
+            payeeAccntNo = "";
+        }
+        return payeeAccntNo;
+    }
     public void setPayeeAccntNo(String payeeAccntNo) { this.payeeAccntNo = payeeAccntNo; }
 
-    public String getPayeeIFSC() { return payeeIFSC; }
+    public String getPayeeIFSC() {
+        if(payeeIFSC == null){
+            payeeIFSC = "";
+        }
+        return payeeIFSC;
+    }
     public void setPayeeIFSC(String payeeIFSC) { this.payeeIFSC = payeeIFSC; }
 
-    public String getPayeeAadhaarNo() { return payeeAadhaarNo; }
+    public String getPayeeAadhaarNo() {
+        if(payeeAadhaarNo == null){
+            payeeAadhaarNo = "";
+        }
+        return payeeAadhaarNo;
+    }
     public void setPayeeAadhaarNo(String payeeAadhaarNo) { this.payeeAadhaarNo = payeeAadhaarNo; }
 
-    public String getExpiryTime() { return expiryTime; }
+    public String getExpiryTime() {
+        if(expiryTime == null){
+            expiryTime = "";
+        }
+        return expiryTime;
+    }
     public void setExpiryTime(String expiryTime) { this.expiryTime = expiryTime; }
 
-    public String getPayerIFSC() { return payerIFSC; }
+    public String getPayerIFSC() {
+        if(payerIFSC == null){
+            payerIFSC = "";
+        }
+        return payerIFSC;
+    }
     public void setPayerIFSC(String payerIFSC) { this.payerIFSC = payerIFSC; }
 
-    public String getPayerAadhaarNo() { return payerAadhaarNo; }
+    public String getPayerAadhaarNo() {
+        if(payerAadhaarNo == null){
+            payerAadhaarNo = "";
+        }
+        return payerAadhaarNo;
+    }
     public void setPayerAadhaarNo(String payerAadhaarNo) { this.payerAadhaarNo = payerAadhaarNo; }
 
-    public String getSubMerchantID() { return subMerchantID; }
+    public String getSubMerchantID() {
+        if(subMerchantID == null){
+            subMerchantID = "";
+        }
+        return subMerchantID;
+    }
     public void setSubMerchantID(String subMerchantID) { this.subMerchantID = subMerchantID; }
 
-    public String getWhitelistedAccnts() { return whitelistedAccnts; }
+    public String getWhitelistedAccnts() {
+        if(whitelistedAccnts == null){
+            whitelistedAccnts = "";
+        }
+        return whitelistedAccnts;
+    }
     public void setWhitelistedAccnts(String whitelistedAccnts) { this.whitelistedAccnts= whitelistedAccnts; }
 
-    public String getPayerMMID() { return payerMMID; }
+    public String getPayerMMID() {
+        if(payerMMID == null){
+            payerMMID = "";
+        }
+        return payerMMID;
+    }
     public void setPayerMMID(String payerMMID) { this.payerMMID = payerMMID; }
 
-    public String getPayeeMMID() { return payeeMMID; }
+    public String getPayeeMMID() {
+        if(payeeMMID == null){
+            payeeMMID = "";
+        }
+        return payeeMMID;
+    }
     public void setPayeeMMID(String payeeMMID) { this.payeeMMID = payeeMMID; }
 
-    public String getRefurl() { return refurl; }
+    public String getRefurl() {
+        if(refurl == null){
+            refurl = "";
+        }
+        return refurl;
+    }
     public void setRefurl(String refurl) { this.refurl = refurl; }
 
-    public String getPayerAccntNo() { return payerAccntNo; }
+    public String getPayerAccntNo() {
+        if(payerAccntNo == null){
+            payerAccntNo = "";
+        }
+        return payerAccntNo;
+    }
     public void setPayerAccntNo(String payerAccntNo) { this.payerAccntNo = payerAccntNo; }
 
     //--------------------------------
 
     public String getPayer_vpa() {
+        if(payer_vpa == null){
+            payer_vpa = "";
+        }
         return payer_vpa;
     }
     public void setPayer_vpa(String payer_vpa) {
@@ -142,6 +205,9 @@ public class TxnDetails {
     }
 
     public String getPayer_phone_no() {
+        if(payer_phone_no == null){
+            payer_phone_no = "";
+        }
         return payer_phone_no;
     }
     public void setPayer_phone_no(String payer_phone_no) {
@@ -149,6 +215,9 @@ public class TxnDetails {
     }
 
     public String getPayee_phone_no() {
+        if(payee_phone_no == null){
+            payee_phone_no = "";
+        }
         return payee_phone_no;
     }
     public void setPayee_phone_no(String payee_phone_no) {
@@ -156,6 +225,9 @@ public class TxnDetails {
     }
 
     public String getPayee_vpa() {
+        if(payee_vpa == null){
+            payee_vpa = "";
+        }
         return payee_vpa;
     }
     public void setPayee_vpa(String payee_vpa) {
@@ -182,6 +254,9 @@ public class TxnDetails {
      * @return The mid
      */
     public String getMid() {
+        if(mid == null){
+            mid = "";
+        }
         return mid;
     }
     /**
@@ -195,6 +270,9 @@ public class TxnDetails {
      * @return The mkey
      */
     public String getMkey() {
+        if(mkey == null){
+            mkey = "";
+        }
         return mkey;
     }
     /**
@@ -208,6 +286,9 @@ public class TxnDetails {
      * @return The transactionDescription
      */
     public String getTransactionDescription() {
+        if(transaction_description == null){
+            transaction_description = "";
+        }
         return transaction_description;
     }
     /**
@@ -221,6 +302,9 @@ public class TxnDetails {
      * @return The amount
      */
     public Integer getAmount() {
+        if(amount == null){
+            amount = 0;
+        }
         return amount;
     }
     /**
@@ -234,6 +318,9 @@ public class TxnDetails {
      * @return The currency
      */
     public String getCurrency() {
+        if(currency == null){
+            currency = "";
+        }
         return currency;
     }
     /**
@@ -247,6 +334,9 @@ public class TxnDetails {
      * @return The appName
      */
     public String getAppName() {
+        if(app_name == null){
+            app_name = "";
+        }
         return app_name;
     }
     /**
@@ -260,6 +350,9 @@ public class TxnDetails {
      * @return The paymentType
      */
     public String getPaymentType() {
+        if(payment_type == null){
+            payment_type = "";
+        }
         return payment_type;
     }
     /**
@@ -273,6 +366,9 @@ public class TxnDetails {
      * @return The transactionType
      */
     public String getTransactionType() {
+        if(transaction_type == null){
+            transaction_type = "";
+        }
         return transaction_type;
     }
     /**
@@ -286,6 +382,9 @@ public class TxnDetails {
      * @return The mcc
      */
     public String getMcc() {
+        if(mcc == null){
+            mcc = "";
+        }
         return mcc;
     }
     /**
@@ -303,6 +402,9 @@ public class TxnDetails {
     }
 
     public String getVpa() {
+        if(vpa == null){
+            vpa = "";
+        }
         return vpa;
     }
     public void setVpa(String vpa) {

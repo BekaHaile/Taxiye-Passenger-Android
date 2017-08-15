@@ -1649,10 +1649,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setGravity(Gravity.LEFT);
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20f), 0, 0, 0);
                 titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.getLlSearchCart().getId());
+                topBar.title.setPadding(0, 0, 0, 0);
             }
             else {
                 topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -80f), 0, 0, 0);
+                topBar.title.setPadding((int) (ASSL.Xscale() * 80f), 0, 0, 0);
             }
             if(fragment instanceof FeedReserveSpotFragment
                     || fragment instanceof FeedSpotReservedSharingFragment
@@ -1660,10 +1662,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 					|| fragment instanceof FeedChangeCityFragment
 					|| fragment instanceof RestaurantReviewsListFragment
                     || fragment instanceof RestaurantAddReviewFragment
-                    || fragment instanceof FeedbackFragment){
+                    || fragment instanceof FeedbackFragment
+                    || fragment instanceof MealFragment
+                    || fragment instanceof ProsHomeFragment){
                 topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
-                topBar.title.setPadding((int) (ASSL.Xscale() * 20f), 0, 0, 0);
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -80f), 0, 0, 0);
+                topBar.title.setPadding((int) (ASSL.Xscale() * 80f), 0, 0, 0);
             }
 
 

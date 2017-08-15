@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -29,7 +28,6 @@ import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.DiscountInfo;
-import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -63,7 +61,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -236,7 +233,9 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
-            activity.setAddressTextToLocationPlaceHolder();
+            if(!activity.isOrderJustCompleted()) {
+                activity.setAddressTextToLocationPlaceHolder();
+            }
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
             if(activity.getCartChangedAtCheckout()){
