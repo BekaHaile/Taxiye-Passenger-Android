@@ -1653,8 +1653,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
             else {
                 topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -80f), 0, 0, 0);
-                topBar.title.setPadding((int) (ASSL.Xscale() * 80f), 0, 0, 0);
+                titleLayoutParams.setMargins(0, 0, (int) (ASSL.Xscale() * 50f), 0);
             }
             if(fragment instanceof FeedReserveSpotFragment
                     || fragment instanceof FeedSpotReservedSharingFragment
@@ -1666,8 +1665,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     || fragment instanceof MealFragment
                     || fragment instanceof ProsHomeFragment){
                 topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -80f), 0, 0, 0);
-                topBar.title.setPadding((int) (ASSL.Xscale() * 80f), 0, 0, 0);
+				titleLayoutParams.setMargins(0, 0, (int) (ASSL.Xscale() * 50f), 0);
             }
 
 
