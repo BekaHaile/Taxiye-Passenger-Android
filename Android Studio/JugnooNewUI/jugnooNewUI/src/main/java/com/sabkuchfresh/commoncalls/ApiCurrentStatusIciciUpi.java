@@ -80,6 +80,7 @@ public class ApiCurrentStatusIciciUpi {
                                     if(activity.getAppType()== AppConstant.ApplicationType.MEALS){
                                         activity.refreshMealsAdapter();
                                     }
+                                    activity.llCheckoutBarSetVisibilityDirect(View.GONE);
                                 }
                                 Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
                             }
