@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/ivStar"
-            android:layout_width="80px"
-            android:layout_height="80px"
+            android:layout_width="110px"
+            android:layout_height="110px"
             android:layout_centerVertical="true"
             android:src="@drawable/star"
             />

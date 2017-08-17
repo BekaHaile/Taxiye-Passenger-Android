@@ -621,12 +621,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         relativeLayoutCartTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (linearLayoutCartExpansion.getVisibility() == View.VISIBLE) {
-                    linearLayoutCartExpansion.setVisibility(View.GONE);
+                if (listViewCart.getVisibility() == View.VISIBLE) {
+//                    linearLayoutCartExpansion.setVisibility(View.GONE);
+                    imageViewCartSep.setVisibility(View.GONE);
+                    listViewCart.setVisibility(View.GONE);
                     imageViewDeleteCart.setVisibility(View.GONE);
                     imageViewCartArrow.setRotation(180f);
                 } else {
-                    linearLayoutCartExpansion.setVisibility(View.VISIBLE);
+//                    linearLayoutCartExpansion.setVisibility(View.VISIBLE);
+                    imageViewCartSep.setVisibility(View.VISIBLE);
+                    listViewCart.setVisibility(View.VISIBLE);
                     imageViewDeleteCart.setVisibility(View.GONE);
                     imageViewCartArrow.setRotation(0f);
                 }
@@ -857,13 +861,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         chargesList.add(taxTotal);
         chargesAdapter.notifyDataSetChanged();
 
-        if (linearLayoutCartExpansion.getVisibility() == View.VISIBLE) {
+       /* if (linearLayoutCartExpansion.getVisibility() == View.VISIBLE) {
             textViewCartTotalUndiscount.setVisibility(View.GONE);
         } else {
             textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
             textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
                     Utils.getMoneyDecimalFormat().format(taxTotal.getValue())));
-        }
+        }*/
 
         if (dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
             if (payableAmount() > 0) {

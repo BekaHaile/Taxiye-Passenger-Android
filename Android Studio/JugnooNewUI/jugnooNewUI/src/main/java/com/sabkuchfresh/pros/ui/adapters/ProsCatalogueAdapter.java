@@ -1,10 +1,12 @@
 package com.sabkuchfresh.pros.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +42,9 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 	public static final int MAIN_ITEM = 1;
 	public static final int ORDER_ITEM = 2;
 	private RecyclerView recyclerView;
-
+	private int gridItemsMargin;
 	public ProsCatalogueAdapter(Context context, Callback callback, RecyclerView recyclerView) {
+		gridItemsMargin = (int) getPxValue(1,context);
 		this.context = context;
 		this.callback = callback;
 		this.recyclerView = recyclerView;
@@ -64,12 +67,14 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 		public ImageView ivSuperCategoryImage;
 		public TextView tvSuperCategoryName;
 		public View viewBG;
+		private RelativeLayout layoutFrameCategory;
 
 		public ViewHolderCategory(final View view, final ItemListener itemListener) {
 			super(view);
 			llRoot = (LinearLayout) view.findViewById(R.id.llRoot);
 			ivSuperCategoryImage = (ImageView) view.findViewById(R.id.ivSuperCategoryImage);
 			tvSuperCategoryName = (TextView) view.findViewById(R.id.tvSuperCategoryName);
+			layoutFrameCategory = (RelativeLayout) view.findViewById(R.id.layout_frame_category);
 			viewBG = view.findViewById(R.id.viewBG);
 			llRoot.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -118,9 +123,17 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 		} else if(mholder instanceof ViewHolderCategory) {
 			position = position - getRecentOrdersSize();
+			int row_no=(position+1)/3;
+			int col_no=(position+1)%3;
+			boolean setTopMargin,setSideMargins;
+			setSideMargins=col_no==2;
+			setTopMargin=row_no==0;
+
 			ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum = prosCatalogueDatumList.get(position);
 			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
 			holder.tvSuperCategoryName.setText(prosCatalogueDatum.getName());
+			holder.llRoot.setPadding(setSideMargins?gridItemsMargin:0,setTopMargin?gridItemsMargin:0
+									,setSideMargins?gridItemsMargin:0,gridItemsMargin);
 
 			try {
 				if (!TextUtils.isEmpty(prosCatalogueDatum.getImageUrl())) {
@@ -379,6 +392,10 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 			statusName = "Service seen by agent";
 		}
 		return new Pair<>(status, statusName);
+	}
+
+	public float getPxValue(int dp, Context activity){
+	   return	TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, activity.getResources().getDisplayMetrics());
 	}
 
 }
