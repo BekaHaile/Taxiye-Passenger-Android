@@ -7,7 +7,7 @@
     android:layout_marginLeft="@dimen/px_20"
     android:layout_marginRight="@dimen/px_20"
     android:layout_marginTop="@dimen/px_20"
-    android:visibility="gone"
+    android:visibility="visible"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="@dimen/px_4">
 
@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/ivStar"
-            android:layout_width="@dimen/px_50"
-            android:layout_height="@dimen/px_50"
+            android:layout_width="@dimen/px_80"
+            android:layout_height="@dimen/px_80"
             android:layout_marginLeft="@dimen/px_25"
             android:layout_marginTop="@dimen/px_22"
             android:src="@drawable/star" />
