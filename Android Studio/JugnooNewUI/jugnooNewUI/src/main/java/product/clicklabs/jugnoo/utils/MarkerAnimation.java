@@ -96,12 +96,11 @@ public class MarkerAnimation {
     public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition,
                                           final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim,
                                           boolean animateRoute, GoogleMap googleMap, int pathResolvedColor,
-                                          int untrackedPathColor, float pathWidth) {
+                                          int untrackedPathColor, float pathWidth, boolean ignoreDistanceCheck) {
 
         try {
-            if(MapUtils.distance(marker.getPosition(), finalPosition) < MIN_DISTANCE
+            if(ignoreDistanceCheck || MapUtils.distance(marker.getPosition(), finalPosition) < MIN_DISTANCE
 					|| MapUtils.distance(marker.getPosition(), finalPosition) > MAX_DISTANCE){
-                //marker.setPosition(finalPosition);
                 animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim);
                 clearPolylines();
                 if(animateRoute && googleMap != null){

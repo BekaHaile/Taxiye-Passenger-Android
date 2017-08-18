@@ -347,14 +347,18 @@ public class MapUtils {
 
 
 
+	private static ValueAnimator markerRotationValueAnimator;
 	public static void rotateMarker(final Marker marker, float bearing) {
 		if (marker != null) {
-			ValueAnimator valueAnimator = new ValueAnimator();
+			if(markerRotationValueAnimator != null){
+				markerRotationValueAnimator.cancel();
+			}
+			markerRotationValueAnimator = new ValueAnimator();
 			final float start = getPositiveRotation(marker.getRotation());
 			final float end = getPositiveRotation(bearing);
 			final float rotationAngle = getRotationAngle(start, end);
 
-			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			markerRotationValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(ValueAnimator animation) {
 					try {
@@ -370,15 +374,9 @@ public class MapUtils {
 				}
 			});
 
-			valueAnimator.setFloatValues(0, 1);
-			valueAnimator.setDuration(220);
-			valueAnimator.start();
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					Log.e("marker.getRotation()", ">" + marker.getRotation());
-				}
-			}, 3005);
+			markerRotationValueAnimator.setFloatValues(0, 1);
+			markerRotationValueAnimator.setDuration(1000);
+			markerRotationValueAnimator.start();
 		}
 	}
 

@@ -2966,6 +2966,23 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     shadowMinOrder.setVisibility(View.GONE);
                 }
 
+            }else if(activity.getAppType()== AppConstant.ApplicationType.FRESH && activity.getVendorOpened()!=null){
+
+                double diffDouble = activity.getOpenedDeliveryStore().getMinOrderAmount()-subTotalAmount;
+                if(diffDouble>0){
+                    String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
+                    tvMinOrderLabelDisplay.setText(textToSet);
+                    tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
+                    shadowMinOrder.setVisibility(View.VISIBLE);
+                    showPaySliderEnabled(false);
+
+                }else{
+
+                    showPaySliderEnabled(true);
+                    tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                    shadowMinOrder.setVisibility(View.GONE);
+                }
+
             }else{
                 showPaySliderEnabled(true);
                 tvMinOrderLabelDisplay.setVisibility(View.GONE);

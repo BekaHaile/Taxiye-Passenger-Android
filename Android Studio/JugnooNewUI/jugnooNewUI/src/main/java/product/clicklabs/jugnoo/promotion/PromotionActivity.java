@@ -105,6 +105,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         relative = (RelativeLayout) findViewById(R.id.linearLayoutRoot);
 
         GAUtils.trackScreenView(PROMOTIONS);
+        Log.e("PromotionActivity", "onCreate");
 
         llContainer = (LinearLayout) findViewById(R.id.llContainer); llContainer.setVisibility(View.GONE);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);

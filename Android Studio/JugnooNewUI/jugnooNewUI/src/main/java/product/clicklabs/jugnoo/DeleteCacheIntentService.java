@@ -54,6 +54,14 @@ public class DeleteCacheIntentService extends IntentService {
 		} catch (Exception e) {}
 	}
 
+	private void getCacheSize(Context context) {
+		try {
+			File dir = context.getCacheDir();
+			long size = dirSize(dir);
+			Log.i(TAG, "getCacheSize => "+dir+", size => "+size);
+		} catch (Exception e) {}
+	}
+
 	private boolean deleteDir(File dir) {
 		if (dir != null && dir.isDirectory()) {
 			String[] children = dir.list();
@@ -73,6 +81,25 @@ public class DeleteCacheIntentService extends IntentService {
 		} else {
 			return false;
 		}
+	}
+
+	private long dirSize(File dir) {
+
+		if (dir.exists()) {
+			long result = 0;
+			File[] fileList = dir.listFiles();
+			for(int i = 0; i < fileList.length; i++) {
+				// Recursive call if it's a directory
+				if(fileList[i].isDirectory()) {
+					result += dirSize(fileList [i]);
+				} else {
+					// Sum the file size in bytes
+					result += fileList[i].length();
+				}
+			}
+			return result; // return the file size
+		}
+		return 0;
 	}
 
 }

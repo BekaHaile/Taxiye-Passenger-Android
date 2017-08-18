@@ -2502,6 +2502,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
             updateItemListFromDBFMG(null);
         }
+        if(getAppType() == AppConstant.ApplicationType.MENUS){
+            getMenusCart().clearEmptyRestaurantCarts();
+        }
+
         saveItemListToSPDB();
         saveAppCart(getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
 
@@ -2511,6 +2515,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
         MyApplication.getInstance().getLocationFetcher().destroy();
+        Log.e("FreshActivity", "onPause");
 
     }
 
@@ -2682,56 +2687,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private void updateItemListFromSPMenus() {
         try {
-//            Gson gson = new Gson();
-//            JSONObject jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
             if (getMenuProductsResponse() != null
                     && getMenuProductsResponse().getCategories() != null) {
                 for (com.sabkuchfresh.retrofit.model.menus.Category category : getMenuProductsResponse().getCategories()) {
                     if (category.getSubcategories() != null) {
                         for (Subcategory subcategory : category.getSubcategories()) {
                             for (Item item : subcategory.getItems()) {
-//                                item.getItemSelectedList().clear();
-//                                JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
-//                                if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
-//                                    for (int i = 0; i < jsonArrayItem.length(); i++) {
-//                                        try {
-//                                            ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
-//                                            if (itemSelected.getQuantity() > 0) {
-//												itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
-//                                                item.getItemSelectedList().add(itemSelected);
-//                                            }
-//                                        } catch (Exception e) {
-//                                        }
-//                                    }
-//                                }
-
                                 getMenusCart().updateItemForRestaurant(getVendorOpened(), item);
-
                             }
                         }
                     } else if (category.getItems() != null) {
                         for (Item item : category.getItems()) {
-//                            item.getItemSelectedList().clear();
-//                            JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
-//                            if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
-//                                for (int i = 0; i < jsonArrayItem.length(); i++) {
-//                                    try {
-//                                        ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
-//                                        if (itemSelected.getQuantity() > 0) {
-//											itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
-//                                            item.getItemSelectedList().add(itemSelected);
-//                                        }
-//                                    } catch (Exception e) {
-//                                    }
-//                                }
-//                            }
-
                             getMenusCart().updateItemForRestaurant(getVendorOpened(), item);
                         }
                     }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

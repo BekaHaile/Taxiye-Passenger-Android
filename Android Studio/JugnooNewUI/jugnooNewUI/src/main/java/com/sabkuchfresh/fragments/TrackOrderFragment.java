@@ -462,7 +462,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 													latLngsDriverAnim.clear();
 													if (markerDriver == null) {
 														markerDriver = googleMap.addMarker(getMarkerOptionsForResource(latLngDriver,
-																R.drawable.ic_bike_track_order_marker, 66f, 86f, 0.5f, 0.5f, 2));
+																R.drawable.ic_bike_track_order_marker, 66f, 86f, 0.5f, 0.8f, 2));
 														markerDriver.setRotation(Prefs.with(activity).getFloat(Constants.SP_TRACKING_LAST_BEARING, (float) bearing));
 													}
 													if (!zoomedFirstTime) {
