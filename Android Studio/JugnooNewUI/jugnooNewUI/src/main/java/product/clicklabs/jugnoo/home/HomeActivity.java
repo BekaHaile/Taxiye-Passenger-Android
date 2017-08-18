@@ -1627,7 +1627,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 							rating, "", "");
                     if (Data.isFuguChatEnabled()) {
                         try {
-                            FuguConfig.getInstance().showConversations(HomeActivity.this,((HomeActivity)HomeActivity.this).getString(R.string.fugu_support_title));
+                            FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
                         } catch (Exception e) {
                             e.printStackTrace();
                             Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
@@ -7713,7 +7713,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 public void onInAppCustomerSupportClick(View view) {
                     if (Data.isFuguChatEnabled()) {
                         try {
-                            FuguConfig.getInstance().showConversations(HomeActivity.this,((Activity)HomeActivity.this).getString(R.string.fugu_support_title));
+                            FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
                         } catch (Exception e) {
                             e.printStackTrace();
                             Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));

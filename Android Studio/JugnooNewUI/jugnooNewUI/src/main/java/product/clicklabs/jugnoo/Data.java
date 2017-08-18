@@ -619,6 +619,10 @@ public class Data {
         Data.recentAddressesFetched = recentAddressesFetched;
     }
 
+    public static long CHANNEL_ID_FUGU_ISSUE_RIDE(){
+        return Config.getConfigMode()==ConfigMode.LIVE?43:43;
+    }
+
     public static long CHANNEL_ID_FUGU_ISSUE_ORDER(){
         return Config.getConfigMode()==ConfigMode.LIVE?56:435;
     }
