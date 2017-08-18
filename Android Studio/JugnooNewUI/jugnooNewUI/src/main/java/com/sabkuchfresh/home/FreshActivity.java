@@ -1007,7 +1007,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                     DeliveryAddressModel deliveryAddressModel = getDeliveryAddressModel();
                     if(deliveryAddressModel != null && deliveryAddressModel.getId() == previousAddressId){
-                        saveDeliveryAddressModel();
+                        saveDeliveryAddressModel(deliveryAddressModel.getAddress(), deliveryAddressModel.getLatLng(), 0, "");
                     }
                 }
                 // else if selected address is updated by user, updating address related local variables
@@ -1020,7 +1020,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     int previousAddressId = getSelectedAddressId();
                     DeliveryAddressModel deliveryAddressModel = getDeliveryAddressModel();
                     if(deliveryAddressModel != null && deliveryAddressModel.getId() == previousAddressId){
-                        saveDeliveryAddressModel();
+                        saveDeliveryAddressModel(deliveryAddressModel.getAddress(), deliveryAddressModel.getLatLng(), 0, "");
                     }
                 }
                 // else find any tagged address near current set location, if that is not tagged
@@ -3943,6 +3943,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             Prefs.with(this).save(getAppType() == AppConstant.ApplicationType.MENUS ?
                     Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
+                    gson.toJson(deliveryAddressModel, DeliveryAddressModel.class));
+        } catch (Exception e) {}
+    }
+
+    public void saveDeliveryAddressModel(String address, LatLng latLng, int id, String type) {
+        deliveryAddressModel = new DeliveryAddressModel(address, latLng, id, type);
+        try {
+            Prefs.with(this).save(getAppType() == AppConstant.ApplicationType.MENUS ?
+                            Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
                     gson.toJson(deliveryAddressModel, DeliveryAddressModel.class));
         } catch (Exception e) {}
     }
