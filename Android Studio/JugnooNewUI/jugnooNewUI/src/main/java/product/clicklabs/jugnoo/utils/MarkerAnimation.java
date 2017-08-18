@@ -42,6 +42,7 @@ public class MarkerAnimation {
     private static final double ANIMATION_TIME = 14000;
     private static final double MIN_DISTANCE = 80;
     private static final double MAX_DISTANCE = 4000;
+    private static final double MAX_DISTANCE_FACTOR_GAPI = 2;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
@@ -245,7 +246,14 @@ public class MarkerAnimation {
                         if (list == null && !TextUtils.isEmpty(result)) {
                             JSONObject jObj = new JSONObject(result);
                             totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
-                            list = MapUtils.getLatLngListFromPath(result);
+                            if(totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
+                                list = new ArrayList<>();
+                                list.add(source);
+                                list.add(destination);
+                                totalDistance = MapUtils.distance(source, destination);
+                            } else {
+                                list = MapUtils.getLatLngListFromPath(result);
+                            }
                         }
 
                         ArrayList<Double> duration = new ArrayList<>();
