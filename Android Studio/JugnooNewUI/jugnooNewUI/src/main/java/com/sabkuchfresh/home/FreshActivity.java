@@ -999,11 +999,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if(searchResultLastFMM.getId() == null || searchResultLastFMM.getId() == -10){
                     setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
                     setSelectedAddress("");
+                    int previousAddressId = getSelectedAddressId();
                     setSelectedAddressId(0);
                     setSelectedAddressType("");
 
                     Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
-                    saveDeliveryAddressModel();
+
+                    DeliveryAddressModel deliveryAddressModel = getDeliveryAddressModel();
+                    if(deliveryAddressModel != null && deliveryAddressModel.getId() == previousAddressId){
+                        saveDeliveryAddressModel();
+                    }
                 }
                 // else if selected address is updated by user, updating address related local variables
                 // from SP search result
@@ -1011,7 +1016,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedLatLng(searchResultLastFMM.getLatLng());
                     setSelectedAddress(searchResultLastFMM.getAddress());
                     setSelectedAddressType(searchResultLastFMM.getName());
-                    saveDeliveryAddressModel();
+
+                    int previousAddressId = getSelectedAddressId();
+                    DeliveryAddressModel deliveryAddressModel = getDeliveryAddressModel();
+                    if(deliveryAddressModel != null && deliveryAddressModel.getId() == previousAddressId){
+                        saveDeliveryAddressModel();
+                    }
                 }
                 // else find any tagged address near current set location, if that is not tagged
                 else if(getSelectedAddressId() == 0){
@@ -3935,6 +3945,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
                     gson.toJson(deliveryAddressModel, DeliveryAddressModel.class));
         } catch (Exception e) {}
+    }
+
+    public DeliveryAddressModel getDeliveryAddressModel() {
+        try {
+            deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(getAppType() == AppConstant.ApplicationType.MENUS ?
+                            Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
+                    Constants.EMPTY_JSON_OBJECT), DeliveryAddressModel.class);
+        } catch (Exception e) {
+        }
+        return deliveryAddressModel;
     }
 
     public void setDeliveryAddressModelToSelectedAddress(boolean dontRefresh) {
