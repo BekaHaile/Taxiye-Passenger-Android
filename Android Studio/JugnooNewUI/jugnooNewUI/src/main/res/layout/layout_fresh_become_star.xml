@@ -86,8 +86,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/px_20"
-                    android:rotation="180"
-                    android:src="@drawable/triangle_grey_dr"
+                    android:src="@drawable/dropdown_checkout_triangle"
                     android:tag="mwar" />
 
 
