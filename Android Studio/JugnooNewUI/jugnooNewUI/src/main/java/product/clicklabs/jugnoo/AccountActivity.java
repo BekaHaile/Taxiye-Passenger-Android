@@ -132,8 +132,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     private RelativeLayout rlMain;
     private TextView tvAbout;
+    private TextView textViewAddressBook;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_account_user);
@@ -265,7 +266,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         ((TextView) findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutAddressBook = (RelativeLayout) findViewById(R.id.relativeLayoutAddressBook);
-        ((TextView)findViewById(R.id.textViewAddressBook)).setTypeface(Fonts.mavenMedium(this));
+        textViewAddressBook =  ((TextView)findViewById(R.id.textViewAddressBook));
+        textViewAddressBook.setTypeface(Fonts.mavenMedium(this));
 
 //        rlJugnooStar = (RelativeLayout) findViewById(R.id.rlJugnooStar);
       //  ((TextView)findViewById(R.id.tvJugnooStar)).setTypeface(Fonts.mavenMedium(this));
@@ -413,15 +415,16 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         } else if (!Utils.validPhoneNumber(phoneNoChanged)) {
                             editTextPhone.requestFocus();
                             editTextPhone.setError(getResources().getString(R.string.invalid_phone_error));
-                        } else if (Data.userData.userName.equals(nameChanged)
+                        } /*else if (Data.userData.userName.equals(nameChanged)
                                 && Data.userData.userEmail.equalsIgnoreCase(emailChanged)
-                                && Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged)) {
+                                z&& Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged)) {
                             Utils.showToast(AccountActivity.this, getString(R.string.nothing_changed));
-                        } else {
+                        }*/ else {
                             updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), emailChanged, "+91" + phoneNoChanged,
                                     !Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged));
                         }
                     } else {
+                        toggleProfileOptions(false);
                         editTextUserName.requestFocus();
                         editTextUserName.setSelection(editTextUserName.getText().length());
                         editTextUserName.setEnabled(true);
@@ -751,6 +754,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         getAllowedAuthChannels();
 	}
 
+	private AccountMenuItemsAdapter accountMenuItemsAdapter;
     private void setMenuItemsAdapter() {
         if(Data.userData !=null && Data.userData.getMenuInfoList()!=null && Data.userData.getMenuInfoList().size()>0){
             ArrayList<MenuInfo> itemsToShowInAccountScreen = new ArrayList<>();
@@ -764,7 +768,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             if(itemsToShowInAccountScreen.size()>0){
                 rvMenuItems.setNestedScrollingEnabled(false);
                 rvMenuItems.setLayoutManager(new LinearLayoutManager(this));
-                rvMenuItems.setAdapter(new AccountMenuItemsAdapter(itemsToShowInAccountScreen, rvMenuItems, new AccountMenuItemsAdapter.AccountMenuItemsCallback() {
+                accountMenuItemsAdapter = new AccountMenuItemsAdapter(itemsToShowInAccountScreen, rvMenuItems, new AccountMenuItemsAdapter.AccountMenuItemsCallback() {
                     @Override
                     public void onMenuItemClick(MenuInfo menuInfo) {
                         if (!editTextUserName.isEnabled()) {
@@ -795,7 +799,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                             }
                         }
                     }
-                },AccountActivity.this));
+                },AccountActivity.this);
+                rvMenuItems.setAdapter(accountMenuItemsAdapter);
                 rvMenuItems.setVisibility(View.VISIBLE);
             }
         }
@@ -980,6 +985,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                                 Prefs.with(activity).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 0)));
                                 imageViewEditProfileSave.setVisibility(View.GONE);
                                 imageViewEditProfile.setVisibility(View.VISIBLE);
+                                toggleProfileOptions(true);
                                 String message = jObj.getString("message");
                                 updateSubscriptionMessage(updatedName);
                                 Data.userData.userName = updatedName;
@@ -1654,5 +1660,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void toggleProfileOptions(boolean isEnable){
+        textViewAddressBook.setEnabled(isEnable);
+        textViewEmergencyContact.setEnabled(isEnable);
+        if(accountMenuItemsAdapter!=null){
+            accountMenuItemsAdapter.toggleMenuItems(isEnable);
+        }
+
     }
 }

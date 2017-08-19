@@ -73,7 +73,7 @@
         <TextView
             android:id="@+id/textViewTitle"
             style="@style/title"
-            android:layout_toRightOf="@+id/imageViewBack"
+            android:layout_centerHorizontal="true"
             android:layout_marginLeft="@dimen/px_20"
             android:text="@string/inbox" />
 
