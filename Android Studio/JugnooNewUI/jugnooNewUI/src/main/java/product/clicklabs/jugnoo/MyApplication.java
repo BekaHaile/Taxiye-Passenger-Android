@@ -81,8 +81,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         ActivityLifecycleCallback.register(this);
 
-		FacebookSdk.sdkInitialize(getApplicationContext());
-		AppEventsLogger.activateApp(this);
 
         /**
          Edited by Parminder Singh on 1/30/17 at 3:47 PM
@@ -96,6 +94,9 @@ public class MyApplication extends Application {
 
 
         super.onCreate();
+		FacebookSdk.sdkInitialize(getApplicationContext());
+		AppEventsLogger.activateApp(this);
+
 //		if (LeakCanary.isInAnalyzerProcess(this)) {
 //			// This process is dedicated to LeakCanary for heap analysis.
 //			// You should not init your app in this process.

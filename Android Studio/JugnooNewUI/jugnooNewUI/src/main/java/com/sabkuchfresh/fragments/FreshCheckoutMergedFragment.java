@@ -1723,6 +1723,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     Currency.getInstance("INR"),
                     bundle
             );
+            Log.e("FreshCheckout>>>>>>>>", "fb logPurchase bundle>"+bundle.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
