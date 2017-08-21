@@ -416,7 +416,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     public static final float MAX_ZOOM = 16;
     private static final int MAP_ANIMATE_DURATION = 300;
 
-    public static final double FIX_ZOOM_DIAGONAL = 108;
+    public static final double FIX_ZOOM_DIAGONAL = 358;
     private final float MAP_PADDING = 100f;
 
     public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
@@ -5149,7 +5149,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         markerOptions1.title("driver position");
         markerOptions1.snippet("");
         markerOptions1.position(driverInfo.latLng);
-        markerOptions1.anchor(0.5f, 0.8f);
+        markerOptions1.anchor(0.5f, 0.5f);
         markerOptions1.zIndex(HOME_MARKER_ZINDEX);
         markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(driverInfo.getMarkerBitmap(HomeActivity.this, assl)));
         return markerOptions1;
@@ -5161,7 +5161,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         markerOptions.title("driver shown to customer");
         markerOptions.snippet("" + driverInfo.userId);
         markerOptions.position(driverInfo.latLng);
-        markerOptions.anchor(0.5f, 0.8f);
+        markerOptions.anchor(0.5f, 0.5f);
         markerOptions.zIndex(HOME_MARKER_ZINDEX);
         markerOptions.rotation((float) driverInfo.getBearing());
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(driverInfo.getMarkerBitmap(HomeActivity.this, assl)));
@@ -5889,7 +5889,24 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                                 if (map != null) {
                                                                     if (HomeActivity.this.hasWindowFocus() && driverLocationMarker != null) {
                                                                         MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-																				driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, false);
+                                                                                driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), new MarkerAnimation.CallbackAnim() {
+                                                                                    @Override
+                                                                                    public void onPathFound(List<LatLng> latLngs) {
+                                                                                        if(latLngs != null){
+                                                                                            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngs);
+                                                                                        }
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public void onAnimComplete() {
+
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public void onAnimNotDone() {
+
+                                                                                    }
+                                                                                }, false, null, 0, 0, 0, false);
                                                                         updateDriverETAText(passengerScreenMode);
                                                                     }
                                                                 }

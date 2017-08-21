@@ -426,7 +426,7 @@ public class MarkerAnimation {
     }
 
 
-    interface CallbackAnim {
+    public interface CallbackAnim {
 		void onPathFound(List<LatLng> latLngs);
         void onAnimComplete();
         void onAnimNotDone();
