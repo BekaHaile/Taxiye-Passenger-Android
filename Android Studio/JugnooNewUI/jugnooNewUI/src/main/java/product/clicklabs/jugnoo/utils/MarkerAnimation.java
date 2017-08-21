@@ -39,7 +39,7 @@ import retrofit.mime.TypedByteArray;
 public class MarkerAnimation {
 
     private static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
-    private static final double ANIMATION_TIME = 14000;
+    private static final double ANIMATION_TIME = 9000;
     private static final double FAST_ANIMATION_TIME = 2000;
     private static final double MIN_DISTANCE = 80;
     private static final double MAX_DISTANCE = 4000;

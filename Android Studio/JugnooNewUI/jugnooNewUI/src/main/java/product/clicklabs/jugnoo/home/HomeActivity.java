@@ -5934,7 +5934,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
             getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), true, null);
 
-            timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 15000, 15000);
+            timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 5000, 10000);
             Log.i("timerDriverLocationUpdater", "started");
 
         } catch (Exception e) {
@@ -6151,7 +6151,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             }
             MarkerAnimation.clearAsyncList();
 
-            timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 18000);
+            timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 10000);
             Log.i("timerMapAnimateAndUpdateRideData", "started");
         } catch (Exception e) {
             e.printStackTrace();
