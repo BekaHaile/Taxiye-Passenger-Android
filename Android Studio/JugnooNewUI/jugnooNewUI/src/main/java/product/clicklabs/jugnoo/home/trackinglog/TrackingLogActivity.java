@@ -59,6 +59,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.MarkerAnimation;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -325,6 +326,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                 map.clear();
 				JSONArray jDriverLocations = jsonObject.getJSONArray(Constants.KEY_DRIVER_LOCATIONS);
                 final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                List<LatLng> driverLatLngs = new ArrayList<>();
 	            for(int i=0; i<jDriverLocations.length(); i++){
                     LatLng latLng = new LatLng(jDriverLocations.getJSONObject(i).getDouble(Constants.KEY_LAT),
                             jDriverLocations.getJSONObject(i).getDouble(Constants.KEY_LONG));
@@ -334,6 +336,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                     markerOptions.zIndex(0);
                     map.addMarker(markerOptions);
                     builder.include(latLng);
+                    driverLatLngs.add(latLng);
                 }
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -365,12 +368,41 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                     Gson gson = new Gson();
                     TrackingLogData trackingLogData = gson.fromJson(jsonObject.toString(), TrackingLogData.class);
                     List<TrackingLogItem> trackingLogItems = trackingLogData.getTrackingLogs();
-                    animateMarkerICSRecursive(driverMarker, trackingLogItems, new LatLngInterpolator.Spherical());
+
+//                    animateMarkerICSRecursive(driverMarker, trackingLogItems, new LatLngInterpolator.Spherical());
+
+                    animateMarkerICSRecursive(driverMarker, driverLatLngs);
                 }
 			}
         } catch (Exception e) {
             e.printStackTrace();
             Utils.showToast(this, "Some error occured "+e.getLocalizedMessage()+":"+e.getMessage()+":"+e.getCause());
+        }
+    }
+
+
+    private void animateMarkerICSRecursive(final Marker marker, final List<LatLng> latLngList){
+        if(latLngList.size() > 0) {
+            LatLng latLng = latLngList.remove(0);
+            MarkerAnimation.animateMarkerToICS("-1", marker, latLng, new LatLngInterpolator.LinearFixed(),
+                    new MarkerAnimation.CallbackAnim() {
+                        @Override
+                        public void onPathFound(List<LatLng> latLngs) {
+
+                        }
+
+                        @Override
+                        public void onAnimComplete() {
+                            if(latLngList.size() > 0) {
+                                animateMarkerICSRecursive(marker, latLngList);
+                            }
+                        }
+
+                        @Override
+                        public void onAnimNotDone() {
+                            this.onAnimComplete();
+                        }
+                    }, false, null, 0, 0, 0, false);
         }
     }
 
