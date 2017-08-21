@@ -98,10 +98,6 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             return new MainViewHolder(v, context);
         } else if (viewType == BLANK_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            v.setLayoutParams(layoutParams);
-
-            ASSL.DoMagic(v);
             return new ViewTitleHolder(v);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");

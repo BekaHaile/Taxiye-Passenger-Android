@@ -373,23 +373,19 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 
 
                     final List<TrackingLogItem> finalTrackingLogItems = new ArrayList<>();
-                    int pointer = 0;
                     for(LatLng latLng : driverLatLngs){
                         double dist = Double.MAX_VALUE;
                         TrackingLogItem itemMatched = null;
-                        int posMatched = -1;
-                        for(int i=pointer; i<trackingLogItems.size(); i++){
+                        for(int i=0; i<trackingLogItems.size(); i++){
                             TrackingLogItem item = trackingLogItems.get(i);
                             double distI = MapUtils.distance(latLng, item.getLatLng());
                             if(distI <= dist){
                                 dist = distI;
                                 itemMatched = item;
-                                posMatched = i;
                             }
                         }
                         if(itemMatched != null){
                             finalTrackingLogItems.add(itemMatched);
-                            pointer = posMatched;
                         }
                     }
 
@@ -397,7 +393,10 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            animateMarkerICSRecursive(driverMarker, finalTrackingLogItems);
+                            if(state == ScreenState.MAP) {
+                                MarkerAnimation.clearAsyncList();
+                                animateMarkerICSRecursive(driverMarker, finalTrackingLogItems);
+                            }
                         }
                     }, 1100);
 
@@ -411,7 +410,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 
 
     private void animateMarkerICSRecursive(final Marker marker, final List<TrackingLogItem> trackingLogItems){
-        if(trackingLogItems.size() > 0) {
+        if(state == ScreenState.MAP && trackingLogItems.size() > 0) {
             TrackingLogItem trackingLogItem = trackingLogItems.remove(0);
             MarkerAnimation.animateMarkerToICS("-1", marker, trackingLogItem.getLatLng(), new LatLngInterpolator.LinearFixed(),
                     new MarkerAnimation.CallbackAnim() {
@@ -422,7 +421,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 
                         @Override
                         public void onAnimComplete() {
-                            if(trackingLogItems.size() > 0) {
+                            if(state == ScreenState.MAP && trackingLogItems.size() > 0) {
                                 animateMarkerICSRecursive(marker, trackingLogItems);
                             }
                         }
