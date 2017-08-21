@@ -29,7 +29,7 @@ import retrofit.mime.MultipartTypedOutput;
 public interface MenusApiService {
 
 	@FormUrlEncoded
-	@POST("/nearby_restaurants")
+	@POST("/nearby_restaurants_v2")
 	void nearbyRestaurants(@FieldMap Map<String, String> params,
 						   Callback<MenusResponse> callback);
 

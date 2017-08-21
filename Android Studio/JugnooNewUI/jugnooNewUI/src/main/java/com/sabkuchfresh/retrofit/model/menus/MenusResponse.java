@@ -69,6 +69,8 @@ public class MenusResponse implements Serializable {
 
 	@SerializedName("rating_color")
 	private String colorCode;
+	@SerializedName("is_complete")
+	private int isPageLengthComplete;
 
 	public String getColorCode() {
 		return colorCode;
@@ -180,6 +182,10 @@ public class MenusResponse implements Serializable {
 
 	public StripInfo getStripInfo() {
 		return stripInfo;
+	}
+
+	public boolean isPageLengthComplete() {
+		return isPageLengthComplete==1;
 	}
 
 

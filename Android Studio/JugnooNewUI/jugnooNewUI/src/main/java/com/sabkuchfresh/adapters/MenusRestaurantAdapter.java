@@ -2,11 +2,8 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -30,6 +27,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
+import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -94,7 +92,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final int NO_VENDORS_ITEM = 4;
     private static final int OFFERS_PAGER_ITEM = 5;
     private static final int OFFER_STRIP_ITEM = 6;
-   private final static ColorMatrix BW_MATRIX = new ColorMatrix();
+    private static final int ITEM_PROGRESS_BAR = 7;
+
+    private final static ColorMatrix BW_MATRIX = new ColorMatrix();
    private final static  ColorMatrixColorFilter BW_FILTER;
     static {
         BW_MATRIX.setSaturation(0);
@@ -166,9 +166,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         callback.onNotify(vendorsToShow.size());
     }
 
+    public boolean showAddRestaurantLayout;
     public void setList(ArrayList<MenusResponse.Vendor> vendors, List<MenusResponse.BannerInfo> bannerInfos,
-                        MenusResponse.StripInfo stripInfo, boolean showBanner) {
+                        MenusResponse.StripInfo stripInfo, boolean showBanner, boolean showAddRestaurantLayout) {
         this.vendorsComplete = vendors;
+        this.showAddRestaurantLayout=showAddRestaurantLayout;
         this.vendorsFiltered.clear();
         this.vendorsFiltered.addAll(vendors);
         setRestIdMappedVendors();
@@ -305,6 +307,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         } else if(viewType == OFFER_STRIP_ITEM){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.textview_min_order, parent, false);
             return new ViewHolderOfferStrip(v, this);
+        }else if(viewType== ITEM_PROGRESS_BAR){
+
+
+                View   v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progress_bar_feed, parent, false);
+
+
+                return new ProgressBarViewHolder(v);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
@@ -729,17 +738,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             if (position >= 0 && position < recentOrdersSize()) {
                 return STATUS_ITEM;
             } else if (position >= recentOrdersSize() && vendorsToShow.size() == 0) {
-                return FORM_ITEM;
+                return showAddRestaurantLayout?FORM_ITEM:ITEM_PROGRESS_BAR;
             } else if (position >= recentOrdersSize() && position - recentOrdersSize() < vendorsToShow.size()) {
                 return MAIN_ITEM;
             } else {
-                return FORM_ITEM;
+                return showAddRestaurantLayout?FORM_ITEM:ITEM_PROGRESS_BAR;
             }
         } else if (position < recentOrdersSize()) {
             return STATUS_ITEM;
         } else {
             if (vendorsCompleteCount() > 0) {
-                return FORM_ITEM;
+                return showAddRestaurantLayout?FORM_ITEM:ITEM_PROGRESS_BAR;
             } else {
                 return NO_VENDORS_ITEM;
             }
@@ -805,7 +814,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    private static class ProgressBarViewHolder extends RecyclerView.ViewHolder {
 
+//        public RelativeLayout relative;
+
+        public ProgressBarViewHolder(View itemView) {
+            super(itemView);
+//            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+        }
+    }
     private class ViewHolderRestaurantForm extends RecyclerView.ViewHolder {
         TextView tvCouldNotFind, tvRecommend;
         EditText etRestaurantName, etLocality, etTelephone;

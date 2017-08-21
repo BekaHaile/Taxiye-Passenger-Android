@@ -83,6 +83,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     PushDialog pushDialog;
     private boolean resumed = false, searchOpened = false;
     private KeyboardLayoutListener keyboardLayoutListener;
+    private LinearLayoutManager linearLayoutManager;
+    private int visibleItemCount;
+    private int totalItemCount;
+    private int pastVisiblesItems;
+    private boolean isPagingApiInProgress;
+    private boolean hasMorePages;
 
     public MenusFragment() {
     }
@@ -126,7 +132,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         relativeLayoutNoMenus.setVisibility(View.GONE);
 
         recyclerViewRestaurant = (RecyclerView) rootView.findViewById(R.id.recyclerViewRestaurant);
-        recyclerViewRestaurant.setLayoutManager(new LinearLayoutManager(activity));
+        linearLayoutManager = new LinearLayoutManager(activity);
+        recyclerViewRestaurant.setLayoutManager(linearLayoutManager);
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
         /*textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus); textViewNoMenus.setTypeface(Fonts.mavenMedium(activity));*/
@@ -274,6 +281,28 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 			}
 		});
 
+        recyclerViewRestaurant.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                //To implement Pagination
+                if (dy > 0) {
+
+                    visibleItemCount = linearLayoutManager.getChildCount();
+                    totalItemCount = linearLayoutManager.getItemCount();
+                    pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (!isPagingApiInProgress && hasMorePages) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            getAllMenus(true,lastMenusLatlng, true);
+                        }
+                    }
+                }
+            }
+
+
+
+
+        });
         return rootView;
     }
 
@@ -340,15 +369,24 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onRefresh() {
-        getAllMenus(false, activity.getSelectedLatLng());
+        getAllMenus(false, activity.getSelectedLatLng(), false);
     }
 
-    public void getAllMenus(final boolean loader, final LatLng latLng) {
+    private LatLng lastMenusLatlng;
+    private int currentPageCount=1 ;
+    public void getAllMenus(final boolean loader, final LatLng latLng, final boolean isPagination) {
+
         try {
             if (MyApplication.getInstance().isOnline()) {
+                this.lastMenusLatlng = latLng;
                 ProgressDialog progressDialog = null;
-                if (loader)
-                    progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
+                if(isPagination){
+                    isPagingApiInProgress=true;
+                }else{
+                    if (loader)
+                        progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
+                }
+
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -356,12 +394,18 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
                 params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
                 params.put(Constants.INTERATED, "1");
+                params.put(Constants.PAGE_NO, isPagination?String.valueOf(currentPageCount):"0");
+
 
                 new HomeUtil().putDefaultParams(params);
                 final ProgressDialog finalProgressDialog = progressDialog;
+
                 RestClient.getMenusApiService().nearbyRestaurants(params, new Callback<MenusResponse>() {
                     @Override
                     public void success(MenusResponse menusResponse, Response response) {
+                        if(isPagination){
+                            isPagingApiInProgress=false;
+                        }
                         relativeLayoutNoMenus.setVisibility(View.GONE);
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
@@ -371,10 +415,29 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
 
+                                    //set Variables for pagination
+                                    hasMorePages =  menusResponse.getVendors()!=null && menusResponse.getVendors().size()>0 && menusResponse.isPageLengthComplete();
 
 
+                                    if(isPagination){
+                                        vendors.addAll((ArrayList<MenusResponse.Vendor>) menusResponse.getVendors());
+                                        menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos(),
+                                                menusResponse.getStripInfo(), menusResponse.getShowBanner(), !hasMorePages);
+                                        menusResponse.setVendors(vendors);
+                                        activity.setMenusResponse(menusResponse);
+                                        currentPageCount++;
+                                        try {
+                                            if (finalProgressDialog != null)
+                                                finalProgressDialog.dismiss();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        return;
 
+                                    }
+                                    currentPageCount=1;
                                     activity.setMenusResponse(menusResponse);
+
                                     vendors = (ArrayList<MenusResponse.Vendor>) menusResponse.getVendors();
 
                                     recentOrder.clear();
@@ -384,7 +447,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
                                     menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos(),
-                                            menusResponse.getStripInfo(), menusResponse.getShowBanner());
+                                            menusResponse.getStripInfo(), menusResponse.getShowBanner(), !hasMorePages);
                                     applyFilter(false);
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
@@ -412,6 +475,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                     checkIciciPaymentStatusApi(activity);
 
+
+
+
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -430,6 +496,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     @Override
                     public void failure(RetrofitError error) {
+                        if(isPagination){
+                            isPagingApiInProgress=false;
+                        }
                         relativeLayoutNoMenus.setVisibility(View.GONE);
                         Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
                         try {
@@ -459,7 +528,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        getAllMenus(true, latLng);
+                        getAllMenus(true, latLng, false);
                     }
 
                     @Override
