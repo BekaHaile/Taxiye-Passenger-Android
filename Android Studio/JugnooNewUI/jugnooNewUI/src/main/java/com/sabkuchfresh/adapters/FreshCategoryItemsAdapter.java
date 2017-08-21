@@ -382,10 +382,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemCount() {
-        if(listType == AppConstant.ListType.HOME)
-            return subItems == null ? 0 : subItems.size()+1;
-        else
-            return subItems == null ? 0 : subItems.size();
+        return subItems == null ? 0 : subItems.size()+1;
     }
 
 

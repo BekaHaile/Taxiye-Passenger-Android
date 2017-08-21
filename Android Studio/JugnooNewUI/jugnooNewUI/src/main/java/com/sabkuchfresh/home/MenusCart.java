@@ -52,6 +52,8 @@ public class MenusCart {
 				item.getItemSelectedList().clear();
 				item.getItemSelectedList().addAll(itemSelecteds);
 				getRestaurantCart(vendor).getItemHashMap().put(item.getRestaurantItemId(), item);
+			} else {
+				item.getItemSelectedList().clear();
 			}
 		}
 	}
