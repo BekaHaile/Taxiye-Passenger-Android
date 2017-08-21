@@ -87,6 +87,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
     ArrayList<TrackingLogReponse.Datum> data = new ArrayList<>();
     ScreenState state;
     ASSL assl;
+    Handler handler = new Handler();
 
     @Override
     protected void onResume() {
@@ -338,7 +339,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                     builder.include(latLng);
                     driverLatLngs.add(latLng);
                 }
-                new Handler().postDelayed(new Runnable() {
+                handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -363,15 +364,43 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                     markerOptions.rotation((float) jTrackingLog0.getDouble(Constants.KEY_BEARING));
                     markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                             .createMarkerBitmapForResource(this, assl, R.drawable.ic_auto_marker)));
-                    Marker driverMarker = map.addMarker(markerOptions);
+                    final Marker driverMarker = map.addMarker(markerOptions);
 
                     Gson gson = new Gson();
                     TrackingLogData trackingLogData = gson.fromJson(jsonObject.toString(), TrackingLogData.class);
                     List<TrackingLogItem> trackingLogItems = trackingLogData.getTrackingLogs();
 
-//                    animateMarkerICSRecursive(driverMarker, trackingLogItems, new LatLngInterpolator.Spherical());
 
-                    animateMarkerICSRecursive(driverMarker, driverLatLngs);
+
+                    final List<TrackingLogItem> finalTrackingLogItems = new ArrayList<>();
+                    int pointer = 0;
+                    for(LatLng latLng : driverLatLngs){
+                        double dist = Double.MAX_VALUE;
+                        TrackingLogItem itemMatched = null;
+                        int posMatched = -1;
+                        for(int i=pointer; i<trackingLogItems.size(); i++){
+                            TrackingLogItem item = trackingLogItems.get(i);
+                            double distI = MapUtils.distance(latLng, item.getLatLng());
+                            if(distI <= dist){
+                                dist = distI;
+                                itemMatched = item;
+                                posMatched = i;
+                            }
+                        }
+                        if(itemMatched != null){
+                            finalTrackingLogItems.add(itemMatched);
+                            pointer = posMatched;
+                        }
+                    }
+
+//                    animateMarkerICSRecursive(driverMarker, trackingLogItems, new LatLngInterpolator.Spherical());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            animateMarkerICSRecursive(driverMarker, finalTrackingLogItems);
+                        }
+                    }, 1100);
+
                 }
 			}
         } catch (Exception e) {
@@ -381,10 +410,10 @@ public class TrackingLogActivity extends BaseFragmentActivity {
     }
 
 
-    private void animateMarkerICSRecursive(final Marker marker, final List<LatLng> latLngList){
-        if(latLngList.size() > 0) {
-            LatLng latLng = latLngList.remove(0);
-            MarkerAnimation.animateMarkerToICS("-1", marker, latLng, new LatLngInterpolator.LinearFixed(),
+    private void animateMarkerICSRecursive(final Marker marker, final List<TrackingLogItem> trackingLogItems){
+        if(trackingLogItems.size() > 0) {
+            TrackingLogItem trackingLogItem = trackingLogItems.remove(0);
+            MarkerAnimation.animateMarkerToICS("-1", marker, trackingLogItem.getLatLng(), new LatLngInterpolator.LinearFixed(),
                     new MarkerAnimation.CallbackAnim() {
                         @Override
                         public void onPathFound(List<LatLng> latLngs) {
@@ -393,8 +422,8 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 
                         @Override
                         public void onAnimComplete() {
-                            if(latLngList.size() > 0) {
-                                animateMarkerICSRecursive(marker, latLngList);
+                            if(trackingLogItems.size() > 0) {
+                                animateMarkerICSRecursive(marker, trackingLogItems);
                             }
                         }
 
@@ -402,8 +431,10 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                         public void onAnimNotDone() {
                             this.onAnimComplete();
                         }
-                    }, false, null, 0, 0, 0, false);
+                    }, false, null, 0, 0, 0,
+                    trackingLogItem.getMode().equalsIgnoreCase(TrackingLogModeValue.RESET.getOrdinal()));
         }
+
     }
 
     private void animateMarkerICSRecursive(final Marker marker, final List<TrackingLogItem> trackingLogItems,
@@ -498,6 +529,10 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 
         public Double getLat() {
             return lat;
+        }
+
+        public LatLng getLatLng(){
+            return new LatLng(lat, lng);
         }
 
         public void setLat(Double lat) {
