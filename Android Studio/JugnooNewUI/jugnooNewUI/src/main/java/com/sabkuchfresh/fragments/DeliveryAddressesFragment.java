@@ -466,10 +466,10 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 if (savedPlacesAdapter.getCount() >= 3) {
                     height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
                     paramsRL.setMargins(0, 0, 0, height);
-                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_290));
+                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_300));
                 } else {
                     paramsRL.setMargins(0, 0, 0, height);
-                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_176));
+                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_186));
                 }
             } else {
                 paramsRL.setMargins(0, 0, 0, 0);

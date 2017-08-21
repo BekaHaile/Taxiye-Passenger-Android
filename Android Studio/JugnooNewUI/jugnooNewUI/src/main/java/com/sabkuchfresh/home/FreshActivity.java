@@ -482,6 +482,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.GROCERY);
                     lastClientId = Config.getGroceryClientId();
                 } else if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                    getTopBar().etSearch.setHint(getString(R.string.search_items_menus));
                     fetchFiltersFromSP();
                     openCart();
                     addMenusFragment();
@@ -1648,10 +1649,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.title.setGravity(Gravity.LEFT);
                 titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20f), 0, 0, 0);
                 titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.getLlSearchCart().getId());
+                topBar.title.setPadding(0, 0, 0, 0);
             }
             else {
                 topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
+                titleLayoutParams.setMargins(0, 0, (int) (ASSL.Xscale() * 50f), 0);
             }
             if(fragment instanceof FeedReserveSpotFragment
                     || fragment instanceof FeedSpotReservedSharingFragment
@@ -1659,10 +1661,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 					|| fragment instanceof FeedChangeCityFragment
 					|| fragment instanceof RestaurantReviewsListFragment
                     || fragment instanceof RestaurantAddReviewFragment
-                    || fragment instanceof FeedbackFragment){
+                    || fragment instanceof FeedbackFragment
+                    || fragment instanceof MealFragment
+                    || fragment instanceof ProsHomeFragment){
                 topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32f), 0, 0, 0);
-                topBar.title.setPadding((int) (ASSL.Xscale() * 20f), 0, 0, 0);
+				titleLayoutParams.setMargins(0, 0, (int) (ASSL.Xscale() * 50f), 0);
             }
 
 

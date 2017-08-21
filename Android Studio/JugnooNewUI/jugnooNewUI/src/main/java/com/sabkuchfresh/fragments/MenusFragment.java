@@ -298,7 +298,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     return;
                 }
 				activity.fragmentUISetup(this);
-				activity.setAddressTextToLocationPlaceHolder();
+				if(!activity.isOrderJustCompleted()) {
+					activity.setAddressTextToLocationPlaceHolder();
+				}
 				activity.resumeMethod();
                 applyFilter(false);
                 if (searchOpened) {

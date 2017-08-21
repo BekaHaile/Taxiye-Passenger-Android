@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Log;
@@ -85,6 +86,13 @@ public class PinEditTextLayout implements View.OnFocusChangeListener, View.OnKey
 			public void onClick(View v) {
 				setFocus(mPinHiddenEditText);
 				showSoftKeyboard(mPinHiddenEditText);
+			}
+		});
+		mPinHiddenEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				callback.onOTPComplete(mPinHiddenEditText.getText().toString(), mPinHiddenEditText);
+				return false;
 			}
 		});
 	}
