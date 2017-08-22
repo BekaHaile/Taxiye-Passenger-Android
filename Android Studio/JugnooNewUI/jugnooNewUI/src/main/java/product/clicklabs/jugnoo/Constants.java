@@ -585,10 +585,10 @@ public interface Constants {
     String KEY_GO_BACK = "go_back";
     String KEY_PAYMENT_OBJECT = "payment_object";
     String KEY_PAY_ORDER_ID = "pay_order_id";
-    String ACCEPTONLINE = "Accept Online Payment";
-    String OFFERSDISCOUNT = "Offers Discount";
-    String PUREVEGETARIAN = "Pure Vegetarian";
-    String FREEDELIVERY = "Free Delivery";
+    String ACCEPTONLINE = "accepts_online";
+    String OFFERSDISCOUNT = "offers_discount";
+    String PUREVEGETARIAN = "pure_veg";
+    String FREEDELIVERY = "free_delivery";
     String SHOW_SUBSCRIPTION_DATA = "show_subscription_data";
     String KEY_SUB_ID = "sub_id";
 
@@ -770,4 +770,6 @@ public interface Constants {
     String ORDER_STATUS_ADDRESS = "order_status_address";
     String SHOULD_REFRESH_ADDRESS = "should_refresh_address";
     String PAGE_NO = "page_no";
+    String KEY_SORTING = "sorting";
+    String KEY_FILTERS = "filters";
 }

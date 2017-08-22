@@ -196,7 +196,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		relativeLayoutPrice.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setSortBySelected(getSortBySelected() != SortType.PRICE ? SortType.PRICE : SortType.NONE);
+				setSortBySelected(getSortBySelected() != SortType.PRICE_RANGE ? SortType.PRICE_RANGE : SortType.NONE);
 				updateSortTypeUI();
 			}
 		});
@@ -425,7 +425,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 			imageViewRadioPopularity.setImageResource(R.drawable.ic_radio_button_selected);
 		} else if(getSortBySelected() == SortType.DISTANCE){
 			imageViewRadioDistance.setImageResource(R.drawable.ic_radio_button_selected);
-		} else if(getSortBySelected() == SortType.PRICE){
+		} else if(getSortBySelected() == SortType.PRICE_RANGE){
 			imageViewRadioPrice.setImageResource(R.drawable.ic_radio_button_selected);
 		} else if(getSortBySelected() == SortType.DELIVERY_TIME){
 			imageViewRadioDeliveryTime.setImageResource(R.drawable.ic_radio_button_selected);
@@ -480,7 +480,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 
 
 	public enum SortType{
-		NONE(-1), POPULARITY(0), DISTANCE(1), PRICE(2), ONLINEPAYMENTACCEPTED(3), DELIVERY_TIME(4);
+		NONE(-1), POPULARITY(0), DISTANCE(1), PRICE_RANGE(2), ONLINEPAYMENTACCEPTED(3), DELIVERY_TIME(4);
 
 		private int ordinal;
 		SortType(int ordinal){
@@ -596,8 +596,9 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	private void applyRealTimeFilters(){
 		if(activity != null){
 			activity.filtersChanged = true;
-			activity.applyRealTimeFilters();
-			activity.filtersChanged = false;
+//			activity.applyRealTimeFilters();
+//			activity.filtersChanged = false;
 		}
 	}
+
 }

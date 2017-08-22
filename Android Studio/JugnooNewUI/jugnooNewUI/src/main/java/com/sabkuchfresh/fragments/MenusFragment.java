@@ -33,6 +33,7 @@ import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -293,7 +294,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     if (!isPagingApiInProgress && hasMorePages) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                            getAllMenus(true,lastMenusLatlng, true);
+                            getAllMenus(true,lastMenusLatlng, true, false);
                         }
                     }
                 }
@@ -331,7 +332,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 					activity.setAddressTextToLocationPlaceHolder();
 				}
 				activity.resumeMethod();
-                applyFilter(false);
+//                applyFilter(false);
                 if (searchOpened) {
 					searchOpened = false;
 					openSearch(false);
@@ -369,12 +370,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onRefresh() {
-        getAllMenus(false, activity.getSelectedLatLng(), false);
+        getAllMenus(false, activity.getSelectedLatLng(), false, true);
     }
 
     private LatLng lastMenusLatlng;
     private int currentPageCount=1 ;
-    public void getAllMenus(final boolean loader, final LatLng latLng, final boolean isPagination) {
+    public void getAllMenus(final boolean loader, final LatLng latLng, final boolean isPagination, final boolean scrollToTop) {
 
         try {
             if (MyApplication.getInstance().isOnline()) {
@@ -389,6 +390,20 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
                 HashMap<String, String> params = new HashMap<>();
+
+                //Sort Keys
+                if (activity.getSortBySelected() != MenusFilterFragment.SortType.NONE) {
+                    JSONArray sortArray = new JSONArray();
+                    sortArray.put(("" + activity.getSortBySelected()).toLowerCase());
+                    params.put(Constants.KEY_SORTING, sortArray.toString());
+
+                }
+                //Quick Filter Keys
+                if (activity.getQuickFilterSelected() != null && activity.getQuickFilterSelected().size() > 0) {
+                    params.put(Constants.KEY_FILTERS, (new JSONArray(activity.getQuickFilterSelected())).toString());
+
+                }
+
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
@@ -448,7 +463,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                     menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos(),
                                             menusResponse.getStripInfo(), menusResponse.getShowBanner(), !hasMorePages);
-                                    applyFilter(false);
+//                                    applyFilter(false);
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
@@ -474,6 +489,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
                                     checkIciciPaymentStatusApi(activity);
+                                    if(scrollToTop && recyclerViewRestaurant!=null){
+                                            recyclerViewRestaurant.smoothScrollToPosition(0);
+
+                                    }
 
 
 
@@ -508,13 +527,19 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             e.printStackTrace();
                         }
                         swipeRefreshLayout.setRefreshing(false);
-                        retryDialog(DialogErrorType.CONNECTION_LOST, latLng);
+                        retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader, isPagination, scrollToTop);
+                        if(isPagination && menusRestaurantAdapter!=null){
+                            menusRestaurantAdapter.hideProgressBar();
+                        }
 
                     }
                 });
             } else {
-                retryDialog(DialogErrorType.NO_NET, latLng);
+                retryDialog(DialogErrorType.NO_NET, latLng, loader, isPagination, scrollToTop);
                 swipeRefreshLayout.setRefreshing(false);
+                if(isPagination && menusRestaurantAdapter!=null){
+                    menusRestaurantAdapter.hideProgressBar();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -522,13 +547,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
-    private void retryDialog(DialogErrorType dialogErrorType, final LatLng latLng) {
+    private void retryDialog(DialogErrorType dialogErrorType, final LatLng latLng, final boolean loader, final boolean isPagination, final boolean scrollToTop) {
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        getAllMenus(true, latLng, false);
+                        getAllMenus(loader, latLng, isPagination, scrollToTop);
                     }
 
                     @Override
@@ -618,13 +643,20 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     public void applyFilter(boolean scrollToTop){
-        menusRestaurantAdapter.applyFilter();
-        if (activity.getTopFragment() instanceof MenusFragment) {
-            activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-        }
+//        menusRestaurantAdapter.applyFilter();
+
         if(scrollToTop) {
-            recyclerViewRestaurant.smoothScrollToPosition(0);
+
+
+
+            getAllMenus(true, lastMenusLatlng, false, true);
+
+
+            if (activity.getTopFragment() instanceof MenusFragment) {
+                activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
+            }
         }
+
     }
 
     private static void checkIciciPaymentStatusApi(final FreshActivity activity) {

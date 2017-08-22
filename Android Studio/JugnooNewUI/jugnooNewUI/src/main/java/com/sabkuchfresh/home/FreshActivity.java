@@ -882,7 +882,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                                         }
                                         if (fragment != null && FreshActivity.this.hasWindowFocus()) {
-                                            ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false);
+                                            ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false, false);
 
 
                                         } else {
@@ -3306,8 +3306,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             sortBySelected = MenusFilterFragment.SortType.POPULARITY;
         } else if (sortBy == MenusFilterFragment.SortType.DISTANCE.getOrdinal()) {
             sortBySelected = MenusFilterFragment.SortType.DISTANCE;
-        } else if (sortBy == MenusFilterFragment.SortType.PRICE.getOrdinal()) {
-            sortBySelected = MenusFilterFragment.SortType.PRICE;
+        } else if (sortBy == MenusFilterFragment.SortType.PRICE_RANGE.getOrdinal()) {
+            sortBySelected = MenusFilterFragment.SortType.PRICE_RANGE;
         } else if (sortBy == MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED.getOrdinal()) {
             sortBySelected = MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED;
         } else if (sortBy == MenusFilterFragment.SortType.DELIVERY_TIME.getOrdinal()) {
@@ -3576,7 +3576,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (appType == AppConstant.ApplicationType.GROCERY && getGroceryFragment() != null) {
                     getGroceryFragment().getAllProducts(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.MENUS && getMenusFragment() != null) {
-                    getMenusFragment().getAllMenus(true, getSelectedLatLng(), false);
+                    getMenusFragment().getAllMenus(true, getSelectedLatLng(), false, false);
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
                     getFeedHomeFragment().fetchFeedsApi(true, true, true);
                 } else if (appType == AppConstant.ApplicationType.PROS && getProsHomeFragment() != null) {

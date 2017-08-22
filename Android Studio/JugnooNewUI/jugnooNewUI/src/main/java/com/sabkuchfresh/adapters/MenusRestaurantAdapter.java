@@ -27,7 +27,6 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
-import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -169,6 +168,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public boolean showAddRestaurantLayout;
     public void setList(ArrayList<MenusResponse.Vendor> vendors, List<MenusResponse.BannerInfo> bannerInfos,
                         MenusResponse.StripInfo stripInfo, boolean showBanner, boolean showAddRestaurantLayout) {
+        this.showBottomView =true;
         this.vendorsComplete = vendors;
         this.showAddRestaurantLayout=showAddRestaurantLayout;
         this.vendorsFiltered.clear();
@@ -182,6 +182,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         applyFilter();
     }
 
+    public boolean showBottomView;//either progress bar or restaurant
+    public void hideProgressBar(){
+        if(!showAddRestaurantLayout){
+            showBottomView =false;
+        }
+        notifyDataSetChanged();
+    }
     private void setRestIdMappedVendors(){
         restIdMappedVendors.clear();
         for(MenusResponse.Vendor vendor : vendorsFiltered){
@@ -255,7 +262,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     point = rhs.getPopularity() - lhs.getPopularity();
                 } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE) {
                     point = -(int) (rhs.getDistance() - lhs.getDistance());
-                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE) {
+                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE_RANGE) {
                     point = lhs.getPriceRange() - rhs.getPriceRange();
                 } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DELIVERY_TIME) {
                     point = lhs.getDeliveryTime() - rhs.getDeliveryTime();
@@ -758,7 +765,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
 //        int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
-        int formItem = (recentOrdersSize() > 0 || vendorsCompleteCount() > 0) ? 1 : 0;
+        int formItem = !showBottomView?0:(recentOrdersSize() > 0 || vendorsCompleteCount() > 0) ? 1 : 0;
         return offerStripSize() + (offerVendorsSize() > 0 ? 1 : 0)
                 + recentOrdersSize() + vendorsToShowCount() + formItem;
     }
