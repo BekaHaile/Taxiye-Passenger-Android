@@ -244,7 +244,6 @@ public class MarkerAnimation {
             super.onPostExecute(result);
             if(!stopCurrentAsync) {
                 try {
-                    if (result != null) {
                         clearPolylines();
                         if (list == null && !TextUtils.isEmpty(result)) {
                             JSONObject jObj = new JSONObject(result);
@@ -257,7 +256,12 @@ public class MarkerAnimation {
                             } else {
                                 list = MapUtils.getLatLngListFromPath(result);
                             }
-                        }
+                        } else if(list == null && TextUtils.isEmpty(result)){
+							list = new ArrayList<>();
+							list.add(source);
+							list.add(destination);
+							totalDistance = MapUtils.distance(source, destination);
+						}
 
                         ArrayList<Double> duration = new ArrayList<>();
                         for (int i = 0; i < list.size(); i++) {
@@ -287,9 +291,6 @@ public class MarkerAnimation {
                         } else {
                             throw new Exception();
                         }
-                    } else {
-                        throw new Exception();
-                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();

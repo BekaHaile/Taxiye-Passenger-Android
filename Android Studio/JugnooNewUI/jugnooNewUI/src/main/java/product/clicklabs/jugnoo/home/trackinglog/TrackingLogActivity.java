@@ -411,7 +411,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 
     private void animateMarkerICSRecursive(final Marker marker, final List<TrackingLogItem> trackingLogItems){
         if(state == ScreenState.MAP && trackingLogItems.size() > 0) {
-            TrackingLogItem trackingLogItem = trackingLogItems.remove(0);
+            final TrackingLogItem trackingLogItem = trackingLogItems.remove(0);
             MarkerAnimation.animateMarkerToICS("-1", marker, trackingLogItem.getLatLng(), new LatLngInterpolator.LinearFixed(),
                     new MarkerAnimation.CallbackAnim() {
                         @Override
@@ -428,6 +428,9 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 
                         @Override
                         public void onAnimNotDone() {
+							LatLng prevMarkerPos = marker.getPosition();
+							marker.setPosition(trackingLogItem.getLatLng());
+							marker.setRotation((float) MapUtils.getBearing(prevMarkerPos, trackingLogItem.getLatLng()));
                             this.onAnimComplete();
                         }
                     }, false, null, 0, 0, 0,
