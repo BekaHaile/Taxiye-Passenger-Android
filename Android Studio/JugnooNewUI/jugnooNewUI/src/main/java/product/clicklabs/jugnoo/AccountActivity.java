@@ -802,6 +802,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 },AccountActivity.this);
                 rvMenuItems.setAdapter(accountMenuItemsAdapter);
                 rvMenuItems.setVisibility(View.VISIBLE);
+                toggleProfileOptions(true);
             }
         }
     }
