@@ -168,25 +168,23 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public boolean showAddRestaurantLayout;
     public void setList(ArrayList<MenusResponse.Vendor> vendors, List<MenusResponse.BannerInfo> bannerInfos,
                         MenusResponse.StripInfo stripInfo, boolean showBanner, boolean showAddRestaurantLayout) {
-        this.showBottomView =true;
         this.vendorsComplete = vendors;
+        this.showBottomView =showAddRestaurantLayout;
         this.showAddRestaurantLayout=showAddRestaurantLayout;
         this.vendorsFiltered.clear();
         this.vendorsFiltered.addAll(vendors);
         setRestIdMappedVendors();
         this.vendorsToShow.clear();
         this.vendorsToShow.addAll(vendors);
-
         this.bannerInfos = showBanner ? bannerInfos : null;
         this.stripInfo = showBanner ? null : stripInfo;
         applyFilter();
     }
 
     public boolean showBottomView;//either progress bar or restaurant
-    public void hideProgressBar(){
-        if(!showAddRestaurantLayout){
-            showBottomView =false;
-        }
+    public void showProgressBar(boolean show){
+        showAddRestaurantLayout=false;
+        showBottomView=true;
         notifyDataSetChanged();
     }
     private void setRestIdMappedVendors(){
@@ -197,6 +195,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public void applyFilter(){
+//        filtering();
+
+        vendorsFiltered.clear();
+        vendorsFiltered.addAll(vendorsComplete);
+
+        setRestIdMappedVendors();
+
+        searchRestaurant(searchText);
+    }
+
+    private void filtering() {
         vendorsFiltered.clear();
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         for (MenusResponse.Vendor vendor : vendorsComplete) {
@@ -271,9 +280,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 return point;
             }
         });
-        setRestIdMappedVendors();
-
-        searchRestaurant(searchText);
     }
 
     @Override

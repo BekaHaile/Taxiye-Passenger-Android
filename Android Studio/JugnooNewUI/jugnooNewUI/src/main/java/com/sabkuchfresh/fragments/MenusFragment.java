@@ -383,6 +383,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 ProgressDialog progressDialog = null;
                 if(isPagination){
                     isPagingApiInProgress=true;
+                    if(menusRestaurantAdapter!=null){
+                        menusRestaurantAdapter.showProgressBar(true);
+                    }
                 }else{
                     if (loader)
                         progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
@@ -529,7 +532,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         swipeRefreshLayout.setRefreshing(false);
                         retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader, isPagination, scrollToTop);
                         if(isPagination && menusRestaurantAdapter!=null){
-                            menusRestaurantAdapter.hideProgressBar();
+                            menusRestaurantAdapter.showProgressBar(false);
                         }
 
                     }
@@ -538,7 +541,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 retryDialog(DialogErrorType.NO_NET, latLng, loader, isPagination, scrollToTop);
                 swipeRefreshLayout.setRefreshing(false);
                 if(isPagination && menusRestaurantAdapter!=null){
-                    menusRestaurantAdapter.hideProgressBar();
+                    menusRestaurantAdapter.showProgressBar(false);
                 }
             }
         } catch (Exception e) {
