@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -16,16 +17,38 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MenusFilterCuisinesAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.CuisineResponse;
 import com.sabkuchfresh.utils.Utils;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 import static product.clicklabs.jugnoo.Constants.ACCEPTONLINE;
 import static product.clicklabs.jugnoo.Constants.FREEDELIVERY;
@@ -103,7 +126,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		recyclerViewCuisinesList.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
 		menusFilterCuisinesAdapter = new MenusFilterCuisinesAdapter(activity, activity.getFilterCuisinesLocal(), etSearchCuisine, this);
 		recyclerViewCuisinesList.setAdapter(menusFilterCuisinesAdapter);
-
+		setCuisinesList();
 		textViewQuickFilters = (TextView) rootView.findViewById(R.id.textViewQuickFilters); textViewQuickFilters.setTypeface(Fonts.mavenMedium(activity));
 		textViewAcceptOnline = (TextView) rootView.findViewById(R.id.textViewAcceptOnline); textViewAcceptOnline.setTypeface(Fonts.mavenMedium(activity));
 		textViewOffersDiscount = (TextView) rootView.findViewById(R.id.textViewOffersDiscount); textViewOffersDiscount.setTypeface(Fonts.mavenMedium(activity));
@@ -325,9 +348,9 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 			public void onClick(View v) {
 				activity.getCuisinesSelected().clear();
 				for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
-					if(filterCuisine.getSelected() == 1){
-						activity.getCuisinesSelected().add(filterCuisine.getName());
-					}
+					filterCuisine.setSelected(1);
+						activity.getCuisinesSelected().add(filterCuisine);
+
 				}
 
 				applyRealTimeFilters();
@@ -354,6 +377,11 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				etSearchCuisine.setVisibility(View.VISIBLE);
 				ivSearchCuisine.setVisibility(View.VISIBLE);
 				tvReset.setVisibility(View.GONE);
+
+				if(activity.getFilterCuisinesLocal()==null){
+					getAllCuisines(true,activity.getSelectedLatLng());
+
+				}
 				etSearchCuisine.setText("");
 				recyclerViewCuisinesList.scrollToPosition(0);
 			}
@@ -385,7 +413,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				activity.getCuisinesSelected().clear();
 				for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
 					if(filterCuisine.getSelected() == 1){
-						activity.getCuisinesSelected().add(filterCuisine.getName());
+						activity.getCuisinesSelected().add(filterCuisine);
 					}
 				}
 
@@ -521,10 +549,12 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 
 	private void setFiltersText(){
 		textViewSelectCuisinesValue.setText("");
-		for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
-			if(filterCuisine.getSelected() == 1){
-				textViewSelectCuisinesValue.append(filterCuisine.getName()+", ");
-			}
+		if (activity.getFilterCuisinesLocal()!=null) {
+			for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
+                if(filterCuisine.getSelected() == 1){
+                    textViewSelectCuisinesValue.append(filterCuisine.getName()+", ");
+                }
+            }
 		}
 		if(textViewSelectCuisinesValue.getText().length() > 2){
 			textViewSelectCuisinesValue.setText(textViewSelectCuisinesValue.getText().toString()
@@ -534,26 +564,30 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	}
 
 	public void setCuisinesList(){
-		if(activity.getMenusResponse() != null && activity.getMenusResponse().getFilters() != null
-				&& activity.getMenusResponse().getFilters().getCuisines() != null
-				&& activity.getMenusResponse().getFilters().getCuisines().size() > 0){
+		if(activity.getFilterCuisinesLocal()!=null && activity.getFilterCuisinesLocal().size()>0){
 			cardViewCuisines.setVisibility(View.VISIBLE);
 			textViewCuisines.setVisibility(View.VISIBLE);
-			activity.getFilterCuisinesLocal().clear();
-			for(int i=0; i<activity.getMenusResponse().getFilters().getCuisines().size(); i++){
-				String cuisine = activity.getMenusResponse().getFilters().getCuisines().get(i);
+			ArrayList<FilterCuisine> selectedList = new ArrayList<>();
+			for(FilterCuisine cuisine:activity.getFilterCuisinesLocal()){
+
+
 				if(activity.getCuisinesSelected().contains(cuisine)){
-					activity.getFilterCuisinesLocal().add(new FilterCuisine(cuisine, 1));
+					selectedList.add(new FilterCuisine(cuisine.getName(),cuisine.getId(), 1));
 				} else {
-					activity.getFilterCuisinesLocal().add(new FilterCuisine(cuisine, 0));
+					selectedList.add(new FilterCuisine(cuisine.getName(),cuisine.getId(), 0));
 				}
 			}
-			menusFilterCuisinesAdapter.setList(activity.getFilterCuisinesLocal());
-			setFiltersText();
-		} else {
-			cardViewCuisines.setVisibility(View.GONE);
-			textViewCuisines.setVisibility(View.GONE);
+			activity.getFilterCuisinesLocal().clear();
+			activity.setFilterCuisinesLocal(selectedList);
+
+		}else{
+		/*	cardViewCuisines.setVisibility(View.GONE);
+			textViewCuisines.setVisibility(View.GONE);*/
 		}
+		if(menusFilterCuisinesAdapter!=null)
+		menusFilterCuisinesAdapter.setList(activity.getFilterCuisinesLocal());
+
+
 	}
 
 
@@ -576,9 +610,9 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	@Override
 	public void onCuisineClicked(FilterCuisine filterCuisine) {
 		if(filterCuisine.getSelected() == 1){
-			activity.getCuisinesSelected().add(filterCuisine.getName());
+			activity.getCuisinesSelected().add(filterCuisine);
 		} else {
-			activity.getCuisinesSelected().remove(filterCuisine.getName());
+			activity.getCuisinesSelected().remove(filterCuisine);
 		}
 		applyRealTimeFilters();
 	}
@@ -601,4 +635,102 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		}
 	}
 
+	public void getAllCuisines(final boolean loader, final LatLng latLng) {
+
+		try {
+			if (MyApplication.getInstance().isOnline()) {
+				HashMap<String,String> params = new HashMap<>();
+
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
+				params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
+				params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
+				params.put(Constants.INTERATED, "1");
+				new HomeUtil().putDefaultParams(params);
+				ProgressDialog progressDialog = null;
+
+				if (loader)
+					progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
+
+				final ProgressDialog finalProgressDialog = progressDialog;
+				RestClient.getMenusApiService().nearbyCuisines(params, new Callback<CuisineResponse>() {
+					@Override
+					public void success(CuisineResponse cuisineResponse, Response response) {
+
+						try {
+							if(finalProgressDialog !=null)
+								finalProgressDialog.dismiss();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "getAllProducts response = " + responseStr);
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							String message = cuisineResponse.getMessage();
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == cuisineResponse.getFlag()) {
+
+
+									if(cuisineResponse.getRanges()!=null){
+										activity.setFilterCuisinesLocal(cuisineResponse.getRanges());
+										setCuisinesList();
+
+
+									}
+
+
+
+								} else {
+									DialogPopup.alertPopup(activity, "", message);
+								}
+							}
+						} catch (Exception exception) {
+
+							exception.printStackTrace();
+						}
+
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						try {
+							if(finalProgressDialog !=null)
+								finalProgressDialog.dismiss();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader);
+
+					}
+				});
+			} else {
+
+				retryDialog(DialogErrorType.NO_NET, latLng, loader);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void retryDialog(DialogErrorType dialogErrorType, final LatLng latLng, final boolean loader) {
+		DialogPopup.dialogNoInternet(activity,
+				dialogErrorType,
+				new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick(View view) {
+						getAllCuisines(loader, latLng);
+					}
+
+					@Override
+					public void neutralClick(View view) {
+
+					}
+
+					@Override
+					public void negativeClick(View view) {
+					}
+				});
+	}
 }

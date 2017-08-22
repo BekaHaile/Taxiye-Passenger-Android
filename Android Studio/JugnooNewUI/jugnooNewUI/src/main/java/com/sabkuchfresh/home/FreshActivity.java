@@ -40,6 +40,7 @@ import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -375,6 +376,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }, 1000);
 
             topBar.etSearch.addTextChangedListener(textWatcher);
+            topBar.etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    getMenusFragment().getMenusRestaurantAdapter().searchRestaurant(topBar.etSearch.getText().toString().trim());
+                    return false;
+                }
+            });
 
             menusCartSelectedLayout = new MenusCartSelectedLayout(this, findViewById(R.id.vMenusCartSaved));
 
@@ -483,7 +491,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     lastClientId = Config.getGroceryClientId();
                 } else if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
                     getTopBar().etSearch.setHint(getString(R.string.search_items_menus));
-                    fetchFiltersFromSP();
+//                   fetchFiltersFromSP();
                     openCart();
                     addMenusFragment();
 
@@ -1880,7 +1888,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             if (getAppType() == AppConstant.ApplicationType.MENUS) {
                 if (getTopFragment() instanceof MenusFragment) {
-                    getMenusFragment().openSearch(false);
+                    getMenusFragment().toggleSearch(false);
                     topBar.title.setVisibility(View.GONE);
                     topBar.title.invalidate();
                     topBar.animateSearchBar(true);
@@ -2252,7 +2260,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 e.printStackTrace();
             }
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
-            getMenusFragment().openSearch(false);
+            getMenusFragment().toggleSearch(false);
 
 
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
@@ -3284,8 +3292,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         Prefs.with(this).save(Constants.SP_MENUS_FILTER_DELIVERY_TIME, dtSelected.getOrdinal());
         StringBuilder sbCuisines = new StringBuilder();
         if (cuisinesSelected.size() > 0) {
-            for (String cuisine : cuisinesSelected) {
-                sbCuisines.append(cuisine).append(",");
+            for (FilterCuisine cuisine : cuisinesSelected) {
+                sbCuisines.append(cuisine.getName()).append(",");
             }
         }
         Prefs.with(this).save(Constants.SP_MENUS_FILTER_CUISINES, sbCuisines.toString());
@@ -3331,15 +3339,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         } else if (dt == MenusFilterFragment.DeliveryTime.DT60.getOrdinal()) {
             dtSelected = MenusFilterFragment.DeliveryTime.DT60;
         }
-
-        String cuisines = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_CUISINES, "");
+        /*String cuisines = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_CUISINES, "");
         if (!TextUtils.isEmpty(cuisines)) {
             String arr[] = cuisines.split(",");
             cuisinesSelected.clear();
             for (String cuisine : arr) {
                 cuisinesSelected.add(cuisine);
             }
-        }
+        }*/
 
         String qfs = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_QUICK, "");
         if (!TextUtils.isEmpty(qfs)) {
@@ -3356,7 +3363,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private MenusFilterFragment.SortType sortBySelected = MenusFilterFragment.SortType.NONE;
     private MenusFilterFragment.MinOrder moSelected = MenusFilterFragment.MinOrder.NONE;
     private MenusFilterFragment.DeliveryTime dtSelected = MenusFilterFragment.DeliveryTime.NONE;
-    private ArrayList<String> cuisinesSelected = new ArrayList<>();
+    private ArrayList<FilterCuisine> cuisinesSelected = new ArrayList<>();
     private ArrayList<String> quickFilterSelected = new ArrayList<>();
 
     public MenusFilterFragment.SortType getSortBySelected() {
@@ -3383,11 +3390,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         this.dtSelected = dtSelected;
     }
 
-    public ArrayList<String> getCuisinesSelected() {
+    public ArrayList<FilterCuisine> getCuisinesSelected() {
         return cuisinesSelected;
     }
 
-    public void setCuisinesSelected(ArrayList<String> cuisinesSelected) {
+    public void setCuisinesSelected(ArrayList<FilterCuisine> cuisinesSelected) {
         this.cuisinesSelected = cuisinesSelected;
     }
 
@@ -3399,7 +3406,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         this.quickFilterSelected = quickFilterSelected;
     }
 
-    private ArrayList<FilterCuisine> filterCuisinesLocal = new ArrayList<>();
+    private ArrayList<FilterCuisine> filterCuisinesLocal = null;
 
     public ArrayList<FilterCuisine> getFilterCuisinesLocal() {
         return filterCuisinesLocal;
@@ -3825,7 +3832,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (getTopFragment() instanceof FreshSearchFragment) {
                     getFreshSearchFragment().searchFreshItems(s.toString());
                 } else if (getTopFragment() instanceof MenusFragment) {
-                    getMenusFragment().getMenusRestaurantAdapter().searchRestaurant(s.toString().trim());
+//                    getMenusFragment().getMenusRestaurantAdapter().searchRestaurant(s.toString().trim());
                 } else if (getTopFragment() instanceof MenusSearchFragment) {
                     getMenusSearchFragment().searchItems(s.toString().trim());
                 }
@@ -4987,5 +4994,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void setScrollToCategoryId(int scrollToCategoryId) {
         this.scrollToCategoryId = scrollToCategoryId;
+    }
+
+    private List<Integer> searchedRestaurantIds;
+    public List<Integer> getSearchedRestaurantIds(){
+        return searchedRestaurantIds;
+    }
+    public void setSearchedRestaurantIds(List<Integer> searchedRestaurantIds){
+        this.searchedRestaurantIds = searchedRestaurantIds;
     }
 }

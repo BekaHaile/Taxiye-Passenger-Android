@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
+import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -84,6 +85,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private RecyclerView recyclerView;
     private List<MenusResponse.BannerInfo> bannerInfos;
     private MenusResponse.StripInfo stripInfo;
+    private List<Integer> searchedRestaurantIds;
 
     private static final int MAIN_ITEM = 0;
     private static final int FORM_ITEM = 1;
@@ -142,27 +144,33 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     };
 
     private synchronized void searchVendors(String text, List<Integer> searchedRestaurantIds){
-        vendorsToShow.clear();
-        text = text.toLowerCase();
         if(TextUtils.isEmpty(text)){
-            vendorsToShow.addAll(vendorsFiltered);
+            activity.setSearchedRestaurantIds(null);
         } else {
-            if(searchedRestaurantIds == null) {
-                for (MenusResponse.Vendor vendor : vendorsFiltered) {
-                    if (vendor.getName().toLowerCase().contains(text) || vendor.getCuisines().toString().toLowerCase().contains(text)) {
-                        vendorsToShow.add(vendor);
-                    }
-                }
-            } else {
-                for(Integer restId : searchedRestaurantIds){
-                    if(restIdMappedVendors.containsKey(restId)){
-                        vendorsToShow.add(restIdMappedVendors.get(restId));
-                    }
-                }
-            }
+            activity.setSearchedRestaurantIds(searchedRestaurantIds);
         }
-        notifyDataSetChanged();
-        callback.onNotify(vendorsToShow.size());
+        activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), false, true);
+//        vendorsToShow.clear();
+//        text = text.toLowerCase();
+//        if(TextUtils.isEmpty(text)){
+//            vendorsToShow.addAll(vendorsFiltered);
+//        } else {
+//            if(searchedRestaurantIds == null) {
+//                for (MenusResponse.Vendor vendor : vendorsFiltered) {
+//                    if (vendor.getName().toLowerCase().contains(text) || vendor.getCuisines().toString().toLowerCase().contains(text)) {
+//                        vendorsToShow.add(vendor);
+//                    }
+//                }
+//            } else {
+//                for(Integer restId : searchedRestaurantIds){
+//                    if(restIdMappedVendors.containsKey(restId)){
+//                        vendorsToShow.add(restIdMappedVendors.get(restId));
+//                    }
+//                }
+//            }
+//        }
+//        notifyDataSetChanged();
+//        callback.onNotify(vendorsToShow.size());
     }
 
     public boolean showAddRestaurantLayout;
@@ -184,7 +192,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public boolean showBottomView;//either progress bar or restaurant
     public void showProgressBar(boolean show){
         showAddRestaurantLayout=false;
-        showBottomView=true;
+        showBottomView=show;
         notifyDataSetChanged();
     }
     private void setRestIdMappedVendors(){
@@ -202,7 +210,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         setRestIdMappedVendors();
 
-        searchRestaurant(searchText);
+        notifyDataSetChanged();
     }
 
     private void filtering() {
@@ -210,8 +218,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         for (MenusResponse.Vendor vendor : vendorsComplete) {
             boolean cuisineMatched = false, moMatched, dtMatched;
-            for (String cuisine : activity.getCuisinesSelected()) {
-                if (vendor.getCuisines().contains(cuisine)) {
+            for (FilterCuisine cuisine : activity.getCuisinesSelected()) {
+                if (vendor.getCuisines().contains(cuisine.getName())) {
                     cuisineMatched = true;
                     break;
                 }
@@ -723,14 +731,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
-    public boolean filterApplied() {
-        return (activity.getCuisinesSelected().size() > 0
-                || activity.getMoSelected() != MenusFilterFragment.MinOrder.NONE
-                || activity.getDtSelected() != MenusFilterFragment.DeliveryTime.NONE
-                || activity.getSortBySelected() != MenusFilterFragment.SortType.NONE
-                || activity.getQuickFilterSelected().size() > 0);
-    }
-
     @Override
     public int getItemViewType(int position) {
         if(offerStripSize() > 0){
@@ -763,7 +763,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             if (vendorsCompleteCount() > 0) {
                 return showAddRestaurantLayout?FORM_ITEM:ITEM_PROGRESS_BAR;
             } else {
-                return NO_VENDORS_ITEM;
+                return activity.getMenusResponse().getServiceUnavailable() == 1 ? NO_VENDORS_ITEM : FORM_ITEM;
             }
         }
     }
@@ -771,7 +771,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
 //        int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
-        int formItem = !showBottomView?0:(recentOrdersSize() > 0 || vendorsCompleteCount() > 0) ? 1 : 0;
+//        int formItem = !showBottomView?0:(recentOrdersSize() > 0 || vendorsCompleteCount() > 0) ? 1 : 0;
+        int formItem = !showBottomView ? 0 : 1;
         return offerStripSize() + (offerVendorsSize() > 0 ? 1 : 0)
                 + recentOrdersSize() + vendorsToShowCount() + formItem;
     }
@@ -968,15 +969,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
         int oldLength = searchText.length();
         searchText = s;
-        if(searchText.length() > 2) {
+//        if(searchText.length() > 2) {
             searchRestaurantsAutoComplete(searchText);
-        } else {
-            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
-                searchVendors("", null);
-            } else if(vendorsFiltered.size() > 0 && vendorsToShow.size() == 0){
-                searchVendors("", null);
-            }
-        }
+//        } else {
+//            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
+//                searchVendors("", null);
+//            } else if(vendorsFiltered.size() > 0 && vendorsToShow.size() == 0){
+//                searchVendors("", null);
+//            }
+//        }
     }
 
     private HashMap<String, List<Integer>> queryMap = new HashMap<>();
@@ -985,9 +986,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         try {
             if(!refreshingAutoComplete) {
                 if (MyApplication.getInstance().isOnline()) {
-                    if(queryMap.containsKey(searchText)){
-                        searchVendors(searchText, queryMap.get(searchText));
-                    } else {
+//                    if(queryMap.containsKey(searchText)){
+//                        searchVendors(searchText, queryMap.get(searchText));
+//                    } else {
                         HashMap<String, String> params = new HashMap<>();
                         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                         params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
@@ -1033,7 +1034,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                 recallSearch(searchText);
                             }
                         });
-                    }
+//                    }
                 } else {
                     refreshingAutoComplete = true;
                     searchVendors(searchText, null);
@@ -1207,18 +1208,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
 
-//                    Intent intent = new Intent(activity, TrackOrderActivity.class);
-//                    intent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-//                    intent.putExtra(Constants.KEY_ORDER_ID, order.getOrderId());
-//                    intent.putExtra(Constants.KEY_DELIVERY_ID, order.getDeliveryId());
-//                    intent.putExtra(Constants.KEY_PICKUP_LATITUDE, order.getPickupLatitude());
-//                    intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, order.getPickupLongitude());
-//                    intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
-//                    intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
-//                    intent.putExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, order.getShowDeliveryRoute());
-//                    intent.putExtra(Constants.KEY_DRIVER_PHONE_NO, order.getDriverPhoneNo());
-//                    activity.startActivity(intent);
-//                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 } else {
                     Utils.showToast(activity, !TextUtils.isEmpty(order.getTrackDeliveryMessage()) ?
                             order.getTrackDeliveryMessage() : activity.getString(R.string.tracking_not_available_message));
@@ -1323,33 +1312,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 } else {
                     activity.getHomeUtil().openFuguOrSupport(activity, activity.getRelativeLayoutContainer(),
                             order.getOrderId(), order.getSupportCategory(), order.getExpectedDeliveryDate(), ProductType.MENUS.getOrdinal());
-//                    if (Data.isFuguChatEnabled()) {
-//                        try {
-//                            FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                            Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
-//                        }
-//
-//                    } else {
-//                        ArrayList<ShowPanelResponse.Item> items = MyApplication.getInstance().getDatabase2().getSupportDataItems(order.getSupportCategory());
-//                        if(items.size() > 0) {
-//                            ShowPanelResponse.Item item = new ShowPanelResponse.Item();
-//                            item.setItems(items);
-//                            item.setActionType(ActionType.NEXT_LEVEL.getOrdinal());
-//                            item.setSupportId(order.getSupportCategory());
-//                            item.setText(activity.getString(R.string.order_is_late));
-//
-//                            new TransactionUtils().openItemInFragment(activity, activity.getRelativeLayoutContainer(), -1, "",
-//                                    activity.getResources().getString(R.string.support_main_title), item, "",
-//                                    order.getOrderId(), order.getExpectedDeliveryDate(),
-//                                    Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
-//                        } else {
-//                            new TransactionUtils().openRideIssuesFragment(activity, activity.getRelativeLayoutContainer(),
-//                                    -1, order.getOrderId(), null, null, 0, false, 0, null,
-//                                    order.getSupportCategory(), ProductType.MENUS.getOrdinal(), order.getExpectedDeliveryDate());
-//                        }
-//                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

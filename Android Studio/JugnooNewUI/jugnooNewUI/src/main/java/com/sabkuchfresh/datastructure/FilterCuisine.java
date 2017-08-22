@@ -5,11 +5,13 @@ package com.sabkuchfresh.datastructure;
  */
 public class FilterCuisine {
 
+	private int id;
 	private String name;
 	private int selected;
 
-	public FilterCuisine(String name, int selected) {
+	public FilterCuisine(String name,int id, int selected) {
 		this.name = name;
+		this.id = id;
 		this.selected = selected;
 	}
 
@@ -27,5 +29,9 @@ public class FilterCuisine {
 
 	public void setSelected(int selected) {
 		this.selected = selected;
+	}
+
+	public int getId() {
+		return id;
 	}
 }

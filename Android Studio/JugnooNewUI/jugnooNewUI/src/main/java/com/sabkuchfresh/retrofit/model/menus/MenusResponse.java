@@ -72,6 +72,9 @@ public class MenusResponse implements Serializable {
 	@SerializedName("is_complete")
 	private int isPageLengthComplete;
 
+	@SerializedName("service_unavailable")
+	private int serviceUnavailable;
+
 	public String getColorCode() {
 		return colorCode;
 	}
@@ -186,6 +189,14 @@ public class MenusResponse implements Serializable {
 
 	public boolean isPageLengthComplete() {
 		return isPageLengthComplete==1;
+	}
+
+	public int getServiceUnavailable() {
+		return serviceUnavailable;
+	}
+
+	public void setServiceUnavailable(int serviceUnavailable) {
+		this.serviceUnavailable = serviceUnavailable;
 	}
 
 

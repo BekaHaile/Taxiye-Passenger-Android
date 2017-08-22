@@ -24,6 +24,7 @@ import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
+import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -37,6 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -335,7 +337,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 //                applyFilter(false);
                 if (searchOpened) {
 					searchOpened = false;
-					openSearch(false);
+					toggleSearch(false);
 				}
 
 				final boolean refreshCartFinal = activity.isRefreshCart();
@@ -391,6 +393,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
                 }
 
+                if (activity.getTopFragment() instanceof MenusFragment) {
+                    activity.getTopBar().ivFilterApplied.setVisibility(filterApplied() ? View.VISIBLE : View.GONE);
+                }
+
 
                 HashMap<String, String> params = new HashMap<>();
 
@@ -404,8 +410,34 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 //Quick Filter Keys
                 if (activity.getQuickFilterSelected() != null && activity.getQuickFilterSelected().size() > 0) {
                     params.put(Constants.KEY_FILTERS, (new JSONArray(activity.getQuickFilterSelected())).toString());
-
                 }
+
+                //Min Order amount filter
+                if(activity.getMoSelected()!=MenusFilterFragment.MinOrder.NONE){
+                    params.put(Constants.KEY_MIN_ORDER_AMT,"" +  activity.getMoSelected().getOrdinal());
+                }
+
+                if(activity.getCuisinesSelected()!=null && activity.getCuisinesSelected().size()>0){
+
+                    ArrayList<Integer> cusiinesSelectedId = new ArrayList<>();
+                    for(FilterCuisine cuisine:activity.getCuisinesSelected()){
+                        cusiinesSelectedId.add(cuisine.getId());
+
+                    }
+                    params.put(Constants.KEY_CUISINE_SELECTED, cusiinesSelectedId.toString());
+                }
+
+
+                //Search query
+                if(activity.getSearchedRestaurantIds() != null && activity.getSearchedRestaurantIds().size() > 0){
+                  /*  ArrayList<String> ids = new ArrayList<>();
+                    for(Integer id:activity.getSearchedRestaurantIds()){
+                        ids.add( "'"+id+"'");
+                    }*/
+                    params.put(Constants.RESTAURANT_IDS, activity.getSearchedRestaurantIds().toString());
+                }
+
+
 
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
@@ -467,8 +499,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos(),
                                             menusResponse.getStripInfo(), menusResponse.getShowBanner(), !hasMorePages);
 //                                    applyFilter(false);
+                                    // TODO: 22/08/17 service unavailability check
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
-                                            && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
+                                            && menusResponse.getServiceUnavailable() == 1) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
 
                                     if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
@@ -476,7 +509,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                         activity.llCheckoutBarSetVisibilityDirect(View.GONE);
                                         if (searchOpened) {
-                                            openSearch(true);
+                                            toggleSearch(true);
                                             activity.getHandler().postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -484,11 +517,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                                 }
                                             }, 100);
                                         }
+                                    } else {
+                                        activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
                                     }
 
-                                    if(activity.getMenusFilterFragment() != null){
+                                    /*if(activity.getMenusFilterFragment() != null){
                                         activity.getMenusFilterFragment().setCuisinesList();
-                                    }
+                                    }*/
 
 
                                     checkIciciPaymentStatusApi(activity);
@@ -505,6 +540,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 }
                             }
                         } catch (Exception exception) {
+                            try {
+                                if (finalProgressDialog != null)
+                                    finalProgressDialog.dismiss();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             exception.printStackTrace();
                         }
                         try {
@@ -600,10 +641,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     }
 
-    public void openSearch(boolean clearEt) {
+    public void toggleSearch(boolean clearEt) {
         if (searchOpened) {
             searchOpened = false;
             activity.getTopBar().etSearch.setText("");
+            if(activity.getSearchedRestaurantIds()!=null)
+            activity.getSearchedRestaurantIds().clear();
+            getAllMenus(true, activity.getSelectedLatLng(), false, true);
           //  activity.fragmentUISetup(this);
             if (keyboardLayoutListener.getKeyBoardState() == 1) {
                 activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
@@ -649,17 +693,17 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 //        menusRestaurantAdapter.applyFilter();
 
         if(scrollToTop) {
-
-
-
             getAllMenus(true, lastMenusLatlng, false, true);
-
-
-            if (activity.getTopFragment() instanceof MenusFragment) {
-                activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
-            }
         }
 
+    }
+
+    public boolean filterApplied() {
+        return (activity.getCuisinesSelected().size() > 0
+                || activity.getMoSelected() != MenusFilterFragment.MinOrder.NONE
+                || activity.getDtSelected() != MenusFilterFragment.DeliveryTime.NONE
+                || activity.getSortBySelected() != MenusFilterFragment.SortType.NONE
+                || activity.getQuickFilterSelected().size() > 0);
     }
 
     private static void checkIciciPaymentStatusApi(final FreshActivity activity) {

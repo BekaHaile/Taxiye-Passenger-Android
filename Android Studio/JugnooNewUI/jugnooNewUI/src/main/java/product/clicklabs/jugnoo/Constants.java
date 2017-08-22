@@ -772,4 +772,7 @@ public interface Constants {
     String PAGE_NO = "page_no";
     String KEY_SORTING = "sorting";
     String KEY_FILTERS = "filters";
+    String RESTAURANT_IDS = "restaurant_ids";
+    String KEY_MIN_ORDER_AMT = "min_order_amt";
+    String KEY_CUISINE_SELECTED = "cuisines";
 }
