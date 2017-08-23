@@ -6260,6 +6260,11 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                 if (toShowPathToDrop()) {
                                                     pathToDropLocationPolylineOptions = new PolylineOptions();
                                                     pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 7f).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true).zIndex(0);
+
+                                                    // for joining last point of driver tracked path to path left (red to blue)
+                                                    if(latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1){
+                                                        pathToDropLocationPolylineOptions.add(latLngsListForDriverAnimation.get(latLngsListForDriverAnimation.size()-1));
+                                                    }
                                                     for (int z = 0; z < list.size(); z++) {
                                                         pathToDropLocationPolylineOptions.add(list.get(z));
                                                     }
