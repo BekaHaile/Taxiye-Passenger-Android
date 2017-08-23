@@ -347,10 +347,12 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 			@Override
 			public void onClick(View v) {
 				activity.getCuisinesSelected().clear();
-				for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
-					filterCuisine.setSelected(1);
-						activity.getCuisinesSelected().add(filterCuisine);
+				if (activity.getFilterCuisinesLocal()!=null) {
+					for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
+                        filterCuisine.setSelected(1);
+                            activity.getCuisinesSelected().add(filterCuisine);
 
+                    }
 				}
 
 				applyRealTimeFilters();
@@ -407,14 +409,18 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				setSortBySelected(SortType.NONE);
 				setMoSelected(MinOrder.NONE);
 				setDtSelected(DeliveryTime.NONE);
-				for (FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()) {
-					filterCuisine.setSelected(0);
+				if (activity.getFilterCuisinesLocal()!=null) {
+					for (FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()) {
+                        filterCuisine.setSelected(0);
+                    }
 				}
 				activity.getCuisinesSelected().clear();
-				for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
-					if(filterCuisine.getSelected() == 1){
-						activity.getCuisinesSelected().add(filterCuisine);
-					}
+				if (activity.getFilterCuisinesLocal()!=null) {
+					for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
+                        if(filterCuisine.getSelected() == 1){
+                            activity.getCuisinesSelected().add(filterCuisine);
+                        }
+                    }
 				}
 
 				activity.getQuickFilterSelected().clear();

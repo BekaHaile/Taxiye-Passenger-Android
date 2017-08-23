@@ -93,15 +93,21 @@ public class MenusFilterCuisinesFragment extends Fragment{
         buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(activity.getFilterCuisinesLocal()!=null)
-                   activity.getFilterCuisinesLocal().clear();
-                if(menusFilterCuisinesAdapter!=null && menusFilterCuisinesAdapter.getCuisines()!=null){
-                    for(int i=0; i<menusFilterCuisinesAdapter.getCuisines().size(); i++){
-                        activity.getFilterCuisinesLocal().add(menusFilterCuisinesAdapter.getCuisines().get(i));
+                try {
+                    if(activity.getFilterCuisinesLocal()!=null){
+                        activity.getFilterCuisinesLocal().clear();
+                        if(menusFilterCuisinesAdapter!=null && menusFilterCuisinesAdapter.getCuisines()!=null){
+                            for(int i=0; i<menusFilterCuisinesAdapter.getCuisines().size(); i++){
+                                activity.getFilterCuisinesLocal().add(menusFilterCuisinesAdapter.getCuisines().get(i));
+                            }
+                        }
                     }
-                }
 
-                activity.performBackPressed(false);
+
+                    activity.performBackPressed(false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
