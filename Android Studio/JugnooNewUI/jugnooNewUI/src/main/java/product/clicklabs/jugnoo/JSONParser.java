@@ -1907,7 +1907,7 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_SORT_BY, -1);
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_MIN_ORDER, -1);
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_DELIVERY_TIME, -1);
-        Prefs.with(context).save(Constants.SP_MENUS_FILTER_CUISINES, "");
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_CUISINES_GSON, "");
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_QUICK, "");
     }
 

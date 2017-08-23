@@ -34,4 +34,9 @@ public class FilterCuisine {
 	public int getId() {
 		return id;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof FilterCuisine && ((FilterCuisine)obj).id == id;
+	}
 }

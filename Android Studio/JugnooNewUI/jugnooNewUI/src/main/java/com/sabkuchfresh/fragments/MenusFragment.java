@@ -417,6 +417,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     params.put(Constants.KEY_MIN_ORDER_AMT,"" +  activity.getMoSelected().getOrdinal());
                 }
 
+                //Cuisines List
                 if(activity.getCuisinesSelected()!=null && activity.getCuisinesSelected().size()>0){
 
                     ArrayList<Integer> cusiinesSelectedId = new ArrayList<>();

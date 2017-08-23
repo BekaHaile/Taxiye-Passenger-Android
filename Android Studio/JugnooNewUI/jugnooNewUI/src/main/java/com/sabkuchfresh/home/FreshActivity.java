@@ -57,8 +57,11 @@ import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 import com.jugnoo.pay.activities.PaySDKUtils;
 import com.jugnoo.pay.models.MessageRequest;
 import com.razorpay.Checkout;
@@ -194,6 +197,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
+import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.tutorials.NewUserFlow;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -491,7 +495,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     lastClientId = Config.getGroceryClientId();
                 } else if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
                     getTopBar().etSearch.setHint(getString(R.string.search_items_menus));
-//                   fetchFiltersFromSP();
+                    fetchFiltersFromSP();
                     openCart();
                     addMenusFragment();
 
@@ -1888,7 +1892,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             if (getAppType() == AppConstant.ApplicationType.MENUS) {
                 if (getTopFragment() instanceof MenusFragment) {
-                    getMenusFragment().toggleSearch(false);
+                    getMenusFragment().toggleSearch(true);
                     topBar.title.setVisibility(View.GONE);
                     topBar.title.invalidate();
                     topBar.animateSearchBar(true);
@@ -3290,13 +3294,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         Prefs.with(this).save(Constants.SP_MENUS_FILTER_SORT_BY, sortBySelected.getOrdinal());
         Prefs.with(this).save(Constants.SP_MENUS_FILTER_MIN_ORDER, moSelected.getOrdinal());
         Prefs.with(this).save(Constants.SP_MENUS_FILTER_DELIVERY_TIME, dtSelected.getOrdinal());
-        StringBuilder sbCuisines = new StringBuilder();
-        if (cuisinesSelected.size() > 0) {
-            for (FilterCuisine cuisine : cuisinesSelected) {
-                sbCuisines.append(cuisine.getName()).append(",");
-            }
+        JsonElement element = gson.toJsonTree(cuisinesSelected, new TypeToken<List<FilterCuisine>>() {}.getType());
+        if(element != null && element.isJsonArray()) {
+            JsonArray jsonArray = element.getAsJsonArray();
+            Prefs.with(this).save(Constants.SP_MENUS_FILTER_CUISINES_GSON, jsonArray.toString());
         }
-        Prefs.with(this).save(Constants.SP_MENUS_FILTER_CUISINES, sbCuisines.toString());
 
         StringBuilder sbQF = new StringBuilder();
         if (quickFilterSelected.size() > 0) {
@@ -3339,14 +3341,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         } else if (dt == MenusFilterFragment.DeliveryTime.DT60.getOrdinal()) {
             dtSelected = MenusFilterFragment.DeliveryTime.DT60;
         }
-        /*String cuisines = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_CUISINES, "");
+        String cuisines = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_CUISINES_GSON, "");
         if (!TextUtils.isEmpty(cuisines)) {
-            String arr[] = cuisines.split(",");
             cuisinesSelected.clear();
-            for (String cuisine : arr) {
-                cuisinesSelected.add(cuisine);
-            }
-        }*/
+            cuisinesSelected = gson.fromJson(cuisines, new TypeToken<List<FilterCuisine>>() {}.getType());
+        }
 
         String qfs = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_QUICK, "");
         if (!TextUtils.isEmpty(qfs)) {
