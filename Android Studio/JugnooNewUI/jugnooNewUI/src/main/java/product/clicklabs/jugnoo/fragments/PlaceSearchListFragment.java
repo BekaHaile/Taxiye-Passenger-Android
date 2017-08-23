@@ -579,7 +579,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				PlaceSearchListFragment.this.googleMap = googleMap;
 				if (googleMap != null) {
 					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-					googleMap.setMyLocationEnabled(true);
+					googleMap.setMyLocationEnabled(false);
 					googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 //					setupMapAndButtonMargins();
 					moveCameraToCurrent();
