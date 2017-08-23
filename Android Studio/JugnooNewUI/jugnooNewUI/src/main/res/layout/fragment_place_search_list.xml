@@ -17,6 +17,7 @@
         <fragment
             android:id="@+id/googleMap"
             android:name="product.clicklabs.jugnoo.utils.TouchableMapFragment"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

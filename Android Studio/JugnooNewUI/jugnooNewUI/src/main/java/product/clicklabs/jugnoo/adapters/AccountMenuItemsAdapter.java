@@ -42,6 +42,12 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
         this.accountMenuItemsCallback = accountMenuItemsCallback;
         this.recyclerView=recyclerView;
         this.activity = activity;
+        if(menuList!=null){
+            for(MenuInfo menuInfo:menuList){
+                menuInfo.setUIEnabled(true);
+            }
+        }
+
     }
 
     @Override

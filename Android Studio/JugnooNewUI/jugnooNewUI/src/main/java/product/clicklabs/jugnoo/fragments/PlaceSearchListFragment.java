@@ -98,6 +98,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private GoogleMap googleMap;
 	private RelativeLayout rlMarkerPin;
 	private Button bNext;
+	private View mapFragment;
 	public static PlaceSearchListFragment newInstance(Bundle bundle){
 		PlaceSearchListFragment fragment = new PlaceSearchListFragment();
 		fragment.setArguments(bundle);
@@ -123,7 +124,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_place_search_list, container, false);
 
-
+		mapFragment = rootView.findViewById(R.id.googleMap);
+		repositionMyLocationButton();
         activity = getActivity();
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		rootLayout = (RelativeLayout) rootView.findViewById(R.id.rootLayout);
@@ -335,6 +337,16 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			public void onStateChanged(@NonNull View bottomSheet, int newState) {
 				if(newState== BottomSheetBehavior.STATE_COLLAPSED){
 					openSetLocationOnMapMode();
+					if(googleMap!=null){
+						googleMap.setMyLocationEnabled(true);
+						googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+					}
+				}else{
+					if(googleMap!=null){
+						googleMap.setMyLocationEnabled(false);
+						googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+					}
 				}
 			}
 
@@ -749,6 +761,24 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				fillAddressDetails(googleMap.getCameraPosition().target);
 			}
 			Utils.hideSoftKeyboard(activity,editTextSearch);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void repositionMyLocationButton(){
+		try {
+			View locationButton = ((View) mapFragment.findViewById(Integer.parseInt("1")).
+                    getParent()).findViewById(Integer.parseInt("2"));
+
+			// and next place it, for example, on bottom right (as Google Maps app)
+			RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+			// position on right bottom
+			rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+			rlp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+			rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+			rlp.setMargins(0, 0, 40, 0);
+			locationButton.setLayoutParams(rlp);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
