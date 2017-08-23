@@ -775,4 +775,7 @@ public interface Constants {
     String RESTAURANT_IDS = "restaurant_ids";
     String KEY_MIN_ORDER_AMT = "min_order_amt";
     String KEY_CUISINE_SELECTED = "cuisines";
+    String KEY_RIDES = "rides";
+    String KEY_FATAFAT = "fatafat";
+    String KEY_ASKLOCAL = "asklocal";
 }

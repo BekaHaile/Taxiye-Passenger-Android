@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import product.clicklabs.jugnoo.utils.Log;
+
 /**
  * Created by shankar on 09/06/17.
  */
@@ -47,10 +49,12 @@ public class MenusCart {
 						}
 					}
 				}
+				item.getItemSelectedList().clear();
+				item.getItemSelectedList().addAll(itemSelecteds);
+				getRestaurantCart(vendor).getItemHashMap().put(item.getRestaurantItemId(), item);
+			} else {
+				item.getItemSelectedList().clear();
 			}
-			item.getItemSelectedList().clear();
-			item.getItemSelectedList().addAll(itemSelecteds);
-			getRestaurantCart(vendor).getItemHashMap().put(item.getRestaurantItemId(), item);
 		}
 	}
 
@@ -85,5 +89,19 @@ public class MenusCart {
 		}
 		return null;
 	}
+
+	public void clearEmptyRestaurantCarts(){
+		List<Integer> idsToRemove = new ArrayList<>();
+		for(RestaurantCart restaurantCart : getRestaurantCarts().values()){
+			if(restaurantCart.getItemHashMap().size() == 0){
+				idsToRemove.add(restaurantCart.getRestaurant().getRestaurantId());
+			}
+		}
+		for(Integer id : idsToRemove){
+			getRestaurantCarts().remove(id);
+		}
+		Log.e("MenuCart", "emtry restaurants cleared");
+	}
+
 
 }

@@ -57,6 +57,9 @@ public class DeliveryStore {
 	@SerializedName("is_selected")
 	@Expose
 	private Integer isSelected;
+	@SerializedName("min_order_amount")
+	@Expose
+	private double minOrderAmount;
 
 	public Integer getVendorId() {
 		return vendorId;
@@ -184,5 +187,13 @@ public class DeliveryStore {
 
 	public void setIsSelected(Integer isSelected) {
 		this.isSelected = isSelected;
+	}
+
+	public double getMinOrderAmount() {
+		return minOrderAmount;
+	}
+
+	public void setMinOrderAmount(double minOrderAmount) {
+		this.minOrderAmount = minOrderAmount;
 	}
 }

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -61,6 +62,9 @@ public class EmergencyDialog {
 
 			TextView textViewInAppCustomerSupport = (TextView)dialog.findViewById(R.id.textViewInAppCustomerSupport);
 			textViewInAppCustomerSupport.setTypeface(Fonts.mavenRegular(activity));
+			if(Data.isFuguChatEnabled()){
+				textViewInAppCustomerSupport.setText(R.string.chat_with_us);
+			}
 
 			ImageView imageViewClose = (ImageView)dialog.findViewById(R.id.imageViewClose);
 

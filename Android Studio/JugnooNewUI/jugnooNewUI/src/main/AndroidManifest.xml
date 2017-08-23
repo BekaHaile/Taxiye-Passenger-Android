@@ -519,6 +519,36 @@
             android:name=".DeleteCacheIntentService"
             android:enabled="true"/>
 
+        <!-- https://www.jugnoo.in/menus/ -->
+        <activity android:name=".DeeplinkingActivity"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="www.jugnoo.in"
+                    android:pathPrefix="/menus"
+                    android:scheme="https"/>
+                <data
+                    android:host="www.jugnoo.in"
+                    android:pathPrefix="/meals"
+                    android:scheme="https"/>
+                <data
+                    android:host="www.jugnoo.in"
+                    android:pathPrefix="/fatafat"
+                    android:scheme="https"/>
+                <data
+                    android:host="www.jugnoo.in"
+                    android:pathPrefix="/asklocal"
+                    android:scheme="https"/>
+                <data
+                    android:host="www.jugnoo.in"
+                    android:pathPrefix="/rides"
+                    android:scheme="https"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

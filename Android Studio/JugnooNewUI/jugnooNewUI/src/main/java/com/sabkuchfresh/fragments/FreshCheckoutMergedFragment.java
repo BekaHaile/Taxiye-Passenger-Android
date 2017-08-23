@@ -621,12 +621,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         relativeLayoutCartTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (linearLayoutCartExpansion.getVisibility() == View.VISIBLE) {
-                    linearLayoutCartExpansion.setVisibility(View.GONE);
+                if (listViewCart.getVisibility() == View.VISIBLE) {
+//                    linearLayoutCartExpansion.setVisibility(View.GONE);
+                    imageViewCartSep.setVisibility(View.GONE);
+                    listViewCart.setVisibility(View.GONE);
                     imageViewDeleteCart.setVisibility(View.GONE);
                     imageViewCartArrow.setRotation(180f);
                 } else {
-                    linearLayoutCartExpansion.setVisibility(View.VISIBLE);
+//                    linearLayoutCartExpansion.setVisibility(View.VISIBLE);
+                    imageViewCartSep.setVisibility(View.VISIBLE);
+                    listViewCart.setVisibility(View.VISIBLE);
                     imageViewDeleteCart.setVisibility(View.GONE);
                     imageViewCartArrow.setRotation(0f);
                 }
@@ -857,13 +861,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         chargesList.add(taxTotal);
         chargesAdapter.notifyDataSetChanged();
 
-        if (linearLayoutCartExpansion.getVisibility() == View.VISIBLE) {
+       /* if (linearLayoutCartExpansion.getVisibility() == View.VISIBLE) {
             textViewCartTotalUndiscount.setVisibility(View.GONE);
         } else {
             textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
             textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
                     Utils.getMoneyDecimalFormat().format(taxTotal.getValue())));
-        }
+        }*/
 
         if (dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
             if (payableAmount() > 0) {
@@ -1719,6 +1723,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     Currency.getInstance("INR"),
                     bundle
             );
+            Log.e("FreshCheckout>>>>>>>>", "fb logPurchase bundle>"+bundle.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2952,6 +2957,23 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             if(activity.getAppType()== AppConstant.ApplicationType.MENUS && activity.getVendorOpened()!=null){
 
                 double diffDouble = activity.getVendorOpened().getMinimumOrderAmount()-subTotalAmount;
+                if(diffDouble>0){
+                    String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
+                    tvMinOrderLabelDisplay.setText(textToSet);
+                    tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
+                    shadowMinOrder.setVisibility(View.VISIBLE);
+                    showPaySliderEnabled(false);
+
+                }else{
+
+                    showPaySliderEnabled(true);
+                    tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                    shadowMinOrder.setVisibility(View.GONE);
+                }
+
+            }else if(activity.getAppType()== AppConstant.ApplicationType.FRESH && activity.getVendorOpened()!=null){
+
+                double diffDouble = activity.getOpenedDeliveryStore().getMinOrderAmount()-subTotalAmount;
                 if(diffDouble>0){
                     String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
                     tvMinOrderLabelDisplay.setText(textToSet);
