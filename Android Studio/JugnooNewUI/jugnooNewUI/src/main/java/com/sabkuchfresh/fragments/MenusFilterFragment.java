@@ -431,9 +431,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 			}
 		});
 
-		if(activity.getFilterCuisinesLocal()==null){
-			getAllCuisines(true,activity.getSelectedLatLng());
-		}
+
 
 		return rootView;
 	}
@@ -553,11 +551,11 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 
 	private void setFiltersText(){
 		textViewSelectCuisinesValue.setText("");
-		if (activity.getFilterCuisinesLocal()!=null) {
-			for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
-                if(filterCuisine.getSelected() == 1){
+		if (activity.getCuisinesSelected()!=null) {
+			for(FilterCuisine filterCuisine : activity.getCuisinesSelected()){
+
                     textViewSelectCuisinesValue.append(filterCuisine.getName()+", ");
-                }
+
             }
 		}
 		if(textViewSelectCuisinesValue.getText().length() > 2){

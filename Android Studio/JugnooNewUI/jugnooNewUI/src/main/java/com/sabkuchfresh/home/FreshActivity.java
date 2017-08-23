@@ -384,6 +384,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     getMenusFragment().getMenusRestaurantAdapter().searchRestaurant(topBar.etSearch.getText().toString().trim());
+                    Utils.hideSoftKeyboard(FreshActivity.this,topBar.etSearch);
                     return false;
                 }
             });

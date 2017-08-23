@@ -94,6 +94,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.TransactionUtils;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -1918,6 +1919,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                     zoomedForSearch = false;
                                     lastSearchLatLng = null;
                                 }
+                            } else {
+                                textViewInitialSearch.setText("");
+                                zoomedForSearch = false;
                             }
                         }
                     } catch (Exception e) {
@@ -1936,6 +1940,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 @Override
                 public void onMapSettled() {
                     // Map settled
+                    FreshActivity.saveAddressRefreshBoolean(HomeActivity.this,false);
                     boolean refresh = false;
                     try {
                         checkForMyLocationButtonVisibility();
