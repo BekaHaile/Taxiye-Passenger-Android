@@ -146,10 +146,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private synchronized void searchVendors(String text, List<Integer> searchedRestaurantIds){
         if(TextUtils.isEmpty(text)){
             activity.setSearchedRestaurantIds(null);
+            vendorsComplete.clear();
+            setList(vendorsComplete,bannerInfos,stripInfo,showBanner, showAddRestaurantLayout);
         } else {
             activity.setSearchedRestaurantIds(searchedRestaurantIds);
+            activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), false, true);
+
         }
-        activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), false, true);
 //        vendorsToShow.clear();
 //        text = text.toLowerCase();
 //        if(TextUtils.isEmpty(text)){
@@ -174,8 +177,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public boolean showAddRestaurantLayout;
+    private boolean showBanner;
     public void setList(ArrayList<MenusResponse.Vendor> vendors, List<MenusResponse.BannerInfo> bannerInfos,
                         MenusResponse.StripInfo stripInfo, boolean showBanner, boolean showAddRestaurantLayout) {
+        this.showBanner = showBanner;
         this.vendorsComplete = vendors;
         this.showBottomView =showAddRestaurantLayout;
         this.showAddRestaurantLayout=showAddRestaurantLayout;

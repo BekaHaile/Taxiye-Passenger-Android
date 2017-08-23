@@ -2275,7 +2275,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 e.printStackTrace();
             }
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
-            getMenusFragment().toggleSearch(false);
+            getMenusFragment().toggleSearch(true);
 
 
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
