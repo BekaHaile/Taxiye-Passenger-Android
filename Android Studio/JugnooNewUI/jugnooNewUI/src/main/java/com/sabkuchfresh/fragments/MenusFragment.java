@@ -540,7 +540,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                         recyclerViewRestaurant.setVisibility(View.GONE);
                                     } else {
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
-                                        activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN, GravityCompat.END);
+                                        activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END);
                                         recyclerViewRestaurant.setVisibility(View.VISIBLE);
                                     }
 

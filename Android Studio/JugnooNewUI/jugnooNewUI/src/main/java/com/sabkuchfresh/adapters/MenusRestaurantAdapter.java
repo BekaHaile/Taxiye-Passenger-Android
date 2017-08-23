@@ -156,7 +156,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             }else{
                 vendorsComplete.clear();
-                setList(vendorsComplete,bannerInfos,stripInfo,showBanner, showAddRestaurantLayout);
+                setList(vendorsComplete,bannerInfos,stripInfo,showBanner, true);
             }
 
 
