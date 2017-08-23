@@ -640,7 +640,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	private boolean timerStarted = false;
 	private void scheduleTimer(){
 		if(!timerStarted) {
-			getTimer().scheduleAtFixedRate(getTimerTask(), 0, 18 * Constants.SECOND_MILLIS);
+			getTimer().scheduleAtFixedRate(getTimerTask(), 0, 10 * Constants.SECOND_MILLIS);
 			timerStarted = true;
 		}
 	}

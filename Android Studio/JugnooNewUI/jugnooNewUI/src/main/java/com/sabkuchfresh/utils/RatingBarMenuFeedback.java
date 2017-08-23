@@ -37,7 +37,8 @@ public class RatingBarMenuFeedback extends LinearLayout {
     private static final int MEDIUM_RATING_YELLOW = Color.parseColor("#FFD365");
     private static final int GOOD_RATING_GREEN = Color.parseColor("#8DCF61");
     private static final int RATING_DISABLED_COLOR = Color.parseColor("#efefef");
-    private static final int NO_RATING_COLOR = Color.GRAY;
+//    private static final int NO_RATING_COLOR = Color.GRAY;
+    private static final int NO_RATING_COLOR =Color.parseColor("#595968");
     private boolean mAnimate=true;
     private boolean mDisplayText=true;
 

@@ -17,14 +17,11 @@ import android.widget.TextView;
 import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
-import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
-import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DiscountInfo;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SubItem;
-import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.utils.TextViewStrikeThrough;
 import com.squareup.picasso.Picasso;
 
@@ -117,10 +114,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             return new ViewHolderSlot(v, activity);
         } else if (viewType == BLANK_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, 246);
-            v.setLayoutParams(layoutParams);
-
-            ASSL.DoMagic(v);
             return new ViewTitleHolder(v);
         } else if (viewType == BULK_ORDER_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_bulk_order, parent, false);

@@ -1011,11 +1011,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if(searchResultLastFMM.getId() == null || searchResultLastFMM.getId() == -10){
                     setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
                     setSelectedAddress("");
+                    int previousAddressId = getSelectedAddressId();
                     setSelectedAddressId(0);
                     setSelectedAddressType("");
 
                     Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
-                    saveDeliveryAddressModel();
+
+                    DeliveryAddressModel deliveryAddressModel = getDeliveryAddressModel();
+                    if(deliveryAddressModel != null && deliveryAddressModel.getId() == previousAddressId){
+                        saveDeliveryAddressModel(deliveryAddressModel.getAddress(), deliveryAddressModel.getLatLng(), 0, "");
+                    }
                 }
                 // else if selected address is updated by user, updating address related local variables
                 // from SP search result
@@ -1023,7 +1028,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     setSelectedLatLng(searchResultLastFMM.getLatLng());
                     setSelectedAddress(searchResultLastFMM.getAddress());
                     setSelectedAddressType(searchResultLastFMM.getName());
-                    saveDeliveryAddressModel();
+
+                    int previousAddressId = getSelectedAddressId();
+                    DeliveryAddressModel deliveryAddressModel = getDeliveryAddressModel();
+                    if(deliveryAddressModel != null && deliveryAddressModel.getId() == previousAddressId){
+                        saveDeliveryAddressModel(deliveryAddressModel.getAddress(), deliveryAddressModel.getLatLng(), 0, "");
+                    }
                 }
                 // else find any tagged address near current set location, if that is not tagged
                 else if(getSelectedAddressId() == 0){
@@ -2514,6 +2524,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
             updateItemListFromDBFMG(null);
         }
+        if(getAppType() == AppConstant.ApplicationType.MENUS){
+            getMenusCart().clearEmptyRestaurantCarts();
+        }
+
         saveItemListToSPDB();
         saveAppCart(getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
 
@@ -2523,6 +2537,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
         MyApplication.getInstance().getLocationFetcher().destroy();
+        Log.e("FreshActivity", "onPause");
 
     }
 
@@ -2694,56 +2709,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private void updateItemListFromSPMenus() {
         try {
-//            Gson gson = new Gson();
-//            JSONObject jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
             if (getMenuProductsResponse() != null
                     && getMenuProductsResponse().getCategories() != null) {
                 for (com.sabkuchfresh.retrofit.model.menus.Category category : getMenuProductsResponse().getCategories()) {
                     if (category.getSubcategories() != null) {
                         for (Subcategory subcategory : category.getSubcategories()) {
                             for (Item item : subcategory.getItems()) {
-//                                item.getItemSelectedList().clear();
-//                                JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
-//                                if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
-//                                    for (int i = 0; i < jsonArrayItem.length(); i++) {
-//                                        try {
-//                                            ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
-//                                            if (itemSelected.getQuantity() > 0) {
-//												itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
-//                                                item.getItemSelectedList().add(itemSelected);
-//                                            }
-//                                        } catch (Exception e) {
-//                                        }
-//                                    }
-//                                }
-
                                 getMenusCart().updateItemForRestaurant(getVendorOpened(), item);
-
                             }
                         }
                     } else if (category.getItems() != null) {
                         for (Item item : category.getItems()) {
-//                            item.getItemSelectedList().clear();
-//                            JSONArray jsonArrayItem = jCart.optJSONArray(String.valueOf(item.getRestaurantItemId()));
-//                            if (jsonArrayItem != null && jsonArrayItem.length() > 0) {
-//                                for (int i = 0; i < jsonArrayItem.length(); i++) {
-//                                    try {
-//                                        ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
-//                                        if (itemSelected.getQuantity() > 0) {
-//											itemSelected.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSelected));
-//                                            item.getItemSelectedList().add(itemSelected);
-//                                        }
-//                                    } catch (Exception e) {
-//                                    }
-//                                }
-//                            }
-
                             getMenusCart().updateItemForRestaurant(getVendorOpened(), item);
                         }
                     }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3970,6 +3951,25 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
                     gson.toJson(deliveryAddressModel, DeliveryAddressModel.class));
         } catch (Exception e) {}
+    }
+
+    public void saveDeliveryAddressModel(String address, LatLng latLng, int id, String type) {
+        deliveryAddressModel = new DeliveryAddressModel(address, latLng, id, type);
+        try {
+            Prefs.with(this).save(getAppType() == AppConstant.ApplicationType.MENUS ?
+                            Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
+                    gson.toJson(deliveryAddressModel, DeliveryAddressModel.class));
+        } catch (Exception e) {}
+    }
+
+    public DeliveryAddressModel getDeliveryAddressModel() {
+        try {
+            deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(getAppType() == AppConstant.ApplicationType.MENUS ?
+                            Constants.SP_MENUS_CART_ADDRESS : Constants.SP_FRESH_CART_ADDRESS,
+                    Constants.EMPTY_JSON_OBJECT), DeliveryAddressModel.class);
+        } catch (Exception e) {
+        }
+        return deliveryAddressModel;
     }
 
     public void setDeliveryAddressModelToSelectedAddress(boolean dontRefresh) {
