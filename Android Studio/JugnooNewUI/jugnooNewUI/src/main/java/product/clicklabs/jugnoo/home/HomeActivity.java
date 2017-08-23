@@ -3182,11 +3182,11 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                 } else {
                                     driverLocationMarker.setRotation((float) Data.autoData.getAssignedDriverInfo().getBearing());
                                 }
-                                MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
-                                        Data.autoData.getAssignedDriverInfo().latLng,
-                                        driverLocationMarker.getRotation(),
-                                        TrackingLogModeValue.RESET.getOrdinal(),
-                                        Data.autoData.getAssignedDriverInfo().latLng, 0);
+//                                MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
+//                                        Data.autoData.getAssignedDriverInfo().latLng,
+//                                        driverLocationMarker.getRotation(),
+//                                        TrackingLogModeValue.RESET.getOrdinal(),
+//                                        Data.autoData.getAssignedDriverInfo().latLng, 0);
                                 Log.i("marker added", "REQUEST_FINAL");
                             } else {
                                 MarkerAnimation.clearAsyncList();
@@ -6250,13 +6250,15 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 @Override
                 public void run() {
                     try {
+                        List<LatLng> listPath = null;
                         if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
                             Response response = RestClient.getGoogleApiService().getDirections(pickupLatLng.latitude + "," + pickupLatLng.longitude,
                                     Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
                             if (result != null) {
-                                final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
-                                if (list.size() > 0) {
+                                listPath = MapUtils.getLatLngListFromPath(result);
+                                final List<LatLng> finalListPath = listPath;
+                                if (listPath.size() > 0) {
                                     runOnUiThread(new Runnable() {
 
                                         @Override
@@ -6270,8 +6272,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                     if(latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1){
                                                         pathToDropLocationPolylineOptions.add(latLngsListForDriverAnimation.get(latLngsListForDriverAnimation.size()-1));
                                                     }
-                                                    for (int z = 0; z < list.size(); z++) {
-                                                        pathToDropLocationPolylineOptions.add(list.get(z));
+                                                    for (int z = 0; z < finalListPath.size(); z++) {
+                                                        pathToDropLocationPolylineOptions.add(finalListPath.get(z));
                                                     }
 
                                                     if (pathToDropLocationPolyline != null) {
@@ -6289,6 +6291,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         }
 
 
+                        final List<LatLng> finalListPath1 = listPath;
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -6304,7 +6307,20 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                     }
 
                                     if(zoom) {
-										zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsListForDriverAnimation);
+                                        List<LatLng> latLngsToInclude = null;
+                                        if(latLngsListForDriverAnimation != null){
+                                            if(latLngsToInclude == null){
+                                                latLngsToInclude = new ArrayList<LatLng>();
+                                            }
+                                            latLngsToInclude.addAll(latLngsListForDriverAnimation);
+                                        }
+                                        if(finalListPath1 != null){
+                                            if(latLngsToInclude == null){
+                                                latLngsToInclude = new ArrayList<LatLng>();
+                                            }
+                                            latLngsToInclude.addAll(finalListPath1);
+                                        }
+										zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsToInclude);
 									}
                                 } catch (Exception e) {
                                     e.printStackTrace();
