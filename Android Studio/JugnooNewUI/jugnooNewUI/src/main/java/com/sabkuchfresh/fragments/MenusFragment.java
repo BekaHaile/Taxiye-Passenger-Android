@@ -38,7 +38,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -468,6 +469,25 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                     //set Variables for pagination
                                     hasMorePages =  menusResponse.getVendors()!=null && menusResponse.getVendors().size()>0 && menusResponse.isPageLengthComplete();
+
+                                    // sort vendors list according to searched ids
+                                    if(menusResponse.getVendors() != null && menusResponse.getVendors().size()>0
+                                            && activity.getSearchedRestaurantIds() != null && activity.getSearchedRestaurantIds().size() > 0){
+                                        Collections.sort(menusResponse.getVendors(), new Comparator<MenusResponse.Vendor>() {
+                                            @Override
+                                            public int compare(MenusResponse.Vendor o1, MenusResponse.Vendor o2) {
+                                                int i1 = activity.getSearchedRestaurantIds().indexOf(o1.getRestaurantId());
+                                                int i2 = activity.getSearchedRestaurantIds().indexOf(o2.getRestaurantId());
+                                                if(i1 != -1 && i2 != -1){
+                                                    return i1 - i2;
+                                                } else if(i1 != -1){
+                                                    return -1;
+                                                } else {
+                                                    return 1;
+                                                }
+                                            }
+                                        });
+                                    }
 
 
                                     if(isPagination){

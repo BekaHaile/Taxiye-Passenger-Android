@@ -457,6 +457,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 String currentSystemTime = dateFormat.format(new Date());
                 long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
                 long minutes = ((timeDiff1 / (1000L* 60L)));
+                if (minutes <= 0) {
+                    vendor.setIsClosed(1);
+                }
 
                 int visMinOrder = View.VISIBLE;
                 if(!TextUtils.isEmpty(vendor.getMinOrderText())){
