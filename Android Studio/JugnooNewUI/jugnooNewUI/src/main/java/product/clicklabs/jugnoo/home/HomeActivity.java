@@ -3770,6 +3770,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                 PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_REQUEST_FINAL)
                         .commitAllowingStateLoss();
             }
+            checkForMyLocationButtonVisibility();
         } else{
             //fabViewTest.setRelativeLayoutFABVisibility(passengerScreenMode);
             relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
@@ -3781,6 +3782,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
             setJeanieVisibility();
+            checkForMyLocationButtonVisibility();
         }
     }
 
@@ -6978,29 +6980,34 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     }
 
     private void checkForMyLocationButtonVisibility(){
-        try{
-            if("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
-                if (MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
-                        map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK) {
+        if(relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE) {
+            try {
+                if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
+                    if (MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
+                            map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK) {
+                        initialMyLocationBtn.setVisibility(View.VISIBLE);
+                        customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
+                        destroyHighSpeedAccuracyFusedLocationFetcher();
+                    } else {
+                        initialMyLocationBtn.setVisibility(View.GONE);
+                        customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
+                        initializeHighSpeedAccuracyFusedLocationFetcher();
+                    }
+                } else {
                     initialMyLocationBtn.setVisibility(View.VISIBLE);
                     customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                     destroyHighSpeedAccuracyFusedLocationFetcher();
-                } else {
-                    initialMyLocationBtn.setVisibility(View.GONE);
-                    customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
-                    initializeHighSpeedAccuracyFusedLocationFetcher();
                 }
-            } else{
-                initialMyLocationBtn.setVisibility(View.VISIBLE);
-                customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
-                destroyHighSpeedAccuracyFusedLocationFetcher();
+            } catch (Exception e) {
+                if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
+                    initialMyLocationBtn.setVisibility(View.VISIBLE);
+                    customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
+                    destroyHighSpeedAccuracyFusedLocationFetcher();
+                }
             }
-        } catch(Exception e){
-            if("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
-                initialMyLocationBtn.setVisibility(View.VISIBLE);
-                customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
-                destroyHighSpeedAccuracyFusedLocationFetcher();
-            }
+        } else {
+            initialMyLocationBtn.setVisibility(View.GONE);
+            customerInRideMyLocationBtn.setVisibility(View.GONE);
         }
     }
 
