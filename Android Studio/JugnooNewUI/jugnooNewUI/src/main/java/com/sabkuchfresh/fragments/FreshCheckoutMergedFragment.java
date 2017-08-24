@@ -46,8 +46,6 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.jugnoo.pay.activities.MainActivity;
 import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
@@ -55,7 +53,6 @@ import com.sabkuchfresh.adapters.BecomeStarAdapter;
 import com.sabkuchfresh.adapters.CheckoutChargesAdapter;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
-import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -82,7 +79,6 @@ import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
-import com.sabkuchfresh.retrofit.model.menus.CustomiseOptionsId;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
@@ -95,7 +91,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
@@ -626,12 +621,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         relativeLayoutCartTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (linearLayoutCartExpansion.getVisibility() == View.VISIBLE) {
-                    linearLayoutCartExpansion.setVisibility(View.GONE);
+                if (listViewCart.getVisibility() == View.VISIBLE) {
+//                    linearLayoutCartExpansion.setVisibility(View.GONE);
+                    imageViewCartSep.setVisibility(View.GONE);
+                    listViewCart.setVisibility(View.GONE);
                     imageViewDeleteCart.setVisibility(View.GONE);
                     imageViewCartArrow.setRotation(180f);
                 } else {
-                    linearLayoutCartExpansion.setVisibility(View.VISIBLE);
+//                    linearLayoutCartExpansion.setVisibility(View.VISIBLE);
+                    imageViewCartSep.setVisibility(View.VISIBLE);
+                    listViewCart.setVisibility(View.VISIBLE);
                     imageViewDeleteCart.setVisibility(View.GONE);
                     imageViewCartArrow.setRotation(0f);
                 }
@@ -862,13 +861,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         chargesList.add(taxTotal);
         chargesAdapter.notifyDataSetChanged();
 
-        if (linearLayoutCartExpansion.getVisibility() == View.VISIBLE) {
+       /* if (linearLayoutCartExpansion.getVisibility() == View.VISIBLE) {
             textViewCartTotalUndiscount.setVisibility(View.GONE);
         } else {
             textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
             textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
                     Utils.getMoneyDecimalFormat().format(taxTotal.getValue())));
-        }
+        }*/
 
         if (dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
             if (payableAmount() > 0) {
@@ -1194,7 +1193,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         try {
             boolean goAhead = true;
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
-                if (Data.userData.getPaytmBalance() < payableAmount()) {
+                if (Data.userData.getPaytmBalance() < Math.round(payableAmount())) {
                     if (Data.userData.getPaytmEnabled() == 0) {
                         relativeLayoutPaytm.performClick();
                     } else if (Data.userData.getPaytmBalance() < 0) {
@@ -1205,7 +1204,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     goAhead = false;
                 }
             } else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
-                if (Data.userData.getMobikwikBalance() < payableAmount()) {
+                if (Data.userData.getMobikwikBalance() < Math.round(payableAmount())) {
                     if (Data.userData.getMobikwikEnabled() == 0) {
                         relativeLayoutMobikwik.performClick();
                     } else if (Data.userData.getMobikwikBalance() < 0) {
@@ -1216,7 +1215,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     goAhead = false;
                 }
             } else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
-                if (Data.userData.getFreeChargeBalance() < payableAmount()) {
+                if (Data.userData.getFreeChargeBalance() < Math.round(payableAmount())) {
                     if (Data.userData.getFreeChargeEnabled() == 0) {
                         relativeLayoutFreeCharge.performClick();
                     } else if (Data.userData.getFreeChargeBalance() < 0) {
@@ -1724,6 +1723,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     Currency.getInstance("INR"),
                     bundle
             );
+            Log.e("FreshCheckout>>>>>>>>", "fb logPurchase bundle>"+bundle.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2957,6 +2957,23 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             if(activity.getAppType()== AppConstant.ApplicationType.MENUS && activity.getVendorOpened()!=null){
 
                 double diffDouble = activity.getVendorOpened().getMinimumOrderAmount()-subTotalAmount;
+                if(diffDouble>0){
+                    String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
+                    tvMinOrderLabelDisplay.setText(textToSet);
+                    tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
+                    shadowMinOrder.setVisibility(View.VISIBLE);
+                    showPaySliderEnabled(false);
+
+                }else{
+
+                    showPaySliderEnabled(true);
+                    tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                    shadowMinOrder.setVisibility(View.GONE);
+                }
+
+            }else if(activity.getAppType()== AppConstant.ApplicationType.FRESH && activity.getVendorOpened()!=null){
+
+                double diffDouble = activity.getOpenedDeliveryStore().getMinOrderAmount()-subTotalAmount;
                 if(diffDouble>0){
                     String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
                     tvMinOrderLabelDisplay.setText(textToSet);

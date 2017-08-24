@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:background="@color/white"
+            android:paddingTop="20px"
             android:orientation="vertical">
 
             <com.sabkuchfresh.utils.RatingBarMenuFeedback

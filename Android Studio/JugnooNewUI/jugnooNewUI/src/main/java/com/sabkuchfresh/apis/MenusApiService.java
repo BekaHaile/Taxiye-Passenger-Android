@@ -6,6 +6,7 @@ import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
+import com.sabkuchfresh.retrofit.model.menus.CuisineResponse;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.RestaurantSearchResponse;
@@ -29,9 +30,13 @@ import retrofit.mime.MultipartTypedOutput;
 public interface MenusApiService {
 
 	@FormUrlEncoded
-	@POST("/nearby_restaurants")
+	@POST("/nearby_restaurants_v2")
 	void nearbyRestaurants(@FieldMap Map<String, String> params,
 						   Callback<MenusResponse> callback);
+	@FormUrlEncoded
+	@POST("/nearby_cuisines")
+	void nearbyCuisines(@FieldMap Map<String, String> params,
+						   Callback<CuisineResponse> callback);
 
 	@FormUrlEncoded
 	@POST("/v2/restaurant_menu")

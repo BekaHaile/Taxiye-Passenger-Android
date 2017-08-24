@@ -26,6 +26,15 @@ public class MenuInfo {
     @SerializedName("icon_normal")
     @Expose
     private String iconNormal;
+    private boolean isUIEnabled=true;
+
+    public boolean isUIEnabled() {
+        return isUIEnabled;
+    }
+
+    public void setUIEnabled(boolean UIEnabled) {
+        isUIEnabled = UIEnabled;
+    }
 
     public boolean getShowInAccount() {
         return showInAccount==1;

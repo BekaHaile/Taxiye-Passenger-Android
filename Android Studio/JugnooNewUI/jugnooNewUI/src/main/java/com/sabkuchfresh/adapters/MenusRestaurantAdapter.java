@@ -2,11 +2,8 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -30,6 +27,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
+import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -87,6 +85,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private RecyclerView recyclerView;
     private List<MenusResponse.BannerInfo> bannerInfos;
     private MenusResponse.StripInfo stripInfo;
+    private List<Integer> searchedRestaurantIds;
 
     private static final int MAIN_ITEM = 0;
     private static final int FORM_ITEM = 1;
@@ -94,7 +93,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final int NO_VENDORS_ITEM = 4;
     private static final int OFFERS_PAGER_ITEM = 5;
     private static final int OFFER_STRIP_ITEM = 6;
-   private final static ColorMatrix BW_MATRIX = new ColorMatrix();
+    private static final int ITEM_PROGRESS_BAR = 7;
+
+    private final static ColorMatrix BW_MATRIX = new ColorMatrix();
    private final static  ColorMatrixColorFilter BW_FILTER;
     static {
         BW_MATRIX.setSaturation(0);
@@ -143,43 +144,70 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     };
 
     private synchronized void searchVendors(String text, List<Integer> searchedRestaurantIds){
-        vendorsToShow.clear();
-        text = text.toLowerCase();
         if(TextUtils.isEmpty(text)){
-            vendorsToShow.addAll(vendorsFiltered);
+            activity.setSearchedRestaurantIds(null);
+            activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), false, true);
+
         } else {
-            if(searchedRestaurantIds == null) {
-                for (MenusResponse.Vendor vendor : vendorsFiltered) {
-                    if (vendor.getName().toLowerCase().contains(text) || vendor.getCuisines().toString().toLowerCase().contains(text)) {
-                        vendorsToShow.add(vendor);
-                    }
-                }
-            } else {
-                for(Integer restId : searchedRestaurantIds){
-                    if(restIdMappedVendors.containsKey(restId)){
-                        vendorsToShow.add(restIdMappedVendors.get(restId));
-                    }
-                }
+            activity.setSearchedRestaurantIds(searchedRestaurantIds);
+
+            if(searchedRestaurantIds!=null && searchedRestaurantIds.size()>0){
+                activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), false, true);
+
+            }else{
+                vendorsComplete.clear();
+                setList(vendorsComplete,bannerInfos,stripInfo,showBanner, true);
             }
+
+
         }
-        notifyDataSetChanged();
-        callback.onNotify(vendorsToShow.size());
+//        vendorsToShow.clear();
+//        text = text.toLowerCase();
+//        if(TextUtils.isEmpty(text)){
+//            vendorsToShow.addAll(vendorsFiltered);
+//        } else {
+//            if(searchedRestaurantIds == null) {
+//                for (MenusResponse.Vendor vendor : vendorsFiltered) {
+//                    if (vendor.getName().toLowerCase().contains(text) || vendor.getCuisines().toString().toLowerCase().contains(text)) {
+//                        vendorsToShow.add(vendor);
+//                    }
+//                }
+//            } else {
+//                for(Integer restId : searchedRestaurantIds){
+//                    if(restIdMappedVendors.containsKey(restId)){
+//                        vendorsToShow.add(restIdMappedVendors.get(restId));
+//                    }
+//                }
+//            }
+//        }
+//        notifyDataSetChanged();
+//        callback.onNotify(vendorsToShow.size());
     }
 
+    public boolean showAddRestaurantLayout;
+    private boolean showBanner;
     public void setList(ArrayList<MenusResponse.Vendor> vendors, List<MenusResponse.BannerInfo> bannerInfos,
-                        MenusResponse.StripInfo stripInfo, boolean showBanner) {
+                        MenusResponse.StripInfo stripInfo, boolean showBanner, boolean showAddRestaurantLayout) {
+        this.showBanner = showBanner;
         this.vendorsComplete = vendors;
+        this.showBottomView =showAddRestaurantLayout;
+        this.showAddRestaurantLayout=showAddRestaurantLayout;
         this.vendorsFiltered.clear();
         this.vendorsFiltered.addAll(vendors);
         setRestIdMappedVendors();
         this.vendorsToShow.clear();
         this.vendorsToShow.addAll(vendors);
-
         this.bannerInfos = showBanner ? bannerInfos : null;
         this.stripInfo = showBanner ? null : stripInfo;
         applyFilter();
     }
 
+    public boolean showBottomView;//either progress bar or restaurant
+    public void showProgressBar(boolean show){
+        showAddRestaurantLayout=false;
+        showBottomView=show;
+        notifyDataSetChanged();
+    }
     private void setRestIdMappedVendors(){
         restIdMappedVendors.clear();
         for(MenusResponse.Vendor vendor : vendorsFiltered){
@@ -188,12 +216,23 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public void applyFilter(){
+//        filtering();
+
+        vendorsFiltered.clear();
+        vendorsFiltered.addAll(vendorsComplete);
+
+        setRestIdMappedVendors();
+
+        notifyDataSetChanged();
+    }
+
+    private void filtering() {
         vendorsFiltered.clear();
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         for (MenusResponse.Vendor vendor : vendorsComplete) {
             boolean cuisineMatched = false, moMatched, dtMatched;
-            for (String cuisine : activity.getCuisinesSelected()) {
-                if (vendor.getCuisines().contains(cuisine)) {
+            for (FilterCuisine cuisine : activity.getCuisinesSelected()) {
+                if (vendor.getCuisines().contains(cuisine.getName())) {
                     cuisineMatched = true;
                     break;
                 }
@@ -253,7 +292,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     point = rhs.getPopularity() - lhs.getPopularity();
                 } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE) {
                     point = -(int) (rhs.getDistance() - lhs.getDistance());
-                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE) {
+                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE_RANGE) {
                     point = lhs.getPriceRange() - rhs.getPriceRange();
                 } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DELIVERY_TIME) {
                     point = lhs.getDeliveryTime() - rhs.getDeliveryTime();
@@ -262,9 +301,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 return point;
             }
         });
-        setRestIdMappedVendors();
-
-        searchRestaurant(searchText);
     }
 
     @Override
@@ -305,6 +341,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         } else if(viewType == OFFER_STRIP_ITEM){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.textview_min_order, parent, false);
             return new ViewHolderOfferStrip(v, this);
+        }else if(viewType== ITEM_PROGRESS_BAR){
+
+
+                View   v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progress_bar_feed, parent, false);
+
+
+                return new ProgressBarViewHolder(v);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
@@ -422,6 +465,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 String currentSystemTime = dateFormat.format(new Date());
                 long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
                 long minutes = ((timeDiff1 / (1000L* 60L)));
+                if (minutes <= 0) {
+                    vendor.setIsClosed(1);
+                }
 
                 int visMinOrder = View.VISIBLE;
                 if(!TextUtils.isEmpty(vendor.getMinOrderText())){
@@ -701,14 +747,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
-    public boolean filterApplied() {
-        return (activity.getCuisinesSelected().size() > 0
-                || activity.getMoSelected() != MenusFilterFragment.MinOrder.NONE
-                || activity.getDtSelected() != MenusFilterFragment.DeliveryTime.NONE
-                || activity.getSortBySelected() != MenusFilterFragment.SortType.NONE
-                || activity.getQuickFilterSelected().size() > 0);
-    }
-
     @Override
     public int getItemViewType(int position) {
         if(offerStripSize() > 0){
@@ -729,19 +767,19 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             if (position >= 0 && position < recentOrdersSize()) {
                 return STATUS_ITEM;
             } else if (position >= recentOrdersSize() && vendorsToShow.size() == 0) {
-                return FORM_ITEM;
+                return showAddRestaurantLayout?FORM_ITEM:ITEM_PROGRESS_BAR;
             } else if (position >= recentOrdersSize() && position - recentOrdersSize() < vendorsToShow.size()) {
                 return MAIN_ITEM;
             } else {
-                return FORM_ITEM;
+                return showAddRestaurantLayout?FORM_ITEM:ITEM_PROGRESS_BAR;
             }
         } else if (position < recentOrdersSize()) {
             return STATUS_ITEM;
         } else {
             if (vendorsCompleteCount() > 0) {
-                return FORM_ITEM;
+                return showAddRestaurantLayout?FORM_ITEM:ITEM_PROGRESS_BAR;
             } else {
-                return NO_VENDORS_ITEM;
+                return activity.getMenusResponse().getServiceUnavailable() == 1 ? NO_VENDORS_ITEM : FORM_ITEM;
             }
         }
     }
@@ -749,7 +787,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
 //        int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
-        int formItem = (recentOrdersSize() > 0 || vendorsCompleteCount() > 0) ? 1 : 0;
+//        int formItem = !showBottomView?0:(recentOrdersSize() > 0 || vendorsCompleteCount() > 0) ? 1 : 0;
+        int formItem = !showBottomView ? 0 : 1;
         return offerStripSize() + (offerVendorsSize() > 0 ? 1 : 0)
                 + recentOrdersSize() + vendorsToShowCount() + formItem;
     }
@@ -805,7 +844,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    private static class ProgressBarViewHolder extends RecyclerView.ViewHolder {
 
+//        public RelativeLayout relative;
+
+        public ProgressBarViewHolder(View itemView) {
+            super(itemView);
+//            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+        }
+    }
     private class ViewHolderRestaurantForm extends RecyclerView.ViewHolder {
         TextView tvCouldNotFind, tvRecommend;
         EditText etRestaurantName, etLocality, etTelephone;
@@ -938,15 +985,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
         int oldLength = searchText.length();
         searchText = s;
-        if(searchText.length() > 2) {
+//        if(searchText.length() > 2) {
             searchRestaurantsAutoComplete(searchText);
-        } else {
-            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
-                searchVendors("", null);
-            } else if(vendorsFiltered.size() > 0 && vendorsToShow.size() == 0){
-                searchVendors("", null);
-            }
-        }
+//        } else {
+//            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
+//                searchVendors("", null);
+//            } else if(vendorsFiltered.size() > 0 && vendorsToShow.size() == 0){
+//                searchVendors("", null);
+//            }
+//        }
     }
 
     private HashMap<String, List<Integer>> queryMap = new HashMap<>();
@@ -955,9 +1002,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         try {
             if(!refreshingAutoComplete) {
                 if (MyApplication.getInstance().isOnline()) {
-                    if(queryMap.containsKey(searchText)){
-                        searchVendors(searchText, queryMap.get(searchText));
-                    } else {
+//                    if(queryMap.containsKey(searchText)){
+//                        searchVendors(searchText, queryMap.get(searchText));
+//                    } else {
                         HashMap<String, String> params = new HashMap<>();
                         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                         params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
@@ -1003,7 +1050,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                 recallSearch(searchText);
                             }
                         });
-                    }
+//                    }
                 } else {
                     refreshingAutoComplete = true;
                     searchVendors(searchText, null);
@@ -1177,18 +1224,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
 
-//                    Intent intent = new Intent(activity, TrackOrderActivity.class);
-//                    intent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-//                    intent.putExtra(Constants.KEY_ORDER_ID, order.getOrderId());
-//                    intent.putExtra(Constants.KEY_DELIVERY_ID, order.getDeliveryId());
-//                    intent.putExtra(Constants.KEY_PICKUP_LATITUDE, order.getPickupLatitude());
-//                    intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, order.getPickupLongitude());
-//                    intent.putExtra(Constants.KEY_DELIVERY_LATITUDE, order.getDeliveryLatitude());
-//                    intent.putExtra(Constants.KEY_DELIVERY_LONGITUDE, order.getDeliveryLongitude());
-//                    intent.putExtra(Constants.KEY_SHOW_DELIVERY_ROUTE, order.getShowDeliveryRoute());
-//                    intent.putExtra(Constants.KEY_DRIVER_PHONE_NO, order.getDriverPhoneNo());
-//                    activity.startActivity(intent);
-//                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 } else {
                     Utils.showToast(activity, !TextUtils.isEmpty(order.getTrackDeliveryMessage()) ?
                             order.getTrackDeliveryMessage() : activity.getString(R.string.tracking_not_available_message));
@@ -1293,33 +1328,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 } else {
                     activity.getHomeUtil().openFuguOrSupport(activity, activity.getRelativeLayoutContainer(),
                             order.getOrderId(), order.getSupportCategory(), order.getExpectedDeliveryDate(), ProductType.MENUS.getOrdinal());
-//                    if (Data.isFuguChatEnabled()) {
-//                        try {
-//                            FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                            Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
-//                        }
-//
-//                    } else {
-//                        ArrayList<ShowPanelResponse.Item> items = MyApplication.getInstance().getDatabase2().getSupportDataItems(order.getSupportCategory());
-//                        if(items.size() > 0) {
-//                            ShowPanelResponse.Item item = new ShowPanelResponse.Item();
-//                            item.setItems(items);
-//                            item.setActionType(ActionType.NEXT_LEVEL.getOrdinal());
-//                            item.setSupportId(order.getSupportCategory());
-//                            item.setText(activity.getString(R.string.order_is_late));
-//
-//                            new TransactionUtils().openItemInFragment(activity, activity.getRelativeLayoutContainer(), -1, "",
-//                                    activity.getResources().getString(R.string.support_main_title), item, "",
-//                                    order.getOrderId(), order.getExpectedDeliveryDate(),
-//                                    Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
-//                        } else {
-//                            new TransactionUtils().openRideIssuesFragment(activity, activity.getRelativeLayoutContainer(),
-//                                    -1, order.getOrderId(), null, null, 0, false, 0, null,
-//                                    order.getSupportCategory(), ProductType.MENUS.getOrdinal(), order.getExpectedDeliveryDate());
-//                        }
-//                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

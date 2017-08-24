@@ -27,8 +27,8 @@
 
             <ImageView
                 android:id="@+id/imageViewItemImage"
-                android:layout_width="120px"
-                android:layout_height="120px"
+                android:layout_width="41px"
+                android:layout_height="41px"
                 android:layout_centerVertical="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_fresh_item_placeholder"

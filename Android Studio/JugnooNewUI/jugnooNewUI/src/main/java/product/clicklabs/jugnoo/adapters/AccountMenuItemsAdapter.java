@@ -42,6 +42,12 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
         this.accountMenuItemsCallback = accountMenuItemsCallback;
         this.recyclerView=recyclerView;
         this.activity = activity;
+        if(menuList!=null){
+            for(MenuInfo menuInfo:menuList){
+                menuInfo.setUIEnabled(true);
+            }
+        }
+
     }
 
     @Override
@@ -71,6 +77,7 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
 
                     }
                 }
+                holder.tvJugnooStar.setEnabled(menuList.get(position).isUIEnabled());
             }
             else
                 holder.tvJugnooStar.setText(null);
@@ -122,5 +129,15 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
 
     public interface AccountMenuItemsCallback {
         void onMenuItemClick(MenuInfo menuInfo);
+    }
+
+    public void toggleMenuItems(boolean isEnable){
+        if(menuList!=null){
+            for(MenuInfo menuInfo:menuList){
+                menuInfo.setUIEnabled(isEnable);
+            }
+            notifyDataSetChanged();
+        }
+
     }
 }

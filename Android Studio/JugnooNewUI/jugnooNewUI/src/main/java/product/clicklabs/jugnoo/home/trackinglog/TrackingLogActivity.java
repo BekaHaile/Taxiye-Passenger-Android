@@ -59,6 +59,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.MarkerAnimation;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -86,6 +87,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
     ArrayList<TrackingLogReponse.Datum> data = new ArrayList<>();
     ScreenState state;
     ASSL assl;
+    Handler handler = new Handler();
 
     @Override
     protected void onResume() {
@@ -325,6 +327,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                 map.clear();
 				JSONArray jDriverLocations = jsonObject.getJSONArray(Constants.KEY_DRIVER_LOCATIONS);
                 final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                List<LatLng> driverLatLngs = new ArrayList<>();
 	            for(int i=0; i<jDriverLocations.length(); i++){
                     LatLng latLng = new LatLng(jDriverLocations.getJSONObject(i).getDouble(Constants.KEY_LAT),
                             jDriverLocations.getJSONObject(i).getDouble(Constants.KEY_LONG));
@@ -334,8 +337,9 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                     markerOptions.zIndex(0);
                     map.addMarker(markerOptions);
                     builder.include(latLng);
+                    driverLatLngs.add(latLng);
                 }
-                new Handler().postDelayed(new Runnable() {
+                handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -360,18 +364,79 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                     markerOptions.rotation((float) jTrackingLog0.getDouble(Constants.KEY_BEARING));
                     markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                             .createMarkerBitmapForResource(this, assl, R.drawable.ic_auto_marker)));
-                    Marker driverMarker = map.addMarker(markerOptions);
+                    final Marker driverMarker = map.addMarker(markerOptions);
 
                     Gson gson = new Gson();
                     TrackingLogData trackingLogData = gson.fromJson(jsonObject.toString(), TrackingLogData.class);
                     List<TrackingLogItem> trackingLogItems = trackingLogData.getTrackingLogs();
-                    animateMarkerICSRecursive(driverMarker, trackingLogItems, new LatLngInterpolator.Spherical());
+
+
+
+                    final List<TrackingLogItem> finalTrackingLogItems = new ArrayList<>();
+                    for(LatLng latLng : driverLatLngs){
+                        double dist = Double.MAX_VALUE;
+                        TrackingLogItem itemMatched = null;
+                        for(int i=0; i<trackingLogItems.size(); i++){
+                            TrackingLogItem item = trackingLogItems.get(i);
+                            double distI = MapUtils.distance(latLng, item.getLatLng());
+                            if(distI <= dist){
+                                dist = distI;
+                                itemMatched = item;
+                            }
+                        }
+                        if(itemMatched != null){
+                            finalTrackingLogItems.add(itemMatched);
+                        }
+                    }
+
+//                    animateMarkerICSRecursive(driverMarker, trackingLogItems, new LatLngInterpolator.Spherical());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(state == ScreenState.MAP) {
+                                MarkerAnimation.clearAsyncList();
+                                animateMarkerICSRecursive(driverMarker, finalTrackingLogItems);
+                            }
+                        }
+                    }, 1100);
+
                 }
 			}
         } catch (Exception e) {
             e.printStackTrace();
             Utils.showToast(this, "Some error occured "+e.getLocalizedMessage()+":"+e.getMessage()+":"+e.getCause());
         }
+    }
+
+
+    private void animateMarkerICSRecursive(final Marker marker, final List<TrackingLogItem> trackingLogItems){
+        if(state == ScreenState.MAP && trackingLogItems.size() > 0) {
+            final TrackingLogItem trackingLogItem = trackingLogItems.remove(0);
+            MarkerAnimation.animateMarkerToICS("-1", marker, trackingLogItem.getLatLng(), new LatLngInterpolator.LinearFixed(),
+                    new MarkerAnimation.CallbackAnim() {
+                        @Override
+                        public void onPathFound(List<LatLng> latLngs) {
+
+                        }
+
+                        @Override
+                        public void onAnimComplete() {
+                            if(state == ScreenState.MAP && trackingLogItems.size() > 0) {
+                                animateMarkerICSRecursive(marker, trackingLogItems);
+                            }
+                        }
+
+                        @Override
+                        public void onAnimNotDone() {
+							LatLng prevMarkerPos = marker.getPosition();
+							marker.setPosition(trackingLogItem.getLatLng());
+							marker.setRotation((float) MapUtils.getBearing(prevMarkerPos, trackingLogItem.getLatLng()));
+                            this.onAnimComplete();
+                        }
+                    }, false, null, 0, 0, 0,
+                    trackingLogItem.getMode().equalsIgnoreCase(TrackingLogModeValue.RESET.getOrdinal()));
+        }
+
     }
 
     private void animateMarkerICSRecursive(final Marker marker, final List<TrackingLogItem> trackingLogItems,
@@ -466,6 +531,10 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 
         public Double getLat() {
             return lat;
+        }
+
+        public LatLng getLatLng(){
+            return new LatLng(lat, lng);
         }
 
         public void setLat(Double lat) {

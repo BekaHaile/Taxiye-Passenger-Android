@@ -148,12 +148,14 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
               /*  if (reviewDesc.length() == 0) {
                     etFeedback.requestFocus();
                     etFeedback.setError(activity.getString(R.string.please_enter_some_feedback));
-                } else*/ if (reviewDesc.length() > 500) {
+                } else*/
+              if (reviewDesc.length() > 500) {
                     etFeedback.requestFocus();
                     etFeedback.setError(activity.getString(R.string.feedback_must_be_in_500));
                 }
                 else if(customRatingBar.getScore() < 1){
-                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.please_give_some_rating));
+                    Utils.showToast(activity,getString(R.string.error_no_rating));
+//                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.please_give_some_rating));
                 }
                 else {
                     submitFeedback(reviewDesc);
@@ -247,7 +249,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     }
 
     private void updateSubmitButtonStatus() {
-        if(customRatingBar.getScore() > 0 && (etFeedback.getText().toString().trim().length()>0||(objectList!=null && objectList.size()>0)))
+        if(/*customRatingBar.getScore() > 0 && */(etFeedback.getText().toString().trim().length()>0||(objectList!=null && objectList.size()>0)))
             bSubmit.setEnabled(true);
         else
             bSubmit.setEnabled(false);

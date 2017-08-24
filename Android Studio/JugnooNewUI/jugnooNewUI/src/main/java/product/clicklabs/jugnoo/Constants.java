@@ -585,10 +585,10 @@ public interface Constants {
     String KEY_GO_BACK = "go_back";
     String KEY_PAYMENT_OBJECT = "payment_object";
     String KEY_PAY_ORDER_ID = "pay_order_id";
-    String ACCEPTONLINE = "Accept Online Payment";
-    String OFFERSDISCOUNT = "Offers Discount";
-    String PUREVEGETARIAN = "Pure Vegetarian";
-    String FREEDELIVERY = "Free Delivery";
+    String ACCEPTONLINE = "accepts_online";
+    String OFFERSDISCOUNT = "offers_discount";
+    String PUREVEGETARIAN = "pure_veg";
+    String FREEDELIVERY = "free_delivery";
     String SHOW_SUBSCRIPTION_DATA = "show_subscription_data";
     String KEY_SUB_ID = "sub_id";
 
@@ -604,7 +604,7 @@ public interface Constants {
     String SP_MENUS_FILTER_SORT_BY = "sp_menus_filter_sort_by";
     String SP_MENUS_FILTER_MIN_ORDER = "sp_menus_filter_min_order";
     String SP_MENUS_FILTER_DELIVERY_TIME = "sp_menus_filter_delivery_time";
-    String SP_MENUS_FILTER_CUISINES = "sp_menus_filter_cuisines";
+    String SP_MENUS_FILTER_CUISINES_GSON = "sp_menus_filter_cuisines_gson";
     String SP_MENUS_FILTER_QUICK = "sp_menus_filter_quick";
     String KEY_EVENT = "event";
     String KEY_REFERRAL_POPUP_CONTENT = "referral_popup_content";
@@ -769,4 +769,13 @@ public interface Constants {
     String KEY_REODER_ID = "prev_order_id";
     String ORDER_STATUS_ADDRESS = "order_status_address";
     String SHOULD_REFRESH_ADDRESS = "should_refresh_address";
+    String PAGE_NO = "page_no";
+    String KEY_SORTING = "sorting";
+    String KEY_FILTERS = "filters";
+    String RESTAURANT_IDS = "restaurant_ids";
+    String KEY_MIN_ORDER_AMT = "min_order_amt";
+    String KEY_CUISINE_SELECTED = "cuisines";
+    String KEY_RIDES = "rides";
+    String KEY_FATAFAT = "fatafat";
+    String KEY_ASKLOCAL = "asklocal";
 }

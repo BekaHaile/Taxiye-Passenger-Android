@@ -630,7 +630,7 @@
 
     <string name="notifications">Notifications</string>
     <string name="push_notification_pref">Push Notifications Preferences</string>
-    <string name="notification_pref_desc">We respect your personal space\nHelp us customize your experience</string>
+    <string name="notification_pref_desc">We respect your personal space. Help us customize your experience by personalizing notifications you receive.</string>
     <string name="fare_threshold_distance_message_format">First %s Kms included in base fare</string>
 
     <string name="auto">Auto</string>
@@ -670,6 +670,7 @@
     <string name="will_be_delivered_between">will be delivered between</string>
     <string name="your_cart_is_empty">Your cart is empty</string>
     <string name="search_items">Search Items</string>
+    <string name="search_items_menus">Search..</string>
     <string name="item_cancelled">Cancelled</string>
 
 
@@ -1109,7 +1110,7 @@
     <string name="your_order_will_be_delivered_between">Your order will be delivered between</string>
     <string name="could_not_find_favorite_restaurant">Couldn’t find your favourite restaurant yet?</string>
     <string name="why_not_recommend_it">Why not recommend it!</string>
-    <string name="restaurant_name_star">Restaurant name*</string>
+    <string name="restaurant_name_star">Restaurant Name*</string>
     <string name="locality_optional">Locality (optional)</string>
     <string name="telephone_number_optional">Telephone Number (optional)</string>
     <string name="restaurant_name_is_neccessary">Restaurant name is neccessary</string>
@@ -1126,7 +1127,7 @@
     <string name="claim_gift">Claim gift</string>
     <string name="auto_renewal">Auto Renewal</string>
     <string name="upgrade_now">Upgrade Now</string>
-    <string name="what_you_love_about_restaurant">Tell people about your experience: Your meal, packaging, and service?</string>
+    <string name="what_you_love_about_restaurant">Tell us about your experience: Your meal, packaging, and service?</string>
     <string name="feedback_must_be_in_500">Feedback must be in 500 characters</string>
     <string name="thanks_for_your_valuable_feedback">Thanks for your valuable feedback</string>
     <string name="feedback_menu_what_amazing">What was amazing?</string>
@@ -1363,6 +1364,7 @@
     <string name="min_order_checkout">You still have \u20B9%s to go to reach the minimum order amount.</string>
     <string name="label_cancel_edit_order">Click on cancel to edit your order</string>
     <string name="fugu_support_title">Support</string>
+    <string name="error_no_rating">Please select a rating</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

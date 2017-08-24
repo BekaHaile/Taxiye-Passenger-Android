@@ -11,22 +11,25 @@
     <TextView
         android:id="@+id/tv_offer"
         android:background="@color/color_orange_menus"
+        android:tag="@string/dont_touch_me"
         android:paddingLeft="10dp"
-        android:text="Cashback 20%"
+        android:text="20% Promo"
         android:textColor="@android:color/white"
         android:gravity="center"
-        android:textSize="18px"
-        android:layout_marginBottom="-10px"
-        android:layout_width="wrap_content"
+        android:textSize="10sp"
+        android:layout_marginBottom="-5dp"
+        android:layout_width="65dp"
+        android:minWidth="30dp"
         android:visibility="visible"
-        android:layout_height="32px" />
+        android:layout_height="18dp" />
     <View
         android:id="@+id/tv_offer_view"
         android:layout_toRightOf="@id/tv_offer"
         android:background="@drawable/drawable_menu_strip_offer_triangle"
-        android:layout_width="40px"
+        android:layout_width="20dp"
+        android:tag="@string/dont_touch_me"
         android:visibility="visible"
-        android:layout_height="32px"/>
+        android:layout_height="18dp"/>
     
     
     <ImageView
