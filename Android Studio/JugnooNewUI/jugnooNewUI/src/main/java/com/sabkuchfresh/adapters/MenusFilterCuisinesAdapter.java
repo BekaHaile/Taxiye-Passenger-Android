@@ -37,7 +37,8 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 		this.activity = activity;
 		this.cuisines = cuisines;
 		this.cuisinesToShow = new ArrayList<>();
-		this.cuisinesToShow.addAll(this.cuisines);
+		if(this.cuisines!=null)
+		   this.cuisinesToShow.addAll(this.cuisines);
 		this.editTextSearch = editText;
 
 		this.editTextSearch.addTextChangedListener(new TextWatcher() {
@@ -67,13 +68,16 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 	private int searchVendors(String text){
 		cuisinesToShow.clear();
 		text = text.toLowerCase();
-		if(TextUtils.isEmpty(text)){
+		if(TextUtils.isEmpty(text)  ){
+			if(cuisines!=null)
 			cuisinesToShow.addAll(cuisines);
 		} else {
-			for(FilterCuisine filterCuisine : cuisines){
-				if(filterCuisine.getName().toLowerCase().contains(text)){
-					cuisinesToShow.add(filterCuisine);
-				}
+			if (cuisines!=null) {
+				for(FilterCuisine filterCuisine : cuisines){
+                    if(filterCuisine.getName().toLowerCase().contains(text)){
+                        cuisinesToShow.add(filterCuisine);
+                    }
+                }
 			}
 		}
 		notifyDataSetChanged();
@@ -83,7 +87,9 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 	public void setList(ArrayList<FilterCuisine> cuisines) {
 		this.cuisines = cuisines;
 		this.cuisinesToShow.clear();
+		if(cuisines!=null)
 		this.cuisinesToShow.addAll(cuisines);
+		editTextSearch.setText("");
 		notifyDataSetChanged();
 	}
 

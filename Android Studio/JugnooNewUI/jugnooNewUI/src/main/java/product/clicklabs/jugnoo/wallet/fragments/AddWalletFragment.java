@@ -321,10 +321,10 @@ public class AddWalletFragment extends Fragment {
 							int flag = jObj.getInt(Constants.KEY_FLAG);
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								setUIAfterRequest();
-								if (retry) {
+//								if (retry) {
 									DialogPopup.dialogBanner(paymentActivity, paymentActivity.getResources()
 											.getString(R.string.otp_sent_successfully));
-								}
+//								}
 							} else if (ApiResponseFlags.PAYTM_INVALID_EMAIL.getOrdinal() == flag) {
 								DialogPopup.alertPopup(paymentActivity, "", message);
 							} else {

@@ -39,9 +39,11 @@ import retrofit.mime.TypedByteArray;
 public class MarkerAnimation {
 
     private static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
-    private static final double ANIMATION_TIME = 14000;
+    private static final double ANIMATION_TIME = 9000;
+    private static final double FAST_ANIMATION_TIME = 2000;
     private static final double MIN_DISTANCE = 80;
     private static final double MAX_DISTANCE = 4000;
+    private static final double MAX_DISTANCE_FACTOR_GAPI = 2;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
@@ -96,19 +98,20 @@ public class MarkerAnimation {
     public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition,
                                           final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim,
                                           boolean animateRoute, GoogleMap googleMap, int pathResolvedColor,
-                                          int untrackedPathColor, float pathWidth) {
+                                          int untrackedPathColor, float pathWidth, boolean ignoreDistanceCheck) {
 
         try {
-            if(MapUtils.distance(marker.getPosition(), finalPosition) < MIN_DISTANCE
+            if(ignoreDistanceCheck || MapUtils.distance(marker.getPosition(), finalPosition) < MIN_DISTANCE
 					|| MapUtils.distance(marker.getPosition(), finalPosition) > MAX_DISTANCE){
-                //marker.setPosition(finalPosition);
-                animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim);
+                double duration = (ignoreDistanceCheck ? FAST_ANIMATION_TIME : ANIMATION_TIME);
+                animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim,
+                        (long) duration);
                 clearPolylines();
                 if(animateRoute && googleMap != null){
                     List<LatLng> list = new ArrayList<>();
                     list.add(finalPosition);
                     List<Double> durationList = new ArrayList<>();
-                    durationList.add(ANIMATION_TIME);
+                    durationList.add(duration);
 
                     PolylineOptions polylineOptions = new PolylineOptions().color(untrackedPathColor).width(pathWidth)
                             .geodesic(true).add(marker.getPosition()).add(finalPosition);
@@ -241,13 +244,24 @@ public class MarkerAnimation {
             super.onPostExecute(result);
             if(!stopCurrentAsync) {
                 try {
-                    if (result != null) {
                         clearPolylines();
                         if (list == null && !TextUtils.isEmpty(result)) {
                             JSONObject jObj = new JSONObject(result);
                             totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
-                            list = MapUtils.getLatLngListFromPath(result);
-                        }
+                            if(totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
+                                list = new ArrayList<>();
+                                list.add(source);
+                                list.add(destination);
+                                totalDistance = MapUtils.distance(source, destination);
+                            } else {
+                                list = MapUtils.getLatLngListFromPath(result);
+                            }
+                        } else if(list == null && TextUtils.isEmpty(result)){
+							list = new ArrayList<>();
+							list.add(source);
+							list.add(destination);
+							totalDistance = MapUtils.distance(source, destination);
+						}
 
                         ArrayList<Double> duration = new ArrayList<>();
                         for (int i = 0; i < list.size(); i++) {
@@ -277,9 +291,6 @@ public class MarkerAnimation {
                         } else {
                             throw new Exception();
                         }
-                    } else {
-                        throw new Exception();
-                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -359,7 +370,7 @@ public class MarkerAnimation {
     }
 
     private static void animationForShortDistance(String engagementId, final Marker marker, LatLng latLng,
-                                                  final LatLngInterpolator latLngInterpolator, final CallbackAnim callbackAnim){
+                                                  final LatLngInterpolator latLngInterpolator, final CallbackAnim callbackAnim, long duration){
         if(MapUtils.distance(marker.getPosition(), latLng) >= 20) {
             TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {
                 @Override
@@ -369,7 +380,7 @@ public class MarkerAnimation {
             };
             Property<Marker, LatLng> property = Property.of(Marker.class, LatLng.class, "position");
             ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, latLng);
-            animator.setDuration((long) ANIMATION_TIME);
+            animator.setDuration(duration);
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
@@ -401,7 +412,7 @@ public class MarkerAnimation {
                 MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(engagementId),
                         latLng, bearing,
                         TrackingLogModeValue.MOVE.getOrdinal(),
-                        marker.getPosition(), (long) ANIMATION_TIME);
+                        marker.getPosition(), duration);
             }
 
 
@@ -419,7 +430,7 @@ public class MarkerAnimation {
     }
 
 
-    interface CallbackAnim {
+    public interface CallbackAnim {
 		void onPathFound(List<LatLng> latLngs);
         void onAnimComplete();
         void onAnimNotDone();

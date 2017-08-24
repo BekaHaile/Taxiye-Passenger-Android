@@ -27,12 +27,14 @@ import product.clicklabs.jugnoo.datastructure.DeliveryData;
 import product.clicklabs.jugnoo.datastructure.FreshData;
 import product.clicklabs.jugnoo.datastructure.GroceryData;
 import product.clicklabs.jugnoo.datastructure.MealsData;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.PayData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
@@ -125,7 +127,6 @@ public class Data {
     public static String currentActivity = null;
     public static boolean activityResumed = false;
     private static CaptureUserData fuguUserData;
-    private static boolean isFuguChatEnabled;
 
     public static void clearDataOnLogout(Activity context) {
         try {
@@ -587,11 +588,15 @@ public class Data {
     }
 
     public static boolean isFuguChatEnabled() {
-        return isFuguChatEnabled;
-    }
-
-    public static void setIsFuguChatEnabled(boolean isFuguChatEnabled) {
-        Data.isFuguChatEnabled = isFuguChatEnabled;
+        if(Data.userData != null) {
+            ArrayList<MenuInfo> itemsToShow = Data.userData.getMenuInfoList();
+            for (MenuInfo menuInfo : itemsToShow) {
+                if (MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static Bundle fuguChatBundle;
@@ -612,6 +617,10 @@ public class Data {
 
     public static void setRecentAddressesFetched(boolean recentAddressesFetched) {
         Data.recentAddressesFetched = recentAddressesFetched;
+    }
+
+    public static long CHANNEL_ID_FUGU_ISSUE_RIDE(){
+        return Config.getConfigMode()==ConfigMode.LIVE?43:43;
     }
 
     public static long CHANNEL_ID_FUGU_ISSUE_ORDER(){

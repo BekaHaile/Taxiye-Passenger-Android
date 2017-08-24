@@ -17,6 +17,7 @@
         <fragment
             android:id="@+id/googleMap"
             android:name="product.clicklabs.jugnoo.utils.TouchableMapFragment"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -129,6 +130,7 @@
                 android:singleLine="true"
 
                 android:textColor="@color/text_color"
+                android:textColorHint="@color/text_color_hint"
                 android:textCursorDrawable="@drawable/cursor_black"
                 android:textSize="30px" />
 

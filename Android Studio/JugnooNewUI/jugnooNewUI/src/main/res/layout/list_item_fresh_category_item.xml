@@ -182,9 +182,8 @@
             android:layout_height="match_parent"
             android:background="@color/cart_bg_color"
             android:gravity="center_vertical"
-            android:paddingLeft="8px"
-            android:paddingRight="8px"
-            android:text="ACB OFFER "
+            android:paddingLeft="20px"
+            android:text="NEW"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_22" />
 
@@ -193,7 +192,6 @@
             android:layout_width="32px"
             android:layout_height="match_parent"
             android:layout_marginBottom="0px"
-            android:layout_marginLeft="-4px"
             android:scaleType="fitXY"
             android:src="@drawable/bannar_image" />
 
