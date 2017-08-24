@@ -17,6 +17,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.home.OrderCompletDialog;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 
@@ -43,7 +44,7 @@ import retrofit.mime.TypedByteArray;
 import static com.sabkuchfresh.analytics.GAAction.ORDER_PLACED;
 
 
-public class OrderCompleteReferralDialog implements GAAction, GACategory {
+public class OrderCompleteReferralDialog  extends OrderCompletDialog implements GAAction, GACategory {
 
 	private Context context;
 	private Callback callback;
@@ -169,6 +170,11 @@ public class OrderCompleteReferralDialog implements GAAction, GACategory {
 			e.printStackTrace();
 			return null;
 		}
+		return dialog;
+	}
+
+	@Override
+	public Dialog getDialog() {
 		return dialog;
 	}
 

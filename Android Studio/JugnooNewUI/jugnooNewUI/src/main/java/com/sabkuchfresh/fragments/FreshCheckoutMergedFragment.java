@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -70,6 +71,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.home.OrderCheckoutFailureDialog;
+import com.sabkuchfresh.home.OrderCompletDialog;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
@@ -209,7 +211,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private boolean cartChangedRefreshCheckout = false;
     private MySpinner spin;
     boolean flag = false;
-    private Dialog dialogOrderComplete;
+    private OrderCompletDialog dialogOrderComplete;
     private RelativeLayout relativeLayoutIcici;
     private ImageView imageViewIcici;
     private final static IntentFilter ICICI_STATUS_BROADCAST_FILTER = new IntentFilter(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE);
@@ -869,7 +871,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     Utils.getMoneyDecimalFormat().format(taxTotal.getValue())));
         }*/
 
-        if (dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
+        if (dialogOrderComplete == null || dialogOrderComplete.getDialog()==null ||!dialogOrderComplete.getDialog().isShowing()) {
             if (payableAmount() > 0) {
 //                Utils.getDoubleTwoDigits((double)Math.round(payableAmount()));
                 activity.buttonPlaceOrder.setText("PAY " + activity.getString(R.string.rupees_value_format,
@@ -1761,19 +1763,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
         activity.resumeMethod();
 
-        String deliverySlot = "", deliveryDay = "";
-        boolean showDeliverySlot = true;
-        if (type == AppConstant.ApplicationType.MENUS) {
-            showDeliverySlot = false;
-        } else {
-            deliverySlot = DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getStartTime())
-                    + " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime());
-            deliveryDay = activity.getSlotSelected().getDayName();
-        }
-        String restaurantName = "";
-        if (type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null) {
-            restaurantName = activity.getVendorOpened().getName();
-        }
+
 
         if (placeOrderResponse.getSubscriptionDataPlaceOrder() != null) {
             if (placeOrderResponse.getSubscriptionDataPlaceOrder().getUserSubscriptions() != null && placeOrderResponse.getSubscriptionDataPlaceOrder().getUserSubscriptions().size() > 0) {
@@ -1782,6 +1772,46 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 Data.autoData.setCancellationChargesPopupTextLine2(placeOrderResponse.getSubscriptionDataPlaceOrder().getCancellationChargesPopupTextLine2());
             }
         }
+
+        String restaurantName = "";
+        if (type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null) {
+            restaurantName = activity.getVendorOpened().getName();
+        }
+        placeOrderResponse.setSlot(activity.getSlotSelected());
+        placeOrderResponse.setRestaurantName(restaurantName);
+
+
+         if(placeOrderResponse.getReferralPopupContent()==null){
+             dialogOrderComplete = new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+                 @Override
+                 public void onDismiss() {
+                     activity.orderComplete();
+                 }
+             });
+         }  else{
+             dialogOrderComplete = new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
+                 @Override
+                 public void onDialogDismiss() {
+                     activity.orderComplete();
+                 }
+
+                 @Override
+                 public void onConfirmed() {
+                     activity.orderComplete();
+                 }
+             });
+         }
+        showOrderPlacedPopup(placeOrderResponse,type,activity,dialogOrderComplete);
+        activity.clearAllCartAtOrderComplete();
+        activity.setSelectedPromoCoupon(noSelectionCoupon);
+        flurryEventPlaceOrder(placeOrderResponse);
+        fbPurchasedEvent(paramsPlaceOrder, placeOrderResponse);
+    }
+
+    public   static void showOrderPlacedPopup(PlaceOrderResponse placeOrderResponse,Integer type, final FreshActivity activity,OrderCompletDialog orderCompletDialog) {
+        Slot slot = placeOrderResponse.getSlot();
+        String restaurantName = placeOrderResponse.getRestaurantName();
+
         int productType;
         if (type == AppConstant.ApplicationType.MEALS) {
             productType = ProductType.MEALS.getOrdinal();
@@ -1790,38 +1820,38 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         } else {
             productType = ProductType.FRESH.getOrdinal();
         }
+
+        String deliverySlot = "", deliveryDay = "";
+        boolean showDeliverySlot = true;
+        if (type == AppConstant.ApplicationType.MENUS) {
+            showDeliverySlot = false;
+        } else {
+            deliverySlot = DateOperations.convertDayTimeAPViaFormat(slot.getStartTime())
+                    + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime());
+            deliveryDay = slot.getDayName();
+        }
+
+
         if (placeOrderResponse.getReferralPopupContent() == null) {
-            dialogOrderComplete = new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
-                @Override
-                public void onDismiss() {
-                    activity.orderComplete();
-                }
-            }).show(String.valueOf(placeOrderResponse.getOrderId()),
-                    deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
-                    placeOrderResponse, type, "");
+            if (orderCompletDialog instanceof FreshOrderCompleteDialog) {
+                ((FreshOrderCompleteDialog)orderCompletDialog).show(String.valueOf(placeOrderResponse.getOrderId()),
+                        deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
+                        placeOrderResponse, type, "");
+            }
             GAUtils.trackScreenView(productType+ORDER_PLACED);
         } else {
-            dialogOrderComplete = new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
-                @Override
-                public void onDialogDismiss() {
-                    activity.orderComplete();
-                }
+            if(orderCompletDialog instanceof OrderCompleteReferralDialog){
+                ((OrderCompleteReferralDialog)orderCompletDialog).show(true, deliverySlot, deliveryDay,
+                        activity.getResources().getString(R.string.thank_you_for_placing_order_menus_format, restaurantName),
+                        placeOrderResponse.getReferralPopupContent(),
+                        -1, placeOrderResponse.getOrderId(), productType);
+            }
 
-                @Override
-                public void onConfirmed() {
-                    activity.orderComplete();
-                }
-            }).show(true, deliverySlot, deliveryDay,
-                    activity.getResources().getString(R.string.thank_you_for_placing_order_menus_format, restaurantName),
-                    placeOrderResponse.getReferralPopupContent(),
-                    -1, placeOrderResponse.getOrderId(), productType);
             GAUtils.trackScreenView(productType + ORDER_PLACED + REFERRAL);
         }
-        activity.clearAllCartAtOrderComplete();
-        activity.setSelectedPromoCoupon(noSelectionCoupon);
-        flurryEventPlaceOrder(placeOrderResponse);
-        fbPurchasedEvent(paramsPlaceOrder, placeOrderResponse);
     }
+
+
 
     private void flurryEventPlaceOrder(PlaceOrderResponse placeOrderResponse) {
         try {
@@ -3389,6 +3419,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         DELAY_ICICI_UPI_STATUS_CHECK = icici.getPollingTimeMillis();
         Long timerStartedAt = icici.getTimerStartedAt()==null?System.currentTimeMillis():icici.getTimerStartedAt();
         icici.setTimerStartedAt(timerStartedAt);
+        if(activity.getPlaceOrderResponse()!=null){
+            activity.getPlaceOrderResponse().setSlot(activity.getSlotSelected());
+            String restaurantName = "";
+            if (type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null) {
+                restaurantName = activity.getVendorOpened().getName();
+            }
+            activity.getPlaceOrderResponse().setRestaurantName(restaurantName);
+        }
         Data.saveCurrentIciciUpiTransaction(activity.getPlaceOrderResponse(), activity.getAppType());
         showRequestPaymentDialog(amount, TOTAL_EXPIRY_TIME_ICICI_UPI,icici.getReasonList(),icici.getTimerStartedAt()==null?System.currentTimeMillis():icici.getTimerStartedAt());
         activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable, DELAY_ICICI_UPI_STATUS_CHECK);
@@ -3540,7 +3578,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     orderPaymentModes();
                     setPaymentOptionUI();
 
-                    if (dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
+                    if (dialogOrderComplete == null || dialogOrderComplete.getDialog()==null || !dialogOrderComplete.getDialog().isShowing()) {
                         if(checkoutRequestPaymentDialog==null||!checkoutRequestPaymentDialog.isShowing())
                              getCheckoutDataAPI(selectedSubscription, false);
                     }
