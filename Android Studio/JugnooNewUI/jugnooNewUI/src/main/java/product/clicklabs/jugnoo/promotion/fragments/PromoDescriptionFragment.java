@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
+import product.clicklabs.jugnoo.promotion.dialogs.PromoOfferingSelectDialog;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -55,6 +57,7 @@ public class PromoDescriptionFragment extends Fragment {
 	private String offeringName, clientId;
 	private PromoCoupon promoCoupon;
 
+	private Handler handler = new Handler();
 
 	public static PromoDescriptionFragment newInstance(String offeringName, String clientId, PromoCoupon promoCoupon){
 		PromoDescriptionFragment fragment = new PromoDescriptionFragment();
@@ -123,18 +126,47 @@ public class PromoDescriptionFragment extends Fragment {
 	@OnClick(R.id.bUseCoupon)
 	public void useCoupon() {
 		if(context instanceof PromotionActivity && promoCoupon != null) {
-			Prefs.with(context).save(Constants.SP_USE_COUPON_ + clientId, promoCoupon.getId());
-			Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, (promoCoupon instanceof CouponInfo));
-			if(!clientId.equals(Config.getAutosClientId())) {
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						Utils.showToast(context, context.getString(R.string.offer_auto_applied_message_format, "checkout"), Toast.LENGTH_LONG);
-					}
-				}, 500);
+			if(!TextUtils.isEmpty(clientId)) {
+				applyCoupon(clientId);
+			} else {
+				getPromoOfferingSelectDialog().show();
 			}
-			MyApplication.getInstance().getAppSwitcher().switchApp((PromotionActivity)context, clientId,
-					new LatLng(Data.latitude, Data.longitude), true);
 		}
 	}
+
+	private PromoOfferingSelectDialog promoOfferingSelectDialog;
+	private PromoOfferingSelectDialog getPromoOfferingSelectDialog(){
+		if(promoOfferingSelectDialog == null){
+			promoOfferingSelectDialog = new PromoOfferingSelectDialog(getActivity(), new PromoOfferingSelectDialog.Callback() {
+				@Override
+				public void onOfferingClick(final String clientId) {
+					promoOfferingSelectDialog.dismiss();
+					handler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							applyCoupon(clientId);
+						}
+					}, 350);
+				}
+			});
+		}
+		return promoOfferingSelectDialog;
+	}
+
+	private void applyCoupon(String clientId){
+		Prefs.with(context).save(Constants.SP_USE_COUPON_ + clientId, promoCoupon.getId());
+		Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, (promoCoupon instanceof CouponInfo));
+		if (!clientId.equals(Config.getAutosClientId())) {
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					Utils.showToast(context, context.getString(R.string.offer_auto_applied_message_format, "checkout"), Toast.LENGTH_LONG);
+				}
+			}, 500);
+		}
+		MyApplication.getInstance().getAppSwitcher().switchApp((PromotionActivity) context, clientId,
+				new LatLng(Data.latitude, Data.longitude), true);
+	}
+
+
 }

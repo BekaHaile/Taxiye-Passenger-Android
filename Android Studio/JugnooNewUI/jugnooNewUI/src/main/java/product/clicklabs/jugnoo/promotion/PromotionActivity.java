@@ -655,7 +655,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         if(pcAll.size() > 0){
             pcAll = countAndRemoveDuplicatePromoCoupons(pcAll);
             for(PromoCoupon pc : pcAll){
-                promosList.add(new Promo(getString(R.string.all), Config.getAutosClientId(), pc, R.drawable.ic_promo_all, -1));
+                promosList.add(new Promo(getString(R.string.all), "", pc, R.drawable.ic_promo_all, -1));
             }
         }
         if(pcRides.size() > 0) {

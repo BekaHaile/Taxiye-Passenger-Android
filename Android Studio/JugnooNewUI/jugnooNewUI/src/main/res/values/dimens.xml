@@ -879,5 +879,11 @@
     <dimen name="dp_153">
         153dp
     </dimen>
+    <dimen name="dp_180">
+        180dp
+    </dimen>
+    <dimen name="dp_190">
+        190dp
+    </dimen>
 
 </resources>
