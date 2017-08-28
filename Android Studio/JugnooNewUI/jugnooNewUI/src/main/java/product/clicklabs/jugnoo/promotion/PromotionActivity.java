@@ -31,8 +31,12 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -45,13 +49,15 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.promotion.adapters.OfferingPromotionsAdapter;
+import product.clicklabs.jugnoo.promotion.adapters.PromoAdapter;
 import product.clicklabs.jugnoo.promotion.fragments.PromoDescriptionFragment;
+import product.clicklabs.jugnoo.promotion.models.Promo;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -81,9 +87,8 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
     private LinearLayout llContainer;
 
 
-
-    private ArrayList<OfferingPromotion> offeringPromotions = new ArrayList<>();
-    private OfferingPromotionsAdapter offeringPromotionsAdapter;
+    private ArrayList<Promo> promosList = new ArrayList<>();
+    private PromoAdapter promoAdapter;
 
     @Override
     protected void onResume() {
@@ -134,8 +139,8 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         recyclerViewOffers.setItemAnimator(new DefaultItemAnimator());
         recyclerViewOffers.setHasFixedSize(false);
 
-        offeringPromotionsAdapter = new OfferingPromotionsAdapter(this, offeringPromotions);
-        recyclerViewOffers.setAdapter(offeringPromotionsAdapter);
+        promoAdapter = new PromoAdapter(this, promosList, recyclerViewOffers);
+        recyclerViewOffers.setAdapter(promoAdapter);
 
         textViewFreeRides.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,14 +266,14 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
     }
 
     public void updateListData() {
-        if (offeringPromotions.size() == 0) {
+        if (promosList.size() == 0) {
             recyclerViewOffers.setVisibility(View.GONE);
             linearLayoutNoOffers.setVisibility(View.VISIBLE);
         } else{
             recyclerViewOffers.setVisibility(View.VISIBLE);
             linearLayoutNoOffers.setVisibility(View.GONE);
-            offeringPromotionsAdapter.notifyDataSetChanged();
-            updateUserCoupons();
+            promoAdapter.notifyDataSetChanged();
+            updateUserCouponsToCleverTap1(promosList);
         }
     }
 
@@ -296,63 +301,13 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                                     int flag = jObj.getInt("flag");
                                     String message = JSONParser.getServerMessage(jObj);
                                     if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
-                                        offeringPromotions.clear();
 
-                                        ArrayList<PromoCoupon> pcRides = new ArrayList<PromoCoupon>();
-                                        ArrayList<PromoCoupon> pcMenus = new ArrayList<PromoCoupon>();
-                                        ArrayList<PromoCoupon> pcFatafat = new ArrayList<PromoCoupon>();
-                                        ArrayList<PromoCoupon> pcMeals = new ArrayList<PromoCoupon>();
-
-                                        fillMasterPromoCoupons(promCouponResponse.getCommonPromotions(), pcRides, pcMenus, pcFatafat, pcMeals);
-                                        fillMasterPromoCoupons(promCouponResponse.getCommonCoupons(), pcRides, pcMenus, pcFatafat, pcMeals);
-
-                                        if(promCouponResponse.getAutosPromotions() != null)
-                                            pcRides.addAll(promCouponResponse.getAutosPromotions());
-                                        if(promCouponResponse.getAutosCoupons() != null)
-                                            pcRides.addAll(promCouponResponse.getAutosCoupons());
-
-                                        if(promCouponResponse.getMenusPromotions() != null)
-                                            pcMenus.addAll(promCouponResponse.getMenusPromotions());
-                                        if(promCouponResponse.getMenusCoupons() != null)
-                                            pcMenus.addAll(promCouponResponse.getMenusCoupons());
-
-                                        if(promCouponResponse.getFreshPromotions() != null)
-                                            pcFatafat.addAll(promCouponResponse.getFreshPromotions());
-                                        if(promCouponResponse.getFreshCoupons() != null)
-                                            pcFatafat.addAll(promCouponResponse.getFreshCoupons());
-                                        if(promCouponResponse.getGroceryPromotions() != null)
-                                            pcFatafat.addAll(promCouponResponse.getGroceryPromotions());
-                                        if(promCouponResponse.getGroceryCoupons() != null)
-                                            pcFatafat.addAll(promCouponResponse.getGroceryCoupons());
-
-                                        if(promCouponResponse.getMealsPromotions() != null)
-                                            pcMeals.addAll(promCouponResponse.getMealsPromotions());
-                                        if(promCouponResponse.getMealsCoupons() != null)
-                                            pcMeals.addAll(promCouponResponse.getMealsCoupons());
-
-
-                                        if(pcRides.size() > 0) {
-                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.rides), Config.getAutosClientId(),
-                                                    R.drawable.ic_auto_grey, pcRides));
-                                        }
-                                        if(pcMeals.size() > 0) {
-                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.meals), Config.getMealsClientId(),
-                                                    R.drawable.ic_meals_grey, pcMeals));
-                                        }
-                                        if(pcFatafat.size() > 0) {
-                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.fatafat), Config.getFreshClientId(),
-                                                    R.drawable.ic_fresh_grey, pcFatafat));
-                                        }
-                                        if(pcMenus.size() > 0) {
-                                            offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), Config.getMenusClientId(),
-                                                    R.drawable.ic_menus_grey, pcMenus));
-                                        }
-
+                                        parsePromoCoupons(promCouponResponse);
                                         updateListData();
 
                                     } else {
                                         updateListData();
-                                        retryDialog(DialogErrorType.OTHER, message);
+                                        retryDialogGetPromos(DialogErrorType.OTHER, message);
                                     }
                                 } else {
                                     updateListData();
@@ -361,7 +316,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                             } catch (Exception exception) {
                                 exception.printStackTrace();
                                 updateListData();
-                                retryDialog(DialogErrorType.SERVER_ERROR, "");
+                                retryDialogGetPromos(DialogErrorType.SERVER_ERROR, "");
                             }
                             DialogPopup.dismissLoadingDialog();
                         }
@@ -371,11 +326,11 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                             Log.e(TAG, "getCouponsAndPromotions error="+error.toString());
                             DialogPopup.dismissLoadingDialog();
                             updateListData();
-                            retryDialog(DialogErrorType.CONNECTION_LOST, "");
+                            retryDialogGetPromos(DialogErrorType.CONNECTION_LOST, "");
                         }
                     });
                 } else {
-                    retryDialog(DialogErrorType.NO_NET, "");
+                    retryDialogGetPromos(DialogErrorType.NO_NET, "");
                 }
             }
         } catch (Exception e) {
@@ -384,6 +339,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
     }
 
     private void fillMasterPromoCoupons(List promoCouponsMaster,
+                                        ArrayList<PromoCoupon> pcAll,
                                         ArrayList<PromoCoupon> pcRides,
                                         ArrayList<PromoCoupon> pcMenus,
                                         ArrayList<PromoCoupon> pcFatafat,
@@ -391,23 +347,31 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         if(promoCouponsMaster != null) {
             List<PromoCoupon> promoCoupons = promoCouponsMaster;
             for(PromoCoupon promoCoupon : promoCoupons){
-                if(promoCoupon.getAutos() == 1){
-                    pcRides.add(promoCoupon);
-                }
-                if(promoCoupon.getMenus() == 1){
-                    pcMenus.add(promoCoupon);
-                }
-                if(promoCoupon.getFresh() == 1 || promoCoupon.getGrocery() == 1){
-                    pcFatafat.add(promoCoupon);
-                }
-                if(promoCoupon.getMeals() == 1){
-                    pcMeals.add(promoCoupon);
+                if(pcAll != null
+                        && promoCoupon.getAutos() == 1
+                        && promoCoupon.getMenus() == 1
+                        && (promoCoupon.getFresh() == 1 || promoCoupon.getGrocery() == 1)
+                        && promoCoupon.getMeals() == 1){
+                    pcAll.add(promoCoupon);
+                } else {
+                    if (promoCoupon.getAutos() == 1) {
+                        pcRides.add(promoCoupon);
+                    }
+                    if (promoCoupon.getMenus() == 1) {
+                        pcMenus.add(promoCoupon);
+                    }
+                    if (promoCoupon.getFresh() == 1 || promoCoupon.getGrocery() == 1) {
+                        pcFatafat.add(promoCoupon);
+                    }
+                    if (promoCoupon.getMeals() == 1) {
+                        pcMeals.add(promoCoupon);
+                    }
                 }
             }
         }
     }
 
-    private void updateUserCoupons() {
+    private void updateUserCouponsToCleverTap(List<OfferingPromotion> offeringPromotions) {
         try{
             ArrayList<String> coupons = new ArrayList<>();
             double maxValue = 0.0;
@@ -437,7 +401,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
 
 
 
-    private void retryDialog(DialogErrorType dialogErrorType, String message){
+    private void retryDialogGetPromos(DialogErrorType dialogErrorType, String message){
         if(dialogErrorType == DialogErrorType.OTHER){
             DialogPopup.alertPopup(PromotionActivity.this, "", message);
         } else{
@@ -587,5 +551,183 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
     }
 
     private Handler handler = new Handler();
+
+
+    private void oldOfferingParse(PromCouponResponse promCouponResponse){
+        ArrayList<OfferingPromotion> offeringPromotions = new ArrayList<>();
+        offeringPromotions.clear();
+
+        ArrayList<PromoCoupon> pcRides = new ArrayList<PromoCoupon>();
+        ArrayList<PromoCoupon> pcMenus = new ArrayList<PromoCoupon>();
+        ArrayList<PromoCoupon> pcFatafat = new ArrayList<PromoCoupon>();
+        ArrayList<PromoCoupon> pcMeals = new ArrayList<PromoCoupon>();
+
+        fillMasterPromoCoupons(promCouponResponse.getCommonPromotions(), null, pcRides, pcMenus, pcFatafat, pcMeals);
+        fillMasterPromoCoupons(promCouponResponse.getCommonCoupons(), null, pcRides, pcMenus, pcFatafat, pcMeals);
+
+        if(promCouponResponse.getAutosPromotions() != null)
+            pcRides.addAll(promCouponResponse.getAutosPromotions());
+        if(promCouponResponse.getAutosCoupons() != null)
+            pcRides.addAll(promCouponResponse.getAutosCoupons());
+
+        if(promCouponResponse.getMenusPromotions() != null)
+            pcMenus.addAll(promCouponResponse.getMenusPromotions());
+        if(promCouponResponse.getMenusCoupons() != null)
+            pcMenus.addAll(promCouponResponse.getMenusCoupons());
+
+        if(promCouponResponse.getFreshPromotions() != null)
+            pcFatafat.addAll(promCouponResponse.getFreshPromotions());
+        if(promCouponResponse.getFreshCoupons() != null)
+            pcFatafat.addAll(promCouponResponse.getFreshCoupons());
+        if(promCouponResponse.getGroceryPromotions() != null)
+            pcFatafat.addAll(promCouponResponse.getGroceryPromotions());
+        if(promCouponResponse.getGroceryCoupons() != null)
+            pcFatafat.addAll(promCouponResponse.getGroceryCoupons());
+
+        if(promCouponResponse.getMealsPromotions() != null)
+            pcMeals.addAll(promCouponResponse.getMealsPromotions());
+        if(promCouponResponse.getMealsCoupons() != null)
+            pcMeals.addAll(promCouponResponse.getMealsCoupons());
+
+
+        if(pcRides.size() > 0) {
+            offeringPromotions.add(new OfferingPromotion(getString(R.string.rides), Config.getAutosClientId(),
+                    R.drawable.ic_auto_grey, pcRides));
+        }
+        if(pcMeals.size() > 0) {
+            offeringPromotions.add(new OfferingPromotion(getString(R.string.meals), Config.getMealsClientId(),
+                    R.drawable.ic_meals_grey, pcMeals));
+        }
+        if(pcFatafat.size() > 0) {
+            offeringPromotions.add(new OfferingPromotion(getString(R.string.fatafat), Config.getFreshClientId(),
+                    R.drawable.ic_fresh_grey, pcFatafat));
+        }
+        if(pcMenus.size() > 0) {
+            offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), Config.getMenusClientId(),
+                    R.drawable.ic_menus_grey, pcMenus));
+        }
+    }
+
+
+    private void parsePromoCoupons(PromCouponResponse promCouponResponse){
+        promosList.clear();
+
+        ArrayList<PromoCoupon> pcAll = new ArrayList<PromoCoupon>();
+        ArrayList<PromoCoupon> pcRides = new ArrayList<PromoCoupon>();
+        ArrayList<PromoCoupon> pcMenus = new ArrayList<PromoCoupon>();
+        ArrayList<PromoCoupon> pcFatafat = new ArrayList<PromoCoupon>();
+        ArrayList<PromoCoupon> pcMeals = new ArrayList<PromoCoupon>();
+
+        fillMasterPromoCoupons(promCouponResponse.getCommonPromotions(), pcAll, pcRides, pcMenus, pcFatafat, pcMeals);
+        fillMasterPromoCoupons(promCouponResponse.getCommonCoupons(), pcAll, pcRides, pcMenus, pcFatafat, pcMeals);
+
+        if(promCouponResponse.getAutosPromotions() != null)
+            pcRides.addAll(promCouponResponse.getAutosPromotions());
+        if(promCouponResponse.getAutosCoupons() != null)
+            pcRides.addAll(promCouponResponse.getAutosCoupons());
+
+        if(promCouponResponse.getMenusPromotions() != null)
+            pcMenus.addAll(promCouponResponse.getMenusPromotions());
+        if(promCouponResponse.getMenusCoupons() != null)
+            pcMenus.addAll(promCouponResponse.getMenusCoupons());
+
+        if(promCouponResponse.getFreshPromotions() != null)
+            pcFatafat.addAll(promCouponResponse.getFreshPromotions());
+        if(promCouponResponse.getFreshCoupons() != null)
+            pcFatafat.addAll(promCouponResponse.getFreshCoupons());
+        if(promCouponResponse.getGroceryPromotions() != null)
+            pcFatafat.addAll(promCouponResponse.getGroceryPromotions());
+        if(promCouponResponse.getGroceryCoupons() != null)
+            pcFatafat.addAll(promCouponResponse.getGroceryCoupons());
+
+        if(promCouponResponse.getMealsPromotions() != null)
+            pcMeals.addAll(promCouponResponse.getMealsPromotions());
+        if(promCouponResponse.getMealsCoupons() != null)
+            pcMeals.addAll(promCouponResponse.getMealsCoupons());
+
+
+        if(pcAll.size() > 0){
+            pcAll = countAndRemoveDuplicatePromoCoupons(pcAll);
+            for(PromoCoupon pc : pcAll){
+                promosList.add(new Promo(getString(R.string.all), pc, R.drawable.ic_promo_all, -1));
+            }
+        }
+        if(pcRides.size() > 0) {
+            pcRides = countAndRemoveDuplicatePromoCoupons(pcRides);
+            for(PromoCoupon pc : pcRides){
+                promosList.add(new Promo(getString(R.string.rides), pc, R.drawable.ic_promo_rides, R.color.theme_color));
+            }
+        }
+        if(pcMeals.size() > 0) {
+            pcMeals = countAndRemoveDuplicatePromoCoupons(pcMeals);
+            for(PromoCoupon pc : pcMeals){
+                promosList.add(new Promo(getString(R.string.meals), pc, R.drawable.ic_promo_meals, R.color.pink_meals_fab));
+            }
+        }
+        if(pcFatafat.size() > 0) {
+            pcFatafat = countAndRemoveDuplicatePromoCoupons(pcFatafat);
+            for(PromoCoupon pc : pcFatafat){
+                promosList.add(new Promo(getString(R.string.fatafat), pc, R.drawable.ic_promo_fresh, R.color.green_fresh_fab));
+            }
+        }
+        if(pcMenus.size() > 0) {
+            pcMenus = countAndRemoveDuplicatePromoCoupons(pcMenus);
+            for(PromoCoupon pc : pcMenus){
+                promosList.add(new Promo(getString(R.string.menus), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
+            }
+        }
+
+
+    }
+
+
+    private ArrayList<PromoCoupon> countAndRemoveDuplicatePromoCoupons(ArrayList<PromoCoupon> promoCoupons){
+        for(PromoCoupon promoCoupon : promoCoupons){
+            if(promoCoupon instanceof CouponInfo){
+                ((CouponInfo)promoCoupon).setCheckWithCouponId(true);
+            }
+            promoCoupon.setRepeatedCount(Collections.frequency(promoCoupons, promoCoupon));
+        }
+
+        Set set = new TreeSet(new Comparator<PromoCoupon>() {
+            @Override
+            public int compare(PromoCoupon o1, PromoCoupon o2) {
+                if (o1.equals(o2)) {
+                    return 0;
+                }
+                return 1;
+            }
+        });
+        set.addAll(promoCoupons);
+        promoCoupons = new ArrayList<>(set);
+        return promoCoupons;
+    }
+
+
+    private void updateUserCouponsToCleverTap1(List<Promo> promos) {
+        try{
+            ArrayList<String> coupons = new ArrayList<>();
+            double maxValue = 0.0;
+            if(promos != null) {
+                for(Promo promo : promos) {
+                    coupons.add(promo.getPromoCoupon().getTitle());
+                    String value = MyApplication.getInstance().getCleverTapUtils().getCouponValue(promo.getPromoCoupon().getTitle());
+                    if (value.length() > 0) {
+                        coupons.add(value);
+                        maxValue = MyApplication.getInstance().getCleverTapUtils().getCouponMaxValue(maxValue, value);
+                    }
+                }
+            }
+            MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
+
+            DecimalFormat df = new DecimalFormat("#.##");
+            HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+            profileUpdate.put(Events.MAX_COUPON_VALUE, df.format(maxValue));
+            MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

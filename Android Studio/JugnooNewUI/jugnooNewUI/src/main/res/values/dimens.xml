@@ -864,5 +864,14 @@
     <dimen name="dp_182">
         182dp
     </dimen>
+    <dimen name="dp_90">
+        90dp
+    </dimen>
+    <dimen name="dp_29">
+        29dp
+    </dimen>
+    <dimen name="sp_8">
+        8sp
+    </dimen>
 
 </resources>

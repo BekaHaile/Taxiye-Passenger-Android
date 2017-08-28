@@ -535,6 +535,7 @@
 
     <string name="tnc_apply">T&amp;C Apply</string>
     <string name="tnc">T&amp;C</string>
+    <string name="tnc_applied">*T&amp;C Applied</string>
     <string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
 		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
@@ -1365,6 +1366,9 @@
     <string name="label_cancel_edit_order">Click on cancel to edit your order</string>
     <string name="fugu_support_title">Support</string>
     <string name="error_no_rating">Please select a rating</string>
+    <string name="all">All</string>
+    <string name="can_be_used_format">Can be used %s times</string>
+    <string name="applied_on_all_offerings">Applied on all offerings</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

@@ -287,5 +287,8 @@
     <color name="logout_text_color">#adadb5</color>
     <color name="logout_text_color_alpha">#99adadb5</color>
 
+    <color name="promo_all_text_color">#ec8c81</color>
+    <color name="promo_text_color_light_grey">#8d8d8d</color>
+
 
 </resources>
