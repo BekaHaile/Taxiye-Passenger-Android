@@ -36,11 +36,13 @@ public class PromoAdapter extends RecyclerView.Adapter<PromoAdapter.ViewHolder> 
 	private Activity activity;
 	private ArrayList<Promo> promosList = new ArrayList<>();
 	private RecyclerView recyclerView;
+	private Callback callback;
 
-	public PromoAdapter(Activity activity, ArrayList<Promo> promosList, RecyclerView recyclerView) {
+	public PromoAdapter(Activity activity, ArrayList<Promo> promosList, RecyclerView recyclerView, Callback callback) {
 		this.activity = activity;
 		this.promosList = promosList;
 		this.recyclerView = recyclerView;
+		this.callback = callback;
 	}
 
 	@Override
@@ -89,7 +91,9 @@ public class PromoAdapter extends RecyclerView.Adapter<PromoAdapter.ViewHolder> 
 		if(pos != RecyclerView.NO_POSITION){
 			switch(viewClicked.getId()){
 				case R.id.rl:
-
+					if(callback != null){
+						callback.onPromoClick(promosList.get(pos));
+					}
 					break;
 			}
 		}
@@ -123,5 +127,9 @@ public class PromoAdapter extends RecyclerView.Adapter<PromoAdapter.ViewHolder> 
 			tvOfferingName.setTypeface(Fonts.mavenMedium(view.getContext()), Typeface.BOLD);
 			tvPromoTitle.setTypeface(Fonts.mavenMedium(view.getContext()), Typeface.BOLD);
 		}
+	}
+
+	public interface Callback{
+		void onPromoClick(Promo promo);
 	}
 }

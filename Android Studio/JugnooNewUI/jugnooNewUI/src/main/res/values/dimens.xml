@@ -873,5 +873,11 @@
     <dimen name="sp_8">
         8sp
     </dimen>
+    <dimen name="dp_293">
+        293dp
+    </dimen>
+    <dimen name="dp_153">
+        153dp
+    </dimen>
 
 </resources>

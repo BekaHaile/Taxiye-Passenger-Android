@@ -156,18 +156,16 @@
         android:id="@+id/linearLayoutNoOffers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rlEnterPromo"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dp_30"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:layout_centerInParent="true"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="@dimen/dp_120"
-            android:layout_height="@dimen/dp_170"
-            android:src="@drawable/ic_no_items"
+            android:layout_width="@dimen/dp_293"
+            android:layout_height="@dimen/dp_153"
+            android:src="@drawable/ic_no_coupons"
             />
 
         <TextView
@@ -175,10 +173,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
-            android:text="@string/no_offers_currently"
+            android:text="@string/no_coupons_available"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/sp_13"
+            android:textSize="@dimen/sp_14"
             app:font="maven"
+            android:alpha="0.6"
             />
 
     </LinearLayout>

@@ -139,7 +139,13 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         recyclerViewOffers.setItemAnimator(new DefaultItemAnimator());
         recyclerViewOffers.setHasFixedSize(false);
 
-        promoAdapter = new PromoAdapter(this, promosList, recyclerViewOffers);
+        promoAdapter = new PromoAdapter(this, promosList, recyclerViewOffers, new PromoAdapter.Callback() {
+            @Override
+            public void onPromoClick(Promo promo) {
+                openPromoDescriptionFragment(promo.getName(), promo.getClientId(), promo.getPromoCoupon());
+                GAUtils.event(SIDE_MENU, PROMOTIONS + OFFER + TNC + CLICKED, promo.getPromoCoupon().getTitle());
+            }
+        });
         recyclerViewOffers.setAdapter(promoAdapter);
 
         textViewFreeRides.setOnClickListener(new View.OnClickListener() {
@@ -649,31 +655,31 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         if(pcAll.size() > 0){
             pcAll = countAndRemoveDuplicatePromoCoupons(pcAll);
             for(PromoCoupon pc : pcAll){
-                promosList.add(new Promo(getString(R.string.all), pc, R.drawable.ic_promo_all, -1));
+                promosList.add(new Promo(getString(R.string.all), Config.getAutosClientId(), pc, R.drawable.ic_promo_all, -1));
             }
         }
         if(pcRides.size() > 0) {
             pcRides = countAndRemoveDuplicatePromoCoupons(pcRides);
             for(PromoCoupon pc : pcRides){
-                promosList.add(new Promo(getString(R.string.rides), pc, R.drawable.ic_promo_rides, R.color.theme_color));
+                promosList.add(new Promo(getString(R.string.rides), Config.getAutosClientId(), pc, R.drawable.ic_promo_rides, R.color.theme_color));
             }
         }
         if(pcMeals.size() > 0) {
             pcMeals = countAndRemoveDuplicatePromoCoupons(pcMeals);
             for(PromoCoupon pc : pcMeals){
-                promosList.add(new Promo(getString(R.string.meals), pc, R.drawable.ic_promo_meals, R.color.pink_meals_fab));
+                promosList.add(new Promo(getString(R.string.meals), Config.getMealsClientId(), pc, R.drawable.ic_promo_meals, R.color.pink_meals_fab));
             }
         }
         if(pcFatafat.size() > 0) {
             pcFatafat = countAndRemoveDuplicatePromoCoupons(pcFatafat);
             for(PromoCoupon pc : pcFatafat){
-                promosList.add(new Promo(getString(R.string.fatafat), pc, R.drawable.ic_promo_fresh, R.color.green_fresh_fab));
+                promosList.add(new Promo(getString(R.string.fatafat), Config.getFreshClientId(), pc, R.drawable.ic_promo_fresh, R.color.green_fresh_fab));
             }
         }
         if(pcMenus.size() > 0) {
             pcMenus = countAndRemoveDuplicatePromoCoupons(pcMenus);
             for(PromoCoupon pc : pcMenus){
-                promosList.add(new Promo(getString(R.string.menus), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
+                promosList.add(new Promo(getString(R.string.menus), Config.getMenusClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
             }
         }
 

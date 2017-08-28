@@ -8,12 +8,13 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 
 public class Promo {
 
-	private String name;
+	private String name, clientId;
 	private PromoCoupon promoCoupon;
 	private int iconRes, lineColorRes;
 
-	public Promo(String name, PromoCoupon promoCoupon, int iconRes, int lineColorRes) {
+	public Promo(String name, String clientId, PromoCoupon promoCoupon, int iconRes, int lineColorRes) {
 		this.name = name;
+		this.clientId = clientId;
 		this.promoCoupon = promoCoupon;
 		this.iconRes = iconRes;
 		this.lineColorRes = lineColorRes;
@@ -49,5 +50,13 @@ public class Promo {
 
 	public void setPromoCoupon(PromoCoupon promoCoupon) {
 		this.promoCoupon = promoCoupon;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
 	}
 }

@@ -21,7 +21,7 @@
             android:layout_width="@dimen/dp_2"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dp_4"
-            android:layout_marginLeft="3.3dp"
+            android:layout_marginLeft="3dp"
             android:layout_marginTop="1.5dp"
             android:background="@drawable/ic_promo_all_line"
             />
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_25"
             android:layout_toRightOf="@+id/llOffering"
             android:orientation="vertical"
             >
