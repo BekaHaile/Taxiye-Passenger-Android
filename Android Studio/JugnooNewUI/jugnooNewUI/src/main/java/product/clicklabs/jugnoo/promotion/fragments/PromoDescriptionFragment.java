@@ -146,7 +146,7 @@ public class PromoDescriptionFragment extends Fragment {
 						public void run() {
 							applyCoupon(clientId);
 						}
-					}, 350);
+					}, 100);
 				}
 			});
 		}

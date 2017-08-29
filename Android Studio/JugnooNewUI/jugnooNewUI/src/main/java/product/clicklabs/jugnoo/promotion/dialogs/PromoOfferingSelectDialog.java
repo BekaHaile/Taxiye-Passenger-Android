@@ -2,8 +2,10 @@ package product.clicklabs.jugnoo.promotion.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
@@ -32,9 +34,11 @@ public class PromoOfferingSelectDialog {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
+			dialog.getWindow().setGravity(Gravity.CENTER);
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(true);
 
+			RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
 			TextView tvRides = (TextView) dialog.findViewById(R.id.tvRides);
 			TextView tvMeals = (TextView) dialog.findViewById(R.id.tvMeals);
 			TextView tvFresh = (TextView) dialog.findViewById(R.id.tvFresh);
@@ -63,6 +67,13 @@ public class PromoOfferingSelectDialog {
 			tvMeals.setOnClickListener(onClickListener);
 			tvFresh.setOnClickListener(onClickListener);
 			tvMenus.setOnClickListener(onClickListener);
+
+			relative.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dismiss();
+				}
+			});
 
 			dialog.show();
 			return dialog;
