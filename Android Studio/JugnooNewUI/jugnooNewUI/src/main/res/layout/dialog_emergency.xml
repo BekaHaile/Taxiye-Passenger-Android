@@ -104,8 +104,9 @@
                 android:layout_marginTop="0px"
                 android:background="@drawable/button_white_grey_br_selector"
                 android:text="@string/cancel"
+                android:textAllCaps="true"
                 android:textColor="@color/text_color"
-                android:textSize="30px"/>
+                android:textSize="32px"/>
 
         </LinearLayout>
 
