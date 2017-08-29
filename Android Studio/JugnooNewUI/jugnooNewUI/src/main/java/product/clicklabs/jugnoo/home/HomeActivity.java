@@ -5438,7 +5438,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                         relativeLayoutPinEtaRotate.setVisibility(View.VISIBLE);
                                     }
                                     if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-                                        textView.setHint(getResources().getString(R.string.set_pickup_location));
+                                        textView.setHint(getResources().getString(R.string.getting_address));
                                         textView.setText(address);
                                         Data.autoData.setPickupAddress(address);
                                         SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
