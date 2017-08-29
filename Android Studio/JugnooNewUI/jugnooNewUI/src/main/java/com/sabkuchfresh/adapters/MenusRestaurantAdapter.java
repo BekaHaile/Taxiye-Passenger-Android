@@ -1002,9 +1002,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         try {
             if(!refreshingAutoComplete) {
                 if (MyApplication.getInstance().isOnline()) {
-//                    if(queryMap.containsKey(searchText)){
-//                        searchVendors(searchText, queryMap.get(searchText));
-//                    } else {
+                    if(queryMap.containsKey(searchText)){
+                        searchVendors(searchText, queryMap.get(searchText));
+                    } else {
                         HashMap<String, String> params = new HashMap<>();
                         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                         params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
@@ -1050,7 +1050,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                 recallSearch(searchText);
                             }
                         });
-//                    }
+                    }
                 } else {
                     refreshingAutoComplete = true;
                     searchVendors(searchText, null);
