@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.emergency;
 import android.app.Dialog;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,13 +44,13 @@ public class EmergencyDisableDialog {
 			dialog.setCanceledOnTouchOutside(true);
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
-			ImageView close = (ImageView) dialog.findViewById(R.id.close);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
 			textHead.setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewMessage = (TextView) dialog.findViewById(R.id.textMessage);
 			textViewMessage.setTypeface(Fonts.mavenRegular(activity));
 
-			close.setOnClickListener(new View.OnClickListener() {
+			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();

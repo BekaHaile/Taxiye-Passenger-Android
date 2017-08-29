@@ -180,7 +180,7 @@
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20px"
-                    android:layout_marginLeft="100px"
+                    android:layout_marginLeft="60px"
                     android:layout_toLeftOf="@+id/textViewRSRateYourRide"
                     android:src="@color/text_color"/>
 
@@ -189,7 +189,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="@string/rate_your_ride"
+                    android:text="@string/how_was_your_experience"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36"/>
 
@@ -198,7 +198,7 @@
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20px"
-                    android:layout_marginRight="100px"
+                    android:layout_marginRight="60px"
                     android:layout_toRightOf="@+id/textViewRSRateYourRide"
                     android:src="@color/text_color"/>
             </RelativeLayout>

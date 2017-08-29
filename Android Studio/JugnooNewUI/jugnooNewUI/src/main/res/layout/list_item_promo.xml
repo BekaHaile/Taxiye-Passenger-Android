@@ -12,7 +12,8 @@
         android:layout_height="@dimen/dp_90"
         android:layout_marginLeft="@dimen/dp_12"
         android:layout_marginRight="@dimen/dp_12"
-        android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="-2dp"
         android:background="@drawable/ic_promo_bg"
         >
 

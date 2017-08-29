@@ -1370,6 +1370,7 @@
     <string name="can_be_used_format">Can be used %s times</string>
     <string name="applied_on_all_offerings">Applied on all offerings</string>
     <string name="no_coupons_available">No Coupons Available</string>
+    <string name="how_was_your_experience">How was your Experience?</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>
