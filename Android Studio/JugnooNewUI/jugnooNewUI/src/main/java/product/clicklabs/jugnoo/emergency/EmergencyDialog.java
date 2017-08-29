@@ -5,7 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -66,7 +66,8 @@ public class EmergencyDialog {
 				textViewInAppCustomerSupport.setText(R.string.chat_with_us);
 			}
 
-			ImageView imageViewClose = (ImageView)dialog.findViewById(R.id.imageViewClose);
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+			btnCancel.setTypeface(Fonts.mavenRegular(activity));
 
 			View.OnClickListener onClickListener = new View.OnClickListener() {
 				@Override
@@ -92,7 +93,7 @@ public class EmergencyDialog {
 							dialog.dismiss();
 							break;
 
-						case R.id.imageViewClose:
+						case R.id.btnCancel:
 							callBack.onDialogClosed(v);
 							dialog.dismiss();
 							break;
@@ -112,7 +113,7 @@ public class EmergencyDialog {
 			textViewEnableEmergencyMode.setOnClickListener(onClickListener);
 			textViewSendRideStatus.setOnClickListener(onClickListener);
 			textViewInAppCustomerSupport.setOnClickListener(onClickListener);
-			imageViewClose.setOnClickListener(onClickListener);
+			btnCancel.setOnClickListener(onClickListener);
 			linearLayoutInner.setOnClickListener(onClickListener);
 			relative.setOnClickListener(onClickListener);
 

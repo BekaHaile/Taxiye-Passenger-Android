@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.dialogs.PromoOfferingSelectDialog;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -129,7 +130,15 @@ public class PromoDescriptionFragment extends Fragment {
 			if(!TextUtils.isEmpty(clientId)) {
 				applyCoupon(clientId);
 			} else {
-				getPromoOfferingSelectDialog().show();
+//				getPromoOfferingSelectDialog().show();
+				DialogPopup.alertPopupWithListener(getActivity(), "", context.getString(R.string.to_use_this_coupon),
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								getActivity().finish();
+								getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
+							}
+						});
 			}
 		}
 	}

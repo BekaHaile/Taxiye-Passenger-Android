@@ -9,7 +9,7 @@
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
     android:animateLayoutChanges="true"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <LinearLayout
         android:id="@+id/linearLayoutRideSummaryContainer"
@@ -260,7 +260,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/bad"
-                    android:layout_marginLeft="160px"
+                    android:layout_marginLeft="180px"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:visibility="visible"
@@ -272,7 +272,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/great"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="120px"
+                    android:layout_marginRight="145px"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:visibility="visible"

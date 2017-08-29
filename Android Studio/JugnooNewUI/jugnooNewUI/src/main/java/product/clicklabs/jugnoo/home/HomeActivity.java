@@ -6604,6 +6604,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 									passengerScreenMode = PassengerScreenMode.P_INITIAL;
 									switchPassengerScreen(passengerScreenMode);
 									DialogPopup.alertPopup(HomeActivity.this, "", message);
+                                    dismissSOSDialog();
 								}
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -7728,9 +7729,10 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
     public static String CALL = "CALL", SMS = "SMS", CALL_100 = "CALL_100";
 
+    private Dialog sosDialog;
     public void sosDialog(final Activity activity) {
         if (Data.userData.getEmergencyContactsList() != null) {
-            new EmergencyDialog(activity, Data.autoData.getcEngagementId(), new EmergencyDialog.CallBack() {
+            sosDialog = new EmergencyDialog(activity, Data.autoData.getcEngagementId(), new EmergencyDialog.CallBack() {
                 @Override
                 public void onEnableEmergencyModeClick(View view) {
                     Intent intent = new Intent(HomeActivity.this, EmergencyActivity.class);
@@ -7787,6 +7789,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
                 }
             }).show(Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0));
+        }
+    }
+
+    private void dismissSOSDialog(){
+        if(sosDialog != null && sosDialog.isShowing()){
+            sosDialog.dismiss();
         }
     }
 
