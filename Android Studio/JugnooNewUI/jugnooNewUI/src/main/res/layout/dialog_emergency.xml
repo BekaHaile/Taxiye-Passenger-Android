@@ -50,6 +50,14 @@
                 android:text="@string/enable_emergency_mode"
                 android:textAllCaps="true"
                 />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:background="@color/stroke_light_grey_alpha"
+                />
             
             <TextView
                 android:id="@+id/textViewSendRideStatus"
@@ -61,6 +69,14 @@
                 android:paddingLeft="40px"
                 android:text="@string/send_ride_status"
                 android:textAllCaps="true"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:background="@color/stroke_light_grey_alpha"
                 />
 
             <TextView
@@ -75,16 +91,27 @@
                 android:text="@string/in_app_customer_support"
                 android:textAllCaps="true"
                 />
-            
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/stroke_light_grey_alpha" />
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="match_parent"
+                android:layout_height="83px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0px"
+                android:background="@drawable/button_white_grey_br_selector"
+                android:text="@string/cancel"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color"
+                android:textSize="32px"/>
 
         </LinearLayout>
 
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageViewClose"
-        style="@style/cross_popup"
-        />
 
 </RelativeLayout>

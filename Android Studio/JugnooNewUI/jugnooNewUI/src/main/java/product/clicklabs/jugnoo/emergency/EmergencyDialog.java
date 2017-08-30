@@ -5,14 +5,13 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -66,7 +65,8 @@ public class EmergencyDialog {
 				textViewInAppCustomerSupport.setText(R.string.chat_with_us);
 			}
 
-			ImageView imageViewClose = (ImageView)dialog.findViewById(R.id.imageViewClose);
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+			btnCancel.setTypeface(Fonts.mavenRegular(activity));
 
 			View.OnClickListener onClickListener = new View.OnClickListener() {
 				@Override
@@ -75,7 +75,7 @@ public class EmergencyDialog {
 
 						case R.id.textViewEnableEmergencyMode:
 							if(modeEnabled == 1){
-								disableEmergencyMode();
+								callBack.onEmergencyModeDisabled(engagementId);
 							} else{
 								callBack.onEnableEmergencyModeClick(v);
 							}
@@ -92,7 +92,7 @@ public class EmergencyDialog {
 							dialog.dismiss();
 							break;
 
-						case R.id.imageViewClose:
+						case R.id.btnCancel:
 							callBack.onDialogClosed(v);
 							dialog.dismiss();
 							break;
@@ -112,7 +112,7 @@ public class EmergencyDialog {
 			textViewEnableEmergencyMode.setOnClickListener(onClickListener);
 			textViewSendRideStatus.setOnClickListener(onClickListener);
 			textViewInAppCustomerSupport.setOnClickListener(onClickListener);
-			imageViewClose.setOnClickListener(onClickListener);
+			btnCancel.setOnClickListener(onClickListener);
 			linearLayoutInner.setOnClickListener(onClickListener);
 			relative.setOnClickListener(onClickListener);
 
@@ -141,33 +141,11 @@ public class EmergencyDialog {
 	}
 
 
-	private void disableEmergencyMode(){
-		new ApiEmergencyDisable(activity, new ApiEmergencyDisable.Callback() {
-			@Override
-			public void onSuccess() {
-				callBack.onEmergencyModeDisabled();
-			}
 
-			@Override
-			public void onFailure() {
-
-			}
-
-			@Override
-			public void onRetry(View view) {
-				disableEmergencyMode();
-			}
-
-			@Override
-			public void onNoRetry(View view) {
-
-			}
-		}).emergencyDisable(engagementId);
-	}
 
 	public interface CallBack{
 		void onEnableEmergencyModeClick(View view);
-		void onEmergencyModeDisabled();
+		void onEmergencyModeDisabled(String engagementId);
 		void onSendRideStatusClick(View view);
 		void onInAppCustomerSupportClick(View view);
 		void onDialogClosed(View view);

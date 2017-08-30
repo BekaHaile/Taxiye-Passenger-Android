@@ -42,7 +42,6 @@ public class OfferingPromotionsAdapter extends RecyclerView.Adapter<OfferingProm
 	public void onBindViewHolder(ViewHolder holder, int position) {
 		OfferingPromotion offeringPromotion = offeringPromotions.get(position);
 		holder.tvOfferingName.setText(offeringPromotion.getName());
-//		holder.tvOfferingName.setCompoundDrawablesWithIntrinsicBounds(offeringPromotion.getLeftDrawableResource(), 0, 0, 0);
 
 		if(holder.promotionsAdapter == null){
 			holder.promotionsAdapter = new PromotionsAdapter(activity, offeringPromotion.getPromoCoupons(),

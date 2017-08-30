@@ -5438,7 +5438,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                         relativeLayoutPinEtaRotate.setVisibility(View.VISIBLE);
                                     }
                                     if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-                                        textView.setHint(getResources().getString(R.string.set_pickup_location));
+                                        textView.setHint(getResources().getString(R.string.getting_address));
                                         textView.setText(address);
                                         Data.autoData.setPickupAddress(address);
                                         SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
@@ -6604,6 +6604,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 									passengerScreenMode = PassengerScreenMode.P_INITIAL;
 									switchPassengerScreen(passengerScreenMode);
 									DialogPopup.alertPopup(HomeActivity.this, "", message);
+                                    dismissSOSDialog();
 								}
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -7728,9 +7729,10 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
     public static String CALL = "CALL", SMS = "SMS", CALL_100 = "CALL_100";
 
+    private Dialog sosDialog;
     public void sosDialog(final Activity activity) {
         if (Data.userData.getEmergencyContactsList() != null) {
-            new EmergencyDialog(activity, Data.autoData.getcEngagementId(), new EmergencyDialog.CallBack() {
+            sosDialog = new EmergencyDialog(activity, Data.autoData.getcEngagementId(), new EmergencyDialog.CallBack() {
                 @Override
                 public void onEnableEmergencyModeClick(View view) {
                     Intent intent = new Intent(HomeActivity.this, EmergencyActivity.class);
@@ -7744,8 +7746,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 }
 
                 @Override
-                public void onEmergencyModeDisabled() {
-                    updateTopBar();
+                public void onEmergencyModeDisabled(String engagementId) {
+                    disableEmergencyMode(engagementId);
                 }
 
                 @Override
@@ -7787,6 +7789,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
                 }
             }).show(Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0));
+        }
+    }
+
+    private void dismissSOSDialog(){
+        if(sosDialog != null && sosDialog.isShowing()){
+            sosDialog.dismiss();
         }
     }
 
@@ -7847,10 +7855,11 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         }
     }
 
-    private void disableEmergencyMode(final String engagementId){
+    public void disableEmergencyMode(final String engagementId){
         new ApiEmergencyDisable(this, new ApiEmergencyDisable.Callback() {
             @Override
             public void onSuccess() {
+                updateTopBar();
             }
 
             @Override

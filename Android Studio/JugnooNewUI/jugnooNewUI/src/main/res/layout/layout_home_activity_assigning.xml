@@ -142,10 +142,11 @@
             android:layout_toRightOf="@+id/imageViewAssigningDropLocationSearch"
             android:background="@color/transparent"
             android:gravity="center_vertical"
-            android:hint="@string/enter_your_destination"
+            android:hint="@string/enter_destination"
             android:paddingRight="20px"
             android:singleLine="true"
             android:textColor="@color/text_color"
+            android:textColorHint="@color/text_color_hint"
             android:textCursorDrawable="@null"
             android:textSize="30px" />
 

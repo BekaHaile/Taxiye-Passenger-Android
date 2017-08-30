@@ -18,28 +18,23 @@
         <TextView
             android:id="@+id/textHead"
             android:layout_width="match_parent"
-            android:layout_height="150px"
-            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/bg_menu_item_selector_tlrr"
             android:gravity="center"
             android:text="@string/everything_is_alright_caps"
             android:textColor="@color/theme_green_color"
-            android:textSize="@dimen/text_size_42"
-            android:visibility="visible" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@color/stroke_color_light" />
+            android:textSize="@dimen/text_size_36"
+            android:visibility="visible"
+            android:layout_marginTop="35px"
+            />
 
         <TextView
             android:id="@+id/textMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="45px"
-            android:layout_marginTop="45px"
+            android:layout_marginBottom="35px"
+            android:layout_marginTop="20px"
             android:gravity="center"
             android:paddingLeft="40px"
             android:paddingRight="40px"
@@ -47,10 +42,21 @@
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_30" />
 
-    </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/stroke_light_grey_alpha" />
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="match_parent"
+            android:layout_height="83px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="0px"
+            android:background="@drawable/button_white_grey_br_selector"
+            android:text="OK"
+            android:textColor="@color/text_color"
+            android:textSize="30px"/>
 
-    <ImageView
-        android:id="@+id/close"
-        style="@style/cross_popup" />
+    </LinearLayout>
 
 </RelativeLayout>
