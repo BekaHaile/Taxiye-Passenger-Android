@@ -674,14 +674,21 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     }
 
+    private ArrayList<MenusResponse.Vendor> previousVendors;
     public void toggleSearch(boolean clearEt) {
         if (searchOpened) {
             searchOpened = false;
             activity.getTopBar().etSearch.setText("");
             if(activity.getSearchedRestaurantIds()!=null)
             activity.getSearchedRestaurantIds().clear();
-            getAllMenus(true, activity.getSelectedLatLng(), false, true);
-          //  activity.fragmentUISetup(this);
+//            getAllMenus(true, activity.getSelectedLatLng(), false, true);
+            if(previousVendors != null){
+                vendors = previousVendors;
+            }
+            menusRestaurantAdapter.setList(vendors, menusRestaurantAdapter.getBannerInfos(),
+                    menusRestaurantAdapter.getStripInfo(), menusRestaurantAdapter.getShowBanner(), !hasMorePages);
+
+            //  activity.fragmentUISetup(this);
             if (keyboardLayoutListener.getKeyBoardState() == 1) {
                 activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
             }
@@ -693,6 +700,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             activity.getTopBar().animateSearchBar(false);
         } else {
             searchOpened = true;
+            previousVendors = vendors;
             menusRestaurantAdapter.setSearchApiHitOnce(false);
             if (clearEt) {
                 activity.getTopBar().etSearch.setText("");

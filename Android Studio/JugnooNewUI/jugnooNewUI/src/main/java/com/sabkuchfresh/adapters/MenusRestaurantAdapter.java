@@ -817,6 +817,18 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.searchApiHitOnce = searchApiHitOnce;
     }
 
+    public List<MenusResponse.BannerInfo> getBannerInfos() {
+        return bannerInfos;
+    }
+
+    public MenusResponse.StripInfo getStripInfo() {
+        return stripInfo;
+    }
+
+    public boolean getShowBanner() {
+        return showBanner;
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout rlRoot;

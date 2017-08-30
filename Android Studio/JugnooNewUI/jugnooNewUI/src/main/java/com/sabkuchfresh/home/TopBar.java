@@ -232,6 +232,7 @@ public class TopBar implements GAAction, GACategory {
 
                 case R.id.rlFilter:
                     if (activity instanceof FreshActivity) {
+                        Utils.hideSoftKeyboard(activity, etSearch);
                         ((FreshActivity) activity).openMenusFilter();
                     }
                     break;
