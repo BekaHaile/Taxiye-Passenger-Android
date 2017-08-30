@@ -99,7 +99,7 @@ public class PromoDescriptionFragment extends Fragment {
 		offerTitle.setSpan(new StyleSpan(Typeface.BOLD), 0, offerTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvOfferTitle.setText(offerTitle);
 
-		String expireDate = DateOperations.convertDateOnlyViaFormatSlash(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate()));
+		String expireDate = DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(promoCoupon.getExpiryDate()));
 		SpannableStringBuilder validUntilDate = new SpannableStringBuilder(context.getString(R.string.valid_until_format, expireDate));
 		validUntilDate.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.text_color_87)),
 				0, validUntilDate.length()-expireDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
