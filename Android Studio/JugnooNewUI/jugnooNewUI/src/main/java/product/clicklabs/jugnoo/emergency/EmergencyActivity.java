@@ -101,8 +101,6 @@ public class EmergencyActivity extends BaseFragmentActivity {
                         }, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                finish();
-                                overridePendingTransition(R.anim.left_in, R.anim.left_out);
                             }
                         }, false, false);
             } else {
