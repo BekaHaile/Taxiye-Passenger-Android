@@ -7746,8 +7746,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 }
 
                 @Override
-                public void onEmergencyModeDisabled() {
-                    updateTopBar();
+                public void onEmergencyModeDisabled(String engagementId) {
+                    disableEmergencyMode(engagementId);
                 }
 
                 @Override
@@ -7855,10 +7855,11 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         }
     }
 
-    private void disableEmergencyMode(final String engagementId){
+    public void disableEmergencyMode(final String engagementId){
         new ApiEmergencyDisable(this, new ApiEmergencyDisable.Callback() {
             @Override
             public void onSuccess() {
+                updateTopBar();
             }
 
             @Override

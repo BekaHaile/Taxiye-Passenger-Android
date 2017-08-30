@@ -553,7 +553,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                                 activity.setFilterCuisinesLocal(null);
                                                 checkIciciPaymentStatusApi(activity);
                                                 if (scrollToTop && recyclerViewRestaurant != null) {
-                                                    recyclerViewRestaurant.smoothScrollToPosition(0);
+                                                    recyclerViewRestaurant.scrollTo(0, 0);
 
                                                 }
 

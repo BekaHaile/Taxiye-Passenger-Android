@@ -160,6 +160,9 @@ public class MenusResponse implements Serializable {
 	}
 
 	public List<RecentOrder> getRecentOrders() {
+		if(recentOrders == null){
+			recentOrders = new ArrayList<>();
+		}
 		return recentOrders;
 	}
 

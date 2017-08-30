@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -76,7 +75,7 @@ public class EmergencyDialog {
 
 						case R.id.textViewEnableEmergencyMode:
 							if(modeEnabled == 1){
-								disableEmergencyMode();
+								callBack.onEmergencyModeDisabled(engagementId);
 							} else{
 								callBack.onEnableEmergencyModeClick(v);
 							}
@@ -142,33 +141,11 @@ public class EmergencyDialog {
 	}
 
 
-	private void disableEmergencyMode(){
-		new ApiEmergencyDisable(activity, new ApiEmergencyDisable.Callback() {
-			@Override
-			public void onSuccess() {
-				callBack.onEmergencyModeDisabled();
-			}
 
-			@Override
-			public void onFailure() {
-
-			}
-
-			@Override
-			public void onRetry(View view) {
-				disableEmergencyMode();
-			}
-
-			@Override
-			public void onNoRetry(View view) {
-
-			}
-		}).emergencyDisable(engagementId);
-	}
 
 	public interface CallBack{
 		void onEnableEmergencyModeClick(View view);
-		void onEmergencyModeDisabled();
+		void onEmergencyModeDisabled(String engagementId);
 		void onSendRideStatusClick(View view);
 		void onInAppCustomerSupportClick(View view);
 		void onDialogClosed(View view);
