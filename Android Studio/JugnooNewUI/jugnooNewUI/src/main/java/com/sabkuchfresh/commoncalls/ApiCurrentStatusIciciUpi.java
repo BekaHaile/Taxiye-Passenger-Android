@@ -2,8 +2,12 @@ package com.sabkuchfresh.commoncalls;
 
 import android.view.View;
 
+import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
+import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.home.OrderCompletDialog;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
 import com.sabkuchfresh.utils.AppConstant;
@@ -63,12 +67,17 @@ public class ApiCurrentStatusIciciUpi {
                                         placeOrderResponse.getIcici().setIciciPaymentOrderStatus(commonResponse.getStatus());
                                     }
                                 } else {
+
                                     Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
                                 }
                                 apiCurrentStatusListener.onGoToCheckout(commonResponse.getStatus());
 
 
+
+
+
                             } else {
+
 
                                 activity.saveCheckoutData(true);
                                 activity.clearAllCartAtOrderComplete();
@@ -82,7 +91,37 @@ public class ApiCurrentStatusIciciUpi {
                                     }
                                     activity.llCheckoutBarSetVisibilityDirect(View.GONE);
                                 }
+                                PlaceOrderResponse placeOrderResponse = Data.getCurrentIciciUpiTransaction(activity.getAppType());
+                                //Show Order Placed Popup
+                                if(placeOrderResponse!=null){
+                                    OrderCompletDialog orderCompletDialog;
+                                    if(placeOrderResponse.getReferralPopupContent()==null){
+                                        orderCompletDialog = new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+                                            @Override
+                                            public void onDismiss() {
+                                            }
+                                        });
+                                    }  else{
+                                        orderCompletDialog = new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
+                                            @Override
+                                            public void onDialogDismiss() {
+                                            }
+
+                                            @Override
+                                            public void onConfirmed() {
+                                            }
+                                        });
+                                    }
+                                    try {
+                                        FreshCheckoutMergedFragment.showOrderPlacedPopup(placeOrderResponse,activity.getAppType(),activity,orderCompletDialog);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
                                 Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
+
+
                             }
 
                         } else {
