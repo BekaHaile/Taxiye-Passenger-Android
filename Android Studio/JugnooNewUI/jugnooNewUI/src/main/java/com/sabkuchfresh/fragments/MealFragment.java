@@ -129,13 +129,13 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
 
-        mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this,null );
 
         recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
         recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
 //        recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
         recyclerViewCategoryItems.setHasFixedSize(false);
         ((SimpleItemAnimator) recyclerViewCategoryItems.getItemAnimator()).setSupportsChangeAnimations(false);
+        mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this,null,recyclerViewCategoryItems );
 
         noMealsView = (ImageView) rootView.findViewById(R.id.noMealsView);
         noMealsView.setVisibility(View.GONE);

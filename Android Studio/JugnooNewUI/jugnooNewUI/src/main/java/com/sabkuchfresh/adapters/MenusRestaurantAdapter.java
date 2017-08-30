@@ -817,6 +817,18 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.searchApiHitOnce = searchApiHitOnce;
     }
 
+    public List<MenusResponse.BannerInfo> getBannerInfos() {
+        return bannerInfos;
+    }
+
+    public MenusResponse.StripInfo getStripInfo() {
+        return stripInfo;
+    }
+
+    public boolean getShowBanner() {
+        return showBanner;
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout rlRoot;
@@ -985,15 +997,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
         int oldLength = searchText.length();
         searchText = s;
-//        if(searchText.length() > 2) {
+        if(searchText.length() > 2) {
             searchRestaurantsAutoComplete(searchText);
-//        } else {
-//            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
-//                searchVendors("", null);
-//            } else if(vendorsFiltered.size() > 0 && vendorsToShow.size() == 0){
-//                searchVendors("", null);
-//            }
-//        }
+        } else {
+            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
+                searchVendors("", null);
+            } else if(vendorsFiltered.size() > 0 && vendorsToShow.size() == 0){
+                searchVendors("", null);
+            }
+        }
     }
 
     private HashMap<String, List<Integer>> queryMap = new HashMap<>();
@@ -1002,9 +1014,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         try {
             if(!refreshingAutoComplete) {
                 if (MyApplication.getInstance().isOnline()) {
-//                    if(queryMap.containsKey(searchText)){
-//                        searchVendors(searchText, queryMap.get(searchText));
-//                    } else {
+                    if(queryMap.containsKey(searchText)){
+                        searchVendors(searchText, queryMap.get(searchText));
+                    } else {
                         HashMap<String, String> params = new HashMap<>();
                         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                         params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
@@ -1050,7 +1062,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                 recallSearch(searchText);
                             }
                         });
-//                    }
+                    }
                 } else {
                     refreshingAutoComplete = true;
                     searchVendors(searchText, null);

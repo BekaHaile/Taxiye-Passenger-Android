@@ -63,9 +63,29 @@ public class PlaceOrderResponse {
 		return icici;
 	}
 
+	private Slot slot;
 
+	public void setIcici(IciciUpi icici) {
+		this.icici = icici;
+	}
 
+	public Slot getSlot() {
+		return slot;
+	}
 
+	public void setSlot(Slot slot) {
+		this.slot = slot;
+	}
+
+	private String restaurantName;
+
+	public String getRestaurantName() {
+		return restaurantName==null?"":restaurantName;
+	}
+
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
+	}
 
 	public class IciciUpi {
 		@SerializedName("expiration_time")

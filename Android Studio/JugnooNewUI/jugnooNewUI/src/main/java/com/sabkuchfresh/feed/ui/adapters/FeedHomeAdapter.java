@@ -563,7 +563,10 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         Linkify.addLinks(textView,PATTERN_PHONE_NUMBER_LOCAL_PATTERN,"tel: ");
         Linkify.addLinks(textView, Patterns.EMAIL_ADDRESS,"mailto: ");
-        Linkify.addLinks(textView,Patterns.WEB_URL,"http:// ");
+        Pattern httpPattern = Pattern.compile("[a-z]+:\\/\\/[^ \\n]*");
+        Linkify.addLinks(textView, httpPattern,"");
+        Linkify.addLinks(textView,Patterns.WEB_URL,"http://");
+
     }
 
     @Override

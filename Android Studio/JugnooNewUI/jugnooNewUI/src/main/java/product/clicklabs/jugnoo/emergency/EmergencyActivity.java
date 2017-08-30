@@ -1,17 +1,21 @@
 package product.clicklabs.jugnoo.emergency;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyContactsFragment;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyModeEnabledFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 public class EmergencyActivity extends BaseFragmentActivity {
@@ -24,20 +28,6 @@ public class EmergencyActivity extends BaseFragmentActivity {
 
     RelativeLayout relativeLayoutContainer;
     int mode;
-
-    @Override
-    public void onStart() {
-        super.onStart();
-//        FlurryAgent.init(this, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(this, Config.getFlurryKey());
-//        FlurryAgent.onEvent(EmergencyActivity.class.getSimpleName() + " started");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-//        FlurryAgent.onEndSession(this);
-    }
 
     @Override
     protected void onResume() {
@@ -98,8 +88,25 @@ public class EmergencyActivity extends BaseFragmentActivity {
 
     public void performBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            finish();
-            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            if(mode == EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal()
+                    && Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0) == 1){
+                DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+                        getString(R.string.are_you_sure_want_to_disable_emergency),
+                        "", "", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String engagementId = getIntent().getStringExtra(Constants.KEY_ENGAGEMENT_ID);
+                                disableEmergencyMode(engagementId);
+                            }
+                        }, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        }, false, false);
+            } else {
+                finish();
+                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            }
         } else {
             super.onBackPressed();
         }
@@ -140,6 +147,30 @@ public class EmergencyActivity extends BaseFragmentActivity {
         public void setOrdinal(int ordinal) {
             this.ordinal = ordinal;
         }
+    }
+
+    public void disableEmergencyMode(final String engagementId){
+        new ApiEmergencyDisable(this, new ApiEmergencyDisable.Callback() {
+            @Override
+            public void onSuccess() {
+                finish();
+                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            }
+
+            @Override
+            public void onFailure() {
+            }
+
+            @Override
+            public void onRetry(View view) {
+                disableEmergencyMode(engagementId);
+            }
+
+            @Override
+            public void onNoRetry(View view) {
+
+            }
+        }).emergencyDisable(engagementId);
     }
 
 }

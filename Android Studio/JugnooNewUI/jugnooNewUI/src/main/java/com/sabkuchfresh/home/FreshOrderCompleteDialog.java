@@ -28,7 +28,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by shankar on 3/4/16.
  */
-public class FreshOrderCompleteDialog {
+public class FreshOrderCompleteDialog extends OrderCompletDialog {
 
 	private final String TAG = FreshOrderCompleteDialog.class.getSimpleName();
 	private Activity activity;
@@ -246,6 +246,11 @@ public class FreshOrderCompleteDialog {
         }
         return dialog;
     }
+
+	@Override
+	public Dialog getDialog() {
+		return dialog;
+	}
 
 
 	public interface Callback{

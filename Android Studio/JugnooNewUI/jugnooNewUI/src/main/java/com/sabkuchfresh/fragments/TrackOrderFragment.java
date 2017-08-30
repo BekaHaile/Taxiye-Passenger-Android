@@ -260,8 +260,8 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 	public void setMapPaddingAndMoveCamera(){
 		if(googleMap != null && rootHeight > 0) {
-			expanded = false;
-			googleMap.setPadding(0, 0, 0, rootHeight - initialHeight);
+			expanded = !tiltState;
+			googleMap.setPadding(0, 0, 0, expanded ? 0 : (rootHeight - initialHeight));
 
 			try {
 				if (MapUtils.distance(pickupLatLng, deliveryLatLng) > 10) {
@@ -565,7 +565,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 												polylinePath1 = googleMap.addPolyline(polylineOptions1);
 												polylinePath2 = googleMap.addPolyline(polylineOptions2);
 											}
-											if (zoomedFirstTime) {
+											if (zoomedFirstTime && expanded) {
 												zoomToDriverAndDrop();
 											}
 										} catch (Exception e) {

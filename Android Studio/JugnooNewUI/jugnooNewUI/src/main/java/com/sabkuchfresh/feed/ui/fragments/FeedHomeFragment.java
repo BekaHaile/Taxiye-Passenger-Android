@@ -735,6 +735,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.feed_home_menu, menu);
         itemCart = menu.findItem(R.id.item_notification);
         setNotificationCount(notificationsSeenCount);

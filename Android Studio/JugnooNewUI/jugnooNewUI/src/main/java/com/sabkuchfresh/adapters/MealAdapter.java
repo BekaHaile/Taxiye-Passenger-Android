@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DiscountInfo;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
@@ -53,6 +54,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private ProductsResponse.MealsBulkBanner mealsBulkBanner;
     private DiscountInfo discountInfo;
     private boolean showDiscountedPrices;
+    private RecyclerView recyclerView;
 
 
 
@@ -71,13 +73,15 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.possibleStatus = new ArrayList<>();
     }
 
-    public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback, DiscountInfo discountInfo) {
+    public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback, DiscountInfo discountInfo, RecyclerView recyclerView) {
         this.activity = activity;
+        this.recyclerView = recyclerView;
         this.subItems = subItems;
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
         this.callback = callback;
         this.discountInfo = discountInfo;
+
         scheduleHandlerForUpdatingDiscountTime(true, true);
 
     }
@@ -207,12 +211,14 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
                         mHolder.tvLikeCount.setText(noOfLikesLabel);
                         mHolder.rlLikeLayout.setVisibility(View.VISIBLE);
-                        if(subItem.getIsLiked()){
+                         mHolder.likeButton.setLiked(subItem.getIsLiked());
+
+                   /* if(subItem.getIsLiked()){
                             mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_active_new,0,0,0);
                         }else {
                             mHolder.tvLikeCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_new,0,0,0);
 
-                        }
+                        }*/
 
                     mHolder.rlLikeLayout.setTag(position);
                     mHolder.rlLikeLayout.setOnClickListener(new View.OnClickListener() {
@@ -527,11 +533,14 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 if (subItem.isLikeAPIInProgress()) {
                     subItem.setLikeAPIInProgress(false);
                     if (isLiked) {
-                        /*FeedHomeAdapter.ViewHolderReviewImage viewHolderReviewImage = ((FeedHomeAdapter.ViewHolderReviewImage)recyclerView.findViewHolderForAdapterPosition(position));
+                        if(recyclerView!=null){
+                           MealAdapter.ViewHolderSlot viewHolderReviewImage = ((MealAdapter.ViewHolderSlot)recyclerView.findViewHolderForAdapterPosition(position));
                         if(viewHolderReviewImage!=null) {
-                            LikeButton likeButton = viewHolderReviewImage.likeButtonAnimate;
+                            LikeButton likeButton = viewHolderReviewImage.likeButton;
                             likeButton.onClick(likeButton);
-                        }*/
+                        }
+                        }
+
                         subItem.setLikeCount(subItem.getLikeCount() + 1);
                     } else if (subItem.getLikeCount() > 0)
                         subItem.setLikeCount(subItem.getLikeCount() - 1);
@@ -564,6 +573,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public TextViewStrikeThrough tvDiscountedPrice;
         public TextView tvDiscountedOffer,tvLikeCount;
         private RelativeLayout rlLikeLayout;
+        private LikeButton likeButton;
 
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
@@ -578,6 +588,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             imageClosed = (ImageView) itemView.findViewById(R.id.image_view_closed);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
+            likeButton = (LikeButton) itemView.findViewById(R.id.like_button_animate);
 
             textViewTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
             textViewTitle.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);

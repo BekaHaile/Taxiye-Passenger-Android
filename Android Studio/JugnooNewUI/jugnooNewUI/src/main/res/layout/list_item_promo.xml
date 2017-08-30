@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_90"
+        android:layout_marginLeft="@dimen/dp_12"
+        android:layout_marginRight="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="-2.5dp"
+        android:background="@drawable/ic_promo_bg"
+        >
+
+        <ImageView
+            android:id="@+id/ivOfferingLine"
+            android:layout_width="@dimen/dp_2"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dp_4"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="1.5dp"
+            android:background="@drawable/ic_promo_all_line"
+            />
+
+
+        <LinearLayout
+            android:id="@+id/llOffering"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            >
+
+            <ImageView
+                android:id="@+id/ivOfferingIcon"
+                android:layout_width="@dimen/dp_29"
+                android:layout_height="@dimen/dp_29"
+                android:src="@drawable/ic_promo_all"
+                />
+
+            <TextView
+                android:id="@+id/tvOfferingName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_2"
+                android:text="All"
+                android:textColor="@color/promo_all_text_color"
+                android:textSize="@dimen/sp_8"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llPromoContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_25"
+            android:layout_toRightOf="@+id/llOffering"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/tvPromoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="50% cashback via \nshdh"
+                android:textColor="@color/text_color_selector"
+                android:textSize="@dimen/sp_14"
+                />
+
+            <TextView
+                android:id="@+id/tvPromoExpireTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:text="Valid until 20 June, 2017"
+                android:textColor="@color/promo_text_color_light_grey"
+                android:textSize="@dimen/sp_10"
+                app:font="@string/maven_r"
+                />
+
+            <TextView
+                android:id="@+id/tvPromoInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:text="Can be used 3 times"
+                android:textColor="@color/promo_text_color_light_grey"
+                android:textSize="@dimen/sp_10"
+                app:font="@string/maven_r"
+                />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvTNC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_15"
+            android:text="@string/tnc_applied"
+            android:textColor="@color/promo_text_color_light_grey"
+            android:textSize="@dimen/sp_10"
+            app:font="@string/maven_r"
+            />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

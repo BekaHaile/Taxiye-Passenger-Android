@@ -104,25 +104,51 @@
                     android:background="@drawable/bg_like_layout_meal_item"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentBottom="true"
+                    android:gravity="center"
+
+                    android:paddingRight="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                        <TextView
-                            app:font="maven"
-                            android:id="@+id/tv_like_count"
-                            android:drawableLeft="@drawable/ic_like_new"
-                            android:tag="@string/dont_touch_me"
-                            android:textColor="@color/text_color"
-                            android:layout_centerInParent="true"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginRight="15dp"
-                            android:layout_marginTop="7dp"
-                            android:text="2 Likes"
-                            android:textSize="12sp"
-                            android:drawablePadding="3dp"
-                            android:gravity="center"
+                    <LinearLayout
+                        android:id="@+id/view_like"
+                        android:orientation="horizontal"
+                        android:layout_centerInParent="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton
+                            android:clickable="false"
+                            android:id="@+id/like_button_animate"
+                            app:circle_start_color="#ffffff"
+                            app:circle_end_color="#cd8fff"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:icon_size="14dp"
+                            android:layout_marginBottom="-14dp"
+                            android:layout_marginTop="-10dp"
+                            app:anim_scale_factor="3.8"
+                            app:icon_type="heart" />
+
+
+
+
+                        <TextView
+                            android:id="@+id/tv_like_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center"
+                            android:text=" 2 Likes"
+                             android:layout_marginLeft="-13dp"
+                            android:layout_marginTop="2.5dp"
+                            android:textColor="@color/text_color"
+                            android:textSize="12.5sp"
+                            app:font="maven" />
+                    </LinearLayout>
+
+
 
 
 

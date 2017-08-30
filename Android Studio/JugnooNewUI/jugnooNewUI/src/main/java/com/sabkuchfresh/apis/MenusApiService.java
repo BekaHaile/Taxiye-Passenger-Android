@@ -123,4 +123,9 @@ public interface MenusApiService {
 	void confirmDeliveryByUser(@FieldMap Map<String, String> params,
 						   Callback<SettleUserDebt> callback);
 
+	@FormUrlEncoded
+	@POST("/fetch_restaurant_via_search_v2")
+	void fetchRestaurantViaSearchV2(@FieldMap Map<String, String> params,
+						   Callback<MenusResponse> callback);
+
 }
