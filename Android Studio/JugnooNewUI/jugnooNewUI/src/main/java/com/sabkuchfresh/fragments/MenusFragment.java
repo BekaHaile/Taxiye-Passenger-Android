@@ -553,8 +553,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                                 activity.setFilterCuisinesLocal(null);
                                                 checkIciciPaymentStatusApi(activity);
                                                 if (scrollToTop && recyclerViewRestaurant != null) {
-                                                    recyclerViewRestaurant.scrollTo(0, 0);
-
+                                                    linearLayoutManager.scrollToPositionWithOffset(0, 0);
                                                 }
 
 
@@ -600,7 +599,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             if(searchOpened && !isPagination && !swipeRefreshLayout.isRefreshing()){
                                 activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
                             }
-                    if (searchOpened && !TextUtils.isEmpty(searchText)) {
+                    if (searchOpened && searchText.length() > 2) {
                         params.put(Constants.KEY_SEARCH_TEXT, searchText);
                         refreshingAutoComplete = true;
                         RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
