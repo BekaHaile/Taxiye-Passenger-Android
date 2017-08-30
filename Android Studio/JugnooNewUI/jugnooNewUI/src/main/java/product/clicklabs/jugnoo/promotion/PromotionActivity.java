@@ -458,6 +458,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                                 } else if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
                                     String errorMessage = jObj.getString("error");
                                     DialogPopup.alertPopup(activity, "", errorMessage);
+                                    editTextPromoCode.setText("");
                                 } else if (ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag) {
                                     String message = jObj.getString("message");
                                     DialogPopup.dialogBanner(activity, message);
