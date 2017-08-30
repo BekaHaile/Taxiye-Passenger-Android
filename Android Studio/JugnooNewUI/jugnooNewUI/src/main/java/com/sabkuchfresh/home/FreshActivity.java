@@ -382,7 +382,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    getMenusFragment().getMenusRestaurantAdapter().searchRestaurant(topBar.etSearch.getText().toString().trim());
+                    getMenusFragment().searchRestaurant(topBar.etSearch.getText().toString().trim());
                     Utils.hideSoftKeyboard(FreshActivity.this,topBar.etSearch);
                     return false;
                 }
@@ -3812,7 +3812,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (getTopFragment() instanceof FreshSearchFragment) {
                     getFreshSearchFragment().searchFreshItems(s.toString());
                 } else if (getTopFragment() instanceof MenusFragment) {
-                    getMenusFragment().getMenusRestaurantAdapter().searchRestaurant(s.toString().trim());
+                    getMenusFragment().searchRestaurant(s.toString().trim());
                 } else if (getTopFragment() instanceof MenusSearchFragment) {
                     getMenusSearchFragment().searchItems(s.toString().trim());
                 }
@@ -4171,13 +4171,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
        /* LayoutTransition layoutTransition = new LayoutTransition();
         topBar.getLlSearchCart().setLayoutTransition(layoutTransition);*/
 
-
-       llCollapseRating.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener reviewCLickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openRestaurantReviewsListFragment();
             }
-        });
+        };
+        llCollapseRating.setOnClickListener(reviewCLickListener);
+        tvCollapRestaurantName.setOnClickListener(reviewCLickListener);
 
     }
 

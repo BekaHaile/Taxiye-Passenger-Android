@@ -189,7 +189,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     if(percentage > 0 && percentage % 10 == 0) {
                         GAUtils.event(MENUS, HOME + LIST_SCROLLED, percentage + "%");
-                        Log.i("GA Logged", "scroll percentage: "+ percentage + "%");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -377,8 +376,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private LatLng lastMenusLatlng;
     private int currentPageCount=1 ;
     public void getAllMenus(final boolean loader, final LatLng latLng, final boolean isPagination, final boolean scrollToTop) {
-
+        final String searchTextCurr = searchText;
         try {
+            if(!searchOpened || !refreshingAutoComplete)
             if (MyApplication.getInstance().isOnline()) {
                 this.lastMenusLatlng = latLng;
                 ProgressDialog progressDialog = null;
@@ -418,7 +418,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                 //Cuisines List
                 if(activity.getCuisinesSelected()!=null && activity.getCuisinesSelected().size()>0){
-
                     ArrayList<Integer> cusiinesSelectedId = new ArrayList<>();
                     for(FilterCuisine cuisine:activity.getCuisinesSelected()){
                         cusiinesSelectedId.add(cuisine.getId());
@@ -429,13 +428,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
                 //Search query
-                if(activity.getSearchedRestaurantIds() != null && activity.getSearchedRestaurantIds().size() > 0){
-                  /*  ArrayList<String> ids = new ArrayList<>();
-                    for(Integer id:activity.getSearchedRestaurantIds()){
-                        ids.add( "'"+id+"'");
-                    }*/
-                    params.put(Constants.RESTAURANT_IDS, activity.getSearchedRestaurantIds().toString());
-                }
+//                if(activity.getSearchedRestaurantIds() != null && activity.getSearchedRestaurantIds().size() > 0){
+//                    params.put(Constants.RESTAURANT_IDS, activity.getSearchedRestaurantIds().toString());
+//                }
 
 
 
@@ -450,7 +445,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 new HomeUtil().putDefaultParams(params);
                 final ProgressDialog finalProgressDialog = progressDialog;
 
-                RestClient.getMenusApiService().nearbyRestaurants(params, new Callback<MenusResponse>() {
+                Callback<MenusResponse> callback =
+                new Callback<MenusResponse>() {
                     @Override
                     public void success(MenusResponse menusResponse, Response response) {
                         if(isPagination){
@@ -574,6 +570,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             e.printStackTrace();
                         }
                         swipeRefreshLayout.setRefreshing(false);
+                        activity.getTopBar().setPBSearchVisibility(View.GONE);
+                        refreshingAutoComplete = false;
+                        recallSearch(searchTextCurr);
                     }
 
                     @Override
@@ -594,19 +593,35 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         if(isPagination && menusRestaurantAdapter!=null){
                             menusRestaurantAdapter.showProgressBar(false);
                         }
-
+                        activity.getTopBar().setPBSearchVisibility(View.GONE);
+                        refreshingAutoComplete = false;
+                        recallSearch(searchTextCurr);
                     }
-                });
+                };
+
+                if(searchOpened && !TextUtils.isEmpty(searchText)){
+                    params.put(Constants.KEY_SEARCH_TEXT, searchText);
+                    if(!isPagination) {
+                        activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
+                    }
+                    refreshingAutoComplete = true;
+                    RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
+                } else {
+                    RestClient.getMenusApiService().nearbyRestaurants(params, callback);
+                }
+
             } else {
                 retryDialog(DialogErrorType.NO_NET, latLng, loader, isPagination, scrollToTop);
                 swipeRefreshLayout.setRefreshing(false);
-                if(isPagination && menusRestaurantAdapter!=null){
+                if(isPagination && menusRestaurantAdapter != null) {
                     menusRestaurantAdapter.showProgressBar(false);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
             swipeRefreshLayout.setRefreshing(false);
+            refreshingAutoComplete = false;
+            recallSearch(searchTextCurr);
         }
     }
 
@@ -737,4 +752,25 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
 
     }
+
+    private String searchText = "";
+    private boolean refreshingAutoComplete = false;
+    public void searchRestaurant(String s){
+        int oldLength = searchText.length();
+        searchText = s;
+        if(searchText.length() > 2) {
+            getAllMenus(false, activity.getSelectedLatLng(), false, true);
+        } else {
+            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
+                getAllMenus(false, activity.getSelectedLatLng(), false, true);
+            }
+        }
+    }
+
+    private void recallSearch(String previousSearchText){
+        if (searchOpened && !searchText.trim().equalsIgnoreCase(previousSearchText)) {
+            getAllMenus(false, activity.getSelectedLatLng(), false, true);
+        }
+    }
+
 }

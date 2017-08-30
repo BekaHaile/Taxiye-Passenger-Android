@@ -985,15 +985,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
         int oldLength = searchText.length();
         searchText = s;
-//        if(searchText.length() > 2) {
+        if(searchText.length() > 2) {
             searchRestaurantsAutoComplete(searchText);
-//        } else {
-//            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
-//                searchVendors("", null);
-//            } else if(vendorsFiltered.size() > 0 && vendorsToShow.size() == 0){
-//                searchVendors("", null);
-//            }
-//        }
+        } else {
+            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
+                searchVendors("", null);
+            } else if(vendorsFiltered.size() > 0 && vendorsToShow.size() == 0){
+                searchVendors("", null);
+            }
+        }
     }
 
     private HashMap<String, List<Integer>> queryMap = new HashMap<>();
