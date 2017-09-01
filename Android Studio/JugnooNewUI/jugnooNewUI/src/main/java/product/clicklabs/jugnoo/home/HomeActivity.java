@@ -8581,8 +8581,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText());
                     zoomedForSearch = true;
                     lastSearchLatLng = null;
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                    switchPassengerScreen(passengerScreenMode);
                 } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
                     textViewDestSearch.setText(autoCompleteSearchResult.getNameForText());
                     dropAddressName = autoCompleteSearchResult.getNameForText();
@@ -8663,6 +8661,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 				if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
 					if (map != null && searchResult != null) {
 						try {
 	//                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
