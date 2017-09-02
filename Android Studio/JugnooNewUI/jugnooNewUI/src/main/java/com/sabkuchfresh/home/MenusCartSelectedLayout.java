@@ -67,16 +67,6 @@ public class MenusCartSelectedLayout {
 			} else {
 				rlMenusCartSelected.setVisibility(View.GONE);
 			}
-
-//			JSONObject jsonSavedCart = new JSONObject(Prefs.with(activity).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
-//			vendorId = jsonSavedCart.optInt(Constants.KEY_RESTAURANT_ID, -1);
-//			if(vendorId > 0){
-//				String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
-//				rlMenusCartSelected.setVisibility(View.VISIBLE);
-//				tvRestName.setText(oldRestaurantName);
-//			} else {
-//				rlMenusCartSelected.setVisibility(View.GONE);
-//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

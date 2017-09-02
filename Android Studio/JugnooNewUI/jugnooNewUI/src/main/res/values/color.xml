@@ -290,5 +290,7 @@
     <color name="promo_all_text_color">#ec8c81</color>
     <color name="promo_text_color_light_grey">#8d8d8d</color>
 
+    <color name="text_color_link">#4990e2</color>
+
 
 </resources>
