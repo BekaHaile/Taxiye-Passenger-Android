@@ -313,7 +313,7 @@ public class MenusResponse implements Serializable {
 		private String itemInactiveAlertText;
 
 		public Double getRating() {
-			return rating==null?null:Math.round(rating * 10.0) / 10.0;
+			return rating==null?4D:Math.round(rating * 10.0) / 10.0;
 		}
 
 		public long getReviewCount() {

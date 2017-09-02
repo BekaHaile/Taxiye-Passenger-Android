@@ -261,6 +261,7 @@
                 android:textColor="@color/text_color"
                 android:textColorLink="@color/text_color_link"
                 android:textSize="@dimen/sp_12"
+                app:font="@string/maven_r"
                 />
 
 
@@ -279,6 +280,7 @@
                 android:textColor="@color/text_color"
                 android:textColorLink="@color/text_color_link"
                 android:textSize="@dimen/sp_12"
+                app:font="@string/maven_r"
                 />
 
             <TextView
@@ -296,6 +298,7 @@
                 android:textColor="@color/text_color"
                 android:textColorLink="@color/text_color_link"
                 android:textSize="@dimen/sp_12"
+                app:font="@string/maven_r"
                 />
 
 
